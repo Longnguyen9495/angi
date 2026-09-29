@@ -41,18 +41,34 @@ function db(): PDO
     if ($pdo instanceof PDO) {
         return $pdo;
     }
+    $options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+    ];
+    // Production (VPS) runs on SQLite; local XAMPP keeps MariaDB.
+    if (env('DB_DRIVER', 'mysql') === 'sqlite') {
+        $pdo = new PDO('sqlite:' . sqlite_path(), null, null, $options);
+        $pdo->exec('PRAGMA foreign_keys = ON');
+        $pdo->exec('PRAGMA busy_timeout = 5000');
+        $pdo->exec('PRAGMA journal_mode = WAL');
+        return $pdo;
+    }
     $dsn = sprintf(
         'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',
         env('DB_HOST', '127.0.0.1'),
         env('DB_PORT', '3306'),
         env('DB_NAME', 'angi'),
     );
-    $pdo = new PDO($dsn, env('DB_USER', 'root'), env('DB_PASS', ''), [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
-    ]);
+    $pdo = new PDO($dsn, env('DB_USER', 'root'), env('DB_PASS', ''), $options);
     return $pdo;
+}
+
+/** SQLite file; relative DB_PATH values resolve from the project root. */
+function sqlite_path(): string
+{
+    $path = env('DB_PATH', 'storage/database/angi.sqlite');
+    return str_starts_with($path, '/') || preg_match('#^[A-Za-z]:[\\\\/]#', $path) ? $path : APP_ROOT . '/' . $path;
 }
 
 /** Vietnamese-aware slug: "Bánh mì chảo" → "banh-mi-chao". */

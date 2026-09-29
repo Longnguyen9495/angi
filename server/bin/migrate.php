@@ -6,6 +6,18 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../lib/bootstrap.php';
 
+if (env('DB_DRIVER', 'mysql') === 'sqlite') {
+    $dir = dirname(sqlite_path());
+    if (!is_dir($dir) && !mkdir($dir, 0775, true)) {
+        fwrite(STDERR, "Cannot create $dir\n");
+        exit(1);
+    }
+    // PDO's SQLite driver runs a multi-statement script (triggers included) in one exec.
+    db()->exec(file_get_contents(__DIR__ . '/../sql/schema.sqlite.sql'));
+    echo 'Schema ready in ' . sqlite_path() . ".\n";
+    exit;
+}
+
 $dsn = sprintf('mysql:host=%s;port=%s;charset=utf8mb4', env('DB_HOST', '127.0.0.1'), env('DB_PORT', '3306'));
 $pdo = new PDO($dsn, env('DB_USER', 'root'), env('DB_PASS', ''), [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 $sql = file_get_contents(__DIR__ . '/../sql/schema.sql');

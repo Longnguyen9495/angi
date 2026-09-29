@@ -192,7 +192,8 @@ final class Catalogue
     private function replaceIngredients(string $dishId, array $list): void
     {
         $this->pdo->prepare('DELETE FROM dish_ingredients WHERE dish_id = ?')->execute([$dishId]);
-        $link = $this->pdo->prepare('INSERT IGNORE INTO dish_ingredients (dish_id, ingredient_id, position) VALUES (?, ?, ?)');
+        $ignore = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite' ? 'INSERT OR IGNORE' : 'INSERT IGNORE';
+        $link = $this->pdo->prepare("$ignore INTO dish_ingredients (dish_id, ingredient_id, position) VALUES (?, ?, ?)");
         foreach (array_values($list) as $pos => $ing) {
             $id = $this->ensureIngredient($ing);
             $link->execute([$dishId, $id, $pos]);

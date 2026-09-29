@@ -29,3 +29,16 @@ npm run reel:manifest  # tạo lại manifest gọn từ public/images/food-reel
   1. `C:\xampp\apache\bin\httpd.exe -t` (phải ra `Syntax OK`)
   2. Restart Apache trong XAMPP Control Panel (Stop → Start), hoặc graceful restart:
      `powershell -Command "$p=(Get-Content C:\xampp\apache\logs\httpd.pid).Trim(); ([Threading.EventWaitHandle]::OpenExisting('ap'+$p+'_restart')).Set()"`
+
+## Production: https://angi.221-121-1-68.sslip.io (VPS, nginx + php8.5-fpm + SQLite)
+
+- Code: `/var/www/angi` (git clone của repo, owner `rexllm:www-data`), nginx: `deploy/nginx/angi.conf` → `/etc/nginx/sites-available/angi`, SSL bằng certbot.
+- `.env` trên server dùng `DB_DRIVER=sqlite`; file DB ở `storage/database/angi.sqlite` (www-data ghi được, không nằm trong git).
+- Cập nhật bản mới:
+  ```bash
+  cd /var/www/angi && git pull && npm ci && npm run build
+  php server/bin/migrate.php   # chỉ khi schema đổi
+  ```
+- Chép catalogue local lên server: `npm run build` ở local (xuất snapshot), commit, rồi trên server
+  `php server/bin/seed.php --force --from=src/features/food-reel/data/catalogue.snapshot.json`
+  và `scp` các ảnh trong `storage/uploads/` mà món mới tham chiếu.
