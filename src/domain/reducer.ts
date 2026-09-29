@@ -1,0 +1,353 @@
+import { getDish } from '../data/dishes';
+import { CROPS, DAILY_MISSIONS, RECIPES, XP } from '../data/game';
+import type { CropId, MissionKind, RecipeId } from '../data/types';
+import {
+  createInitialProgress,
+  type AgainAnswer,
+  type CheckInOutcome,
+  type GuestProgress,
+  type LedgerEntry,
+  type MotionPref,
+  type Resource,
+} from './progress';
+import type { Filters } from './recommend';
+import { firstEmptyPlot, newlyUnlockable, plotStage, recipeProgress } from './selectors';
+import { HOUR_MS, dateKey, daysBetween, slotKey } from './time';
+
+export type Action =
+  | { type: 'SET_FILTERS'; filters: Filters }
+  | { type: 'CHOOSE_DISH'; dishId: string; now: number }
+  | { type: 'PLANT_MEAL_SEED'; now: number }
+  | { type: 'PLANT_FROM_TRAY'; crop: CropId; plotId: number; now: number }
+  | { type: 'HARVEST_ALL'; now: number }
+  | { type: 'COOK'; recipeId: RecipeId; now: number }
+  | {
+      type: 'CHECK_IN';
+      outcome: CheckInOutcome;
+      rating: number | null;
+      again: AgainAnswer | null;
+      now: number;
+    }
+  | { type: 'HIDE_DISH'; dishId: string }
+  | { type: 'UNHIDE_DISH'; dishId: string }
+  | { type: 'UNHIDE_ALL' }
+  | { type: 'SET_REMINDER'; now: number }
+  | { type: 'SAVE_JOURNEY' }
+  | { type: 'ACK_UNLOCK' }
+  | { type: 'SET_MOTION'; motion: MotionPref }
+  | { type: 'SET_SIMULATE_FAILURE'; value: boolean }
+  | { type: 'RESET'; now: number };
+
+const LEDGER_LIMIT = 400;
+/** Minutes after choosing a dish when the in-page check-in reminder fires. */
+export const REMINDER_DELAY_MS = 45 * 60 * 1000;
+
+function hasKey(s: GuestProgress, key: string): boolean {
+  return s.ledger.some((e) => e.key === key);
+}
+
+function balance(s: GuestProgress, resource: Resource): number {
+  if (resource === 'xp') return s.xp;
+  if (resource === 'stamp') return s.stamps.discovered.length + s.stamps.eaten.length;
+  const [kind, crop] = resource.split(':') as ['seed' | 'ingredient', CropId];
+  return kind === 'seed' ? s.seeds[crop] : s.ingredients[crop];
+}
+
+/**
+ * Applies a resource change through the ledger. Returns false (and changes
+ * nothing) when the idempotency key was already used or the balance would go
+ * negative — double taps and retries can never pay out twice.
+ */
+function post(
+  s: GuestProgress,
+  key: string,
+  resource: Resource,
+  delta: number,
+  reason: string,
+  now: number,
+): boolean {
+  if (hasKey(s, key)) return false;
+  if (resource !== 'stamp') {
+    const next = balance(s, resource) + delta;
+    if (next < 0) return false;
+    if (resource === 'xp') s.xp = next;
+    else {
+      const [kind, crop] = resource.split(':') as ['seed' | 'ingredient', CropId];
+      if (kind === 'seed') s.seeds[crop] = next;
+      else s.ingredients[crop] = next;
+    }
+  }
+  const entry: LedgerEntry = {
+    key,
+    resource,
+    delta,
+    balanceAfter: balance(s, resource),
+    reason,
+    at: now,
+  };
+  s.ledger = [...s.ledger, entry].slice(-LEDGER_LIMIT);
+  return true;
+}
+
+function ensureDay(s: GuestProgress, now: number) {
+  const today = dateKey(now);
+  if (s.missions.date !== today) s.missions = { date: today, done: [] };
+}
+
+function completeMission(s: GuestProgress, id: MissionKind, now: number) {
+  ensureDay(s, now);
+  const xp = DAILY_MISSIONS.find((m) => m.id === id)?.xp ?? 0;
+  if (s.missions.done.includes(id)) return;
+  if (post(s, `mission:${s.missions.date}:${id}`, 'xp', xp, `mission:${id}`, now)) {
+    s.missions = { ...s.missions, done: [...s.missions.done, id] };
+  }
+}
+
+const STREAK_MILESTONES = [1, 3, 5, 7];
+
+/** Soft streak: a missed day uses a rest pass or steps back one milestone, never to zero. */
+export function touchStreak(streak: GuestProgress['streak'], now: number): GuestProgress['streak'] {
+  const today = dateKey(now);
+  const gap = daysBetween(streak.lastActiveDate, today);
+  if (gap <= 0) return streak;
+  if (gap === 1) return { ...streak, count: streak.count + 1, lastActiveDate: today };
+  if (gap === 2 && streak.restPasses > 0) {
+    return {
+      count: streak.count + 1,
+      lastActiveDate: today,
+      restPasses: streak.restPasses - 1,
+    };
+  }
+  const below = [...STREAK_MILESTONES].reverse().find((m) => m < streak.count) ?? 1;
+  return { ...streak, count: below + 1, lastActiveDate: today };
+}
+
+function addStamp(s: GuestProgress, kind: 'discovered' | 'eaten', dishId: string, now: number) {
+  if (s.stamps[kind].includes(dishId)) return;
+  s.stamps = { ...s.stamps, [kind]: [...s.stamps[kind], dishId] };
+  post(s, `stamp:${kind}:${dishId}`, 'stamp', 1, `stamp:${kind}`, now);
+  const opened = newlyUnlockable(s);
+  if (opened.length > 0) {
+    s.unlockedRegions = [...s.unlockedRegions, ...opened];
+    s.recentUnlock = opened[opened.length - 1] ?? null;
+  }
+}
+
+export function gameReducer(state: GuestProgress, action: Action): GuestProgress {
+  switch (action.type) {
+    case 'SET_FILTERS':
+      return { ...state, filters: action.filters };
+
+    case 'CHOOSE_DISH': {
+      const dish = getDish(action.dishId);
+      if (!dish) return state;
+      const key = slotKey(action.now);
+      const current = state.meal?.slotKey === key ? state.meal : null;
+      if (current?.dishId === dish.id) return state;
+      // Once the slot's seed is planted or checked in, the reward is spent: the new
+      // choice is still recorded (choosing food must always work) but pays nothing.
+      if (current && (current.planted || current.checkedIn)) {
+        return { ...state, meal: { ...current, dishId: dish.id, chosenAt: action.now } };
+      }
+
+      const s = structuredClone(state);
+      ensureDay(s, action.now);
+      const rev = s.ledger.filter((e) => e.key.startsWith(`seed:${key}:r`)).length;
+      if (current) {
+        // Switching dish before planting re-targets the pending seed instead of adding one.
+        post(
+          s,
+          `seed:${key}:r${rev}:reverse`,
+          `seed:${current.seedCrop}`,
+          -1,
+          'reversal',
+          action.now,
+        );
+      }
+      post(s, `seed:${key}:r${rev + 1}`, `seed:${dish.seed}`, 1, `dish:${dish.id}`, action.now);
+      post(s, `xp:choose:${key}`, 'xp', XP.chooseDish, 'choose', action.now);
+      s.meal = {
+        slotKey: key,
+        dishId: dish.id,
+        rewardDishId: dish.id,
+        chosenAt: action.now,
+        seedCrop: dish.seed,
+        planted: false,
+        plotId: null,
+        checkedIn: false,
+      };
+      completeMission(s, 'choose', action.now);
+      s.streak = touchStreak(s.streak, action.now);
+      return s;
+    }
+
+    case 'PLANT_MEAL_SEED': {
+      const meal = state.meal;
+      if (!meal || meal.planted) return state;
+      const plot = firstEmptyPlot(state.plots);
+      if (!plot || state.seeds[meal.seedCrop] <= 0) return state;
+      const s = structuredClone(state);
+      const key = `plant:${meal.slotKey}`;
+      if (!post(s, key, `seed:${meal.seedCrop}`, -1, `plot:${plot.id}`, action.now)) return state;
+      const crop = CROPS[meal.seedCrop];
+      s.plots = s.plots.map((p) =>
+        p.id === plot.id
+          ? {
+              ...p,
+              crop: crop.id,
+              plantedAt: action.now,
+              readyAt: action.now + crop.growHours * HOUR_MS,
+              sourceDishId: meal.dishId,
+            }
+          : p,
+      );
+      s.meal = { ...meal, planted: true, plotId: plot.id };
+      addStamp(s, 'discovered', meal.dishId, action.now);
+      return s;
+    }
+
+    case 'PLANT_FROM_TRAY': {
+      const plot = state.plots.find((p) => p.id === action.plotId);
+      if (!plot || plot.crop !== null || state.seeds[action.crop] <= 0) return state;
+      const s = structuredClone(state);
+      const key = `tray:${action.plotId}:${action.now}`;
+      if (!post(s, key, `seed:${action.crop}`, -1, `plot:${plot.id}`, action.now)) return state;
+      const crop = CROPS[action.crop];
+      s.plots = s.plots.map((p) =>
+        p.id === plot.id
+          ? {
+              ...p,
+              crop: crop.id,
+              plantedAt: action.now,
+              readyAt: action.now + crop.growHours * HOUR_MS,
+              sourceDishId: null,
+            }
+          : p,
+      );
+      // A meal seed planted manually from the tray still counts as the meal's planting.
+      const meal = s.meal;
+      if (meal && !meal.planted && meal.seedCrop === action.crop) {
+        s.meal = { ...meal, planted: true, plotId: plot.id };
+        s.plots = s.plots.map((p) => (p.id === plot.id ? { ...p, sourceDishId: meal.dishId } : p));
+        addStamp(s, 'discovered', meal.dishId, action.now);
+      }
+      return s;
+    }
+
+    case 'HARVEST_ALL': {
+      const ready = state.plots.filter((p) => plotStage(p, action.now) === 'ready');
+      if (ready.length === 0) return state;
+      const s = structuredClone(state);
+      for (const plot of ready) {
+        const crop = CROPS[plot.crop!];
+        const tag = `${plot.id}:${plot.plantedAt}`;
+        post(s, `harvest:${tag}`, `ingredient:${crop.id}`, crop.yield, 'harvest', action.now);
+        post(s, `xp:harvest:${tag}`, 'xp', XP.harvestPerPlot, 'harvest', action.now);
+      }
+      const readyIds = new Set(ready.map((p) => p.id));
+      s.plots = s.plots.map((p) =>
+        readyIds.has(p.id)
+          ? { ...p, crop: null, plantedAt: null, readyAt: null, sourceDishId: null }
+          : p,
+      );
+      completeMission(s, 'harvest-or-cook', action.now);
+      return s;
+    }
+
+    case 'COOK': {
+      if (!recipeProgress(state, action.recipeId).canCook) return state;
+      const recipe = RECIPES[action.recipeId];
+      const s = structuredClone(state);
+      const key = `cook:${recipe.id}:${action.now}`;
+      for (const ing of recipe.ingredients) {
+        post(s, `${key}:${ing.crop}`, `ingredient:${ing.crop}`, -ing.qty, 'cook', action.now);
+      }
+      post(s, `${key}:xp`, 'xp', recipe.xp, 'cook', action.now);
+      s.cooked = { ...s.cooked, [recipe.id]: (s.cooked[recipe.id] ?? 0) + 1 };
+      completeMission(s, 'harvest-or-cook', action.now);
+      return s;
+    }
+
+    case 'CHECK_IN': {
+      const meal = state.meal;
+      if (!meal || meal.checkedIn) return state;
+      const s = structuredClone(state);
+      const key = `checkin:${meal.slotKey}`;
+      const xp =
+        action.outcome === 'ate'
+          ? XP.checkinAte
+          : action.outcome === 'swapped'
+            ? XP.checkinSwapped
+            : XP.checkinSkipped;
+      if (!post(s, key, 'xp', xp, `checkin:${action.outcome}`, action.now)) return state;
+
+      if (action.outcome !== 'skipped' && meal.plotId !== null) {
+        // Checking in after a real meal "waters" the plant: it becomes ready now.
+        s.plots = s.plots.map((p) =>
+          p.id === meal.plotId && p.crop && p.readyAt !== null && p.readyAt > action.now
+            ? { ...p, readyAt: action.now }
+            : p,
+        );
+      }
+      if (action.outcome === 'ate') addStamp(s, 'eaten', meal.dishId, action.now);
+      if (action.again === 'no' && !s.hiddenDishIds.includes(meal.dishId)) {
+        s.hiddenDishIds = [...s.hiddenDishIds, meal.dishId];
+      }
+      s.meal = { ...meal, checkedIn: true };
+      s.history = [
+        {
+          slotKey: meal.slotKey,
+          dishId: meal.dishId,
+          outcome: action.outcome,
+          rating: action.outcome === 'skipped' ? null : action.rating,
+          again: action.outcome === 'skipped' ? null : action.again,
+          at: action.now,
+        },
+        ...s.history,
+      ].slice(0, 30);
+      if (s.reminder?.slotKey === meal.slotKey) s.reminder = null;
+      completeMission(s, 'checkin', action.now);
+      s.streak = touchStreak(s.streak, action.now);
+      return s;
+    }
+
+    case 'HIDE_DISH':
+      if (state.hiddenDishIds.includes(action.dishId)) return state;
+      return { ...state, hiddenDishIds: [...state.hiddenDishIds, action.dishId] };
+
+    case 'UNHIDE_DISH':
+      return { ...state, hiddenDishIds: state.hiddenDishIds.filter((d) => d !== action.dishId) };
+
+    case 'UNHIDE_ALL':
+      return state.hiddenDishIds.length ? { ...state, hiddenDishIds: [] } : state;
+
+    case 'SET_REMINDER':
+      if (!state.meal || state.meal.checkedIn) return state;
+      return {
+        ...state,
+        reminder: { slotKey: state.meal.slotKey, at: action.now + REMINDER_DELAY_MS },
+      };
+
+    case 'SAVE_JOURNEY':
+      return state.journeySaved ? state : { ...state, journeySaved: true };
+
+    case 'ACK_UNLOCK':
+      return state.recentUnlock ? { ...state, recentUnlock: null } : state;
+
+    case 'SET_MOTION':
+      return { ...state, settings: { ...state.settings, motion: action.motion } };
+
+    case 'SET_SIMULATE_FAILURE':
+      return { ...state, settings: { ...state.settings, simulateFailure: action.value } };
+
+    case 'RESET': {
+      const fresh = createInitialProgress(action.now);
+      return { ...fresh, settings: state.settings };
+    }
+  }
+}
+
+export function dishSeedName(dishId: string): string {
+  const dish = getDish(dishId);
+  return dish ? CROPS[dish.seed].seedName : '';
+}

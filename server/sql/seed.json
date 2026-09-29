@@ -1,0 +1,5940 @@
+{
+ "ingredients": [
+  {
+   "id": "gao-tam",
+   "name": "Gạo tấm",
+   "description": "Hạt gạo vỡ, nấu lên tơi và thơm, giữ nước sốt tốt.",
+   "crop": "rice"
+  },
+  {
+   "id": "com",
+   "name": "Cơm trắng",
+   "description": "Cơm gạo dẻo vừa, nền trung tính cho món mặn.",
+   "crop": "rice"
+  },
+  {
+   "id": "com-nghe",
+   "name": "Cơm nấu nước gà",
+   "description": "Gạo xào mỡ gà rồi nấu với nước luộc gà cho vàng óng.",
+   "crop": "rice"
+  },
+  {
+   "id": "banh-pho",
+   "name": "Bánh phở",
+   "description": "Sợi gạo dẹt, mềm mà dai, trụng nhanh trong nước sôi.",
+   "crop": "rice"
+  },
+  {
+   "id": "bun",
+   "name": "Bún tươi",
+   "description": "Sợi bún gạo tròn, mát, thấm nước dùng.",
+   "crop": "rice"
+  },
+  {
+   "id": "bun-to",
+   "name": "Bún sợi to",
+   "description": "Sợi bún lớn đặc trưng của xứ Huế, giữ độ dai lâu.",
+   "crop": "rice"
+  },
+  {
+   "id": "banh-cuon-la",
+   "name": "Lá bánh cuốn",
+   "description": "Bột gạo tráng mỏng trên hơi nước, mềm và trong.",
+   "crop": "rice"
+  },
+  {
+   "id": "banh-trang",
+   "name": "Bánh tráng",
+   "description": "Bánh gạo mỏng nhúng qua nước để cuốn rau và nhân.",
+   "crop": "rice"
+  },
+  {
+   "id": "banh-hoi",
+   "name": "Bánh hỏi",
+   "description": "Sợi bún mảnh đan thành vỉ, rưới mỡ hành.",
+   "crop": "rice"
+  },
+  {
+   "id": "soi-mi-quang",
+   "name": "Sợi mì Quảng",
+   "description": "Sợi gạo dày nhuộm nghệ, vàng và dai.",
+   "crop": "rice"
+  },
+  {
+   "id": "banh-da-do",
+   "name": "Bánh đa đỏ",
+   "description": "Sợi bánh đa màu nâu đỏ từ bột gạo và mật mía, đặc sản Hải Phòng.",
+   "crop": "rice"
+  },
+  {
+   "id": "hu-tieu-soi",
+   "name": "Sợi hủ tiếu",
+   "description": "Sợi gạo dai trong, không bở khi chan nước dùng.",
+   "crop": "rice"
+  },
+  {
+   "id": "banh-canh",
+   "name": "Sợi bánh canh",
+   "description": "Sợi to làm từ bột gạo hoặc bột lọc, nước dùng sánh nhẹ.",
+   "crop": "rice"
+  },
+  {
+   "id": "xoi-nep",
+   "name": "Xôi nếp",
+   "description": "Gạo nếp hấp dẻo, no lâu.",
+   "crop": "rice"
+  },
+  {
+   "id": "chao-gao",
+   "name": "Cháo gạo",
+   "description": "Gạo rang sơ rồi ninh nhừ cho cháo thơm và sánh.",
+   "crop": "rice"
+  },
+  {
+   "id": "gao-basmati",
+   "name": "Gạo basmati",
+   "description": "Hạt gạo dài, tơi, thơm mùi hạt rang.",
+   "crop": "rice"
+  },
+  {
+   "id": "gao-arborio",
+   "name": "Gạo arborio",
+   "description": "Gạo hạt tròn nhiều tinh bột, khuấy thành risotto kem mịn.",
+   "crop": "rice"
+  },
+  {
+   "id": "rice-cake",
+   "name": "Bánh gạo Hàn",
+   "description": "Thanh bánh gạo dẻo dai, thấm sốt cay ngọt.",
+   "crop": "rice"
+  },
+  {
+   "id": "rong-bien",
+   "name": "Rong biển",
+   "description": "Lá rong biển sấy giòn, vị mặn umami của biển.",
+   "crop": null
+  },
+  {
+   "id": "mi-trung",
+   "name": "Mì trứng",
+   "description": "Sợi mì vàng làm từ bột mì và trứng, dai giòn.",
+   "crop": null
+  },
+  {
+   "id": "mien",
+   "name": "Miến dong",
+   "description": "Sợi miến trong, dai, làm từ tinh bột củ dong.",
+   "crop": null
+  },
+  {
+   "id": "mi-y",
+   "name": "Mì Ý",
+   "description": "Sợi mì bột semolina, luộc vừa chín tới (al dente).",
+   "crop": null
+  },
+  {
+   "id": "soi-udon",
+   "name": "Sợi udon",
+   "description": "Sợi mì bột mì to và mềm của Nhật.",
+   "crop": null
+  },
+  {
+   "id": "soi-ramen",
+   "name": "Sợi ramen",
+   "description": "Sợi mì kiềm vàng, dai, giữ được nước dùng đậm.",
+   "crop": null
+  },
+  {
+   "id": "soi-soba",
+   "name": "Sợi soba",
+   "description": "Mì kiều mạch màu nâu xám, thường ăn lạnh chấm nước tsuyu.",
+   "crop": null
+  },
+  {
+   "id": "nui",
+   "name": "Nui",
+   "description": "Nui ống ngắn, bắt sốt vào lòng.",
+   "crop": null
+  },
+  {
+   "id": "gnocchi",
+   "name": "Gnocchi",
+   "description": "Viên bánh nhỏ từ khoai tây nghiền và bột mì, mềm như gối.",
+   "crop": null
+  },
+  {
+   "id": "lasagna",
+   "name": "Lá lasagna",
+   "description": "Lá mì dẹt xếp từng lớp với sốt thịt và béchamel.",
+   "crop": null
+  },
+  {
+   "id": "banh-mi-vo",
+   "name": "Bánh mì giòn",
+   "description": "Vỏ mỏng giòn, ruột xốp — kiểu bánh mì Việt.",
+   "crop": null
+  },
+  {
+   "id": "banh-burger",
+   "name": "Bánh burger",
+   "description": "Bánh mì tròn mềm, nướng sơ mặt cắt.",
+   "crop": null
+  },
+  {
+   "id": "banh-sandwich",
+   "name": "Bánh mì sandwich",
+   "description": "Lát bánh mì mềm nướng vàng hai mặt.",
+   "crop": null
+  },
+  {
+   "id": "de-pizza",
+   "name": "Đế bánh pizza",
+   "description": "Bột ủ lên men nướng lửa lớn, viền phồng giòn.",
+   "crop": null
+  },
+  {
+   "id": "tortilla",
+   "name": "Bánh tortilla",
+   "description": "Bánh bột mì hoặc bột ngô mỏng của Mexico.",
+   "crop": null
+  },
+  {
+   "id": "pita",
+   "name": "Bánh pita",
+   "description": "Bánh mì dẹt phồng rỗng ruột, xé ra để kẹp.",
+   "crop": null
+  },
+  {
+   "id": "naan",
+   "name": "Bánh naan",
+   "description": "Bánh mì Ấn nướng trong lò tandoor, mềm và cháy xém.",
+   "crop": null
+  },
+  {
+   "id": "khoai-tay",
+   "name": "Khoai tây",
+   "description": "Chiên, nướng hoặc nghiền — vị bùi, nền cho món Âu.",
+   "crop": null
+  },
+  {
+   "id": "bot-chien",
+   "name": "Lớp bột chiên",
+   "description": "Lớp áo bột chiên giòn rụm bên ngoài.",
+   "crop": null
+  },
+  {
+   "id": "banh-xeo-vo",
+   "name": "Vỏ bánh xèo",
+   "description": "Bột gạo pha nghệ và nước cốt dừa, đổ chảo nóng kêu “xèo”.",
+   "crop": "rice"
+  },
+  {
+   "id": "suon-nuong",
+   "name": "Sườn nướng",
+   "description": "Sườn heo ướp mật ong, sả, nướng than cho cháy cạnh.",
+   "crop": null
+  },
+  {
+   "id": "bi-heo",
+   "name": "Bì heo",
+   "description": "Da heo thái sợi trộn thính, dai giòn.",
+   "crop": null
+  },
+  {
+   "id": "cha-trung",
+   "name": "Chả trứng",
+   "description": "Trứng, thịt băm và miến hấp thành miếng chả vàng.",
+   "crop": null
+  },
+  {
+   "id": "bo-tai",
+   "name": "Bò tái",
+   "description": "Thịt bò thái mỏng, chần nước dùng sôi cho vừa chín.",
+   "crop": null
+  },
+  {
+   "id": "thit-bo",
+   "name": "Thịt bò",
+   "description": "Thịt bò mềm, xào lửa lớn hoặc hầm lâu.",
+   "crop": null
+  },
+  {
+   "id": "bo-ham",
+   "name": "Bò hầm",
+   "description": "Bò hầm nhừ với gia vị đến khi mềm tan.",
+   "crop": null
+  },
+  {
+   "id": "bo-nuong",
+   "name": "Bò nướng",
+   "description": "Thịt bò ướp tỏi, nướng nhanh cho thơm khói.",
+   "crop": null
+  },
+  {
+   "id": "thit-heo-nuong",
+   "name": "Thịt heo nướng",
+   "description": "Thịt heo ướp sả, nước mắm, nướng than.",
+   "crop": null
+  },
+  {
+   "id": "cha-nuong",
+   "name": "Chả nướng",
+   "description": "Thịt băm viên dẹt nướng trên than hoa.",
+   "crop": null
+  },
+  {
+   "id": "gio-heo",
+   "name": "Giò heo",
+   "description": "Móng giò ninh mềm, béo và sần sật.",
+   "crop": null
+  },
+  {
+   "id": "cha-lua",
+   "name": "Chả lụa",
+   "description": "Giò lụa giã nhuyễn gói lá chuối, luộc chín.",
+   "crop": null
+  },
+  {
+   "id": "moc",
+   "name": "Mọc",
+   "description": "Giò sống viên với nấm mèo, thả vào nước dùng.",
+   "crop": null
+  },
+  {
+   "id": "long-heo",
+   "name": "Lòng heo",
+   "description": "Lòng, dồi, gan luộc chín, ăn cùng cháo.",
+   "crop": null
+  },
+  {
+   "id": "thit-heo-quay",
+   "name": "Heo quay",
+   "description": "Thịt ba chỉ quay da giòn nổ lép bép.",
+   "crop": null
+  },
+  {
+   "id": "xa-xiu",
+   "name": "Xá xíu",
+   "description": "Thịt heo tẩm sốt đỏ ngọt kiểu Quảng Đông, nướng bóng.",
+   "crop": null
+  },
+  {
+   "id": "thit-bam",
+   "name": "Thịt băm",
+   "description": "Thịt heo băm xào hoặc nấu sốt.",
+   "crop": null
+  },
+  {
+   "id": "bacon",
+   "name": "Thịt xông khói",
+   "description": "Ba chỉ muối xông khói, áp chảo giòn.",
+   "crop": null
+  },
+  {
+   "id": "pepperoni",
+   "name": "Pepperoni",
+   "description": "Xúc xích Ý cay nhẹ, cong mép khi nướng.",
+   "crop": null
+  },
+  {
+   "id": "xuc-xich",
+   "name": "Xúc xích",
+   "description": "Xúc xích áp chảo xém vỏ.",
+   "crop": null
+  },
+  {
+   "id": "pa-te",
+   "name": "Pa tê",
+   "description": "Pa tê gan béo mịn, phết lớp mỏng.",
+   "crop": null
+  },
+  {
+   "id": "ga",
+   "name": "Thịt gà",
+   "description": "Gà ta luộc hoặc xé, thịt chắc ngọt.",
+   "crop": null
+  },
+  {
+   "id": "ga-gion",
+   "name": "Gà chiên giòn",
+   "description": "Gà tẩm bột chiên vàng, giòn rụm bên ngoài.",
+   "crop": null
+  },
+  {
+   "id": "ga-nuong",
+   "name": "Gà nướng",
+   "description": "Gà ướp thảo mộc nướng lò, da vàng.",
+   "crop": null
+  },
+  {
+   "id": "vit",
+   "name": "Thịt vịt",
+   "description": "Vịt luộc hoặc quay, thịt đậm vị.",
+   "crop": null
+  },
+  {
+   "id": "trung",
+   "name": "Trứng",
+   "description": "Trứng ốp la lòng đào hoặc trứng lòng non.",
+   "crop": null
+  },
+  {
+   "id": "tom",
+   "name": "Tôm",
+   "description": "Tôm tươi luộc, nướng hoặc chiên, vị ngọt biển.",
+   "crop": null
+  },
+  {
+   "id": "muc",
+   "name": "Mực",
+   "description": "Mực tươi xào lửa lớn, giòn sần sật.",
+   "crop": null
+  },
+  {
+   "id": "cua-dong",
+   "name": "Cua đồng",
+   "description": "Cua giã lọc lấy nước, gạch cua nổi thành riêu.",
+   "crop": null
+  },
+  {
+   "id": "ca-hoi",
+   "name": "Cá hồi",
+   "description": "Thịt cá hồi béo, màu cam tươi.",
+   "crop": null
+  },
+  {
+   "id": "ca-ngu",
+   "name": "Cá ngừ",
+   "description": "Cá ngừ đại dương, thịt đỏ chắc.",
+   "crop": null
+  },
+  {
+   "id": "ca-saba",
+   "name": "Cá saba",
+   "description": "Cá thu Nhật nhiều dầu, nướng muối thơm lừng.",
+   "crop": null
+  },
+  {
+   "id": "ca-ro",
+   "name": "Chả cá & cá rô",
+   "description": "Cá rô đồng chiên giòn và chả cá dai ngọt.",
+   "crop": null
+  },
+  {
+   "id": "ca-chien",
+   "name": "Cá chiên bột",
+   "description": "Phi lê cá trắng áo bột bia chiên giòn.",
+   "crop": null
+  },
+  {
+   "id": "ca-linh",
+   "name": "Cá linh & cá sặc",
+   "description": "Cá nước ngọt mùa nước nổi, nấu cùng mắm cá.",
+   "crop": null
+  },
+  {
+   "id": "luon",
+   "name": "Lươn",
+   "description": "Lươn đồng chiên giòn hoặc nướng sốt ngọt.",
+   "crop": null
+  },
+  {
+   "id": "hai-san",
+   "name": "Hải sản",
+   "description": "Tôm, mực, nghêu tươi — vị ngọt của biển.",
+   "crop": null
+  },
+  {
+   "id": "hoanh-thanh",
+   "name": "Hoành thánh",
+   "description": "Vỏ bột mỏng gói nhân tôm thịt, luộc trong veo.",
+   "crop": null
+  },
+  {
+   "id": "dimsum",
+   "name": "Há cảo & xíu mại",
+   "description": "Bánh hấp nhân tôm thịt trong xửng tre.",
+   "crop": null
+  },
+  {
+   "id": "falafel",
+   "name": "Viên falafel",
+   "description": "Đậu gà xay với thảo mộc, viên lại chiên giòn.",
+   "crop": "bean"
+  },
+  {
+   "id": "nem-thit",
+   "name": "Nem nướng",
+   "description": "Thịt heo quết dẻo nướng thành xiên thơm.",
+   "crop": null
+  },
+  {
+   "id": "dau-hu",
+   "name": "Đậu hũ",
+   "description": "Đậu phụ non hoặc chiên vàng, nguồn đạm từ đậu nành.",
+   "crop": "bean"
+  },
+  {
+   "id": "dau-hu-non",
+   "name": "Đậu hũ non",
+   "description": "Đậu hũ mềm như pudding, tan trong nước dùng.",
+   "crop": "bean"
+  },
+  {
+   "id": "gia-do",
+   "name": "Giá đỗ",
+   "description": "Mầm đậu xanh giòn mát.",
+   "crop": "bean"
+  },
+  {
+   "id": "dau-phong",
+   "name": "Đậu phộng rang",
+   "description": "Đậu phộng rang giã dập, bùi và giòn.",
+   "crop": "bean"
+  },
+  {
+   "id": "dau-ga",
+   "name": "Đậu gà",
+   "description": "Hạt đậu tròn bùi, giàu đạm thực vật.",
+   "crop": "bean"
+  },
+  {
+   "id": "dau-den",
+   "name": "Đậu đen",
+   "description": "Đậu đen hầm nhừ kiểu Mexico.",
+   "crop": "bean"
+  },
+  {
+   "id": "tuong-den",
+   "name": "Tương đen",
+   "description": "Tương đậu nành lên men đậm đà, mặn ngọt.",
+   "crop": "bean"
+  },
+  {
+   "id": "miso",
+   "name": "Miso",
+   "description": "Tương đậu nành lên men của Nhật, vị umami sâu.",
+   "crop": "bean"
+  },
+  {
+   "id": "nam",
+   "name": "Nấm",
+   "description": "Nấm đông cô, nấm kim châm, nấm rơm — vị ngọt đất.",
+   "crop": null
+  },
+  {
+   "id": "cha-chay",
+   "name": "Chả chay",
+   "description": "Chả làm từ đậu và nấm, dai vừa.",
+   "crop": "bean"
+  },
+  {
+   "id": "quinoa",
+   "name": "Hạt quinoa",
+   "description": "Hạt diêm mạch tơi, bùi, giàu đạm.",
+   "crop": null
+  },
+  {
+   "id": "hanh-la",
+   "name": "Hành lá",
+   "description": "Hành lá thái nhỏ, mùi thơm tươi.",
+   "crop": "scallion"
+  },
+  {
+   "id": "hanh-phi",
+   "name": "Hành phi",
+   "description": "Hành tím phi vàng giòn, thơm béo.",
+   "crop": "scallion"
+  },
+  {
+   "id": "mo-hanh",
+   "name": "Mỡ hành",
+   "description": "Hành lá chần qua mỡ nóng, rưới lên cơm, bánh.",
+   "crop": "scallion"
+  },
+  {
+   "id": "hanh-tay",
+   "name": "Hành tây",
+   "description": "Hành tây ngọt, giòn khi sống, mềm khi xào.",
+   "crop": "scallion"
+  },
+  {
+   "id": "toi",
+   "name": "Tỏi",
+   "description": "Tỏi phi hoặc tỏi băm sống, cay nồng.",
+   "crop": "scallion"
+  },
+  {
+   "id": "rau-thom",
+   "name": "Rau thơm",
+   "description": "Húng, tía tô, kinh giới — mùi thơm của vườn nhà.",
+   "crop": "herbs"
+  },
+  {
+   "id": "rau-song",
+   "name": "Rau sống",
+   "description": "Xà lách, rau thơm, chuối bắp ăn kèm cho mát.",
+   "crop": "herbs"
+  },
+  {
+   "id": "rau-ram",
+   "name": "Rau răm",
+   "description": "Lá cay nhẹ, the the, hợp món gà và trứng vịt lộn.",
+   "crop": "herbs"
+  },
+  {
+   "id": "ngo",
+   "name": "Ngò",
+   "description": "Ngò rí hoặc ngò gai, mùi thơm đặc trưng.",
+   "crop": "herbs"
+  },
+  {
+   "id": "hung-que",
+   "name": "Húng quế",
+   "description": "Lá basil thơm ngọt, linh hồn của sốt pesto.",
+   "crop": "herbs"
+  },
+  {
+   "id": "xa-lach",
+   "name": "Xà lách",
+   "description": "Lá xà lách giòn mát.",
+   "crop": "herbs"
+  },
+  {
+   "id": "sa",
+   "name": "Sả",
+   "description": "Sả đập dập cho nước dùng thơm ấm.",
+   "crop": "herbs"
+  },
+  {
+   "id": "la-chanh",
+   "name": "Lá chanh & riềng",
+   "description": "Hương chua thơm đặc trưng của món Thái.",
+   "crop": "herbs"
+  },
+  {
+   "id": "dua-leo",
+   "name": "Dưa leo",
+   "description": "Dưa leo thái lát, giòn và mát.",
+   "crop": null
+  },
+  {
+   "id": "ca-rot",
+   "name": "Cà rốt",
+   "description": "Cà rốt ngọt, giòn — tạo màu cho đĩa.",
+   "crop": null
+  },
+  {
+   "id": "do-chua",
+   "name": "Đồ chua",
+   "description": "Cà rốt, củ cải ngâm chua ngọt.",
+   "crop": null
+  },
+  {
+   "id": "dua-cai",
+   "name": "Dưa cải chua",
+   "description": "Cải muối chua, xào cùng bò cho giòn.",
+   "crop": null
+  },
+  {
+   "id": "mang",
+   "name": "Măng tươi",
+   "description": "Măng luộc kỹ, giòn và hơi đắng nhẹ.",
+   "crop": null
+  },
+  {
+   "id": "bap-cai",
+   "name": "Bắp cải",
+   "description": "Bắp cải thái sợi, giòn ngọt.",
+   "crop": null
+  },
+  {
+   "id": "rau-cai",
+   "name": "Rau cải",
+   "description": "Cải thìa hoặc cải ngọt xào nhanh.",
+   "crop": null
+  },
+  {
+   "id": "bo",
+   "name": "Bơ",
+   "description": "Bơ chín mềm béo ngậy.",
+   "crop": null
+  },
+  {
+   "id": "ca-chua",
+   "name": "Cà chua",
+   "description": "Cà chua chín cho vị chua ngọt và sắc đỏ.",
+   "crop": "tomato"
+  },
+  {
+   "id": "sot-ca-chua",
+   "name": "Sốt cà chua",
+   "description": "Cà chua hầm với tỏi, dầu ô liu và thảo mộc.",
+   "crop": "tomato"
+  },
+  {
+   "id": "dua",
+   "name": "Dứa",
+   "description": "Dứa chín thêm vị chua ngọt nhiệt đới.",
+   "crop": null
+  },
+  {
+   "id": "chanh",
+   "name": "Chanh",
+   "description": "Vắt chanh tươi để món bừng vị.",
+   "crop": null
+  },
+  {
+   "id": "bap-chuoi",
+   "name": "Bắp chuối",
+   "description": "Hoa chuối thái mỏng, giòn chát nhẹ.",
+   "crop": null
+  },
+  {
+   "id": "ot",
+   "name": "Ớt tươi",
+   "description": "Ớt hiểm hoặc ớt sừng thêm độ cay nồng.",
+   "crop": "chili"
+  },
+  {
+   "id": "sa-te",
+   "name": "Sa tế",
+   "description": "Ớt, sả, tỏi phi trong dầu — cay thơm và đỏ au.",
+   "crop": "chili"
+  },
+  {
+   "id": "kimchi",
+   "name": "Kimchi",
+   "description": "Cải thảo muối lên men với ớt bột, chua cay.",
+   "crop": "chili"
+  },
+  {
+   "id": "gochujang",
+   "name": "Tương ớt gochujang",
+   "description": "Tương ớt lên men của Hàn, cay ngọt sâu.",
+   "crop": "chili"
+  },
+  {
+   "id": "nuoc-mam",
+   "name": "Nước mắm pha",
+   "description": "Mắm, đường, chanh, tỏi ớt — chua ngọt cân bằng.",
+   "crop": null
+  },
+  {
+   "id": "mam-tom",
+   "name": "Mắm tôm",
+   "description": "Mắm tôm đánh bông với chanh, đường và ớt.",
+   "crop": null
+  },
+  {
+   "id": "mam-ca",
+   "name": "Mắm cá linh",
+   "description": "Mắm cá lên men đậm đà của miền Tây.",
+   "crop": null
+  },
+  {
+   "id": "nuoc-dung-bo",
+   "name": "Nước dùng bò",
+   "description": "Xương bò ninh với quế, hồi, gừng nướng.",
+   "crop": null
+  },
+  {
+   "id": "nuoc-dung-xuong",
+   "name": "Nước dùng xương",
+   "description": "Xương heo ninh lâu, ngọt thanh.",
+   "crop": null
+  },
+  {
+   "id": "nuoc-dung-ga",
+   "name": "Nước dùng gà",
+   "description": "Gà ninh với gừng, hành nướng, trong và ngọt.",
+   "crop": null
+  },
+  {
+   "id": "nuoc-dung-mam-ruoc",
+   "name": "Nước dùng sả ruốc",
+   "description": "Xương bò, sả và mắm ruốc Huế.",
+   "crop": null
+  },
+  {
+   "id": "nuoc-dung-tom-yum",
+   "name": "Nước dùng tom yum",
+   "description": "Sả, riềng, lá chanh, ớt — chua cay kiểu Thái.",
+   "crop": null
+  },
+  {
+   "id": "nuoc-dung-ramen",
+   "name": "Nước dùng ramen",
+   "description": "Xương heo hoặc gà ninh đục nhiều giờ.",
+   "crop": null
+  },
+  {
+   "id": "dashi",
+   "name": "Nước dùng dashi",
+   "description": "Rong kombu và cá bào katsuobushi, thanh và umami.",
+   "crop": null
+  },
+  {
+   "id": "sot-teriyaki",
+   "name": "Sốt teriyaki",
+   "description": "Nước tương, mirin, đường thắng bóng.",
+   "crop": null
+  },
+  {
+   "id": "ca-ri",
+   "name": "Sốt cà ri",
+   "description": "Hỗn hợp gia vị cà ri hầm sánh.",
+   "crop": null
+  },
+  {
+   "id": "nuoc-cot-dua",
+   "name": "Nước cốt dừa",
+   "description": "Béo ngọt, làm tròn vị cay.",
+   "crop": null
+  },
+  {
+   "id": "pho-mai",
+   "name": "Phô mai",
+   "description": "Phô mai tan chảy kéo sợi.",
+   "crop": null
+  },
+  {
+   "id": "sot-kem",
+   "name": "Sốt kem",
+   "description": "Kem tươi, bơ và phô mai parmesan quyện mịn.",
+   "crop": null
+  },
+  {
+   "id": "pesto",
+   "name": "Sốt pesto",
+   "description": "Húng quế, hạt thông, parmesan, dầu ô liu giã nhuyễn.",
+   "crop": "herbs"
+  },
+  {
+   "id": "sot-bbq",
+   "name": "Sốt BBQ",
+   "description": "Sốt khói ngọt, sánh, phết nhiều lớp khi nướng.",
+   "crop": null
+  },
+  {
+   "id": "sot-me",
+   "name": "Sốt me",
+   "description": "Me chua ngọt, đặc trưng pad thai.",
+   "crop": null
+  },
+  {
+   "id": "bot-thinh",
+   "name": "Thính",
+   "description": "Gạo rang xay, thơm bùi.",
+   "crop": "rice"
+  },
+  {
+   "id": "gia-vi-biryani",
+   "name": "Gia vị biryani",
+   "description": "Nghệ tây, bạch đậu khấu, quế — thơm nồng Ấn Độ.",
+   "crop": null
+  },
+  {
+   "id": "ngu-vi-huong",
+   "name": "Ngũ vị hương",
+   "description": "Quế, hồi, đinh hương, tiêu Tứ Xuyên, thì là.",
+   "crop": null
+  },
+  {
+   "id": "tieu",
+   "name": "Tiêu",
+   "description": "Tiêu xay thơm cay ấm.",
+   "crop": null
+  },
+  {
+   "id": "gung",
+   "name": "Gừng",
+   "description": "Gừng tươi thái sợi, ấm bụng.",
+   "crop": null
+  },
+  {
+   "id": "dau-me",
+   "name": "Dầu mè",
+   "description": "Dầu mè rang thơm béo.",
+   "crop": null
+  },
+  {
+   "id": "nuoc-tuong",
+   "name": "Nước tương",
+   "description": "Tương đậu nành lên men, mặn dịu.",
+   "crop": "bean"
+  },
+  {
+   "id": "banh-trang-me",
+   "name": "Bánh tráng mè",
+   "description": "Bánh tráng nướng rắc mè, bẻ vụn vào tô.",
+   "crop": "rice"
+  }
+ ],
+ "dishes": [
+  {
+   "id": "com-tam",
+   "position": 0,
+   "sourceImageId": 0,
+   "name": "Cơm tấm",
+   "subtitle": "Sườn bì chả • Việt Nam",
+   "price": 45,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "copper",
+   "story": "Khói than sớm mai trên phố Sài Gòn, gạo tấm tơi dưới miếng sườn cháy cạnh.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 3,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/000-com-tam.webp",
+   "thumbnail": "/images/food-reel/thumb/000-com-tam.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-0.webp)",
+   "ingredients": [
+    {
+     "id": "gao-tam"
+    },
+    {
+     "id": "suon-nuong"
+    },
+    {
+     "id": "bi-heo"
+    },
+    {
+     "id": "cha-trung"
+    },
+    {
+     "id": "mo-hanh"
+    },
+    {
+     "id": "nuoc-mam"
+    },
+    {
+     "id": "do-chua"
+    }
+   ]
+  },
+  {
+   "id": "pho-bo",
+   "position": 1,
+   "sourceImageId": 1,
+   "name": "Phở bò",
+   "subtitle": "Tái nạm • Việt Nam",
+   "price": 55,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "amber",
+   "story": "Nồi nước dùng ninh suốt đêm, hương quế hồi dậy lên khi bát phở vừa chan.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 0
+   },
+   "image": "/images/food-reel/full/001-pho-bo.webp",
+   "thumbnail": "/images/food-reel/thumb/001-pho-bo.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-0.webp)",
+   "ingredients": [
+    {
+     "id": "banh-pho"
+    },
+    {
+     "id": "bo-tai"
+    },
+    {
+     "id": "nuoc-dung-bo"
+    },
+    {
+     "id": "hanh-la"
+    },
+    {
+     "id": "ngo"
+    },
+    {
+     "id": "gung"
+    }
+   ]
+  },
+  {
+   "id": "banh-mi",
+   "position": 2,
+   "sourceImageId": 2,
+   "name": "Bánh mì",
+   "subtitle": "Thịt nướng • Việt Nam",
+   "price": 25,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "gold",
+   "story": "Tiếng vỏ bánh vỡ giòn đầu tiên — bữa trưa gói gọn trong lòng bàn tay.",
+   "flavor": {
+    "spicy": 2,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 5
+   },
+   "image": "/images/food-reel/full/002-banh-mi.webp",
+   "thumbnail": "/images/food-reel/thumb/002-banh-mi.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-0.webp)",
+   "ingredients": [
+    {
+     "id": "banh-mi-vo"
+    },
+    {
+     "id": "thit-heo-nuong"
+    },
+    {
+     "id": "pa-te"
+    },
+    {
+     "id": "do-chua"
+    },
+    {
+     "id": "ngo"
+    },
+    {
+     "id": "ot"
+    }
+   ]
+  },
+  {
+   "id": "bun-cha",
+   "position": 3,
+   "sourceImageId": 3,
+   "name": "Bún chả",
+   "subtitle": "Chả nướng • Việt Nam",
+   "price": 50,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "copper",
+   "story": "Làn khói chả quạt tay bay khắp ngõ nhỏ Hà Nội mỗi buổi trưa.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 3,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/003-bun-cha.webp",
+   "thumbnail": "/images/food-reel/thumb/003-bun-cha.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-0.webp)",
+   "ingredients": [
+    {
+     "id": "bun"
+    },
+    {
+     "id": "cha-nuong"
+    },
+    {
+     "id": "nuoc-mam"
+    },
+    {
+     "id": "rau-song"
+    },
+    {
+     "id": "ca-rot"
+    },
+    {
+     "id": "toi"
+    }
+   ]
+  },
+  {
+   "id": "sushi-ca-hoi",
+   "position": 4,
+   "sourceImageId": 4,
+   "name": "Sushi cá hồi",
+   "subtitle": "Cá hồi • Nhật Bản",
+   "price": 150,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ocean",
+   "story": "Lát cá hồi mát lạnh trên nắm cơm dấm — sự tinh giản của bếp Nhật.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 1,
+    "rich": 3,
+    "fresh": 5,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/004-sushi-ca-hoi.webp",
+   "thumbnail": "/images/food-reel/thumb/004-sushi-ca-hoi.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-1.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "ca-hoi"
+    },
+    {
+     "id": "rong-bien"
+    },
+    {
+     "id": "nuoc-tuong"
+    },
+    {
+     "id": "gung"
+    }
+   ]
+  },
+  {
+   "id": "pizza",
+   "position": 5,
+   "sourceImageId": 5,
+   "name": "Pizza",
+   "subtitle": "Phô mai • Ý",
+   "price": 100,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Viền bánh phồng cháy xém và sợi phô mai kéo dài khi vừa rời lò.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/005-pizza.webp",
+   "thumbnail": "/images/food-reel/thumb/005-pizza.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-1.webp)",
+   "ingredients": [
+    {
+     "id": "de-pizza"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "sot-ca-chua"
+    },
+    {
+     "id": "hung-que"
+    }
+   ]
+  },
+  {
+   "id": "ga-ran",
+   "position": 6,
+   "sourceImageId": 6,
+   "name": "Gà rán",
+   "subtitle": "Giòn cay • Quốc tế",
+   "price": 65,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "gold",
+   "story": "Lớp áo giòn rụm vỡ ra, bên trong là thịt gà còn mọng nước.",
+   "flavor": {
+    "spicy": 3,
+    "sweet": 1,
+    "rich": 4,
+    "fresh": 1,
+    "crunchy": 5
+   },
+   "image": "/images/food-reel/full/006-ga-ran.webp",
+   "thumbnail": "/images/food-reel/thumb/006-ga-ran.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-1.webp)",
+   "ingredients": [
+    {
+     "id": "ga-gion"
+    },
+    {
+     "id": "bot-chien"
+    },
+    {
+     "id": "ot"
+    },
+    {
+     "id": "khoai-tay"
+    }
+   ]
+  },
+  {
+   "id": "com-chay",
+   "position": 7,
+   "sourceImageId": 7,
+   "name": "Cơm chay",
+   "subtitle": "Đậu hũ & rau • Việt Nam",
+   "price": 35,
+   "vegetarian": true,
+   "region": "south",
+   "tone": "herb",
+   "story": "Một mâm chay giản dị mà đủ đầy, ăn xong thấy lòng nhẹ tênh.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 2,
+    "fresh": 4,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/007-com-chay.webp",
+   "thumbnail": "/images/food-reel/thumb/007-com-chay.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-1.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "dau-hu"
+    },
+    {
+     "id": "nam"
+    },
+    {
+     "id": "rau-cai"
+    },
+    {
+     "id": "nuoc-tuong"
+    }
+   ]
+  },
+  {
+   "id": "bibimbap",
+   "position": 8,
+   "sourceImageId": 8,
+   "name": "Bibimbap",
+   "subtitle": "Cơm trộn • Hàn Quốc",
+   "price": 85,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Trộn đều tô cơm nóng, lòng đỏ trứng quyện cùng tương ớt đỏ au.",
+   "flavor": {
+    "spicy": 3,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/008-bibimbap.webp",
+   "thumbnail": "/images/food-reel/thumb/008-bibimbap.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-2.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "gochujang"
+    },
+    {
+     "id": "trung"
+    },
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "gia-do"
+    },
+    {
+     "id": "ca-rot"
+    },
+    {
+     "id": "dau-me"
+    }
+   ]
+  },
+  {
+   "id": "com-ga-hoi-an",
+   "position": 9,
+   "sourceImageId": 9,
+   "name": "Cơm gà Hội An",
+   "subtitle": "Món ăn trưa",
+   "price": 45,
+   "vegetarian": false,
+   "region": "central",
+   "tone": "gold",
+   "story": "Cơm vàng hạt nghệ và gà xé phay — hương vị phố cổ bên sông Hoài.",
+   "flavor": {
+    "spicy": 2,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/009-com-ga-hoi-an.webp",
+   "thumbnail": "/images/food-reel/thumb/009-com-ga-hoi-an.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-2.webp)",
+   "ingredients": [
+    {
+     "id": "com-nghe"
+    },
+    {
+     "id": "ga"
+    },
+    {
+     "id": "rau-ram"
+    },
+    {
+     "id": "hanh-tay"
+    },
+    {
+     "id": "ot"
+    }
+   ]
+  },
+  {
+   "id": "bun-bo-hue",
+   "position": 10,
+   "sourceImageId": 10,
+   "name": "Bún bò Huế",
+   "subtitle": "Món ăn trưa",
+   "price": 50,
+   "vegetarian": false,
+   "region": "central",
+   "tone": "crimson",
+   "story": "Sả, ruốc và sa tế — tô bún đỏ au mang cái nồng nàn của đất cố đô.",
+   "flavor": {
+    "spicy": 4,
+    "sweet": 1,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 0
+   },
+   "image": "/images/food-reel/full/010-bun-bo-hue.webp",
+   "thumbnail": "/images/food-reel/thumb/010-bun-bo-hue.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-2.webp)",
+   "ingredients": [
+    {
+     "id": "bun-to"
+    },
+    {
+     "id": "nuoc-dung-mam-ruoc"
+    },
+    {
+     "id": "sa"
+    },
+    {
+     "id": "sa-te"
+    },
+    {
+     "id": "gio-heo"
+    },
+    {
+     "id": "thit-bo"
+    }
+   ]
+  },
+  {
+   "id": "hu-tieu",
+   "position": 11,
+   "sourceImageId": 11,
+   "name": "Hủ tiếu",
+   "subtitle": "Món ăn trưa",
+   "price": 40,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "amber",
+   "story": "Nước dùng trong veo ngọt xương, sợi hủ tiếu dai — bữa sáng quen của người miền Tây.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 3,
+    "rich": 2,
+    "fresh": 4,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/011-hu-tieu.webp",
+   "thumbnail": "/images/food-reel/thumb/011-hu-tieu.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-2.webp)",
+   "ingredients": [
+    {
+     "id": "hu-tieu-soi"
+    },
+    {
+     "id": "nuoc-dung-xuong"
+    },
+    {
+     "id": "tom"
+    },
+    {
+     "id": "thit-bam"
+    },
+    {
+     "id": "hanh-phi"
+    },
+    {
+     "id": "gia-do"
+    }
+   ]
+  },
+  {
+   "id": "mi-quang",
+   "position": 12,
+   "sourceImageId": 12,
+   "name": "Mì Quảng",
+   "subtitle": "Món ăn trưa",
+   "price": 45,
+   "vegetarian": false,
+   "region": "central",
+   "tone": "gold",
+   "story": "Ít nước mà đậm, bẻ bánh tráng mè nghe giòn tan — xứ Quảng trong một tô.",
+   "flavor": {
+    "spicy": 2,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 4
+   },
+   "image": "/images/food-reel/full/012-mi-quang.webp",
+   "thumbnail": "/images/food-reel/thumb/012-mi-quang.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-3.webp)",
+   "ingredients": [
+    {
+     "id": "soi-mi-quang"
+    },
+    {
+     "id": "tom"
+    },
+    {
+     "id": "thit-heo-nuong"
+    },
+    {
+     "id": "dau-phong"
+    },
+    {
+     "id": "banh-trang-me"
+    },
+    {
+     "id": "rau-song"
+    }
+   ]
+  },
+  {
+   "id": "bun-thit-nuong",
+   "position": 13,
+   "sourceImageId": 13,
+   "name": "Bún thịt nướng",
+   "subtitle": "Món ăn trưa",
+   "price": 40,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "copper",
+   "story": "Thịt nướng sả vừa rời bếp than, rưới nước mắm chua ngọt lên bún mát.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 3,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/013-bun-thit-nuong.webp",
+   "thumbnail": "/images/food-reel/thumb/013-bun-thit-nuong.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-3.webp)",
+   "ingredients": [
+    {
+     "id": "bun"
+    },
+    {
+     "id": "thit-heo-nuong"
+    },
+    {
+     "id": "nuoc-mam"
+    },
+    {
+     "id": "dau-phong"
+    },
+    {
+     "id": "rau-song"
+    },
+    {
+     "id": "mo-hanh"
+    }
+   ]
+  },
+  {
+   "id": "banh-cuon",
+   "position": 14,
+   "sourceImageId": 14,
+   "name": "Bánh cuốn",
+   "subtitle": "Món ăn trưa",
+   "price": 35,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "ivory",
+   "story": "Lớp bánh mỏng như lụa tráng trên hơi nước, rắc hành phi thơm lừng.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 2,
+    "fresh": 4,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/014-banh-cuon.webp",
+   "thumbnail": "/images/food-reel/thumb/014-banh-cuon.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-3.webp)",
+   "ingredients": [
+    {
+     "id": "banh-cuon-la"
+    },
+    {
+     "id": "thit-bam"
+    },
+    {
+     "id": "nam"
+    },
+    {
+     "id": "hanh-phi"
+    },
+    {
+     "id": "cha-lua"
+    },
+    {
+     "id": "nuoc-mam"
+    }
+   ]
+  },
+  {
+   "id": "bun-dau-mam-tom",
+   "position": 15,
+   "sourceImageId": 15,
+   "name": "Bún đậu mắm tôm",
+   "subtitle": "Món ăn trưa",
+   "price": 55,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "gold",
+   "story": "Đậu rán vàng giòn chấm mắm tôm sủi bọt — món của những cuộc hẹn đông vui.",
+   "flavor": {
+    "spicy": 2,
+    "sweet": 1,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 4
+   },
+   "image": "/images/food-reel/full/015-bun-dau-mam-tom.webp",
+   "thumbnail": "/images/food-reel/thumb/015-bun-dau-mam-tom.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-3.webp)",
+   "ingredients": [
+    {
+     "id": "bun"
+    },
+    {
+     "id": "dau-hu"
+    },
+    {
+     "id": "mam-tom"
+    },
+    {
+     "id": "cha-lua"
+    },
+    {
+     "id": "rau-thom"
+    },
+    {
+     "id": "dua-leo"
+    }
+   ]
+  },
+  {
+   "id": "com-rang-dua-bo",
+   "position": 16,
+   "sourceImageId": 16,
+   "name": "Cơm rang dưa bò",
+   "subtitle": "Món ăn trưa",
+   "price": 50,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "copper",
+   "story": "Chảo cơm rang lửa lớn, dưa cải chua giòn quyện cùng bò mềm.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/016-com-rang-dua-bo.webp",
+   "thumbnail": "/images/food-reel/thumb/016-com-rang-dua-bo.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-4.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "dua-cai"
+    },
+    {
+     "id": "toi"
+    },
+    {
+     "id": "hanh-la"
+    }
+   ]
+  },
+  {
+   "id": "bo-luc-lac",
+   "position": 17,
+   "sourceImageId": 17,
+   "name": "Bò lúc lắc",
+   "subtitle": "Món ăn trưa",
+   "price": 85,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "copper",
+   "story": "Những khối bò lắc chảo xèo xèo, thơm bơ tỏi và tiêu đen.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 3,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/017-bo-luc-lac.webp",
+   "thumbnail": "/images/food-reel/thumb/017-bo-luc-lac.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-4.webp)",
+   "ingredients": [
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "hanh-tay"
+    },
+    {
+     "id": "toi"
+    },
+    {
+     "id": "xa-lach"
+    },
+    {
+     "id": "ca-chua"
+    },
+    {
+     "id": "tieu"
+    }
+   ]
+  },
+  {
+   "id": "banh-xeo",
+   "position": 18,
+   "sourceImageId": 18,
+   "name": "Bánh xèo",
+   "subtitle": "Món ăn trưa",
+   "price": 50,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "gold",
+   "story": "Tiếng “xèo” khi đổ bột vào chảo nóng, cuốn rau chấm mắm — vui như ngày hội.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 5
+   },
+   "image": "/images/food-reel/full/018-banh-xeo.webp",
+   "thumbnail": "/images/food-reel/thumb/018-banh-xeo.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-4.webp)",
+   "ingredients": [
+    {
+     "id": "banh-xeo-vo"
+    },
+    {
+     "id": "tom"
+    },
+    {
+     "id": "thit-bam"
+    },
+    {
+     "id": "gia-do"
+    },
+    {
+     "id": "rau-song"
+    },
+    {
+     "id": "nuoc-mam"
+    }
+   ]
+  },
+  {
+   "id": "banh-da-cua",
+   "position": 19,
+   "sourceImageId": 19,
+   "name": "Bánh đa cua",
+   "subtitle": "Món ăn trưa",
+   "price": 45,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "amber",
+   "story": "Sợi bánh đa đỏ và riêu cua đồng — hương vị cảng biển Hải Phòng.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/019-banh-da-cua.webp",
+   "thumbnail": "/images/food-reel/thumb/019-banh-da-cua.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-4.webp)",
+   "ingredients": [
+    {
+     "id": "banh-da-do"
+    },
+    {
+     "id": "cua-dong"
+    },
+    {
+     "id": "rau-cai"
+    },
+    {
+     "id": "cha-lua"
+    },
+    {
+     "id": "hanh-phi"
+    }
+   ]
+  },
+  {
+   "id": "mi-xao-bo",
+   "position": 20,
+   "sourceImageId": 20,
+   "name": "Mì xào bò",
+   "subtitle": "Món ăn trưa",
+   "price": 45,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "copper",
+   "story": "Sợi mì xém chảo, bò mềm và cải xanh giòn — nhanh, no, đậm vị.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/020-mi-xao-bo.webp",
+   "thumbnail": "/images/food-reel/thumb/020-mi-xao-bo.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-5.webp)",
+   "ingredients": [
+    {
+     "id": "mi-trung"
+    },
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "rau-cai"
+    },
+    {
+     "id": "toi"
+    },
+    {
+     "id": "ca-rot"
+    }
+   ]
+  },
+  {
+   "id": "bun-ca",
+   "position": 21,
+   "sourceImageId": 21,
+   "name": "Bún cá",
+   "subtitle": "Món ăn trưa",
+   "price": 40,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "ocean",
+   "story": "Chả cá dai ngọt, cá rô chiên giòn trong nước dùng chua nhẹ cà chua.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 2,
+    "fresh": 4,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/021-bun-ca.webp",
+   "thumbnail": "/images/food-reel/thumb/021-bun-ca.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-5.webp)",
+   "ingredients": [
+    {
+     "id": "bun"
+    },
+    {
+     "id": "ca-ro"
+    },
+    {
+     "id": "ca-chua"
+    },
+    {
+     "id": "rau-thom"
+    },
+    {
+     "id": "hanh-la"
+    }
+   ]
+  },
+  {
+   "id": "goi-cuon",
+   "position": 22,
+   "sourceImageId": 22,
+   "name": "Gỏi cuốn",
+   "subtitle": "Món ăn trưa",
+   "price": 35,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "herb",
+   "story": "Cuốn tôm hồng ẩn sau lớp bánh tráng trong — món mát lành của ngày nắng.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 2,
+    "fresh": 5,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/022-goi-cuon.webp",
+   "thumbnail": "/images/food-reel/thumb/022-goi-cuon.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-5.webp)",
+   "ingredients": [
+    {
+     "id": "banh-trang"
+    },
+    {
+     "id": "tom"
+    },
+    {
+     "id": "thit-heo-nuong"
+    },
+    {
+     "id": "bun"
+    },
+    {
+     "id": "rau-song"
+    },
+    {
+     "id": "tuong-den"
+    }
+   ]
+  },
+  {
+   "id": "chao-suon",
+   "position": 23,
+   "sourceImageId": 23,
+   "name": "Cháo sườn",
+   "subtitle": "Món ăn trưa",
+   "price": 25,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "ivory",
+   "story": "Bát cháo sánh mịn và quẩy giòn — hơi ấm của phố cổ lúc sớm mai.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 1,
+    "rich": 3,
+    "fresh": 2,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/023-chao-suon.webp",
+   "thumbnail": "/images/food-reel/thumb/023-chao-suon.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-5.webp)",
+   "ingredients": [
+    {
+     "id": "chao-gao"
+    },
+    {
+     "id": "suon-nuong"
+    },
+    {
+     "id": "hanh-la"
+    },
+    {
+     "id": "tieu"
+    },
+    {
+     "id": "banh-mi-vo"
+    }
+   ]
+  },
+  {
+   "id": "ramen",
+   "position": 24,
+   "sourceImageId": 24,
+   "name": "Ramen",
+   "subtitle": "Món ăn trưa",
+   "price": 100,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "amber",
+   "story": "Nước dùng đục ninh nhiều giờ, trứng lòng đào và lát chashu tan trong miệng.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 5,
+    "fresh": 2,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/024-ramen.webp",
+   "thumbnail": "/images/food-reel/thumb/024-ramen.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-6.webp)",
+   "ingredients": [
+    {
+     "id": "soi-ramen"
+    },
+    {
+     "id": "nuoc-dung-ramen"
+    },
+    {
+     "id": "xa-xiu"
+    },
+    {
+     "id": "trung"
+    },
+    {
+     "id": "hanh-la"
+    },
+    {
+     "id": "rong-bien"
+    }
+   ]
+  },
+  {
+   "id": "udon",
+   "position": 25,
+   "sourceImageId": 25,
+   "name": "Udon",
+   "subtitle": "Món ăn trưa",
+   "price": 85,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "amber",
+   "story": "Sợi udon mềm mập trong nước dashi thanh — sự dịu dàng của bếp Nhật.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 2,
+    "fresh": 4,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/025-udon.webp",
+   "thumbnail": "/images/food-reel/thumb/025-udon.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-6.webp)",
+   "ingredients": [
+    {
+     "id": "soi-udon"
+    },
+    {
+     "id": "dashi"
+    },
+    {
+     "id": "hanh-la"
+    },
+    {
+     "id": "tom"
+    },
+    {
+     "id": "nuoc-tuong"
+    }
+   ]
+  },
+  {
+   "id": "com-ca-ri-nhat",
+   "position": 26,
+   "sourceImageId": 26,
+   "name": "Cơm cà ri Nhật",
+   "subtitle": "Món ăn trưa",
+   "price": 90,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "gold",
+   "story": "Cà ri Nhật sánh ngọt dịu, rưới đầy lên cơm trắng nóng hổi.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 3,
+    "rich": 4,
+    "fresh": 1,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/026-com-ca-ri-nhat.webp",
+   "thumbnail": "/images/food-reel/thumb/026-com-ca-ri-nhat.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-6.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "ca-ri"
+    },
+    {
+     "id": "khoai-tay"
+    },
+    {
+     "id": "ca-rot"
+    },
+    {
+     "id": "ga-gion"
+    }
+   ]
+  },
+  {
+   "id": "tteokbokki",
+   "position": 27,
+   "sourceImageId": 27,
+   "name": "Tteokbokki",
+   "subtitle": "Món ăn trưa",
+   "price": 65,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Thanh bánh gạo dẻo quánh trong sốt đỏ cay ngọt — món ăn vặt đường phố Seoul.",
+   "flavor": {
+    "spicy": 4,
+    "sweet": 3,
+    "rich": 3,
+    "fresh": 1,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/027-tteokbokki.webp",
+   "thumbnail": "/images/food-reel/thumb/027-tteokbokki.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-6.webp)",
+   "ingredients": [
+    {
+     "id": "rice-cake"
+    },
+    {
+     "id": "gochujang"
+    },
+    {
+     "id": "cha-lua"
+    },
+    {
+     "id": "trung"
+    },
+    {
+     "id": "hanh-la"
+    }
+   ]
+  },
+  {
+   "id": "burger-bo",
+   "position": 28,
+   "sourceImageId": 28,
+   "name": "Burger bò",
+   "subtitle": "Món ăn trưa",
+   "price": 65,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "copper",
+   "story": "Miếng bò áp vỉ cháy mặt, phô mai tan chảy giữa hai lớp bánh mềm.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/028-burger-bo.webp",
+   "thumbnail": "/images/food-reel/thumb/028-burger-bo.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-7.webp)",
+   "ingredients": [
+    {
+     "id": "banh-burger"
+    },
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "xa-lach"
+    },
+    {
+     "id": "ca-chua"
+    },
+    {
+     "id": "hanh-tay"
+    }
+   ]
+  },
+  {
+   "id": "mi-y-bo-bam",
+   "position": 29,
+   "sourceImageId": 29,
+   "name": "Mì Ý bò bằm",
+   "subtitle": "Món ăn trưa",
+   "price": 80,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Sốt bò bằm hầm chậm với cà chua — món Ý của những bữa cơm gia đình.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 3,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 0
+   },
+   "image": "/images/food-reel/full/029-mi-y-bo-bam.webp",
+   "thumbnail": "/images/food-reel/thumb/029-mi-y-bo-bam.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-7.webp)",
+   "ingredients": [
+    {
+     "id": "mi-y"
+    },
+    {
+     "id": "thit-bam"
+    },
+    {
+     "id": "sot-ca-chua"
+    },
+    {
+     "id": "hanh-tay"
+    },
+    {
+     "id": "pho-mai"
+    }
+   ]
+  },
+  {
+   "id": "pad-thai",
+   "position": 30,
+   "sourceImageId": 30,
+   "name": "Pad Thai",
+   "subtitle": "Món ăn trưa",
+   "price": 75,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "gold",
+   "story": "Sợi phở xào sốt me chua ngọt, rắc đậu phộng — Bangkok trên chảo gang.",
+   "flavor": {
+    "spicy": 2,
+    "sweet": 4,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/030-pad-thai.webp",
+   "thumbnail": "/images/food-reel/thumb/030-pad-thai.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-7.webp)",
+   "ingredients": [
+    {
+     "id": "banh-pho"
+    },
+    {
+     "id": "tom"
+    },
+    {
+     "id": "sot-me"
+    },
+    {
+     "id": "dau-phong"
+    },
+    {
+     "id": "gia-do"
+    },
+    {
+     "id": "trung"
+    },
+    {
+     "id": "chanh"
+    }
+   ]
+  },
+  {
+   "id": "mi-tom-yum",
+   "position": 31,
+   "sourceImageId": 31,
+   "name": "Mì Tom Yum",
+   "subtitle": "Món ăn trưa",
+   "price": 80,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Chua, cay, thơm lá chanh — tô mì đánh thức mọi giác quan.",
+   "flavor": {
+    "spicy": 5,
+    "sweet": 2,
+    "rich": 2,
+    "fresh": 4,
+    "crunchy": 0
+   },
+   "image": "/images/food-reel/full/031-mi-tom-yum.webp",
+   "thumbnail": "/images/food-reel/thumb/031-mi-tom-yum.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-7.webp)",
+   "ingredients": [
+    {
+     "id": "mi-trung"
+    },
+    {
+     "id": "nuoc-dung-tom-yum"
+    },
+    {
+     "id": "tom"
+    },
+    {
+     "id": "nam"
+    },
+    {
+     "id": "la-chanh"
+    },
+    {
+     "id": "ot"
+    }
+   ]
+  },
+  {
+   "id": "lau-nam-chay",
+   "position": 32,
+   "sourceImageId": 32,
+   "name": "Lẩu nấm chay",
+   "subtitle": "Chay",
+   "price": 120,
+   "vegetarian": true,
+   "region": "south",
+   "tone": "herb",
+   "story": "Nồi lẩu nghi ngút với đủ loại nấm, ngọt thanh từ rau củ.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 2,
+    "fresh": 5,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/032-lau-nam-chay.webp",
+   "thumbnail": "/images/food-reel/thumb/032-lau-nam-chay.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-8.webp)",
+   "ingredients": [
+    {
+     "id": "nam"
+    },
+    {
+     "id": "dau-hu"
+    },
+    {
+     "id": "rau-cai"
+    },
+    {
+     "id": "ca-rot"
+    },
+    {
+     "id": "nuoc-tuong"
+    }
+   ]
+  },
+  {
+   "id": "mi-nam-chay",
+   "position": 33,
+   "sourceImageId": 33,
+   "name": "Mì nấm chay",
+   "subtitle": "Chay",
+   "price": 40,
+   "vegetarian": true,
+   "region": "south",
+   "tone": "herb",
+   "story": "Nấm đông cô ngọt đất trong nước dùng rau củ, nhẹ mà đủ no.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 2,
+    "fresh": 4,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/033-mi-nam-chay.webp",
+   "thumbnail": "/images/food-reel/thumb/033-mi-nam-chay.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-8.webp)",
+   "ingredients": [
+    {
+     "id": "mi-trung"
+    },
+    {
+     "id": "nam"
+    },
+    {
+     "id": "dau-hu"
+    },
+    {
+     "id": "rau-cai"
+    },
+    {
+     "id": "hanh-la"
+    }
+   ]
+  },
+  {
+   "id": "banh-mi-chay",
+   "position": 34,
+   "sourceImageId": 34,
+   "name": "Bánh mì chay",
+   "subtitle": "Chay",
+   "price": 25,
+   "vegetarian": true,
+   "region": "south",
+   "tone": "herb",
+   "story": "Ổ bánh mì giòn với chả chay và đồ chua — chay mà vẫn rộn ràng.",
+   "flavor": {
+    "spicy": 2,
+    "sweet": 2,
+    "rich": 2,
+    "fresh": 4,
+    "crunchy": 5
+   },
+   "image": "/images/food-reel/full/034-banh-mi-chay.webp",
+   "thumbnail": "/images/food-reel/thumb/034-banh-mi-chay.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-8.webp)",
+   "ingredients": [
+    {
+     "id": "banh-mi-vo"
+    },
+    {
+     "id": "dau-hu"
+    },
+    {
+     "id": "cha-chay"
+    },
+    {
+     "id": "do-chua"
+    },
+    {
+     "id": "ngo"
+    },
+    {
+     "id": "ot"
+    }
+   ]
+  },
+  {
+   "id": "goi-cuon-chay",
+   "position": 35,
+   "sourceImageId": 35,
+   "name": "Gỏi cuốn chay",
+   "subtitle": "Chay",
+   "price": 35,
+   "vegetarian": true,
+   "region": "south",
+   "tone": "herb",
+   "story": "Rau xanh và đậu hũ cuộn trong bánh tráng, chấm tương đậu béo bùi.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 1,
+    "fresh": 5,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/035-goi-cuon-chay.webp",
+   "thumbnail": "/images/food-reel/thumb/035-goi-cuon-chay.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-8.webp)",
+   "ingredients": [
+    {
+     "id": "banh-trang"
+    },
+    {
+     "id": "dau-hu"
+    },
+    {
+     "id": "bun"
+    },
+    {
+     "id": "rau-song"
+    },
+    {
+     "id": "tuong-den"
+    }
+   ]
+  },
+  {
+   "id": "com-binh-dan",
+   "position": 36,
+   "sourceImageId": 36,
+   "name": "Cơm bình dân",
+   "subtitle": "Chọn món mặn, rau & canh",
+   "price": 40,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "copper",
+   "story": "Chọn món mặn, rau và canh như bữa cơm nhà giữa ngày làm việc.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/036-com-binh-dan.webp",
+   "thumbnail": "/images/food-reel/thumb/036-com-binh-dan.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "thit-heo-quay"
+    },
+    {
+     "id": "trung"
+    },
+    {
+     "id": "rau-cai"
+    },
+    {
+     "id": "nuoc-mam"
+    }
+   ]
+  },
+  {
+   "id": "com-ga-xoi-mo",
+   "position": 37,
+   "sourceImageId": 39,
+   "name": "Cơm gà xối mỡ",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 55,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "gold",
+   "story": "Da gà xối mỡ giòn rụm, cơm chiên hạt vàng tơi.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 5
+   },
+   "image": "/images/food-reel/full/039-com-ga-xoi-mo.webp",
+   "thumbnail": "/images/food-reel/thumb/039-com-ga-xoi-mo.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "ga-gion"
+    },
+    {
+     "id": "do-chua"
+    },
+    {
+     "id": "nuoc-mam"
+    },
+    {
+     "id": "dua-leo"
+    }
+   ]
+  },
+  {
+   "id": "bun-rieu",
+   "position": 38,
+   "sourceImageId": 42,
+   "name": "Bún riêu",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 45,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "crimson",
+   "story": "Gạch cua nổi vàng trên nước dùng chua thanh — vị quê đồng chiêm trũng.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 2,
+    "fresh": 4,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/042-bun-rieu.webp",
+   "thumbnail": "/images/food-reel/thumb/042-bun-rieu.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "ingredients": [
+    {
+     "id": "bun"
+    },
+    {
+     "id": "cua-dong"
+    },
+    {
+     "id": "ca-chua"
+    },
+    {
+     "id": "dau-hu"
+    },
+    {
+     "id": "mam-tom"
+    },
+    {
+     "id": "rau-song"
+    }
+   ]
+  },
+  {
+   "id": "banh-canh-cua",
+   "position": 39,
+   "sourceImageId": 43,
+   "name": "Bánh canh cua",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 60,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "ocean",
+   "story": "Nước dùng sánh gạch cua, sợi bánh canh dai mềm — món của những ngày mưa.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 0
+   },
+   "image": "/images/food-reel/full/043-banh-canh-cua.webp",
+   "thumbnail": "/images/food-reel/thumb/043-banh-canh-cua.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "ingredients": [
+    {
+     "id": "banh-canh"
+    },
+    {
+     "id": "cua-dong"
+    },
+    {
+     "id": "tom"
+    },
+    {
+     "id": "hanh-la"
+    },
+    {
+     "id": "tieu"
+    }
+   ]
+  },
+  {
+   "id": "bo-ne",
+   "position": 40,
+   "sourceImageId": 44,
+   "name": "Bò né",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 75,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "copper",
+   "story": "Chảo gang nóng rực, bò và trứng kêu xèo xèo — bữa sáng của dân Sài Gòn.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 5,
+    "fresh": 1,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/044-bo-ne.webp",
+   "thumbnail": "/images/food-reel/thumb/044-bo-ne.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "ingredients": [
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "trung"
+    },
+    {
+     "id": "pa-te"
+    },
+    {
+     "id": "hanh-tay"
+    },
+    {
+     "id": "banh-mi-vo"
+    }
+   ]
+  },
+  {
+   "id": "com-ga-teriyaki",
+   "position": 41,
+   "sourceImageId": 45,
+   "name": "Cơm gà teriyaki",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 85,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "copper",
+   "story": "Đùi gà láng bóng sốt teriyaki mặn ngọt trên cơm trắng.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 4,
+    "rich": 3,
+    "fresh": 2,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/045-com-ga-teriyaki.webp",
+   "thumbnail": "/images/food-reel/thumb/045-com-ga-teriyaki.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "ga-nuong"
+    },
+    {
+     "id": "sot-teriyaki"
+    },
+    {
+     "id": "bap-cai"
+    },
+    {
+     "id": "hanh-la"
+    }
+   ]
+  },
+  {
+   "id": "com-heo-chien-xu",
+   "position": 42,
+   "sourceImageId": 46,
+   "name": "Cơm heo chiên xù",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 95,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "gold",
+   "story": "Miếng tonkatsu vàng ruộm, cắn vào nghe rộp cùng bắp cải mát.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 3,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 5
+   },
+   "image": "/images/food-reel/full/046-com-heo-chien-xu.webp",
+   "thumbnail": "/images/food-reel/thumb/046-com-heo-chien-xu.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "bot-chien"
+    },
+    {
+     "id": "thit-heo-nuong"
+    },
+    {
+     "id": "bap-cai"
+    },
+    {
+     "id": "sot-bbq"
+    }
+   ]
+  },
+  {
+   "id": "com-chien-hai-san",
+   "position": 43,
+   "sourceImageId": 47,
+   "name": "Cơm chiên hải sản",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 85,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ocean",
+   "story": "Chảo cơm chiên thơm mùi lửa, hạt nào hạt nấy quyện tôm mực.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 2,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/047-com-chien-hai-san.webp",
+   "thumbnail": "/images/food-reel/thumb/047-com-chien-hai-san.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "hai-san"
+    },
+    {
+     "id": "trung"
+    },
+    {
+     "id": "hanh-la"
+    },
+    {
+     "id": "ca-rot"
+    }
+   ]
+  },
+  {
+   "id": "mi-vit-tiem",
+   "position": 44,
+   "sourceImageId": 48,
+   "name": "Mì vịt tiềm",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 95,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "amber",
+   "story": "Đùi vịt tiềm thuốc bắc mềm rục, thơm ngũ vị — món của người Hoa Chợ Lớn.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 3,
+    "rich": 5,
+    "fresh": 1,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/048-mi-vit-tiem.webp",
+   "thumbnail": "/images/food-reel/thumb/048-mi-vit-tiem.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "ingredients": [
+    {
+     "id": "mi-trung"
+    },
+    {
+     "id": "vit"
+    },
+    {
+     "id": "ngu-vi-huong"
+    },
+    {
+     "id": "rau-cai"
+    },
+    {
+     "id": "nam"
+    }
+   ]
+  },
+  {
+   "id": "kimbap",
+   "position": 45,
+   "sourceImageId": 49,
+   "name": "Kimbap",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 70,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "herb",
+   "story": "Những khoanh cơm cuộn rong biển nhiều màu, gọn gàng cho chuyến dã ngoại.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 2,
+    "fresh": 4,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/049-kimbap.webp",
+   "thumbnail": "/images/food-reel/thumb/049-kimbap.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "rong-bien"
+    },
+    {
+     "id": "trung"
+    },
+    {
+     "id": "ca-rot"
+    },
+    {
+     "id": "dau-me"
+    }
+   ]
+  },
+  {
+   "id": "mi-tron-han-quoc",
+   "position": 46,
+   "sourceImageId": 50,
+   "name": "Mì trộn Hàn Quốc",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 75,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Trộn đều sợi mì với tương ớt đỏ, dưa leo giòn làm dịu vị cay.",
+   "flavor": {
+    "spicy": 4,
+    "sweet": 3,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/050-mi-tron-han-quoc.webp",
+   "thumbnail": "/images/food-reel/thumb/050-mi-tron-han-quoc.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "ingredients": [
+    {
+     "id": "mi-trung"
+    },
+    {
+     "id": "gochujang"
+    },
+    {
+     "id": "trung"
+    },
+    {
+     "id": "dua-leo"
+    },
+    {
+     "id": "dau-me"
+    }
+   ]
+  },
+  {
+   "id": "salad-uc-ga",
+   "position": 47,
+   "sourceImageId": 51,
+   "name": "Salad ức gà",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 85,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "herb",
+   "story": "Ức gà nướng mềm trên nền rau xanh giòn — bữa trưa nhẹ bụng.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 1,
+    "rich": 2,
+    "fresh": 5,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/051-salad-uc-ga.webp",
+   "thumbnail": "/images/food-reel/thumb/051-salad-uc-ga.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "ingredients": [
+    {
+     "id": "ga-nuong"
+    },
+    {
+     "id": "xa-lach"
+    },
+    {
+     "id": "ca-chua"
+    },
+    {
+     "id": "dua-leo"
+    },
+    {
+     "id": "bo"
+    }
+   ]
+  },
+  {
+   "id": "mi-y-sot-kem-bacon",
+   "position": 48,
+   "sourceImageId": 52,
+   "name": "Mì Ý sốt kem bacon",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 115,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ivory",
+   "story": "Sốt kem béo mịn bám từng sợi mì, điểm thịt xông khói giòn.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 5,
+    "fresh": 1,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/052-mi-y-sot-kem-bacon.webp",
+   "thumbnail": "/images/food-reel/thumb/052-mi-y-sot-kem-bacon.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "ingredients": [
+    {
+     "id": "mi-y"
+    },
+    {
+     "id": "sot-kem"
+    },
+    {
+     "id": "bacon"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "tieu"
+    }
+   ]
+  },
+  {
+   "id": "lasagna-bo",
+   "position": 49,
+   "sourceImageId": 53,
+   "name": "Lasagna bò",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 125,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Từng lớp mì, sốt bò và phô mai nướng vàng mặt — ấm như bếp nhà Ý.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 3,
+    "rich": 5,
+    "fresh": 1,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/053-lasagna-bo.webp",
+   "thumbnail": "/images/food-reel/thumb/053-lasagna-bo.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "ingredients": [
+    {
+     "id": "lasagna"
+    },
+    {
+     "id": "thit-bam"
+    },
+    {
+     "id": "sot-ca-chua"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "sot-kem"
+    }
+   ]
+  },
+  {
+   "id": "burger-bo-pho-mai-va-khoai-tay",
+   "position": 50,
+   "sourceImageId": 54,
+   "name": "Burger bò phô mai & khoai tây",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 120,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "gold",
+   "story": "Burger hai tầng phô mai và khoai tây chiên nóng hổi bên cạnh.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 5,
+    "fresh": 1,
+    "crunchy": 4
+   },
+   "image": "/images/food-reel/full/054-burger-bo-pho-mai-va-khoai-tay.webp",
+   "thumbnail": "/images/food-reel/thumb/054-burger-bo-pho-mai-va-khoai-tay.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "ingredients": [
+    {
+     "id": "banh-burger"
+    },
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "khoai-tay"
+    },
+    {
+     "id": "hanh-tay"
+    }
+   ]
+  },
+  {
+   "id": "pizza-pepperoni",
+   "position": 51,
+   "sourceImageId": 55,
+   "name": "Pizza pepperoni",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 120,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Những lát pepperoni cong mép, mỡ ớt đỏ rịn trên nền phô mai.",
+   "flavor": {
+    "spicy": 2,
+    "sweet": 2,
+    "rich": 5,
+    "fresh": 1,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/055-pizza-pepperoni.webp",
+   "thumbnail": "/images/food-reel/thumb/055-pizza-pepperoni.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "ingredients": [
+    {
+     "id": "de-pizza"
+    },
+    {
+     "id": "pepperoni"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "sot-ca-chua"
+    }
+   ]
+  },
+  {
+   "id": "com-bo-gyudon",
+   "position": 52,
+   "sourceImageId": 56,
+   "name": "Cơm bò gyudon",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 110,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "amber",
+   "story": "Bò thái mỏng hầm hành tây ngọt dịu, phủ kín bát cơm nóng.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 3,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 0
+   },
+   "image": "/images/food-reel/full/056-com-bo-gyudon.webp",
+   "thumbnail": "/images/food-reel/thumb/056-com-bo-gyudon.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "hanh-tay"
+    },
+    {
+     "id": "dashi"
+    },
+    {
+     "id": "trung"
+    }
+   ]
+  },
+  {
+   "id": "com-ca-saba-nuong",
+   "position": 53,
+   "sourceImageId": 57,
+   "name": "Cơm cá saba nướng",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 110,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ocean",
+   "story": "Cá saba nướng muối da giòn, thịt béo mềm, vắt chút chanh.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 1,
+    "rich": 4,
+    "fresh": 3,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/057-com-ca-saba-nuong.webp",
+   "thumbnail": "/images/food-reel/thumb/057-com-ca-saba-nuong.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "ca-saba"
+    },
+    {
+     "id": "miso"
+    },
+    {
+     "id": "bap-cai"
+    },
+    {
+     "id": "chanh"
+    }
+   ]
+  },
+  {
+   "id": "mi-soba-nhat",
+   "position": 54,
+   "sourceImageId": 58,
+   "name": "Mì soba Nhật",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 110,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ocean",
+   "story": "Sợi soba mát lạnh chấm nước tsuyu — món giải nhiệt mùa hè Nhật.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 1,
+    "fresh": 5,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/058-mi-soba-nhat.webp",
+   "thumbnail": "/images/food-reel/thumb/058-mi-soba-nhat.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "ingredients": [
+    {
+     "id": "soi-soba"
+    },
+    {
+     "id": "dashi"
+    },
+    {
+     "id": "hanh-la"
+    },
+    {
+     "id": "rong-bien"
+    },
+    {
+     "id": "nuoc-tuong"
+    }
+   ]
+  },
+  {
+   "id": "com-ca-ri-thai",
+   "position": 55,
+   "sourceImageId": 59,
+   "name": "Cơm cà ri Thái",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 110,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "herb",
+   "story": "Cà ri xanh béo nước cốt dừa, cay nồng và thơm lá húng.",
+   "flavor": {
+    "spicy": 4,
+    "sweet": 3,
+    "rich": 4,
+    "fresh": 3,
+    "crunchy": 0
+   },
+   "image": "/images/food-reel/full/059-com-ca-ri-thai.webp",
+   "thumbnail": "/images/food-reel/thumb/059-com-ca-ri-thai.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "ca-ri"
+    },
+    {
+     "id": "nuoc-cot-dua"
+    },
+    {
+     "id": "ga"
+    },
+    {
+     "id": "hung-que"
+    },
+    {
+     "id": "ot"
+    }
+   ]
+  },
+  {
+   "id": "salad-ca-ngu",
+   "position": 56,
+   "sourceImageId": 60,
+   "name": "Salad cá ngừ",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 110,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ocean",
+   "story": "Cá ngừ, trứng và rau giòn — đĩa salad đầy năng lượng.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 1,
+    "rich": 2,
+    "fresh": 5,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/060-salad-ca-ngu.webp",
+   "thumbnail": "/images/food-reel/thumb/060-salad-ca-ngu.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "ingredients": [
+    {
+     "id": "ca-ngu"
+    },
+    {
+     "id": "xa-lach"
+    },
+    {
+     "id": "trung"
+    },
+    {
+     "id": "ca-chua"
+    },
+    {
+     "id": "dua-leo"
+    }
+   ]
+  },
+  {
+   "id": "salad-quinoa-dau-ga",
+   "position": 57,
+   "sourceImageId": 61,
+   "name": "Salad quinoa đậu gà",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 115,
+   "vegetarian": true,
+   "region": "world",
+   "tone": "herb",
+   "story": "Hạt quinoa bùi, đậu gà và rau củ tươi — chay mà no lâu.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 1,
+    "rich": 2,
+    "fresh": 5,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/061-salad-quinoa-dau-ga.webp",
+   "thumbnail": "/images/food-reel/thumb/061-salad-quinoa-dau-ga.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "ingredients": [
+    {
+     "id": "quinoa"
+    },
+    {
+     "id": "dau-ga"
+    },
+    {
+     "id": "dua-leo"
+    },
+    {
+     "id": "ca-chua"
+    },
+    {
+     "id": "bo"
+    },
+    {
+     "id": "chanh"
+    }
+   ]
+  },
+  {
+   "id": "bo-bit-tet",
+   "position": 58,
+   "sourceImageId": 62,
+   "name": "Bò bít tết",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 180,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "copper",
+   "story": "Miếng bít tết áp chảo mặt ngoài sém, bên trong hồng mọng.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 1,
+    "rich": 5,
+    "fresh": 1,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/062-bo-bit-tet.webp",
+   "thumbnail": "/images/food-reel/thumb/062-bo-bit-tet.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "ingredients": [
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "khoai-tay"
+    },
+    {
+     "id": "toi"
+    },
+    {
+     "id": "tieu"
+    },
+    {
+     "id": "xa-lach"
+    }
+   ]
+  },
+  {
+   "id": "ca-hoi-ap-chao",
+   "position": 59,
+   "sourceImageId": 63,
+   "name": "Cá hồi áp chảo",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 190,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ocean",
+   "story": "Da cá hồi giòn tan, thịt cá cam óng còn mọng nước.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 1,
+    "rich": 4,
+    "fresh": 4,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/063-ca-hoi-ap-chao.webp",
+   "thumbnail": "/images/food-reel/thumb/063-ca-hoi-ap-chao.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "ingredients": [
+    {
+     "id": "ca-hoi"
+    },
+    {
+     "id": "khoai-tay"
+    },
+    {
+     "id": "chanh"
+    },
+    {
+     "id": "xa-lach"
+    },
+    {
+     "id": "toi"
+    }
+   ]
+  },
+  {
+   "id": "com-luon-nhat",
+   "position": 60,
+   "sourceImageId": 64,
+   "name": "Cơm lươn Nhật",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 180,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "copper",
+   "story": "Lươn nướng sốt ngọt bóng lớp, phủ trên cơm — món mùa hè của Nhật.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 4,
+    "rich": 4,
+    "fresh": 1,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/064-com-luon-nhat.webp",
+   "thumbnail": "/images/food-reel/thumb/064-com-luon-nhat.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "luon"
+    },
+    {
+     "id": "sot-teriyaki"
+    },
+    {
+     "id": "hanh-la"
+    }
+   ]
+  },
+  {
+   "id": "com-bo-nuong-han",
+   "position": 61,
+   "sourceImageId": 65,
+   "name": "Cơm bò nướng Hàn",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 150,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "copper",
+   "story": "Bò ướp lê và tỏi kiểu bulgogi, nướng thơm lừng kèm kimchi.",
+   "flavor": {
+    "spicy": 3,
+    "sweet": 3,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/065-com-bo-nuong-han.webp",
+   "thumbnail": "/images/food-reel/thumb/065-com-bo-nuong-han.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "bo-nuong"
+    },
+    {
+     "id": "gochujang"
+    },
+    {
+     "id": "kimchi"
+    },
+    {
+     "id": "dau-me"
+    }
+   ]
+  },
+  {
+   "id": "com-ca-hoi-teriyaki",
+   "position": 62,
+   "sourceImageId": 66,
+   "name": "Cơm cá hồi teriyaki",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 150,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ocean",
+   "story": "Cá hồi áp chảo sốt teriyaki óng ánh, béo mềm trên cơm trắng.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 4,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/066-com-ca-hoi-teriyaki.webp",
+   "thumbnail": "/images/food-reel/thumb/066-com-ca-hoi-teriyaki.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "ca-hoi"
+    },
+    {
+     "id": "sot-teriyaki"
+    },
+    {
+     "id": "bap-cai"
+    },
+    {
+     "id": "hanh-la"
+    }
+   ]
+  },
+  {
+   "id": "poke-ca-hoi",
+   "position": 63,
+   "sourceImageId": 67,
+   "name": "Poke cá hồi",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 160,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ocean",
+   "story": "Tô poke Hawaii rực màu: cá hồi tươi, bơ béo và rong biển.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 5,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/067-poke-ca-hoi.webp",
+   "thumbnail": "/images/food-reel/thumb/067-poke-ca-hoi.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "ca-hoi"
+    },
+    {
+     "id": "bo"
+    },
+    {
+     "id": "rong-bien"
+    },
+    {
+     "id": "dua-leo"
+    },
+    {
+     "id": "nuoc-tuong"
+    }
+   ]
+  },
+  {
+   "id": "suon-nuong-bbq",
+   "position": 64,
+   "sourceImageId": 68,
+   "name": "Sườn nướng BBQ",
+   "subtitle": "Kèm cơm hoặc khoai tây • Phần một người",
+   "price": 230,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "copper",
+   "story": "Sườn nướng chậm phết sốt BBQ nhiều lớp, mềm rời khỏi xương.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 4,
+    "rich": 5,
+    "fresh": 1,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/068-suon-nuong-bbq.webp",
+   "thumbnail": "/images/food-reel/thumb/068-suon-nuong-bbq.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "ingredients": [
+    {
+     "id": "suon-nuong"
+    },
+    {
+     "id": "sot-bbq"
+    },
+    {
+     "id": "khoai-tay"
+    },
+    {
+     "id": "bap-cai"
+    }
+   ]
+  },
+  {
+   "id": "pizza-hai-san",
+   "position": 65,
+   "sourceImageId": 69,
+   "name": "Pizza hải sản",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 160,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ocean",
+   "story": "Tôm mực trên nền phô mai nướng — vị biển cả gặp lò nướng Ý.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 3,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/069-pizza-hai-san.webp",
+   "thumbnail": "/images/food-reel/thumb/069-pizza-hai-san.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "ingredients": [
+    {
+     "id": "de-pizza"
+    },
+    {
+     "id": "hai-san"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "sot-ca-chua"
+    },
+    {
+     "id": "hung-que"
+    }
+   ]
+  },
+  {
+   "id": "mi-y-hai-san",
+   "position": 66,
+   "sourceImageId": 70,
+   "name": "Mì Ý hải sản",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 160,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ocean",
+   "story": "Mì Ý xào tỏi và hải sản tươi, thơm mùi rượu vang và húng quế.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/070-mi-y-hai-san.webp",
+   "thumbnail": "/images/food-reel/thumb/070-mi-y-hai-san.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "ingredients": [
+    {
+     "id": "mi-y"
+    },
+    {
+     "id": "hai-san"
+    },
+    {
+     "id": "toi"
+    },
+    {
+     "id": "sot-ca-chua"
+    },
+    {
+     "id": "hung-que"
+    }
+   ]
+  },
+  {
+   "id": "lau-bo-ca-nhan",
+   "position": 67,
+   "sourceImageId": 71,
+   "name": "Lẩu bò cá nhân",
+   "subtitle": "Phần ăn trưa / người",
+   "price": 160,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "amber",
+   "story": "Nồi lẩu nhỏ riêng một người, nhúng bò tái chín tới trong nước dùng sôi.",
+   "flavor": {
+    "spicy": 2,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 3,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/071-lau-bo-ca-nhan.webp",
+   "thumbnail": "/images/food-reel/thumb/071-lau-bo-ca-nhan.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "ingredients": [
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "nuoc-dung-bo"
+    },
+    {
+     "id": "rau-cai"
+    },
+    {
+     "id": "nam"
+    },
+    {
+     "id": "bun"
+    }
+   ]
+  },
+  {
+   "id": "pho-ga",
+   "position": 68,
+   "sourceImageId": 72,
+   "name": "Phở gà",
+   "subtitle": "Tô thường • Việt Nam",
+   "price": 55,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "ivory",
+   "story": "Nước dùng gà trong vắt, sợi lá chanh thơm — thanh tao kiểu Hà thành.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 2,
+    "fresh": 5,
+    "crunchy": 0
+   },
+   "image": "/images/food-reel/full/072-pho-ga.webp",
+   "thumbnail": "/images/food-reel/thumb/072-pho-ga.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "ingredients": [
+    {
+     "id": "banh-pho"
+    },
+    {
+     "id": "ga"
+    },
+    {
+     "id": "nuoc-dung-ga"
+    },
+    {
+     "id": "hanh-la"
+    },
+    {
+     "id": "la-chanh"
+    }
+   ]
+  },
+  {
+   "id": "pho-cuon",
+   "position": 69,
+   "sourceImageId": 73,
+   "name": "Phở cuốn",
+   "subtitle": "Phần 10 cuốn • Việt Nam",
+   "price": 70,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "herb",
+   "story": "Lá phở cuộn bò xào và rau thơm — món sinh ra ở làng Ngũ Xã ven hồ Trúc Bạch.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 2,
+    "fresh": 5,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/073-pho-cuon.webp",
+   "thumbnail": "/images/food-reel/thumb/073-pho-cuon.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "ingredients": [
+    {
+     "id": "banh-pho"
+    },
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "rau-thom"
+    },
+    {
+     "id": "nuoc-mam"
+    },
+    {
+     "id": "toi"
+    }
+   ]
+  },
+  {
+   "id": "bun-moc",
+   "position": 70,
+   "sourceImageId": 74,
+   "name": "Bún mọc",
+   "subtitle": "Tô thường • Việt Nam",
+   "price": 45,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "ivory",
+   "story": "Những viên mọc trắng mềm trong nước dùng xương ngọt thanh.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 2,
+    "fresh": 4,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/074-bun-moc.webp",
+   "thumbnail": "/images/food-reel/thumb/074-bun-moc.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "ingredients": [
+    {
+     "id": "bun"
+    },
+    {
+     "id": "moc"
+    },
+    {
+     "id": "nuoc-dung-xuong"
+    },
+    {
+     "id": "nam"
+    },
+    {
+     "id": "hanh-la"
+    },
+    {
+     "id": "cha-lua"
+    }
+   ]
+  },
+  {
+   "id": "bun-mang-vit",
+   "position": 71,
+   "sourceImageId": 75,
+   "name": "Bún măng vịt",
+   "subtitle": "Tô có thịt vịt • Việt Nam",
+   "price": 60,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "amber",
+   "story": "Vịt luộc thơm gừng, măng giòn sần sật và chén nước mắm gừng cay ấm.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/075-bun-mang-vit.webp",
+   "thumbnail": "/images/food-reel/thumb/075-bun-mang-vit.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "ingredients": [
+    {
+     "id": "bun"
+    },
+    {
+     "id": "vit"
+    },
+    {
+     "id": "mang"
+    },
+    {
+     "id": "gung"
+    },
+    {
+     "id": "hanh-la"
+    },
+    {
+     "id": "nuoc-mam"
+    }
+   ]
+  },
+  {
+   "id": "bun-bo-nam-bo",
+   "position": 72,
+   "sourceImageId": 76,
+   "name": "Bún bò Nam Bộ",
+   "subtitle": "Bún trộn bò • Việt Nam",
+   "price": 60,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "herb",
+   "story": "Tô bún trộn bò xào, đậu phộng và rau sống — món trộn nổi tiếng giữa lòng Hà Nội.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 3,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 4
+   },
+   "image": "/images/food-reel/full/076-bun-bo-nam-bo.webp",
+   "thumbnail": "/images/food-reel/thumb/076-bun-bo-nam-bo.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "ingredients": [
+    {
+     "id": "bun"
+    },
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "dau-phong"
+    },
+    {
+     "id": "hanh-phi"
+    },
+    {
+     "id": "rau-song"
+    },
+    {
+     "id": "nuoc-mam"
+    }
+   ]
+  },
+  {
+   "id": "bun-mam",
+   "position": 73,
+   "sourceImageId": 77,
+   "name": "Bún mắm",
+   "subtitle": "Tô hải sản • Việt Nam",
+   "price": 65,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "ocean",
+   "story": "Nước dùng mắm cá linh đậm đà — tinh thần sông nước miền Tây.",
+   "flavor": {
+    "spicy": 2,
+    "sweet": 1,
+    "rich": 4,
+    "fresh": 3,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/077-bun-mam.webp",
+   "thumbnail": "/images/food-reel/thumb/077-bun-mam.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "ingredients": [
+    {
+     "id": "bun"
+    },
+    {
+     "id": "mam-ca"
+    },
+    {
+     "id": "ca-linh"
+    },
+    {
+     "id": "tom"
+    },
+    {
+     "id": "muc"
+    },
+    {
+     "id": "rau-song"
+    }
+   ]
+  },
+  {
+   "id": "bun-chay",
+   "position": 74,
+   "sourceImageId": 78,
+   "name": "Bún chay",
+   "subtitle": "Đậu hũ & rau • Việt Nam",
+   "price": 35,
+   "vegetarian": true,
+   "region": "south",
+   "tone": "herb",
+   "story": "Bún chay với nấm và đậu hũ, thanh nhẹ như một ngày rằm.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 1,
+    "fresh": 5,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/078-bun-chay.webp",
+   "thumbnail": "/images/food-reel/thumb/078-bun-chay.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "ingredients": [
+    {
+     "id": "bun"
+    },
+    {
+     "id": "dau-hu"
+    },
+    {
+     "id": "nam"
+    },
+    {
+     "id": "rau-cai"
+    },
+    {
+     "id": "hanh-la"
+    }
+   ]
+  },
+  {
+   "id": "banh-canh-gio-heo",
+   "position": 75,
+   "sourceImageId": 79,
+   "name": "Bánh canh giò heo",
+   "subtitle": "Tô thường • Việt Nam",
+   "price": 50,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "ivory",
+   "story": "Giò heo ninh mềm, sợi bánh canh dai — hương vị Trảng Bàng.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/079-banh-canh-gio-heo.webp",
+   "thumbnail": "/images/food-reel/thumb/079-banh-canh-gio-heo.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "ingredients": [
+    {
+     "id": "banh-canh"
+    },
+    {
+     "id": "gio-heo"
+    },
+    {
+     "id": "nuoc-dung-xuong"
+    },
+    {
+     "id": "hanh-phi"
+    },
+    {
+     "id": "tieu"
+    }
+   ]
+  },
+  {
+   "id": "mien-ga",
+   "position": 76,
+   "sourceImageId": 80,
+   "name": "Miến gà",
+   "subtitle": "Tô thường • Việt Nam",
+   "price": 55,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "ivory",
+   "story": "Sợi miến trong và gà xé trong nước dùng ngọt — dịu dàng cho ngày lạnh.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 2,
+    "fresh": 4,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/080-mien-ga.webp",
+   "thumbnail": "/images/food-reel/thumb/080-mien-ga.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "ingredients": [
+    {
+     "id": "mien"
+    },
+    {
+     "id": "ga"
+    },
+    {
+     "id": "nuoc-dung-ga"
+    },
+    {
+     "id": "hanh-la"
+    },
+    {
+     "id": "nam"
+    }
+   ]
+  },
+  {
+   "id": "mien-luon",
+   "position": 77,
+   "sourceImageId": 81,
+   "name": "Miến lươn",
+   "subtitle": "Tô thường • Việt Nam",
+   "price": 65,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "amber",
+   "story": "Lươn chiên giòn rụm rắc lên bát miến nóng, thơm rau răm.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 4
+   },
+   "image": "/images/food-reel/full/081-mien-luon.webp",
+   "thumbnail": "/images/food-reel/thumb/081-mien-luon.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "ingredients": [
+    {
+     "id": "mien"
+    },
+    {
+     "id": "luon"
+    },
+    {
+     "id": "nuoc-dung-xuong"
+    },
+    {
+     "id": "hanh-phi"
+    },
+    {
+     "id": "rau-ram"
+    }
+   ]
+  },
+  {
+   "id": "chao-vit",
+   "position": 78,
+   "sourceImageId": 82,
+   "name": "Cháo vịt",
+   "subtitle": "Phần có thịt vịt • Việt Nam",
+   "price": 55,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "ivory",
+   "story": "Cháo vịt nấu gạo rang thơm, chấm vịt với nước mắm gừng.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/082-chao-vit.webp",
+   "thumbnail": "/images/food-reel/thumb/082-chao-vit.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "ingredients": [
+    {
+     "id": "chao-gao"
+    },
+    {
+     "id": "vit"
+    },
+    {
+     "id": "gung"
+    },
+    {
+     "id": "hanh-la"
+    },
+    {
+     "id": "nuoc-mam"
+    }
+   ]
+  },
+  {
+   "id": "chao-long",
+   "position": 79,
+   "sourceImageId": 83,
+   "name": "Cháo lòng",
+   "subtitle": "Phần có lòng • Việt Nam",
+   "price": 40,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "ivory",
+   "story": "Bát cháo lòng nóng hổi — món quà quê của những sớm mùa đông.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 1,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/083-chao-long.webp",
+   "thumbnail": "/images/food-reel/thumb/083-chao-long.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "ingredients": [
+    {
+     "id": "chao-gao"
+    },
+    {
+     "id": "long-heo"
+    },
+    {
+     "id": "hanh-la"
+    },
+    {
+     "id": "tieu"
+    },
+    {
+     "id": "rau-thom"
+    }
+   ]
+  },
+  {
+   "id": "banh-hoi-heo-quay",
+   "position": 80,
+   "sourceImageId": 84,
+   "name": "Bánh hỏi heo quay",
+   "subtitle": "Một phần • Việt Nam",
+   "price": 50,
+   "vegetarian": false,
+   "region": "central",
+   "tone": "copper",
+   "story": "Vỉ bánh hỏi mảnh mai cùng heo quay da giòn — món đãi khách miền Trung.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 3,
+    "crunchy": 4
+   },
+   "image": "/images/food-reel/full/084-banh-hoi-heo-quay.webp",
+   "thumbnail": "/images/food-reel/thumb/084-banh-hoi-heo-quay.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "ingredients": [
+    {
+     "id": "banh-hoi"
+    },
+    {
+     "id": "thit-heo-quay"
+    },
+    {
+     "id": "mo-hanh"
+    },
+    {
+     "id": "rau-song"
+    },
+    {
+     "id": "nuoc-mam"
+    }
+   ]
+  },
+  {
+   "id": "nem-nuong",
+   "position": 81,
+   "sourceImageId": 85,
+   "name": "Nem nướng",
+   "subtitle": "Phần cuốn đủ bữa • Việt Nam",
+   "price": 55,
+   "vegetarian": false,
+   "region": "central",
+   "tone": "copper",
+   "story": "Nem nướng than hồng, cuốn rau chấm nước sốt sền sệt — đặc sản Nha Trang.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 3,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/085-nem-nuong.webp",
+   "thumbnail": "/images/food-reel/thumb/085-nem-nuong.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "ingredients": [
+    {
+     "id": "nem-thit"
+    },
+    {
+     "id": "banh-trang"
+    },
+    {
+     "id": "rau-song"
+    },
+    {
+     "id": "tuong-den"
+    },
+    {
+     "id": "dua-leo"
+    }
+   ]
+  },
+  {
+   "id": "dimsum",
+   "position": 82,
+   "sourceImageId": 86,
+   "name": "Dimsum",
+   "subtitle": "Khoảng 3 xửng / người",
+   "price": 130,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ivory",
+   "story": "Những xửng tre bốc khói, há cảo trong suốt lộ nhân tôm hồng.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/086-dimsum.webp",
+   "thumbnail": "/images/food-reel/thumb/086-dimsum.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "ingredients": [
+    {
+     "id": "dimsum"
+    },
+    {
+     "id": "tom"
+    },
+    {
+     "id": "thit-bam"
+    },
+    {
+     "id": "nuoc-tuong"
+    },
+    {
+     "id": "gung"
+    }
+   ]
+  },
+  {
+   "id": "mi-hoanh-thanh",
+   "position": 83,
+   "sourceImageId": 87,
+   "name": "Mì hoành thánh",
+   "subtitle": "Tô mì & hoành thánh",
+   "price": 60,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "amber",
+   "story": "Sợi mì vàng dai và hoành thánh mỏng tang — bữa tối quen của phố người Hoa.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/087-mi-hoanh-thanh.webp",
+   "thumbnail": "/images/food-reel/thumb/087-mi-hoanh-thanh.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "ingredients": [
+    {
+     "id": "mi-trung"
+    },
+    {
+     "id": "hoanh-thanh"
+    },
+    {
+     "id": "xa-xiu"
+    },
+    {
+     "id": "rau-cai"
+    },
+    {
+     "id": "nuoc-dung-xuong"
+    }
+   ]
+  },
+  {
+   "id": "mi-bo-dai-loan",
+   "position": 84,
+   "sourceImageId": 88,
+   "name": "Mì bò Đài Loan",
+   "subtitle": "Bò hầm & mì • Đài Loan",
+   "price": 85,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "amber",
+   "story": "Bò hầm thuốc bắc mềm tan, nước dùng nâu sậm — món quốc hồn Đài Loan.",
+   "flavor": {
+    "spicy": 2,
+    "sweet": 2,
+    "rich": 5,
+    "fresh": 2,
+    "crunchy": 0
+   },
+   "image": "/images/food-reel/full/088-mi-bo-dai-loan.webp",
+   "thumbnail": "/images/food-reel/thumb/088-mi-bo-dai-loan.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "ingredients": [
+    {
+     "id": "mi-trung"
+    },
+    {
+     "id": "bo-ham"
+    },
+    {
+     "id": "ngu-vi-huong"
+    },
+    {
+     "id": "rau-cai"
+    },
+    {
+     "id": "ot"
+    }
+   ]
+  },
+  {
+   "id": "mi-xao-gion",
+   "position": 85,
+   "sourceImageId": 89,
+   "name": "Mì xào giòn",
+   "subtitle": "Hải sản & rau củ",
+   "price": 70,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "gold",
+   "story": "Tổ mì chiên giòn rụm, sốt hải sản sánh đổ lên nghe lách tách.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 5
+   },
+   "image": "/images/food-reel/full/089-mi-xao-gion.webp",
+   "thumbnail": "/images/food-reel/thumb/089-mi-xao-gion.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "ingredients": [
+    {
+     "id": "mi-trung"
+    },
+    {
+     "id": "hai-san"
+    },
+    {
+     "id": "rau-cai"
+    },
+    {
+     "id": "ca-rot"
+    },
+    {
+     "id": "nam"
+    }
+   ]
+  },
+  {
+   "id": "com-nieu-singapore",
+   "position": 86,
+   "sourceImageId": 90,
+   "name": "Cơm niêu Singapore",
+   "subtitle": "Một niêu / người",
+   "price": 85,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "copper",
+   "story": "Niêu đất nóng, lớp cơm cháy giòn dưới đáy là phần đáng mong nhất.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 3,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 4
+   },
+   "image": "/images/food-reel/full/090-com-nieu-singapore.webp",
+   "thumbnail": "/images/food-reel/thumb/090-com-nieu-singapore.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "ga"
+    },
+    {
+     "id": "xuc-xich"
+    },
+    {
+     "id": "nuoc-tuong"
+    },
+    {
+     "id": "rau-cai"
+    }
+   ]
+  },
+  {
+   "id": "com-ga-hai-nam",
+   "position": 87,
+   "sourceImageId": 91,
+   "name": "Cơm gà Hải Nam",
+   "subtitle": "Gà luộc & cơm thơm",
+   "price": 75,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ivory",
+   "story": "Gà luộc da vàng, cơm thơm mỡ gà và chén gừng giã — món của Hải Nam và Singapore.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/091-com-ga-hai-nam.webp",
+   "thumbnail": "/images/food-reel/thumb/091-com-ga-hai-nam.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "ingredients": [
+    {
+     "id": "com-nghe"
+    },
+    {
+     "id": "ga"
+    },
+    {
+     "id": "gung"
+    },
+    {
+     "id": "dua-leo"
+    },
+    {
+     "id": "nuoc-tuong"
+    }
+   ]
+  },
+  {
+   "id": "com-ga-trung-nhat",
+   "position": 88,
+   "sourceImageId": 92,
+   "name": "Cơm gà trứng Nhật",
+   "subtitle": "Oyakodon • Nhật Bản",
+   "price": 100,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "gold",
+   "story": "Oyakodon — gà và trứng hầm dashi, lòng trứng còn mềm óng.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 3,
+    "rich": 3,
+    "fresh": 2,
+    "crunchy": 0
+   },
+   "image": "/images/food-reel/full/092-com-ga-trung-nhat.webp",
+   "thumbnail": "/images/food-reel/thumb/092-com-ga-trung-nhat.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "ga"
+    },
+    {
+     "id": "trung"
+    },
+    {
+     "id": "hanh-tay"
+    },
+    {
+     "id": "dashi"
+    }
+   ]
+  },
+  {
+   "id": "com-tempura",
+   "position": 89,
+   "sourceImageId": 93,
+   "name": "Cơm tempura",
+   "subtitle": "Tendon • Nhật Bản",
+   "price": 130,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "gold",
+   "story": "Tôm tempura áo bột mỏng giòn xốp, rưới sốt tendon ngọt mặn.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 3,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 5
+   },
+   "image": "/images/food-reel/full/093-com-tempura.webp",
+   "thumbnail": "/images/food-reel/thumb/093-com-tempura.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "tom"
+    },
+    {
+     "id": "bot-chien"
+    },
+    {
+     "id": "sot-teriyaki"
+    },
+    {
+     "id": "nam"
+    }
+   ]
+  },
+  {
+   "id": "mi-cay-han-quoc",
+   "position": 90,
+   "sourceImageId": 94,
+   "name": "Mì cay Hàn Quốc",
+   "subtitle": "Một tô • Hàn Quốc",
+   "price": 65,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Tô mì đỏ rực với nhiều cấp độ cay — thử thách ai dám húp cạn.",
+   "flavor": {
+    "spicy": 5,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 2,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/094-mi-cay-han-quoc.webp",
+   "thumbnail": "/images/food-reel/thumb/094-mi-cay-han-quoc.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "ingredients": [
+    {
+     "id": "mi-trung"
+    },
+    {
+     "id": "gochujang"
+    },
+    {
+     "id": "kimchi"
+    },
+    {
+     "id": "hai-san"
+    },
+    {
+     "id": "nam"
+    }
+   ]
+  },
+  {
+   "id": "mi-tuong-den",
+   "position": 91,
+   "sourceImageId": 95,
+   "name": "Mì tương đen",
+   "subtitle": "Jajangmyeon • Hàn Quốc",
+   "price": 70,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "amber",
+   "story": "Jajangmyeon sốt tương đen bóng mượt — món ăn của “ngày độc thân” ở Hàn.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 4,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/095-mi-tuong-den.webp",
+   "thumbnail": "/images/food-reel/thumb/095-mi-tuong-den.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "ingredients": [
+    {
+     "id": "mi-trung"
+    },
+    {
+     "id": "tuong-den"
+    },
+    {
+     "id": "thit-bam"
+    },
+    {
+     "id": "hanh-tay"
+    },
+    {
+     "id": "dua-leo"
+    }
+   ]
+  },
+  {
+   "id": "mi-lanh-han-quoc",
+   "position": 92,
+   "sourceImageId": 96,
+   "name": "Mì lạnh Hàn Quốc",
+   "subtitle": "Naengmyeon • Hàn Quốc",
+   "price": 95,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ocean",
+   "story": "Sợi mì lạnh trong nước dùng đá mát rượi — giải nhiệt những trưa hè.",
+   "flavor": {
+    "spicy": 2,
+    "sweet": 3,
+    "rich": 1,
+    "fresh": 5,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/096-mi-lanh-han-quoc.webp",
+   "thumbnail": "/images/food-reel/thumb/096-mi-lanh-han-quoc.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "ingredients": [
+    {
+     "id": "mi-trung"
+    },
+    {
+     "id": "dua-leo"
+    },
+    {
+     "id": "trung"
+    },
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "gochujang"
+    }
+   ]
+  },
+  {
+   "id": "canh-kimchi-kem-com",
+   "position": 93,
+   "sourceImageId": 97,
+   "name": "Canh kimchi kèm cơm",
+   "subtitle": "Kimchi jjigae • Hàn Quốc",
+   "price": 85,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Kimchi lên men lâu ngày nấu thành nồi canh chua cay sôi sùng sục.",
+   "flavor": {
+    "spicy": 4,
+    "sweet": 1,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/097-canh-kimchi-kem-com.webp",
+   "thumbnail": "/images/food-reel/thumb/097-canh-kimchi-kem-com.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "ingredients": [
+    {
+     "id": "kimchi"
+    },
+    {
+     "id": "com"
+    },
+    {
+     "id": "dau-hu"
+    },
+    {
+     "id": "thit-heo-quay"
+    },
+    {
+     "id": "hanh-la"
+    }
+   ]
+  },
+  {
+   "id": "canh-dau-hu-non-kem-com",
+   "position": 94,
+   "sourceImageId": 98,
+   "name": "Canh đậu hũ non kèm cơm",
+   "subtitle": "Sundubu jjigae • Hàn Quốc",
+   "price": 85,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Đậu hũ non tan mềm trong nồi đất đỏ, đập thêm quả trứng khi còn sôi.",
+   "flavor": {
+    "spicy": 4,
+    "sweet": 1,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 0
+   },
+   "image": "/images/food-reel/full/098-canh-dau-hu-non-kem-com.webp",
+   "thumbnail": "/images/food-reel/thumb/098-canh-dau-hu-non-kem-com.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "ingredients": [
+    {
+     "id": "dau-hu-non"
+    },
+    {
+     "id": "com"
+    },
+    {
+     "id": "hai-san"
+    },
+    {
+     "id": "gochujang"
+    },
+    {
+     "id": "trung"
+    }
+   ]
+  },
+  {
+   "id": "ga-pho-mai-han-quoc",
+   "position": 95,
+   "sourceImageId": 99,
+   "name": "Gà phô mai Hàn Quốc",
+   "subtitle": "Phần một người",
+   "price": 120,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Gà sốt cay phủ phô mai kéo sợi — món nhậu đêm của giới trẻ Seoul.",
+   "flavor": {
+    "spicy": 3,
+    "sweet": 3,
+    "rich": 5,
+    "fresh": 1,
+    "crunchy": 4
+   },
+   "image": "/images/food-reel/full/099-ga-pho-mai-han-quoc.webp",
+   "thumbnail": "/images/food-reel/thumb/099-ga-pho-mai-han-quoc.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "ingredients": [
+    {
+     "id": "ga-gion"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "gochujang"
+    },
+    {
+     "id": "hanh-la"
+    }
+   ]
+  },
+  {
+   "id": "com-chien-kimchi",
+   "position": 96,
+   "sourceImageId": 100,
+   "name": "Cơm chiên kimchi",
+   "subtitle": "Kimchi bokkeumbap • Hàn Quốc",
+   "price": 65,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Cơm chiên kimchi chua cay, đỉnh là quả trứng ốp lòng đào.",
+   "flavor": {
+    "spicy": 3,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 2,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/100-com-chien-kimchi.webp",
+   "thumbnail": "/images/food-reel/thumb/100-com-chien-kimchi.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "kimchi"
+    },
+    {
+     "id": "trung"
+    },
+    {
+     "id": "thit-heo-quay"
+    },
+    {
+     "id": "hanh-la"
+    }
+   ]
+  },
+  {
+   "id": "lau-thai-mot-nguoi",
+   "position": 97,
+   "sourceImageId": 101,
+   "name": "Lẩu Thái một người",
+   "subtitle": "Kèm bún hoặc mì",
+   "price": 130,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Nồi lẩu chua cay kiểu Thái riêng một người, thơm sả và lá chanh.",
+   "flavor": {
+    "spicy": 5,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/101-lau-thai-mot-nguoi.webp",
+   "thumbnail": "/images/food-reel/thumb/101-lau-thai-mot-nguoi.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "ingredients": [
+    {
+     "id": "nuoc-dung-tom-yum"
+    },
+    {
+     "id": "hai-san"
+    },
+    {
+     "id": "nam"
+    },
+    {
+     "id": "la-chanh"
+    },
+    {
+     "id": "bun"
+    }
+   ]
+  },
+  {
+   "id": "lau-sukiyaki-mot-nguoi",
+   "position": 98,
+   "sourceImageId": 102,
+   "name": "Lẩu sukiyaki một người",
+   "subtitle": "Thịt, rau & mì • Nhật Bản",
+   "price": 220,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "amber",
+   "story": "Nồi sukiyaki ngọt dịu, nhúng bò mỏng rồi chấm trứng lòng đỏ.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 4,
+    "rich": 4,
+    "fresh": 3,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/102-lau-sukiyaki-mot-nguoi.webp",
+   "thumbnail": "/images/food-reel/thumb/102-lau-sukiyaki-mot-nguoi.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "ingredients": [
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "dashi"
+    },
+    {
+     "id": "nam"
+    },
+    {
+     "id": "dau-hu"
+    },
+    {
+     "id": "rau-cai"
+    },
+    {
+     "id": "trung"
+    }
+   ]
+  },
+  {
+   "id": "ca-ri-an-do-va-naan",
+   "position": 99,
+   "sourceImageId": 103,
+   "name": "Cà ri Ấn Độ & naan",
+   "subtitle": "Cà ri gà kèm bánh naan",
+   "price": 220,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "gold",
+   "story": "Cà ri gà sánh nhiều gia vị, xé bánh naan cháy xém chấm vào.",
+   "flavor": {
+    "spicy": 3,
+    "sweet": 2,
+    "rich": 5,
+    "fresh": 2,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/103-ca-ri-an-do-va-naan.webp",
+   "thumbnail": "/images/food-reel/thumb/103-ca-ri-an-do-va-naan.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "ingredients": [
+    {
+     "id": "ca-ri"
+    },
+    {
+     "id": "ga"
+    },
+    {
+     "id": "naan"
+    },
+    {
+     "id": "sot-kem"
+    },
+    {
+     "id": "ngo"
+    }
+   ]
+  },
+  {
+   "id": "com-biryani",
+   "position": 100,
+   "sourceImageId": 104,
+   "name": "Cơm biryani",
+   "subtitle": "Cơm gia vị & gà • Ấn Độ",
+   "price": 190,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "gold",
+   "story": "Từng lớp cơm basmati và gà ủ gia vị — hương thơm lan cả gian bếp Ấn.",
+   "flavor": {
+    "spicy": 3,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 3,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/104-com-biryani.webp",
+   "thumbnail": "/images/food-reel/thumb/104-com-biryani.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "ingredients": [
+    {
+     "id": "gao-basmati"
+    },
+    {
+     "id": "ga"
+    },
+    {
+     "id": "gia-vi-biryani"
+    },
+    {
+     "id": "hanh-phi"
+    },
+    {
+     "id": "ngo"
+    }
+   ]
+  },
+  {
+   "id": "banh-xeo-nhat",
+   "position": 101,
+   "sourceImageId": 105,
+   "name": "Bánh xèo Nhật",
+   "subtitle": "Okonomiyaki • Nhật Bản",
+   "price": 110,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "gold",
+   "story": "Okonomiyaki — bánh bắp cải áp chảo, vẽ sốt và rắc cá bào nhảy múa.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 3,
+    "rich": 4,
+    "fresh": 3,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/105-banh-xeo-nhat.webp",
+   "thumbnail": "/images/food-reel/thumb/105-banh-xeo-nhat.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "ingredients": [
+    {
+     "id": "bap-cai"
+    },
+    {
+     "id": "bot-chien"
+    },
+    {
+     "id": "hai-san"
+    },
+    {
+     "id": "trung"
+    },
+    {
+     "id": "sot-bbq"
+    }
+   ]
+  },
+  {
+   "id": "sandwich",
+   "position": 102,
+   "sourceImageId": 106,
+   "name": "Sandwich",
+   "subtitle": "Phần bánh kẹp đủ bữa",
+   "price": 80,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ivory",
+   "story": "Chiếc sandwich nướng vàng hai mặt, gọn nhẹ cho trưa bận rộn.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/106-sandwich.webp",
+   "thumbnail": "/images/food-reel/thumb/106-sandwich.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "ingredients": [
+    {
+     "id": "banh-sandwich"
+    },
+    {
+     "id": "ga"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "xa-lach"
+    },
+    {
+     "id": "ca-chua"
+    }
+   ]
+  },
+  {
+   "id": "banh-mi-kebab",
+   "position": 103,
+   "sourceImageId": 107,
+   "name": "Bánh mì kebab",
+   "subtitle": "Doner kebab • Thổ Nhĩ Kỳ",
+   "price": 35,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "copper",
+   "story": "Thịt xoay nướng thái mỏng từ trụ lửa, kẹp cùng rau giòn — gốc Thổ Nhĩ Kỳ.",
+   "flavor": {
+    "spicy": 2,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/107-banh-mi-kebab.webp",
+   "thumbnail": "/images/food-reel/thumb/107-banh-mi-kebab.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "ingredients": [
+    {
+     "id": "pita"
+    },
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "bap-cai"
+    },
+    {
+     "id": "hanh-tay"
+    },
+    {
+     "id": "ot"
+    }
+   ]
+  },
+  {
+   "id": "banh-cuon-ga",
+   "position": 104,
+   "sourceImageId": 108,
+   "name": "Bánh cuộn gà",
+   "subtitle": "Chicken wrap",
+   "price": 95,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ivory",
+   "story": "Cuộn bánh mềm ôm gà giòn và rau tươi, cầm tay đi dạo.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/108-banh-cuon-ga.webp",
+   "thumbnail": "/images/food-reel/thumb/108-banh-cuon-ga.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "ingredients": [
+    {
+     "id": "tortilla"
+    },
+    {
+     "id": "ga-gion"
+    },
+    {
+     "id": "xa-lach"
+    },
+    {
+     "id": "ca-chua"
+    },
+    {
+     "id": "sot-kem"
+    }
+   ]
+  },
+  {
+   "id": "burrito",
+   "position": 105,
+   "sourceImageId": 109,
+   "name": "Burrito",
+   "subtitle": "Cuộn cơm, đậu & thịt • Mexico",
+   "price": 150,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "copper",
+   "story": "Cuộn to tròn đủ cơm, đậu và thịt — một bữa no kiểu Mexico.",
+   "flavor": {
+    "spicy": 2,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 3,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/109-burrito.webp",
+   "thumbnail": "/images/food-reel/thumb/109-burrito.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "ingredients": [
+    {
+     "id": "tortilla"
+    },
+    {
+     "id": "com"
+    },
+    {
+     "id": "dau-den"
+    },
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "bo"
+    }
+   ]
+  },
+  {
+   "id": "taco",
+   "position": 106,
+   "sourceImageId": 110,
+   "name": "Taco",
+   "subtitle": "Phần 3 bánh • Mexico",
+   "price": 150,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Ba chiếc taco với thịt, hành và ngò tươi — vắt chanh rồi ăn liền tay.",
+   "flavor": {
+    "spicy": 3,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/110-taco.webp",
+   "thumbnail": "/images/food-reel/thumb/110-taco.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "ingredients": [
+    {
+     "id": "tortilla"
+    },
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "hanh-tay"
+    },
+    {
+     "id": "ngo"
+    },
+    {
+     "id": "chanh"
+    },
+    {
+     "id": "ot"
+    }
+   ]
+  },
+  {
+   "id": "quesadilla",
+   "position": 107,
+   "sourceImageId": 111,
+   "name": "Quesadilla",
+   "subtitle": "Phô mai & gà • Mexico",
+   "price": 140,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "gold",
+   "story": "Bánh tortilla gập đôi áp chảo, phô mai chảy tràn khi cắt.",
+   "flavor": {
+    "spicy": 2,
+    "sweet": 1,
+    "rich": 5,
+    "fresh": 2,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/111-quesadilla.webp",
+   "thumbnail": "/images/food-reel/thumb/111-quesadilla.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "ingredients": [
+    {
+     "id": "tortilla"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "ga"
+    },
+    {
+     "id": "ot"
+    },
+    {
+     "id": "bo"
+    }
+   ]
+  },
+  {
+   "id": "fish-va-chips",
+   "position": 108,
+   "sourceImageId": 112,
+   "name": "Fish & chips",
+   "subtitle": "Cá chiên & khoai tây",
+   "price": 170,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "gold",
+   "story": "Cá áo bột bia chiên giòn và khoai tây to bản — hương vị bến cảng nước Anh.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 1,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 5
+   },
+   "image": "/images/food-reel/full/112-fish-va-chips.webp",
+   "thumbnail": "/images/food-reel/thumb/112-fish-va-chips.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "ingredients": [
+    {
+     "id": "ca-chien"
+    },
+    {
+     "id": "khoai-tay"
+    },
+    {
+     "id": "chanh"
+    },
+    {
+     "id": "bot-chien"
+    }
+   ]
+  },
+  {
+   "id": "ga-nuong-kem-khoai-tay",
+   "position": 109,
+   "sourceImageId": 113,
+   "name": "Gà nướng kèm khoai tây",
+   "subtitle": "Phần một người",
+   "price": 140,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "copper",
+   "story": "Gà nướng lò thảo mộc da vàng ươm, khoai tây bùi thấm mỡ gà.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 1,
+    "rich": 4,
+    "fresh": 3,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/113-ga-nuong-kem-khoai-tay.webp",
+   "thumbnail": "/images/food-reel/thumb/113-ga-nuong-kem-khoai-tay.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "ingredients": [
+    {
+     "id": "ga-nuong"
+    },
+    {
+     "id": "khoai-tay"
+    },
+    {
+     "id": "toi"
+    },
+    {
+     "id": "hung-que"
+    },
+    {
+     "id": "tieu"
+    }
+   ]
+  },
+  {
+   "id": "mac-va-cheese",
+   "position": 110,
+   "sourceImageId": 114,
+   "name": "Mac & cheese",
+   "subtitle": "Nui phô mai • Phần chính",
+   "price": 150,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ivory",
+   "story": "Nui ngập sốt phô mai nướng xém mặt — món an ủi của mọi lứa tuổi.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 5,
+    "fresh": 1,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/114-mac-va-cheese.webp",
+   "thumbnail": "/images/food-reel/thumb/114-mac-va-cheese.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "ingredients": [
+    {
+     "id": "nui"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "sot-kem"
+    },
+    {
+     "id": "tieu"
+    }
+   ]
+  },
+  {
+   "id": "mi-y-pesto",
+   "position": 111,
+   "sourceImageId": 115,
+   "name": "Mì Ý pesto",
+   "subtitle": "Húng quế & gà • Ý",
+   "price": 170,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "herb",
+   "story": "Sốt pesto xanh mướt thơm húng quế, quyện cùng gà áp chảo.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 1,
+    "rich": 4,
+    "fresh": 5,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/115-mi-y-pesto.webp",
+   "thumbnail": "/images/food-reel/thumb/115-mi-y-pesto.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "ingredients": [
+    {
+     "id": "mi-y"
+    },
+    {
+     "id": "pesto"
+    },
+    {
+     "id": "ga"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "toi"
+    }
+   ]
+  },
+  {
+   "id": "mi-y-ca-hoi",
+   "position": 112,
+   "sourceImageId": 116,
+   "name": "Mì Ý cá hồi",
+   "subtitle": "Sốt kem cá hồi • Ý",
+   "price": 230,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ivory",
+   "story": "Sốt kem mịn và cá hồi hồng — mì Ý cho buổi tối nhẹ nhàng.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 5,
+    "fresh": 3,
+    "crunchy": 0
+   },
+   "image": "/images/food-reel/full/116-mi-y-ca-hoi.webp",
+   "thumbnail": "/images/food-reel/thumb/116-mi-y-ca-hoi.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "ingredients": [
+    {
+     "id": "mi-y"
+    },
+    {
+     "id": "ca-hoi"
+    },
+    {
+     "id": "sot-kem"
+    },
+    {
+     "id": "toi"
+    },
+    {
+     "id": "chanh"
+    }
+   ]
+  },
+  {
+   "id": "com-risotto",
+   "position": 113,
+   "sourceImageId": 117,
+   "name": "Cơm risotto",
+   "subtitle": "Cơm Ý • Phần chính",
+   "price": 260,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "ivory",
+   "story": "Khuấy chậm từng muôi nước dùng cho hạt gạo sánh mịn như kem.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 5,
+    "fresh": 2,
+    "crunchy": 0
+   },
+   "image": "/images/food-reel/full/117-com-risotto.webp",
+   "thumbnail": "/images/food-reel/thumb/117-com-risotto.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "ingredients": [
+    {
+     "id": "gao-arborio"
+    },
+    {
+     "id": "nam"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "sot-kem"
+    },
+    {
+     "id": "hanh-tay"
+    }
+   ]
+  },
+  {
+   "id": "gnocchi",
+   "position": 114,
+   "sourceImageId": 118,
+   "name": "Gnocchi",
+   "subtitle": "Bánh khoai tây kiểu Ý",
+   "price": 250,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Viên gnocchi mềm như gối nhỏ, lăn trong sốt cà chua và húng quế.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 3,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/118-gnocchi.webp",
+   "thumbnail": "/images/food-reel/thumb/118-gnocchi.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "ingredients": [
+    {
+     "id": "gnocchi"
+    },
+    {
+     "id": "sot-ca-chua"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "hung-que"
+    }
+   ]
+  },
+  {
+   "id": "falafel-kem-pita",
+   "position": 115,
+   "sourceImageId": 119,
+   "name": "Falafel kèm pita",
+   "subtitle": "Đậu gà, rau & bánh pita",
+   "price": 150,
+   "vegetarian": true,
+   "region": "world",
+   "tone": "herb",
+   "story": "Viên falafel giòn ngoài, xanh thảo mộc bên trong, kẹp trong pita ấm.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 1,
+    "rich": 3,
+    "fresh": 4,
+    "crunchy": 4
+   },
+   "image": "/images/food-reel/full/119-falafel-kem-pita.webp",
+   "thumbnail": "/images/food-reel/thumb/119-falafel-kem-pita.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "ingredients": [
+    {
+     "id": "falafel"
+    },
+    {
+     "id": "pita"
+    },
+    {
+     "id": "dua-leo"
+    },
+    {
+     "id": "ca-chua"
+    },
+    {
+     "id": "chanh"
+    }
+   ]
+  },
+  {
+   "id": "nui-xao-bo",
+   "position": 116,
+   "sourceImageId": 120,
+   "name": "Nui xào bò",
+   "subtitle": "Nui, bò & rau • Việt Nam",
+   "price": 50,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "crimson",
+   "story": "Nui xào bò sốt cà chua — món “Tây ta” của những quán cơm Sài Gòn.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 3,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/120-nui-xao-bo.webp",
+   "thumbnail": "/images/food-reel/thumb/120-nui-xao-bo.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "ingredients": [
+    {
+     "id": "nui"
+    },
+    {
+     "id": "thit-bo"
+    },
+    {
+     "id": "ca-chua"
+    },
+    {
+     "id": "hanh-tay"
+    },
+    {
+     "id": "toi"
+    }
+   ]
+  },
+  {
+   "id": "chao-ga",
+   "position": 117,
+   "sourceImageId": 121,
+   "name": "Cháo gà",
+   "subtitle": "Gà xé & hành tiêu • Việt Nam",
+   "price": 45,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "ivory",
+   "story": "Cháo gà xé nóng hổi, lá chanh thái chỉ — món chữa lành những ngày mệt.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 1,
+    "rich": 2,
+    "fresh": 3,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/121-chao-ga.webp",
+   "thumbnail": "/images/food-reel/thumb/121-chao-ga.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "ingredients": [
+    {
+     "id": "chao-gao"
+    },
+    {
+     "id": "ga"
+    },
+    {
+     "id": "hanh-la"
+    },
+    {
+     "id": "tieu"
+    },
+    {
+     "id": "gung"
+    }
+   ]
+  },
+  {
+   "id": "bo-kho-banh-mi",
+   "position": 118,
+   "sourceImageId": 122,
+   "name": "Bò kho bánh mì",
+   "subtitle": "Bò hầm & bánh mì • Việt Nam",
+   "price": 65,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "copper",
+   "story": "Bò kho sả và ngũ vị sánh đỏ, chấm ổ bánh mì giòn rụm.",
+   "flavor": {
+    "spicy": 2,
+    "sweet": 3,
+    "rich": 5,
+    "fresh": 2,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/122-bo-kho-banh-mi.webp",
+   "thumbnail": "/images/food-reel/thumb/122-bo-kho-banh-mi.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "ingredients": [
+    {
+     "id": "bo-ham"
+    },
+    {
+     "id": "banh-mi-vo"
+    },
+    {
+     "id": "sa"
+    },
+    {
+     "id": "ca-rot"
+    },
+    {
+     "id": "ngu-vi-huong"
+    }
+   ]
+  },
+  {
+   "id": "xoi-man",
+   "position": 119,
+   "sourceImageId": 123,
+   "name": "Xôi mặn",
+   "subtitle": "Gà, thịt hoặc chả • Việt Nam",
+   "price": 35,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "gold",
+   "story": "Nắm xôi dẻo phủ đủ topping mặn — bữa sáng cầm tay của người đi làm.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 2
+   },
+   "image": "/images/food-reel/full/123-xoi-man.webp",
+   "thumbnail": "/images/food-reel/thumb/123-xoi-man.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "ingredients": [
+    {
+     "id": "xoi-nep"
+    },
+    {
+     "id": "cha-lua"
+    },
+    {
+     "id": "ga"
+    },
+    {
+     "id": "hanh-phi"
+    },
+    {
+     "id": "mo-hanh"
+    }
+   ]
+  },
+  {
+   "id": "banh-mi-chao",
+   "position": 120,
+   "sourceImageId": 124,
+   "name": "Bánh mì chảo",
+   "subtitle": "Trứng, pa tê & xúc xích • Việt Nam",
+   "price": 45,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "copper",
+   "story": "Chảo gang nóng với trứng, pa tê, xúc xích — xé bánh mì chấm là tuyệt.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 5,
+    "fresh": 1,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/124-banh-mi-chao.webp",
+   "thumbnail": "/images/food-reel/thumb/124-banh-mi-chao.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "ingredients": [
+    {
+     "id": "trung"
+    },
+    {
+     "id": "pa-te"
+    },
+    {
+     "id": "xuc-xich"
+    },
+    {
+     "id": "banh-mi-vo"
+    },
+    {
+     "id": "hanh-tay"
+    }
+   ]
+  },
+  {
+   "id": "com-xa-xiu",
+   "position": 121,
+   "sourceImageId": 125,
+   "name": "Cơm xá xíu",
+   "subtitle": "Thịt xá xíu & cơm • Món Hoa",
+   "price": 55,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "copper",
+   "story": "Thịt xá xíu đỏ bóng ngọt thơm — hương vị Chợ Lớn trên đĩa cơm.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 4,
+    "rich": 3,
+    "fresh": 2,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/125-com-xa-xiu.webp",
+   "thumbnail": "/images/food-reel/thumb/125-com-xa-xiu.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "xa-xiu"
+    },
+    {
+     "id": "trung"
+    },
+    {
+     "id": "dua-leo"
+    },
+    {
+     "id": "nuoc-tuong"
+    }
+   ]
+  },
+  {
+   "id": "com-vit-quay",
+   "position": 122,
+   "sourceImageId": 126,
+   "name": "Cơm vịt quay",
+   "subtitle": "Vịt quay & cơm • Món Hoa",
+   "price": 75,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "copper",
+   "story": "Vịt quay da giòn óng mật, thịt thấm ngũ vị hương.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 3,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 3
+   },
+   "image": "/images/food-reel/full/126-com-vit-quay.webp",
+   "thumbnail": "/images/food-reel/thumb/126-com-vit-quay.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "ingredients": [
+    {
+     "id": "com"
+    },
+    {
+     "id": "vit"
+    },
+    {
+     "id": "ngu-vi-huong"
+    },
+    {
+     "id": "dua-leo"
+    },
+    {
+     "id": "nuoc-tuong"
+    }
+   ]
+  },
+  {
+   "id": "mi-xa-xiu",
+   "position": 123,
+   "sourceImageId": 127,
+   "name": "Mì xá xíu",
+   "subtitle": "Mì trứng & thịt xá xíu • Món Hoa",
+   "price": 55,
+   "vegetarian": false,
+   "region": "south",
+   "tone": "amber",
+   "story": "Mì trứng dai cùng xá xíu ngọt thơm — tô mì quen của người Hoa Sài Gòn.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 3,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/127-mi-xa-xiu.webp",
+   "thumbnail": "/images/food-reel/thumb/127-mi-xa-xiu.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "ingredients": [
+    {
+     "id": "mi-trung"
+    },
+    {
+     "id": "xa-xiu"
+    },
+    {
+     "id": "rau-cai"
+    },
+    {
+     "id": "hanh-la"
+    },
+    {
+     "id": "nuoc-dung-xuong"
+    }
+   ]
+  },
+  {
+   "id": "mi-udon-xao",
+   "position": 124,
+   "sourceImageId": 128,
+   "name": "Mì udon xào",
+   "subtitle": "Hải sản & rau • Nhật Bản",
+   "price": 110,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "amber",
+   "story": "Yaki udon — sợi mì mập xào chảo lớn với hải sản và rau.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 3,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/128-mi-udon-xao.webp",
+   "thumbnail": "/images/food-reel/thumb/128-mi-udon-xao.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "ingredients": [
+    {
+     "id": "soi-udon"
+    },
+    {
+     "id": "hai-san"
+    },
+    {
+     "id": "bap-cai"
+    },
+    {
+     "id": "nuoc-tuong"
+    },
+    {
+     "id": "ca-rot"
+    }
+   ]
+  },
+  {
+   "id": "burger-ga-va-khoai-tay",
+   "position": 125,
+   "sourceImageId": 129,
+   "name": "Burger gà & khoai tây",
+   "subtitle": "Gà giòn & khoai tây • Quốc tế",
+   "price": 80,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "gold",
+   "story": "Miếng gà giòn rụm trong bánh burger mềm, khoai tây chiên bên cạnh.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 4,
+    "fresh": 2,
+    "crunchy": 5
+   },
+   "image": "/images/food-reel/full/129-burger-ga-va-khoai-tay.webp",
+   "thumbnail": "/images/food-reel/thumb/129-burger-ga-va-khoai-tay.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "ingredients": [
+    {
+     "id": "banh-burger"
+    },
+    {
+     "id": "ga-gion"
+    },
+    {
+     "id": "xa-lach"
+    },
+    {
+     "id": "khoai-tay"
+    },
+    {
+     "id": "sot-kem"
+    }
+   ]
+  },
+  {
+   "id": "mi-y-sot-ca-chua-va-pho-mai",
+   "position": 126,
+   "sourceImageId": 130,
+   "name": "Mì Ý sốt cà chua & phô mai",
+   "subtitle": "Cà chua & mascarpone • Ý",
+   "price": 170,
+   "vegetarian": false,
+   "region": "world",
+   "tone": "crimson",
+   "story": "Sốt cà chua với mascarpone béo mịn — giản dị mà trọn vị Ý.",
+   "flavor": {
+    "spicy": 0,
+    "sweet": 3,
+    "rich": 4,
+    "fresh": 3,
+    "crunchy": 0
+   },
+   "image": "/images/food-reel/full/130-mi-y-sot-ca-chua-va-pho-mai.webp",
+   "thumbnail": "/images/food-reel/thumb/130-mi-y-sot-ca-chua-va-pho-mai.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "ingredients": [
+    {
+     "id": "mi-y"
+    },
+    {
+     "id": "sot-ca-chua"
+    },
+    {
+     "id": "pho-mai"
+    },
+    {
+     "id": "hung-que"
+    },
+    {
+     "id": "toi"
+    }
+   ]
+  },
+  {
+   "id": "mien-xao",
+   "position": 127,
+   "sourceImageId": 131,
+   "name": "Miến xào",
+   "subtitle": "Thịt & rau • Việt Nam",
+   "price": 55,
+   "vegetarian": false,
+   "region": "north",
+   "tone": "amber",
+   "story": "Miến xào tơi sợi với mộc nhĩ và rau củ — món của những mâm cỗ Tết.",
+   "flavor": {
+    "spicy": 1,
+    "sweet": 2,
+    "rich": 3,
+    "fresh": 3,
+    "crunchy": 1
+   },
+   "image": "/images/food-reel/full/131-mien-xao.webp",
+   "thumbnail": "/images/food-reel/thumb/131-mien-xao.webp",
+   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "ingredients": [
+    {
+     "id": "mien"
+    },
+    {
+     "id": "thit-bam"
+    },
+    {
+     "id": "nam"
+    },
+    {
+     "id": "ca-rot"
+    },
+    {
+     "id": "hanh-la"
+    }
+   ]
+  }
+ ]
+}

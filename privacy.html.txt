@@ -1,0 +1,78 @@
+`n
+`n
+`n
+ `n
+ `n
+ `nChính sách quyền riêng tư — Trưa Nay Ăn Gì`n
+ `n
+ `n
+ `n
+ `n
+`n
+`n
+ `nĐến nội dung chính`n
+ `n`n← Trưa Nay Ăn Gì`n`n`nQuyền riêng tư`n`nĐiều khoản`n`n`n
+ `n
+ `nThông tin & hỗ trợ`n
+ `nChính sách quyền riêng tư`n
+`nBạn có thể chọn món mà không cần đăng nhập. Chính sách này giải thích dữ liệu được xử lý khi sử dụng truanayangi.com và cách quản lý dữ liệu đó.`n
+ `nCập nhật ngày `n10/09/2026`n`n
+ `n
+ `n`nĐăng nhập là tùy chọn.`n Tài khoản giúp lưu danh sách món, lựa chọn và lịch sử của bạn.`n
+ `n`nBạn quyết định quyền vị trí.`n Từ chối vị trí vẫn có thể quay; nếu đã đăng nhập và cấp quyền, vị trí có thể được lưu cùng lượt quay.`n
+ `n`nCần hỗ trợ về dữ liệu?`n Viết cho `ncontact@truanayangi.com`n.`n
+ `n
+ `n`nDữ liệu & mục đích`n`nVị trí`n`nLưu trữ`n`nBên tiếp nhận`n`nQuyền của bạn`n`n
+ `n
+ `n1. Dữ liệu chúng tôi xử lý`n
+ `n
+ `n`nTài khoản`n`nKhi bạn đăng nhập bằng Google, chúng tôi nhận mã tài khoản, tên và email đã xác minh. Với Facebook hoặc TikTok khi phương thức đó được bật, chúng tôi nhận mã tài khoản trong ứng dụng và tên hiển thị. Dữ liệu dùng để xác thực và lưu thông tin riêng của bạn. Các phương thức đăng nhập không tự động gộp tài khoản theo email. Ứng dụng không yêu cầu đọc Gmail, Drive, danh bạ, danh sách bạn bè hay đăng nội dung thay bạn.`n`n
+ `n`nLựa chọn & lịch sử`n`nVới tài khoản đã đăng nhập, chúng tôi lưu món tự thêm, món bị tắt, lựa chọn vòng quay và lịch sử kết quả, gồm món, thời điểm, ngân sách, bộ lọc và phiên bản danh sách món. Dữ liệu giúp khôi phục lựa chọn, xem lại kết quả và xử lý lỗi đồng bộ. Vị trí đi kèm được mô tả riêng bên dưới.`n`n
+ `n`nLượt sử dụng`n`nWebsite ghi nhận lượt quay hoàn tất để cập nhật bộ đếm. Khi bạn bấm Google Maps, GrabFood hoặc ShopeeFood sau lượt quay, chúng tôi lưu mã sự kiện và lượt quay, nền tảng, mã món công khai hoặc nhãn “custom”, phiên bản danh mục, vị trí nút trên giao diện, loại đích web/app và thời gian. Dữ liệu dùng để hiểu lựa chọn dịch vụ và kiểm tra hoạt động liên kết. Lượt bấm của người đã đăng nhập gắn với tài khoản và có thể đối chiếu với lịch sử; lượt bấm của khách không gắn với tài khoản. Sự kiện bấm không chứa thêm tọa độ hay tên, mã riêng của món tự tạo.`n`n
+ `n`nThông tin kỹ thuật`n`nHạ tầng website có thể xử lý địa chỉ IP, thông tin trình duyệt, yêu cầu truy cập và nhật ký lỗi để truyền tải nội dung, bảo vệ dịch vụ và khắc phục sự cố. Sử dụng dưới dạng khách không đồng nghĩa với hoàn toàn không có dữ liệu kỹ thuật.`n`n
+ `n`nThông tin liên hệ`n`nNếu bạn gửi email, chúng tôi xử lý địa chỉ email và nội dung bạn cung cấp để trả lời, hỗ trợ hoặc giải quyết yêu cầu. Không gửi mật khẩu, mã xác thực hay thông tin nhạy cảm không cần thiết.`n`n
+ `n
+ `nBộ đếm và lượt bấm là sự kiện do trình duyệt báo về; không phải số người dùng duy nhất, đơn hàng hay xác nhận ứng dụng bên ngoài đã mở thành công.`n
+ `n
+ `n
+ `n2. Vị trí và lựa chọn của bạn`n
+ `n`nVị trí chính xác là dữ liệu cá nhân nhạy cảm.`n Website có thể yêu cầu vị trí khi bạn quay hoặc tìm quán. Nếu quyền đã được cấp trước đó, trình duyệt có thể cung cấp lại vị trí khi bạn mở hoặc quay lại trang mà không hỏi thêm.`n
+ `nVới người đã đăng nhập và cho phép vị trí, tọa độ, độ chính xác và thời điểm xác định được lưu cùng lịch sử lượt quay trên máy chủ; dữ liệu cũng có thể nằm trong hàng đợi trên thiết bị khi chưa đồng bộ. Với khách, tọa độ được dùng tạm trong trang, không lưu vào lịch sử tài khoản hoặc sự kiện bấm dịch vụ.`n
+ `nBạn có thể từ chối hoặc thu hồi quyền trong cài đặt website của trình duyệt. Lượt quay vẫn hoạt động; kết quả tìm quán gần bạn có thể kém phù hợp hơn. Khi không lấy được vị trí, lịch sử tài khoản chỉ ghi trạng thái tương ứng. Thu hồi quyền ngăn những lần truy cập vị trí tiếp theo, không tự xóa dữ liệu đã lưu.`n
+ `nKhi bạn mở Google Maps, tọa độ có thể được đưa vào liên kết tìm kiếm và gửi cho Google. Khu vực ShopeeFood được suy ra trên thiết bị; khi không xác định được, liên kết có thể mở trang chủ. Dịch vụ đặt món quản lý địa chỉ giao hàng và quyền vị trí riêng.`n
+ `n
+ `n`nYêu cầu chờ gửi khi mất kết nối`n`nNếu máy chủ chưa nhận được góp ý món ăn, thiết bị có thể giữ tối đa 5 yêu cầu chờ gửi cho mỗi tài khoản, gồm tên món, giá, mã món cần sửa và mã chống trùng. Website tự thử gửi lại sau khi xác nhận đúng tài khoản. Yêu cầu chỉ trở thành ticket trên máy chủ khi gửi thành công; bạn có thể xóa yêu cầu chưa gửi tại trang góp ý của mình.`n`n`n`nDữ liệu sử dụng để cải thiện trải nghiệm`n`nWebsite ghi nhận việc mở và chọn theme, bắt đầu/kết thúc lượt chơi, lỗi lượt chơi, mở danh sách món, tìm kiếm, lọc, xem món, mở liên kết tìm quán và sử dụng nút chia sẻ. Dữ liệu gồm mã sự kiện, thời gian, mã trình duyệt và phiên truy cập, theme, nguồn truy cập, mã món và lựa chọn bộ lọc. Nếu đang đăng nhập, sự kiện có thể gắn với mã tài khoản đã được máy chủ xác thực. Chúng tôi không ghi nội dung từ khóa tìm kiếm, chỉ ghi độ dài và số kết quả, và không dùng fingerprint để nối thiết bị.`n`nĐể hiểu mức sử dụng theo khu vực, máy chủ ghi quốc gia và tỉnh/thành ước lượng từ IP do Cloudflare cung cấp khi nhận sự kiện. Sự kiện analytics không lưu IP hoặc tọa độ GPS cho mục đích này. Vị trí này có thể sai do mạng di động, VPN hoặc dữ liệu địa lý, và không xác định nơi cư trú. Portal nội bộ chỉ hiển thị số liệu tổng hợp.`n`nSự kiện chờ gửi được lưu trên thiết bị tối đa 30 ngày, tối đa 1.000 sự kiện. Khi kết nối phục hồi, website tự thử gửi lại. Dữ liệu chi tiết trên máy chủ được giữ 90 ngày rồi chuyển thành thống kê tổng hợp không chứa mã người dùng hoặc trình duyệt. Xóa dữ liệu website sẽ xóa bản lưu trên thiết bị, bao gồm những sự kiện chưa gửi.`n`n
+ `n
+ `n3. Cookie và thời gian lưu trữ`n
+ `n`nBộ sưu tập Duyên Vị:`n với khách, nhân vật đã mở và số lần gặp được lưu trong trình duyệt này. Khi đăng nhập, bộ sưu tập của tài khoản được lưu trên máy chủ và có bản lưu cùng hàng đợi đồng bộ trên thiết bị, tách riêng theo tài khoản. Việc nhập nhân vật của khách vào tài khoản cần thao tác chủ động; lịch sử quay cũ không tự chuyển thành nhân vật. Máy chủ lưu mã món, số lần gặp, thời điểm ghi nhận và mã lượt quay chống trùng cho đến khi xóa tài khoản. Xóa dữ liệu tài khoản cũng xóa bộ sưu tập và mã chống trùng liên quan trên máy chủ, đồng thời dọn bản lưu tài khoản trên trình duyệt đang dùng. Bộ sưu tập khách độc lập vẫn còn cho đến khi bạn xóa dữ liệu website.`n
+ `n
+ `n`nPhiên đăng nhập:`n cookie phiên có thời hạn tối đa 30 ngày; cookie tạm cũng được dùng để bảo vệ quá trình đăng nhập. Bạn có thể đăng xuất hoặc xóa cookie trong trình duyệt.`n
+ `n`nTrên thiết bị:`n ngôn ngữ được lưu trong trình duyệt. Một số lựa chọn chỉ tồn tại trong trang; không phải mọi bộ lọc đều được nhớ sau khi tải lại.`n
+ `n`nLượt quay chờ đồng bộ:`n lưu theo tài khoản trên thiết bị để gửi lại. Hàng đợi này hiện chưa có thời hạn tự hết hiệu lực; dữ liệu được gỡ khi gửi thành công, khi xóa dữ liệu tài khoản trên thiết bị đó hoặc khi bạn xóa dữ liệu website.`n
+ `n`nLượt bấm chờ đồng bộ:`n được đánh dấu hết hạn sau 7 ngày, giữ tối đa 50 sự kiện. Sự kiện hết hạn được dọn khi website xử lý hàng đợi; nếu bạn không mở lại website, dữ liệu có thể còn trên thiết bị đến khi bị dọn hoặc bạn xóa dữ liệu website.`n
+ `n`nTrên máy chủ:`n danh sách món và lịch sử tài khoản được giữ để bạn sử dụng lại, cho đến khi được xóa. Lịch sử không tự mất sau 50 lượt. Hiện chưa có thời hạn tự xóa chung cho toàn bộ lịch sử, sự kiện sử dụng và nhật ký vận hành.`n
+ `n
+ `nĐăng xuất hoặc xóa dữ liệu trình duyệt không đồng nghĩa với xóa tài khoản trên máy chủ. Ngược lại, xóa tài khoản không tự dọn mọi trình duyệt và thiết bị bạn từng dùng.`n
+ `n
+ `n
+ `n4. Bên tiếp nhận và bảo vệ dữ liệu`n
+ `nNhóm vận hành Trưa Nay Ăn Gì xử lý dữ liệu để cung cấp và hỗ trợ dịch vụ. Google Cloud cung cấp hạ tầng máy chủ và cơ sở dữ liệu; Cloudflare cung cấp kết nối, phân phối nội dung và bảo vệ website. Cơ sở dữ liệu ứng dụng được cấu hình tại Singapore; các nhà cung cấp có thể xử lý dữ liệu tại những quốc gia khác theo hệ thống của họ.`n
+ `nNhà cung cấp đăng nhập xử lý thông tin theo chính sách riêng. Khi bạn chủ động mở liên kết bên ngoài, dịch vụ đích nhận thông tin cần cho liên kết, như tên món tìm kiếm, tọa độ nếu có và nhãn nguồn truanayangi.com; trình duyệt cũng có thể gửi tên miền giới thiệu. Bạn nên xem chính sách của dịch vụ đó trước khi đăng nhập hoặc đặt món.`n
+ `nChúng tôi có thể cung cấp dữ liệu khi có nghĩa vụ pháp lý hoặc yêu cầu hợp lệ của cơ quan có thẩm quyền. Biện pháp bảo vệ bao gồm kết nối HTTPS, cookie phiên hạn chế truy cập từ mã trong trang và kiểm soát truy cập tài khoản. Không có phương thức lưu trữ hay truyền tải nào bảo đảm an toàn tuyệt đối.`n
+ `n
+ `n
+ `n5. Quản lý và yêu cầu xóa dữ liệu`n
+ `nTrong `n“Danh sách món của tôi” → “Xóa dữ liệu cá nhân”`n, bạn có thể yêu cầu xóa tài khoản, liên kết đăng nhập, phiên, danh sách món, lựa chọn đã lưu, lịch sử và lượt bấm dịch vụ gắn với tài khoản trong cơ sở dữ liệu đang hoạt động. Khi thao tác thành công, hàng đợi của tài khoản trên trình duyệt đang dùng cũng được dọn.`n
+ `nSố lượt tổng hợp, mã sự kiện chống ghi trùng không còn liên kết tài khoản và sự kiện của khách có thể được giữ lại. Dữ liệu trong nhật ký hoặc bản sao lưu có thể còn đến khi hết thời hạn lưu trữ tương ứng; xóa tài khoản không có nghĩa là mọi bản sao được xóa ngay lập tức. Bạn nên xóa dữ liệu website trên các thiết bị khác nếu muốn dọn bản lưu cục bộ.`n
+ `nBạn cũng có thể yêu cầu được biết, truy cập, chỉnh sửa, cung cấp hoặc xóa dữ liệu; rút lại sự đồng ý, hạn chế hoặc phản đối việc xử lý; hoặc khiếu nại theo pháp luật áp dụng. Gửi email đến `ncontact@truanayangi.com`n, mô tả yêu cầu và phương thức đăng nhập đã dùng. Chúng tôi có thể cần thông tin phù hợp để xác minh quyền đối với tài khoản.`n
+ `nYêu cầu được phản hồi và xử lý theo thời hạn pháp luật áp dụng. Nếu không thể thực hiện đầy đủ hoặc cần thêm thời gian theo quy định, chúng tôi sẽ giải thích lý do. Một số yêu cầu có thể làm hạn chế tính năng tài khoản; bạn vẫn có thể quay dưới dạng khách.`n
+ `n
+ `n
+ `n6. Thay đổi chính sách`n
+ `nChính sách có thể được cập nhật khi dịch vụ hoặc cách xử lý dữ liệu thay đổi. Ngày cập nhật được ghi ở đầu trang. Với thay đổi cần thông báo hoặc xin lại sự đồng ý theo pháp luật, chúng tôi sẽ thực hiện yêu cầu đó; việc tiếp tục sử dụng website không thay thế sự đồng ý cần thiết.`n
+ `n
+ `n`n`nLiên hệ nhóm vận hành Trưa Nay Ăn Gì`n`n`nThắc mắc về chính sách hoặc yêu cầu liên quan đến dữ liệu: `ncontact@truanayangi.com`n.`n`n
+ `n
+ `n`nTrưa Nay Ăn Gì`n`n`nQuyền riêng tư`n`nĐiều khoản`n`nLiên hệ`n`n`n
+`n
+`n

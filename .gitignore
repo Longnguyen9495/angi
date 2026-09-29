@@ -1,0 +1,12 @@
+node_modules
+dist
+*.local
+.vite
+.tmp-*
+
+.env
+storage/uploads/*
+!storage/uploads/.gitkeep
+
+backups/
+*.log

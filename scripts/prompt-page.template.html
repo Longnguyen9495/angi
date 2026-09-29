@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Food Reel Prompt Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+/>
+<style>
+  :root {
+    --bg: #f3f1ec;
+    --panel: #fbfaf7;
+    --ink: #22201c;
+    --muted: #6d675d;
+    --line: #dfdad0;
+    --accent: #1f6b52;
+    --accent-ink: #ffffff;
+    --accent-soft: #dcebe4;
+    --done: #8a8378;
+    --focus: #1f6b52;
+    --sans: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      --bg: #151513;
+      --panel: #1d1c19;
+      --ink: #efebe3;
+      --muted: #a39c90;
+      --line: #34322d;
+      --accent: #5fb895;
+      --accent-ink: #0f1a15;
+      --accent-soft: #1f3129;
+      --done: #7d776c;
+      --focus: #5fb895;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme='dark'] {
+    --bg: #151513;
+    --panel: #1d1c19;
+    --ink: #efebe3;
+    --muted: #a39c90;
+    --line: #34322d;
+    --accent: #5fb895;
+    --accent-ink: #0f1a15;
+    --accent-soft: #1f3129;
+    --done: #7d776c;
+    --focus: #5fb895;
+    color-scheme: dark;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+  [hidden] {
+    display: none !important;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.55 var(--sans);
+    padding-inline: 16px;
+    padding-block: 0 48px;
+  }
+  .wrap {
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  header.top {
+    padding-block: 32px 18px;
+    display: grid;
+    gap: 10px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  .lede {
+    margin: 0;
+    color: var(--muted);
+    max-width: 64ch;
+  }
+
+  .bar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 5;
+    background: var(--bg);
+    padding-block: 12px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .search {
+    flex: 1 1 220px;
+    min-width: 0;
+    height: 42px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    color: var(--ink);
+    font: inherit;
+  }
+  .btn {
+    height: 42px;
+    padding: 0 16px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--ink);
+    font: 600 0.9rem/1 var(--sans);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn:hover {
+    border-color: var(--muted);
+  }
+  .btn--primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+  .progress {
+    font: 500 0.85rem/1 var(--mono);
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 3.2rem minmax(0, 1fr) auto;
+    gap: 6px 14px;
+    align-items: start;
+    padding-block: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .no {
+    font: 500 0.9rem/1.6 var(--mono);
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 12px;
+  }
+  .name {
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+  .meta {
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .file {
+    font: 0.78rem/1.4 var(--mono);
+    color: var(--muted);
+  }
+  .prompt {
+    grid-column: 2 / 3;
+    margin: 6px 0 0;
+    font: 0.82rem/1.6 var(--mono);
+    color: var(--muted);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .row.open .prompt {
+    display: block;
+  }
+  .toggle {
+    grid-column: 2 / 3;
+    justify-self: start;
+    border: 0;
+    background: none;
+    padding: 0;
+    color: var(--accent);
+    font: 600 0.8rem/1.6 var(--sans);
+    cursor: pointer;
+  }
+  .copy {
+    grid-row: 1 / span 3;
+    grid-column: 3;
+    min-width: 96px;
+  }
+  .row.done .name,
+  .row.done .no {
+    color: var(--done);
+  }
+  .row.done .copy {
+    background: var(--accent-soft);
+    border-color: transparent;
+  }
+  .empty {
+    padding-block: 32px;
+    color: var(--muted);
+  }
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--bg);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    max-width: calc(100vw - 32px);
+  }
+  @media (max-width: 560px) {
+    .row {
+      grid-template-columns: 2.6rem minmax(0, 1fr);
+    }
+    .copy {
+      grid-row: auto;
+      grid-column: 2;
+      justify-self: start;
+      margin-top: 6px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Food Reel Prompt Deck</h1>
+    <p class="lede">
+      128 prompt tạo ảnh cho reel món ăn, cùng một khung: góc 3/4 từ trên, đồ đựng khác nhau theo từng món,
+      nền đen #000000, ảnh vuông 1:1. Bấm <strong>Sao chép</strong> ở từng món, hoặc chép cả bộ một lần. Món đã chép
+      được đánh dấu trên trình duyệt này để bạn biết mình đang tới đâu.
+    </p>
+  </header>
+
+  <div class="bar" role="toolbar" aria-label="Công cụ">
+    <input id="q" class="search" type="search" aria-label="Tìm món" placeholder="Tìm món, ví dụ: bún, phở, pizza…" autocomplete="off" />
+    <button id="copyAll" class="btn btn--primary" type="button">Sao chép tất cả</button>
+    <button id="reset" class="btn" type="button">Xóa dấu đã chép</button>
+    <span id="progress" class="progress" aria-live="polite"></span>
+  </div>
+
+  <ol id="list" class="list"></ol>
+  <p id="empty" class="empty" hidden>Không có món nào khớp. Thử từ khóa khác.</p>
+</div>
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script>
+  const ITEMS = __DATA__;
+  const KEY = 'food-reel-prompts/copied-v3';
+  let copied = new Set();
+  try {
+    copied = new Set(JSON.parse(localStorage.getItem(KEY) || '[]'));
+  } catch (e) {}
+  const save = () => {
+    try {
+      localStorage.setItem(KEY, JSON.stringify([...copied]));
+    } catch (e) {}
+  };
+
+  const list = document.getElementById('list');
+  const progress = document.getElementById('progress');
+  const toastEl = document.getElementById('toast');
+  let toastTimer;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => (toastEl.hidden = true), 1800);
+  }
+
+  // The async Clipboard API only exists on HTTPS/localhost; http://angi.local
+  // needs the classic textarea + execCommand path.
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try {
+      ok = document.execCommand('copy');
+    } catch (e) {}
+    ta.remove();
+    return ok;
+  }
+
+  async function copyText(text, fallbackEl) {
+    try {
+      if (!navigator.clipboard) throw new Error('no clipboard api');
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (e) {
+      if (legacyCopy(text)) return true;
+      if (fallbackEl) {
+        const r = document.createRange();
+        r.selectNodeContents(fallbackEl);
+        const s = getSelection();
+        s.removeAllRanges();
+        s.addRange(r);
+      }
+      return false;
+    }
+  }
+
+  function updateProgress() {
+    progress.textContent = `${copied.size}/${ITEMS.length} đã chép`;
+  }
+
+  const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/gi, 'd').toLowerCase();
+
+  function render() {
+    const frag = document.createDocumentFragment();
+    for (const it of ITEMS) {
+      const li = document.createElement('li');
+      li.className = 'row' + (copied.has(it.no) ? ' done' : '');
+      li.dataset.key = norm(`${it.name} ${it.sub} ${it.no}`);
+      li.innerHTML = `
+        <span class="no">${it.no}</span>
+        <div class="head"><span class="name"></span><span class="meta"></span><span class="file"></span></div>
+        <button class="btn copy" type="button"></button>
+        <p class="prompt"></p>
+        <button class="toggle" type="button" aria-expanded="false">Xem đầy đủ</button>`;
+      li.querySelector('.name').textContent = it.name;
+      li.querySelector('.meta').textContent = it.sub;
+      li.querySelector('.file').textContent = it.file;
+      li.querySelector('.prompt').textContent = it.prompt;
+      const btn = li.querySelector('.copy');
+      btn.textContent = copied.has(it.no) ? 'Đã chép' : 'Sao chép';
+      btn.setAttribute('aria-label', `Sao chép prompt ${it.name}`);
+      btn.addEventListener('click', async () => {
+        const ok = await copyText(it.prompt, li.querySelector('.prompt'));
+        li.classList.add('open');
+        if (ok) {
+          copied.add(it.no);
+          save();
+          li.classList.add('done');
+          btn.textContent = 'Đã chép';
+          toast(`Đã chép prompt ${it.no} · ${it.name}`);
+          updateProgress();
+        } else {
+          toast('Trình duyệt chặn sao chép. Prompt đã được bôi đen, nhấn Ctrl+C.');
+        }
+      });
+      const tg = li.querySelector('.toggle');
+      tg.addEventListener('click', () => {
+        const open = li.classList.toggle('open');
+        tg.textContent = open ? 'Thu gọn' : 'Xem đầy đủ';
+        tg.setAttribute('aria-expanded', String(open));
+      });
+      frag.appendChild(li);
+    }
+    list.appendChild(frag);
+    updateProgress();
+  }
+  render();
+
+  document.getElementById('q').addEventListener('input', (e) => {
+    const q = norm(e.target.value.trim());
+    let shown = 0;
+    for (const li of list.children) {
+      const hit = !q || li.dataset.key.includes(q);
+      li.hidden = !hit;
+      if (hit) shown++;
+    }
+    document.getElementById('empty').hidden = shown > 0;
+  });
+
+  document.getElementById('copyAll').addEventListener('click', async () => {
+    const text = ITEMS.map((it) => it.prompt).join('\n\n');
+    const ok = await copyText(text);
+    toast(ok ? `Đã chép cả ${ITEMS.length} prompt, mỗi prompt cách nhau một dòng trống.` : 'Trình duyệt chặn sao chép. Hãy chép từng món.');
+  });
+
+  document.getElementById('reset').addEventListener('click', () => {
+    copied = new Set();
+    save();
+    for (const li of list.children) {
+      li.classList.remove('done');
+      li.querySelector('.copy').textContent = 'Sao chép';
+    }
+    updateProgress();
+    toast('Đã xóa dấu đã chép.');
+  });
+</script>
+</body>
+</html>

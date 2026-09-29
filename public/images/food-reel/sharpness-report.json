@@ -1,0 +1,1154 @@
+[
+  {
+    "sourceImageId": 91,
+    "name": "Cơm gà Hải Nam",
+    "file": "091-com-ga-hai-nam.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1688,
+    "outputSharpness": 1.0874,
+    "outputEntropy": 6.7625
+  },
+  {
+    "sourceImageId": 70,
+    "name": "Mì Ý hải sản",
+    "file": "070-mi-y-hai-san.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3161,
+    "outputSharpness": 1.0889,
+    "outputEntropy": 5.2741
+  },
+  {
+    "sourceImageId": 72,
+    "name": "Phở gà",
+    "file": "072-pho-ga.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.067,
+    "outputSharpness": 1.089,
+    "outputEntropy": 6.3754
+  },
+  {
+    "sourceImageId": 43,
+    "name": "Bánh canh cua",
+    "file": "043-banh-canh-cua.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.2051,
+    "outputSharpness": 1.0933,
+    "outputEntropy": 5.8256
+  },
+  {
+    "sourceImageId": 79,
+    "name": "Bánh canh giò heo",
+    "file": "079-banh-canh-gio-heo.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.067,
+    "outputSharpness": 1.094,
+    "outputEntropy": 6.6982
+  },
+  {
+    "sourceImageId": 111,
+    "name": "Quesadilla",
+    "file": "111-quesadilla.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3022,
+    "outputSharpness": 1.1175,
+    "outputEntropy": 6.2774
+  },
+  {
+    "sourceImageId": 121,
+    "name": "Cháo gà",
+    "file": "121-chao-ga.webp",
+    "profile": "soft",
+    "sourceSharpness": 2.8193,
+    "outputSharpness": 1.1255,
+    "outputEntropy": 6.267
+  },
+  {
+    "sourceImageId": 69,
+    "name": "Pizza hải sản",
+    "file": "069-pizza-hai-san.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3161,
+    "outputSharpness": 1.132,
+    "outputEntropy": 5.7072
+  },
+  {
+    "sourceImageId": 122,
+    "name": "Bò kho bánh mì",
+    "file": "122-bo-kho-banh-mi.webp",
+    "profile": "soft",
+    "sourceSharpness": 2.8193,
+    "outputSharpness": 1.1351,
+    "outputEntropy": 6.2977
+  },
+  {
+    "sourceImageId": 59,
+    "name": "Cơm cà ri Thái",
+    "file": "059-com-ca-ri-thai.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1072,
+    "outputSharpness": 1.1366,
+    "outputEntropy": 5.8634
+  },
+  {
+    "sourceImageId": 112,
+    "name": "Fish & chips",
+    "file": "112-fish-va-chips.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3022,
+    "outputSharpness": 1.1375,
+    "outputEntropy": 6.8667
+  },
+  {
+    "sourceImageId": 123,
+    "name": "Xôi mặn",
+    "file": "123-xoi-man.webp",
+    "profile": "soft",
+    "sourceSharpness": 2.8193,
+    "outputSharpness": 1.1604,
+    "outputEntropy": 6.1962
+  },
+  {
+    "sourceImageId": 114,
+    "name": "Mac & cheese",
+    "file": "114-mac-va-cheese.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3022,
+    "outputSharpness": 1.1671,
+    "outputEntropy": 6.7439
+  },
+  {
+    "sourceImageId": 53,
+    "name": "Lasagna bò",
+    "file": "053-lasagna-bo.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1072,
+    "outputSharpness": 1.1782,
+    "outputEntropy": 5.6938
+  },
+  {
+    "sourceImageId": 36,
+    "name": "Cơm bình dân",
+    "file": "036-com-binh-dan.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.2051,
+    "outputSharpness": 1.1796,
+    "outputEntropy": 5.5012
+  },
+  {
+    "sourceImageId": 124,
+    "name": "Bánh mì chảo",
+    "file": "124-banh-mi-chao.webp",
+    "profile": "soft",
+    "sourceSharpness": 2.8193,
+    "outputSharpness": 1.1818,
+    "outputEntropy": 6.4483
+  },
+  {
+    "sourceImageId": 39,
+    "name": "Cơm gà xối mỡ",
+    "file": "039-com-ga-xoi-mo.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.2051,
+    "outputSharpness": 1.1836,
+    "outputEntropy": 5.6507
+  },
+  {
+    "sourceImageId": 130,
+    "name": "Mì Ý sốt cà chua & phô mai",
+    "file": "130-mi-y-sot-ca-chua-va-pho-mai.webp",
+    "profile": "soft",
+    "sourceSharpness": 2.8193,
+    "outputSharpness": 1.1847,
+    "outputEntropy": 6.582
+  },
+  {
+    "sourceImageId": 74,
+    "name": "Bún mọc",
+    "file": "074-bun-moc.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.067,
+    "outputSharpness": 1.1874,
+    "outputEntropy": 6.5426
+  },
+  {
+    "sourceImageId": 47,
+    "name": "Cơm chiên hải sản",
+    "file": "047-com-chien-hai-san.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.2051,
+    "outputSharpness": 1.1876,
+    "outputEntropy": 5.7088
+  },
+  {
+    "sourceImageId": 73,
+    "name": "Phở cuốn",
+    "file": "073-pho-cuon.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.067,
+    "outputSharpness": 1.1877,
+    "outputEntropy": 6.151
+  },
+  {
+    "sourceImageId": 55,
+    "name": "Pizza pepperoni",
+    "file": "055-pizza-pepperoni.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1072,
+    "outputSharpness": 1.1894,
+    "outputEntropy": 6.0326
+  },
+  {
+    "sourceImageId": 63,
+    "name": "Cá hồi áp chảo",
+    "file": "063-ca-hoi-ap-chao.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3161,
+    "outputSharpness": 1.1927,
+    "outputEntropy": 4.9457
+  },
+  {
+    "sourceImageId": 94,
+    "name": "Mì cay Hàn Quốc",
+    "file": "094-mi-cay-han-quoc.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1688,
+    "outputSharpness": 1.1932,
+    "outputEntropy": 6.7667
+  },
+  {
+    "sourceImageId": 56,
+    "name": "Cơm bò gyudon",
+    "file": "056-com-bo-gyudon.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1072,
+    "outputSharpness": 1.1954,
+    "outputEntropy": 5.4765
+  },
+  {
+    "sourceImageId": 87,
+    "name": "Mì hoành thánh",
+    "file": "087-mi-hoanh-thanh.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1688,
+    "outputSharpness": 1.2017,
+    "outputEntropy": 6.6698
+  },
+  {
+    "sourceImageId": 62,
+    "name": "Bò bít tết",
+    "file": "062-bo-bit-tet.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3161,
+    "outputSharpness": 1.2091,
+    "outputEntropy": 4.9731
+  },
+  {
+    "sourceImageId": 52,
+    "name": "Mì Ý sốt kem bacon",
+    "file": "052-mi-y-sot-kem-bacon.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1072,
+    "outputSharpness": 1.2099,
+    "outputEntropy": 5.5979
+  },
+  {
+    "sourceImageId": 97,
+    "name": "Canh kimchi kèm cơm",
+    "file": "097-canh-kimchi-kem-com.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.5498,
+    "outputSharpness": 1.2127,
+    "outputEntropy": 6.5064
+  },
+  {
+    "sourceImageId": 129,
+    "name": "Burger gà & khoai tây",
+    "file": "129-burger-ga-va-khoai-tay.webp",
+    "profile": "soft",
+    "sourceSharpness": 2.8193,
+    "outputSharpness": 1.2133,
+    "outputEntropy": 6.4603
+  },
+  {
+    "sourceImageId": 120,
+    "name": "Nui xào bò",
+    "file": "120-nui-xao-bo.webp",
+    "profile": "soft",
+    "sourceSharpness": 2.8193,
+    "outputSharpness": 1.2152,
+    "outputEntropy": 6.1548
+  },
+  {
+    "sourceImageId": 100,
+    "name": "Cơm chiên kimchi",
+    "file": "100-com-chien-kimchi.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.5498,
+    "outputSharpness": 1.2196,
+    "outputEntropy": 6.5496
+  },
+  {
+    "sourceImageId": 75,
+    "name": "Bún măng vịt",
+    "file": "075-bun-mang-vit.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.067,
+    "outputSharpness": 1.222,
+    "outputEntropy": 6.5032
+  },
+  {
+    "sourceImageId": 131,
+    "name": "Miến xào",
+    "file": "131-mien-xao.webp",
+    "profile": "soft",
+    "sourceSharpness": 2.8193,
+    "outputSharpness": 1.2309,
+    "outputEntropy": 6.5192
+  },
+  {
+    "sourceImageId": 54,
+    "name": "Burger bò phô mai & khoai tây",
+    "file": "054-burger-bo-pho-mai-va-khoai-tay.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1072,
+    "outputSharpness": 1.2327,
+    "outputEntropy": 5.7707
+  },
+  {
+    "sourceImageId": 128,
+    "name": "Mì udon xào",
+    "file": "128-mi-udon-xao.webp",
+    "profile": "soft",
+    "sourceSharpness": 2.8193,
+    "outputSharpness": 1.2442,
+    "outputEntropy": 6.5871
+  },
+  {
+    "sourceImageId": 80,
+    "name": "Miến gà",
+    "file": "080-mien-ga.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.067,
+    "outputSharpness": 1.2452,
+    "outputEntropy": 6.2535
+  },
+  {
+    "sourceImageId": 98,
+    "name": "Canh đậu hũ non kèm cơm",
+    "file": "098-canh-dau-hu-non-kem-com.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.5498,
+    "outputSharpness": 1.2533,
+    "outputEntropy": 6.6067
+  },
+  {
+    "sourceImageId": 108,
+    "name": "Bánh cuộn gà",
+    "file": "108-banh-cuon-ga.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3022,
+    "outputSharpness": 1.2572,
+    "outputEntropy": 6.1593
+  },
+  {
+    "sourceImageId": 86,
+    "name": "Dimsum",
+    "file": "086-dimsum.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1688,
+    "outputSharpness": 1.2653,
+    "outputEntropy": 6.8449
+  },
+  {
+    "sourceImageId": 109,
+    "name": "Burrito",
+    "file": "109-burrito.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3022,
+    "outputSharpness": 1.2728,
+    "outputEntropy": 6.2482
+  },
+  {
+    "sourceImageId": 84,
+    "name": "Bánh hỏi heo quay",
+    "file": "084-banh-hoi-heo-quay.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1688,
+    "outputSharpness": 1.2784,
+    "outputEntropy": 6.768
+  },
+  {
+    "sourceImageId": 67,
+    "name": "Poke cá hồi",
+    "file": "067-poke-ca-hoi.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3161,
+    "outputSharpness": 1.2792,
+    "outputEntropy": 5.2576
+  },
+  {
+    "sourceImageId": 125,
+    "name": "Cơm xá xíu",
+    "file": "125-com-xa-xiu.webp",
+    "profile": "soft",
+    "sourceSharpness": 2.8193,
+    "outputSharpness": 1.2797,
+    "outputEntropy": 6.2976
+  },
+  {
+    "sourceImageId": 50,
+    "name": "Mì trộn Hàn Quốc",
+    "file": "050-mi-tron-han-quoc.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1072,
+    "outputSharpness": 1.2892,
+    "outputEntropy": 5.3285
+  },
+  {
+    "sourceImageId": 60,
+    "name": "Salad cá ngừ",
+    "file": "060-salad-ca-ngu.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3161,
+    "outputSharpness": 1.3031,
+    "outputEntropy": 5.0896
+  },
+  {
+    "sourceImageId": 127,
+    "name": "Mì xá xíu",
+    "file": "127-mi-xa-xiu.webp",
+    "profile": "soft",
+    "sourceSharpness": 2.8193,
+    "outputSharpness": 1.3058,
+    "outputEntropy": 6.3693
+  },
+  {
+    "sourceImageId": 77,
+    "name": "Bún mắm",
+    "file": "077-bun-mam.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.067,
+    "outputSharpness": 1.3061,
+    "outputEntropy": 6.7065
+  },
+  {
+    "sourceImageId": 126,
+    "name": "Cơm vịt quay",
+    "file": "126-com-vit-quay.webp",
+    "profile": "soft",
+    "sourceSharpness": 2.8193,
+    "outputSharpness": 1.3066,
+    "outputEntropy": 6.2927
+  },
+  {
+    "sourceImageId": 51,
+    "name": "Salad ức gà",
+    "file": "051-salad-uc-ga.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1072,
+    "outputSharpness": 1.3099,
+    "outputEntropy": 5.6039
+  },
+  {
+    "sourceImageId": 92,
+    "name": "Cơm gà trứng Nhật",
+    "file": "092-com-ga-trung-nhat.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1688,
+    "outputSharpness": 1.3158,
+    "outputEntropy": 6.6312
+  },
+  {
+    "sourceImageId": 107,
+    "name": "Bánh mì kebab",
+    "file": "107-banh-mi-kebab.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.5498,
+    "outputSharpness": 1.3225,
+    "outputEntropy": 6.7849
+  },
+  {
+    "sourceImageId": 44,
+    "name": "Bò né",
+    "file": "044-bo-ne.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.2051,
+    "outputSharpness": 1.3258,
+    "outputEntropy": 6.0301
+  },
+  {
+    "sourceImageId": 82,
+    "name": "Cháo vịt",
+    "file": "082-chao-vit.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.067,
+    "outputSharpness": 1.3455,
+    "outputEntropy": 6.4678
+  },
+  {
+    "sourceImageId": 110,
+    "name": "Taco",
+    "file": "110-taco.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3022,
+    "outputSharpness": 1.3485,
+    "outputEntropy": 6.4063
+  },
+  {
+    "sourceImageId": 49,
+    "name": "Kimbap",
+    "file": "049-kimbap.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1072,
+    "outputSharpness": 1.3541,
+    "outputEntropy": 5.2449
+  },
+  {
+    "sourceImageId": 89,
+    "name": "Mì xào giòn",
+    "file": "089-mi-xao-gion.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1688,
+    "outputSharpness": 1.3616,
+    "outputEntropy": 6.7895
+  },
+  {
+    "sourceImageId": 106,
+    "name": "Sandwich",
+    "file": "106-sandwich.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.5498,
+    "outputSharpness": 1.3638,
+    "outputEntropy": 6.9239
+  },
+  {
+    "sourceImageId": 58,
+    "name": "Mì soba Nhật",
+    "file": "058-mi-soba-nhat.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1072,
+    "outputSharpness": 1.3751,
+    "outputEntropy": 5.7758
+  },
+  {
+    "sourceImageId": 61,
+    "name": "Salad quinoa đậu gà",
+    "file": "061-salad-quinoa-dau-ga.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3161,
+    "outputSharpness": 1.3799,
+    "outputEntropy": 4.8608
+  },
+  {
+    "sourceImageId": 83,
+    "name": "Cháo lòng",
+    "file": "083-chao-long.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.067,
+    "outputSharpness": 1.3867,
+    "outputEntropy": 6.4975
+  },
+  {
+    "sourceImageId": 42,
+    "name": "Bún riêu",
+    "file": "042-bun-rieu.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.2051,
+    "outputSharpness": 1.3899,
+    "outputEntropy": 5.7327
+  },
+  {
+    "sourceImageId": 90,
+    "name": "Cơm niêu Singapore",
+    "file": "090-com-nieu-singapore.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1688,
+    "outputSharpness": 1.3912,
+    "outputEntropy": 6.3049
+  },
+  {
+    "sourceImageId": 85,
+    "name": "Nem nướng",
+    "file": "085-nem-nuong.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1688,
+    "outputSharpness": 1.3955,
+    "outputEntropy": 6.9511
+  },
+  {
+    "sourceImageId": 96,
+    "name": "Mì lạnh Hàn Quốc",
+    "file": "096-mi-lanh-han-quoc.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.5498,
+    "outputSharpness": 1.3955,
+    "outputEntropy": 6.3476
+  },
+  {
+    "sourceImageId": 68,
+    "name": "Sườn nướng BBQ",
+    "file": "068-suon-nuong-bbq.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3161,
+    "outputSharpness": 1.4069,
+    "outputEntropy": 5.2227
+  },
+  {
+    "sourceImageId": 65,
+    "name": "Cơm bò nướng Hàn",
+    "file": "065-com-bo-nuong-han.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3161,
+    "outputSharpness": 1.4137,
+    "outputEntropy": 5.0028
+  },
+  {
+    "sourceImageId": 57,
+    "name": "Cơm cá saba nướng",
+    "file": "057-com-ca-saba-nuong.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1072,
+    "outputSharpness": 1.4165,
+    "outputEntropy": 5.9463
+  },
+  {
+    "sourceImageId": 78,
+    "name": "Bún chay",
+    "file": "078-bun-chay.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.067,
+    "outputSharpness": 1.4239,
+    "outputEntropy": 6.8193
+  },
+  {
+    "sourceImageId": 66,
+    "name": "Cơm cá hồi teriyaki",
+    "file": "066-com-ca-hoi-teriyaki.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3161,
+    "outputSharpness": 1.4318,
+    "outputEntropy": 5.1336
+  },
+  {
+    "sourceImageId": 93,
+    "name": "Cơm tempura",
+    "file": "093-com-tempura.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1688,
+    "outputSharpness": 1.4352,
+    "outputEntropy": 6.4152
+  },
+  {
+    "sourceImageId": 48,
+    "name": "Mì vịt tiềm",
+    "file": "048-mi-vit-tiem.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1072,
+    "outputSharpness": 1.4505,
+    "outputEntropy": 5.3282
+  },
+  {
+    "sourceImageId": 99,
+    "name": "Gà phô mai Hàn Quốc",
+    "file": "099-ga-pho-mai-han-quoc.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.5498,
+    "outputSharpness": 1.4687,
+    "outputEntropy": 6.5168
+  },
+  {
+    "sourceImageId": 116,
+    "name": "Mì Ý cá hồi",
+    "file": "116-mi-y-ca-hoi.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3022,
+    "outputSharpness": 1.4753,
+    "outputEntropy": 6.8376
+  },
+  {
+    "sourceImageId": 71,
+    "name": "Lẩu bò cá nhân",
+    "file": "071-lau-bo-ca-nhan.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3161,
+    "outputSharpness": 1.4759,
+    "outputEntropy": 5.4664
+  },
+  {
+    "sourceImageId": 46,
+    "name": "Cơm heo chiên xù",
+    "file": "046-com-heo-chien-xu.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.2051,
+    "outputSharpness": 1.4788,
+    "outputEntropy": 5.7737
+  },
+  {
+    "sourceImageId": 113,
+    "name": "Gà nướng kèm khoai tây",
+    "file": "113-ga-nuong-kem-khoai-tay.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3022,
+    "outputSharpness": 1.4982,
+    "outputEntropy": 6.8695
+  },
+  {
+    "sourceImageId": 103,
+    "name": "Cà ri Ấn Độ & naan",
+    "file": "103-ca-ri-an-do-va-naan.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.5498,
+    "outputSharpness": 1.5,
+    "outputEntropy": 6.6136
+  },
+  {
+    "sourceImageId": 119,
+    "name": "Falafel kèm pita",
+    "file": "119-falafel-kem-pita.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3022,
+    "outputSharpness": 1.5071,
+    "outputEntropy": 6.774
+  },
+  {
+    "sourceImageId": 45,
+    "name": "Cơm gà teriyaki",
+    "file": "045-com-ga-teriyaki.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.2051,
+    "outputSharpness": 1.5083,
+    "outputEntropy": 5.2226
+  },
+  {
+    "sourceImageId": 76,
+    "name": "Bún bò Nam Bộ",
+    "file": "076-bun-bo-nam-bo.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.067,
+    "outputSharpness": 1.5182,
+    "outputEntropy": 6.5834
+  },
+  {
+    "sourceImageId": 118,
+    "name": "Gnocchi",
+    "file": "118-gnocchi.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3022,
+    "outputSharpness": 1.5216,
+    "outputEntropy": 7.092
+  },
+  {
+    "sourceImageId": 101,
+    "name": "Lẩu Thái một người",
+    "file": "101-lau-thai-mot-nguoi.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.5498,
+    "outputSharpness": 1.5372,
+    "outputEntropy": 6.471
+  },
+  {
+    "sourceImageId": 81,
+    "name": "Miến lươn",
+    "file": "081-mien-luon.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.067,
+    "outputSharpness": 1.5407,
+    "outputEntropy": 6.33
+  },
+  {
+    "sourceImageId": 95,
+    "name": "Mì tương đen",
+    "file": "095-mi-tuong-den.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1688,
+    "outputSharpness": 1.5628,
+    "outputEntropy": 6.6666
+  },
+  {
+    "sourceImageId": 88,
+    "name": "Mì bò Đài Loan",
+    "file": "088-mi-bo-dai-loan.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.1688,
+    "outputSharpness": 1.5751,
+    "outputEntropy": 6.5904
+  },
+  {
+    "sourceImageId": 117,
+    "name": "Cơm risotto",
+    "file": "117-com-risotto.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3022,
+    "outputSharpness": 1.5984,
+    "outputEntropy": 7.0613
+  },
+  {
+    "sourceImageId": 64,
+    "name": "Cơm lươn Nhật",
+    "file": "064-com-luon-nhat.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3161,
+    "outputSharpness": 1.6225,
+    "outputEntropy": 5.003
+  },
+  {
+    "sourceImageId": 104,
+    "name": "Cơm biryani",
+    "file": "104-com-biryani.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.5498,
+    "outputSharpness": 1.6401,
+    "outputEntropy": 6.8581
+  },
+  {
+    "sourceImageId": 115,
+    "name": "Mì Ý pesto",
+    "file": "115-mi-y-pesto.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.3022,
+    "outputSharpness": 1.6615,
+    "outputEntropy": 6.9912
+  },
+  {
+    "sourceImageId": 102,
+    "name": "Lẩu sukiyaki một người",
+    "file": "102-lau-sukiyaki-mot-nguoi.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.5498,
+    "outputSharpness": 1.6837,
+    "outputEntropy": 6.7588
+  },
+  {
+    "sourceImageId": 105,
+    "name": "Bánh xèo Nhật",
+    "file": "105-banh-xeo-nhat.webp",
+    "profile": "soft",
+    "sourceSharpness": 3.5498,
+    "outputSharpness": 1.8788,
+    "outputEntropy": 6.9202
+  },
+  {
+    "sourceImageId": 35,
+    "name": "Gỏi cuốn chay",
+    "file": "035-goi-cuon-chay.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.8194,
+    "outputSharpness": 2.0157,
+    "outputEntropy": 6.1642
+  },
+  {
+    "sourceImageId": 11,
+    "name": "Hủ tiếu",
+    "file": "011-hu-tieu.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.7758,
+    "outputSharpness": 2.1521,
+    "outputEntropy": 6.7776
+  },
+  {
+    "sourceImageId": 4,
+    "name": "Sushi cá hồi",
+    "file": "004-sushi-ca-hoi.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.1312,
+    "outputSharpness": 2.1905,
+    "outputEntropy": 6.3201
+  },
+  {
+    "sourceImageId": 25,
+    "name": "Udon",
+    "file": "025-udon.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.9339,
+    "outputSharpness": 2.2305,
+    "outputEntropy": 6.5564
+  },
+  {
+    "sourceImageId": 9,
+    "name": "Cơm gà Hội An",
+    "file": "009-com-ga-hoi-an.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.7758,
+    "outputSharpness": 2.2436,
+    "outputEntropy": 6.672
+  },
+  {
+    "sourceImageId": 31,
+    "name": "Mì Tom Yum",
+    "file": "031-mi-tom-yum.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.8939,
+    "outputSharpness": 2.4197,
+    "outputEntropy": 6.7077
+  },
+  {
+    "sourceImageId": 34,
+    "name": "Bánh mì chay",
+    "file": "034-banh-mi-chay.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.8194,
+    "outputSharpness": 2.4545,
+    "outputEntropy": 6.2445
+  },
+  {
+    "sourceImageId": 2,
+    "name": "Bánh mì",
+    "file": "002-banh-mi.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.1409,
+    "outputSharpness": 2.5565,
+    "outputEntropy": 6.3978
+  },
+  {
+    "sourceImageId": 30,
+    "name": "Pad Thai",
+    "file": "030-pad-thai.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.8939,
+    "outputSharpness": 2.6077,
+    "outputEntropy": 6.7679
+  },
+  {
+    "sourceImageId": 6,
+    "name": "Gà rán",
+    "file": "006-ga-ran.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.1312,
+    "outputSharpness": 2.7102,
+    "outputEntropy": 6.6317
+  },
+  {
+    "sourceImageId": 1,
+    "name": "Phở bò",
+    "file": "001-pho-bo.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.1409,
+    "outputSharpness": 2.7193,
+    "outputEntropy": 6.6206
+  },
+  {
+    "sourceImageId": 14,
+    "name": "Bánh cuốn",
+    "file": "014-banh-cuon.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.3398,
+    "outputSharpness": 2.7214,
+    "outputEntropy": 6.402
+  },
+  {
+    "sourceImageId": 27,
+    "name": "Tteokbokki",
+    "file": "027-tteokbokki.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.9339,
+    "outputSharpness": 2.7272,
+    "outputEntropy": 6.394
+  },
+  {
+    "sourceImageId": 29,
+    "name": "Mì Ý bò bằm",
+    "file": "029-mi-y-bo-bam.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.8939,
+    "outputSharpness": 2.7802,
+    "outputEntropy": 6.662
+  },
+  {
+    "sourceImageId": 32,
+    "name": "Lẩu nấm chay",
+    "file": "032-lau-nam-chay.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.8194,
+    "outputSharpness": 2.8121,
+    "outputEntropy": 6.0781
+  },
+  {
+    "sourceImageId": 22,
+    "name": "Gỏi cuốn",
+    "file": "022-goi-cuon.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.5301,
+    "outputSharpness": 2.8312,
+    "outputEntropy": 6.7007
+  },
+  {
+    "sourceImageId": 28,
+    "name": "Burger bò",
+    "file": "028-burger-bo.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.8939,
+    "outputSharpness": 2.8315,
+    "outputEntropy": 6.7227
+  },
+  {
+    "sourceImageId": 10,
+    "name": "Bún bò Huế",
+    "file": "010-bun-bo-hue.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.7758,
+    "outputSharpness": 2.8327,
+    "outputEntropy": 6.69
+  },
+  {
+    "sourceImageId": 24,
+    "name": "Ramen",
+    "file": "024-ramen.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.9339,
+    "outputSharpness": 2.8955,
+    "outputEntropy": 6.3783
+  },
+  {
+    "sourceImageId": 12,
+    "name": "Mì Quảng",
+    "file": "012-mi-quang.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.3398,
+    "outputSharpness": 2.9342,
+    "outputEntropy": 6.4316
+  },
+  {
+    "sourceImageId": 26,
+    "name": "Cơm cà ri Nhật",
+    "file": "026-com-ca-ri-nhat.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.9339,
+    "outputSharpness": 2.9415,
+    "outputEntropy": 6.5751
+  },
+  {
+    "sourceImageId": 3,
+    "name": "Bún chả",
+    "file": "003-bun-cha.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.1409,
+    "outputSharpness": 2.9951,
+    "outputEntropy": 6.8573
+  },
+  {
+    "sourceImageId": 8,
+    "name": "Bibimbap",
+    "file": "008-bibimbap.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.7758,
+    "outputSharpness": 3.0009,
+    "outputEntropy": 6.4686
+  },
+  {
+    "sourceImageId": 23,
+    "name": "Cháo sườn",
+    "file": "023-chao-suon.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.5301,
+    "outputSharpness": 3.0797,
+    "outputEntropy": 6.8718
+  },
+  {
+    "sourceImageId": 33,
+    "name": "Mì nấm chay",
+    "file": "033-mi-nam-chay.webp",
+    "profile": "standard",
+    "sourceSharpness": 2.8194,
+    "outputSharpness": 3.1052,
+    "outputEntropy": 5.7785
+  },
+  {
+    "sourceImageId": 17,
+    "name": "Bò lúc lắc",
+    "file": "017-bo-luc-lac.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.3869,
+    "outputSharpness": 3.1176,
+    "outputEntropy": 6.5904
+  },
+  {
+    "sourceImageId": 18,
+    "name": "Bánh xèo",
+    "file": "018-banh-xeo.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.3869,
+    "outputSharpness": 3.1309,
+    "outputEntropy": 6.496
+  },
+  {
+    "sourceImageId": 7,
+    "name": "Cơm chay",
+    "file": "007-com-chay.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.1312,
+    "outputSharpness": 3.1381,
+    "outputEntropy": 6.7349
+  },
+  {
+    "sourceImageId": 16,
+    "name": "Cơm rang dưa bò",
+    "file": "016-com-rang-dua-bo.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.3869,
+    "outputSharpness": 3.1633,
+    "outputEntropy": 6.3564
+  },
+  {
+    "sourceImageId": 19,
+    "name": "Bánh đa cua",
+    "file": "019-banh-da-cua.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.3869,
+    "outputSharpness": 3.2315,
+    "outputEntropy": 6.6689
+  },
+  {
+    "sourceImageId": 15,
+    "name": "Bún đậu mắm tôm",
+    "file": "015-bun-dau-mam-tom.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.3398,
+    "outputSharpness": 3.2616,
+    "outputEntropy": 6.8473
+  },
+  {
+    "sourceImageId": 0,
+    "name": "Cơm tấm",
+    "file": "000-com-tam.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.1409,
+    "outputSharpness": 3.2695,
+    "outputEntropy": 6.7292
+  },
+  {
+    "sourceImageId": 5,
+    "name": "Pizza",
+    "file": "005-pizza.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.1312,
+    "outputSharpness": 3.3508,
+    "outputEntropy": 6.7547
+  },
+  {
+    "sourceImageId": 13,
+    "name": "Bún thịt nướng",
+    "file": "013-bun-thit-nuong.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.3398,
+    "outputSharpness": 3.465,
+    "outputEntropy": 6.3915
+  },
+  {
+    "sourceImageId": 21,
+    "name": "Bún cá",
+    "file": "021-bun-ca.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.5301,
+    "outputSharpness": 3.4838,
+    "outputEntropy": 6.6661
+  },
+  {
+    "sourceImageId": 20,
+    "name": "Mì xào bò",
+    "file": "020-mi-xao-bo.webp",
+    "profile": "standard",
+    "sourceSharpness": 3.5301,
+    "outputSharpness": 3.5981,
+    "outputEntropy": 6.5554
+  }
+]

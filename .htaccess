@@ -1,0 +1,3 @@
+# This project is served only through the angi.local vhost (dist/, /api, /admin, /uploads).
+# Deny direct access via http://localhost/angi/... so .env, server/ and storage/ never leak.
+Require all denied

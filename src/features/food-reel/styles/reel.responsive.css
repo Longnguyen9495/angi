@@ -1,0 +1,334 @@
+/* ——— Tablet 768–1023 ——— */
+@media (max-width: 1023px) {
+  .fr-headline {
+    top: clamp(80px, 11vh, 120px);
+  }
+
+  .fr-headline__title {
+    font-size: clamp(3.4rem, 12vw, 7.5rem);
+  }
+
+  .fr-track,
+  .fr-orbit {
+    top: 49%;
+  }
+
+  .fr-selected {
+    left: var(--fr-gutter);
+    right: var(--fr-gutter);
+    width: auto;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    gap: 12px;
+    padding-top: 40px;
+    background: linear-gradient(transparent, var(--fr-canvas) 34%);
+  }
+
+  .fr[data-phase='selected'] .fr-track {
+    top: 34%;
+  }
+
+  .fr-selected__story {
+    display: none;
+  }
+
+  .fr-story__hero {
+    grid-template-columns: 1fr;
+    align-content: start;
+    gap: 28px;
+    min-height: 0;
+    padding-top: 8px;
+  }
+
+  .fr-story__media {
+    width: min(100%, 62vh);
+    justify-self: center;
+  }
+
+  .fr-ingredients {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .fr-story__section--split {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ——— Mobile < 768 ——— */
+@media (max-width: 767px) {
+  .fr-header {
+    padding-top: calc(10px + env(safe-area-inset-top));
+    padding-bottom: 10px;
+  }
+
+  .fr-logo {
+    align-items: center;
+    padding-top: 0;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .fr-logo__tag,
+  .fr-chrome__label,
+  .fr-chrome__stats {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .fr-header__nav {
+    gap: 2px;
+  }
+
+  .fr-chrome {
+    width: 40px;
+    padding: 0;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .fr-chrome__count {
+    display: none;
+  }
+
+  .fr-chrome__badge {
+    position: absolute;
+    top: 5px;
+    right: 3px;
+    display: grid;
+    place-items: center;
+    min-width: 15px;
+    height: 15px;
+    padding: 0 3px;
+    border-radius: 999px;
+    background: var(--fr-gold);
+    color: var(--fr-canvas);
+    font: 700 0.58rem/1 var(--fr-body);
+    letter-spacing: 0;
+  }
+
+  .fr-chrome--journey .fr-chrome__dot {
+    position: absolute;
+    bottom: 8px;
+    right: 7px;
+  }
+
+  /* Headline sizes by width *and* height so short phones keep room for the plate.
+     Keep in sync with mobileBands() in engine/layout.ts. */
+  .fr-headline {
+    top: calc(68px + env(safe-area-inset-top));
+  }
+
+  .fr-headline__title {
+    font-size: min(15.5vw, 8.2vh, 5.2rem);
+  }
+
+  .fr-headline__sub {
+    margin-top: 12px;
+    font-size: 0.64rem;
+    letter-spacing: 0.22em;
+  }
+
+  .fr-track,
+  .fr-orbit {
+    top: var(--fr-reel-y, 52%);
+  }
+
+  /* The mask fades the plate edge: tuck the caption closer to what is visible. */
+  .fr-item__caption {
+    top: calc(100% - 2px);
+    max-width: calc(100vw - 2 * var(--fr-gutter));
+    gap: 10px;
+  }
+
+  .fr-item__name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fr-dock {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'spin spin'
+      'count hint';
+    row-gap: 14px;
+    padding-bottom: calc(18px + env(safe-area-inset-bottom));
+  }
+
+  .fr-spin {
+    grid-area: spin;
+    justify-self: stretch;
+    justify-content: center;
+    min-height: 58px;
+  }
+
+  .fr-counter {
+    grid-area: count;
+    font-size: 0.85rem;
+  }
+
+  .fr-hint {
+    grid-area: hint;
+    justify-self: stretch;
+    min-width: 0;
+    font-size: 0.56rem;
+    letter-spacing: 0.14em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fr-rail {
+    bottom: calc(128px + env(safe-area-inset-bottom));
+    gap: 6px;
+  }
+
+  /* Fade the chip strip at the edges so it reads as scrollable. */
+  .fr-rail:not(.fr-rail--inline) .fr-rail__list {
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 var(--fr-gutter),
+      #000 calc(100% - 40px),
+      transparent
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 var(--fr-gutter),
+      #000 calc(100% - 40px),
+      transparent
+    );
+    scroll-padding-inline: var(--fr-gutter);
+  }
+
+  .fr-rail__list::after {
+    content: '';
+    flex: 0 0 calc(var(--fr-gutter) - 8px);
+  }
+
+  .fr-rail__chip {
+    min-height: 38px;
+    font-size: 0.78rem;
+  }
+
+  .fr-item__name {
+    font-size: 1.2rem;
+  }
+
+  .fr-selected__title {
+    font-size: clamp(2.4rem, 12vw, 3.6rem);
+  }
+
+  .fr-selected__meta {
+    gap: 8px 18px;
+    padding-top: 10px;
+  }
+
+  .fr-selected__actions .fr-cta {
+    flex: 1 1 100%;
+  }
+
+  .fr[data-phase='selected'] .fr-track {
+    top: 30%;
+  }
+
+  .fr-story__bar {
+    padding-top: calc(10px + env(safe-area-inset-top));
+  }
+
+  .fr-story__title {
+    font-size: clamp(2.8rem, 13vw, 4.4rem);
+  }
+
+  .fr-story__section {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+
+  .fr-ingredients {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .fr-flavor__row {
+    grid-template-columns: 64px 1fr auto;
+    gap: 12px;
+  }
+
+  /* Two stacked buttons: the backdrop has to be solid almost immediately. */
+  .fr-story__actions {
+    justify-content: stretch;
+    gap: 10px;
+    padding-top: 22px;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom));
+    background: linear-gradient(transparent, var(--story-bg) 20px);
+  }
+
+  .fr-story__actions .fr-ghost {
+    min-height: 44px;
+  }
+
+  .fr-story__actions .fr-cta,
+  .fr-story__actions .fr-ghost {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  .fr-epilogue__hero {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .fr-epilogue__img {
+    width: min(62vw, 260px);
+  }
+
+  .fr-epilogue__actions .fr-ghost {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}
+
+/* Short phones (SE, 5s…): the plate needs the rail's space. Mirrors MOBILE_COMPACT_HEIGHT. */
+@media (max-width: 767px) and (max-height: 639px) {
+  .fr-rail:not(.fr-rail--inline) {
+    display: none;
+  }
+
+  .fr-spin {
+    min-height: 54px;
+  }
+}
+
+/* Narrow phones (≤ 359 px): tighten the chrome so logo and actions fit one row. */
+@media (max-width: 359px) {
+  :root {
+    --fr-gutter: 14px;
+  }
+
+  .fr-logo__word {
+    font-size: 1.12rem;
+  }
+
+  .fr-chrome {
+    width: 36px;
+  }
+
+  .fr-hint {
+    display: none;
+  }
+}
+
+/* Very short landscape screens: keep the CTA reachable. */
+@media (max-height: 560px) {
+  .fr-headline {
+    display: none;
+  }
+
+  .fr-rail {
+    display: none;
+  }
+}
