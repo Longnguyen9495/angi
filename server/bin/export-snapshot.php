@@ -20,6 +20,11 @@ try {
         unset($d['aiModel'], $d['aiAt'], $d['updatedAt'], $d['contentSource']);
         return $d;
     }, $items);
+    if (!$items && is_file($target)) {
+        // The fallback must always be able to open the reel.
+        echo "Database has no publishable dish, keeping the existing snapshot.\n";
+        exit(0);
+    }
     $json = json_encode(
         ['version' => $catalogue->version(), 'count' => count($items), 'items' => $items],
         JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT,

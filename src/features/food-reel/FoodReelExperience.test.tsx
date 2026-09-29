@@ -7,7 +7,7 @@ import { mockConfig } from '../../services/mockApi';
 import { FeedbackProvider } from '../../state/FeedbackProvider';
 import { GameProvider } from '../../state/GameProvider';
 import { FoodVideo } from './components/FoodVideo';
-import { dishAt, getReelDish } from './data/reelCatalogue';
+import { dishAt, getReelDish, reelCount } from './data/reelCatalogue';
 import type { ReelDish } from './foodReel.types';
 import { reelBootConfig } from './hooks/useAssetPreloader';
 
@@ -74,7 +74,7 @@ describe('Food Reel landing', () => {
     renderApp();
     await booted();
     expect(screen.getByRole('group', { name: /vũ trụ món ăn/i })).toBeInTheDocument();
-    expect(screen.getByLabelText('Món 1 trên 128')).toBeInTheDocument();
+    expect(screen.getByLabelText(`Món 1 trên ${reelCount()}`)).toBeInTheDocument();
     expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
     expect(screen.queryByRole('switch')).not.toBeInTheDocument();
     expect(screen.queryByRole('radio')).not.toBeInTheDocument();
@@ -101,11 +101,15 @@ describe('Food Reel landing', () => {
     const centre = document.querySelector<HTMLElement>('[data-reel-centre]')!;
     centre.focus();
     await user.keyboard('{ArrowRight}');
-    await waitFor(() => expect(screen.getByLabelText('Món 2 trên 128')).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByLabelText(`Món 2 trên ${reelCount()}`)).toBeInTheDocument(),
+    );
     expect(document.activeElement).toHaveAttribute('data-reel-centre');
     expect(document.activeElement).toHaveAccessibleName(new RegExp(dishAt(1).name));
     await user.keyboard('{ArrowLeft}{ArrowLeft}');
-    await waitFor(() => expect(screen.getByLabelText('Món 128 trên 128')).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByLabelText(`Món ${reelCount()} trên ${reelCount()}`)).toBeInTheDocument(),
+    );
   });
 });
 

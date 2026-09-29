@@ -67,4 +67,15 @@ describe('catalogue store', () => {
     expect(await loadLiveCatalogue(20)).toBe('snapshot');
     expect(reelCount()).toBe(original.count);
   });
+
+  it('reports an empty database instead of showing the snapshot', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        async () =>
+          new Response(JSON.stringify({ version: 'x', count: 0, items: [] }), { status: 200 }),
+      ),
+    );
+    expect(await loadLiveCatalogue()).toBe('empty');
+  });
 });

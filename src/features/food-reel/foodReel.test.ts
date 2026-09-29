@@ -18,15 +18,16 @@ import type { ReelState } from './foodReel.types';
 import { foodReelReducer, initialReelState } from './foodReelReducer';
 
 const PUBLIC = join(process.cwd(), 'public');
+const localFile = (url: string) =>
+  url.startsWith('/uploads/') ? join(process.cwd(), 'storage', url) : join(PUBLIC, url);
 
 describe('reel catalogue', () => {
-  it('has all 128 manifest dishes with local thumbnail and full image files', () => {
-    expect(reelCount()).toBe(128);
+  it('has every catalogue dish with local thumbnail and full image files', () => {
+    expect(reelCount()).toBeGreaterThanOrEqual(128);
     for (const d of reelDishes()) {
-      expect(existsSync(join(PUBLIC, d.thumbnail)), d.thumbnail).toBe(true);
-      expect(existsSync(join(PUBLIC, d.image)), d.image).toBe(true);
-      expect(d.thumbnail).toContain('/thumb/');
-      expect(d.image).toContain('/full/');
+      // Admin uploads live in storage/uploads (served at /uploads), the rest in public/.
+      expect(existsSync(localFile(d.thumbnail)), d.thumbnail).toBe(true);
+      expect(existsSync(localFile(d.image)), d.image).toBe(true);
     }
   });
 
@@ -63,8 +64,8 @@ describe('reel catalogue', () => {
 
   it('wraps virtual indices in both directions', () => {
     expect(dishAt(0).id).toBe(reelDishes()[0]!.id);
-    expect(dishAt(128).id).toBe(reelDishes()[0]!.id);
-    expect(dishAt(-1).id).toBe(reelDishes()[127]!.id);
+    expect(dishAt(reelCount()).id).toBe(reelDishes()[0]!.id);
+    expect(dishAt(-1).id).toBe(reelDishes()[reelCount() - 1]!.id);
     expect(getReelDish('bun-moc')?.name).toBe('Bún mọc');
   });
 });

@@ -115,9 +115,10 @@ export function applyCatalogue(payload: CataloguePayload): boolean {
 
 /**
  * Fetches the live catalogue from the API. Resolves to where the data came
- * from; never rejects, so a slow or failing API only means the snapshot.
+ * from; never rejects. Only an unreachable API falls back to the snapshot —
+ * a database that answers with no dishes resolves to 'empty'.
  */
-export async function loadLiveCatalogue(timeoutMs = 1500): Promise<'live' | 'snapshot'> {
+export async function loadLiveCatalogue(timeoutMs = 1500): Promise<'live' | 'snapshot' | 'empty'> {
   if (typeof fetch !== 'function') return 'snapshot';
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -127,7 +128,9 @@ export async function loadLiveCatalogue(timeoutMs = 1500): Promise<'live' | 'sna
       headers: { Accept: 'application/json' },
     });
     if (!res.ok) return 'snapshot';
-    return applyCatalogue((await res.json()) as CataloguePayload) ? 'live' : 'snapshot';
+    const payload = (await res.json()) as CataloguePayload;
+    if (Array.isArray(payload?.items) && payload.items.length === 0) return 'empty';
+    return applyCatalogue(payload) ? 'live' : 'snapshot';
   } catch {
     return 'snapshot';
   } finally {

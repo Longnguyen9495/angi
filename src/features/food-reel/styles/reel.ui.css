@@ -1073,3 +1073,49 @@
   font-size: 0.76rem;
   font-weight: 600;
 }
+
+/* Empty database */
+.fr-empty {
+  min-height: 100dvh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 16px;
+  padding: 32px var(--fr-gutter);
+  text-align: center;
+  background: var(--fr-canvas);
+  color: var(--fr-ivory);
+  font-family: var(--fr-body);
+}
+.fr-empty__brand {
+  margin: 0;
+  color: var(--fr-gold);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.fr-empty__title {
+  margin: 0;
+  font-family: var(--fr-display);
+  font-size: clamp(2.2rem, 9vw, 4rem);
+  font-weight: 500;
+}
+.fr-empty__text {
+  margin: 0;
+  max-width: 34ch;
+  color: var(--fr-muted);
+  line-height: 1.6;
+}
+.fr-empty__cta {
+  margin-top: 8px;
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: var(--fr-ivory);
+  color: var(--fr-canvas);
+  font-weight: 600;
+  text-decoration: none;
+}
+.fr-empty__cta:focus-visible {
+  outline: 2px solid var(--fr-gold);
+  outline-offset: 3px;
+}

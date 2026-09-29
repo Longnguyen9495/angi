@@ -7,6 +7,7 @@ import { mockConfig } from '../../../services/mockApi';
 import { FeedbackProvider } from '../../../state/FeedbackProvider';
 import { GameProvider } from '../../../state/GameProvider';
 import { reelBootConfig } from '../hooks/useAssetPreloader';
+import { reelCount } from '../data/reelCatalogue';
 
 const realMatchMedia = window.matchMedia;
 
@@ -75,7 +76,7 @@ describe('Journey layer', () => {
     for (const label of ['Cấp độ', 'Chuỗi ngày', 'Dấu hành trình', 'Món đã khám phá']) {
       expect(within(layer).getByText(label)).toBeInTheDocument();
     }
-    expect(within(layer).getByText('/128')).toBeInTheDocument();
+    expect(within(layer).getByText(`/${reelCount()}`)).toBeInTheDocument();
     for (const title of [
       'Bữa này',
       'Khu vườn',
