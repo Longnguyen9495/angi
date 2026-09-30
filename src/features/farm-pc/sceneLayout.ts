@@ -166,3 +166,31 @@ export const PALETTE = {
   water: [0.55, 0.78, 0.95] as Vec3,
   lamp: [1, 0.78, 0.45] as Vec3,
 };
+
+/**
+ * CC0 props (public/models/farm/props/{id}.glb). `at: 'barn'` places in barn
+ * space (x right, z towards the door side). `size` is the target longest side
+ * in metres (≈1.3× real life, so props read next to the diorama-scale barn);
+ * the loader scales the model to it and stands it on the ground.
+ * `replaces` names the placeholder shapes hidden once the model has loaded.
+ */
+export interface PropSpot {
+  id: string;
+  at: 'barn' | 'world';
+  x: number;
+  z: number;
+  /** Degrees around Y, then optional tilt around X (lay an axe down). */
+  rot: number;
+  tilt?: number;
+  size: number;
+  replaces?: 'crate' | 'jar' | 'sack';
+}
+
+export const PROPS: readonly PropSpot[] = [
+  { id: 'wooden_crate_02', at: 'barn', x: 1.78, z: 0.72, rot: 12, size: 0.8, replaces: 'crate' },
+  { id: 'planter_pot_clay', at: 'barn', x: -1.66, z: 0.86, rot: 0, size: 0.62, replaces: 'jar' },
+  { id: 'ceramic_pot', at: 'barn', x: -1.62, z: 1.46, rot: 30, size: 0.42 },
+  { id: 'chinese_stool', at: 'barn', x: 1.6, z: 1.5, rot: -18, size: 0.56, replaces: 'sack' },
+  { id: 'wooden_axe_02', at: 'barn', x: 2.0, z: 0.1, rot: 70, tilt: 90, size: 0.78 },
+  { id: 'wooden_bucket_01', at: 'world', x: 2.75, z: 1.9, rot: 25, size: 0.5 },
+];

@@ -59,6 +59,23 @@ Theo quyết định: nâng độ thật trên góc PlayCanvas bằng texture + 
 
 Ảnh: `pbr-dep-trua`, `pbr-dep-chieu`, `pbr-nhe-trua`, `pbr-tuoi-dat-uot` trong thư mục ảnh.
 
+## Bước 1c — script chuyển động, quy ước tên, đồ vật CC0
+
+- Chuyển động nay là script PlayCanvas (`src/features/farm-pc/scripts/motion.ts`), chạy theo sự kiện `farm:view` / `farm:effect` / `farm:env`:
+  - `Sway`: tán cây và cây trồng lắc theo gió;
+  - `Pop`: cây trồng nảy lên khi đổi giai đoạn (không nảy lúc mới tải);
+  - `DoorOnSelect`: cửa kho mở khi chọn nhà kho;
+  - `Lamp`: đèn theo buổi;
+  - `PlayFx`: particle cho scene Editor sau này.
+
+  Tất cả tắt khi bật giảm chuyển động. Khi tab ẩn, thời gian script dừng (`timeScale = 0`).
+- Vật thể đặt tên theo quy ước (`corner-root`, `barn`, `barn-hit`, `barn-door`, `bed`, `plot-N/soil`, `plot-N/crop`, `tree`, `sun`); `validateCorner` kiểm tra.
+- 6 đồ vật CC0 Poly Haven (hòm gỗ, chum đất nung, nồi đất, ghế đẩu, rìu, xô gỗ) thay khối tạm. Tổng 724 KB, texture 256 px, mỗi món 1–5 nghìn đỉnh. Tỉ lệ và vị trí trong `PROPS` (`sceneLayout.ts`). Nếu file lỗi, khối tạm vẫn còn.
+- Test engine thật trên `NullGraphicsDevice` (9 test). Có test hồi quy cho lỗi đất ướt: đã thử đưa code về cách cũ, test báo đỏ.
+- Chunk engine: 1.33 MB / 350 KB gzip (thêm hệ script và bộ đọc GLB).
+
+Ảnh: `do-vat-cc0`, `cua-kho-mo`.
+
 ## Hạn chế và việc tiếp theo
 
 - Mô hình vẫn là placeholder dựng bằng code (tán cây là cụm cầu, cây trồng, đá dẹt, bụi cỏ). Texture/HDRI đã làm bề mặt và ánh sáng thật hơn, nhưng hình khối là giới hạn chính còn lại. Đây không phải nghiệm thu mỹ thuật so với ảnh tham chiếu.

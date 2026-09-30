@@ -1,7 +1,8 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { FARM_TEXTURES } from './assets';
+import { FARM_MODELS, FARM_TEXTURES } from './assets';
+import { PROPS } from './sceneLayout';
 import { ENV_BACKDROP, ENV_HDR, TEX_SETS, texUrl, type TexSetId } from './engine/textures';
 
 const root = resolve(__dirname, '../../..');
@@ -25,5 +26,15 @@ describe('farm asset files', () => {
     }
     const credited = new Set(FARM_TEXTURES.map((t) => t.id));
     for (const id of Object.keys(TEX_SETS)) expect(credited.has(id), id).toBe(true);
+  });
+
+  it('ships and credits every prop model the scene places', () => {
+    const credited = new Map(FARM_MODELS.map((m) => [m.id, m]));
+    for (const spot of PROPS) {
+      const m = credited.get(spot.id);
+      expect(m, spot.id).toBeTruthy();
+      expect(m!.license).toBe('CC0');
+      expect(existsSync(resolve(root, m!.file)), m!.file).toBe(true);
+    }
   });
 });

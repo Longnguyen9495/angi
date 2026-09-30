@@ -1,6 +1,21 @@
 # Kế hoạch: dựng góc vườn bằng Blender + PlayCanvas Editor
 
-> Trạng thái: kế hoạch, chưa thực hiện. Làm tiếp từ lát cắt đã có: [playcanvas-lat-cat-1.md](playcanvas-lat-cat-1.md).
+> Trạng thái (2026-09-30): **giai đoạn 3 và 4 đã làm xong trong code**, cùng 6 đồ vật CC0 thay placeholder. Giai đoạn 0, 1 (cây/nhà kho/luống), 2 và 5 cần bạn thao tác ngoài code; giai đoạn 6 làm khi có bản xuất đầu tiên. Làm tiếp từ lát cắt đã có: [playcanvas-lat-cat-1.md](playcanvas-lat-cat-1.md).
+
+## Tiến độ
+
+| Giai đoạn | Trạng thái | Ghi chú |
+|---|---|---|
+| 0 — Chuẩn bị | ⏳ Bạn làm | Kiểm tra gói/project riêng tư, tạo project, engine 2.22.x |
+| 1 — Mô hình | 🟡 Một phần | Đã có 6 đồ vật CC0 (Poly Haven) trong `public/models/farm/props/`. **Cây, nhà kho, luống, cây trồng vẫn cần Blender**: mô hình CC0 có sẵn của cây đều nặng hàng triệu tam giác |
+| 2 — Lắp cảnh Editor | ⏳ Bạn làm | |
+| 3 — Quy ước tên | ✅ Xong | `src/features/farm-pc/naming.ts` (`CORNER`, `validateCorner`); góc dựng bằng code đã đặt tên theo quy ước và có test |
+| 4 — Script chuyển động | ✅ Xong | `src/features/farm-pc/scripts/`: `Sway`, `Pop`, `DoorOnSelect`, `Lamp`, `PlayFx` + sự kiện `farm:*`; đang chạy trong góc hiện tại (cây/lá lắc, cây trồng nảy khi đổi giai đoạn, cửa kho mở khi chọn, đèn theo buổi) |
+| 5 — Xuất bản | ⏳ Bạn làm | |
+| 6 — Tích hợp bản xuất | ⏸ Chờ bản xuất | Đã sẵn: `startFarmEngine`, `validateCorner`, test engine thật trên `NullGraphicsDevice` |
+| 7 — Nghiệm thu | ⏸ | |
+
+**Lưu ý khi dùng script trong Editor:** các file trong `scripts/` là TypeScript. Để upload lên Editor cần bản JS; đây là việc của giai đoạn 6 (thêm bước build `scripts/*.ts` → `.mjs`, hoặc đồng bộ bằng `playcanvas-sync`).
 > Mục tiêu: thay các khối dựng bằng code trong góc mẫu bằng mô hình thật và hiệu ứng chuyển động do bạn chỉnh trực quan, **không đổi luật chơi, tiến độ hay backend**.
 
 ## Nguyên tắc (đọc trước khi bắt đầu)
@@ -159,8 +174,7 @@ Mỗi khu là một scene hoặc template riêng, cùng quy ước tên.
 
 ## Prompt để giao cho Claude khi quay lại
 
-Giai đoạn 4 (làm được ngay, chưa cần bản xuất):
-> Đọc `plans/playcanvas-editor-pipeline.md`. Viết các script chuyển động ở giai đoạn 4 (ESM, PlayCanvas 2.22) và định nghĩa sự kiện `farm:view` / `farm:effect` / `farm:env` dựa trên `src/features/farm-pc/contract.ts`. Có test, tôn trọng giảm chuyển động.
+Giai đoạn 4 — đã xong (script trong `src/features/farm-pc/scripts/`).
 
 Giai đoạn 6 (sau khi có `public/farm-scenes/corner-v1/`):
 > Đọc `plans/playcanvas-editor-pipeline.md` và `public/farm-scenes/corner-v1/SOURCE.md`. Làm giai đoạn 6: loader nạp bản xuất, nối gameplay theo quy ước tên, fallback về góc dựng bằng code, test, chạy kiểm tra và chụp so sánh.

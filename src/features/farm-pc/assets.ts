@@ -165,3 +165,30 @@ export const FARM_TEXTURES: FarmTexture[] = [
     ],
   },
 ];
+
+export interface FarmModel {
+  id: string;
+  use: string;
+  /** Poly Haven: CC0 1.0. */
+  license: 'CC0';
+  source: string;
+  file: string;
+}
+
+const model = (id: string, use: string): FarmModel => ({
+  id,
+  use,
+  license: 'CC0',
+  source: PH(id),
+  // Repacked from the 1K glTF: textures 256 px webp, welded and pruned (glTF Transform).
+  file: `public/models/farm/props/${id}.glb`,
+});
+
+export const FARM_MODELS: FarmModel[] = [
+  model('wooden_crate_02', 'Hòm gỗ cạnh nhà kho'),
+  model('planter_pot_clay', 'Chum đất nung'),
+  model('ceramic_pot', 'Nồi đất'),
+  model('chinese_stool', 'Ghế đẩu gỗ'),
+  model('wooden_axe_02', 'Rìu nằm cạnh hòm'),
+  model('wooden_bucket_01', 'Xô gỗ cạnh luống'),
+];

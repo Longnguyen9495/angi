@@ -11,6 +11,7 @@ import {
   CULLFACE_NONE,
   Color,
   ConeGeometry,
+  ContainerHandler,
   CylinderGeometry,
   DEVICETYPE_WEBGL2,
   Entity,
@@ -26,6 +27,7 @@ import {
   RESOLUTION_AUTO,
   Ray,
   RenderComponentSystem,
+  ScriptComponentSystem,
   SHADOW_PCF3_32F,
   SHADOW_PCF5_32F,
   SSAOTYPE_LIGHTING,
@@ -38,6 +40,7 @@ import {
   Vec2,
   Vec3 as V3,
   createGraphicsDevice,
+  type ContainerResource,
   type GraphicsDevice,
   type Geometry,
 } from 'playcanvas';
@@ -62,6 +65,7 @@ import {
   LIGHTING,
   PALETTE,
   PATH_STONES,
+  PROPS,
   TREE,
   TUFTS,
   bedCell,
@@ -69,6 +73,9 @@ import {
   type Vec3,
 } from '../sceneLayout';
 import { cliffGeometry, groundGeometry, groundHeight, prismGeometry } from './geometry';
+import { CORNER } from '../naming';
+import { emitEffect, emitEnv, emitView } from '../scripts/events';
+import { DoorOnSelect, Lamp, Pop, Sway } from '../scripts/motion';
 import { ENV_BACKDROP, ENV_HDR, TEX_SETS, texUrl, type TexMap, type TexSetId } from './textures';
 
 /*
@@ -110,9 +117,10 @@ const LEAF_TEX: TexUse = { set: 'leafy_grass', tiling: [2, 2] };
 interface PlotNode {
   root: Entity;
   soil: Entity;
+  /** Empty attach point named `crop` (convention); the crop model goes inside. */
+  anchor: Entity;
   crop: Entity | null;
   cropKey: string;
-  sway: { e: Entity; yaw: number }[];
   thirsty: Entity;
   ripe: Entity;
 }
@@ -166,7 +174,7 @@ function rand(seed: number): () => number {
   };
 }
 
-class FarmEngine implements FarmEngineHandle {
+export class FarmEngine implements FarmEngineHandle {
   private readonly app: AppBase;
   private readonly device: GraphicsDevice;
   private readonly canvas: HTMLCanvasElement;
@@ -187,8 +195,11 @@ class FarmEngine implements FarmEngineHandle {
 
   private camera!: Entity;
   private sun!: Entity;
-  private lamp!: Entity;
-  private lampGlow!: Entity;
+  /** `corner-root`: everything the naming convention covers lives under it. */
+  private world!: Entity;
+  private readonly placeholders = new Map<string, Entity[]>();
+  /** Views received; crops built after the first one pop in. */
+  private views = 0;
   private bed: Entity | null = null;
   private bedCount = 0;
   private readonly plots = new Map<number, PlotNode>();
@@ -196,7 +207,6 @@ class FarmEngine implements FarmEngineHandle {
   private ringScale = 1;
   /** Pull the camera back on tall/narrow canvases so the whole corner stays in view. */
   private fit = 1;
-  private treeCanopy: Entity[] = [];
   private blobMat!: StandardMaterial;
   private readonly bursts: Burst[] = [];
   private view: FarmView | null = null;
@@ -212,6 +222,16 @@ class FarmEngine implements FarmEngineHandle {
   };
   private drag: { x: number; y: number; yaw: number; moved: boolean; id: number } | null = null;
   private readonly picks: { sel: Exclude<FarmSelection, null>; box: BoundingBox }[] = [];
+
+  /** For ?g3d-debug and tests only. */
+  get appForDebug(): AppBase {
+    return this.app;
+  }
+
+  /** corner-root, for naming checks in tests. */
+  get root(): Entity {
+    return this.world;
+  }
 
   constructor(app: AppBase, device: GraphicsDevice, opts: FarmEngineOptions) {
     this.app = app;
@@ -238,6 +258,8 @@ class FarmEngine implements FarmEngineHandle {
       gammaCorrection: GAMMA_SRGB,
     });
     this.app.root.addChild(this.camera);
+    this.world = new Entity(CORNER.root);
+    this.app.root.addChild(this.world);
 
     // Cloud backdrop: an unlit plane that travels with the camera (sky only, never the farm).
     const bg = new StandardMaterial();
@@ -259,14 +281,14 @@ class FarmEngine implements FarmEngineHandle {
       false,
     );
 
-    this.sun = new Entity('sun');
+    this.sun = new Entity(CORNER.sun);
     this.sun.addComponent('light', {
       type: 'directional',
       shadowDistance: 24,
       normalOffsetBias: 0.06,
       shadowBias: 0.2,
     });
-    this.app.root.addChild(this.sun);
+    this.world.addChild(this.sun);
 
     this.blobMat = this.makeBlobMaterial();
     this.buildIsland();
@@ -279,7 +301,7 @@ class FarmEngine implements FarmEngineHandle {
     this.ring = this.meshEntity(
       new TorusGeometry({ tubeRadius: 0.045, ringRadius: 0.5, segments: 48, sides: 8 }),
       this.mat('select', PALETTE.select, { glow: 0.55 }),
-      this.app.root,
+      this.world,
       false,
     );
     this.ring.enabled = false;
@@ -373,6 +395,7 @@ class FarmEngine implements FarmEngineHandle {
    * file only costs that detail: the flat palette stays, gameplay is untouched.
    */
   loadAssets() {
+    this.loadProps();
     const sets = [...new Set(this.texMats.map((t) => t.use.set))];
     const maps: [TexMap, boolean][] = [
       ['diff', true],
@@ -419,6 +442,66 @@ class FarmEngine implements FarmEngineHandle {
       .catch(() => {
         /* the plain sky colour stays */
       });
+  }
+
+  /**
+   * CC0 GLB props replace the placeholder shapes once loaded; a failed file
+   * keeps the placeholder. Each model is scaled to its spot's size and stood
+   * on the ground.
+   */
+  private loadProps() {
+    const barn = this.world.findByName(CORNER.barn) as Entity | null;
+    for (const spot of PROPS) {
+      const url = `${import.meta.env.BASE_URL}models/farm/props/${spot.id}.glb`;
+      const a = new Asset(spot.id, 'container', { url });
+      this.assets.push(a);
+      a.once('load', (loaded: Asset) => {
+        if (this.destroyed) return;
+        const res = loaded.resource as ContainerResource;
+        const model = res.instantiateRenderEntity({ castShadows: true, receiveShadows: true });
+        const holder = new Entity(`prop-${spot.id}`);
+        const parent = spot.at === 'barn' && barn ? barn : this.world;
+        parent.addChild(holder);
+        holder.setLocalEulerAngles(spot.tilt ?? 0, spot.rot, 0);
+        holder.addChild(model);
+        // Measure, scale to size, then sit the lowest point on the ground at (x, z).
+        const box = this.worldBox(model);
+        if (!box) return holder.destroy();
+        const he = box.halfExtents;
+        const k = spot.size / (2 * Math.max(he.x, he.y, he.z));
+        holder.setLocalScale(k, k, k);
+        holder.setLocalPosition(spot.x, 0, spot.z);
+        const placed = this.worldBox(model)!;
+        const wp = holder.getPosition();
+        const ground = groundHeight(placed.center.x, placed.center.z);
+        holder.setPosition(wp.x, wp.y + ground - (placed.center.y - placed.halfExtents.y), wp.z);
+        for (const e of spot.replaces ? (this.placeholders.get(spot.replaces) ?? []) : []) {
+          e.enabled = false;
+        }
+        this.requestFrame();
+      });
+      a.once('error', () => {
+        /* placeholder stays */
+      });
+      this.app.assets.add(a);
+      this.app.assets.load(a);
+    }
+  }
+
+  /** World-space bounds of every mesh under `e`, or null if it has none. */
+  private worldBox(e: Entity): BoundingBox | null {
+    e.syncHierarchy();
+    let box: BoundingBox | null = null;
+    for (const r of e.findComponents('render') as unknown as { meshInstances: MeshInstance[] }[]) {
+      for (const mi of r.meshInstances) {
+        if (box) box.add(mi.aabb);
+        else {
+          box = new BoundingBox();
+          box.copy(mi.aabb);
+        }
+      }
+    }
+    return box;
   }
 
   /** Shared unit meshes with tangents (the stock primitives have none, so normal maps fail). */
@@ -485,7 +568,7 @@ class FarmEngine implements FarmEngineHandle {
     pos: Vec3,
     scale: Vec3,
     rot: Vec3 = [0, 0, 0],
-    parent: Entity = this.app.root,
+    parent: Entity = this.world,
     shadows = true,
   ): Entity {
     const e = new Entity();
@@ -536,7 +619,7 @@ class FarmEngine implements FarmEngineHandle {
         });
   }
 
-  private blob(x: number, z: number, w: number, d: number, rotY = 0, parent = this.app.root) {
+  private blob(x: number, z: number, w: number, d: number, rotY = 0, parent = this.world) {
     return this.prim(
       'plane',
       this.blobMat,
@@ -556,7 +639,7 @@ class FarmEngine implements FarmEngineHandle {
         gloss: 0.12,
         tex: { set: 'leafy_grass', tiling: [1, 1] },
       }),
-      this.app.root,
+      this.world,
       false,
     );
     this.meshEntity(
@@ -566,7 +649,7 @@ class FarmEngine implements FarmEngineHandle {
         gloss: 0.15,
         tex: { set: 'rock_boulder_dry', tiling: [1, 1] },
       }),
-      this.app.root,
+      this.world,
       true,
     );
     // A few rim rocks break the edge silhouette.
@@ -610,10 +693,10 @@ class FarmEngine implements FarmEngineHandle {
 
   private buildBarn() {
     const { x, z, rot, width: w, depth: d, wall, ridge } = BARN;
-    const root = new Entity('barn');
+    const root = new Entity(CORNER.barn);
     root.setLocalPosition(x, 0, z);
     root.setLocalEulerAngles(0, (rot * 180) / Math.PI, 0);
-    this.app.root.addChild(root);
+    this.world.addChild(root);
     this.blob(0, 0, w + 1.6, d + 1.5, 0, root);
 
     const planks = (tiling: readonly [number, number]): TexUse => ({
@@ -688,34 +771,26 @@ class FarmEngine implements FarmEngineHandle {
 
     // Door with frame and cross brace, sign board, a lantern for the evening.
     const front = d / 2 + 0.03;
-    this.prim('box', dark, [0.1, 0.2 + 0.62, front], [0.96, 1.24, 0.05], [0, 0, 0], root);
+    // The door hangs on a hinge at its left edge so DoorOnSelect can swing it.
+    const door = new Entity(CORNER.barnDoor);
+    door.setLocalPosition(0.1 - 0.48, 0, front);
+    root.addChild(door);
+    const dy = 0.2 + 0.62;
+    this.prim('box', dark, [0.48, dy, 0], [0.96, 1.24, 0.05], [0, 0, 0], door);
+    this.prim('box', light, [0.48, dy, 0.03], [0.82, 1.1, 0.04], [0, 0, 0], door, false);
+    this.prim('box', dark, [0.48, dy, 0.06], [0.1, 1.28, 0.03], [0, 0, 42], door, false);
+    this.prim('box', dark, [0.48, dy, 0.06], [0.1, 1.28, 0.03], [0, 0, -42], door, false);
     this.prim(
       'box',
-      light,
-      [0.1, 0.2 + 0.62, front + 0.03],
-      [0.82, 1.1, 0.04],
+      this.mat('doorway', [0.08, 0.06, 0.05]),
+      [0.1, dy, front - 0.02],
+      [0.92, 1.2, 0.02],
       [0, 0, 0],
       root,
       false,
     );
-    this.prim(
-      'box',
-      dark,
-      [0.1, 0.2 + 0.62, front + 0.06],
-      [0.1, 1.28, 0.03],
-      [0, 0, 42],
-      root,
-      false,
-    );
-    this.prim(
-      'box',
-      dark,
-      [0.1, 0.2 + 0.62, front + 0.06],
-      [0.1, 1.28, 0.03],
-      [0, 0, -42],
-      root,
-      false,
-    );
+    door.addComponent('script');
+    door.script!.create(DoorOnSelect, { properties: { openAngle: -105 } });
     this.prim(
       'box',
       light,
@@ -724,7 +799,7 @@ class FarmEngine implements FarmEngineHandle {
       [0, 0, 0],
       root,
     );
-    this.lampGlow = this.prim(
+    const lampGlow = this.prim(
       'sphere',
       this.mat('lamp', PALETTE.lamp, { glow: 0.15 }),
       [0.78, 0.2 + wall - 0.25, front + 0.1],
@@ -733,20 +808,30 @@ class FarmEngine implements FarmEngineHandle {
       root,
       false,
     );
-    this.lamp = new Entity('lamp');
-    this.lamp.addComponent('light', {
+    lampGlow.name = 'lamp-glow';
+    const lamp = new Entity('lamp');
+    lamp.addComponent('light', {
       type: 'omni',
       range: 3.2,
       intensity: 0,
       castShadows: false,
       color: new Color(...PALETTE.lamp),
     });
-    this.lamp.setLocalPosition(0.78, 0.2 + wall - 0.1, front + 0.5);
-    root.addChild(this.lamp);
+    lamp.setLocalPosition(0.78, 0.2 + wall - 0.1, front + 0.5);
+    root.addChild(lamp);
+    lamp.addComponent('script');
+    lamp.script!.create(Lamp, { properties: { glow: lampGlow, intensity: 2.2 } });
 
-    // Storytelling props: crates, a sack, a clay jar.
-    this.prim('box', wood, [w / 2 + 0.45, 0.25, d / 2 - 0.2], [0.5, 0.5, 0.5], [0, 12, 0], root);
-    this.prim(
+    // Storytelling props until the CC0 models arrive: crates, a sack, a clay jar.
+    const crate = this.prim(
+      'box',
+      wood,
+      [w / 2 + 0.45, 0.25, d / 2 - 0.2],
+      [0.5, 0.5, 0.5],
+      [0, 12, 0],
+      root,
+    );
+    const crateTop = this.prim(
       'box',
       light,
       [w / 2 + 0.42, 0.66, d / 2 - 0.25],
@@ -754,7 +839,7 @@ class FarmEngine implements FarmEngineHandle {
       [0, -9, 0],
       root,
     );
-    this.prim(
+    const sack = this.prim(
       'sphere',
       this.mat('sack', PALETTE.plaster),
       [w / 2 + 0.35, 0.24, d / 2 + 0.45],
@@ -762,7 +847,7 @@ class FarmEngine implements FarmEngineHandle {
       [0, 20, 0],
       root,
     );
-    this.prim(
+    const jar = this.prim(
       'sphere',
       this.mat('jar', PALETTE.roof, { gloss: 0.4 }),
       [-w / 2 - 0.35, 0.28, d / 2 - 0.1],
@@ -770,7 +855,7 @@ class FarmEngine implements FarmEngineHandle {
       [0, 0, 0],
       root,
     );
-    this.prim(
+    const jarRim = this.prim(
       'cylinder',
       this.mat('jarRim', PALETTE.roofDark),
       [-w / 2 - 0.35, 0.56, d / 2 - 0.1],
@@ -779,6 +864,15 @@ class FarmEngine implements FarmEngineHandle {
       root,
     );
     this.blob(w / 2 + 0.45, d / 2 + 0.1, 1.3, 1.6, 0, root);
+    this.placeholders.set('crate', [crate, crateTop]);
+    this.placeholders.set('sack', [sack]);
+    this.placeholders.set('jar', [jar, jarRim]);
+
+    // Tap volume, named by the convention (an Editor scene provides the same box).
+    const hit = new Entity(CORNER.barnHit);
+    hit.setLocalPosition(0, 1.2, 0);
+    hit.setLocalScale(3.4, 2.8, 3.2);
+    root.addChild(hit);
 
     this.picks.push({
       sel: { kind: 'barn' },
@@ -788,9 +882,9 @@ class FarmEngine implements FarmEngineHandle {
 
   private buildTree() {
     const { x, z, trunk, canopy } = TREE;
-    const root = new Entity('tree');
+    const root = new Entity(CORNER.tree);
     root.setLocalPosition(x, groundHeight(x, z), z);
-    this.app.root.addChild(root);
+    this.world.addChild(root);
     this.blob(0, 0, canopy * 2.6, canopy * 2.2, 0, root);
     const bark = this.mat('bark', PALETTE.bark, { tex: { set: 'bark_brown_02', tiling: [1, 2] } });
     const tg = new ConeGeometry({
@@ -815,8 +909,8 @@ class FarmEngine implements FarmEngineHandle {
       [0.05, trunk + 1.05, 0.1, 0.62, PALETTE.leafLight],
       [-0.25, trunk + 0.05, 0.55, 0.52, PALETTE.leafLight],
     ];
-    this.treeCanopy = clumps.map(([cx, cy, cz, s, col], i) =>
-      this.prim(
+    clumps.forEach(([cx, cy, cz, s, col], i) => {
+      const clump = this.prim(
         'sphere',
         // Leafy photo on the clumps breaks the smooth spheres into foliage.
         this.mat(`leaf${i % 3}`, col, { gloss: 0.18, tex: LEAF_TEX }),
@@ -824,8 +918,10 @@ class FarmEngine implements FarmEngineHandle {
         [s * canopy * 1.25, s * canopy * 1.0, s * canopy * 1.2],
         [0, i * 37, 0],
         root,
-      ),
-    );
+      );
+      clump.addComponent('script');
+      clump.script!.create(Sway, { properties: { amplitude: 1.6, speed: 0.14, phase: i * 1.3 } });
+    });
   }
 
   private buildTufts() {
@@ -850,7 +946,7 @@ class FarmEngine implements FarmEngineHandle {
           [tx + ox, y + 0.08, tz + oz],
           [0.42 * s, 0.24 * s, 0.36 * s],
           [0, r() * 180, 0],
-          this.app.root,
+          this.world,
           false,
         );
       }
@@ -861,7 +957,7 @@ class FarmEngine implements FarmEngineHandle {
           [tx + (r() - 0.5) * 0.6 * s, y + 0.22 * s, tz + (r() - 0.5) * 0.4 * s],
           [0.08, 0.06, 0.08],
           [0, 0, 0],
-          this.app.root,
+          this.world,
           false,
         );
       }
@@ -871,13 +967,14 @@ class FarmEngine implements FarmEngineHandle {
 
   /* --------------------------------------------------------------- bed */
 
-  private buildBed(count: number) {
+  private buildBed(ids: readonly number[]) {
+    const count = ids.length;
     this.bed?.destroy();
     this.plots.clear();
     this.picks.splice(0, this.picks.length, ...this.picks.filter((p) => p.sel.kind !== 'plot'));
     const { w, d } = bedSize(count);
-    const bed = new Entity('bed');
-    this.app.root.addChild(bed);
+    const bed = new Entity(CORNER.bed);
+    this.world.addChild(bed);
     this.bed = bed;
     this.bedCount = count;
     const wood = this.mat('bedWood', PALETTE.wood, {
@@ -936,9 +1033,11 @@ class FarmEngine implements FarmEngineHandle {
     const ripeMat = this.mat('ripe', PALETTE.select, { glow: 0.6 });
     for (let i = 0; i < count; i++) {
       const c = bedCell(i, count);
-      const root = new Entity(`plot-${i}`);
+      const root = new Entity(CORNER.plot(ids[i]!));
       root.setLocalPosition(c.x, h, c.z);
       bed.addChild(root);
+      const anchor = new Entity(CORNER.crop);
+      root.addChild(anchor);
       const soilTile = this.prim(
         'box',
         soil,
@@ -980,19 +1079,22 @@ class FarmEngine implements FarmEngineHandle {
         false,
       );
       ripe.enabled = false;
-      this.plots.set(i, { root, soil: soilTile, crop: null, cropKey: '', sway: [], thirsty, ripe });
+      soilTile.name = CORNER.soil;
+      this.plots.set(i, { root, soil: soilTile, anchor, crop: null, cropKey: '', thirsty, ripe });
     }
   }
 
   private buildCrop(node: PlotNode, p: FarmPlotView) {
     node.crop?.destroy();
     node.crop = null;
-    node.sway = [];
     node.cropKey = `${p.crop}:${p.stage}`;
     if (!p.crop || p.stage === 'empty') return;
-    const group = new Entity('crop');
-    node.root.addChild(group);
+    const group = new Entity('crop-model');
+    node.anchor.addChild(group);
     node.crop = group;
+    // Pop scales this wrapper; the stage/growth scale stays on `group`.
+    const pop = new Entity('pop');
+    group.addChild(pop);
     const count = QUALITY[this.env.quality].plantsPerPlot;
     const r = rand(node.root.name.length * 31 + p.id * 97);
     const leaf = this.mat('cropLeaf', PALETTE.cropLeaf, { gloss: 0.25 });
@@ -1008,8 +1110,7 @@ class FarmEngine implements FarmEngineHandle {
       plant.setLocalPosition(px, 0.06, (r() - 0.5) * 0.18);
       const yaw = r() * 360;
       plant.setLocalEulerAngles(0, yaw, 0);
-      group.addChild(plant);
-      node.sway.push({ e: plant, yaw });
+      pop.addChild(plant);
       if (blade) {
         const ripeBlade = p.stage === 'ready' ? fruit : leaf;
         for (let b = 0; b < 5; b++) {
@@ -1069,6 +1170,14 @@ class FarmEngine implements FarmEngineHandle {
         }
       }
     }
+    // Wind on each plant; a pop-in for crops that change after the first view.
+    pop.children.forEach((plant, i) => {
+      const e = plant as Entity;
+      e.addComponent('script');
+      e.script!.create(Sway, { properties: { amplitude: 4, speed: 0.26, phase: i * 1.9 + p.id } });
+    });
+    pop.addComponent('script');
+    pop.script!.create(Pop, { properties: { playOnStart: this.views > 0 } });
     this.scaleCrop(node, p);
   }
 
@@ -1086,7 +1195,7 @@ class FarmEngine implements FarmEngineHandle {
     if (this.destroyed) return;
     this.view = view;
     if (view.plots.length !== this.bedCount) {
-      this.buildBed(view.plots.length);
+      this.buildBed(view.plots.map((p) => p.id));
       view.plots.forEach((_, i) => {
         const c = bedCell(i, view.plots.length);
         this.picks.push({
@@ -1110,6 +1219,8 @@ class FarmEngine implements FarmEngineHandle {
       node.ripe.enabled = p.stage === 'ready';
     });
     this.placeRing(view.selected);
+    this.views++;
+    emitView(this.app, view);
     this.requestFrame();
   }
 
@@ -1127,7 +1238,9 @@ class FarmEngine implements FarmEngineHandle {
   }
 
   play(effect: FarmEffect) {
-    if (this.destroyed || this.env.reduced || !this.view) return;
+    if (this.destroyed) return;
+    emitEffect(this.app, effect);
+    if (this.env.reduced || !this.view) return;
     for (const id of effect.plotIds) {
       const i = this.view.plots.findIndex((p) => p.id === id);
       if (i < 0) continue;
@@ -1140,6 +1253,8 @@ class FarmEngine implements FarmEngineHandle {
   setActive(active: boolean) {
     if (this.destroyed || this.active === active) return;
     this.active = active;
+    // Scripts stop advancing while hidden; nothing grows from frames spent off-screen.
+    this.app.timeScale = active ? 1 : 0;
     this.app.autoRender = active && !this.env.reduced;
     if (active) this.requestFrame();
   }
@@ -1230,10 +1345,7 @@ class FarmEngine implements FarmEngineHandle {
     bg.update();
     scene.fog.color = new Color(...L.sky);
     this.camera.camera!.clearColor = new Color(L.sky[0], L.sky[1], L.sky[2], 1);
-    this.lamp.light!.intensity = L.lamp * 2.2;
-    const glow = matOf(this.lampGlow);
-    glow.emissiveIntensity = 0.15 + L.lamp * 2;
-    glow.update();
+    emitEnv(this.app, env);
     this.app.autoRender = this.active && !env.reduced;
     this.requestFrame();
   }
@@ -1376,15 +1488,6 @@ class FarmEngine implements FarmEngineHandle {
     const moving = this.updateCamera(dt, false);
     if (!this.env.reduced) {
       const t = this.time;
-      this.treeCanopy.forEach((e, i) => {
-        e.setLocalEulerAngles(Math.sin(t * 0.9 + i) * 1.6, i * 37, Math.cos(t * 0.7 + i) * 1.4);
-      });
-      for (const n of this.plots.values()) {
-        const phase = n.root.getLocalPosition().x;
-        n.sway.forEach(({ e, yaw }, i) => {
-          e.setLocalEulerAngles(Math.sin(t * 1.6 + i + phase) * 4, yaw, 0);
-        });
-      }
       if (this.ring.enabled) {
         const s = this.ringScale;
         const p = 1 + Math.sin(t * 3.2) * 0.025;
@@ -1483,26 +1586,50 @@ class FarmEngine implements FarmEngineHandle {
 }
 
 /** Creates the engine on a canvas. Rejects if WebGL 2 is unavailable. */
+/**
+ * Builds the corner on an existing graphics device. `loadAssets: false` skips
+ * network files (textures, HDR, props) — used by tests on a NullGraphicsDevice.
+ */
+export function startFarmEngine(
+  device: GraphicsDevice,
+  opts: FarmEngineOptions,
+  { loadAssets = true }: { loadAssets?: boolean } = {},
+): FarmEngine {
+  const app = new AppBase(opts.canvas);
+  const o = new AppOptions();
+  o.graphicsDevice = device;
+  o.componentSystems = [
+    RenderComponentSystem,
+    CameraComponentSystem,
+    LightComponentSystem,
+    ScriptComponentSystem,
+  ];
+  o.resourceHandlers = [TextureHandler, ContainerHandler];
+  app.init(o);
+  app.setCanvasFillMode(FILLMODE_NONE);
+  app.setCanvasResolution(RESOLUTION_AUTO);
+  const engine = new FarmEngine(app, device, opts);
+  try {
+    engine.build();
+    engine.resize();
+    app.start();
+    if (loadAssets) engine.loadAssets();
+  } catch (err) {
+    engine.destroy();
+    throw err;
+  }
+  return engine;
+}
+
 export const createFarmEngine: CreateFarmEngine = async (opts) => {
   const device = await createGraphicsDevice(opts.canvas, {
     deviceTypes: [DEVICETYPE_WEBGL2],
     antialias: opts.env.quality !== 'low',
     powerPreference: 'high-performance',
   });
-  const app = new AppBase(opts.canvas);
-  const o = new AppOptions();
-  o.graphicsDevice = device;
-  o.componentSystems = [RenderComponentSystem, CameraComponentSystem, LightComponentSystem];
-  o.resourceHandlers = [TextureHandler];
-  app.init(o);
-  app.setCanvasFillMode(FILLMODE_NONE);
-  app.setCanvasResolution(RESOLUTION_AUTO);
-  const engine = new FarmEngine(app, device as GraphicsDevice, opts);
+  const engine = startFarmEngine(device as GraphicsDevice, opts);
+  const app = engine.appForDebug;
   try {
-    engine.build();
-    engine.resize();
-    app.start();
-    engine.loadAssets();
     // ?g3d-debug exposes the engine for measuring (same switch as the classic renderer).
     if (window.location.search.includes('g3d-debug')) {
       (window as unknown as { __farmPc: unknown }).__farmPc = { engine, app };
