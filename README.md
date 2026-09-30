@@ -23,6 +23,8 @@ Sprite khu vườn (10 loại cây × 4 giai đoạn, nông sản, đồ trang t
 Logo & ảnh xem trước khi gửi link: `node scripts/generate-brand.mjs` tạo favicon/apple-touch-icon/icon 192–512;
 `public/og-image.jpg` (1200×630) chụp từ `scripts/brand/og-image.html` (mở ở 1200×630, DPR 1). Link tuyệt đối
 trong thẻ `og:*` lấy từ biến `SITE_URL` lúc build (mặc định domain production).
+Link từng món (`/mon/<slug>`) có ảnh xem trước riêng: nginx gửi `/mon/*` và `/og/*` sang `server/web/share.php`
+(chèn meta của món vào `dist/index.html`, ghép ảnh 1200×630 bằng GD từ `server/web/og-dish-base.png`, cache ở `storage/og/`).
 
 Ảnh món (JPEG cục bộ) được sinh lại bằng:
 `powershell -ExecutionPolicy Bypass -File scripts/generate-dish-images.ps1`
