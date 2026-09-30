@@ -18,6 +18,16 @@
 **Script trong Editor:** đã upload `farm/scripts/farm-motion.mjs` (đóng gói từ `src/features/farm-pc/scripts/motion.ts`). Sửa script thì sửa file TS, đóng gói lại bằng `npx esbuild src/features/farm-pc/scripts/motion.ts --bundle --format=esm --external:playcanvas --target=es2022 --outfile=farm-motion.mjs`, đổi `var X = class extends Script` thành `export class X extends Script` (parser của Editor chỉ nhận dạng này), rồi upload lại. Ghi chú cũ: các file trong `scripts/` là TypeScript. Để upload lên Editor cần bản JS; đây là việc của giai đoạn 6 (thêm bước build `scripts/*.ts` → `.mjs`, hoặc đồng bộ bằng `playcanvas-sync`).
 > Mục tiêu: thay các khối dựng bằng code trong góc mẫu bằng mô hình thật và hiệu ứng chuyển động do bạn chỉnh trực quan, **không đổi luật chơi, tiến độ hay backend**.
 
+## Làm tiếp trên máy khác
+
+1. `git fetch && git switch playcanvas-corner`, rồi `npm ci`.
+2. Node ≥ 22.18. Đăng ký MCP cho Claude Code (cấu hình theo từng máy):
+   `claude mcp add playcanvas -- npx -y @playcanvas/editor-mcp-server`
+3. Mở phiên Claude Code mới, mở project `angi-farm-corner` trong Editor → nút **MCP** (thanh dưới) → port `52000` → **Connect**. Cho phép popup với playcanvas.com nếu muốn Claude tự Launch thử.
+4. Nhắn Claude: "đọc plans/playcanvas-editor-pipeline.md rồi làm tiếp góc vườn trong Editor".
+
+`docs/PAGESEED-SERVER-ACCESS.md` (hướng dẫn truy cập VPS) không nằm trong repo; cần deploy từ máy mới thì chép file đó sang bằng tay.
+
 ## Cảnh `corner` trong Editor (dựng qua MCP, 2026-09-30)
 
 - 172 entity dưới `corner-root`, đủ 34 tên bắt buộc (`barn`, `barn-hit`, `barn-door`, `bed`, `plot-1…9` với `soil` + `crop`, `tree`, `sun`). Toạ độ sinh từ `sceneLayout.ts`, nên khớp với góc trong app.
