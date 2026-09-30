@@ -8,6 +8,7 @@ import { AtlasSection } from './AtlasSection';
 import { Cookbook } from './Cookbook';
 import { CookingSheet } from './CookingSheet';
 import { CurrentMeal } from './CurrentMeal';
+import { FriendsSection } from './FriendsSection';
 import { GardenSection } from './GardenSection';
 import { JourneyStats } from './JourneyStats';
 import { MealLog, MissionsSection } from './MissionsSection';
@@ -108,7 +109,8 @@ export default function JourneyScene({ onBackToReel, onOpenDish }: JourneySceneP
           </Section>
 
           <Section id="khu-vuon" no="02" title="Khu vườn">
-            <GardenSection onCook={setCooking} onOrders={() => jump('don-co-ba')} />
+            <GardenSection onCook={setCooking} onOrders={() => jump('don-co-ba')} onGo={jump} />
+            <FriendsSection />
           </Section>
 
           <Section

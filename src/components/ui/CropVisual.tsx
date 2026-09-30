@@ -1,8 +1,8 @@
 import type { CSSProperties, Ref } from 'react';
 import { CROPS } from '../../data/game';
-import type { CropId } from '../../data/types';
+import type { CropId, ProduceId } from '../../data/types';
 import type { PlotStage } from '../../domain/selectors';
-import { cropSprite } from '../../data/sprites';
+import { cropSprite, produceSprite } from '../../data/sprites';
 
 /**
  * A plant as a raster sprite per crop and stage. The stage is also shown as
@@ -26,11 +26,11 @@ export function CropVisual({ crop, stage }: { crop: CropId | null; stage: PlotSt
 }
 
 /** Harvested produce (pantry chips, harvest flight, cooking). */
-export function ProduceImage({ crop, size = 24 }: { crop: CropId; size?: number }) {
+export function ProduceImage({ crop, size = 24 }: { crop: ProduceId; size?: number }) {
   return (
     <img
       className="produce-img"
-      src={cropSprite(crop, 'produce')}
+      src={produceSprite(crop)}
       alt=""
       width={size}
       height={size}

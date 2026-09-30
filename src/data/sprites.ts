@@ -1,9 +1,14 @@
-import type { CropId, DecorId } from './types';
+import type { CropId, DecorId, ProduceId } from './types';
 import type { PlotStage } from '../domain/selectors';
 
 /** Garden sprites (see scripts/generate-crop-sprites.mjs): /images/garden/<crop>-<stage>.webp. */
 export function cropSprite(crop: CropId, stage: Exclude<PlotStage, 'empty'> | 'produce'): string {
   return `/images/garden/${crop}-${stage}.webp`;
+}
+
+/** Pantry image for any produce (crops, egg, milk): /images/garden/<id>-produce.webp. */
+export function produceSprite(id: ProduceId): string {
+  return `/images/garden/${id}-produce.webp`;
 }
 
 /** Garden decorations bought at the market. */

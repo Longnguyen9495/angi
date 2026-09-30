@@ -2,12 +2,16 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { parseProgress } from '../domain/persistence';
 import type { GuestProgress } from '../domain/progress';
 import { reconcile, summarize } from '../domain/sync';
-import { AccountError, accountApi, type AccountUser } from '../services/account';
+import { CROPS } from '../data/game';
+import type { CropId } from '../data/types';
+import { AccountError, accountApi, friendsApi, type AccountUser } from '../services/account';
 import { AccountContext, type AccountContextValue, type SyncState } from './context';
 import { useFeedback, useGame } from './hooks';
 
 /** Changes are gathered for this long before one save to the account. */
 const PUSH_DELAY_MS = 3000;
+/** How often a signed-in garden asks for friends' help and Cô Ba's gift. */
+const EVENTS_EVERY_MS = 5 * 60 * 1000;
 
 /**
  * Optional guest account. Signed out, nothing happens here beyond one /me call.
@@ -78,6 +82,38 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     [dispatch],
   );
 
+  /** Friends' watering, Cô Ba's daily seed, XP for helping: apply once, then acknowledge. */
+  const pullEvents = useCallback(async () => {
+    if (!ready.current) return;
+    const r = await friendsApi.events().catch(() => null);
+    if (!r || r.events.length === 0) return;
+    const now = Date.now();
+    const lines: string[] = [];
+    for (const e of r.events) {
+      const seen = stateRef.current.ledger.some((l) => l.key.startsWith(`friend:${e.id}:`));
+      const crop = e.crop && e.crop in CROPS ? (e.crop as CropId) : undefined;
+      dispatch({
+        type: 'FRIEND_EVENT',
+        event: { id: e.id, type: e.type, plotId: e.plotId ?? undefined, crop, from: e.from },
+        now,
+      });
+      if (seen) continue;
+      if (e.type === 'water') lines.push(`${e.from} đã tưới giúp ô ${e.plotId}`);
+      if (e.type === 'gift' && crop)
+        lines.push(`Cô Ba gửi 1 ${CROPS[crop].seedName.toLowerCase()}`);
+    }
+    await friendsApi.ack(r.events.map((e) => e.id)).catch(() => undefined);
+    if (lines.length > 0) {
+      toast({
+        message:
+          lines.slice(0, 2).join(' · ') +
+          (lines.length > 2 ? ` và ${lines.length - 2} tin khác` : '') +
+          '.',
+        tone: 'success',
+      });
+    }
+  }, [dispatch, toast]);
+
   /** First contact after sign-in (or page load): decide push, pull or ask. */
   const attach = useCallback(
     async (u: AccountUser) => {
@@ -107,9 +143,24 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         setSync('saved');
         setLastSyncAt(Date.now());
       }
+      void pullEvents();
     },
-    [dispatch, push],
+    [dispatch, push, pullEvents],
   );
+
+  // While signed in: check for friends' help now and then, and when the tab comes back.
+  useEffect(() => {
+    if (status !== 'signed-in' || conflict) return;
+    const t = setInterval(() => void pullEvents(), EVENTS_EVERY_MS);
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') void pullEvents();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      clearInterval(t);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [status, conflict, pullEvents]);
 
   // Who is this? One quiet request per page load; failure just means "guest".
   useEffect(() => {
@@ -173,6 +224,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         } else {
           await push(stateRef.current);
         }
+        void pullEvents();
       },
       signedIn: attach,
       logout: async () => {
@@ -191,11 +243,12 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         setSync('idle');
         setConflict(null);
       },
+      checkInbox: pullEvents,
       setMarketing: async (on) => {
         setUser(await accountApi.setMarketing(on));
       },
     }),
-    [status, user, sync, lastSyncAt, conflict, state, dispatch, push, attach],
+    [status, user, sync, lastSyncAt, conflict, state, dispatch, push, attach, pullEvents],
   );
 
   return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>;

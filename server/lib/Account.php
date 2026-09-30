@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/Mailer.php';
+require_once __DIR__ . '/LoginCodeEmail.php';
 
 /*
  * Optional guest accounts: email + one-time code, no password. The only thing
@@ -52,16 +53,8 @@ final class Account
         ]);
 
         $url = rtrim((string) env('APP_URL', 'http://angi.local'), '/') . '/api/account/link?t=' . $link;
-        Mailer::send(
-            $email,
-            "Mã đăng nhập Bếp Việt: $code",
-            "Mã đăng nhập Bếp Việt của bạn là: $code\n\n"
-            . "Nhập mã này trên trang đang mở (hết hạn sau 10 phút), hoặc mở link:\n$url\n\n"
-            . "Nếu bạn không yêu cầu, cứ bỏ qua email này — không ai đăng nhập được khi không có mã.\n\n"
-            . "Bếp Việt chỉ dùng email để lưu hành trình của bạn"
-            . (($body['marketing'] ?? false) === true ? ' và gửi tin ưu đãi bạn đã đồng ý nhận' : '')
-            . ".\n",
-        );
+        $mail = LoginCodeEmail::build($code, $url, ($body['marketing'] ?? false) === true);
+        Mailer::send($email, $mail['subject'], $mail['text'], $mail['html']);
         $out = ['sent' => true, 'email' => $email, 'expiresIn' => self::CODE_TTL];
         if (env('APP_ENV', 'production') === 'local') {
             $out['devCode'] = $code; // local only: test without a mailbox
@@ -238,6 +231,11 @@ final class Account
         return [
             'account' => $this->publicUser($u) + ['consentVersion' => $u['consent_version'], 'consentAt' => (int) $u['consent_at']],
             'progress' => $this->getProgress(),
+            'garden' => $this->one('SELECT friend_code, garden_name, created_at FROM garden_profiles WHERE user_id = ?', [$u['id']]),
+            'friends' => array_column($this->all(
+                'SELECT g.friend_code FROM friendships f JOIN garden_profiles g ON g.user_id = f.friend_id WHERE f.user_id = ?',
+                [$u['id']],
+            ), 'friend_code'),
             'sessions' => array_map(fn ($s) => array_map('intval', $s), $sessions),
             'exportedAt' => time(),
         ];
@@ -247,6 +245,9 @@ final class Account
     {
         $u = $this->requireUser();
         // Explicit deletes as well as ON DELETE CASCADE, so nothing is left behind on either driver.
+        $this->db->prepare('DELETE FROM farm_events WHERE to_user = ? OR from_user = ?')->execute([$u['id'], $u['id']]);
+        $this->db->prepare('DELETE FROM friendships WHERE user_id = ? OR friend_id = ?')->execute([$u['id'], $u['id']]);
+        $this->db->prepare('DELETE FROM garden_profiles WHERE user_id = ?')->execute([$u['id']]);
         $this->db->prepare('DELETE FROM user_progress WHERE user_id = ?')->execute([$u['id']]);
         $this->db->prepare('DELETE FROM user_sessions WHERE user_id = ?')->execute([$u['id']]);
         $this->db->prepare('DELETE FROM login_codes WHERE email = ?')->execute([$u['email']]);

@@ -7,8 +7,8 @@ import {
   Plant,
 } from '@phosphor-icons/react';
 import { CropIcon } from '../../../components/ui/CropIcon';
-import { CROPS, RECIPES } from '../../../data/game';
-import type { CropId, RecipeId } from '../../../data/types';
+import { ANIMALS, CROPS, RECIPES, produceName } from '../../../data/game';
+import type { AnimalId, CropId, RecipeId } from '../../../data/types';
 import { dishIdsForSeed, type NextStep } from '../../../domain/nextStep';
 import { slotKey, formatDuration } from '../../../domain/time';
 import { useGame } from '../../../state/hooks';
@@ -20,6 +20,7 @@ interface NextStepCardProps {
   onCook: (recipe: RecipeId) => void;
   onOrders: () => void;
   onHarvest: () => void;
+  onAnimal: (animal: AnimalId, act: 'feed' | 'collect') => void;
   onPlant: (plotId: number, crop: CropId) => void;
   onFind: (crop: CropId) => void;
 }
@@ -31,6 +32,7 @@ export function NextStepCard({
   onCook,
   onOrders,
   onHarvest,
+  onAnimal,
   onPlant,
   onFind,
 }: NextStepCardProps) {
@@ -65,6 +67,25 @@ export function NextStepCard({
       body = 'Thu hoạch để đưa nông sản vào kho và giải phóng ô đất.';
       action = { label: 'Thu hoạch', run: onHarvest };
       break;
+    case 'collect': {
+      const a = ANIMALS[step.animal];
+      icon = <Basket size={22} aria-hidden="true" />;
+      title = `${a.name} đã có ${produceName(a.product).toLowerCase()}`;
+      body = `Thu ${a.yield} ${produceName(a.product).toLowerCase()} vào kho, rồi cho ăn để có mẻ tiếp theo.`;
+      action = {
+        label: `Thu ${produceName(a.product).toLowerCase()}`,
+        run: () => onAnimal(a.id, 'collect'),
+      };
+      break;
+    }
+    case 'feed': {
+      const a = ANIMALS[step.animal];
+      icon = <Plant size={22} aria-hidden="true" />;
+      title = `Cho ${a.name.toLowerCase()} ăn`;
+      body = `1 ${produceName(a.feed).toLowerCase()} → sau ${a.hours} giờ có ${a.yield} ${produceName(a.product).toLowerCase()} cho công thức.`;
+      action = { label: 'Cho ăn', run: () => onAnimal(a.id, 'feed') };
+      break;
+    }
     case 'plant': {
       const c = CROPS[step.crop];
       icon = <Plant size={22} aria-hidden="true" />;

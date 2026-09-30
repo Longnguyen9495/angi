@@ -1,0 +1,66 @@
+<!doctype html>
+<meta charset="utf-8" />
+<script>
+  // Packs 8 CC0 textures (Poly Haven) into two RGBA detail maps, one material per channel.
+  // Each channel = luminance normalised to mean 0.5 with a common contrast, so the shader
+  // can multiply it onto the painted vertex colours without changing the palette.
+  const SIZE = 256;
+  const A = ['fine_grained_wood', 'rock_face', 'farm_soil', 'leafy_grass'];
+  const B = ['clay_plaster', 'pine_bark', 'forest_leaves_02', 'rough_linen'];
+  const load = (id) =>
+    new Promise((res, rej) => {
+      const im = new Image();
+      im.onload = () => res(im);
+      im.onerror = rej;
+      im.src = id + '.jpg';
+    });
+  function lumaOf(im) {
+    const c = document.createElement('canvas');
+    c.width = c.height = SIZE;
+    const x = c.getContext('2d');
+    x.imageSmoothingQuality = 'high';
+    x.drawImage(im, 0, 0, SIZE, SIZE);
+    const d = x.getImageData(0, 0, SIZE, SIZE).data;
+    const l = new Float32Array(SIZE * SIZE);
+    let sum = 0;
+    for (let i = 0; i < l.length; i++) {
+      l[i] = 0.2126 * d[i * 4] + 0.7152 * d[i * 4 + 1] + 0.0722 * d[i * 4 + 2];
+      sum += l[i];
+    }
+    const mean = sum / l.length;
+    let v = 0;
+    for (let i = 0; i < l.length; i++) v += (l[i] - mean) ** 2;
+    const sd = Math.sqrt(v / l.length) || 1;
+    // ±2.2 standard deviations span the byte range.
+    return l.map((y) => Math.max(0, Math.min(255, 127.5 + ((y - mean) / sd) * 58)));
+  }
+  async function pack(ids) {
+    const chans = [];
+    for (const id of ids) chans.push(lumaOf(await load(id)));
+    const c = document.createElement('canvas');
+    c.width = c.height = SIZE;
+    const x = c.getContext('2d');
+    const img = x.createImageData(SIZE, SIZE);
+    for (let i = 0; i < SIZE * SIZE; i++)
+      for (let k = 0; k < 4; k++) img.data[i * 4 + k] = chans[k][i];
+    // putImageData keeps alpha exact (no premultiply) — the 4th material lives there.
+    x.putImageData(img, 0, 0);
+    return c.toDataURL('image/png');
+  }
+  window.run = async () => {
+    for (const id of [...A, ...B]) {
+      const l = lumaOf(await load(id));
+      const c = document.createElement('canvas');
+      c.width = c.height = SIZE;
+      const x = c.getContext('2d');
+      const img = x.createImageData(SIZE, SIZE);
+      for (let i = 0; i < l.length; i++) {
+        img.data[i * 4] = img.data[i * 4 + 1] = img.data[i * 4 + 2] = l[i];
+        img.data[i * 4 + 3] = 255;
+      }
+      x.putImageData(img, 0, 0);
+      await fetch('save.php?name=' + id.replace(/_/g, '-'), { method: 'POST', body: c.toDataURL('image/jpeg', 0.88) });
+    }
+    return 'saved';
+  };
+</script>

@@ -17,3 +17,6 @@ storage/logs/
 
 # Per-dish link-preview images (generated on demand by server/web/share.php)
 storage/og/
+
+# VPS access notes (root login details) — repo is public, keep local
+docs/PAGESEED-SERVER-ACCESS.md

@@ -2,7 +2,7 @@ import { Coins, SealCheck, Storefront } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { ProduceImage } from '../../../components/ui/CropVisual';
 import { CropIcon } from '../../../components/ui/CropIcon';
-import { CROP_LIST, DECOR_LIST, MARKET } from '../../../data/game';
+import { CROP_LIST, DECOR_LIST, MARKET, PRODUCE_IDS, produceName } from '../../../data/game';
 import { decorSprite } from '../../../data/sprites';
 import { cropAvailable } from '../../../domain/selectors';
 import { currentTime } from '../../../domain/time';
@@ -21,7 +21,10 @@ export function MarketSection() {
   const { state, dispatch } = useGame();
   const { announce } = useFeedback();
   const [tab, setTab] = useState<Tab>('sell');
-  const pantry = CROP_LIST.filter((c) => state.ingredients[c.id] > 0);
+  const pantry = PRODUCE_IDS.filter((id) => state.ingredients[id] > 0).map((id) => ({
+    id,
+    produceName: produceName(id),
+  }));
   const seeds = CROP_LIST.filter((c) => cropAvailable(state, c.id));
 
   return (

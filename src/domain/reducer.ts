@@ -1,10 +1,11 @@
 import { getDish } from '../data/dishes';
-import { CROPS, DAILY_MISSIONS, DECOR, MARKET, RECIPES, WATERING, XP } from '../data/game';
-import type { CropId, DecorId, MissionKind, RecipeId } from '../data/types';
+import { ANIMALS, CROPS, DAILY_MISSIONS, DECOR, MARKET, RECIPES, WATERING, XP } from '../data/game';
+import type { AnimalId, CropId, DecorId, MissionKind, ProduceId, RecipeId } from '../data/types';
 import {
   createInitialProgress,
   type AgainAnswer,
   type CheckInOutcome,
+  type FriendEvent,
   type GuestProgress,
   type LedgerEntry,
   type MotionPref,
@@ -12,6 +13,7 @@ import {
 } from './progress';
 import type { Filters } from './recommend';
 import {
+  animalStage,
   cropAvailable,
   firstEmptyPlot,
   newPlotCount,
@@ -37,7 +39,13 @@ export type Action =
   | { type: 'REMOVE_PHOTO'; slotKey: string }
   /** Replace everything with progress restored from the guest's account. */
   | { type: 'LOAD_PROGRESS'; progress: GuestProgress }
-  | { type: 'SELL'; crop: CropId; now: number }
+  | { type: 'SELL'; crop: ProduceId; now: number }
+  | { type: 'FEED_ANIMAL'; animal: AnimalId; now: number }
+  | { type: 'COLLECT_ANIMAL'; animal: AnimalId; now: number }
+  | { type: 'PLACE_DECOR'; decor: DecorId; x: number; z: number; rot: number }
+  | { type: 'STORE_DECOR'; decor: DecorId }
+  /** A friend's help or gift, confirmed by the server; applied once per event id. */
+  | { type: 'FRIEND_EVENT'; event: FriendEvent; now: number }
   | { type: 'BUY_SEED'; crop: CropId; now: number }
   | { type: 'BUY_DECOR'; decor: DecorId; now: number }
   | {
@@ -70,8 +78,8 @@ function balance(s: GuestProgress, resource: Resource): number {
   if (resource === 'xp') return s.xp;
   if (resource === 'coin') return s.coins;
   if (resource === 'stamp') return s.stamps.discovered.length + s.stamps.eaten.length;
-  const [kind, crop] = resource.split(':') as ['seed' | 'ingredient', CropId];
-  return kind === 'seed' ? s.seeds[crop] : s.ingredients[crop];
+  const [kind, id] = resource.split(':') as ['seed' | 'ingredient', string];
+  return kind === 'seed' ? s.seeds[id as CropId] : s.ingredients[id as ProduceId];
 }
 
 /**
@@ -94,9 +102,9 @@ function post(
     if (resource === 'xp') s.xp = next;
     else if (resource === 'coin') s.coins = next;
     else {
-      const [kind, crop] = resource.split(':') as ['seed' | 'ingredient', CropId];
-      if (kind === 'seed') s.seeds[crop] = next;
-      else s.ingredients[crop] = next;
+      const [kind, id] = resource.split(':') as ['seed' | 'ingredient', string];
+      if (kind === 'seed') s.seeds[id as CropId] = next;
+      else s.ingredients[id as ProduceId] = next;
     }
   }
   const entry: LedgerEntry = {
@@ -396,6 +404,81 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
 
     case 'LOAD_PROGRESS':
       return { ...action.progress, settings: state.settings };
+
+    case 'FEED_ANIMAL': {
+      const def = ANIMALS[action.animal];
+      if (animalStage(state, def.id, action.now) !== 'hungry' || state.ingredients[def.feed] <= 0) {
+        return state;
+      }
+      const s = structuredClone(state);
+      const key = `feed:${def.id}:${action.now}`;
+      if (!post(s, key, `ingredient:${def.feed}`, -1, 'feed', action.now)) return state;
+      s.animals[def.id] = { fedAt: action.now, readyAt: action.now + def.hours * HOUR_MS };
+      return s;
+    }
+
+    case 'COLLECT_ANIMAL': {
+      const def = ANIMALS[action.animal];
+      const a = state.animals[def.id];
+      if (animalStage(state, def.id, action.now) !== 'ready' || a.fedAt === null) return state;
+      const s = structuredClone(state);
+      const tag = `${def.id}:${a.fedAt}`;
+      post(s, `collect:${tag}`, `ingredient:${def.product}`, def.yield, 'animal', action.now);
+      post(s, `xp:collect:${tag}`, 'xp', XP.collectAnimal, 'animal', action.now);
+      s.animals[def.id] = { fedAt: null, readyAt: null };
+      completeMission(s, 'harvest-or-cook', action.now);
+      return s;
+    }
+
+    case 'PLACE_DECOR': {
+      if (!state.decor.includes(action.decor)) return state;
+      const x = Math.round(action.x);
+      const z = Math.round(action.z);
+      // Two decorations never share a cell.
+      const taken = Object.entries(state.decorLayout).some(
+        ([id, pos]) => id !== action.decor && pos && pos.x === x && pos.z === z,
+      );
+      if (taken) return state;
+      return {
+        ...state,
+        decorLayout: {
+          ...state.decorLayout,
+          [action.decor]: { x, z, rot: ((action.rot % 4) + 4) % 4 },
+        },
+      };
+    }
+
+    case 'STORE_DECOR':
+      if (!state.decor.includes(action.decor)) return state;
+      return { ...state, decorLayout: { ...state.decorLayout, [action.decor]: null } };
+
+    case 'FRIEND_EVENT': {
+      const ev = action.event;
+      const key = `friend:${ev.id}`;
+      // `friend:1:` must not match `friend:10:xp`.
+      if (state.ledger.some((e) => e.key.startsWith(`${key}:`))) return state;
+      const s = structuredClone(state);
+      if (ev.type === 'water') {
+        // A friend's watering shortens the plot like a can would, without using ours.
+        const plot = s.plots.find((p) => p.id === ev.plotId);
+        if (
+          plot &&
+          (!ev.crop || plot.crop === ev.crop) &&
+          plot.readyAt !== null &&
+          plot.readyAt > action.now
+        ) {
+          plot.readyAt = action.now + Math.round((plot.readyAt - action.now) * (1 - WATERING.cut));
+          plot.wateredAt = action.now;
+        }
+        post(s, `${key}:xp`, 'xp', XP.friendHelp, `friend:water`, action.now);
+      } else if (ev.type === 'gift' && ev.crop) {
+        post(s, `${key}:seed`, `seed:${ev.crop}`, 1, 'friend:gift', action.now);
+      } else if (ev.type === 'helped') {
+        // We watered a friend's plot: our reward for helping.
+        post(s, `${key}:xp`, 'xp', XP.friendHelp, 'friend:helped', action.now);
+      }
+      return s;
+    }
 
     case 'SELL': {
       if (state.ingredients[action.crop] <= 0) return state;

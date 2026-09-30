@@ -39,6 +39,12 @@ Link từng món (`/mon/<slug>`) có ảnh xem trước riêng: nginx gửi `/mo
 - Kiểm tra: `npm run test:account` (chạy trên SQLite tạm, không đụng dữ liệu thật).
 - Trang quyền riêng tư: `public/quyen-rieng-tu.html`
 
+## Khu vườn 3D & bạn vườn
+
+- Vườn 3D (three.js + @react-three/fiber) ở `src/features/garden3d/`, có nút chuyển 2D. Chi tiết: `plans/khu-vuon-3d.md`.
+- Bạn vườn cần tài khoản: mã khu vườn 6 ký tự, ghé đảo của bạn, tưới giúp 1 ô/bạn/ngày (tối đa 5 bạn), quà hạt của Cô Ba mỗi ngày.
+  API `/api/account/garden|friends|events` (`server/lib/Friends.php`); sau khi pull chạy lại `php server/bin/migrate.php`.
+
 ## http://angi.local (XAMPP/Apache)
 
 - VirtualHost: `deploy/apache/angi.local.conf` (DocumentRoot `dist/`, SPA fallback, cache asset).

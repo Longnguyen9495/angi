@@ -10,6 +10,11 @@ export type CropId =
   | 'garlic'
   | 'cucumber'
   | 'lime';
+/** Animal products: they fill the pantry like crops but are not grown in plots. */
+export type AnimalProduct = 'egg' | 'milk';
+/** Anything that can sit in the pantry and go into a recipe. */
+export type ProduceId = CropId | AnimalProduct;
+export type AnimalId = 'chicken' | 'cow';
 export type RecipeId =
   | 'com-tam'
   | 'bun-rieu'
@@ -22,7 +27,8 @@ export type RecipeId =
   | 'nem-nuong'
   | 'pho-bo'
   | 'bun-cha'
-  | 'banh-cuon';
+  | 'banh-cuon'
+  | 'banh-mi-chao';
 export type DecorId = 'scarecrow' | 'lantern' | 'jar' | 'fence';
 export type BudgetId = 'low' | 'mid' | 'high';
 export type MoodId = 'quick' | 'filling' | 'light' | 'novel';
@@ -72,7 +78,7 @@ export interface RecipeDef {
   dishId: string;
   region: RegionId;
   group: DishGroup;
-  ingredients: { crop: CropId; qty: number }[];
+  ingredients: { crop: ProduceId; qty: number }[];
   xp: number;
   unlockNote: string;
   fact: string;

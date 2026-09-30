@@ -19,16 +19,19 @@
     "catalogue:export": "php server/bin/export-snapshot.php",
     "ai:enrich": "php server/bin/ai-enrich.php",
     "test:server": "php server/bin/selftest.php",
-    "test:account": "php server/bin/selftest-account.php"
+    "test:account": "php server/bin/selftest-account.php && php server/bin/selftest-friends.php"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource/be-vietnam-pro": "^5.3.0",
     "@phosphor-icons/react": "^2.1.10",
+    "@react-three/fiber": "^9.8.1",
     "lucide-react": "^1.48.0",
     "motion": "^13.4.5",
+    "playcanvas": "2.22.6",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react-dom": "^19.3.0",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -39,6 +42,7 @@
     "@types/node": "^26.6.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
     "@vitejs/plugin-react": "^6.1.1",
     "eslint": "^10.11.0",
     "eslint-plugin-react-hooks": "^7.1.1",

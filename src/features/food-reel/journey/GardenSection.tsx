@@ -1,9 +1,20 @@
 import { Basket, Drop } from '@phosphor-icons/react';
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import {
+  Component,
+  Suspense,
+  lazy,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from 'react';
 import { CropIcon } from '../../../components/ui/CropIcon';
 import { CropVisual, ProduceImage } from '../../../components/ui/CropVisual';
-import { CROPS, CROP_LIST, WATERING } from '../../../data/game';
-import type { CropId, RecipeId } from '../../../data/types';
+import { ANIMALS, CROPS, CROP_LIST, WATERING, PRODUCE_IDS, produceName } from '../../../data/game';
+import type { AnimalId, CropId, DecorId, RecipeId } from '../../../data/types';
+import { canUseWebGL } from '../../garden3d/quality';
+import { readRenderer, rememberRenderer, type GardenRenderer } from '../../farm-pc/renderer';
 import { nextStep } from '../../../domain/nextStep';
 import { decorSprite } from '../../../data/sprites';
 import {
@@ -23,6 +34,41 @@ import { currentTime, formatDuration } from '../../../domain/time';
 import { burstSoil, flyTo, sprinkle } from '../../../motion/effects';
 import { useFeedback, useGame, useUi } from '../../../state/hooks';
 import { NextStepCard } from './NextStepCard';
+
+const Garden3D = lazy(() => import('../../garden3d/Garden3D'));
+// Experiment (?renderer=playcanvas): loaded only when chosen, never beside Garden3D.
+const FarmPlayCanvas = lazy(() => import('../../farm-pc/FarmPlayCanvas'));
+
+type View = '2d' | '3d';
+const VIEW_KEY = 'bv.garden.view';
+
+function initialView(reduced: boolean): View {
+  if (!canUseWebGL()) return '2d';
+  try {
+    const v = localStorage.getItem(VIEW_KEY);
+    if (v === '2d' || v === '3d') return v;
+  } catch {
+    /* storage blocked */
+  }
+  return reduced ? '2d' : '3d';
+}
+
+/** If the 3D scene throws, the guest keeps a working (flat) garden. */
+class SceneBoundary extends Component<
+  { onFail: () => void; children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch() {
+    this.props.onFail();
+  }
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
 
 type DayPart = 'morning' | 'noon' | 'evening' | 'night';
 
@@ -51,11 +97,24 @@ const POUR_MS = 1100;
 export function GardenSection({
   onCook,
   onOrders,
+  onGo,
 }: {
   onCook: (recipe: RecipeId) => void;
   onOrders: () => void;
+  /** Jump to another Journey section (the 3D kitchen and barn link out). */
+  onGo?: (section: 'cong-thuc' | 'don-co-ba' | 'cho-que') => void;
 }) {
   const { state, dispatch, now, reduced } = useGame();
+  const [view, setViewState] = useState<View>(() => initialView(reduced));
+  const [renderer, setRenderer] = useState<GardenRenderer>(readRenderer);
+  const setView = (v: View) => {
+    setViewState(v);
+    try {
+      localStorage.setItem(VIEW_KEY, v);
+    } catch {
+      /* not remembered */
+    }
+  };
   const { toast, announce } = useFeedback();
   const { spinForSeed } = useUi();
   const [justHarvested, setJustHarvested] = useState(0);
@@ -76,7 +135,10 @@ export function GardenSection({
   const pendingMealSeed =
     !!state.meal && !state.meal.planted && state.seeds[state.meal.seedCrop] > 0;
   const target = pendingMealSeed ? firstEmptyPlot(state.plots) : undefined;
-  const pantry = CROP_LIST.filter((c) => state.ingredients[c.id] > 0);
+  const pantry = PRODUCE_IDS.filter((id) => state.ingredients[id] > 0).map((id) => ({
+    id,
+    produceName: produceName(id),
+  }));
   const cans = waterLeft(state, now);
   const part = dayPart(now);
   const nextPlotAt = nextPlotLevel(state);
@@ -150,6 +212,20 @@ export function GardenSection({
     if (leftAfter <= 0) setWatering(false);
   };
 
+  const animalAct = (animal: AnimalId, act: 'feed' | 'collect') => {
+    const def = ANIMALS[animal];
+    dispatch({
+      type: act === 'feed' ? 'FEED_ANIMAL' : 'COLLECT_ANIMAL',
+      animal,
+      now: currentTime(),
+    });
+    announce(
+      act === 'feed'
+        ? `Đã cho ${def.name.toLowerCase()} ăn. ${def.hours} giờ nữa quay lại thu.`
+        : `Đã thu ${def.yield} ${produceName(def.product).toLowerCase()} vào kho.`,
+    );
+  };
+
   return (
     <div className={`fj-garden ${watering ? 'is-watering' : ''}`} data-daypart={part}>
       <div className="fj-garden__head">
@@ -158,6 +234,16 @@ export function GardenSection({
           cây vẫn lớn, không bao giờ héo.
         </p>
         <div className="fj-garden__tools">
+          {canUseWebGL() && (
+            <div className="fj-view-switch" role="group" aria-label="Kiểu khu vườn">
+              <button type="button" aria-pressed={view === '3d'} onClick={() => setView('3d')}>
+                3D
+              </button>
+              <button type="button" aria-pressed={view === '2d'} onClick={() => setView('2d')}>
+                2D
+              </button>
+            </div>
+          )}
           <button
             type="button"
             className={`fj-can-btn ${watering ? 'is-on' : ''}`}
@@ -193,145 +279,209 @@ export function GardenSection({
         </p>
       )}
 
-      <div className="fj-field">
-        <span className="fj-field__sky" aria-hidden="true" />
-        {part === 'night' && !reduced && (
-          <span className="fj-fireflies" aria-hidden="true">
-            {Array.from({ length: 6 }, (_, i) => (
-              <span key={i} />
-            ))}
-          </span>
-        )}
-        {ready.length > 0 && !reduced && <span className="fj-butterfly" aria-hidden="true" />}
-
-        {state.decor.length > 0 && (
-          <div className="fj-yard" aria-hidden="true">
-            {state.decor.includes('fence') && <span className="fj-yard__fence" />}
-            {(['scarecrow', 'jar', 'lantern'] as const)
-              .filter((d) => state.decor.includes(d))
-              .map((d) => (
-                <img
-                  key={d}
-                  className={`fj-yard__item fj-yard__item--${d}`}
-                  src={decorSprite(d)}
-                  alt=""
-                  width={256}
-                  height={256}
-                  decoding="async"
-                />
+      {view === '3d' ? (
+        <SceneBoundary onFail={() => setViewState('2d')}>
+          <Suspense
+            fallback={
+              <div className="g3d-loading" role="status">
+                Đang dựng khu vườn trên mây…
+              </div>
+            }
+          >
+            {renderer === 'playcanvas' ? (
+              <FarmPlayCanvas
+                state={state}
+                now={now}
+                reduced={reduced}
+                dayPart={part}
+                watering={watering}
+                activeSeed={activeSeed}
+                seeds={seeds.map((c) => c.id)}
+                onPickSeed={setPicked}
+                onPlant={(plotId, crop) => plantAt(plotId, crop)}
+                onWater={waterAt}
+                onHarvest={harvestAll}
+                onMarket={onGo ? () => onGo('cho-que') : undefined}
+                onFlat={() => setView('2d')}
+                onClassic={() => {
+                  rememberRenderer('three');
+                  setRenderer('three');
+                }}
+              />
+            ) : (
+              <Garden3D
+                state={state}
+                now={now}
+                reduced={reduced}
+                watering={watering}
+                activeSeed={activeSeed}
+                seeds={seeds.map((c) => c.id)}
+                onPickSeed={setPicked}
+                onPlant={(plotId, crop) => plantAt(plotId, crop)}
+                onWater={waterAt}
+                onHarvest={harvestAll}
+                onToggleWatering={() => setWatering((w) => !w)}
+                onAnimal={animalAct}
+                onPlaceDecor={(decor: DecorId, x, z, rot) =>
+                  dispatch({ type: 'PLACE_DECOR', decor, x, z, rot })
+                }
+                onStoreDecor={(decor) => dispatch({ type: 'STORE_DECOR', decor })}
+                onGo={(section) => (section === 'don-co-ba' ? onOrders() : onGo?.(section))}
+                onFlat={(reason) => {
+                  if (reason === 'user') setView('2d');
+                  else {
+                    setViewState('2d');
+                    toast({ message: 'Máy tạm dừng 3D — chuyển về khu vườn phẳng.' });
+                  }
+                }}
+              />
+            )}
+          </Suspense>
+        </SceneBoundary>
+      ) : (
+        <div className="fj-field">
+          <span className="fj-field__sky" aria-hidden="true" />
+          {part === 'night' && !reduced && (
+            <span className="fj-fireflies" aria-hidden="true">
+              {Array.from({ length: 6 }, (_, i) => (
+                <span key={i} />
               ))}
-          </div>
-        )}
-        <ul
-          className="fj-plots"
-          aria-label="Các ô đất"
-          style={{ '--plot-cols': plotCols } as CSSProperties}
-        >
-          {state.plots.map((plot) => {
-            const stage = plotStage(plot, now);
-            const crop = plot.crop ? CROPS[plot.crop] : null;
-            const left = plot.readyAt !== null ? plot.readyAt - now : 0;
-            const growing = isGrowing(stage);
-            const wet = isWet(plot, now);
-            const block = growing ? waterBlock(state, plot, now) : 'not-growing';
-            const cls = [
-              'fj-plot',
-              `fj-plot--${stage}`,
-              target?.id === plot.id ? 'is-target' : '',
-              fresh === plot.id ? 'is-fresh' : '',
-              wet ? 'is-wet' : '',
-              pouring === plot.id ? 'is-pouring' : '',
-              watering && growing && !block ? 'is-thirsty' : '',
-            ].join(' ');
-            const style = {
-              '--sway-delay': `${(-plot.id * 0.73).toFixed(2)}s`,
-              '--grow': plotGrowth(plot, now).toFixed(3),
-            } as CSSProperties;
+            </span>
+          )}
+          {ready.length > 0 && !reduced && <span className="fj-butterfly" aria-hidden="true" />}
 
-            let stateText: string;
-            if (stage === 'empty') stateText = activeSeed ? 'Chạm để gieo' : 'Chờ hạt';
-            else if (watering && growing && block) stateText = BLOCK_NOTE[block];
-            else if (watering && growing) stateText = 'Chạm để tưới';
-            else stateText = STAGE_LABEL[stage];
-            if (growing && !(watering && !block)) stateText += ` · còn ${formatDuration(left)}`;
+          {state.decor.length > 0 && (
+            <div className="fj-yard" aria-hidden="true">
+              {state.decor.includes('fence') && <span className="fj-yard__fence" />}
+              {(['scarecrow', 'jar', 'lantern'] as const)
+                .filter((d) => state.decor.includes(d))
+                .map((d) => (
+                  <img
+                    key={d}
+                    className={`fj-yard__item fj-yard__item--${d}`}
+                    src={decorSprite(d)}
+                    alt=""
+                    width={256}
+                    height={256}
+                    decoding="async"
+                  />
+                ))}
+            </div>
+          )}
+          <ul
+            className="fj-plots"
+            aria-label="Các ô đất"
+            style={{ '--plot-cols': plotCols } as CSSProperties}
+          >
+            {state.plots.map((plot) => {
+              const stage = plotStage(plot, now);
+              const crop = plot.crop ? CROPS[plot.crop] : null;
+              const left = plot.readyAt !== null ? plot.readyAt - now : 0;
+              const growing = isGrowing(stage);
+              const wet = isWet(plot, now);
+              const block = growing ? waterBlock(state, plot, now) : 'not-growing';
+              const cls = [
+                'fj-plot',
+                `fj-plot--${stage}`,
+                target?.id === plot.id ? 'is-target' : '',
+                fresh === plot.id ? 'is-fresh' : '',
+                wet ? 'is-wet' : '',
+                pouring === plot.id ? 'is-pouring' : '',
+                watering && growing && !block ? 'is-thirsty' : '',
+              ].join(' ');
+              const style = {
+                '--sway-delay': `${(-plot.id * 0.73).toFixed(2)}s`,
+                '--grow': plotGrowth(plot, now).toFixed(3),
+              } as CSSProperties;
 
-            const body = (
-              <>
-                <span className="fj-plot__no">Ô {plot.id}</span>
-                <span
-                  className="fj-plot__bed"
-                  aria-hidden="true"
-                  ref={(el) => {
-                    if (el) beds.current.set(plot.id, el);
-                    else beds.current.delete(plot.id);
-                  }}
-                >
-                  <span className="plot__soil" />
-                  {crop && (
-                    // Keyed by stage so each new stage pops in once.
-                    <span key={stage} className="fj-plot__plant">
-                      <CropVisual crop={plot.crop} stage={stage} />
+              let stateText: string;
+              if (stage === 'empty') stateText = activeSeed ? 'Chạm để gieo' : 'Chờ hạt';
+              else if (watering && growing && block) stateText = BLOCK_NOTE[block];
+              else if (watering && growing) stateText = 'Chạm để tưới';
+              else stateText = STAGE_LABEL[stage];
+              if (growing && !(watering && !block)) stateText += ` · còn ${formatDuration(left)}`;
+
+              const body = (
+                <>
+                  <span className="fj-plot__no">Ô {plot.id}</span>
+                  <span
+                    className="fj-plot__bed"
+                    aria-hidden="true"
+                    ref={(el) => {
+                      if (el) beds.current.set(plot.id, el);
+                      else beds.current.delete(plot.id);
+                    }}
+                  >
+                    <span className="plot__soil" />
+                    {crop && (
+                      // Keyed by stage so each new stage pops in once.
+                      <span key={stage} className="fj-plot__plant">
+                        <CropVisual crop={plot.crop} stage={stage} />
+                      </span>
+                    )}
+                    {pouring === plot.id && <span className="fj-can" />}
+                    <span className="fj-plot__fx" />
+                  </span>
+                  <span className="fj-plot__crop">{crop ? crop.name : 'Trống'}</span>
+                  {growing && (
+                    <span className="fj-plot__grow" aria-hidden="true">
+                      <span />
                     </span>
                   )}
-                  {pouring === plot.id && <span className="fj-can" />}
-                  <span className="fj-plot__fx" />
-                </span>
-                <span className="fj-plot__crop">{crop ? crop.name : 'Trống'}</span>
-                {growing && (
-                  <span className="fj-plot__grow" aria-hidden="true">
-                    <span />
-                  </span>
-                )}
-                <span className="fj-plot__state">{stateText}</span>
-              </>
-            );
+                  <span className="fj-plot__state">{stateText}</span>
+                </>
+              );
 
-            const plantable = !watering && stage === 'empty';
-            const waterable = watering && growing;
-            return (
-              <li key={plot.id} style={style}>
-                {plantable ? (
-                  <button
-                    type="button"
-                    className={cls}
-                    onClick={() => plantAt(plot.id)}
-                    disabled={!activeSeed}
-                    aria-label={
-                      activeSeed
-                        ? `Ô ${plot.id}, trống. Gieo ${CROPS[activeSeed].seedName.toLowerCase()}`
-                        : `Ô ${plot.id}, trống. Khay chưa có hạt`
-                    }
-                  >
-                    {body}
-                  </button>
-                ) : waterable ? (
-                  <button
-                    type="button"
-                    className={cls}
-                    onClick={() => waterAt(plot.id)}
-                    aria-disabled={block !== null}
-                    aria-label={`Tưới ô ${plot.id}, ${crop!.name}, ${STAGE_LABEL[stage].toLowerCase()}, còn ${formatDuration(left)}${block ? `. ${BLOCK_NOTE[block]}` : ''}`}
-                  >
-                    {body}
-                  </button>
-                ) : (
-                  <div className={cls}>{body}</div>
-                )}
+              const plantable = !watering && stage === 'empty';
+              const waterable = watering && growing;
+              return (
+                <li key={plot.id} style={style}>
+                  {plantable ? (
+                    <button
+                      type="button"
+                      className={cls}
+                      onClick={() => plantAt(plot.id)}
+                      disabled={!activeSeed}
+                      aria-label={
+                        activeSeed
+                          ? `Ô ${plot.id}, trống. Gieo ${CROPS[activeSeed].seedName.toLowerCase()}`
+                          : `Ô ${plot.id}, trống. Khay chưa có hạt`
+                      }
+                    >
+                      {body}
+                    </button>
+                  ) : waterable ? (
+                    <button
+                      type="button"
+                      className={cls}
+                      onClick={() => waterAt(plot.id)}
+                      aria-disabled={block !== null}
+                      aria-label={`Tưới ô ${plot.id}, ${crop!.name}, ${STAGE_LABEL[stage].toLowerCase()}, còn ${formatDuration(left)}${block ? `. ${BLOCK_NOTE[block]}` : ''}`}
+                    >
+                      {body}
+                    </button>
+                  ) : (
+                    <div className={cls}>{body}</div>
+                  )}
+                </li>
+              );
+            })}
+            {nextPlotAt !== null && (
+              <li
+                className="fj-plot fj-plot--locked"
+                aria-label={`Ô đất mới mở ở cấp ${nextPlotAt}`}
+              >
+                <span className="fj-plot__no">Ô {state.plots.length + 1}</span>
+                <span className="fj-plot__bed" aria-hidden="true">
+                  <span className="plot__soil" />
+                </span>
+                <span className="fj-plot__crop">Sắp mở</span>
+                <span className="fj-plot__state">Lên cấp {nextPlotAt} để mở rộng vườn</span>
               </li>
-            );
-          })}
-          {nextPlotAt !== null && (
-            <li className="fj-plot fj-plot--locked" aria-label={`Ô đất mới mở ở cấp ${nextPlotAt}`}>
-              <span className="fj-plot__no">Ô {state.plots.length + 1}</span>
-              <span className="fj-plot__bed" aria-hidden="true">
-                <span className="plot__soil" />
-              </span>
-              <span className="fj-plot__crop">Sắp mở</span>
-              <span className="fj-plot__state">Lên cấp {nextPlotAt} để mở rộng vườn</span>
-            </li>
-          )}
-        </ul>
-      </div>
+            )}
+          </ul>
+        </div>
+      )}
 
       <NextStepCard
         key={justHarvested}
@@ -340,6 +490,7 @@ export function GardenSection({
         onCook={onCook}
         onOrders={onOrders}
         onHarvest={harvestAll}
+        onAnimal={animalAct}
         onPlant={(plotId, crop) => plantAt(plotId, crop)}
         onFind={spinForSeed}
       />

@@ -97,6 +97,15 @@ const DEFS = `
   <radialGradient id="jar" cx=".35" cy=".35" r=".8">
     <stop offset="0" stop-color="#b8743f"/><stop offset=".6" stop-color="#7a4424"/><stop offset="1" stop-color="#3f2012"/>
   </radialGradient>
+  <radialGradient id="egg" cx=".38" cy=".32" r=".75">
+    <stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#f3ead8"/><stop offset="1" stop-color="#d9ccb0"/>
+  </radialGradient>
+  <radialGradient id="eggBrown" cx=".38" cy=".32" r=".75">
+    <stop offset="0" stop-color="#f3d2a8"/><stop offset=".7" stop-color="#d9a36a"/><stop offset="1" stop-color="#b07a44"/>
+  </radialGradient>
+  <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#cfe3ea"/><stop offset=".5" stop-color="#f4fbfd"/><stop offset="1" stop-color="#b9d2db"/>
+  </linearGradient>
   <radialGradient id="shadow" cx=".5" cy=".5" r=".5">
     <stop offset="0" stop-color="#000" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity="0"/>
   </radialGradient>
@@ -863,12 +872,42 @@ function produce(crop) {
           return `<path d="M 188 186 L ${f(188 + Math.cos(a) * 30)} ${f(186 + Math.sin(a) * 30)}" stroke="#d2e79a" stroke-width="2.4"/>`;
         }).join('')}
         <circle cx="188" cy="186" r="30" fill="#c9e27a" opacity=".35"/>`;
+    case 'egg':
+      return `<ellipse cx="128" cy="222" rx="86" ry="12" fill="url(#shadow)"/>
+        <path d="M 40 170 Q 128 250 216 170 Q 206 214 128 222 Q 50 214 40 170 Z" fill="#b8864a"/>
+        ${[
+          [70, 176],
+          [96, 190],
+          [128, 196],
+          [160, 190],
+          [186, 176],
+          [110, 182],
+          [148, 182],
+        ]
+          .map(
+            ([x, y]) =>
+              `<path d="M ${x - 14} ${y} q 14 -8 28 0" stroke="#d9b370" stroke-width="3" fill="none"/>`,
+          )
+          .join('')}
+        <ellipse cx="100" cy="132" rx="38" ry="48" fill="url(#egg)" transform="rotate(-12 100 132)"/>
+        <ellipse cx="160" cy="138" rx="36" ry="46" fill="url(#eggBrown)" transform="rotate(10 160 138)"/>
+        <ellipse cx="88" cy="112" rx="10" ry="16" fill="#fff" opacity=".6" transform="rotate(-20 88 112)"/>
+        <ellipse cx="150" cy="118" rx="9" ry="14" fill="#fff" opacity=".35" transform="rotate(10 150 118)"/>`;
+    case 'milk':
+      return `<ellipse cx="128" cy="226" rx="70" ry="12" fill="url(#shadow)"/>
+        <path d="M 102 40 L 154 40 L 154 70 Q 184 92 184 128 L 184 206 Q 184 222 168 222 L 88 222 Q 72 222 72 206 L 72 128 Q 72 92 102 70 Z" fill="url(#glass)"/>
+        <path d="M 78 120 Q 78 100 104 84 L 152 84 Q 178 100 178 120 L 178 206 Q 178 216 166 216 L 90 216 Q 78 216 78 206 Z" fill="#fbf8ef"/>
+        <rect x="98" y="30" width="60" height="16" rx="5" fill="#5f97b7"/>
+        <rect x="88" y="140" width="80" height="44" rx="8" fill="#c9663d"/>
+        <path d="M 108 170 q 20 -26 40 0" stroke="#fbf8ef" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <rect x="86" y="96" width="8" height="100" rx="4" fill="#fff" opacity=".55"/>`;
   }
   return '';
 }
 
 const DRAW = { rice, herbs, chili, scallion, bean, tomato, lemongrass, garlic, cucumber, lime };
 const DECOR = ['scarecrow', 'lantern', 'jar', 'fence'];
+const PRODUCTS = ['egg', 'milk'];
 const STAGES = ['sprout', 'young', 'flowering', 'ready'];
 
 let count = 0;
@@ -883,6 +922,14 @@ for (const [crop, draw] of Object.entries(DRAW)) {
       .toFile(join(outDir, `${name}.webp`));
     count++;
   }
+}
+for (const id of PRODUCTS) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${SIZE * 2}" height="${SIZE * 2}" viewBox="0 0 ${SIZE} ${SIZE}">${DEFS}${produce(id)}</svg>`;
+  await sharp(Buffer.from(svg))
+    .resize(SIZE, SIZE)
+    .webp({ quality: 88, alphaQuality: 92, effort: 6 })
+    .toFile(join(outDir, `${id}-produce.webp`));
+  count++;
 }
 for (const id of DECOR) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${SIZE * 2}" height="${SIZE * 2}" viewBox="0 0 ${SIZE} ${SIZE}">${DEFS}${decor(id)}</svg>`;

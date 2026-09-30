@@ -27,14 +27,39 @@ final class Mailer
         return '';
     }
 
-    public static function send(string $to, string $subject, string $text): void
+    /** Sends plain text, or HTML with `$text` as its plain-text alternative. */
+    public static function send(string $to, string $subject, string $text, ?string $html = null): void
     {
         $driver = self::cfg('MAIL_DRIVER', 'MAIL_MAILER') ?: 'log';
         match ($driver) {
-            'mail' => self::viaMail($to, $subject, $text),
-            'smtp' => self::viaSmtp($to, $subject, $text),
-            default => self::viaLog($to, $subject, $text),
+            'mail' => self::viaMail($to, $subject, $text, $html),
+            'smtp' => self::viaSmtp($to, $subject, $text, $html),
+            default => self::viaLog($to, $subject, $text, $html),
         };
+    }
+
+    /**
+     * MIME content headers and body: text/plain alone, or multipart/alternative
+     * (plain text first, HTML last — clients show the last part they support).
+     *
+     * @return array{0: string[], 1: string}
+     */
+    private static function body(string $text, ?string $html): array
+    {
+        if ($html === null) {
+            return [
+                ['Content-Type: text/plain; charset=UTF-8', 'Content-Transfer-Encoding: base64'],
+                chunk_split(base64_encode($text)),
+            ];
+        }
+        $b = 'bv-' . bin2hex(random_bytes(12));
+        $part = fn (string $type, string $content) => "--$b\r\n"
+            . "Content-Type: $type; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
+            . chunk_split(base64_encode($content));
+        return [
+            ["Content-Type: multipart/alternative; boundary=\"$b\""],
+            $part('text/plain', $text) . $part('text/html', $html) . "--$b--\r\n",
+        ];
     }
 
     private static function from(): array
@@ -50,9 +75,10 @@ final class Mailer
         return '=?UTF-8?B?' . base64_encode($value) . '?=';
     }
 
-    private static function message(string $to, string $subject, string $text): string
+    private static function message(string $to, string $subject, string $text, ?string $html): string
     {
         [$from, $name] = self::from();
+        [$contentHeaders, $body] = self::body($text, $html);
         $headers = [
             'From: ' . self::encodeHeader($name) . " <$from>",
             "To: <$to>",
@@ -60,13 +86,12 @@ final class Mailer
             'Date: ' . date(DATE_RFC2822),
             'Message-ID: <' . bin2hex(random_bytes(12)) . '@' . (explode('@', $from)[1] ?? 'localhost') . '>',
             'MIME-Version: 1.0',
-            'Content-Type: text/plain; charset=UTF-8',
-            'Content-Transfer-Encoding: base64',
+            ...$contentHeaders,
         ];
-        return implode("\r\n", $headers) . "\r\n\r\n" . chunk_split(base64_encode($text));
+        return implode("\r\n", $headers) . "\r\n\r\n" . $body;
     }
 
-    private static function viaLog(string $to, string $subject, string $text): void
+    private static function viaLog(string $to, string $subject, string $text, ?string $html): void
     {
         $dir = APP_ROOT . '/storage/logs';
         if (!is_dir($dir)) {
@@ -74,23 +99,27 @@ final class Mailer
         }
         $entry = sprintf("[%s] To: %s\nSubject: %s\n\n%s\n%s\n", date('c'), $to, $subject, $text, str_repeat('-', 60));
         file_put_contents($dir . '/mail.log', $entry, FILE_APPEND | LOCK_EX);
+        if ($html !== null) {
+            // Latest HTML version, handy to open in a browser while developing.
+            file_put_contents($dir . '/mail-last.html', $html, LOCK_EX);
+        }
     }
 
-    private static function viaMail(string $to, string $subject, string $text): void
+    private static function viaMail(string $to, string $subject, string $text, ?string $html): void
     {
         [$from, $name] = self::from();
+        [$contentHeaders, $body] = self::body($text, $html);
         $headers = implode("\r\n", [
             'From: ' . self::encodeHeader($name) . " <$from>",
             'MIME-Version: 1.0',
-            'Content-Type: text/plain; charset=UTF-8',
-            'Content-Transfer-Encoding: base64',
+            ...$contentHeaders,
         ]);
-        if (!mail($to, self::encodeHeader($subject), chunk_split(base64_encode($text)), $headers)) {
+        if (!mail($to, self::encodeHeader($subject), $body, $headers)) {
             throw new HttpError(502, 'Chưa gửi được email, bạn thử lại sau ít phút nhé.');
         }
     }
 
-    private static function viaSmtp(string $to, string $subject, string $text): void
+    private static function viaSmtp(string $to, string $subject, string $text, ?string $html): void
     {
         $host = self::cfg('SMTP_HOST', 'MAIL_HOST');
         $port = (int) (self::cfg('SMTP_PORT', 'MAIL_PORT') ?: '587');
@@ -154,7 +183,7 @@ final class Mailer
             $cmd("RCPT TO:<$to>", [250, 251]);
             $cmd('DATA', [354]);
             // Dot-stuffing: a line starting with "." must be doubled.
-            $body = preg_replace('/^\./m', '..', self::message($to, $subject, $text));
+            $body = preg_replace('/^\./m', '..', self::message($to, $subject, $text, $html));
             $cmd($body . "\r\n.", [250]);
             $cmd('QUIT', [221]);
         } finally {

@@ -1,12 +1,12 @@
-import type { CropId } from '../../data/types';
-import { cropSprite } from '../../data/sprites';
+import type { ProduceId } from '../../data/types';
+import { produceSprite } from '../../data/sprites';
 
 /** Small crop mark for chips and lists: the produce sprite, so every crop has one. */
-export function CropIcon({ crop, size = 16 }: { crop: CropId; size?: number }) {
+export function CropIcon({ crop, size = 16 }: { crop: ProduceId; size?: number }) {
   return (
     <img
       className="crop-icon"
-      src={cropSprite(crop, 'produce')}
+      src={produceSprite(crop)}
       alt=""
       width={size}
       height={size}

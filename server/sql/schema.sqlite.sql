@@ -107,3 +107,35 @@ CREATE TABLE IF NOT EXISTS user_progress (
   version INTEGER NOT NULL DEFAULT 1,
   updated_at INTEGER NOT NULL
 );
+
+-- ——— Khu vườn bạn bè (same tables as schema.sql) ———
+
+CREATE TABLE IF NOT EXISTS garden_profiles (
+  user_id INTEGER NOT NULL PRIMARY KEY REFERENCES users (id) ON DELETE CASCADE,
+  friend_code TEXT NOT NULL UNIQUE,
+  garden_name TEXT NOT NULL DEFAULT '',
+  created_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS friendships (
+  user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+  friend_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+  created_at INTEGER NOT NULL,
+  PRIMARY KEY (user_id, friend_id)
+);
+CREATE INDEX IF NOT EXISTS idx_friend ON friendships (friend_id);
+
+CREATE TABLE IF NOT EXISTS farm_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  to_user INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+  from_user INTEGER NULL,
+  type TEXT NOT NULL,
+  plot_id INTEGER NULL,
+  crop TEXT NULL,
+  day TEXT NOT NULL,
+  uniq TEXT NOT NULL UNIQUE,
+  created_at INTEGER NOT NULL,
+  delivered_at INTEGER NULL
+);
+CREATE INDEX IF NOT EXISTS idx_events_to ON farm_events (to_user, delivered_at);
+CREATE INDEX IF NOT EXISTS idx_events_from ON farm_events (from_user, day);

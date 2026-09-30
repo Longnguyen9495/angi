@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../../../App';
 import { STORAGE_KEY, saveProgress } from '../../../domain/persistence';
-import { EMPTY_CROPS, createInitialProgress } from '../../../domain/progress';
+import { EMPTY_PRODUCE, createInitialProgress } from '../../../domain/progress';
 import { mockConfig } from '../../../services/mockApi';
 import { FeedbackProvider } from '../../../state/FeedbackProvider';
 import { GameProvider } from '../../../state/GameProvider';
@@ -292,7 +292,7 @@ describe('the kitchen', () => {
       {
         ...base,
         plots: base.plots.map((p) => ({ ...p, crop: null, plantedAt: null, readyAt: null })),
-        ingredients: { ...EMPTY_CROPS, rice: 1, scallion: 1 },
+        ingredients: { ...EMPTY_PRODUCE, rice: 1, scallion: 1 },
       },
       now,
     );
@@ -319,7 +319,7 @@ describe('the kitchen', () => {
     await waitFor(() =>
       expect(screen.queryByRole('dialog', { name: 'Cơm tấm sườn' })).not.toBeInTheDocument(),
     );
-    expect(within(layer).getByRole('heading', { name: 'Sổ bếp · 1/12 trang' })).toBeInTheDocument();
+    expect(within(layer).getByRole('heading', { name: 'Sổ bếp · 1/13 trang' })).toBeInTheDocument();
     expect(document.querySelector('.fj-page.is-cooked .fj-page__name')).toHaveTextContent(
       'Cơm tấm sườn',
     );

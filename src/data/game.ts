@@ -1,11 +1,14 @@
 import type {
   AvoidId,
   BudgetId,
+  AnimalId,
+  AnimalProduct,
   CropDef,
   CropId,
   DecorId,
   DishGroup,
   MissionDef,
+  ProduceId,
   MoodId,
   NpcDef,
   RecipeDef,
@@ -320,7 +323,87 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
     unlockNote: 'Mở cùng Bắc Bộ.',
     fact: 'Lá bánh được tráng trên khuôn vải căng trên nồi nước sôi, mỏng đến mức nhìn xuyên được.',
   },
+  // ——— From the animals ———
+  'banh-mi-chao': {
+    id: 'banh-mi-chao',
+    name: 'Bánh mì chảo',
+    dishId: 'banh-mi-chao',
+    region: 'south',
+    group: 'pancake',
+    ingredients: [
+      { crop: 'egg', qty: 1 },
+      { crop: 'milk', qty: 1 },
+      { crop: 'tomato', qty: 1 },
+    ],
+    xp: 50,
+    unlockNote: 'Mở cùng Nam Bộ — cần trứng gà và sữa bò trong vườn.',
+    fact: 'Chảo gang nóng xèo xèo: trứng ốp la, pa tê và xíu mại ăn kèm ổ bánh mì giòn, một kiểu điểm tâm của Sài Gòn.',
+  },
 };
+
+// ——— Animals: fed with garden produce, they give egg and milk. Never sick, never lost. ———
+
+export interface AnimalDef {
+  id: AnimalId;
+  name: string;
+  /** What one feeding costs, from the pantry. */
+  feed: CropId;
+  product: AnimalProduct;
+  /** Products collected per cycle. */
+  yield: number;
+  hours: number;
+  unlockLevel: number;
+}
+
+export const ANIMALS: Record<AnimalId, AnimalDef> = {
+  chicken: {
+    id: 'chicken',
+    name: 'Gà mái',
+    feed: 'rice',
+    product: 'egg',
+    yield: 2,
+    hours: 3,
+    unlockLevel: 2,
+  },
+  cow: {
+    id: 'cow',
+    name: 'Bò sữa',
+    feed: 'herbs',
+    product: 'milk',
+    yield: 1,
+    hours: 5,
+    unlockLevel: 4,
+  },
+};
+
+export const ANIMAL_LIST: AnimalDef[] = Object.values(ANIMALS);
+
+const ANIMAL_PRODUCE: Record<AnimalProduct, { name: string; animal: AnimalId }> = {
+  egg: { name: 'Trứng gà', animal: 'chicken' },
+  milk: { name: 'Sữa bò', animal: 'cow' },
+};
+
+export const PRODUCE_IDS: ProduceId[] = [...(Object.keys(CROPS) as CropId[]), 'egg', 'milk'];
+
+export function isCrop(id: ProduceId): id is CropId {
+  return id in CROPS;
+}
+
+/** Display name of anything in the pantry. */
+export function produceName(id: ProduceId): string {
+  return isCrop(id) ? CROPS[id].produceName : ANIMAL_PRODUCE[id].name;
+}
+
+/** Level at which a pantry item can first be obtained (crops by unlock, products by their animal). */
+export function produceUnlockLevel(id: ProduceId): number {
+  return isCrop(id)
+    ? (CROPS[id].unlock?.level ?? 1)
+    : ANIMALS[ANIMAL_PRODUCE[id].animal].unlockLevel;
+}
+
+export function animalOf(id: AnimalProduct): AnimalId {
+  return ANIMAL_PRODUCE[id].animal;
+}
 
 export const RECIPE_LIST: RecipeDef[] = Object.values(RECIPES);
 
@@ -384,6 +467,8 @@ export const XP = {
   checkinSwapped: 15,
   checkinSkipped: 5,
   harvestPerPlot: 5,
+  collectAnimal: 4,
+  friendHelp: 3,
   checkinPhoto: 5,
 } as const;
 
@@ -406,7 +491,7 @@ export const WATERING = {
  */
 export const MARKET = {
   /** What the market pays for one produce. */
-  sell: (crop: CropId): number => (CROPS[crop].unlock ? 6 : 4),
+  sell: (item: ProduceId): number => (isCrop(item) ? (CROPS[item].unlock ? 6 : 4) : 7),
   /** What one seed costs. */
   seed: (crop: CropId): number => (CROPS[crop].unlock ? 10 : 6),
 } as const;

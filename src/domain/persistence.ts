@@ -1,6 +1,13 @@
 import { DECOR, FARM_PLOT_COUNT, MAX_PLOT_COUNT } from '../data/game';
 import type { CropId, DecorId } from '../data/types';
-import { createInitialProgress, EMPTY_CROPS, type GuestProgress } from './progress';
+import {
+  createInitialProgress,
+  EMPTY_ANIMALS,
+  EMPTY_CROPS,
+  EMPTY_PRODUCE,
+  type AnimalState,
+  type GuestProgress,
+} from './progress';
 import { DEFAULT_FILTERS } from './recommend';
 
 export const STORAGE_KEY = 'hanh-trinh-bep-viet/guest';
@@ -26,13 +33,49 @@ function isStringArray(v: unknown): v is string[] {
 }
 
 function cropCounts(v: unknown): Record<CropId, number> | null {
+  return counts(v, EMPTY_CROPS);
+}
+
+function counts<K extends string>(v: unknown, empty: Record<K, number>): Record<K, number> | null {
   if (!isObject(v)) return null;
-  const out = { ...EMPTY_CROPS };
-  for (const k of Object.keys(out) as CropId[]) {
+  const out = { ...empty };
+  for (const k of Object.keys(out) as K[]) {
     const n = v[k];
     if (n === undefined) continue;
     if (typeof n !== 'number' || !Number.isFinite(n) || n < 0) return null;
     out[k] = Math.floor(n);
+  }
+  return out;
+}
+
+function parseAnimals(v: unknown): GuestProgress['animals'] {
+  const out = structuredClone(EMPTY_ANIMALS);
+  if (!isObject(v)) return out;
+  for (const id of Object.keys(out) as (keyof typeof out)[]) {
+    const a = v[id];
+    if (!isObject(a)) continue;
+    const num = (x: unknown) => (typeof x === 'number' && Number.isFinite(x) ? x : null);
+    out[id] = { fedAt: num(a.fedAt), readyAt: num(a.readyAt) } satisfies AnimalState;
+  }
+  return out;
+}
+
+function parseLayout(v: Record<string, unknown>): GuestProgress['decorLayout'] {
+  const out: GuestProgress['decorLayout'] = {};
+  for (const [id, pos] of Object.entries(v)) {
+    if (!(id in DECOR)) continue;
+    if (pos === null) {
+      out[id as DecorId] = null;
+    } else if (
+      isObject(pos) &&
+      [pos.x, pos.z, pos.rot].every((n) => typeof n === 'number' && Number.isFinite(n))
+    ) {
+      out[id as DecorId] = {
+        x: pos.x as number,
+        z: pos.z as number,
+        rot: (((pos.rot as number) % 4) + 4) % 4,
+      };
+    }
   }
   return out;
 }
@@ -45,7 +88,7 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
   if (!isObject(raw)) return null;
   const base = createInitialProgress(now);
   const seeds = cropCounts(raw.seeds);
-  const ingredients = cropCounts(raw.ingredients);
+  const ingredients = counts(raw.ingredients, EMPTY_PRODUCE);
   if (!seeds || !ingredients) return null;
   if (typeof raw.guestId !== 'string' || typeof raw.xp !== 'number') return null;
   if (
@@ -95,6 +138,8 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
         ? Math.floor(raw.coins)
         : 0,
     photos: isStringArray(raw.photos) ? raw.photos : [],
+    animals: parseAnimals(raw.animals),
+    decorLayout: isObject(raw.decorLayout) ? parseLayout(raw.decorLayout) : {},
     decor: isStringArray(raw.decor) ? (raw.decor.filter((d) => d in DECOR) as DecorId[]) : [],
     recentCropUnlock:
       typeof raw.recentCropUnlock === 'string' && raw.recentCropUnlock in EMPTY_CROPS

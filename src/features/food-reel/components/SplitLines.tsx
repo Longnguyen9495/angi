@@ -1,9 +1,8 @@
 import { m, type Variants } from 'motion/react';
-import type { ElementType } from 'react';
 
 interface SplitLinesProps {
   lines: string[];
-  as?: ElementType;
+  as?: 'h1' | 'h2' | 'h3' | 'p' | 'div';
   className?: string;
   delay?: number;
   stagger?: number;

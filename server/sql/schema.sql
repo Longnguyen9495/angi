@@ -104,3 +104,43 @@ CREATE TABLE IF NOT EXISTS user_progress (
   updated_at INT UNSIGNED NOT NULL,
   CONSTRAINT fk_progress_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ——— Khu vườn bạn bè: garden code, friends, and help/gift events ———
+
+CREATE TABLE IF NOT EXISTS garden_profiles (
+  user_id INT UNSIGNED NOT NULL PRIMARY KEY,
+  friend_code CHAR(6) NOT NULL,
+  garden_name VARCHAR(40) NOT NULL DEFAULT '',
+  created_at INT UNSIGNED NOT NULL,
+  UNIQUE KEY uq_garden_code (friend_code),
+  CONSTRAINT fk_garden_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS friendships (
+  user_id INT UNSIGNED NOT NULL,
+  friend_id INT UNSIGNED NOT NULL,
+  created_at INT UNSIGNED NOT NULL,
+  PRIMARY KEY (user_id, friend_id),
+  KEY idx_friend (friend_id),
+  CONSTRAINT fk_friend_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+  CONSTRAINT fk_friend_friend FOREIGN KEY (friend_id) REFERENCES users (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- One row per thing a guest should receive (water from a friend, Cô Ba's gift, XP for helping).
+-- `uniq` makes the daily limits hold even under double-clicks: e.g. water:<from>:<to>:<day>.
+CREATE TABLE IF NOT EXISTS farm_events (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  to_user INT UNSIGNED NOT NULL,
+  from_user INT UNSIGNED NULL,
+  type VARCHAR(10) NOT NULL,
+  plot_id INT NULL,
+  crop VARCHAR(20) NULL,
+  day CHAR(10) NOT NULL,
+  uniq VARCHAR(80) NOT NULL,
+  created_at INT UNSIGNED NOT NULL,
+  delivered_at INT UNSIGNED NULL,
+  UNIQUE KEY uq_event (uniq),
+  KEY idx_events_to (to_user, delivered_at),
+  KEY idx_events_from (from_user, day),
+  CONSTRAINT fk_events_to FOREIGN KEY (to_user) REFERENCES users (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

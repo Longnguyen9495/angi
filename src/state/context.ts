@@ -64,6 +64,8 @@ export interface AccountContextValue {
   logout: () => Promise<void>;
   deleteAccount: () => Promise<void>;
   setMarketing: (on: boolean) => Promise<void>;
+  /** Fetch and apply friends' help / Cô Ba's gift now (e.g. right after watering a friend). */
+  checkInbox: () => Promise<void>;
 }
 
 export const AccountContext = createContext<AccountContextValue | null>(null);

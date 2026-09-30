@@ -14,6 +14,7 @@ require_once __DIR__ . '/../lib/AiEnricher.php';
 require_once __DIR__ . '/../lib/Images.php';
 require_once __DIR__ . '/../lib/Auth.php';
 require_once __DIR__ . '/../lib/Account.php';
+require_once __DIR__ . '/../lib/Friends.php';
 
 header('X-Content-Type-Options: nosniff');
 
@@ -47,8 +48,25 @@ try {
         if ($method !== 'GET') {
             Account::requireAppHeader();
         }
+        // Khu vườn bạn bè: routes with a garden code in the path.
+        $friends = new Friends(db(), $account);
+        if (preg_match('#^/account/friends/([A-Za-z0-9]{6})(/(garden|water))?$#', $path, $fm)) {
+            $code = $fm[1];
+            match ($method . ' ' . ($fm[3] ?? '')) {
+                'GET garden' => json_response($friends->visit($code)),
+                'POST water' => json_response($friends->water($code, read_json_body())),
+                'DELETE ' => json_response($friends->remove($code)),
+                default => throw new HttpError(404, 'Không có API này.'),
+            };
+        }
         $route = $method . ' ' . $path;
         match ($route) {
+            'GET /account/garden' => json_response($friends->profile()),
+            'PUT /account/garden' => json_response($friends->rename(read_json_body())),
+            'GET /account/friends' => json_response($friends->list()),
+            'POST /account/friends' => json_response($friends->add(read_json_body())),
+            'GET /account/events' => json_response($friends->events()),
+            'POST /account/events/ack' => json_response($friends->ack(read_json_body())),
             'POST /account/code' => json_response($account->requestCode(read_json_body(), (string) ($_SERVER['REMOTE_ADDR'] ?? ''))),
             'POST /account/verify' => json_response($account->verifyCode(read_json_body())),
             'GET /account/link' => $account->verifyLink((string) ($_GET['t'] ?? '')),

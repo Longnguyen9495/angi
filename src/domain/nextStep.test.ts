@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getReelGameDish } from '../features/food-reel/data/reelCatalogue';
 import { dishIdsForSeed, nextStep } from './nextStep';
-import { EMPTY_CROPS, createInitialProgress, type GuestProgress } from './progress';
+import { EMPTY_PRODUCE, createInitialProgress, type GuestProgress, EMPTY_CROPS } from './progress';
 import { HOUR_MS } from './time';
 
 const NOON = new Date(2026, 8, 29, 12, 0, 0).getTime();
@@ -17,7 +17,7 @@ function bare(): GuestProgress {
 
 describe('nextStep', () => {
   it('cooks first when a recipe is complete', () => {
-    const s = { ...bare(), ingredients: { ...EMPTY_CROPS, rice: 1, scallion: 1 } };
+    const s = { ...bare(), ingredients: { ...EMPTY_PRODUCE, rice: 1, scallion: 1 } };
     expect(nextStep(s, NOON)).toEqual({ kind: 'cook', recipe: 'com-tam' });
   });
 
@@ -29,14 +29,14 @@ describe('nextStep', () => {
   it('plants a tray seed the closest recipe needs, into the first empty plot', () => {
     const s = {
       ...bare(),
-      ingredients: { ...EMPTY_CROPS, rice: 1 },
+      ingredients: { ...EMPTY_PRODUCE, rice: 1 },
       seeds: { ...EMPTY_CROPS, chili: 1, scallion: 1 },
     };
     expect(nextStep(s, NOON)).toEqual({ kind: 'plant', crop: 'scallion', plotId: 1 });
   });
 
   it('points to dishes that grant the missing seed when the tray is empty', () => {
-    const s = { ...bare(), ingredients: { ...EMPTY_CROPS, rice: 1 } };
+    const s = { ...bare(), ingredients: { ...EMPTY_PRODUCE, rice: 1 } };
     const step = nextStep(s, NOON);
     expect(step).toEqual({ kind: 'find', crop: 'scallion', recipe: 'com-tam' });
     const ids = dishIdsForSeed('scallion');

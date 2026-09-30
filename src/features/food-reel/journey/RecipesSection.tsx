@@ -1,10 +1,10 @@
 import { CookingPot, LockSimple, SealCheck } from '@phosphor-icons/react';
 import { CropIcon } from '../../../components/ui/CropIcon';
 import { ProgressBar } from '../../../components/ui/ProgressBar';
-import { CROPS, RECIPE_LIST, REGIONS } from '../../../data/game';
+import { RECIPE_LIST, REGIONS, produceName, produceUnlockLevel } from '../../../data/game';
 import type { RecipeId } from '../../../data/types';
 import {
-  cropAvailable,
+  produceAvailable,
   recipeAvailable,
   recipeProgress,
   regionProgress,
@@ -49,7 +49,7 @@ export function RecipesSection({ onCook }: { onCook: (recipe: RecipeId) => void 
               />
               <ul className="fj-ingredients">
                 {p.ingredients.map((x) => {
-                  const status = !cropAvailable(state, x.crop)
+                  const status = !produceAvailable(state, x.crop)
                     ? 'locked'
                     : x.have >= x.qty
                       ? 'have'
@@ -59,7 +59,7 @@ export function RecipesSection({ onCook }: { onCook: (recipe: RecipeId) => void 
                   return (
                     <li key={x.crop} className={`fj-ingredient fj-ingredient--${status}`}>
                       <CropIcon crop={x.crop} size={14} />
-                      {CROPS[x.crop].produceName}
+                      {produceName(x.crop)}
                       <span className="fj-ingredient__status">{STATUS[status]}</span>
                     </li>
                   );
@@ -74,10 +74,11 @@ export function RecipesSection({ onCook }: { onCook: (recipe: RecipeId) => void 
                 ) : (
                   <p className="fj-note">
                     {(() => {
-                      const lockedCrop = p.ingredients.find((x) => !cropAvailable(state, x.crop));
+                      const lockedCrop = p.ingredients.find(
+                        (x) => !produceAvailable(state, x.crop),
+                      );
                       if (lockedCrop) {
-                        const c = CROPS[lockedCrop.crop];
-                        return `Cần ${c.name.toLowerCase()} — mở ở cấp ${c.unlock?.level}.`;
+                        return `Cần ${produceName(lockedCrop.crop).toLowerCase()} — mở ở cấp ${produceUnlockLevel(lockedCrop.crop)}.`;
                       }
                       return p.ingredients.some((x) => x.have < x.qty && x.growing === 0)
                         ? 'Chốt một món có nguyên liệu còn thiếu để nhận hạt.'

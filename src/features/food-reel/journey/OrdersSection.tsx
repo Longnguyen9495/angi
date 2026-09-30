@@ -2,7 +2,7 @@ import { ChefHat, Drop, SealCheck } from '@phosphor-icons/react';
 import { useRef } from 'react';
 import { ProduceImage } from '../../../components/ui/CropVisual';
 import { CropIcon } from '../../../components/ui/CropIcon';
-import { CHEF, CROPS } from '../../../data/game';
+import { CHEF, CROPS, produceName } from '../../../data/game';
 import { canFulfill, orderDone, todaysOrders, type ChefOrder } from '../../../domain/orders';
 import { currentTime } from '../../../domain/time';
 import { flyTo } from '../../../motion/effects';
@@ -64,7 +64,7 @@ function OrderCard({ order, big }: { order: ChefOrder; big: boolean }) {
             <li key={i.crop} className={have >= i.qty || done ? 'is-have' : ''}>
               <ProduceImage crop={i.crop} size={34} />
               <span>
-                {CROPS[i.crop].produceName} ×{i.qty}
+                {produceName(i.crop)} ×{i.qty}
                 {!done && <span className="fj-order__have"> · có {have}</span>}
               </span>
             </li>

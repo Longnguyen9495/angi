@@ -1,5 +1,5 @@
-import { BASE_CROPS, CROP_LIST } from '../data/game';
-import type { CropId } from '../data/types';
+import { ANIMAL_LIST, BASE_CROPS, CROP_LIST, isCrop } from '../data/game';
+import type { CropId, ProduceId } from '../data/types';
 import type { GuestProgress } from './progress';
 import { dateKey } from './time';
 
@@ -13,7 +13,7 @@ export interface OrderReward {
 export interface ChefOrder {
   id: string;
   line: string;
-  items: { crop: CropId; qty: number }[];
+  items: { crop: ProduceId; qty: number }[];
   reward: OrderReward;
 }
 
@@ -59,11 +59,13 @@ function pick<T>(list: readonly T[], n: number, r: () => number): T[] {
  * (two produce, pays a can of water and a seed) and one larger one (three
  * produce, pays two seeds and more XP). Only crops the guest can grow appear.
  */
-export function dailyOrders(date: string, crops: readonly CropId[] = BASE_CROPS): ChefOrder[] {
+export function dailyOrders(date: string, crops: readonly ProduceId[] = BASE_CROPS): ChefOrder[] {
   const r = rng(hash(`co-ba:${date}`));
   const small = pick(crops, 2, r);
   const big = pick(crops, 3, r);
-  const seedOf = () => crops[Math.floor(r() * crops.length)]!;
+  // Rewards are seeds, and only crops have seeds.
+  const seedCrops = crops.filter((c): c is CropId => isCrop(c));
+  const seedOf = () => seedCrops[Math.floor(r() * seedCrops.length)]!;
   return [
     {
       id: `${date}:0`,
@@ -77,7 +79,7 @@ export function dailyOrders(date: string, crops: readonly CropId[] = BASE_CROPS)
       items: big.map((crop, i) => ({ crop, qty: i === 0 ? 2 : 1 })),
       reward: {
         xp: 30,
-        seeds: pick(crops, 2, r).map((crop) => ({ crop, qty: 1 })),
+        seeds: pick(seedCrops, 2, r).map((crop) => ({ crop, qty: 1 })),
         water: 0,
       },
     },
@@ -88,9 +90,13 @@ export function todaysOrders(p: GuestProgress, now: number): ChefOrder[] {
   return dailyOrders(dateKey(now), orderCrops(p));
 }
 
-/** Crops that can show up in orders: the base six plus any the guest has unlocked. */
-export function orderCrops(p: GuestProgress): CropId[] {
-  return CROP_LIST.filter((c) => !c.unlock || p.unlockedCrops.includes(c.id)).map((c) => c.id);
+/** Produce that can show up in orders: open crops, plus egg/milk once their animal is unlocked. */
+export function orderCrops(p: GuestProgress): ProduceId[] {
+  const crops: ProduceId[] = CROP_LIST.filter(
+    (c) => !c.unlock || p.unlockedCrops.includes(c.id),
+  ).map((c) => c.id);
+  const lv = Math.floor(p.xp / 100) + 1;
+  return [...crops, ...ANIMAL_LIST.filter((a) => lv >= a.unlockLevel).map((a) => a.product)];
 }
 
 export function orderDone(p: GuestProgress, order: ChefOrder): boolean {

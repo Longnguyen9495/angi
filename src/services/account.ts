@@ -78,3 +78,76 @@ export function maskEmail(email: string): string {
   const keep = name.slice(0, Math.min(2, Math.max(1, name.length - 1)));
   return `${keep}${'•'.repeat(Math.max(1, Math.min(4, name.length - keep.length)))}@${domain}`;
 }
+
+// ——— Khu vườn bạn bè (server/lib/Friends.php) ———
+
+export interface GardenProfile {
+  code: string;
+  name: string;
+  displayName: string;
+}
+
+export interface FriendSummary {
+  code: string;
+  name: string;
+  xp: number;
+  level: number;
+  /** Plots ready to harvest / growing plots a visitor could water. */
+  ready: number;
+  growing: number;
+  helpedToday: boolean;
+  updatedAt: number | null;
+}
+
+export interface FriendsList {
+  me: GardenProfile & { xp: number; level: number };
+  friends: FriendSummary[];
+  helpsLeft: number;
+  max: number;
+}
+
+export interface FriendPlot {
+  id: number;
+  crop: string | null;
+  plantedAt: number | null;
+  readyAt: number | null;
+  wateredAt: number | null;
+}
+
+export interface FriendGarden {
+  code: string;
+  name: string;
+  xp: number;
+  level: number;
+  plots: FriendPlot[];
+  decor: string[];
+  decorLayout: Record<string, { x: number; z: number; rot: number } | null>;
+  animals: Record<string, { fedAt: number | null; readyAt: number | null }>;
+  updatedAt: number | null;
+  helpedToday: boolean;
+  helpsLeft: number;
+}
+
+export interface RemoteFriendEvent {
+  id: string;
+  type: 'water' | 'gift' | 'helped';
+  plotId: number | null;
+  crop: string | null;
+  from: string;
+  at: number;
+}
+
+export const friendsApi = {
+  profile: () => call<GardenProfile>('GET', '/garden'),
+  rename: (name: string) => call<GardenProfile>('PUT', '/garden', { name }),
+  list: () => call<FriendsList>('GET', '/friends'),
+  add: (code: string) => call<FriendsList>('POST', '/friends', { code }),
+  remove: (code: string) => call<FriendsList>('DELETE', `/friends/${encodeURIComponent(code)}`),
+  visit: (code: string) => call<FriendGarden>('GET', `/friends/${encodeURIComponent(code)}/garden`),
+  water: (code: string, plotId: number) =>
+    call<FriendGarden & { ok: true }>('POST', `/friends/${encodeURIComponent(code)}/water`, {
+      plotId,
+    }),
+  events: () => call<{ events: RemoteFriendEvent[] }>('GET', '/events'),
+  ack: (ids: string[]) => call<{ ok: true }>('POST', '/events/ack', { ids }),
+};

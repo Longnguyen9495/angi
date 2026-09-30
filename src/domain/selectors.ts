@@ -1,5 +1,6 @@
 import { reelGameDishes } from '../features/food-reel/data/reelCatalogue';
 import {
+  ANIMALS,
   CROPS,
   DAILY_MISSIONS,
   RECIPES,
@@ -9,8 +10,10 @@ import {
   PLOT_UNLOCK_LEVELS,
   WATERING,
   XP_PER_LEVEL,
+  animalOf,
+  isCrop,
 } from '../data/game';
-import type { CropId, MissionKind, RecipeId, RegionId } from '../data/types';
+import type { AnimalId, CropId, MissionKind, ProduceId, RecipeId, RegionId } from '../data/types';
 import type { GuestProgress, Plot } from './progress';
 import { dateKey } from './time';
 
@@ -80,7 +83,7 @@ export function totalSeeds(p: GuestProgress): number {
 }
 
 export interface IngredientProgress {
-  crop: CropId;
+  crop: ProduceId;
   qty: number;
   have: number;
   growing: number;
@@ -104,7 +107,12 @@ export function recipeProgress(p: GuestProgress, id: RecipeId): RecipeProgress {
     crop,
     qty,
     have: p.ingredients[crop],
-    growing: p.plots.filter((pl) => pl.crop === crop).length,
+    // Crops in the ground, or an animal busy producing it, count as "đang lớn".
+    growing: isCrop(crop)
+      ? p.plots.filter((pl) => pl.crop === crop).length
+      : p.animals[animalOf(crop)].readyAt !== null
+        ? ANIMALS[animalOf(crop)].yield
+        : 0,
   }));
   const secured = ingredients.reduce((s, i) => s + Math.min(i.qty, i.have + i.growing), 0);
   const total = ingredients.reduce((s, i) => s + i.qty, 0);
@@ -126,6 +134,24 @@ export function recipeAvailable(p: GuestProgress, id: RecipeId): boolean {
 /** The base crops are always open; the others open by level. */
 export function cropAvailable(p: GuestProgress, crop: CropId): boolean {
   return !CROPS[crop].unlock || p.unlockedCrops.includes(crop);
+}
+
+/** A pantry item can be obtained: its crop is open, or its animal is unlocked. */
+export function produceAvailable(p: GuestProgress, id: ProduceId): boolean {
+  return isCrop(id) ? cropAvailable(p, id) : animalUnlocked(p, animalOf(id));
+}
+
+export function animalUnlocked(p: GuestProgress, id: AnimalId): boolean {
+  return level(p.xp).level >= ANIMALS[id].unlockLevel;
+}
+
+export type AnimalStage = 'locked' | 'hungry' | 'busy' | 'ready';
+
+export function animalStage(p: GuestProgress, id: AnimalId, now: number): AnimalStage {
+  if (!animalUnlocked(p, id)) return 'locked';
+  const a = p.animals[id];
+  if (a.readyAt === null) return 'hungry';
+  return now >= a.readyAt ? 'ready' : 'busy';
 }
 
 /** Crops whose level has been reached but that are not recorded as unlocked yet. */

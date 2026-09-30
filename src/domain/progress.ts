@@ -1,4 +1,12 @@
-import type { CropId, DecorId, MissionKind, RecipeId, RegionId } from '../data/types';
+import type {
+  AnimalId,
+  CropId,
+  DecorId,
+  MissionKind,
+  ProduceId,
+  RecipeId,
+  RegionId,
+} from '../data/types';
 import { FARM_PLOT_COUNT } from '../data/game';
 import { DEFAULT_FILTERS, type Filters } from './recommend';
 import { HOUR_MS, dateKey } from './time';
@@ -39,7 +47,7 @@ export interface CheckInRecord {
   at: number;
 }
 
-export type Resource = `seed:${CropId}` | `ingredient:${CropId}` | 'xp' | 'stamp' | 'coin';
+export type Resource = `seed:${CropId}` | `ingredient:${ProduceId}` | 'xp' | 'stamp' | 'coin';
 
 /** Append-only reward ledger entry. `key` doubles as the idempotency key. */
 export interface LedgerEntry {
@@ -57,7 +65,7 @@ export interface GuestProgress {
   filters: Filters;
   hiddenDishIds: string[];
   seeds: Record<CropId, number>;
-  ingredients: Record<CropId, number>;
+  ingredients: Record<ProduceId, number>;
   plots: Plot[];
   xp: number;
   stamps: { discovered: string[]; eaten: string[] };
@@ -82,6 +90,10 @@ export interface GuestProgress {
   coins: number;
   /** Decorations bought for the garden. */
   decor: DecorId[];
+  /** Where each decoration stands on the 3D island (grid cell + quarter turns); missing = default spot. */
+  decorLayout: Partial<Record<DecorId, DecorPlacement | null>>;
+  /** Animals: fed → producing until readyAt → collect. Never sick, never lost. */
+  animals: Record<AnimalId, AnimalState>;
   /**
    * Meal slots that have a check-in photo. The images themselves stay on this
    * device (IndexedDB, see services/photoStore.ts) and never sync.
@@ -91,6 +103,32 @@ export interface GuestProgress {
   settings: { motion: MotionPref; simulateFailure: boolean };
   ledger: LedgerEntry[];
 }
+
+export interface DecorPlacement {
+  x: number;
+  z: number;
+  /** Quarter turns (0–3). */
+  rot: number;
+}
+
+/** Something a friend did for this garden, as recorded by the server (see server/lib/Friends.php). */
+export interface FriendEvent {
+  id: string;
+  type: 'water' | 'gift' | 'helped';
+  plotId?: number;
+  crop?: CropId;
+  from?: string;
+}
+
+export interface AnimalState {
+  fedAt: number | null;
+  readyAt: number | null;
+}
+
+export const EMPTY_ANIMALS: Record<AnimalId, AnimalState> = {
+  chicken: { fedAt: null, readyAt: null },
+  cow: { fedAt: null, readyAt: null },
+};
 
 export const EMPTY_CROPS: Record<CropId, number> = {
   rice: 0,
@@ -104,6 +142,8 @@ export const EMPTY_CROPS: Record<CropId, number> = {
   cucumber: 0,
   lime: 0,
 };
+
+export const EMPTY_PRODUCE: Record<ProduceId, number> = { ...EMPTY_CROPS, egg: 0, milk: 0 };
 
 function randomId(): string {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) return crypto.randomUUID();
@@ -145,7 +185,7 @@ export function createInitialProgress(now: number): GuestProgress {
     filters: DEFAULT_FILTERS,
     hiddenDishIds: [],
     seeds: { ...EMPTY_CROPS },
-    ingredients: { ...EMPTY_CROPS },
+    ingredients: { ...EMPTY_PRODUCE },
     plots,
     xp: 0,
     stamps: { discovered: [], eaten: [] },
@@ -163,6 +203,8 @@ export function createInitialProgress(now: number): GuestProgress {
     recentCropUnlock: null,
     coins: 0,
     decor: [],
+    decorLayout: {},
+    animals: structuredClone(EMPTY_ANIMALS),
     photos: [],
     journeySaved: false,
     settings: { motion: 'system', simulateFailure: false },

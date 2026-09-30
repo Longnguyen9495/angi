@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { ProduceImage } from '../../../components/ui/CropVisual';
 import { Sheet } from '../../../components/ui/Sheet';
 import { cookPlan } from '../../../data/cooking';
-import { CROPS, RECIPES } from '../../../data/game';
+import { RECIPES, produceName } from '../../../data/game';
 import type { RecipeId } from '../../../data/types';
 import { recipeProgress } from '../../../domain/selectors';
 import { currentTime } from '../../../domain/time';
@@ -163,7 +163,7 @@ function CookingScene({
             {recipe.ingredients.map((i) => (
               <li key={i.crop}>
                 <ProduceImage crop={i.crop} size={30} />
-                {CROPS[i.crop].produceName} ×{i.qty}
+                {produceName(i.crop)} ×{i.qty}
                 <span className="fj-cook__have">có {state.ingredients[i.crop]}</span>
               </li>
             ))}

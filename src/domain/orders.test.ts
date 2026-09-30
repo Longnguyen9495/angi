@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { canFulfill, dailyOrders, todaysOrders } from './orders';
-import { EMPTY_CROPS, createInitialProgress, type GuestProgress } from './progress';
+import { EMPTY_PRODUCE, createInitialProgress, type GuestProgress } from './progress';
 import { gameReducer } from './reducer';
 import { waterLeft } from './selectors';
 import { HOUR_MS, dateKey } from './time';
@@ -11,7 +11,7 @@ const NOON = new Date(2026, 8, 29, 12, 0, 0).getTime();
 function stocked(n: number): GuestProgress {
   const s = createInitialProgress(NOON);
   const order = todaysOrders(s, NOON)[n]!;
-  const ingredients = { ...EMPTY_CROPS };
+  const ingredients = { ...EMPTY_PRODUCE };
   for (const i of order.items) ingredients[i.crop] = i.qty;
   return { ...s, ingredients };
 }
