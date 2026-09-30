@@ -59,7 +59,7 @@ function site_url(): string
 function og_version(array $dish): string
 {
     $base = @filemtime(__DIR__ . '/og-dish-base.png') ?: 0;
-    return substr(sha1($dish['name'] . '|' . $dish['subtitle'] . '|' . $dish['image'] . '|' . $base . '|v2'), 0, 10);
+    return substr(sha1($dish['name'] . '|' . $dish['subtitle'] . '|' . $dish['image'] . '|' . $base . '|v3'), 0, 10);
 }
 
 function set_meta(string $html, string $key, string $value): string
@@ -247,9 +247,11 @@ function render_og_image(array $dish): string
         imagettftext($im, $size, 0, 72, $y, $ivory, $bold, $line);
         $y += (int) ($size * 1.18);
     }
+    // Some subtitles already name the region ("Sườn nướng • Nam Bộ"): don't say it twice.
+    $region = REGION_LABEL[$dish['region']] ?? '';
     $details = array_filter([
         $dish['subtitle'],
-        REGION_LABEL[$dish['region']] ?? '',
+        $region !== '' && !str_contains(mb_strtolower($dish['subtitle']), mb_strtolower($region)) ? $region : '',
         $dish['price'] > 0 ? 'khoảng ' . $dish['price'] . 'k' : '',
     ]);
     // Up to two lines of details; a line never ends on a dangling separator.
