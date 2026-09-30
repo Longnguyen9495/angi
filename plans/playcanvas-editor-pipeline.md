@@ -6,17 +6,28 @@
 
 | Giai đoạn | Trạng thái | Ghi chú |
 |---|---|---|
-| 0 — Chuẩn bị | ⏳ Bạn làm | Kiểm tra gói/project riêng tư, tạo project, engine 2.22.x |
+| 0 — Chuẩn bị | ✅ Xong | Project `angi-farm-corner` (công khai), engine 2.22.6 |
 | 1 — Mô hình | 🟡 Một phần | Đã có 6 đồ vật CC0 (Poly Haven) trong `public/models/farm/props/`. **Cây, nhà kho, luống, cây trồng vẫn cần Blender**: mô hình CC0 có sẵn của cây đều nặng hàng triệu tam giác |
-| 2 — Lắp cảnh Editor | ⏳ Bạn làm | |
+| 2 — Lắp cảnh Editor | ✅ Bản đầu | Claude dựng qua PlayCanvas MCP (xem mục dưới); bạn chỉnh tay tiếp tuỳ ý |
 | 3 — Quy ước tên | ✅ Xong | `src/features/farm-pc/naming.ts` (`CORNER`, `validateCorner`); góc dựng bằng code đã đặt tên theo quy ước và có test |
 | 4 — Script chuyển động | ✅ Xong | `src/features/farm-pc/scripts/`: `Sway`, `Pop`, `DoorOnSelect`, `Lamp`, `PlayFx` + sự kiện `farm:*`; đang chạy trong góc hiện tại (cây/lá lắc, cây trồng nảy khi đổi giai đoạn, cửa kho mở khi chọn, đèn theo buổi) |
 | 5 — Xuất bản | ⏳ Bạn làm | |
 | 6 — Tích hợp bản xuất | ⏸ Chờ bản xuất | Đã sẵn: `startFarmEngine`, `validateCorner`, test engine thật trên `NullGraphicsDevice` |
 | 7 — Nghiệm thu | ⏸ | |
 
-**Lưu ý khi dùng script trong Editor:** các file trong `scripts/` là TypeScript. Để upload lên Editor cần bản JS; đây là việc của giai đoạn 6 (thêm bước build `scripts/*.ts` → `.mjs`, hoặc đồng bộ bằng `playcanvas-sync`).
+**Script trong Editor:** đã upload `farm/scripts/farm-motion.mjs` (đóng gói từ `src/features/farm-pc/scripts/motion.ts`). Sửa script thì sửa file TS, đóng gói lại bằng `npx esbuild src/features/farm-pc/scripts/motion.ts --bundle --format=esm --external:playcanvas --target=es2022 --outfile=farm-motion.mjs`, đổi `var X = class extends Script` thành `export class X extends Script` (parser của Editor chỉ nhận dạng này), rồi upload lại. Ghi chú cũ: các file trong `scripts/` là TypeScript. Để upload lên Editor cần bản JS; đây là việc của giai đoạn 6 (thêm bước build `scripts/*.ts` → `.mjs`, hoặc đồng bộ bằng `playcanvas-sync`).
 > Mục tiêu: thay các khối dựng bằng code trong góc mẫu bằng mô hình thật và hiệu ứng chuyển động do bạn chỉnh trực quan, **không đổi luật chơi, tiến độ hay backend**.
+
+## Cảnh `corner` trong Editor (dựng qua MCP, 2026-09-30)
+
+- 172 entity dưới `corner-root`, đủ 34 tên bắt buộc (`barn`, `barn-hit`, `barn-door`, `bed`, `plot-1…9` với `soil` + `crop`, `tree`, `sun`). Toạ độ sinh từ `sceneLayout.ts`, nên khớp với góc trong app.
+- Mặt đảo và mái hồi là GLB xuất từ chính `engine/geometry.ts` (`island`, `gable`). Nhà kho, cây, luống, đường đá, bụi cỏ dựng bằng khối cơ bản. 6 đồ vật CC0 là template.
+- 27 vật liệu PBR (texture Poly Haven, nhuộm theo bảng màu; Editor giới hạn diffuse ≤ 1 nên vài màu tối hơn một chút so với app), skybox từ HDR (prefilter, cường độ 0.7), tone mapping Neutral, fog linear, nắng có bóng 2048.
+- Camera = góc nhìn game (FOV 34), có phông mây gắn theo camera.
+- Script: `farmSway` trên 6 cụm tán cây, `farmDoor` trên `barn-door`, `farmLamp` trên `lamp`. Đã Launch thử: không có lỗi, chỉ 2 cảnh báo vô hại từ vật liệu GLB.
+- Checkpoint: "Before Claude builds…" (trạng thái trống), "corner v1", "corner v2". Khôi phục được trong Version Control của Editor.
+- Lưu ý: khi viewport Editor nhìn qua entity `Camera`, xoay/zoom sẽ di chuyển chính camera game. Chọn lại camera `Perspective` trước khi điều hướng.
+- Ảnh: `plans/playcanvas-lat-cat-1/editor-corner-camera.webp`, `editor-launch.webp`.
 
 ## Nguyên tắc (đọc trước khi bắt đầu)
 
@@ -181,4 +192,5 @@ Giai đoạn 6 (sau khi có `public/farm-scenes/corner-v1/`):
 
 ## Ghi chú quyết định
 
-- (Điền khi làm giai đoạn 0) Gói PlayCanvas đã chọn, ngày kiểm tra điều kiện, project riêng tư hay công khai:
+- 2026-09-30: đã tạo project `angi-farm-corner` (Blank Project, tài khoản LONGNGUYEN9495) ở chế độ **công khai (PUBLIC)**; project riêng tư là tính năng Premium. Chấp nhận được vì repo code cũng công khai và asset đều CC0; không upload bí mật hay asset không có quyền chia sẻ. Có thể nâng gói và chuyển riêng tư sau.
+- Phiên bản engine của project: **2.22.6 (Current)**, trùng với `playcanvas` 2.22.6 trong `package.json`; không cần đổi gì. Nếu sau này đổi engine trong Editor thì nâng gói npm cùng số.
