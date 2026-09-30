@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":[{\"resource_id\":\"b06315d6-cc51-47a1-8ac1-1d440d13faef\",\"name\":\"model-tree-trunk\",\"path\":\"Root/corner-root/tree/model-tree-trunk\",\"parent\":\"21c6eae9-50d0-47a1-8845-514bc9be8099\",\"enabled\":true,\"tags\":[],\"components\":[\"render\"]},{\"resource_id\":\"19d9eabb-2aa8-49be-bdbf-ad37d85ecb67\",\"name\":\"model-leaf-cluster-1\",\"path\":\"Root/corner-root/tree/model-leaf-cluster-1\",\"parent\":\"21c6eae9-50d0-47a1-8845-514bc9be8099\",\"enabled\":true,\"tags\":[],\"components\":[\"render\"]},{\"resource_id\":\"4a699f4a-8aad-4117-aa0e-89cc5a855283\",\"name\":\"model-leaf-cluster-2\",\"path\":\"Root/corner-root/tree/model-leaf-cluster-2\",\"parent\":\"21c6eae9-50d0-47a1-8845-514bc9be8099\",\"enabled\":true,\"tags\":[],\"components\":[\"render\"]},{\"resource_id\":\"7ddb59a8-1ff4-46f8-8109-f2268585145f\",\"name\":\"model-leaf-cluster-3\",\"path\":\"Root/corner-root/tree/model-leaf-cluster-3\",\"parent\":\"21c6eae9-50d0-47a1-8845-514bc9be8099\",\"enabled\":true,\"tags\":[],\"components\":[\"render\"]},{\"resource_id\":\"eaa951ca-173f-41d3-9da0-d314b3c9203b\",\"name\":\"model-leaf-cluster-4\",\"path\":\"Root/corner-root/tree/model-leaf-cluster-4\",\"parent\":\"21c6eae9-50d0-47a1-8845-514bc9be8099\",\"enabled\":true,\"tags\":[],\"components\":[\"render\"]},{\"resource_id\":\"4f08cc55-6c7c-4874-b03e-9cc97c3584c3\",\"name\":\"model-leaf-cluster-5\",\"path\":\"Root/corner-root/tree/model-leaf-cluster-5\",\"parent\":\"21c6eae9-50d0-47a1-8845-514bc9be8099\",\"enabled\":true,\"tags\":[],\"components\":[\"render\"]},{\"resource_id\":\"109f79ec-4a2c-47a6-9196-36531668a77d\",\"name\":\"model-bed-frame-soil\",\"path\":\"Root/corner-root/bed/model-bed-frame-soil\",\"parent\":\"952e1adb-fd13-4edb-b9f0-f6ed863ce05e\",\"enabled\":true,\"tags\":[],\"components\":[\"render\"]},{\"resource_id\":\"03cb0376-188a-4f03-b7a6-3a9706fe57f3\",\"name\":\"model-path-stones\",\"path\":\"Root/corner-root/path/model-path-stones\",\"parent\":\"e0a5ead8-06f4-4c5e-ae16-fc5a668c7b88\",\"enabled\":true,\"tags\":[],\"components\":[\"render\"]}],\"meta\":{\"tool\":\"entities:create\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 38
+}

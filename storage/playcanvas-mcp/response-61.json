@@ -1,0 +1,13 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":null,\"meta\":{\"tool\":\"launch:start\",\"status\":\"error\",\"message\":\"Could not open the launch window (popup blocked). Allow popups for the editor origin and retry.\"}}"
+      }
+    ],
+    "isError": true
+  },
+  "jsonrpc": "2.0",
+  "id": 61
+}

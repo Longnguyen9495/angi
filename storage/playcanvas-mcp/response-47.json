@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":[{\"name\":\"model-barn-body\",\"tags\":[],\"enabled\":true,\"resource_id\":\"37fb46ac-7426-4287-8b26-dfa206468f7a\",\"parent\":\"c60c2ee9-abcc-4597-a009-2da185135a21\",\"children\":[],\"position\":[0,0,0],\"rotation\":[0,0,0],\"scale\":[1,1,1],\"components\":{\"render\":{\"enabled\":true,\"type\":\"asset\",\"asset\":309298324,\"materialAssets\":[309298322],\"layers\":[0],\"batchGroupId\":null,\"castShadows\":true,\"castShadowsLightmap\":true,\"receiveShadows\":true,\"lightmapped\":false,\"lightmapSizeMultiplier\":1,\"isStatic\":false,\"rootBone\":null,\"aabbCenter\":null,\"aabbHalfExtents\":null,\"shadowCascadeMask\":255}},\"template\":null,\"template_id\":null,\"template_ent_ids\":null},{\"name\":\"model-barn-door\",\"tags\":[],\"enabled\":true,\"resource_id\":\"ef685979-5ddf-4afb-9085-1bdc0ca586a4\",\"parent\":\"359f180b-3cbd-4e29-a568-176dac158acd\",\"children\":[],\"position\":[-0.07,0.16,0.030000000000000027],\"rotation\":[0,0,0],\"scale\":[1,1,1],\"components\":{\"render\":{\"enabled\":true,\"type\":\"asset\",\"asset\":309298325,\"materialAssets\":[309298322],\"layers\":[0],\"batchGroupId\":null,\"castShadows\":true,\"castShadowsLightmap\":true,\"receiveShadows\":true,\"lightmapped\":false,\"lightmapSizeMultiplier\":1,\"isStatic\":false,\"rootBone\":null,\"aabbCenter\":null,\"aabbHalfExtents\":null,\"shadowCascadeMask\":255}},\"template\":null,\"template_id\":null,\"template_ent_ids\":null}],\"meta\":{\"tool\":\"entities:list\",\"status\":\"ok\",\"total\":2,\"count\":2,\"hasMore\":false,\"nextCursor\":null}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 47
+}

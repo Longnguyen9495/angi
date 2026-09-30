@@ -1,0 +1,2876 @@
+[
+  {
+    "id": 7,
+    "method": "tools/call",
+    "params": {
+      "name": "create_checkpoint",
+      "arguments": {
+        "description": "Before corner completion 2026-09-30: preserve 172 entities, 34 required names, existing assets and camera; Git playcanvas-corner 50c5ea0"
+      }
+    }
+  },
+  {
+    "id": 8,
+    "method": "tools/call",
+    "params": {
+      "name": "list_scenes",
+      "arguments": {}
+    }
+  },
+  {
+    "id": 9,
+    "method": "tools/call",
+    "params": {
+      "name": "get_checkpoint",
+      "arguments": {
+        "checkpointId": "e795a0a5-65ee-4c85-a5f6-835a28415b96"
+      }
+    }
+  },
+  {
+    "id": 10,
+    "method": "tools/call",
+    "params": {
+      "name": "list_entities",
+      "arguments": {
+        "full": true,
+        "limit": 500
+      }
+    }
+  },
+  {
+    "id": 11,
+    "method": "tools/call",
+    "params": {
+      "name": "query_viewport_state",
+      "arguments": {}
+    }
+  },
+  {
+    "id": 12,
+    "method": "tools/call",
+    "params": {
+      "name": "set_viewport_state",
+      "arguments": {
+        "cameraId": "e951effe-82e0-11ee-9eae-baf4d5e490e2"
+      }
+    }
+  },
+  {
+    "id": 13,
+    "method": "tools/call",
+    "params": {
+      "name": "list_scenes",
+      "arguments": {}
+    }
+  },
+  {
+    "id": 14,
+    "method": "tools/call",
+    "params": {
+      "name": "list_scenes",
+      "arguments": {}
+    }
+  },
+  {
+    "id": 15,
+    "method": "tools/call",
+    "params": {
+      "name": "query_viewport_state",
+      "arguments": {}
+    }
+  },
+  {
+    "id": 16,
+    "method": "tools/call",
+    "params": {
+      "name": "list_scenes",
+      "arguments": {}
+    }
+  },
+  {
+    "id": 17,
+    "method": "tools/call",
+    "params": {
+      "name": "list_scenes",
+      "arguments": {}
+    }
+  },
+  {
+    "id": 18,
+    "method": "tools/call",
+    "params": {
+      "name": "list_scenes",
+      "arguments": {}
+    }
+  },
+  {
+    "id": 19,
+    "method": "tools/call",
+    "params": {
+      "name": "query_viewport_state",
+      "arguments": {}
+    }
+  },
+  {
+    "id": 20,
+    "method": "tools/call",
+    "params": {
+      "name": "list_entities",
+      "arguments": {
+        "full": true,
+        "limit": 500
+      }
+    }
+  },
+  {
+    "id": 21,
+    "method": "tools/call",
+    "params": {
+      "name": "create_checkpoint",
+      "arguments": {
+        "description": "Before model import batch: preserve gameplay names primitives door hit soil crop; parent resumed 2026-09-30"
+      }
+    }
+  },
+  {
+    "id": 22,
+    "method": "tools/call",
+    "params": {
+      "name": "set_viewport_state",
+      "arguments": {
+        "cameraId": "e951effe-82e0-11ee-9eae-baf4d5e490e2"
+      }
+    }
+  },
+  {
+    "id": 23,
+    "method": "tools/call",
+    "params": {
+      "name": "capture_viewport",
+      "arguments": {}
+    }
+  },
+  {
+    "id": 24,
+    "method": "tools/call",
+    "params": {
+      "name": "set_viewport_state",
+      "arguments": {
+        "cameraId": "perspective"
+      }
+    }
+  },
+  {
+    "id": 25,
+    "method": "tools/call",
+    "params": {
+      "name": "upload_assets",
+      "arguments": {
+        "assets": [
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/farm-atlas.png",
+            "type": "texture",
+            "name": "farm-atlas.png",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "preload": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 26,
+    "method": "tools/call",
+    "params": {
+      "name": "upload_assets",
+      "arguments": {
+        "assets": [
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/barn.glb",
+            "type": "scene",
+            "name": "barn.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "preload": true,
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 27,
+    "method": "tools/call",
+    "params": {
+      "name": "get_asset",
+      "arguments": {
+        "id": 309298321
+      }
+    }
+  },
+  {
+    "id": 28,
+    "method": "tools/call",
+    "params": {
+      "name": "list_assets",
+      "arguments": {
+        "full": true,
+        "name": "barn",
+        "limit": 100
+      }
+    }
+  },
+  {
+    "id": 29,
+    "method": "tools/call",
+    "params": {
+      "name": "get_asset_references",
+      "arguments": {
+        "id": 309298319
+      }
+    }
+  },
+  {
+    "id": 30,
+    "method": "tools/call",
+    "params": {
+      "name": "get_asset",
+      "arguments": {
+        "id": 309298322
+      }
+    }
+  },
+  {
+    "id": 31,
+    "method": "tools/call",
+    "params": {
+      "name": "set_material_properties",
+      "arguments": {
+        "assetId": 309298322,
+        "properties": {
+          "diffuseMap": 309298319,
+          "diffuseMapUv": 0,
+          "diffuseMapChannel": "rgb"
+        }
+      }
+    }
+  },
+  {
+    "id": 32,
+    "method": "tools/call",
+    "params": {
+      "name": "upload_assets",
+      "arguments": {
+        "assets": [
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/bed.glb",
+            "type": "scene",
+            "name": "bed.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/path-stones.glb",
+            "type": "scene",
+            "name": "path-stones.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/tree-broadleaf.glb",
+            "type": "scene",
+            "name": "tree-broadleaf.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-bean-flowering.glb",
+            "type": "scene",
+            "name": "crop-bean-flowering.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-bean-ready.glb",
+            "type": "scene",
+            "name": "crop-bean-ready.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-bean-sprout.glb",
+            "type": "scene",
+            "name": "crop-bean-sprout.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-bean-young.glb",
+            "type": "scene",
+            "name": "crop-bean-young.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-chili-flowering.glb",
+            "type": "scene",
+            "name": "crop-chili-flowering.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-chili-ready.glb",
+            "type": "scene",
+            "name": "crop-chili-ready.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-chili-sprout.glb",
+            "type": "scene",
+            "name": "crop-chili-sprout.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-chili-young.glb",
+            "type": "scene",
+            "name": "crop-chili-young.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-cucumber-flowering.glb",
+            "type": "scene",
+            "name": "crop-cucumber-flowering.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-cucumber-ready.glb",
+            "type": "scene",
+            "name": "crop-cucumber-ready.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-cucumber-sprout.glb",
+            "type": "scene",
+            "name": "crop-cucumber-sprout.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-cucumber-young.glb",
+            "type": "scene",
+            "name": "crop-cucumber-young.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-garlic-flowering.glb",
+            "type": "scene",
+            "name": "crop-garlic-flowering.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-garlic-ready.glb",
+            "type": "scene",
+            "name": "crop-garlic-ready.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-garlic-sprout.glb",
+            "type": "scene",
+            "name": "crop-garlic-sprout.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-garlic-young.glb",
+            "type": "scene",
+            "name": "crop-garlic-young.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-herbs-flowering.glb",
+            "type": "scene",
+            "name": "crop-herbs-flowering.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-herbs-ready.glb",
+            "type": "scene",
+            "name": "crop-herbs-ready.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-herbs-sprout.glb",
+            "type": "scene",
+            "name": "crop-herbs-sprout.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-herbs-young.glb",
+            "type": "scene",
+            "name": "crop-herbs-young.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-lemongrass-flowering.glb",
+            "type": "scene",
+            "name": "crop-lemongrass-flowering.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-lemongrass-ready.glb",
+            "type": "scene",
+            "name": "crop-lemongrass-ready.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-lemongrass-sprout.glb",
+            "type": "scene",
+            "name": "crop-lemongrass-sprout.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-lemongrass-young.glb",
+            "type": "scene",
+            "name": "crop-lemongrass-young.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-lime-flowering.glb",
+            "type": "scene",
+            "name": "crop-lime-flowering.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-lime-ready.glb",
+            "type": "scene",
+            "name": "crop-lime-ready.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-lime-sprout.glb",
+            "type": "scene",
+            "name": "crop-lime-sprout.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-lime-young.glb",
+            "type": "scene",
+            "name": "crop-lime-young.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-rice-flowering.glb",
+            "type": "scene",
+            "name": "crop-rice-flowering.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-rice-ready.glb",
+            "type": "scene",
+            "name": "crop-rice-ready.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-rice-sprout.glb",
+            "type": "scene",
+            "name": "crop-rice-sprout.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-rice-young.glb",
+            "type": "scene",
+            "name": "crop-rice-young.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-scallion-flowering.glb",
+            "type": "scene",
+            "name": "crop-scallion-flowering.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-scallion-ready.glb",
+            "type": "scene",
+            "name": "crop-scallion-ready.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-scallion-sprout.glb",
+            "type": "scene",
+            "name": "crop-scallion-sprout.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-scallion-young.glb",
+            "type": "scene",
+            "name": "crop-scallion-young.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-tomato-flowering.glb",
+            "type": "scene",
+            "name": "crop-tomato-flowering.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-tomato-ready.glb",
+            "type": "scene",
+            "name": "crop-tomato-ready.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-tomato-sprout.glb",
+            "type": "scene",
+            "name": "crop-tomato-sprout.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          },
+          {
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/crops/crop-tomato-young.glb",
+            "type": "scene",
+            "name": "crop-tomato-young.glb",
+            "tags": [
+              "angi-original",
+              "corner-model-v2"
+            ],
+            "settings": {
+              "searchRelatedAssets": true,
+              "useGlb": true,
+              "useContainers": true,
+              "meshCompression": "none",
+              "overwriteMaterial": false,
+              "overwriteTexture": false
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 33,
+    "method": "tools/call",
+    "params": {
+      "name": "list_assets",
+      "arguments": {
+        "full": true,
+        "type": "template",
+        "limit": 500
+      }
+    }
+  },
+  {
+    "id": 34,
+    "method": "tools/call",
+    "params": {
+      "name": "list_assets",
+      "arguments": {
+        "full": true,
+        "type": "material",
+        "name": "original-painted-atlas",
+        "limit": 100
+      }
+    }
+  },
+  {
+    "id": 35,
+    "method": "tools/call",
+    "params": {
+      "name": "modify_assets",
+      "arguments": {
+        "edits": [
+          {
+            "id": 309298725,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298431,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298719,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298714,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298387,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298426,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298709,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298704,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298406,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298699,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298436,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298694,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298792,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298786,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298421,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298689,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298750,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298746,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298740,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298358,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298735,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298680,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298730,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298417,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298619,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298593,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298401,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298503,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298859,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298851,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298411,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298844,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298838,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298832,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298826,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298822,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298497,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298816,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298811,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298806,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298391,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298801,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          },
+          {
+            "id": 309298796,
+            "path": "data.diffuseMap",
+            "value": 309298319
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 36,
+    "method": "tools/call",
+    "params": {
+      "name": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "parent": "c60c2ee9-abcc-4597-a009-2da185135a21",
+            "entity": {
+              "name": "model-barn-body",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "components": {
+                "render": {
+                  "enabled": true,
+                  "type": "asset",
+                  "asset": 309298324,
+                  "materialAssets": [
+                    309298322
+                  ],
+                  "layers": [
+                    0
+                  ],
+                  "batchGroupId": null,
+                  "castShadows": true,
+                  "castShadowsLightmap": true,
+                  "receiveShadows": true,
+                  "lightmapped": false,
+                  "lightmapSizeMultiplier": 1,
+                  "isStatic": false,
+                  "rootBone": null,
+                  "aabbCenter": null,
+                  "aabbHalfExtents": null,
+                  "shadowCascadeMask": 255
+                }
+              }
+            }
+          },
+          {
+            "parent": "359f180b-3cbd-4e29-a568-176dac158acd",
+            "entity": {
+              "name": "model-barn-door",
+              "position": [
+                -0.07,
+                0.16,
+                0.030000000000000027
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "components": {
+                "render": {
+                  "enabled": true,
+                  "type": "asset",
+                  "asset": 309298325,
+                  "materialAssets": [
+                    309298322
+                  ],
+                  "layers": [
+                    0
+                  ],
+                  "batchGroupId": null,
+                  "castShadows": true,
+                  "castShadowsLightmap": true,
+                  "receiveShadows": true,
+                  "lightmapped": false,
+                  "lightmapSizeMultiplier": 1,
+                  "isStatic": false,
+                  "rootBone": null,
+                  "aabbCenter": null,
+                  "aabbHalfExtents": null,
+                  "shadowCascadeMask": 255
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 37,
+    "method": "tools/call",
+    "params": {
+      "name": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "parent": "c60c2ee9-abcc-4597-a009-2da185135a21",
+            "entity": {
+              "name": "model-barn-body",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "components": {
+                "render": {
+                  "enabled": true,
+                  "type": "asset",
+                  "asset": 309298324,
+                  "materialAssets": [
+                    309298322
+                  ],
+                  "layers": [
+                    0
+                  ],
+                  "batchGroupId": null,
+                  "castShadows": true,
+                  "castShadowsLightmap": true,
+                  "receiveShadows": true,
+                  "lightmapped": false,
+                  "lightmapSizeMultiplier": 1,
+                  "isStatic": false,
+                  "rootBone": null,
+                  "shadowCascadeMask": 255
+                }
+              }
+            }
+          },
+          {
+            "parent": "359f180b-3cbd-4e29-a568-176dac158acd",
+            "entity": {
+              "name": "model-barn-door",
+              "position": [
+                -0.07,
+                0.16,
+                0.030000000000000027
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "components": {
+                "render": {
+                  "enabled": true,
+                  "type": "asset",
+                  "asset": 309298325,
+                  "materialAssets": [
+                    309298322
+                  ],
+                  "layers": [
+                    0
+                  ],
+                  "batchGroupId": null,
+                  "castShadows": true,
+                  "castShadowsLightmap": true,
+                  "receiveShadows": true,
+                  "lightmapped": false,
+                  "lightmapSizeMultiplier": 1,
+                  "isStatic": false,
+                  "rootBone": null,
+                  "shadowCascadeMask": 255
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 38,
+    "method": "tools/call",
+    "params": {
+      "name": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "parent": "21c6eae9-50d0-47a1-8845-514bc9be8099",
+            "entity": {
+              "name": "model-tree-trunk",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "components": {
+                "render": {
+                  "enabled": true,
+                  "type": "asset",
+                  "asset": 309298393,
+                  "materialAssets": [
+                    309298391
+                  ],
+                  "layers": [
+                    0
+                  ],
+                  "batchGroupId": null,
+                  "castShadows": true,
+                  "castShadowsLightmap": true,
+                  "receiveShadows": true,
+                  "lightmapped": false,
+                  "lightmapSizeMultiplier": 1,
+                  "isStatic": false,
+                  "rootBone": null,
+                  "shadowCascadeMask": 255
+                }
+              }
+            }
+          },
+          {
+            "parent": "21c6eae9-50d0-47a1-8845-514bc9be8099",
+            "entity": {
+              "name": "model-leaf-cluster-1",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "components": {
+                "render": {
+                  "enabled": true,
+                  "type": "asset",
+                  "asset": 309298394,
+                  "materialAssets": [
+                    309298391
+                  ],
+                  "layers": [
+                    0
+                  ],
+                  "batchGroupId": null,
+                  "castShadows": true,
+                  "castShadowsLightmap": true,
+                  "receiveShadows": true,
+                  "lightmapped": false,
+                  "lightmapSizeMultiplier": 1,
+                  "isStatic": false,
+                  "rootBone": null,
+                  "shadowCascadeMask": 255
+                }
+              }
+            }
+          },
+          {
+            "parent": "21c6eae9-50d0-47a1-8845-514bc9be8099",
+            "entity": {
+              "name": "model-leaf-cluster-2",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "components": {
+                "render": {
+                  "enabled": true,
+                  "type": "asset",
+                  "asset": 309298396,
+                  "materialAssets": [
+                    309298391
+                  ],
+                  "layers": [
+                    0
+                  ],
+                  "batchGroupId": null,
+                  "castShadows": true,
+                  "castShadowsLightmap": true,
+                  "receiveShadows": true,
+                  "lightmapped": false,
+                  "lightmapSizeMultiplier": 1,
+                  "isStatic": false,
+                  "rootBone": null,
+                  "shadowCascadeMask": 255
+                }
+              }
+            }
+          },
+          {
+            "parent": "21c6eae9-50d0-47a1-8845-514bc9be8099",
+            "entity": {
+              "name": "model-leaf-cluster-3",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "components": {
+                "render": {
+                  "enabled": true,
+                  "type": "asset",
+                  "asset": 309298395,
+                  "materialAssets": [
+                    309298391
+                  ],
+                  "layers": [
+                    0
+                  ],
+                  "batchGroupId": null,
+                  "castShadows": true,
+                  "castShadowsLightmap": true,
+                  "receiveShadows": true,
+                  "lightmapped": false,
+                  "lightmapSizeMultiplier": 1,
+                  "isStatic": false,
+                  "rootBone": null,
+                  "shadowCascadeMask": 255
+                }
+              }
+            }
+          },
+          {
+            "parent": "21c6eae9-50d0-47a1-8845-514bc9be8099",
+            "entity": {
+              "name": "model-leaf-cluster-4",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "components": {
+                "render": {
+                  "enabled": true,
+                  "type": "asset",
+                  "asset": 309298397,
+                  "materialAssets": [
+                    309298391
+                  ],
+                  "layers": [
+                    0
+                  ],
+                  "batchGroupId": null,
+                  "castShadows": true,
+                  "castShadowsLightmap": true,
+                  "receiveShadows": true,
+                  "lightmapped": false,
+                  "lightmapSizeMultiplier": 1,
+                  "isStatic": false,
+                  "rootBone": null,
+                  "shadowCascadeMask": 255
+                }
+              }
+            }
+          },
+          {
+            "parent": "21c6eae9-50d0-47a1-8845-514bc9be8099",
+            "entity": {
+              "name": "model-leaf-cluster-5",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "components": {
+                "render": {
+                  "enabled": true,
+                  "type": "asset",
+                  "asset": 309298398,
+                  "materialAssets": [
+                    309298391
+                  ],
+                  "layers": [
+                    0
+                  ],
+                  "batchGroupId": null,
+                  "castShadows": true,
+                  "castShadowsLightmap": true,
+                  "receiveShadows": true,
+                  "lightmapped": false,
+                  "lightmapSizeMultiplier": 1,
+                  "isStatic": false,
+                  "rootBone": null,
+                  "shadowCascadeMask": 255
+                }
+              }
+            }
+          },
+          {
+            "parent": "952e1adb-fd13-4edb-b9f0-f6ed863ce05e",
+            "entity": {
+              "name": "model-bed-frame-soil",
+              "position": [
+                0.35,
+                0,
+                1.05
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "components": {
+                "render": {
+                  "enabled": true,
+                  "type": "asset",
+                  "asset": 309298360,
+                  "materialAssets": [
+                    309298358
+                  ],
+                  "layers": [
+                    0
+                  ],
+                  "batchGroupId": null,
+                  "castShadows": true,
+                  "castShadowsLightmap": true,
+                  "receiveShadows": true,
+                  "lightmapped": false,
+                  "lightmapSizeMultiplier": 1,
+                  "isStatic": false,
+                  "rootBone": null,
+                  "shadowCascadeMask": 255
+                }
+              }
+            }
+          },
+          {
+            "parent": "e0a5ead8-06f4-4c5e-ae16-fc5a668c7b88",
+            "entity": {
+              "name": "model-path-stones",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "components": {
+                "render": {
+                  "enabled": true,
+                  "type": "asset",
+                  "asset": 309298388,
+                  "materialAssets": [
+                    309298387
+                  ],
+                  "layers": [
+                    0
+                  ],
+                  "batchGroupId": null,
+                  "castShadows": true,
+                  "castShadowsLightmap": true,
+                  "receiveShadows": true,
+                  "lightmapped": false,
+                  "lightmapSizeMultiplier": 1,
+                  "isStatic": false,
+                  "rootBone": null,
+                  "shadowCascadeMask": 255
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 39,
+    "method": "tools/call",
+    "params": {
+      "name": "modify_entities",
+      "arguments": {
+        "edits": [
+          {
+            "id": "a35855c0-875d-4816-a938-27fdbeccfcb6",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "2b93e5dd-bccf-4f71-b42c-953a9424f2b2",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "6ee28a40-386a-4634-83ac-6e805100d07e",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "83efa21b-4175-4d5b-9e80-b23364971fa0",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "ff5ab816-ae65-4b46-b9f5-1d8cdba46ada",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "d3123992-edb5-4ffc-97d6-5fa080d077be",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "6b8ab729-92e8-4ad4-9779-34b896082f70",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "7a6df641-7caa-41d2-8579-9b091ea7043f",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "3aa69b84-df2a-4a99-b457-620667147198",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "ecfec81c-c21b-4069-b80f-5ccb40e19531",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "166f0214-d4dc-43f4-99e5-9f109d3931ba",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "02ec1011-37c4-47e5-a457-9fcba2435097",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "30617e7b-40d8-4aeb-b05f-f9cda49ee41a",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "d2a9bcb4-978e-435f-9d81-341099e03c73",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "47fc399e-d431-48ad-a1b8-03c364db90fd",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "263089c8-c5e1-4d01-8294-331ce8abc810",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "a73fe158-03e1-4e3d-b094-b58e346e3a9e",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "539a7a27-3932-44c7-b080-3c5897764780",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "31d2af26-cf9e-4207-be1d-a6cc51941feb",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "c89bd059-4e6e-4280-9fdd-3460d9e63824",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "05064627-fe72-4d4b-907d-93172a44eb29",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "928a544c-68db-499e-b3d8-30d4c5c2394f",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "6093e0e4-acfb-4e59-8415-deb005064113",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "de5c8fbd-460d-47c5-ad57-35a0a640a143",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "ac84538c-f314-46a1-89d5-0a01350e0294",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "80ac76ff-416b-496a-ae35-d4e7eb7511b8",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "ddba1a4a-00d4-46a0-8837-14b1609da7f0",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "4abc2439-18a1-49c7-a400-80a536d33c6f",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "8095edbf-e35d-49a1-8ce5-eedae553ed30",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "069805ad-f6b0-4188-8e9f-aca40d31b017",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "5117f081-4988-432b-b0c7-f67554a5b15f",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "6b7327e0-b0d0-47b1-80c0-e25a32100f9f",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "232e58ca-591e-470f-a195-afeb3fea4131",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "f6d219df-e394-4f80-af48-46e7c798e6fe",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "3047eb90-8a97-436e-abdc-ffce3e192e5a",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "b5c5dabf-0373-43f3-9410-ef66f7dd8538",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "212dd06d-b9ac-4ad9-b9a2-c2859ad82cb8",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "9de85b7d-4d96-4fd8-b3b7-bd1a921bce01",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "c87e13d7-070c-4851-a5af-ff78f2a3de00",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "c8afe960-01da-4d44-a01e-296e6a78f565",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "0c000aa2-c76e-4787-a580-107e5f16a5cd",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "8d700f55-da45-4a04-9dca-20feff0446fa",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "be7ec464-087e-4278-b7d8-a08d3a8edb56",
+            "path": "enabled",
+            "value": false
+          },
+          {
+            "id": "f057bf1d-45d6-4947-ba6b-25e5caa3f925",
+            "path": "enabled",
+            "value": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 40,
+    "method": "tools/call",
+    "params": {
+      "name": "list_entities",
+      "arguments": {
+        "full": true,
+        "limit": 500
+      }
+    }
+  },
+  {
+    "id": 41,
+    "method": "tools/call",
+    "params": {
+      "name": "set_viewport_state",
+      "arguments": {
+        "cameraId": "e951effe-82e0-11ee-9eae-baf4d5e490e2"
+      }
+    }
+  },
+  {
+    "id": 42,
+    "method": "tools/call",
+    "params": {
+      "name": "get_asset_references",
+      "arguments": {
+        "id": 309298319
+      }
+    }
+  },
+  {
+    "id": 43,
+    "method": "tools/call",
+    "params": {
+      "name": "capture_viewport",
+      "arguments": {}
+    }
+  },
+  {
+    "id": 44,
+    "method": "tools/call",
+    "params": {
+      "name": "set_viewport_state",
+      "arguments": {
+        "cameraId": "perspective"
+      }
+    }
+  },
+  {
+    "id": 45,
+    "method": "tools/call",
+    "params": {
+      "name": "get_asset",
+      "arguments": {
+        "id": 309298319
+      }
+    }
+  },
+  {
+    "id": 46,
+    "method": "tools/call",
+    "params": {
+      "name": "get_asset",
+      "arguments": {
+        "id": 309298322
+      }
+    }
+  },
+  {
+    "id": 47,
+    "method": "tools/call",
+    "params": {
+      "name": "list_entities",
+      "arguments": {
+        "full": true,
+        "name": "model-barn",
+        "limit": 10
+      }
+    }
+  },
+  {
+    "id": 48,
+    "method": "tools/call",
+    "params": {
+      "name": "upload_assets",
+      "arguments": {
+        "assets": [
+          {
+            "id": 309298319,
+            "path": "c:/xampp/htdocs/angi/public/models/farm/optimized/farm-atlas.png",
+            "type": "texture",
+            "mime": "image/png",
+            "settings": {
+              "pow2": false
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 49,
+    "method": "tools/call",
+    "params": {
+      "name": "get_asset",
+      "arguments": {
+        "id": 309298319
+      }
+    }
+  },
+  {
+    "id": 50,
+    "method": "tools/call",
+    "params": {
+      "name": "read_editor_logs",
+      "arguments": {
+        "types": [
+          "warn",
+          "error"
+        ],
+        "limit": 100
+      }
+    }
+  },
+  {
+    "id": 51,
+    "method": "tools/call",
+    "params": {
+      "name": "get_asset",
+      "arguments": {
+        "id": 309298319
+      }
+    }
+  },
+  {
+    "id": 52,
+    "method": "tools/call",
+    "params": {
+      "name": "upload_assets",
+      "arguments": {
+        "assets": [
+          {
+            "path": "c:/xampp/htdocs/angi/storage/playcanvas-mcp/farm-motion.mjs",
+            "type": "script",
+            "name": "farm-motion.mjs",
+            "tags": [
+              "angi-original",
+              "corner-motion-v2"
+            ],
+            "preload": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 53,
+    "method": "tools/call",
+    "params": {
+      "name": "script_parse",
+      "arguments": {
+        "assetId": 309300378
+      }
+    }
+  },
+  {
+    "id": 54,
+    "method": "tools/call",
+    "params": {
+      "name": "create_checkpoint",
+      "arguments": {
+        "description": "Before particles and motion bindings; structural models imported, anchors validated; atlas processing unresolved 2026-09-30"
+      }
+    }
+  },
+  {
+    "id": 55,
+    "method": "tools/call",
+    "params": {
+      "name": "reimport_assets",
+      "arguments": {
+        "ids": [
+          309298319
+        ],
+        "settings": {
+          "pow2": false
+        }
+      }
+    }
+  },
+  {
+    "id": 56,
+    "method": "tools/call",
+    "params": {
+      "name": "upload_assets",
+      "arguments": {
+        "assets": [
+          {
+            "id": 309300378,
+            "path": "c:/xampp/htdocs/angi/storage/playcanvas-mcp/farm-motion.mjs",
+            "type": "script"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 57,
+    "method": "tools/call",
+    "params": {
+      "name": "script_parse",
+      "arguments": {
+        "assetId": 309300378
+      }
+    }
+  },
+  {
+    "id": 58,
+    "method": "tools/call",
+    "params": {
+      "name": "set_viewport_state",
+      "arguments": {
+        "cameraId": "e951effe-82e0-11ee-9eae-baf4d5e490e2"
+      }
+    }
+  },
+  {
+    "id": 59,
+    "method": "tools/call",
+    "params": {
+      "name": "capture_viewport",
+      "arguments": {}
+    }
+  },
+  {
+    "id": 60,
+    "method": "tools/call",
+    "params": {
+      "name": "set_viewport_state",
+      "arguments": {
+        "cameraId": "perspective"
+      }
+    }
+  },
+  {
+    "id": 61,
+    "method": "tools/call",
+    "params": {
+      "name": "launch_start",
+      "arguments": {
+        "engineVersion": "2.22.6",
+        "device": "webgl2",
+        "debug": true,
+        "waitMs": 20000
+      }
+    }
+  },
+  {
+    "id": 62,
+    "method": "tools/call",
+    "params": {
+      "name": "get_asset",
+      "arguments": {
+        "id": 309298319
+      }
+    }
+  },
+  {
+    "id": 63,
+    "method": "tools/call",
+    "params": {
+      "name": "get_asset",
+      "arguments": {
+        "id": 309298322
+      }
+    }
+  },
+  {
+    "id": 64,
+    "method": "tools/call",
+    "params": {
+      "name": "get_asset",
+      "arguments": {
+        "id": 309298319
+      }
+    }
+  },
+  {
+    "id": 65,
+    "method": "tools/call",
+    "params": {
+      "name": "launch_start",
+      "arguments": {}
+    }
+  },
+  {
+    "id": 66,
+    "method": "tools/call",
+    "params": {
+      "name": "get_asset",
+      "arguments": {
+        "id": 309298319
+      }
+    }
+  },
+  {
+    "id": 67,
+    "method": "tools/call",
+    "params": {
+      "name": "launch_start",
+      "arguments": {}
+    }
+  },
+  {
+    "id": 68,
+    "method": "tools/call",
+    "params": {
+      "name": "read_runtime_logs",
+      "arguments": {
+        "level": "all",
+        "limit": 100
+      }
+    }
+  },
+  {
+    "id": 69,
+    "method": "tools/call",
+    "params": {
+      "name": "set_viewport_state",
+      "arguments": {
+        "cameraId": "e951effe-82e0-11ee-9eae-baf4d5e490e2"
+      }
+    }
+  },
+  {
+    "id": 70,
+    "method": "tools/call",
+    "params": {
+      "name": "capture_viewport",
+      "arguments": {}
+    }
+  },
+  {
+    "id": 71,
+    "method": "tools/call",
+    "params": {
+      "name": "set_viewport_state",
+      "arguments": {
+        "cameraId": "perspective"
+      }
+    }
+  },
+  {
+    "id": 72,
+    "method": "tools/call",
+    "params": {
+      "name": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "parent": "616dc1db-c18f-4f05-be43-e76fef8e2fb7",
+            "entity": {
+              "name": "fx-water",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "components": {
+                "particlesystem": {
+                  "enabled": true,
+                  "autoPlay": false,
+                  "loop": false,
+                  "numParticles": 20,
+                  "lifetime": 0.65,
+                  "rate": 0.015,
+                  "rate2": 0.025,
+                  "emitterShape": 0,
+                  "emitterExtents": [
+                    0.18,
+                    0.02,
+                    0.18
+                  ],
+                  "colorGraph": {
+                    "type": 1,
+                    "keys": [
+                      [
+                        0,
+                        0.25,
+                        1,
+                        0.25
+                      ],
+                      [
+                        0,
+                        0.65,
+                        1,
+                        0.65
+                      ],
+                      [
+                        0,
+                        1,
+                        1,
+                        1
+                      ]
+                    ]
+                  },
+                  "alphaGraph": {
+                    "type": 1,
+                    "keys": [
+                      0,
+                      0.8,
+                      1,
+                      0
+                    ]
+                  },
+                  "scaleGraph": {
+                    "type": 1,
+                    "keys": [
+                      0,
+                      0.045,
+                      1,
+                      0.015
+                    ]
+                  },
+                  "localVelocityGraph": {
+                    "type": 1,
+                    "keys": [
+                      [
+                        0,
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0.6,
+                        1,
+                        0.1
+                      ],
+                      [
+                        0,
+                        0,
+                        1,
+                        0
+                      ]
+                    ]
+                  }
+                },
+                "script": {
+                  "enabled": true,
+                  "order": [
+                    "farmFx"
+                  ],
+                  "scripts": {
+                    "farmFx": {
+                      "enabled": true,
+                      "attributes": {
+                        "kind": "water",
+                        "lift": 0.2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "parent": "616dc1db-c18f-4f05-be43-e76fef8e2fb7",
+            "entity": {
+              "name": "fx-dust",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "components": {
+                "particlesystem": {
+                  "enabled": true,
+                  "autoPlay": false,
+                  "loop": false,
+                  "numParticles": 20,
+                  "lifetime": 0.65,
+                  "rate": 0.015,
+                  "rate2": 0.025,
+                  "emitterShape": 0,
+                  "emitterExtents": [
+                    0.18,
+                    0.02,
+                    0.18
+                  ],
+                  "colorGraph": {
+                    "type": 1,
+                    "keys": [
+                      [
+                        0,
+                        0.55,
+                        1,
+                        0.55
+                      ],
+                      [
+                        0,
+                        0.35,
+                        1,
+                        0.35
+                      ],
+                      [
+                        0,
+                        0.15,
+                        1,
+                        0.15
+                      ]
+                    ]
+                  },
+                  "alphaGraph": {
+                    "type": 1,
+                    "keys": [
+                      0,
+                      0.8,
+                      1,
+                      0
+                    ]
+                  },
+                  "scaleGraph": {
+                    "type": 1,
+                    "keys": [
+                      0,
+                      0.045,
+                      1,
+                      0.015
+                    ]
+                  },
+                  "localVelocityGraph": {
+                    "type": 1,
+                    "keys": [
+                      [
+                        0,
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0.6,
+                        1,
+                        0.1
+                      ],
+                      [
+                        0,
+                        0,
+                        1,
+                        0
+                      ]
+                    ]
+                  }
+                },
+                "script": {
+                  "enabled": true,
+                  "order": [
+                    "farmFx"
+                  ],
+                  "scripts": {
+                    "farmFx": {
+                      "enabled": true,
+                      "attributes": {
+                        "kind": "dust",
+                        "lift": 0.2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "parent": "616dc1db-c18f-4f05-be43-e76fef8e2fb7",
+            "entity": {
+              "name": "fx-sparkle",
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "components": {
+                "particlesystem": {
+                  "enabled": true,
+                  "autoPlay": false,
+                  "loop": false,
+                  "numParticles": 12,
+                  "lifetime": 0.65,
+                  "rate": 0.015,
+                  "rate2": 0.025,
+                  "emitterShape": 0,
+                  "emitterExtents": [
+                    0.18,
+                    0.02,
+                    0.18
+                  ],
+                  "colorGraph": {
+                    "type": 1,
+                    "keys": [
+                      [
+                        0,
+                        1,
+                        1,
+                        1
+                      ],
+                      [
+                        0,
+                        0.85,
+                        1,
+                        0.85
+                      ],
+                      [
+                        0,
+                        0.25,
+                        1,
+                        0.25
+                      ]
+                    ]
+                  },
+                  "alphaGraph": {
+                    "type": 1,
+                    "keys": [
+                      0,
+                      0.8,
+                      1,
+                      0
+                    ]
+                  },
+                  "scaleGraph": {
+                    "type": 1,
+                    "keys": [
+                      0,
+                      0.045,
+                      1,
+                      0.015
+                    ]
+                  },
+                  "localVelocityGraph": {
+                    "type": 1,
+                    "keys": [
+                      [
+                        0,
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0.6,
+                        1,
+                        0.1
+                      ],
+                      [
+                        0,
+                        0,
+                        1,
+                        0
+                      ]
+                    ]
+                  }
+                },
+                "script": {
+                  "enabled": true,
+                  "order": [
+                    "farmFx"
+                  ],
+                  "scripts": {
+                    "farmFx": {
+                      "enabled": true,
+                      "attributes": {
+                        "kind": "sparkle",
+                        "lift": 0.2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 73,
+    "method": "tools/call",
+    "params": {
+      "name": "attach_script",
+      "arguments": {
+        "id": "19d9eabb-2aa8-49be-bdbf-ad37d85ecb67",
+        "scriptName": "farmSway",
+        "attributes": {
+          "amplitude": 1.2,
+          "speed": 0.25,
+          "phase": 0
+        }
+      }
+    }
+  },
+  {
+    "id": 74,
+    "method": "tools/call",
+    "params": {
+      "name": "attach_script",
+      "arguments": {
+        "id": "4a699f4a-8aad-4117-aa0e-89cc5a855283",
+        "scriptName": "farmSway",
+        "attributes": {
+          "amplitude": 1.2,
+          "speed": 0.25,
+          "phase": 1
+        }
+      }
+    }
+  },
+  {
+    "id": 75,
+    "method": "tools/call",
+    "params": {
+      "name": "attach_script",
+      "arguments": {
+        "id": "7ddb59a8-1ff4-46f8-8109-f2268585145f",
+        "scriptName": "farmSway",
+        "attributes": {
+          "amplitude": 1.2,
+          "speed": 0.25,
+          "phase": 2
+        }
+      }
+    }
+  },
+  {
+    "id": 76,
+    "method": "tools/call",
+    "params": {
+      "name": "attach_script",
+      "arguments": {
+        "id": "eaa951ca-173f-41d3-9da0-d314b3c9203b",
+        "scriptName": "farmSway",
+        "attributes": {
+          "amplitude": 1.2,
+          "speed": 0.25,
+          "phase": 3
+        }
+      }
+    }
+  },
+  {
+    "id": 77,
+    "method": "tools/call",
+    "params": {
+      "name": "attach_script",
+      "arguments": {
+        "id": "4f08cc55-6c7c-4874-b03e-9cc97c3584c3",
+        "scriptName": "farmSway",
+        "attributes": {
+          "amplitude": 1.2,
+          "speed": 0.25,
+          "phase": 4
+        }
+      }
+    }
+  },
+  {
+    "id": 78,
+    "method": "tools/call",
+    "params": {
+      "name": "list_entities",
+      "arguments": {
+        "full": true,
+        "limit": 500
+      }
+    }
+  },
+  {
+    "id": 79,
+    "method": "tools/call",
+    "params": {
+      "name": "download_build",
+      "arguments": {
+        "name": "corner-v2-verification-2026-09-30",
+        "sceneIds": [
+          2608607
+        ],
+        "primarySceneId": 2608607,
+        "engineVersion": "2.22.6",
+        "concatenate": false,
+        "minify": false,
+        "sourceMaps": false,
+        "optimizeSceneFormat": false,
+        "format": "static",
+        "outputPath": "c:/xampp/htdocs/angi/storage/playcanvas-mcp/corner-v2-export.zip",
+        "overwrite": false
+      }
+    }
+  }
+]

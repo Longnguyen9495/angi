@@ -37,6 +37,7 @@ import type {
   FarmSelection,
 } from './contract';
 import './farm-pc.css';
+import { readSceneConfig } from './engine/sceneLoader';
 
 /** Same key as the classic 3D garden: one quality choice per device. */
 const QUALITY_KEY = 'bv.garden3d.quality';
@@ -82,6 +83,7 @@ export interface FarmPlayCanvasProps {
   onClassic: () => void;
   /** Test seam; production lazy-loads engine/FarmEngine. */
   createEngine?: CreateFarmEngine;
+  sceneConfigUrl?: string;
 }
 
 /**
@@ -195,6 +197,7 @@ export default function FarmPlayCanvas(props: FarmPlayCanvasProps) {
         if (cancelled) return;
         const h = await create({
           canvas,
+          sceneConfigUrl: props.sceneConfigUrl ?? readSceneConfig(),
           env: envRef.current,
           onIntent: (i) => intentRef.current(i),
           onLost: () => {

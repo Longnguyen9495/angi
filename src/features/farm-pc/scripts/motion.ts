@@ -87,11 +87,21 @@ export class Pop extends Script {
 
   initialize() {
     this.rest.copy(this.entity.getLocalScale());
-    trackEnv(this);
+    trackEnv(this, (env) => {
+      if (env.reduced) {
+        this.t = -1;
+        this.entity.setLocalScale(this.rest);
+      }
+    });
     if (this.playOnStart && !this.reduced) this.play();
   }
 
   play() {
+    if (this.reduced) {
+      this.t = -1;
+      this.entity.setLocalScale(this.rest);
+      return;
+    }
     this.t = 0;
     this.apply(0);
   }
@@ -165,7 +175,9 @@ export class Lamp extends Script {
 
   /** @attribute Light intensity at full night. */
   intensity = 2.2;
-  /** @attribute Entity whose emissive material glows with the lamp. */
+  /** @attribute Entity whose emissive material glows with the lamp.
+   * @type {Entity}
+   */
   glow: Entity | null = null;
 
   level = 0;
@@ -198,16 +210,49 @@ export class PlayFx extends Script {
   /** @attribute Height above the plot anchor. */
   lift = 0.2;
 
+  private emitters = new Map<number, Entity>();
+
+  private stopAll() {
+    for (const emitter of [this.entity, ...this.emitters.values()]) {
+      emitter.particlesystem?.stop();
+      emitter.particlesystem?.reset();
+      if (emitter !== this.entity) emitter.enabled = false;
+    }
+  }
+
   initialize() {
-    trackEnv(this);
+    // The authored entity is a template, never a moving multi-plot emitter.
+    if (this.entity.particlesystem) this.entity.particlesystem.autoPlay = false;
+    this.stopAll();
+    trackEnv(this, (env) => {
+      if (env.reduced) this.stopAll();
+    });
+    this.once('destroy', () => {
+      this.stopAll();
+      for (const emitter of this.emitters.values()) emitter.destroy();
+      this.emitters.clear();
+    });
     listen<FarmEffect>(this, FARM_EVENTS.effect, (fx) => {
       if (fx.kind !== this.kind || this.reduced) return;
-      for (const id of fx.plotIds) {
+      for (const id of new Set(fx.plotIds)) {
         const plot = this.app.root.findByName(`plot-${id}`);
-        const ps = this.entity.particlesystem;
-        if (!plot || !ps) continue;
+        if (!plot || !this.entity.particlesystem) continue;
+        let emitter = this.emitters.get(id);
+        if (!emitter) {
+          emitter = this.entity.clone();
+          // Cloned scripts would subscribe recursively; only retain particles.
+          if (emitter.script) emitter.removeComponent('script');
+          emitter.name = `${this.entity.name}-plot-${id}`;
+          this.app.root.addChild(emitter);
+          this.emitters.set(id, emitter);
+        }
+        const ps = emitter.particlesystem;
+        if (!ps) continue;
         const p = plot.getPosition();
-        this.entity.setPosition(p.x, p.y + this.lift, p.z);
+        emitter.setPosition(p.x, p.y + this.lift, p.z);
+        emitter.enabled = true;
+        ps.autoPlay = false;
+        ps.loop = false;
         ps.reset();
         ps.play();
       }

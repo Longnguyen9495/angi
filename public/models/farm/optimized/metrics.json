@@ -1,0 +1,230 @@
+{
+  "format": "GLB geometry with one shared external PNG (standard glTF 2.0)",
+  "editorImportVerified": false,
+  "files": [
+    {
+      "file": "barn.glb",
+      "originalBytes": 348812,
+      "bytes": 198088
+    },
+    {
+      "file": "bed.glb",
+      "originalBytes": 180872,
+      "bytes": 30148
+    },
+    {
+      "file": "path-stones.glb",
+      "originalBytes": 168328,
+      "bytes": 17604
+    },
+    {
+      "file": "tree-broadleaf.glb",
+      "originalBytes": 232292,
+      "bytes": 81568
+    },
+    {
+      "file": "crops/crop-bean-flowering.glb",
+      "originalBytes": 177380,
+      "bytes": 26660
+    },
+    {
+      "file": "crops/crop-bean-ready.glb",
+      "originalBytes": 181976,
+      "bytes": 31256
+    },
+    {
+      "file": "crops/crop-bean-sprout.glb",
+      "originalBytes": 155816,
+      "bytes": 5096
+    },
+    {
+      "file": "crops/crop-bean-young.glb",
+      "originalBytes": 171608,
+      "bytes": 20888
+    },
+    {
+      "file": "crops/crop-chili-flowering.glb",
+      "originalBytes": 173520,
+      "bytes": 22800
+    },
+    {
+      "file": "crops/crop-chili-ready.glb",
+      "originalBytes": 178120,
+      "bytes": 27396
+    },
+    {
+      "file": "crops/crop-chili-sprout.glb",
+      "originalBytes": 155820,
+      "bytes": 5100
+    },
+    {
+      "file": "crops/crop-chili-young.glb",
+      "originalBytes": 167752,
+      "bytes": 17032
+    },
+    {
+      "file": "crops/crop-cucumber-flowering.glb",
+      "originalBytes": 177392,
+      "bytes": 26672
+    },
+    {
+      "file": "crops/crop-cucumber-ready.glb",
+      "originalBytes": 181988,
+      "bytes": 31268
+    },
+    {
+      "file": "crops/crop-cucumber-sprout.glb",
+      "originalBytes": 155828,
+      "bytes": 5108
+    },
+    {
+      "file": "crops/crop-cucumber-young.glb",
+      "originalBytes": 171620,
+      "bytes": 20900
+    },
+    {
+      "file": "crops/crop-garlic-flowering.glb",
+      "originalBytes": 189800,
+      "bytes": 39080
+    },
+    {
+      "file": "crops/crop-garlic-ready.glb",
+      "originalBytes": 216680,
+      "bytes": 65960
+    },
+    {
+      "file": "crops/crop-garlic-sprout.glb",
+      "originalBytes": 153352,
+      "bytes": 2632
+    },
+    {
+      "file": "crops/crop-garlic-young.glb",
+      "originalBytes": 155656,
+      "bytes": 4936
+    },
+    {
+      "file": "crops/crop-herbs-flowering.glb",
+      "originalBytes": 179080,
+      "bytes": 28360
+    },
+    {
+      "file": "crops/crop-herbs-ready.glb",
+      "originalBytes": 179068,
+      "bytes": 28348
+    },
+    {
+      "file": "crops/crop-herbs-sprout.glb",
+      "originalBytes": 155820,
+      "bytes": 5100
+    },
+    {
+      "file": "crops/crop-herbs-young.glb",
+      "originalBytes": 171388,
+      "bytes": 20668
+    },
+    {
+      "file": "crops/crop-lemongrass-flowering.glb",
+      "originalBytes": 157228,
+      "bytes": 6508
+    },
+    {
+      "file": "crops/crop-lemongrass-ready.glb",
+      "originalBytes": 157212,
+      "bytes": 6492
+    },
+    {
+      "file": "crops/crop-lemongrass-sprout.glb",
+      "originalBytes": 153364,
+      "bytes": 2640
+    },
+    {
+      "file": "crops/crop-lemongrass-young.glb",
+      "originalBytes": 157208,
+      "bytes": 6484
+    },
+    {
+      "file": "crops/crop-lime-flowering.glb",
+      "originalBytes": 173520,
+      "bytes": 22796
+    },
+    {
+      "file": "crops/crop-lime-ready.glb",
+      "originalBytes": 183844,
+      "bytes": 33124
+    },
+    {
+      "file": "crops/crop-lime-sprout.glb",
+      "originalBytes": 155820,
+      "bytes": 5100
+    },
+    {
+      "file": "crops/crop-lime-young.glb",
+      "originalBytes": 167748,
+      "bytes": 17028
+    },
+    {
+      "file": "crops/crop-rice-flowering.glb",
+      "originalBytes": 210916,
+      "bytes": 60192
+    },
+    {
+      "file": "crops/crop-rice-ready.glb",
+      "originalBytes": 210900,
+      "bytes": 60180
+    },
+    {
+      "file": "crops/crop-rice-sprout.glb",
+      "originalBytes": 153344,
+      "bytes": 2624
+    },
+    {
+      "file": "crops/crop-rice-young.glb",
+      "originalBytes": 155652,
+      "bytes": 4932
+    },
+    {
+      "file": "crops/crop-scallion-flowering.glb",
+      "originalBytes": 189808,
+      "bytes": 39088
+    },
+    {
+      "file": "crops/crop-scallion-ready.glb",
+      "originalBytes": 189808,
+      "bytes": 39084
+    },
+    {
+      "file": "crops/crop-scallion-sprout.glb",
+      "originalBytes": 153356,
+      "bytes": 2636
+    },
+    {
+      "file": "crops/crop-scallion-young.glb",
+      "originalBytes": 155664,
+      "bytes": 4944
+    },
+    {
+      "file": "crops/crop-tomato-flowering.glb",
+      "originalBytes": 173524,
+      "bytes": 22804
+    },
+    {
+      "file": "crops/crop-tomato-ready.glb",
+      "originalBytes": 183852,
+      "bytes": 33128
+    },
+    {
+      "file": "crops/crop-tomato-sprout.glb",
+      "originalBytes": 155824,
+      "bytes": 5100
+    },
+    {
+      "file": "crops/crop-tomato-young.glb",
+      "originalBytes": 167756,
+      "bytes": 17032
+    }
+  ],
+  "atlasBytes": 150655,
+  "originalGlbBytes": 7786316,
+  "optimizedGlbBytes": 1154584,
+  "totalBytes": 1305239
+}

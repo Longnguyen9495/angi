@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":[{\"id\":2608607,\"projectId\":1610400,\"name\":\"corner\",\"created\":\"2023-11-14T11:28:19.373Z\",\"modified\":\"2026-09-30T10:45:54.452Z\",\"uniqueId\":2608607}],\"meta\":{\"tool\":\"scenes:list\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 18
+}

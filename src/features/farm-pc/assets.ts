@@ -1,12 +1,10 @@
 /*
- * Asset manifest for the PlayCanvas corner. Every MODEL is still a PROCEDURAL
- * PLACEHOLDER built in code from engine primitives. Surfaces use the CC0
- * photo textures and sky listed in FARM_TEXTURES (files checked into public/). `plannedPath` is where the
- * Blender export is expected to land later — nothing reads it until `status`
- * becomes 'ready' and the file exists in public/.
- *
- * Placeholders prove the bridge, layout, lighting and workflow only. They are
- * not an art sign-off against the reference image.
+ * Local original GLBs are ready for parent Editor upload, NOT art-approved.
+ * The running engine still uses its existing geometry; no loader is changed.
+ * Original pack: Zoo / angi, AI-assisted mesh + raster authoring, CC0-1.0
+ * explicit public-domain dedication: https://creativecommons.org/publicdomain/zero/1.0/
+ * Provenance and placement: public/models/farm/SOURCE.md.
+ * Existing Poly Haven textures and props retain their separate credits below.
  */
 
 export type AssetStatus = 'placeholder' | 'in-progress' | 'ready';
@@ -18,7 +16,7 @@ export interface FarmAsset {
   /** Who made it / where it came from. */
   source: string;
   license: string;
-  /** Expected GLB location once modelled (not loaded while status !== 'ready'). */
+  /** Local GLB delivery path; ready does not imply engine integration or art approval. */
   plannedPath: string;
   /** Starting budget to check at the gameplay camera, not a measured value. */
   budget: { triangles: number; texture: string };
@@ -28,45 +26,50 @@ export const FARM_ASSETS: FarmAsset[] = [
   {
     id: 'barn',
     role: 'Nhà kho: thân gỗ, mái ngói đất nung, cửa, khung, chân móng đá, bảng hiệu',
-    status: 'placeholder',
-    source: 'Dựng bằng code (engine/scene.ts) từ khối hộp/lăng trụ PlayCanvas',
-    license: 'Mã nguồn của dự án',
+    status: 'ready',
+    source:
+      'Zoo / angi: tự làm mesh ván, mái ngói cong, móng, cửa riêng pivot trái; scripts/generate-farm-models.mjs; SOURCE.md; chưa nghiệm thu mỹ thuật',
+    license: 'CC0-1.0 — explicit public-domain dedication',
     plannedPath: 'models/farm/barn.glb',
     budget: { triangles: 6000, texture: '1024² atlas dùng chung gỗ/ngói' },
   },
   {
     id: 'tree-broadleaf',
     role: 'Cây lá rộng: thân thuôn, 4–5 cụm tán có khoảng rỗng',
-    status: 'placeholder',
-    source: 'Dựng bằng code từ hình nón cụt + cầu dẹt',
-    license: 'Mã nguồn của dự án',
+    status: 'ready',
+    source:
+      'Zoo / angi: tự làm thân phân cành + 5 cụm lá thẻ gấp sống lá; scripts/generate-farm-models.mjs; SOURCE.md; chưa nghiệm thu mỹ thuật',
+    license: 'CC0-1.0 — explicit public-domain dedication',
     plannedPath: 'models/farm/tree-broadleaf.glb',
     budget: { triangles: 4000, texture: '512² lá dạng thẻ + vỏ cây' },
   },
   {
     id: 'bed',
     role: 'Luống: khung ván dày, cọc góc, đất gợn, ô trồng theo số ô thật',
-    status: 'placeholder',
-    source: 'Dựng bằng code từ khối hộp',
-    license: 'Mã nguồn của dự án',
+    status: 'ready',
+    source:
+      'Zoo / angi: tự làm khung ván, cọc, 9 ô đất gợn, không cây; scripts/generate-farm-models.mjs; SOURCE.md; chưa nghiệm thu mỹ thuật',
+    license: 'CC0-1.0 — explicit public-domain dedication',
     plannedPath: 'models/farm/bed.glb',
     budget: { triangles: 2500, texture: '512² gỗ + đất' },
   },
   {
     id: 'crop-stages',
     role: 'Cây trồng 4 giai đoạn (mầm, đang lớn, ra hoa, chín) cho 10 loài',
-    status: 'placeholder',
-    source: 'Dựng bằng code: lá cầu dẹt, quả theo màu CROPS[].color',
-    license: 'Mã nguồn của dự án',
-    plannedPath: 'models/farm/crops/{crop}-{stage}.glb',
-    budget: { triangles: 800, texture: 'atlas cây trồng 1024² dùng chung' },
+    status: 'ready',
+    source:
+      'Zoo / angi: tự làm 10 loài × 4 stages, lá/thân/bông/quả riêng; atlas tự vẽ 512²; scripts/generate-farm-models.mjs; SOURCE.md; chưa nghiệm thu mỹ thuật',
+    license: 'CC0-1.0 — explicit public-domain dedication',
+    plannedPath: 'models/farm/crops/crop-{crop}-{stage}.glb',
+    budget: { triangles: 800, texture: 'atlas tự vẽ 512² nhúng trong từng GLB' },
   },
   {
     id: 'path-stones',
     role: 'Đường đá: 8 phiến dẹt, xám ấm/beige, xoay và kích thước khác nhau',
-    status: 'placeholder',
-    source: 'Dựng bằng code từ trụ dẹt',
-    license: 'Mã nguồn của dự án',
+    status: 'ready',
+    source:
+      'Zoo / angi: tự làm 8 phiến đá bất quy tắc có cạnh dày; scripts/generate-farm-models.mjs; SOURCE.md; chưa nghiệm thu mỹ thuật',
+    license: 'CC0-1.0 — explicit public-domain dedication',
     plannedPath: 'models/farm/path-stones.glb',
     budget: { triangles: 1200, texture: '512² đá' },
   },

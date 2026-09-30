@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":[],\"meta\":{\"tool\":\"editor:logs\",\"status\":\"ok\",\"total\":0,\"count\":0,\"hasMore\":false,\"nextCursor\":null}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 50
+}

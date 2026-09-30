@@ -1,0 +1,266 @@
+[
+  {
+    "id": "a35855c0-875d-4816-a938-27fdbeccfcb6",
+    "path": "enabled",
+    "value": true,
+    "name": "bed-soil"
+  },
+  {
+    "id": "2b93e5dd-bccf-4f71-b42c-953a9424f2b2",
+    "path": "enabled",
+    "value": true,
+    "name": "board"
+  },
+  {
+    "id": "6ee28a40-386a-4634-83ac-6e805100d07e",
+    "path": "enabled",
+    "value": true,
+    "name": "board"
+  },
+  {
+    "id": "83efa21b-4175-4d5b-9e80-b23364971fa0",
+    "path": "enabled",
+    "value": true,
+    "name": "board-cap"
+  },
+  {
+    "id": "ff5ab816-ae65-4b46-b9f5-1d8cdba46ada",
+    "path": "enabled",
+    "value": true,
+    "name": "board"
+  },
+  {
+    "id": "d3123992-edb5-4ffc-97d6-5fa080d077be",
+    "path": "enabled",
+    "value": true,
+    "name": "board"
+  },
+  {
+    "id": "6b8ab729-92e8-4ad4-9779-34b896082f70",
+    "path": "enabled",
+    "value": true,
+    "name": "board-cap"
+  },
+  {
+    "id": "7a6df641-7caa-41d2-8579-9b091ea7043f",
+    "path": "enabled",
+    "value": true,
+    "name": "stake"
+  },
+  {
+    "id": "3aa69b84-df2a-4a99-b457-620667147198",
+    "path": "enabled",
+    "value": true,
+    "name": "stake"
+  },
+  {
+    "id": "ecfec81c-c21b-4069-b80f-5ccb40e19531",
+    "path": "enabled",
+    "value": true,
+    "name": "stake"
+  },
+  {
+    "id": "166f0214-d4dc-43f4-99e5-9f109d3931ba",
+    "path": "enabled",
+    "value": true,
+    "name": "stake"
+  },
+  {
+    "id": "02ec1011-37c4-47e5-a457-9fcba2435097",
+    "path": "enabled",
+    "value": true,
+    "name": "trunk"
+  },
+  {
+    "id": "30617e7b-40d8-4aeb-b05f-f9cda49ee41a",
+    "path": "enabled",
+    "value": true,
+    "name": "branch"
+  },
+  {
+    "id": "d2a9bcb4-978e-435f-9d81-341099e03c73",
+    "path": "enabled",
+    "value": true,
+    "name": "branch"
+  },
+  {
+    "id": "47fc399e-d431-48ad-a1b8-03c364db90fd",
+    "path": "enabled",
+    "value": true,
+    "name": "canopy-1"
+  },
+  {
+    "id": "263089c8-c5e1-4d01-8294-331ce8abc810",
+    "path": "enabled",
+    "value": true,
+    "name": "canopy-2"
+  },
+  {
+    "id": "a73fe158-03e1-4e3d-b094-b58e346e3a9e",
+    "path": "enabled",
+    "value": true,
+    "name": "canopy-3"
+  },
+  {
+    "id": "539a7a27-3932-44c7-b080-3c5897764780",
+    "path": "enabled",
+    "value": true,
+    "name": "canopy-4"
+  },
+  {
+    "id": "31d2af26-cf9e-4207-be1d-a6cc51941feb",
+    "path": "enabled",
+    "value": true,
+    "name": "canopy-5"
+  },
+  {
+    "id": "c89bd059-4e6e-4280-9fdd-3460d9e63824",
+    "path": "enabled",
+    "value": true,
+    "name": "canopy-6"
+  },
+  {
+    "id": "05064627-fe72-4d4b-907d-93172a44eb29",
+    "path": "enabled",
+    "value": true,
+    "name": "stone-1"
+  },
+  {
+    "id": "928a544c-68db-499e-b3d8-30d4c5c2394f",
+    "path": "enabled",
+    "value": true,
+    "name": "stone-2"
+  },
+  {
+    "id": "6093e0e4-acfb-4e59-8415-deb005064113",
+    "path": "enabled",
+    "value": true,
+    "name": "stone-3"
+  },
+  {
+    "id": "de5c8fbd-460d-47c5-ad57-35a0a640a143",
+    "path": "enabled",
+    "value": true,
+    "name": "stone-4"
+  },
+  {
+    "id": "ac84538c-f314-46a1-89d5-0a01350e0294",
+    "path": "enabled",
+    "value": true,
+    "name": "stone-5"
+  },
+  {
+    "id": "80ac76ff-416b-496a-ae35-d4e7eb7511b8",
+    "path": "enabled",
+    "value": true,
+    "name": "stone-6"
+  },
+  {
+    "id": "ddba1a4a-00d4-46a0-8837-14b1609da7f0",
+    "path": "enabled",
+    "value": true,
+    "name": "stone-7"
+  },
+  {
+    "id": "4abc2439-18a1-49c7-a400-80a536d33c6f",
+    "path": "enabled",
+    "value": true,
+    "name": "door"
+  },
+  {
+    "id": "8095edbf-e35d-49a1-8ce5-eedae553ed30",
+    "path": "enabled",
+    "value": true,
+    "name": "door-panel"
+  },
+  {
+    "id": "069805ad-f6b0-4188-8e9f-aca40d31b017",
+    "path": "enabled",
+    "value": true,
+    "name": "brace"
+  },
+  {
+    "id": "5117f081-4988-432b-b0c7-f67554a5b15f",
+    "path": "enabled",
+    "value": true,
+    "name": "brace"
+  },
+  {
+    "id": "6b7327e0-b0d0-47b1-80c0-e25a32100f9f",
+    "path": "enabled",
+    "value": true,
+    "name": "plinth"
+  },
+  {
+    "id": "232e58ca-591e-470f-a195-afeb3fea4131",
+    "path": "enabled",
+    "value": true,
+    "name": "walls"
+  },
+  {
+    "id": "f6d219df-e394-4f80-af48-46e7c798e6fe",
+    "path": "enabled",
+    "value": true,
+    "name": "post"
+  },
+  {
+    "id": "3047eb90-8a97-436e-abdc-ffce3e192e5a",
+    "path": "enabled",
+    "value": true,
+    "name": "post"
+  },
+  {
+    "id": "b5c5dabf-0373-43f3-9410-ef66f7dd8538",
+    "path": "enabled",
+    "value": true,
+    "name": "post"
+  },
+  {
+    "id": "212dd06d-b9ac-4ad9-b9a2-c2859ad82cb8",
+    "path": "enabled",
+    "value": true,
+    "name": "post"
+  },
+  {
+    "id": "9de85b7d-4d96-4fd8-b3b7-bd1a921bce01",
+    "path": "enabled",
+    "value": true,
+    "name": "beam"
+  },
+  {
+    "id": "c87e13d7-070c-4851-a5af-ff78f2a3de00",
+    "path": "enabled",
+    "value": true,
+    "name": "roof-back"
+  },
+  {
+    "id": "c8afe960-01da-4d44-a01e-296e6a78f565",
+    "path": "enabled",
+    "value": true,
+    "name": "roof-front"
+  },
+  {
+    "id": "0c000aa2-c76e-4787-a580-107e5f16a5cd",
+    "path": "enabled",
+    "value": true,
+    "name": "ridge-cap"
+  },
+  {
+    "id": "8d700f55-da45-4a04-9dca-20feff0446fa",
+    "path": "enabled",
+    "value": true,
+    "name": "doorway"
+  },
+  {
+    "id": "be7ec464-087e-4278-b7d8-a08d3a8edb56",
+    "path": "enabled",
+    "value": true,
+    "name": "sign"
+  },
+  {
+    "id": "f057bf1d-45d6-4947-ba6b-25e5caa3f925",
+    "path": "enabled",
+    "value": true,
+    "name": "gable"
+  }
+]

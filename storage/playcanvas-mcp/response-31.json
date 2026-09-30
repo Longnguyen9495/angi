@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":{\"id\":309298322,\"name\":\"original-painted-atlas\",\"type\":\"material\",\"folder\":null,\"tags\":[]},\"meta\":{\"tool\":\"assets:data:set\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 31
+}

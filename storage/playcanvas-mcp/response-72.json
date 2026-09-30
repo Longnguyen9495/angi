@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":[{\"resource_id\":\"99da7813-9cae-40f8-aecb-dcd3ab7a6590\",\"name\":\"fx-water\",\"path\":\"Root/corner-root/fx-water\",\"parent\":\"616dc1db-c18f-4f05-be43-e76fef8e2fb7\",\"enabled\":true,\"tags\":[],\"components\":[\"particlesystem\",\"script\"]},{\"resource_id\":\"26a1f459-f047-446a-805c-746c29904944\",\"name\":\"fx-dust\",\"path\":\"Root/corner-root/fx-dust\",\"parent\":\"616dc1db-c18f-4f05-be43-e76fef8e2fb7\",\"enabled\":true,\"tags\":[],\"components\":[\"particlesystem\",\"script\"]},{\"resource_id\":\"77787702-8dda-466d-ab12-62e521bf5289\",\"name\":\"fx-sparkle\",\"path\":\"Root/corner-root/fx-sparkle\",\"parent\":\"616dc1db-c18f-4f05-be43-e76fef8e2fb7\",\"enabled\":true,\"tags\":[],\"components\":[\"particlesystem\",\"script\"]}],\"meta\":{\"tool\":\"entities:create\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 72
+}

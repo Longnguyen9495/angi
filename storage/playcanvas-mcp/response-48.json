@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":{\"succeeded\":[{\"index\":0,\"asset\":{\"id\":309298319,\"name\":\"farm-atlas.png\",\"type\":\"texture\",\"folder\":null,\"tags\":[\"angi-original\",\"corner-model-v2\"]}}],\"failed\":[]},\"meta\":{\"tool\":\"assets:upload\",\"status\":\"ok\",\"partial\":false}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 48
+}

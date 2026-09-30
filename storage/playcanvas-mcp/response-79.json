@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":{\"buildId\":71441,\"path\":\"c:\\\\xampp\\\\htdocs\\\\angi\\\\storage\\\\playcanvas-mcp\\\\corner-v2-export.zip\",\"bytes\":6515929},\"meta\":{\"tool\":\"builds:download\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 79
+}

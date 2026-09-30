@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":{\"cameraId\":\"perspective\",\"position\":[15.628166198730469,9.040048599243164,3.8130099773406982],\"rotation\":[-27.799999880118826,76.39999952475097,-2.028914210127715e-14],\"projection\":\"perspective\",\"orthoHeight\":10,\"grid\":{\"divisions\":8,\"size\":1},\"bones\":true,\"iconSize\":0.2,\"expanded\":false},\"meta\":{\"tool\":\"viewport:state:get\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 5
+}

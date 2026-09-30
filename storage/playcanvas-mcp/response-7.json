@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":{\"id\":\"e795a0a5-65ee-4c85-a5f6-835a28415b96\",\"user\":{\"id\":729642,\"fullName\":\"Nguyen Thanh Long\",\"username\":\"longnguyen9495\"},\"createdAt\":\"2026-09-30T11:27:22.482Z\",\"description\":\"Before corner completion 2026-09-30: preserve 172 entities, 34 required names, existing assets and camera; Git playcanvas-corner 50c5ea0\"},\"meta\":{\"tool\":\"vcs:checkpoint:create\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 7
+}

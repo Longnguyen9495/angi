@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":{\"scripts\":{\"farmSway\":{\"attributesInvalid\":[],\"attributesOrder\":[\"amplitude\",\"speed\",\"phase\"],\"attributes\":{\"amplitude\":{\"type\":\"number\",\"name\":\"amplitude\",\"array\":false,\"description\":\"\",\"default\":2},\"speed\":{\"type\":\"number\",\"name\":\"speed\",\"array\":false,\"description\":\"\",\"default\":0.25},\"phase\":{\"type\":\"number\",\"name\":\"phase\",\"array\":false,\"description\":\"\",\"default\":0}},\"name\":\"farmSway\"},\"farmPop\":{\"attributesInvalid\":[],\"attributesOrder\":[\"duration\",\"from\",\"playOnStart\"],\"attributes\":{\"duration\":{\"type\":\"number\",\"name\":\"duration\",\"array\":false,\"description\":\"\",\"default\":0.38},\"from\":{\"type\":\"number\",\"name\":\"from\",\"array\":false,\"description\":\"\",\"default\":0.55},\"playOnStart\":{\"type\":\"boolean\",\"name\":\"playOnStart\",\"array\":false,\"description\":\"\",\"default\":true}},\"name\":\"farmPop\"},\"farmDoor\":{\"attributesInvalid\":[],\"attributesOrder\":[\"openAngle\",\"target\"],\"attributes\":{\"openAngle\":{\"type\":\"number\",\"name\":\"openAngle\",\"array\":false,\"description\":\"\",\"default\":-100},\"target\":{\"type\":\"string\",\"name\":\"target\",\"array\":false,\"description\":\"\",\"default\":\"barn\"}},\"name\":\"farmDoor\"},\"farmLamp\":{\"attributesInvalid\":[],\"attributesOrder\":[\"intensity\"],\"attributes\":{\"intensity\":{\"type\":\"number\",\"name\":\"intensity\",\"array\":false,\"description\":\"\",\"default\":2.2}},\"name\":\"farmLamp\"},\"farmFx\":{\"attributesInvalid\":[],\"attributesOrder\":[\"kind\",\"lift\"],\"attributes\":{\"kind\":{\"type\":\"string\",\"name\":\"kind\",\"array\":false,\"description\":\"\",\"default\":\"water\"},\"lift\":{\"type\":\"number\",\"name\":\"lift\",\"array\":false,\"description\":\"\",\"default\":0.2}},\"name\":\"farmFx\"}},\"scriptsInvalid\":[],\"loading\":false},\"meta\":{\"tool\":\"assets:script:parse\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 57
+}

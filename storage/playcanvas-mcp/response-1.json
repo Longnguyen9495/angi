@@ -1,0 +1,18 @@
+{
+  "result": {
+    "protocolVersion": "2024-11-05",
+    "capabilities": {
+      "tools": {
+        "listChanged": true
+      },
+      "resources": {},
+      "prompts": {}
+    },
+    "serverInfo": {
+      "name": "PlayCanvas",
+      "version": "0.7.1"
+    }
+  },
+  "jsonrpc": "2.0",
+  "id": 1
+}

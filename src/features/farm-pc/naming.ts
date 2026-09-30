@@ -39,6 +39,24 @@ function find(root: GraphNode, name: string): GraphNode | null {
 export function validateCorner(root: GraphNode, plotIds: readonly number[]): CornerCheck {
   const missing: string[] = [];
   const warnings: string[] = [];
+  const all: GraphNode[] = [];
+  const visit = (node: GraphNode) => {
+    all.push(node);
+    node.children.forEach(visit);
+  };
+  visit(root);
+  const unique = [
+    CORNER.root,
+    CORNER.barn,
+    CORNER.barnHit,
+    CORNER.barnDoor,
+    CORNER.bed,
+    CORNER.tree,
+    CORNER.sun,
+    ...plotIds.map(CORNER.plot),
+  ];
+  for (const name of unique)
+    if (all.filter((node) => node.name === name).length > 1) missing.push(`duplicate:${name}`);
   const corner = find(root, CORNER.root);
   if (!corner) return { ok: false, missing: [CORNER.root], warnings };
   for (const name of [
@@ -58,7 +76,8 @@ export function validateCorner(root: GraphNode, plotIds: readonly number[]): Cor
       continue;
     }
     for (const child of [CORNER.soil, CORNER.crop]) {
-      if (!plot.children.some((c) => c.name === child)) missing.push(`${CORNER.plot(id)}/${child}`);
+      if (plot.children.filter((c) => c.name === child).length !== 1)
+        missing.push(`${CORNER.plot(id)}/${child}`);
     }
   }
   for (const fx of CORNER.fx) if (!corner.findByName(fx)) warnings.push(fx);

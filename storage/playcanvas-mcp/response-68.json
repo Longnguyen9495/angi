@@ -1,0 +1,13 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":null,\"meta\":{\"tool\":\"runtime:logs\",\"status\":\"error\",\"message\":\"No running instance connected. Call launch_start first; the editor relays to the launched page automatically. If it never connects, allow popups for the editor origin so the launch window can open; the editor relays to it, so no extra browser permission is involved.\"}}"
+      }
+    ],
+    "isError": true
+  },
+  "jsonrpc": "2.0",
+  "id": 68
+}

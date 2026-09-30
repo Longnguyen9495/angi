@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":{\"name\":\"farm-atlas.png\",\"tags\":[\"angi-original\",\"corner-model-v2\"],\"meta\":{\"compress\":{\"alpha\":false,\"normals\":false,\"dxt\":false,\"pvr\":false,\"pvrBpp\":4,\"etc1\":false,\"etc2\":false,\"basis\":false,\"quality\":128,\"compressionMode\":\"etc\"},\"format\":\"png\",\"type\":\"TrueColorAlpha\",\"width\":512,\"height\":512,\"alpha\":true,\"depth\":8,\"srgb\":true,\"interlaced\":false},\"data\":{\"addressu\":\"repeat\",\"addressv\":\"repeat\",\"minfilter\":\"linear_mip_linear\",\"magfilter\":\"linear\",\"anisotropy\":1,\"rgbm\":false,\"srgb\":true,\"mipmaps\":true},\"file\":{\"filename\":\"farm-atlas.png\",\"url\":\"/api/assets/309298319/file/farm-atlas.png?branchId=d194d3e9-f0b4-45a2-a1f6-f8f42f539842\",\"size\":150655,\"hash\":\"b84b6dd02e854eaab90477d40288adbb\",\"variants\":{}},\"path\":[],\"id\":309298319,\"uniqueId\":309298319,\"createdAt\":\"2026-09-30T16:10:01.177Z\",\"modifiedAt\":null,\"scope\":{\"type\":\"project\",\"id\":1610400},\"user_id\":729642,\"source_asset_id\":null,\"source\":false,\"revision\":1,\"preload\":true,\"exclude\":false,\"type\":\"texture\",\"region\":\"eu-west-1\",\"task\":null,\"i18n\":{},\"checkpoint_id\":\"18c7c35b-4a02-451b-b1e9-ee2ed4fb7e65\",\"has_thumbnail\":true,\"thumbnails\":{\"s\":\"/api/assets/309298319/thumbnail/small?branchId=d194d3e9-f0b4-45a2-a1f6-f8f42f539842\",\"m\":\"/api/assets/309298319/thumbnail/medium?branchId=d194d3e9-f0b4-45a2-a1f6-f8f42f539842\",\"l\":\"/api/assets/309298319/thumbnail/large?branchId=d194d3e9-f0b4-45a2-a1f6-f8f42f539842\",\"xl\":\"/api/assets/309298319/thumbnail/xlarge?branchId=d194d3e9-f0b4-45a2-a1f6-f8f42f539842\"},\"immutable_backup\":\"fa69bcb9-6d25-4fb9-8503-4cbb83d8a77c\",\"license\":null,\"same_as_backup\":1,\"taskInfo\":null},\"meta\":{\"tool\":\"assets:get\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 66
+}

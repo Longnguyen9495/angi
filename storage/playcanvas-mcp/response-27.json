@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":{\"name\":\"barn.glb\",\"tags\":[\"angi-original\",\"corner-model-v2\"],\"meta\":{\"model\":{\"file\":\"model.glb\",\"name\":\"barn.glb\"},\"textures\":[],\"materials\":[{\"name\":\"original-painted-atlas\",\"textures\":[0,0]}],\"mappings\":[0,0],\"animations\":[],\"scene\":{\"file\":\"scene.json\",\"name\":\"barn\"}},\"data\":null,\"file\":{\"filename\":\"barn.glb\",\"url\":\"/api/assets/309298321/file/barn.glb?branchId=d194d3e9-f0b4-45a2-a1f6-f8f42f539842\",\"size\":198088,\"hash\":\"c8f14463ce0b71aa8135c1a14c4b348b\"},\"path\":[],\"id\":309298321,\"uniqueId\":309298321,\"type\":\"scene\",\"source\":true,\"source_asset_id\":null,\"createdAt\":\"2026-09-30T16:10:38.007Z\",\"scope\":{\"type\":\"project\",\"id\":1610400},\"user_id\":729642,\"revision\":1,\"preload\":false,\"exclude\":false,\"region\":\"eu-west-1\",\"task\":null,\"i18n\":{},\"checkpoint_id\":0,\"has_thumbnail\":false,\"immutable_backup\":null,\"license\":null,\"same_as_backup\":0,\"taskInfo\":null},\"meta\":{\"tool\":\"assets:get\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 27
+}

@@ -1,0 +1,13 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "MCP error -32602: Input validation error: Invalid arguments for tool create_entities: [\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"null\",\n    \"path\": [\n      \"entities\",\n      0,\n      \"entity\",\n      \"components\",\n      \"render\",\n      \"aabbCenter\"\n    ],\n    \"message\": \"Expected array, received null\"\n  },\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"null\",\n    \"path\": [\n      \"entities\",\n      0,\n      \"entity\",\n      \"components\",\n      \"render\",\n      \"aabbHalfExtents\"\n    ],\n    \"message\": \"Expected array, received null\"\n  },\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"null\",\n    \"path\": [\n      \"entities\",\n      1,\n      \"entity\",\n      \"components\",\n      \"render\",\n      \"aabbCenter\"\n    ],\n    \"message\": \"Expected array, received null\"\n  },\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"null\",\n    \"path\": [\n      \"entities\",\n      1,\n      \"entity\",\n      \"components\",\n      \"render\",\n      \"aabbHalfExtents\"\n    ],\n    \"message\": \"Expected array, received null\"\n  }\n]"
+      }
+    ],
+    "isError": true
+  },
+  "jsonrpc": "2.0",
+  "id": 36
+}

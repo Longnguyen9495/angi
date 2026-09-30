@@ -1,0 +1,494 @@
+{
+  "date": "2026-09-30T17:12:51.005Z",
+  "project": 1610400,
+  "scene": 2608607,
+  "engine": "2.22.6",
+  "buildId": 71441,
+  "archiveBytes": 6515929,
+  "extractedBytes": 11299413,
+  "excludingEngineBytes": 7262056,
+  "excludingEngineAndHdrNamedFilesBytes": 5914299,
+  "note": "Unpruned full Editor export; HDR exclusion uses filename only, includes old sky faces and disabled primitive dependencies. Not accepted runtime payload.",
+  "files": [
+    {
+      "path": "2608607.json",
+      "bytes": 130175
+    },
+    {
+      "path": "config.json",
+      "bytes": 567152
+    },
+    {
+      "path": "files/assets/309263420/1/sky.png",
+      "bytes": 147883
+    },
+    {
+      "path": "files/assets/309263422/1/sky_negz.png",
+      "bytes": 147065
+    },
+    {
+      "path": "files/assets/309263423/1/sky_posz.png",
+      "bytes": 198593
+    },
+    {
+      "path": "files/assets/309263424/1/sky_posx.png",
+      "bytes": 172680
+    },
+    {
+      "path": "files/assets/309263425/1/sky_negy.png",
+      "bytes": 152642
+    },
+    {
+      "path": "files/assets/309263426/1/sky_negx.png",
+      "bytes": 155167
+    },
+    {
+      "path": "files/assets/309263427/1/sky_posy.png",
+      "bytes": 170046
+    },
+    {
+      "path": "files/assets/309264988/1/bark_brown_02_arm.webp",
+      "bytes": 46502
+    },
+    {
+      "path": "files/assets/309264998/1/bark_brown_02_diff.webp",
+      "bytes": 81662
+    },
+    {
+      "path": "files/assets/309265019/1/bark_brown_02_nor.webp",
+      "bytes": 127896
+    },
+    {
+      "path": "files/assets/309265020/1/brown_mud_02_arm.webp",
+      "bytes": 54268
+    },
+    {
+      "path": "files/assets/309265022/1/brown_mud_02_diff.webp",
+      "bytes": 60582
+    },
+    {
+      "path": "files/assets/309265023/1/brown_mud_02_nor.webp",
+      "bytes": 145452
+    },
+    {
+      "path": "files/assets/309265024/1/brown_planks_05_arm.webp",
+      "bytes": 13920
+    },
+    {
+      "path": "files/assets/309265025/1/brown_planks_05_diff.webp",
+      "bytes": 16898
+    },
+    {
+      "path": "files/assets/309265026/1/brown_planks_05_nor.webp",
+      "bytes": 23642
+    },
+    {
+      "path": "files/assets/309265027/1/clay_roof_tiles_02_arm.webp",
+      "bytes": 56310
+    },
+    {
+      "path": "files/assets/309265028/1/clay_roof_tiles_02_diff.webp",
+      "bytes": 187770
+    },
+    {
+      "path": "files/assets/309265029/1/clay_roof_tiles_02_nor.webp",
+      "bytes": 313258
+    },
+    {
+      "path": "files/assets/309265030/1/leafy_grass_arm.webp",
+      "bytes": 200098
+    },
+    {
+      "path": "files/assets/309265031/1/leafy_grass_diff.webp",
+      "bytes": 354036
+    },
+    {
+      "path": "files/assets/309265032/1/leafy_grass_nor.webp",
+      "bytes": 115878
+    },
+    {
+      "path": "files/assets/309265033/1/rock_boulder_dry_arm.webp",
+      "bytes": 26864
+    },
+    {
+      "path": "files/assets/309265034/1/rock_boulder_dry_diff.webp",
+      "bytes": 57690
+    },
+    {
+      "path": "files/assets/309265035/1/rock_boulder_dry_nor.webp",
+      "bytes": 54582
+    },
+    {
+      "path": "files/assets/309265038/1/sky_1k_hdr.png",
+      "bytes": 635385
+    },
+    {
+      "path": "files/assets/309265039/1/sky_backdrop.webp",
+      "bytes": 28040
+    },
+    {
+      "path": "files/assets/309265044/1/ceramic_pot_nor_gl.webp",
+      "bytes": 3070
+    },
+    {
+      "path": "files/assets/309265045/1/ceramic_pot_diff.webp",
+      "bytes": 9548
+    },
+    {
+      "path": "files/assets/309265046/1/ceramic_pot.glb",
+      "bytes": 88936
+    },
+    {
+      "path": "files/assets/309265047/1/ceramic_pot_metal-ceramic_pot_rough.webp",
+      "bytes": 7864
+    },
+    {
+      "path": "files/assets/309265052/1/chinese_stool_diff.webp",
+      "bytes": 3972
+    },
+    {
+      "path": "files/assets/309265053/1/chinese_stool_rough.webp",
+      "bytes": 6560
+    },
+    {
+      "path": "files/assets/309265054/1/chinese_stool.glb",
+      "bytes": 41136
+    },
+    {
+      "path": "files/assets/309265055/1/chinese_stool_nor_gl.webp",
+      "bytes": 6722
+    },
+    {
+      "path": "files/assets/309265066/1/planter_pot_clay_diff.webp",
+      "bytes": 4790
+    },
+    {
+      "path": "files/assets/309265067/1/planter_pot_clay_rough.webp",
+      "bytes": 5218
+    },
+    {
+      "path": "files/assets/309265068/1/planter_pot_clay_nor_gl.webp",
+      "bytes": 4076
+    },
+    {
+      "path": "files/assets/309265069/1/planter_pot_clay.glb",
+      "bytes": 79092
+    },
+    {
+      "path": "files/assets/309265075/1/wooden_axe_02_diff.webp",
+      "bytes": 9422
+    },
+    {
+      "path": "files/assets/309265076/1/wooden_axe_02.glb",
+      "bytes": 60180
+    },
+    {
+      "path": "files/assets/309265077/1/wooden_axe_02_metal-wooden_axe_02_rough.webp",
+      "bytes": 10930
+    },
+    {
+      "path": "files/assets/309265078/1/wooden_axe_02_nor_gl.webp",
+      "bytes": 1700
+    },
+    {
+      "path": "files/assets/309265083/1/wooden_bucket_01_metal-wooden_bucket_01_rough.webp",
+      "bytes": 12938
+    },
+    {
+      "path": "files/assets/309265084/1/wooden_bucket_01_diff.webp",
+      "bytes": 8392
+    },
+    {
+      "path": "files/assets/309265085/1/wooden_bucket_01_nor_gl.webp",
+      "bytes": 6514
+    },
+    {
+      "path": "files/assets/309265086/1/wooden_bucket_01.glb",
+      "bytes": 160296
+    },
+    {
+      "path": "files/assets/309265092/1/wooden_crate_02_diff.webp",
+      "bytes": 9204
+    },
+    {
+      "path": "files/assets/309265093/1/wooden_crate_02.glb",
+      "bytes": 151812
+    },
+    {
+      "path": "files/assets/309265094/1/wooden_crate_02_nor_gl.webp",
+      "bytes": 5708
+    },
+    {
+      "path": "files/assets/309265095/1/wooden_crate_02_metal-wooden_crate_02_rough.webp",
+      "bytes": 11560
+    },
+    {
+      "path": "files/assets/309265108/1/sky_1k_hdr_pz.png",
+      "bytes": 80460
+    },
+    {
+      "path": "files/assets/309265109/1/sky_1k_hdr_nz.png",
+      "bytes": 75480
+    },
+    {
+      "path": "files/assets/309265110/1/sky_1k_hdr_ny.png",
+      "bytes": 54877
+    },
+    {
+      "path": "files/assets/309265111/1/sky_1k_hdr_px.png",
+      "bytes": 78162
+    },
+    {
+      "path": "files/assets/309265112/1/sky_1k_hdr_py.png",
+      "bytes": 106713
+    },
+    {
+      "path": "files/assets/309265113/1/sky_1k_hdr_nx.png",
+      "bytes": 79899
+    },
+    {
+      "path": "files/assets/309265114/1/sky_1k_hdr_cubemap.png",
+      "bytes": 236781
+    },
+    {
+      "path": "files/assets/309265193/1/island.glb",
+      "bytes": 70516
+    },
+    {
+      "path": "files/assets/309265199/1/gable.glb",
+      "bytes": 1356
+    },
+    {
+      "path": "files/assets/309265356/1/farm-motion.mjs",
+      "bytes": 5618
+    },
+    {
+      "path": "files/assets/309298319/1/farm-atlas.png",
+      "bytes": 150655
+    },
+    {
+      "path": "files/assets/309298323/1/barn.glb",
+      "bytes": 197388
+    },
+    {
+      "path": "files/assets/309298359/1/bed.glb",
+      "bytes": 29564
+    },
+    {
+      "path": "files/assets/309298386/1/path-stones.glb",
+      "bytes": 16940
+    },
+    {
+      "path": "files/assets/309298392/1/tree-broadleaf.glb",
+      "bytes": 80048
+    },
+    {
+      "path": "files/assets/309298402/1/crop-bean-flowering.glb",
+      "bytes": 25992
+    },
+    {
+      "path": "files/assets/309298407/1/crop-bean-ready.glb",
+      "bytes": 30600
+    },
+    {
+      "path": "files/assets/309298412/1/crop-bean-sprout.glb",
+      "bytes": 4472
+    },
+    {
+      "path": "files/assets/309298416/1/crop-bean-young.glb",
+      "bytes": 20228
+    },
+    {
+      "path": "files/assets/309298422/1/crop-chili-flowering.glb",
+      "bytes": 22140
+    },
+    {
+      "path": "files/assets/309298427/1/crop-chili-ready.glb",
+      "bytes": 26744
+    },
+    {
+      "path": "files/assets/309298432/1/crop-chili-sprout.glb",
+      "bytes": 4472
+    },
+    {
+      "path": "files/assets/309298437/1/crop-chili-young.glb",
+      "bytes": 16376
+    },
+    {
+      "path": "files/assets/309298498/1/crop-cucumber-flowering.glb",
+      "bytes": 25996
+    },
+    {
+      "path": "files/assets/309298502/1/crop-cucumber-ready.glb",
+      "bytes": 30604
+    },
+    {
+      "path": "files/assets/309298587/1/crop-cucumber-sprout.glb",
+      "bytes": 4476
+    },
+    {
+      "path": "files/assets/309298620/1/crop-cucumber-young.glb",
+      "bytes": 20232
+    },
+    {
+      "path": "files/assets/309298681/1/crop-garlic-flowering.glb",
+      "bytes": 38444
+    },
+    {
+      "path": "files/assets/309298690/1/crop-garlic-ready.glb",
+      "bytes": 65320
+    },
+    {
+      "path": "files/assets/309298695/1/crop-garlic-sprout.glb",
+      "bytes": 1980
+    },
+    {
+      "path": "files/assets/309298700/1/crop-garlic-young.glb",
+      "bytes": 4288
+    },
+    {
+      "path": "files/assets/309298705/1/crop-herbs-flowering.glb",
+      "bytes": 27708
+    },
+    {
+      "path": "files/assets/309298710/1/crop-herbs-ready.glb",
+      "bytes": 27704
+    },
+    {
+      "path": "files/assets/309298715/1/crop-herbs-sprout.glb",
+      "bytes": 4472
+    },
+    {
+      "path": "files/assets/309298720/1/crop-herbs-young.glb",
+      "bytes": 20024
+    },
+    {
+      "path": "files/assets/309298726/1/crop-lemongrass-flowering.glb",
+      "bytes": 5832
+    },
+    {
+      "path": "files/assets/309298731/1/crop-lemongrass-ready.glb",
+      "bytes": 5828
+    },
+    {
+      "path": "files/assets/309298736/1/crop-lemongrass-sprout.glb",
+      "bytes": 1984
+    },
+    {
+      "path": "files/assets/309298741/1/crop-lemongrass-young.glb",
+      "bytes": 5828
+    },
+    {
+      "path": "files/assets/309298745/1/crop-lime-flowering.glb",
+      "bytes": 22140
+    },
+    {
+      "path": "files/assets/309298751/1/crop-lime-ready.glb",
+      "bytes": 32480
+    },
+    {
+      "path": "files/assets/309298787/1/crop-lime-sprout.glb",
+      "bytes": 4472
+    },
+    {
+      "path": "files/assets/309298791/1/crop-lime-young.glb",
+      "bytes": 16376
+    },
+    {
+      "path": "files/assets/309298797/1/crop-rice-flowering.glb",
+      "bytes": 59560
+    },
+    {
+      "path": "files/assets/309298802/1/crop-rice-ready.glb",
+      "bytes": 59556
+    },
+    {
+      "path": "files/assets/309298807/1/crop-rice-sprout.glb",
+      "bytes": 1980
+    },
+    {
+      "path": "files/assets/309298812/1/crop-rice-young.glb",
+      "bytes": 4288
+    },
+    {
+      "path": "files/assets/309298817/1/crop-scallion-flowering.glb",
+      "bytes": 38444
+    },
+    {
+      "path": "files/assets/309298821/1/crop-scallion-ready.glb",
+      "bytes": 38440
+    },
+    {
+      "path": "files/assets/309298827/1/crop-scallion-sprout.glb",
+      "bytes": 1984
+    },
+    {
+      "path": "files/assets/309298833/1/crop-scallion-young.glb",
+      "bytes": 4292
+    },
+    {
+      "path": "files/assets/309298837/1/crop-tomato-flowering.glb",
+      "bytes": 22140
+    },
+    {
+      "path": "files/assets/309298845/1/crop-tomato-ready.glb",
+      "bytes": 32484
+    },
+    {
+      "path": "files/assets/309298852/1/crop-tomato-sprout.glb",
+      "bytes": 4472
+    },
+    {
+      "path": "files/assets/309298858/1/crop-tomato-young.glb",
+      "bytes": 16376
+    },
+    {
+      "path": "files/assets/309300378/1/farm-motion.mjs",
+      "bytes": 7490
+    },
+    {
+      "path": "index.html",
+      "bytes": 622
+    },
+    {
+      "path": "js/esm-scripts/farm/scripts/farm-motion.mjs",
+      "bytes": 7046
+    },
+    {
+      "path": "js/esm-scripts/farm-motion.mjs",
+      "bytes": 9371
+    },
+    {
+      "path": "js/index.mjs",
+      "bytes": 10967
+    },
+    {
+      "path": "js/playcanvas-stable.min.mjs",
+      "bytes": 4037357
+    },
+    {
+      "path": "js/__loading__.mjs",
+      "bytes": 2836
+    },
+    {
+      "path": "js/__modules__.mjs",
+      "bytes": 1832
+    },
+    {
+      "path": "js/__settings__.mjs",
+      "bytes": 737
+    },
+    {
+      "path": "logo.png",
+      "bytes": 2599
+    },
+    {
+      "path": "manifest.json",
+      "bytes": 359
+    },
+    {
+      "path": "styles.css",
+      "bytes": 736
+    }
+  ]
+}

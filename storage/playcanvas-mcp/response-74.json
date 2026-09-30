@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":[{\"resource_id\":\"4a699f4a-8aad-4117-aa0e-89cc5a855283\",\"name\":\"model-leaf-cluster-2\",\"path\":\"Root/corner-root/tree/model-leaf-cluster-2\",\"parent\":\"21c6eae9-50d0-47a1-8845-514bc9be8099\",\"enabled\":true,\"tags\":[],\"components\":[\"render\",\"script\"]}],\"meta\":{\"tool\":\"entities:scripts:add\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 74
+}

@@ -1,0 +1,5120 @@
+{
+  "data": [
+    {
+      "name": "barn",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298323
+      },
+      "data": {
+        "entities": {
+          "de3f8b53-221e-45d1-b878-d100bf78bc15": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [
+              "874609ba-e5b5-4028-9e25-38d894b65561",
+              "cf4cb5f9-0fc9-4946-901e-b2bdb36e8611"
+            ],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {},
+            "resource_id": "de3f8b53-221e-45d1-b878-d100bf78bc15",
+            "name": "SceneRoot"
+          },
+          "874609ba-e5b5-4028-9e25-38d894b65561": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": "de3f8b53-221e-45d1-b878-d100bf78bc15",
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298324,
+                "materialAssets": [
+                  309298322
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "874609ba-e5b5-4028-9e25-38d894b65561",
+            "name": "barn-body"
+          },
+          "cf4cb5f9-0fc9-4946-901e-b2bdb36e8611": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": "de3f8b53-221e-45d1-b878-d100bf78bc15",
+            "children": [],
+            "position": [
+              -0.45,
+              0.16,
+              1.06
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298325,
+                "materialAssets": [
+                  309298322
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "cf4cb5f9-0fc9-4946-901e-b2bdb36e8611",
+            "name": "barn-door"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298326,
+      "uniqueId": 309298326,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:10:40.494Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "bed",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298359
+      },
+      "data": {
+        "entities": {
+          "06dde06f-8028-40d7-b59e-480d9a91c3f1": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298360,
+                "materialAssets": [
+                  309298358
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "06dde06f-8028-40d7-b59e-480d9a91c3f1",
+            "name": "bed-frame-soil"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298373,
+      "uniqueId": 309298373,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:12:46.241Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "ceramic_pot",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309265046
+      },
+      "data": {
+        "entities": {
+          "6a5e5b08-63ba-47d9-a747-08ef2b90779b": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309265048,
+                "materialAssets": [
+                  309265043
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "6a5e5b08-63ba-47d9-a747-08ef2b90779b",
+            "name": "ceramic_pot"
+          }
+        }
+      },
+      "file": null,
+      "path": [
+        309264968,
+        309264974
+      ],
+      "id": 309265050,
+      "uniqueId": 309265050,
+      "createdAt": "2026-09-30T10:33:22.894Z",
+      "modifiedAt": null,
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "source_asset_id": null,
+      "revision": 1,
+      "source": false,
+      "preload": true,
+      "region": "eu-west-1",
+      "type": "template",
+      "task": null,
+      "checkpoint_id": "d1aa0fa5-f325-4d8c-9a9c-9f15a0bbcd2c",
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "chinese_stool",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309265054
+      },
+      "data": {
+        "entities": {
+          "119f295e-db81-4ea8-81ff-056047ceb4c7": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              -90,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309265056,
+                "materialAssets": [
+                  309265051
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "119f295e-db81-4ea8-81ff-056047ceb4c7",
+            "name": "chinese_stool"
+          }
+        }
+      },
+      "file": null,
+      "path": [
+        309264968,
+        309264974
+      ],
+      "id": 309265058,
+      "uniqueId": 309265058,
+      "createdAt": "2026-09-30T10:33:26.433Z",
+      "modifiedAt": null,
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "source_asset_id": null,
+      "revision": 1,
+      "source": false,
+      "preload": true,
+      "region": "eu-west-1",
+      "type": "template",
+      "task": null,
+      "checkpoint_id": "d1aa0fa5-f325-4d8c-9a9c-9f15a0bbcd2c",
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-bean-flowering",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298402
+      },
+      "data": {
+        "entities": {
+          "9229ac83-9939-489a-b0d5-99bc31c75e13": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298403,
+                "materialAssets": [
+                  309298401
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "9229ac83-9939-489a-b0d5-99bc31c75e13",
+            "name": "crop-bean-flowering"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298405,
+      "uniqueId": 309298405,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:12:53.444Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-bean-ready",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298407
+      },
+      "data": {
+        "entities": {
+          "91f27407-4fd0-44b6-a290-c998782e6d35": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298408,
+                "materialAssets": [
+                  309298406
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "91f27407-4fd0-44b6-a290-c998782e6d35",
+            "name": "crop-bean-ready"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298410,
+      "uniqueId": 309298410,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:12:55.498Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-bean-sprout",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298412
+      },
+      "data": {
+        "entities": {
+          "bcd7cc28-270e-4b86-b676-b52604c13a61": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298413,
+                "materialAssets": [
+                  309298411
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "bcd7cc28-270e-4b86-b676-b52604c13a61",
+            "name": "crop-bean-sprout"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298415,
+      "uniqueId": 309298415,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:12:57.482Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-bean-young",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298416
+      },
+      "data": {
+        "entities": {
+          "94da0ac5-71b5-440c-acf6-f0dc9b80f472": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298418,
+                "materialAssets": [
+                  309298417
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "94da0ac5-71b5-440c-acf6-f0dc9b80f472",
+            "name": "crop-bean-young"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298420,
+      "uniqueId": 309298420,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:12:59.520Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-chili-flowering",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298422
+      },
+      "data": {
+        "entities": {
+          "7149e881-6962-41e1-a800-2ecd825ff744": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298423,
+                "materialAssets": [
+                  309298421
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "7149e881-6962-41e1-a800-2ecd825ff744",
+            "name": "crop-chili-flowering"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298425,
+      "uniqueId": 309298425,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:02.602Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-chili-ready",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298427
+      },
+      "data": {
+        "entities": {
+          "edf88f15-2901-4d60-905b-0712b2653ba7": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298428,
+                "materialAssets": [
+                  309298426
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "edf88f15-2901-4d60-905b-0712b2653ba7",
+            "name": "crop-chili-ready"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298430,
+      "uniqueId": 309298430,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:04.645Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-chili-sprout",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298432
+      },
+      "data": {
+        "entities": {
+          "bd2e0041-186b-47fe-a0e1-0af6bb945b4a": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298433,
+                "materialAssets": [
+                  309298431
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "bd2e0041-186b-47fe-a0e1-0af6bb945b4a",
+            "name": "crop-chili-sprout"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298435,
+      "uniqueId": 309298435,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:06.691Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-chili-young",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298437
+      },
+      "data": {
+        "entities": {
+          "970dae12-921e-4bb9-bd70-f548c2e0a265": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298444,
+                "materialAssets": [
+                  309298436
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "970dae12-921e-4bb9-bd70-f548c2e0a265",
+            "name": "crop-chili-young"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298486,
+      "uniqueId": 309298486,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:09.753Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-cucumber-flowering",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298498
+      },
+      "data": {
+        "entities": {
+          "b720514f-7451-4d1a-b865-ed1a1c7ae1b0": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298500,
+                "materialAssets": [
+                  309298497
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "b720514f-7451-4d1a-b865-ed1a1c7ae1b0",
+            "name": "crop-cucumber-flowering"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298501,
+      "uniqueId": 309298501,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:11.796Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-cucumber-ready",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298502
+      },
+      "data": {
+        "entities": {
+          "35e7cb02-f12d-4cd1-ad52-c19f0567406e": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298505,
+                "materialAssets": [
+                  309298503
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "35e7cb02-f12d-4cd1-ad52-c19f0567406e",
+            "name": "crop-cucumber-ready"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298538,
+      "uniqueId": 309298538,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:13.982Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-cucumber-sprout",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298587
+      },
+      "data": {
+        "entities": {
+          "3f2cb90b-6813-44a1-b446-de316a3ee00c": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298604,
+                "materialAssets": [
+                  309298593
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "3f2cb90b-6813-44a1-b446-de316a3ee00c",
+            "name": "crop-cucumber-sprout"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298613,
+      "uniqueId": 309298613,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:16.245Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-cucumber-young",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298620
+      },
+      "data": {
+        "entities": {
+          "6c2fadd2-79a5-49ed-b15e-c6765445530f": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298669,
+                "materialAssets": [
+                  309298619
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "6c2fadd2-79a5-49ed-b15e-c6765445530f",
+            "name": "crop-cucumber-young"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298683,
+      "uniqueId": 309298683,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:18.954Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-garlic-flowering",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298681
+      },
+      "data": {
+        "entities": {
+          "7800b13a-558f-4115-96a0-1d25cc5b07d8": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298687,
+                "materialAssets": [
+                  309298680
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "7800b13a-558f-4115-96a0-1d25cc5b07d8",
+            "name": "crop-garlic-flowering"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298688,
+      "uniqueId": 309298688,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:20.001Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-garlic-ready",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298690
+      },
+      "data": {
+        "entities": {
+          "9bc041d0-1bbf-4e9f-8ad2-046338f38100": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298692,
+                "materialAssets": [
+                  309298689
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "9bc041d0-1bbf-4e9f-8ad2-046338f38100",
+            "name": "crop-garlic-ready"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298693,
+      "uniqueId": 309298693,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:22.042Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-garlic-sprout",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298695
+      },
+      "data": {
+        "entities": {
+          "1f0fab0c-17b5-48fc-a494-9facb4b6025a": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298697,
+                "materialAssets": [
+                  309298694
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "1f0fab0c-17b5-48fc-a494-9facb4b6025a",
+            "name": "crop-garlic-sprout"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298698,
+      "uniqueId": 309298698,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:24.080Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-garlic-young",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298700
+      },
+      "data": {
+        "entities": {
+          "c85cd39d-5bd9-46bb-a07f-5a95007c6d88": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298702,
+                "materialAssets": [
+                  309298699
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "c85cd39d-5bd9-46bb-a07f-5a95007c6d88",
+            "name": "crop-garlic-young"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298703,
+      "uniqueId": 309298703,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:26.120Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-herbs-flowering",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298705
+      },
+      "data": {
+        "entities": {
+          "1e7d9449-5bea-4f63-aece-d23549f5317d": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298707,
+                "materialAssets": [
+                  309298704
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "1e7d9449-5bea-4f63-aece-d23549f5317d",
+            "name": "crop-herbs-flowering"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298708,
+      "uniqueId": 309298708,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:28.171Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-herbs-ready",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298710
+      },
+      "data": {
+        "entities": {
+          "aa6a4790-69e3-4f01-9fea-98bb60052c38": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298712,
+                "materialAssets": [
+                  309298709
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "aa6a4790-69e3-4f01-9fea-98bb60052c38",
+            "name": "crop-herbs-ready"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298713,
+      "uniqueId": 309298713,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:30.204Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-herbs-sprout",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298715
+      },
+      "data": {
+        "entities": {
+          "d46c218a-1af1-4f72-a102-c9ed86087235": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298717,
+                "materialAssets": [
+                  309298714
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "d46c218a-1af1-4f72-a102-c9ed86087235",
+            "name": "crop-herbs-sprout"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298718,
+      "uniqueId": 309298718,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:32.599Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-herbs-young",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298720
+      },
+      "data": {
+        "entities": {
+          "02f85ece-d7a1-46a9-97b2-1ba4aff8a3dd": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298723,
+                "materialAssets": [
+                  309298719
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "02f85ece-d7a1-46a9-97b2-1ba4aff8a3dd",
+            "name": "crop-herbs-young"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298724,
+      "uniqueId": 309298724,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:34.297Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-lemongrass-flowering",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298726
+      },
+      "data": {
+        "entities": {
+          "a476a3e3-8aca-4ca3-befa-f7a234230cff": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298728,
+                "materialAssets": [
+                  309298725
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "a476a3e3-8aca-4ca3-befa-f7a234230cff",
+            "name": "crop-lemongrass-flowering"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298729,
+      "uniqueId": 309298729,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:36.339Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-lemongrass-ready",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298731
+      },
+      "data": {
+        "entities": {
+          "494ae8c2-29c2-44d0-a036-a77240de8b29": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298733,
+                "materialAssets": [
+                  309298730
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "494ae8c2-29c2-44d0-a036-a77240de8b29",
+            "name": "crop-lemongrass-ready"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298734,
+      "uniqueId": 309298734,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:38.382Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-lemongrass-sprout",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298736
+      },
+      "data": {
+        "entities": {
+          "3d55932a-eab0-4bb8-8899-66e3c11a407c": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298738,
+                "materialAssets": [
+                  309298735
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "3d55932a-eab0-4bb8-8899-66e3c11a407c",
+            "name": "crop-lemongrass-sprout"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298739,
+      "uniqueId": 309298739,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:40.432Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-lemongrass-young",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298741
+      },
+      "data": {
+        "entities": {
+          "76327554-ca8f-452f-afcf-2a565792042b": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298743,
+                "materialAssets": [
+                  309298740
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "76327554-ca8f-452f-afcf-2a565792042b",
+            "name": "crop-lemongrass-young"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298744,
+      "uniqueId": 309298744,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:42.459Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-lime-flowering",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298745
+      },
+      "data": {
+        "entities": {
+          "1ee533bf-0264-4c45-8878-18722c94c750": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298748,
+                "materialAssets": [
+                  309298746
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "1ee533bf-0264-4c45-8878-18722c94c750",
+            "name": "crop-lime-flowering"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298749,
+      "uniqueId": 309298749,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:44.496Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-lime-ready",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298751
+      },
+      "data": {
+        "entities": {
+          "f7892763-e03f-4a23-9aae-a43a41ba20eb": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298753,
+                "materialAssets": [
+                  309298750
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "f7892763-e03f-4a23-9aae-a43a41ba20eb",
+            "name": "crop-lime-ready"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298754,
+      "uniqueId": 309298754,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:46.556Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-lime-sprout",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298787
+      },
+      "data": {
+        "entities": {
+          "fe59d5dd-296a-4689-8646-e34e95c3ae0b": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298789,
+                "materialAssets": [
+                  309298786
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "fe59d5dd-296a-4689-8646-e34e95c3ae0b",
+            "name": "crop-lime-sprout"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298790,
+      "uniqueId": 309298790,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:48.589Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-lime-young",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298791
+      },
+      "data": {
+        "entities": {
+          "a507ac10-27bd-4ddf-a984-cadbef8ca013": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298793,
+                "materialAssets": [
+                  309298792
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "a507ac10-27bd-4ddf-a984-cadbef8ca013",
+            "name": "crop-lime-young"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298795,
+      "uniqueId": 309298795,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:50.653Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-rice-flowering",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298797
+      },
+      "data": {
+        "entities": {
+          "cb71a9a4-a136-42c2-97b8-27ecdf20161e": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298798,
+                "materialAssets": [
+                  309298796
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "cb71a9a4-a136-42c2-97b8-27ecdf20161e",
+            "name": "crop-rice-flowering"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298800,
+      "uniqueId": 309298800,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:53.696Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-rice-ready",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298802
+      },
+      "data": {
+        "entities": {
+          "068e7b77-5090-4c05-a920-a766dfaa6466": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298804,
+                "materialAssets": [
+                  309298801
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "068e7b77-5090-4c05-a920-a766dfaa6466",
+            "name": "crop-rice-ready"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298805,
+      "uniqueId": 309298805,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:56.773Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-rice-sprout",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298807
+      },
+      "data": {
+        "entities": {
+          "3d9164e5-24ed-4b33-81a0-2a3df3086be3": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298809,
+                "materialAssets": [
+                  309298806
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "3d9164e5-24ed-4b33-81a0-2a3df3086be3",
+            "name": "crop-rice-sprout"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298810,
+      "uniqueId": 309298810,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:13:58.820Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-rice-young",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298812
+      },
+      "data": {
+        "entities": {
+          "efd47b90-7f79-4f6d-916c-9ba5f521a524": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298814,
+                "materialAssets": [
+                  309298811
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "efd47b90-7f79-4f6d-916c-9ba5f521a524",
+            "name": "crop-rice-young"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298815,
+      "uniqueId": 309298815,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:14:01.210Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-scallion-flowering",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298817
+      },
+      "data": {
+        "entities": {
+          "c87beeb6-c842-4b27-b7fa-eea86c77ef49": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298818,
+                "materialAssets": [
+                  309298816
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "c87beeb6-c842-4b27-b7fa-eea86c77ef49",
+            "name": "crop-scallion-flowering"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298820,
+      "uniqueId": 309298820,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:14:02.886Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-scallion-ready",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298821
+      },
+      "data": {
+        "entities": {
+          "977be069-5388-4ad7-9a0d-0d2ccb33d6f4": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298824,
+                "materialAssets": [
+                  309298822
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "977be069-5388-4ad7-9a0d-0d2ccb33d6f4",
+            "name": "crop-scallion-ready"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298825,
+      "uniqueId": 309298825,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:14:05.962Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-scallion-sprout",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298827
+      },
+      "data": {
+        "entities": {
+          "334aa4b8-207d-419f-865e-9a2079c106cc": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298829,
+                "materialAssets": [
+                  309298826
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "334aa4b8-207d-419f-865e-9a2079c106cc",
+            "name": "crop-scallion-sprout"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298831,
+      "uniqueId": 309298831,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:14:08.001Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-scallion-young",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298833
+      },
+      "data": {
+        "entities": {
+          "c4a45c2e-c876-4b6a-91c2-5956a7ab006e": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298835,
+                "materialAssets": [
+                  309298832
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "c4a45c2e-c876-4b6a-91c2-5956a7ab006e",
+            "name": "crop-scallion-young"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298836,
+      "uniqueId": 309298836,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:14:10.052Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-tomato-flowering",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298837
+      },
+      "data": {
+        "entities": {
+          "9721904e-2add-4fba-8815-80f1c1c14fa0": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298841,
+                "materialAssets": [
+                  309298838
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "9721904e-2add-4fba-8815-80f1c1c14fa0",
+            "name": "crop-tomato-flowering"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298843,
+      "uniqueId": 309298843,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:14:12.071Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-tomato-ready",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298845
+      },
+      "data": {
+        "entities": {
+          "033cea29-8a6e-4716-b519-1a1c95ac30a8": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298848,
+                "materialAssets": [
+                  309298844
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "033cea29-8a6e-4716-b519-1a1c95ac30a8",
+            "name": "crop-tomato-ready"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298850,
+      "uniqueId": 309298850,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:14:14.146Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-tomato-sprout",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298852
+      },
+      "data": {
+        "entities": {
+          "35836dac-0da2-4b35-bcc6-b562b26ac07f": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298855,
+                "materialAssets": [
+                  309298851
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "35836dac-0da2-4b35-bcc6-b562b26ac07f",
+            "name": "crop-tomato-sprout"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298857,
+      "uniqueId": 309298857,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:14:16.162Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "crop-tomato-young",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298858
+      },
+      "data": {
+        "entities": {
+          "25bef737-2acf-459c-867a-684f4c2dfd89": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298861,
+                "materialAssets": [
+                  309298859
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "25bef737-2acf-459c-867a-684f4c2dfd89",
+            "name": "crop-tomato-young"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298863,
+      "uniqueId": 309298863,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:14:18.204Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "gable",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309265199
+      },
+      "data": {
+        "entities": {
+          "cf927754-1ac1-40a3-9751-d5569a169bc3": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309265201,
+                "materialAssets": [
+                  309265200
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "cf927754-1ac1-40a3-9751-d5569a169bc3",
+            "name": "gable"
+          }
+        }
+      },
+      "file": null,
+      "path": [
+        309264968,
+        309264974
+      ],
+      "id": 309265202,
+      "uniqueId": 309265202,
+      "createdAt": "2026-09-30T10:36:15.632Z",
+      "modifiedAt": null,
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "source_asset_id": null,
+      "revision": 1,
+      "source": false,
+      "preload": true,
+      "region": "eu-west-1",
+      "type": "template",
+      "task": null,
+      "checkpoint_id": "d1aa0fa5-f325-4d8c-9a9c-9f15a0bbcd2c",
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "island",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309265193
+      },
+      "data": {
+        "entities": {
+          "7738b0d6-43cf-4e96-8653-5894ddb266c4": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [
+              "d83d957c-3dd3-44da-9a01-6063f91f1609",
+              "46bf3285-bf82-4ee1-97ea-a7897f00f040"
+            ],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {},
+            "resource_id": "7738b0d6-43cf-4e96-8653-5894ddb266c4",
+            "name": "island"
+          },
+          "d83d957c-3dd3-44da-9a01-6063f91f1609": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": "7738b0d6-43cf-4e96-8653-5894ddb266c4",
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309265195,
+                "materialAssets": [
+                  309265192
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "d83d957c-3dd3-44da-9a01-6063f91f1609",
+            "name": "ground"
+          },
+          "46bf3285-bf82-4ee1-97ea-a7897f00f040": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": "7738b0d6-43cf-4e96-8653-5894ddb266c4",
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309265196,
+                "materialAssets": [
+                  309265194
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "46bf3285-bf82-4ee1-97ea-a7897f00f040",
+            "name": "cliff"
+          }
+        }
+      },
+      "file": null,
+      "path": [
+        309264968,
+        309264974
+      ],
+      "id": 309265198,
+      "uniqueId": 309265198,
+      "createdAt": "2026-09-30T10:36:13.575Z",
+      "modifiedAt": null,
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "source_asset_id": null,
+      "revision": 1,
+      "source": false,
+      "preload": true,
+      "region": "eu-west-1",
+      "type": "template",
+      "task": null,
+      "checkpoint_id": "d1aa0fa5-f325-4d8c-9a9c-9f15a0bbcd2c",
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "path-stones",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298386
+      },
+      "data": {
+        "entities": {
+          "2d092aec-380e-4870-bb29-0d466052647e": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298388,
+                "materialAssets": [
+                  309298387
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "2d092aec-380e-4870-bb29-0d466052647e",
+            "name": "path-stones"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298390,
+      "uniqueId": 309298390,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:12:48.265Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "planter_pot_clay",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309265069
+      },
+      "data": {
+        "entities": {
+          "67f26924-3fa4-4b69-b8d8-a8a50be4bbb6": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309265070,
+                "materialAssets": [
+                  309265065
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "67f26924-3fa4-4b69-b8d8-a8a50be4bbb6",
+            "name": "planter_pot_clay"
+          }
+        }
+      },
+      "file": null,
+      "path": [
+        309264968,
+        309264974
+      ],
+      "id": 309265072,
+      "uniqueId": 309265072,
+      "createdAt": "2026-09-30T10:33:29.010Z",
+      "modifiedAt": null,
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "source_asset_id": null,
+      "revision": 1,
+      "source": false,
+      "preload": true,
+      "region": "eu-west-1",
+      "type": "template",
+      "task": null,
+      "checkpoint_id": "d1aa0fa5-f325-4d8c-9a9c-9f15a0bbcd2c",
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "tree-broadleaf",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309298392
+      },
+      "data": {
+        "entities": {
+          "c3e38a73-32b8-4f90-b67d-c3c7681772ae": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [
+              "5240e19d-90e7-4579-8a4b-947e7673e30d",
+              "908ce180-b543-4988-845d-41465a762a93",
+              "01115f88-a651-440e-b29e-6cc6abd6ae61",
+              "d8842793-d553-4d9d-9f6a-48698badca4d",
+              "b70520ec-4020-47a7-8bb1-f81ae80bec1f",
+              "cae94687-2170-4110-bfc3-397f26f9781a"
+            ],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {},
+            "resource_id": "c3e38a73-32b8-4f90-b67d-c3c7681772ae",
+            "name": "SceneRoot"
+          },
+          "5240e19d-90e7-4579-8a4b-947e7673e30d": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": "c3e38a73-32b8-4f90-b67d-c3c7681772ae",
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298393,
+                "materialAssets": [
+                  309298391
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "5240e19d-90e7-4579-8a4b-947e7673e30d",
+            "name": "tree-trunk"
+          },
+          "908ce180-b543-4988-845d-41465a762a93": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": "c3e38a73-32b8-4f90-b67d-c3c7681772ae",
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298394,
+                "materialAssets": [
+                  309298391
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "908ce180-b543-4988-845d-41465a762a93",
+            "name": "leaf-cluster-1"
+          },
+          "01115f88-a651-440e-b29e-6cc6abd6ae61": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": "c3e38a73-32b8-4f90-b67d-c3c7681772ae",
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298396,
+                "materialAssets": [
+                  309298391
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "01115f88-a651-440e-b29e-6cc6abd6ae61",
+            "name": "leaf-cluster-2"
+          },
+          "d8842793-d553-4d9d-9f6a-48698badca4d": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": "c3e38a73-32b8-4f90-b67d-c3c7681772ae",
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298395,
+                "materialAssets": [
+                  309298391
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "d8842793-d553-4d9d-9f6a-48698badca4d",
+            "name": "leaf-cluster-3"
+          },
+          "b70520ec-4020-47a7-8bb1-f81ae80bec1f": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": "c3e38a73-32b8-4f90-b67d-c3c7681772ae",
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298397,
+                "materialAssets": [
+                  309298391
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "b70520ec-4020-47a7-8bb1-f81ae80bec1f",
+            "name": "leaf-cluster-4"
+          },
+          "cae94687-2170-4110-bfc3-397f26f9781a": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": "c3e38a73-32b8-4f90-b67d-c3c7681772ae",
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309298398,
+                "materialAssets": [
+                  309298391
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "cae94687-2170-4110-bfc3-397f26f9781a",
+            "name": "leaf-cluster-5"
+          }
+        }
+      },
+      "file": null,
+      "path": [],
+      "id": 309298400,
+      "uniqueId": 309298400,
+      "type": "template",
+      "source": false,
+      "source_asset_id": null,
+      "createdAt": "2026-09-30T16:12:50.306Z",
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "revision": 1,
+      "preload": true,
+      "region": "eu-west-1",
+      "task": null,
+      "checkpoint_id": 0,
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "wooden_axe_02",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309265076
+      },
+      "data": {
+        "entities": {
+          "f53a5868-d46c-47ec-8c63-cf545ca30bd1": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309265079,
+                "materialAssets": [
+                  309265074
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "f53a5868-d46c-47ec-8c63-cf545ca30bd1",
+            "name": "wooden_axe_02"
+          }
+        }
+      },
+      "file": null,
+      "path": [
+        309264968,
+        309264974
+      ],
+      "id": 309265081,
+      "uniqueId": 309265081,
+      "createdAt": "2026-09-30T10:33:32.581Z",
+      "modifiedAt": null,
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "source_asset_id": null,
+      "revision": 1,
+      "source": false,
+      "preload": true,
+      "region": "eu-west-1",
+      "type": "template",
+      "task": null,
+      "checkpoint_id": "d1aa0fa5-f325-4d8c-9a9c-9f15a0bbcd2c",
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "wooden_bucket_01",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309265086
+      },
+      "data": {
+        "entities": {
+          "8dabd91d-7443-406a-ad64-5e1e06ba6629": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [
+              "ac4029b2-fb02-4638-b738-5ab6a2a2fbf4",
+              "e1311e7a-d7c7-426e-ba79-406d8d89a7b2"
+            ],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {},
+            "resource_id": "8dabd91d-7443-406a-ad64-5e1e06ba6629",
+            "name": "SceneRoot"
+          },
+          "ac4029b2-fb02-4638-b738-5ab6a2a2fbf4": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": "8dabd91d-7443-406a-ad64-5e1e06ba6629",
+            "children": [],
+            "position": [
+              -0.000120928,
+              0,
+              0.000120928
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309265087,
+                "materialAssets": [
+                  309265082
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "ac4029b2-fb02-4638-b738-5ab6a2a2fbf4",
+            "name": "wooden_bucket_01"
+          },
+          "e1311e7a-d7c7-426e-ba79-406d8d89a7b2": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": "8dabd91d-7443-406a-ad64-5e1e06ba6629",
+            "children": [],
+            "position": [
+              0,
+              0.321168,
+              0.000120928
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309265088,
+                "materialAssets": [
+                  309265082
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "e1311e7a-d7c7-426e-ba79-406d8d89a7b2",
+            "name": "wooden_bucket_01_handle"
+          }
+        }
+      },
+      "file": null,
+      "path": [
+        309264968,
+        309264974
+      ],
+      "id": 309265090,
+      "uniqueId": 309265090,
+      "createdAt": "2026-09-30T10:33:35.154Z",
+      "modifiedAt": null,
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "source_asset_id": null,
+      "revision": 1,
+      "source": false,
+      "preload": true,
+      "region": "eu-west-1",
+      "type": "template",
+      "task": null,
+      "checkpoint_id": "d1aa0fa5-f325-4d8c-9a9c-9f15a0bbcd2c",
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    },
+    {
+      "name": "wooden_crate_02",
+      "tags": [],
+      "meta": {
+        "containerAsset": 309265093
+      },
+      "data": {
+        "entities": {
+          "0445899d-43e8-4949-a53b-8dc9fe15da47": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": null,
+            "children": [
+              "63e3e0ee-1b49-48f6-a8b3-f3e6232c5e14",
+              "78259e09-b60e-4a6b-a3b2-40c610644af0"
+            ],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {},
+            "resource_id": "0445899d-43e8-4949-a53b-8dc9fe15da47",
+            "name": "SceneRoot"
+          },
+          "63e3e0ee-1b49-48f6-a8b3-f3e6232c5e14": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": "0445899d-43e8-4949-a53b-8dc9fe15da47",
+            "children": [],
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309265096,
+                "materialAssets": [
+                  309265091
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "63e3e0ee-1b49-48f6-a8b3-f3e6232c5e14",
+            "name": "wooden_crate_02_crate"
+          },
+          "78259e09-b60e-4a6b-a3b2-40c610644af0": {
+            "enabled": true,
+            "template": null,
+            "tags": [],
+            "parent": "0445899d-43e8-4949-a53b-8dc9fe15da47",
+            "children": [],
+            "position": [
+              0.000183366,
+              0.420502,
+              -0.000177562
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "template_id": null,
+            "template_ent_ids": null,
+            "components": {
+              "render": {
+                "enabled": true,
+                "type": "asset",
+                "asset": 309265097,
+                "materialAssets": [
+                  309265091
+                ],
+                "layers": [
+                  0
+                ],
+                "batchGroupId": null,
+                "castShadows": true,
+                "castShadowsLightmap": true,
+                "receiveShadows": true,
+                "lightmapped": false,
+                "lightmapSizeMultiplier": 1,
+                "isStatic": false,
+                "rootBone": null,
+                "aabbCenter": null,
+                "aabbHalfExtents": null,
+                "shadowCascadeMask": 255
+              }
+            },
+            "resource_id": "78259e09-b60e-4a6b-a3b2-40c610644af0",
+            "name": "wooden_crate_02_lid"
+          }
+        }
+      },
+      "file": null,
+      "path": [
+        309264968,
+        309264974
+      ],
+      "id": 309265098,
+      "uniqueId": 309265098,
+      "createdAt": "2026-09-30T10:33:38.209Z",
+      "modifiedAt": null,
+      "scope": {
+        "type": "project",
+        "id": 1610400
+      },
+      "user_id": 729642,
+      "source_asset_id": null,
+      "revision": 1,
+      "source": false,
+      "preload": true,
+      "region": "eu-west-1",
+      "type": "template",
+      "task": null,
+      "checkpoint_id": "d1aa0fa5-f325-4d8c-9a9c-9f15a0bbcd2c",
+      "has_thumbnail": false,
+      "immutable_backup": null,
+      "license": null,
+      "i18n": {},
+      "exclude": false,
+      "same_as_backup": 0,
+      "taskInfo": null
+    }
+  ],
+  "meta": {
+    "tool": "assets:list",
+    "status": "ok",
+    "total": 52,
+    "count": 52,
+    "hasMore": false,
+    "nextCursor": null
+  }
+}

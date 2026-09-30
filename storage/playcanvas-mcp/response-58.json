@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":{\"cameraId\":\"e951effe-82e0-11ee-9eae-baf4d5e490e2\",\"position\":[0,7.802000045776367,11.293999671936035],\"rotation\":[-34.377001238332234,0,0],\"projection\":\"perspective\",\"orthoHeight\":4,\"grid\":{\"divisions\":8,\"size\":1},\"bones\":true,\"iconSize\":0.2,\"expanded\":false},\"meta\":{\"tool\":\"viewport:state:set\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 58
+}

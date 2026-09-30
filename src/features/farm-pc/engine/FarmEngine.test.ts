@@ -157,6 +157,24 @@ describe('FarmEngine on a null device', () => {
     expect(e.appForDebug.timeScale).toBe(1);
   });
 
+  it('cancels an in-flight pop and refuses replay under reduced motion', () => {
+    const e = start();
+    e.setView(view());
+    e.setView(view([{ crop: 'herbs', stage: 'ready' }]));
+    const entity = find(e, CORNER.plot(1)).findByName('pop') as Entity;
+    const pop = scriptOf(entity, Pop);
+    pop.play();
+    tick(e, 0.1);
+    expect(pop.playing).toBe(true);
+    e.setEnv({ ...ENV, reduced: true });
+    expect(pop.playing).toBe(false);
+    const rest = entity.getLocalScale().clone();
+    pop.play();
+    tick(e, 0.1);
+    expect(pop.playing).toBe(false);
+    expect(entity.getLocalScale().equals(rest)).toBe(true);
+  });
+
   it('can be destroyed twice', () => {
     const e = start();
     e.setView(view());

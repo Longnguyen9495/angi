@@ -12,6 +12,11 @@ import {
   Color,
   ConeGeometry,
   ContainerHandler,
+  MaterialHandler,
+  RenderHandler,
+  ModelHandler,
+  JsonHandler,
+  BinaryHandler,
   CylinderGeometry,
   DEVICETYPE_WEBGL2,
   Entity,
@@ -74,6 +79,7 @@ import {
 } from '../sceneLayout';
 import { cliffGeometry, groundGeometry, groundHeight, prismGeometry } from './geometry';
 import { CORNER } from '../naming';
+import { loadCorner, type LoadedCorner } from './sceneLoader';
 import { emitEffect, emitEnv, emitView } from '../scripts/events';
 import { DoorOnSelect, Lamp, Pop, Sway } from '../scripts/motion';
 import { ENV_BACKDROP, ENV_HDR, TEX_SETS, texUrl, type TexMap, type TexSetId } from './textures';
@@ -181,6 +187,12 @@ export class FarmEngine implements FarmEngineHandle {
   private readonly opts: FarmEngineOptions;
   private env: FarmEnv;
   private destroyed = false;
+  private readonly sceneAbort = new AbortController();
+  private loadedCorner: LoadedCorner | null = null;
+  private proceduralWorld: Entity | null = null;
+  /** Settles even on export errors: the procedural presentation remains available. */
+  sceneReady: Promise<void> = Promise.resolve();
+  sceneError: unknown = null;
   private active = true;
 
   private readonly mats = new Map<string, StandardMaterial>();
@@ -314,6 +326,130 @@ export class FarmEngine implements FarmEngineHandle {
     this.canvas.addEventListener('pointerup', this.onUp);
     this.canvas.addEventListener('pointercancel', this.onCancel);
     this.canvas.addEventListener('webglcontextlost', this.onContextLost);
+  }
+
+  loadVersionedScene(url: string) {
+    const timer = window.setTimeout(() => this.sceneAbort.abort(), 10_000);
+    this.sceneReady = loadCorner(this.app, url, this.sceneAbort.signal)
+      .then((loaded) => {
+        if (this.destroyed) {
+          loaded.dispose();
+          return;
+        }
+        try {
+          if (
+            this.view &&
+            this.view.plots.map((p) => p.id).join(',') !== loaded.plotIds.join(',')
+          ) {
+            throw new Error('Scene plot IDs do not match domain view');
+          }
+          const corner = (
+            loaded.hierarchy.name === CORNER.root
+              ? loaded.hierarchy
+              : loaded.hierarchy.findByName(CORNER.root)
+          ) as Entity;
+          const nodes = new Map<number, PlotNode>();
+          loaded.plotIds.forEach((id, i) => {
+            const root = corner.findByName(CORNER.plot(id)) as Entity;
+            const soil = root.children.find((c) => c.name === CORNER.soil) as Entity;
+            const anchor = root.children.find((c) => c.name === CORNER.crop) as Entity;
+            if (!soil.render?.meshInstances.length || anchor.children.length)
+              throw new Error('Soil render / empty crop anchor required');
+            const thirsty = new Entity('thirsty');
+            const ripe = new Entity('ripe');
+            root.addChild(thirsty);
+            root.addChild(ripe);
+            this.prim(
+              'sphere',
+              this.mat('thirsty', PALETTE.thirsty, { glow: 0.5 }),
+              [0, 1, 0],
+              [0.16, 0.16, 0.16],
+              [0, 0, 0],
+              thirsty,
+              false,
+            );
+            this.prim(
+              'sphere',
+              this.mat('ripe', PALETTE.select, { glow: 0.6 }),
+              [0.35, 1, 0],
+              [0.16, 0.16, 0.16],
+              [0, 0, 0],
+              ripe,
+              false,
+            );
+            thirsty.enabled = ripe.enabled = false;
+            nodes.set(i, { root, soil, anchor, crop: null, cropKey: '', thirsty, ripe });
+          });
+          const sun = corner.findByName(CORNER.sun) as Entity;
+          if (!sun.light) throw new Error('Scene sun requires light component');
+          const door = corner.findByName(CORNER.barnDoor) as Entity;
+          door.addComponent('script');
+          door.script!.create(DoorOnSelect, { properties: { openAngle: -105 } });
+          for (const camera of loaded.hierarchy.findComponents('camera')) camera.enabled = false;
+          this.proceduralWorld = this.world;
+          this.proceduralWorld.enabled = false;
+          this.app.root.addChild(loaded.hierarchy);
+          this.app.systems.fire('initialize', loaded.hierarchy);
+          this.app.systems.fire('postInitialize', loaded.hierarchy);
+          this.app.systems.fire('postPostInitialize', loaded.hierarchy);
+          this.loadedCorner = loaded;
+          this.world = corner;
+          this.sun = sun;
+          this.world.addChild(this.ring);
+          this.plots.clear();
+          nodes.forEach((node, i) => this.plots.set(i, node));
+          this.bedCount = loaded.plotIds.length;
+          this.picks.length = 0;
+          const hit = corner.findByName(CORNER.barnHit) as Entity;
+          const box = new BoundingBox();
+          box.setFromTransformedAabb(
+            new BoundingBox(new V3(), new V3(0.5, 0.5, 0.5)),
+            hit.getWorldTransform(),
+          );
+          this.picks.push({ sel: { kind: 'barn' }, box });
+          nodes.forEach((node, i) =>
+            this.picks.push({
+              sel: { kind: 'plot', id: loaded.plotIds[i]! },
+              box: new BoundingBox(
+                node.root
+                  .getPosition()
+                  .clone()
+                  .add(new V3(0, 0.3, 0)),
+                new V3(BED.cell / 2, 0.45, BED.cell / 2),
+              ),
+            }),
+          );
+          this.applyEnv(this.env, false);
+          if (this.view) this.setView(this.view);
+        } catch (error) {
+          loaded.dispose();
+          this.sceneError = error;
+        }
+      })
+      .catch((error: unknown) => {
+        if (!this.destroyed) this.sceneError = error;
+      })
+      .finally(() => window.clearTimeout(timer));
+  }
+
+  private fallbackScene() {
+    if (!this.loadedCorner || !this.proceduralWorld) return;
+    this.proceduralWorld.addChild(this.ring);
+    this.loadedCorner.dispose();
+    this.loadedCorner = null;
+    this.world = this.proceduralWorld;
+    this.world.enabled = true;
+    this.proceduralWorld = null;
+    this.sun = this.world.findByName(CORNER.sun) as Entity;
+    this.bed = this.world.findByName(CORNER.bed) as Entity | null;
+    this.bedCount = -1;
+    this.plots.clear();
+    this.picks.length = 0;
+    this.picks.push({
+      sel: { kind: 'barn' },
+      box: new BoundingBox(new V3(BARN.x, 1.2, BARN.z), new V3(1.7, 1.4, 1.6)),
+    });
+    this.applyEnv(this.env, false);
   }
 
   private mat(
@@ -1194,7 +1330,15 @@ export class FarmEngine implements FarmEngineHandle {
   setView(view: FarmView) {
     if (this.destroyed) return;
     this.view = view;
-    if (view.plots.length !== this.bedCount) {
+    if (
+      this.loadedCorner &&
+      view.plots.map((p) => p.id).join(',') !== this.loadedCorner.plotIds.join(',')
+    )
+      this.fallbackScene();
+    if (
+      view.plots.length !== this.bedCount ||
+      view.plots.some((p, i) => this.plots.get(i)?.root.name !== CORNER.plot(p.id))
+    ) {
       this.buildBed(view.plots.map((p) => p.id));
       view.plots.forEach((_, i) => {
         const c = bedCell(i, view.plots.length);
@@ -1245,7 +1389,13 @@ export class FarmEngine implements FarmEngineHandle {
       const i = this.view.plots.findIndex((p) => p.id === id);
       if (i < 0) continue;
       const c = bedCell(i, this.view.plots.length);
-      this.spawnBurst(effect.kind, c.x, BED.height + 0.1, c.z);
+      const pos = this.loadedCorner ? this.plots.get(i)?.root.getPosition() : undefined;
+      this.spawnBurst(
+        effect.kind,
+        pos?.x ?? c.x,
+        pos ? pos.y + 0.1 : BED.height + 0.1,
+        pos?.z ?? c.z,
+      );
     }
     this.requestFrame();
   }
@@ -1291,6 +1441,9 @@ export class FarmEngine implements FarmEngineHandle {
   destroy() {
     if (this.destroyed) return;
     this.destroyed = true;
+    this.sceneAbort.abort();
+    this.loadedCorner?.dispose();
+    this.loadedCorner = null;
     this.canvas.removeEventListener('pointerdown', this.onDown);
     this.canvas.removeEventListener('pointermove', this.onMove);
     this.canvas.removeEventListener('pointerup', this.onUp);
@@ -1410,7 +1563,19 @@ export class FarmEngine implements FarmEngineHandle {
       s = 3.6;
     }
     this.ring.enabled = true;
-    this.ring.setLocalPosition(x, y, z);
+    if (this.loadedCorner) {
+      const target =
+        sel.kind === 'plot'
+          ? this.world.findByName(CORNER.plot(sel.id))
+          : this.world.findByName(CORNER.barnHit);
+      if (target) {
+        const pos = target.getPosition();
+        x = pos.x;
+        z = pos.z;
+        y = sel.kind === 'plot' ? pos.y + 0.1 : 0.06;
+      }
+    }
+    this.ring.setPosition(x, y, z);
     this.ringScale = s;
     this.ring.setLocalScale(s, 1, s);
     // Lean the camera gently towards the selection; never lose the whole corner.
@@ -1604,7 +1769,15 @@ export function startFarmEngine(
     LightComponentSystem,
     ScriptComponentSystem,
   ];
-  o.resourceHandlers = [TextureHandler, ContainerHandler];
+  o.resourceHandlers = [
+    TextureHandler,
+    ContainerHandler,
+    MaterialHandler,
+    RenderHandler,
+    ModelHandler,
+    JsonHandler,
+    BinaryHandler,
+  ];
   app.init(o);
   app.setCanvasFillMode(FILLMODE_NONE);
   app.setCanvasResolution(RESOLUTION_AUTO);
@@ -1614,6 +1787,7 @@ export function startFarmEngine(
     engine.resize();
     app.start();
     if (loadAssets) engine.loadAssets();
+    if (opts.sceneConfigUrl) engine.loadVersionedScene(opts.sceneConfigUrl);
   } catch (err) {
     engine.destroy();
     throw err;

@@ -1,0 +1,64 @@
+{
+  "entry": "src/features/farm-pc/scripts/motion.ts",
+  "output": "storage/playcanvas-mcp/farm-motion.mjs",
+  "esbuildVersion": "0.25.12",
+  "format": "esm",
+  "target": "es2022",
+  "external": [
+    "playcanvas"
+  ],
+  "classes": [
+    {
+      "className": "Sway",
+      "scriptName": "farmSway",
+      "attributes": [
+        "amplitude",
+        "speed",
+        "phase"
+      ]
+    },
+    {
+      "className": "Pop",
+      "scriptName": "farmPop",
+      "attributes": [
+        "duration",
+        "from",
+        "playOnStart"
+      ]
+    },
+    {
+      "className": "DoorOnSelect",
+      "scriptName": "farmDoor",
+      "attributes": [
+        "openAngle",
+        "target"
+      ]
+    },
+    {
+      "className": "Lamp",
+      "scriptName": "farmLamp",
+      "attributes": [
+        "intensity",
+        "glow"
+      ]
+    },
+    {
+      "className": "PlayFx",
+      "scriptName": "farmFx",
+      "attributes": [
+        "kind",
+        "lift"
+      ]
+    }
+  ],
+  "checks": {
+    "moduleSyntax": true,
+    "directExportClasses": true,
+    "scriptNames": true,
+    "attributeComments": true,
+    "noRelativeImports": true
+  },
+  "editorParserVerified": false,
+  "runtimeVerified": false,
+  "parentFollowUp": "Verify registration of all five scripts and their attribute types in the Editor parser; then Launch and test event delivery, initial state, reduced motion and cleanup. No MCP/upload performed by this tool."
+}

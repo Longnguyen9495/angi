@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":{\"name\":\"farm-atlas.png\",\"tags\":[\"angi-original\",\"corner-model-v2\"],\"meta\":{\"compress\":{\"alpha\":false,\"normals\":false,\"dxt\":false,\"pvr\":false,\"pvrBpp\":4,\"etc1\":false,\"etc2\":false,\"basis\":false,\"quality\":128,\"compressionMode\":\"etc\"},\"format\":null,\"type\":null,\"width\":null,\"height\":null,\"alpha\":false,\"depth\":8,\"srgb\":false,\"interlaced\":false},\"data\":{\"addressu\":\"repeat\",\"addressv\":\"repeat\",\"minfilter\":\"linear_mip_linear\",\"magfilter\":\"linear\",\"anisotropy\":1,\"rgbm\":false,\"srgb\":true,\"mipmaps\":true},\"file\":null,\"path\":[],\"id\":309298319,\"uniqueId\":309298319,\"type\":\"texture\",\"source\":false,\"source_asset_id\":null,\"createdAt\":\"2026-09-30T16:10:01.177Z\",\"scope\":{\"type\":\"project\",\"id\":1610400},\"user_id\":729642,\"revision\":1,\"preload\":true,\"exclude\":false,\"region\":\"eu-west-1\",\"task\":\"running\",\"i18n\":{},\"checkpoint_id\":0,\"has_thumbnail\":false,\"immutable_backup\":null,\"license\":null,\"same_as_backup\":0,\"taskInfo\":null},\"meta\":{\"tool\":\"assets:get\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 49
+}

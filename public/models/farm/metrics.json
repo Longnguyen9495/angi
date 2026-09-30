@@ -1,0 +1,275 @@
+{
+  "generator": "scripts/generate-farm-models.mjs",
+  "atlas": {
+    "width": 512,
+    "height": 512,
+    "bytes": 150655
+  },
+  "files": [
+    {
+      "file": "barn.glb",
+      "triangles": 2042,
+      "bytes": 348812,
+      "budget": 6000
+    },
+    {
+      "file": "tree-broadleaf.glb",
+      "triangles": 792,
+      "bytes": 232292,
+      "budget": 4000
+    },
+    {
+      "file": "bed.glb",
+      "triangles": 300,
+      "bytes": 180872,
+      "budget": 2500
+    },
+    {
+      "file": "path-stones.glb",
+      "triangles": 168,
+      "bytes": 168328,
+      "budget": 1200
+    },
+    {
+      "file": "crops/crop-rice-sprout.glb",
+      "triangles": 12,
+      "bytes": 153344,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-rice-young.glb",
+      "triangles": 36,
+      "bytes": 155652,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-rice-flowering.glb",
+      "triangles": 612,
+      "bytes": 210916,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-rice-ready.glb",
+      "triangles": 612,
+      "bytes": 210900,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-herbs-sprout.glb",
+      "triangles": 38,
+      "bytes": 155820,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-herbs-young.glb",
+      "triangles": 200,
+      "bytes": 171388,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-herbs-flowering.glb",
+      "triangles": 280,
+      "bytes": 179080,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-herbs-ready.glb",
+      "triangles": 280,
+      "bytes": 179068,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-chili-sprout.glb",
+      "triangles": 38,
+      "bytes": 155820,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-chili-young.glb",
+      "triangles": 162,
+      "bytes": 167752,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-chili-flowering.glb",
+      "triangles": 222,
+      "bytes": 173520,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-chili-ready.glb",
+      "triangles": 270,
+      "bytes": 178120,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-scallion-sprout.glb",
+      "triangles": 12,
+      "bytes": 153356,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-scallion-young.glb",
+      "triangles": 36,
+      "bytes": 155664,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-scallion-flowering.glb",
+      "triangles": 392,
+      "bytes": 189808,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-scallion-ready.glb",
+      "triangles": 392,
+      "bytes": 189808,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-bean-sprout.glb",
+      "triangles": 38,
+      "bytes": 155816,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-bean-young.glb",
+      "triangles": 202,
+      "bytes": 171608,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-bean-flowering.glb",
+      "triangles": 262,
+      "bytes": 177380,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-bean-ready.glb",
+      "triangles": 310,
+      "bytes": 181976,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-tomato-sprout.glb",
+      "triangles": 38,
+      "bytes": 155824,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-tomato-young.glb",
+      "triangles": 162,
+      "bytes": 167756,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-tomato-flowering.glb",
+      "triangles": 222,
+      "bytes": 173524,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-tomato-ready.glb",
+      "triangles": 330,
+      "bytes": 183852,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-lemongrass-sprout.glb",
+      "triangles": 12,
+      "bytes": 153364,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-lemongrass-young.glb",
+      "triangles": 52,
+      "bytes": 157208,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-lemongrass-flowering.glb",
+      "triangles": 52,
+      "bytes": 157228,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-lemongrass-ready.glb",
+      "triangles": 52,
+      "bytes": 157212,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-garlic-sprout.glb",
+      "triangles": 12,
+      "bytes": 153352,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-garlic-young.glb",
+      "triangles": 36,
+      "bytes": 155656,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-garlic-flowering.glb",
+      "triangles": 392,
+      "bytes": 189800,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-garlic-ready.glb",
+      "triangles": 672,
+      "bytes": 216680,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-cucumber-sprout.glb",
+      "triangles": 38,
+      "bytes": 155828,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-cucumber-young.glb",
+      "triangles": 202,
+      "bytes": 171620,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-cucumber-flowering.glb",
+      "triangles": 262,
+      "bytes": 177392,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-cucumber-ready.glb",
+      "triangles": 310,
+      "bytes": 181988,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-lime-sprout.glb",
+      "triangles": 38,
+      "bytes": 155820,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-lime-young.glb",
+      "triangles": 162,
+      "bytes": 167748,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-lime-flowering.glb",
+      "triangles": 222,
+      "bytes": 173520,
+      "budget": 800
+    },
+    {
+      "file": "crops/crop-lime-ready.glb",
+      "triangles": 330,
+      "bytes": 183844,
+      "budget": 800
+    }
+  ],
+  "totalBytes": 7786316
+}

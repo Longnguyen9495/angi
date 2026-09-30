@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":[{\"resource_id\":\"37fb46ac-7426-4287-8b26-dfa206468f7a\",\"name\":\"model-barn-body\",\"path\":\"Root/corner-root/barn/model-barn-body\",\"parent\":\"c60c2ee9-abcc-4597-a009-2da185135a21\",\"enabled\":true,\"tags\":[],\"components\":[\"render\"]},{\"resource_id\":\"ef685979-5ddf-4afb-9085-1bdc0ca586a4\",\"name\":\"model-barn-door\",\"path\":\"Root/corner-root/barn/barn-door/model-barn-door\",\"parent\":\"359f180b-3cbd-4e29-a568-176dac158acd\",\"enabled\":true,\"tags\":[],\"components\":[\"render\"]}],\"meta\":{\"tool\":\"entities:create\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 37
+}

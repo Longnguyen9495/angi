@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"scripts/**/*.mjs\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"scripts/**/*.mjs\"",
-    "test": "vitest run",
+    "test": "node scripts/run-vitest.mjs run",
     "assets:food-reel": "node scripts/extract-food-atlas.mjs",
     "assets:garden": "node scripts/generate-crop-sprites.mjs",
     "check:motion": "node scripts/check-no-svg-animation.mjs",

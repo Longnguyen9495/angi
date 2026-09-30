@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":{\"succeeded\":[{\"id\":309298319,\"result\":{\"id\":309298319,\"uniqueId\":309298319,\"createdAt\":\"2026-09-30T16:10:01.177Z\",\"modifiedAt\":\"2026-09-30T16:42:05.866Z\",\"file\":{\"filename\":\"farm-atlas.png\",\"size\":150655,\"hash\":\"b84b6dd02e854eaab90477d40288adbb\",\"variants\":{},\"url\":\"/api/assets/309298319/file/farm-atlas.png?branchId=d194d3e9-f0b4-45a2-a1f6-f8f42f539842\"},\"hasThumbnail\":true,\"name\":\"farm-atlas.png\",\"type\":\"texture\",\"scope\":{\"type\":\"project\",\"id\":1610400},\"source\":false,\"tags\":[\"angi-original\",\"corner-model-v2\"],\"task\":null,\"taskInfo\":null,\"preload\":true,\"exclude\":false,\"data\":{\"addressu\":\"repeat\",\"addressv\":\"repeat\",\"minfilter\":\"linear_mip_linear\",\"magfilter\":\"linear\",\"anisotropy\":1,\"rgbm\":false,\"srgb\":true,\"mipmaps\":true},\"i18n\":{},\"sourceId\":null,\"parent\":null}}],\"failed\":[]},\"meta\":{\"tool\":\"assets:reimport\",\"status\":\"ok\",\"partial\":false}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 55
+}

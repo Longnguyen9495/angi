@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":{\"id\":\"a9e857d7-9e46-48c5-83c3-892680b559af\",\"user\":{\"id\":729642,\"fullName\":\"Nguyen Thanh Long\",\"username\":\"longnguyen9495\"},\"createdAt\":\"2026-09-30T16:04:03.165Z\",\"description\":\"Before model import batch: preserve gameplay names primitives door hit soil crop; parent resumed 2026-09-30\"},\"meta\":{\"tool\":\"vcs:checkpoint:create\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 21
+}

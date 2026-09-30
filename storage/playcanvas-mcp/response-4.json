@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":{\"projectId\":1610400,\"branch\":{\"id\":\"d194d3e9-f0b4-45a2-a1f6-f8f42f539842\",\"name\":\"main\",\"latestCheckpointId\":\"d1aa0fa5-f325-4d8c-9a9c-9f15a0bbcd2c\"},\"mergeInProgress\":false},\"meta\":{\"tool\":\"vcs:status\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 4
+}

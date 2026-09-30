@@ -66,6 +66,8 @@ export type FarmBlock =
 
 export interface FarmEngineOptions {
   canvas: HTMLCanvasElement;
+  /** Optional versioned presentation export; absent keeps the procedural corner. */
+  sceneConfigUrl?: string;
   env: FarmEnv;
   onIntent: (intent: FarmIntent) => void;
   /** WebGL context lost or the device failed after start-up. */

@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":{\"id\":\"18c7c35b-4a02-451b-b1e9-ee2ed4fb7e65\",\"user\":{\"id\":729642,\"fullName\":\"Nguyen Thanh Long\",\"username\":\"longnguyen9495\"},\"createdAt\":\"2026-09-30T16:42:05.610Z\",\"description\":\"Before particles and motion bindings; structural models imported, anchors validated; atlas processing unresolved 2026-09-30\"},\"meta\":{\"tool\":\"vcs:checkpoint:create\",\"status\":\"ok\"}}"
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 54
+}

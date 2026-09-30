@@ -1,0 +1,13 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":null,\"meta\":{\"tool\":\"assets:get\",\"status\":\"error\",\"message\":\"Editor not connected. Open the PlayCanvas Editor, click the MCP button at the bottom of the toolbar and press CONNECT, then retry. If it stays on \\\"Connecting\\\", the browser may be blocking its connection to 127.0.0.1: allow local access for the editor origin in site settings (\\\"Apps on device\\\" in Chrome).\"}}"
+      }
+    ],
+    "isError": true
+  },
+  "jsonrpc": "2.0",
+  "id": 64
+}
