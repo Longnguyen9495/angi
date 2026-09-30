@@ -24,7 +24,16 @@ function env(string $key, ?string $default = null): ?string
                     continue;
                 }
                 [$k, $v] = explode('=', $line, 2);
-                $vars[trim($k)] = trim($v);
+                $v = trim($v);
+                // Laravel-style values: "quoted", 'quoted', null, and ${OTHER_KEY} references.
+                if (strlen($v) >= 2 && ($v[0] === '"' || $v[0] === "'") && $v[-1] === $v[0]) {
+                    $v = substr($v, 1, -1);
+                }
+                if (strtolower($v) === 'null') {
+                    $v = '';
+                }
+                $v = preg_replace_callback('/\$\{([A-Z0-9_]+)\}/', fn ($m) => $vars[$m[1]] ?? '', $v) ?? $v;
+                $vars[trim($k)] = $v;
             }
         }
     }

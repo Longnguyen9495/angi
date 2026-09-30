@@ -6,19 +6,29 @@ import { SLOT_LABEL, mealSlot, slotKey } from '../../../domain/time';
 import { useGame } from '../../../state/hooks';
 import type { ReelDish } from '../foodReel.types';
 import { splitName } from '../utils';
+import type { ShopeeCity } from '../data/orderLinks';
+import { OrderLinks } from './OrderLinks';
 import { SplitLines } from './SplitLines';
 
 interface ChosenEpilogueProps {
   dish: ReelDish;
   onSpinAgain: () => void;
   onJourney: () => void;
+  orderCity: ShopeeCity;
+  onOrderCity: (city: ShopeeCity) => void;
 }
 
 /**
  * Scene F: only after a dish is confirmed does the game appear — as an
  * epilogue reusing the idempotent seed reward, never next to the reel.
  */
-export function ChosenEpilogue({ dish, onSpinAgain, onJourney }: ChosenEpilogueProps) {
+export function ChosenEpilogue({
+  dish,
+  onSpinAgain,
+  onJourney,
+  orderCity,
+  onOrderCity,
+}: ChosenEpilogueProps) {
   const { state, now } = useGame();
   const meal = state.meal?.slotKey === slotKey(now) ? state.meal : null;
 
@@ -60,6 +70,9 @@ export function ChosenEpilogue({ dish, onSpinAgain, onJourney }: ChosenEpilogueP
             </p>
           </div>
         </div>
+
+        {/* Choosing is only half the lunch: hand the dish to a map or a delivery app. */}
+        <OrderLinks dishName={dish.name} city={orderCity} onCity={onOrderCity} />
 
         <div className="fr-epilogue__reward">
           {meal ? (

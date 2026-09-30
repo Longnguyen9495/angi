@@ -1,0 +1,102 @@
+import { BASE_CROPS, CROP_LIST } from '../data/game';
+import type { CropId } from '../data/types';
+import type { GuestProgress } from './progress';
+import { dateKey } from './time';
+
+export interface OrderReward {
+  xp: number;
+  seeds: { crop: CropId; qty: number }[];
+  water: number;
+}
+
+/** A small request from Cô Ba: hand over produce, get seeds, water and XP. */
+export interface ChefOrder {
+  id: string;
+  line: string;
+  items: { crop: CropId; qty: number }[];
+  reward: OrderReward;
+}
+
+export const ORDERS_PER_DAY = 2;
+
+// What Cô Ba is cooking today; one line per order, picked by the day's hash.
+const LINES = [
+  'Quán đông khách trưa nay, Cô Ba cần gấp ít nguyên liệu.',
+  'Cô Ba đang ninh nồi nước dùng, còn thiếu chút nữa thôi.',
+  'Có khách đặt cỗ tối nay — giúp Cô Ba một tay nhé.',
+  'Cô Ba muốn thử một món mới, cần nguyên liệu tươi từ vườn.',
+  'Chợ sáng hết hàng, Cô Ba nhờ khu vườn của bạn.',
+  'Nồi canh chua đang chờ, chỉ thiếu vài thứ từ vườn.',
+];
+
+function hash(text: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 16777619);
+  return h >>> 0;
+}
+
+function rng(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function pick<T>(list: readonly T[], n: number, r: () => number): T[] {
+  const pool = [...list];
+  const out: T[] = [];
+  while (out.length < n && pool.length > 0)
+    out.push(pool.splice(Math.floor(r() * pool.length), 1)[0]!);
+  return out;
+}
+
+/**
+ * Today's orders, the same for everyone on a given local day: one small order
+ * (two produce, pays a can of water and a seed) and one larger one (three
+ * produce, pays two seeds and more XP). Only crops the guest can grow appear.
+ */
+export function dailyOrders(date: string, crops: readonly CropId[] = BASE_CROPS): ChefOrder[] {
+  const r = rng(hash(`co-ba:${date}`));
+  const small = pick(crops, 2, r);
+  const big = pick(crops, 3, r);
+  const seedOf = () => crops[Math.floor(r() * crops.length)]!;
+  return [
+    {
+      id: `${date}:0`,
+      line: LINES[Math.floor(r() * LINES.length)]!,
+      items: small.map((crop) => ({ crop, qty: 1 })),
+      reward: { xp: 15, seeds: [{ crop: seedOf(), qty: 1 }], water: 1 },
+    },
+    {
+      id: `${date}:1`,
+      line: LINES[Math.floor(r() * LINES.length)]!,
+      items: big.map((crop, i) => ({ crop, qty: i === 0 ? 2 : 1 })),
+      reward: {
+        xp: 30,
+        seeds: pick(crops, 2, r).map((crop) => ({ crop, qty: 1 })),
+        water: 0,
+      },
+    },
+  ];
+}
+
+export function todaysOrders(p: GuestProgress, now: number): ChefOrder[] {
+  return dailyOrders(dateKey(now), orderCrops(p));
+}
+
+/** Crops that can show up in orders: the base six plus any the guest has unlocked. */
+export function orderCrops(p: GuestProgress): CropId[] {
+  return CROP_LIST.filter((c) => !c.unlock || p.unlockedCrops.includes(c.id)).map((c) => c.id);
+}
+
+export function orderDone(p: GuestProgress, order: ChefOrder): boolean {
+  return p.orders.done.includes(order.id);
+}
+
+export function canFulfill(p: GuestProgress, order: ChefOrder): boolean {
+  return !orderDone(p, order) && order.items.every((i) => p.ingredients[i.crop] >= i.qty);
+}

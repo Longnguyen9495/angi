@@ -461,3 +461,169 @@
   gap: 12px;
   justify-content: flex-end;
 }
+
+/* ——— Tìm quán & đặt món ——— */
+.fr-order {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  padding: 18px 20px;
+  border: 1px solid var(--fr-line-strong);
+  border-radius: 22px;
+  background: rgb(12 12 11 / 45%);
+  text-align: left;
+}
+
+.fr-order--compact {
+  margin: 8px var(--fr-gutter) 18px;
+  width: auto;
+}
+
+.fr-order__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+.fr-order__title {
+  margin: 0;
+  font-family: var(--fr-display);
+  font-weight: 480;
+  font-size: 1.2rem;
+}
+
+.fr-order__city {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--fr-muted);
+  font-size: 0.78rem;
+}
+
+.fr-order__city select {
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--fr-line-strong);
+  border-radius: 999px;
+  background: var(--fr-canvas-2);
+  color: var(--fr-ivory);
+  font: inherit;
+}
+
+.fr-order__list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.fr-order__link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 8px 12px;
+  border: 1px solid var(--fr-line);
+  border-radius: 16px;
+  color: var(--fr-ivory);
+  text-decoration: none;
+  transition:
+    border-color 180ms var(--fr-ease),
+    background-color 180ms var(--fr-ease);
+}
+
+.fr-order__link:hover {
+  border-color: var(--fr-line-strong);
+  background: rgb(244 237 225 / 4%);
+}
+
+.fr-order__link:focus-visible {
+  outline: 2px solid var(--fr-gold);
+  outline-offset: 2px;
+}
+
+.fr-order__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--svc, var(--fr-gold));
+  color: #fff;
+}
+
+.fr-order__link--maps {
+  --svc: #1a73e8;
+}
+
+.fr-order__link--grab {
+  --svc: #00a94f;
+}
+
+.fr-order__link--shopee {
+  --svc: #ee4d2d;
+}
+
+.fr-order__link--be {
+  --svc: #e8a700;
+}
+
+.fr-order__text {
+  display: grid;
+  min-width: 0;
+}
+
+.fr-order__name {
+  font-weight: 600;
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+
+.fr-order__note {
+  color: var(--fr-soft);
+  font-size: 0.72rem;
+}
+
+.fr-order__out {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--fr-soft);
+}
+
+.fr-order__fine {
+  color: var(--fr-soft);
+  font-size: 0.72rem;
+}
+
+@media (max-width: 900px) {
+  .fr-order__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .fr-order {
+    padding: 16px 14px;
+  }
+
+  .fr-order__link {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .fr-order__icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .fr-order__name {
+    font-size: 0.82rem;
+  }
+
+  /* No room for the external-link mark next to the name on phones. */
+  .fr-order__out {
+    display: none;
+  }
+}

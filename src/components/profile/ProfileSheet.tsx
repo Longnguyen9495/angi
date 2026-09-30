@@ -4,7 +4,9 @@ import { getDish } from '../../data/dishes';
 import type { MotionPref } from '../../domain/progress';
 import { exportProgress } from '../../domain/persistence';
 import { level, stampCount } from '../../domain/selectors';
-import { useFeedback, useGame } from '../../state/hooks';
+import { clearPhotos } from '../../services/photoStore';
+import { useAccount, useFeedback, useGame } from '../../state/hooks';
+import { AccountBlock } from '../account/AccountBlock';
 import { ProgressBar } from '../ui/ProgressBar';
 import { Sheet } from '../ui/Sheet';
 import { currentTime } from '../../domain/time';
@@ -34,6 +36,7 @@ export function ProfileSheet({
   const { toast } = useFeedback();
   const [confirmReset, setConfirmReset] = useState(false);
   const lv = level(state.xp);
+  const signedIn = useAccount().status === 'signed-in';
 
   const download = () => {
     const blob = new Blob([exportProgress(state)], { type: 'application/json' });
@@ -54,7 +57,11 @@ export function ProfileSheet({
         onClose();
       }}
       title="Hồ sơ khách"
-      description="Tiến trình được lưu trên thiết bị này. Chưa cần tài khoản."
+      description={
+        signedIn
+          ? 'Tiến trình được lưu trên máy này và trong tài khoản của bạn.'
+          : 'Tiến trình được lưu trên thiết bị này. Chưa cần tài khoản.'
+      }
     >
       <div className="profile">
         <section className="profile__block" aria-labelledby="pf-level">
@@ -76,6 +83,8 @@ export function ProfileSheet({
             Bỏ một ngày chỉ lùi một mốc (3 · 5 · 7 ngày), không bao giờ về 0.
           </p>
         </section>
+
+        <AccountBlock />
 
         <fieldset className="profile__block option-group">
           <legend className="profile__heading">Chuyển động</legend>
@@ -176,11 +185,17 @@ export function ProfileSheet({
             </button>
             {confirmReset ? (
               <span className="profile__confirm" role="group" aria-label="Xác nhận xóa tiến trình">
+                <span className="profile__confirm-note">
+                  {signedIn
+                    ? 'Xoá tiến trình, ảnh trên máy này và bản lưu trong tài khoản?'
+                    : 'Xoá tiến trình và ảnh trên máy này?'}
+                </span>
                 <button
                   type="button"
                   className="btn btn--danger btn--sm"
                   onClick={() => {
                     dispatch({ type: 'RESET', now: currentTime() });
+                    void clearPhotos().catch(() => undefined);
                     setConfirmReset(false);
                     toast({ message: 'Đã bắt đầu hành trình mới.', tone: 'info' });
                   }}

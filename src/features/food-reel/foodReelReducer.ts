@@ -1,4 +1,4 @@
-import { dishAt, reelCount } from './data/reelCatalogue';
+import { CATALOGUE_VIEW, type ReelView } from './data/reelCatalogue';
 import { planSpin } from './engine/spin';
 import type { ReelEvent, ReelState } from './foodReel.types';
 import { accepts } from './foodReelMachine';
@@ -18,11 +18,14 @@ export function initialReelState(index = 0): ReelState {
   };
 }
 
-/** Pure scene reducer. Guards live in TRANSITIONS; each case assumes a valid phase. */
+/**
+ * Pure scene reducer. Guards live in TRANSITIONS; each case assumes a valid phase.
+ * `view` is what the reel spins over (whole catalogue or the guest's shortlist).
+ */
 export function foodReelReducer(
   state: ReelState,
   event: ReelEvent,
-  count = reelCount(),
+  view: ReelView = CATALOGUE_VIEW,
 ): ReelState {
   if (!accepts(state.phase, event.type)) return state;
 
@@ -50,13 +53,13 @@ export function foodReelReducer(
       };
 
     case 'SPIN': {
-      const spin = planSpin(state.index, event.seed, count);
+      const spin = planSpin(state.index, event.seed, view.count, { avoidCurrent: !view.pooled });
       return {
         ...state,
         phase: 'spinning',
         spin,
         spinCount: state.spinCount + 1,
-        winnerId: dishAt(spin.target).id,
+        winnerId: view.dishAt(spin.target).id,
         ready: false,
         pendingSpin: false,
         chosenId: null,
@@ -77,7 +80,9 @@ export function foodReelReducer(
       if (state.phase === 'selected' && !state.ready) return state;
       const detailId =
         event.dishId ??
-        (state.phase === 'selected' && state.winnerId ? state.winnerId : dishAt(state.index).id);
+        (state.phase === 'selected' && state.winnerId
+          ? state.winnerId
+          : view.dishAt(state.index).id);
       return {
         ...state,
         phase: 'opening-detail',

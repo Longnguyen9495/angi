@@ -18,6 +18,7 @@ import { gameReducer } from '../../domain/reducer';
 import { plotStage, recipeProgress } from '../../domain/selectors';
 import { useFeedback, useGame, useUi } from '../../state/hooks';
 import { Sheet } from '../ui/Sheet';
+import { PhotoCapture } from './PhotoCapture';
 import { currentTime } from '../../domain/time';
 
 const OUTCOMES: { id: CheckInOutcome; label: string; hint: string }[] = [
@@ -171,6 +172,9 @@ export function CheckInSheet({
             <li key={l}>{l}</li>
           ))}
         </ul>
+        {summary.outcome !== 'skipped' && (
+          <PhotoCapture slotKey={meal.slotKey} dishId={meal.dishId} />
+        )}
       </div>
     );
   } else if (meal.checkedIn) {
@@ -279,7 +283,9 @@ export function CheckInSheet({
       open={open}
       onClose={close}
       title="Check-in sau bữa"
-      description={dish ? `Món đã chọn: ${dish.name}. Không cần ảnh hay viết review.` : undefined}
+      description={
+        dish ? `Món đã chọn: ${dish.name}. Ảnh là tuỳ chọn, không cần viết review.` : undefined
+      }
       footer={
         summary ? (
           <>

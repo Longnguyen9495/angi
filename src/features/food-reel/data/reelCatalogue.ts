@@ -156,6 +156,56 @@ export function dishAt(virtualIndex: number): ReelDish {
   return dishes[((Math.round(virtualIndex) % n) + n) % n]!;
 }
 
+/**
+ * What the reel is currently spinning over: the whole catalogue, or a guest's
+ * shortlist ("Rổ quay"). Virtual indices wrap over `count`, so a shortlist of
+ * three repeats like a slot machine: A B C A B C…
+ */
+export interface ReelView {
+  readonly count: number;
+  /** True when the view is a shortlist rather than the whole catalogue. */
+  readonly pooled: boolean;
+  dishAt(virtualIndex: number): ReelDish;
+}
+
+/** The whole catalogue. Reads live, so a catalogue swapped in at boot is picked up. */
+export const CATALOGUE_VIEW: ReelView = {
+  get count() {
+    return dishes.length;
+  },
+  pooled: false,
+  dishAt,
+};
+
+/** Smallest shortlist worth spinning over. */
+export const POOL_MIN = 2;
+
+/** Dishes of `ids` that still exist, in the given order, without duplicates. */
+export function poolDishes(ids: readonly string[]): ReelDish[] {
+  const seen = new Set<string>();
+  const out: ReelDish[] = [];
+  for (const id of ids) {
+    const d = byId.get(id);
+    if (d && !seen.has(id)) {
+      seen.add(id);
+      out.push(d);
+    }
+  }
+  return out;
+}
+
+/** A shortlist view, or the whole catalogue when fewer than POOL_MIN dishes remain. */
+export function createReelView(ids: readonly string[] | null): ReelView {
+  const list = ids ? poolDishes(ids) : [];
+  if (list.length < POOL_MIN) return CATALOGUE_VIEW;
+  const n = list.length;
+  return {
+    count: n,
+    pooled: true,
+    dishAt: (vi) => list[((Math.round(vi) % n) + n) % n]!,
+  };
+}
+
 export function formatReelPrice(price: number): string {
   return `${price}k`;
 }

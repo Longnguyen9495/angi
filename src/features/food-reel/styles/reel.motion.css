@@ -199,6 +199,304 @@
   }
 }
 
+/* ——— Garden life ——— */
+@keyframes fj-stage-in {
+  from {
+    scale: 0.6;
+    opacity: 0;
+  }
+  to {
+    scale: 1;
+    opacity: 1;
+  }
+}
+
+@keyframes fj-sway {
+  from {
+    rotate: -3deg;
+  }
+  to {
+    rotate: 3deg;
+  }
+}
+
+@keyframes fj-drink {
+  0%,
+  100% {
+    scale: 1;
+  }
+  45% {
+    scale: 1.04 1.12;
+  }
+}
+
+@keyframes fj-ripe-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 rgb(244 214 120 / 0%));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgb(244 214 120 / 45%));
+  }
+}
+
+@keyframes fj-twinkle {
+  0%,
+  60%,
+  100% {
+    opacity: 0;
+    scale: 0.4;
+  }
+  75% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes fj-can-pour {
+  0% {
+    opacity: 0;
+    transform: translate(18px, -14px) rotate(0deg);
+  }
+  18% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg);
+  }
+  32%,
+  78% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(-32deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(16px, -12px) rotate(0deg);
+  }
+}
+
+@keyframes fj-flap {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0.25);
+  }
+}
+
+@keyframes fj-flutter-path {
+  0% {
+    transform: translate(4vw, 60px) rotate(8deg);
+  }
+  20% {
+    transform: translate(22vw, 10px) rotate(-6deg);
+  }
+  40% {
+    transform: translate(46vw, 90px) rotate(10deg);
+  }
+  60% {
+    transform: translate(64vw, 20px) rotate(-8deg);
+  }
+  80% {
+    transform: translate(36vw, 120px) rotate(6deg);
+  }
+  100% {
+    transform: translate(4vw, 60px) rotate(8deg);
+  }
+}
+
+@keyframes fj-firefly {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  30% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+    transform: translate(14px, -18px);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(-8px, -30px);
+  }
+}
+
+@keyframes fj-bump {
+  0%,
+  100% {
+    scale: 1;
+  }
+  40% {
+    scale: 1.45;
+  }
+}
+
+@keyframes fj-next-in {
+  from {
+    opacity: 0.3;
+    translate: 0 10px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* ——— Cooking ——— */
+@keyframes fj-lid-rattle {
+  from {
+    translate: -0.5px 0;
+    rotate: -1deg;
+  }
+  to {
+    translate: 0.5px -2.5px;
+    rotate: 1.2deg;
+  }
+}
+
+@keyframes fj-rattle {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-0.8px) rotate(-0.4deg);
+  }
+  75% {
+    transform: translateX(0.8px) rotate(0.4deg);
+  }
+}
+
+@keyframes fj-burst {
+  0% {
+    opacity: 0;
+    scale: 0.4;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 1.3;
+  }
+}
+
+@keyframes fj-ring {
+  from {
+    stroke-dashoffset: 0;
+    stroke: var(--fr-gold);
+  }
+  to {
+    stroke-dashoffset: -100;
+    stroke: var(--fr-copper-ink);
+  }
+}
+
+@keyframes fj-tick {
+  0%,
+  100% {
+    scale: 1;
+  }
+  15% {
+    scale: 1.12;
+  }
+}
+
+@keyframes fj-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes fj-sheen {
+  from {
+    background-position: -100% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes fj-label-in {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    translate: 0 8px;
+  }
+  to {
+    opacity: 1;
+    filter: none;
+    translate: 0 0;
+  }
+}
+
+@keyframes fj-flame {
+  from {
+    scale: 1 0.85;
+  }
+  to {
+    scale: 0.9 1.12;
+  }
+}
+
+@keyframes fj-drop-in {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(92px) rotate(160deg) scale(0.8);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(110px) rotate(200deg) scale(0.5);
+  }
+}
+
+@keyframes fj-bubble {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-18px) scale(1.1);
+  }
+}
+
+@keyframes fj-steam {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scaleX(0.8);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-70px) scaleX(1.4);
+  }
+}
+
+@keyframes fj-dish-up {
+  from {
+    opacity: 0;
+    transform: translateY(60px) scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .reward {
   animation: fr-rise 420ms var(--fr-ease) 80ms both;
 }
@@ -273,8 +571,25 @@ html[data-motion='reduced'] *::after {
 
 html[data-motion='reduced'] .plant-stage__seed,
 html[data-motion='reduced'] .soil-particle,
+html[data-motion='reduced'] .water-drop,
+html[data-motion='reduced'] .fj-can,
+html[data-motion='reduced'] .fj-butterfly,
+html[data-motion='reduced'] .fj-fireflies,
+html[data-motion='reduced'] .fj-cook__drop,
+html[data-motion='reduced'] .fj-cook__steam,
 html[data-motion='reduced'] .fly-ghost {
   display: none !important;
+}
+
+/* The countdown ring and stage bars carry information, so they keep running. */
+html[data-motion='reduced'] .fj-cook__pot,
+html[data-motion='reduced'] .fj-cook__lid,
+html[data-motion='reduced'] .fj-cook__fire span,
+html[data-motion='reduced'] .fj-cook__bubbles span,
+html[data-motion='reduced'] .fj-cook__stage::after,
+html[data-motion='reduced'] .fj-timer__ring,
+html[data-motion='reduced'] .fj-steps__bar::after {
+  animation: none !important;
 }
 
 html[data-motion='reduced'] .reward,

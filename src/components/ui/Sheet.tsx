@@ -11,6 +11,8 @@ interface SheetProps {
   footer?: ReactNode;
   /** 'dark' matches the Food Reel canvas. */
   variant?: 'light' | 'dark';
+  /** Phones: take the whole screen instead of a bottom sheet (long lists). */
+  fullOnMobile?: boolean;
 }
 
 const FOCUSABLE =
@@ -28,6 +30,7 @@ export function Sheet({
   children,
   footer,
   variant = 'light',
+  fullOnMobile = false,
 }: SheetProps) {
   const titleId = useId();
   const descId = useId();
@@ -84,7 +87,7 @@ export function Sheet({
       <div className="sheet-backdrop" onClick={onClose} aria-hidden="true" />
       <div
         ref={panelRef}
-        className="sheet"
+        className={`sheet ${fullOnMobile ? 'sheet--full' : ''}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

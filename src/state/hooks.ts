@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
 import type { MotionPref } from '../domain/progress';
-import { FeedbackContext, GameContext, UiContext } from './context';
+import { AccountContext, FeedbackContext, GameContext, UiContext } from './context';
 
 export function useGame() {
   const ctx = useContext(GameContext);
@@ -11,6 +11,12 @@ export function useGame() {
 export function useFeedback() {
   const ctx = useContext(FeedbackContext);
   if (!ctx) throw new Error('useFeedback must be used inside <FeedbackProvider>');
+  return ctx;
+}
+
+export function useAccount() {
+  const ctx = useContext(AccountContext);
+  if (!ctx) throw new Error('useAccount must be used inside <AccountProvider>');
   return ctx;
 }
 

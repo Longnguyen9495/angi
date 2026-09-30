@@ -63,3 +63,47 @@ WHEN NEW.updated_at = OLD.updated_at
 BEGIN
   UPDATE ingredients SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
 END;
+
+-- ——— Guest accounts (same tables as schema.sql; times are Unix seconds) ———
+
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL UNIQUE,
+  marketing INTEGER NOT NULL DEFAULT 0,
+  consent_version TEXT NOT NULL,
+  consent_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS login_codes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL,
+  code_hash TEXT NOT NULL,
+  link_hash TEXT NOT NULL,
+  ip_hash TEXT NOT NULL,
+  consent_version TEXT NOT NULL,
+  marketing INTEGER NOT NULL DEFAULT 0,
+  attempts INTEGER NOT NULL DEFAULT 0,
+  expires_at INTEGER NOT NULL,
+  used_at INTEGER NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_codes_email ON login_codes (email, created_at);
+CREATE INDEX IF NOT EXISTS idx_codes_ip ON login_codes (ip_hash, created_at);
+CREATE INDEX IF NOT EXISTS idx_codes_link ON login_codes (link_hash);
+
+CREATE TABLE IF NOT EXISTS user_sessions (
+  token_hash TEXT NOT NULL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+  created_at INTEGER NOT NULL,
+  last_seen INTEGER NOT NULL,
+  expires_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_sessions_user ON user_sessions (user_id);
+
+CREATE TABLE IF NOT EXISTS user_progress (
+  user_id INTEGER NOT NULL PRIMARY KEY REFERENCES users (id) ON DELETE CASCADE,
+  data TEXT NOT NULL,
+  version INTEGER NOT NULL DEFAULT 1,
+  updated_at INTEGER NOT NULL
+);

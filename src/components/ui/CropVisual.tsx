@@ -2,21 +2,42 @@ import type { CSSProperties, Ref } from 'react';
 import { CROPS } from '../../data/game';
 import type { CropId } from '../../data/types';
 import type { PlotStage } from '../../domain/selectors';
+import { cropSprite } from '../../data/sprites';
 
 /**
- * Plant drawn with DOM + pseudo-elements only (stem, two leaves, fruit).
- * Stage is shown through shape/size; text labels live next to it.
+ * A plant as a raster sprite per crop and stage. The stage is also shown as
+ * text next to it; the image itself is decorative.
  */
 export function CropVisual({ crop, stage }: { crop: CropId | null; stage: PlotStage }) {
   if (!crop || stage === 'empty') return null;
-  const style = { '--crop-color': CROPS[crop].color } as CSSProperties;
   return (
-    <span className={`crop crop--${stage} crop--${crop}`} style={style} aria-hidden="true">
-      <span className="crop__stem" />
-      <span className="crop__leaf crop__leaf--l" />
-      <span className="crop__leaf crop__leaf--r" />
-      {stage === 'ready' && <span className="crop__fruit" />}
+    <span className={`crop crop--${stage} crop--${crop}`} aria-hidden="true">
+      <img
+        className="crop__img"
+        src={cropSprite(crop, stage)}
+        alt=""
+        width={256}
+        height={256}
+        decoding="async"
+        draggable={false}
+      />
     </span>
+  );
+}
+
+/** Harvested produce (pantry chips, harvest flight, cooking). */
+export function ProduceImage({ crop, size = 24 }: { crop: CropId; size?: number }) {
+  return (
+    <img
+      className="produce-img"
+      src={cropSprite(crop, 'produce')}
+      alt=""
+      width={size}
+      height={size}
+      decoding="async"
+      draggable={false}
+      aria-hidden="true"
+    />
   );
 }
 

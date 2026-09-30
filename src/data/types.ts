@@ -1,6 +1,29 @@
 export type RegionId = 'north' | 'central' | 'south';
-export type CropId = 'rice' | 'herbs' | 'chili' | 'scallion' | 'bean' | 'tomato';
-export type RecipeId = 'com-tam' | 'bun-rieu' | 'bun-bo-hue';
+export type CropId =
+  | 'rice'
+  | 'herbs'
+  | 'chili'
+  | 'scallion'
+  | 'bean'
+  | 'tomato'
+  | 'lemongrass'
+  | 'garlic'
+  | 'cucumber'
+  | 'lime';
+export type RecipeId =
+  | 'com-tam'
+  | 'bun-rieu'
+  | 'bun-bo-hue'
+  | 'goi-cuon'
+  | 'banh-xeo'
+  | 'bo-luc-lac'
+  | 'mi-quang'
+  | 'com-ga-hoi-an'
+  | 'nem-nuong'
+  | 'pho-bo'
+  | 'bun-cha'
+  | 'banh-cuon';
+export type DecorId = 'scarecrow' | 'lantern' | 'jar' | 'fence';
 export type BudgetId = 'low' | 'mid' | 'high';
 export type MoodId = 'quick' | 'filling' | 'light' | 'novel';
 export type AvoidId = 'seafood' | 'beef' | 'pork' | 'spicy';
@@ -38,17 +61,23 @@ export interface CropDef {
   regions: RegionId[];
   /** CSS colour used for the fruit/leaf tip of the mature plant. */
   color: string;
+  /** Crops beyond the starting six open at a level (and gift one seed). */
+  unlock?: { level: number };
 }
 
 export interface RecipeDef {
   id: RecipeId;
   name: string;
+  /** The reel dish this recipe cooks (photo for the cookbook and the result card). */
+  dishId: string;
   region: RegionId;
   group: DishGroup;
   ingredients: { crop: CropId; qty: number }[];
   xp: number;
   unlockNote: string;
   fact: string;
+  /** Starter recipes are open from day one; the rest open with their region on the map. */
+  starter?: boolean;
 }
 
 export interface RegionDef {

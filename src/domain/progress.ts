@@ -1,4 +1,4 @@
-import type { CropId, MissionKind, RecipeId, RegionId } from '../data/types';
+import type { CropId, DecorId, MissionKind, RecipeId, RegionId } from '../data/types';
 import { FARM_PLOT_COUNT } from '../data/game';
 import { DEFAULT_FILTERS, type Filters } from './recommend';
 import { HOUR_MS, dateKey } from './time';
@@ -14,6 +14,8 @@ export interface Plot {
   readyAt: number | null;
   /** Dish that produced the seed, if planted from a meal. */
   sourceDishId: string | null;
+  /** Last time the plot was watered (can or post-meal rain); drives the wet-soil look. */
+  wateredAt: number | null;
 }
 
 export interface MealSession {
@@ -37,7 +39,7 @@ export interface CheckInRecord {
   at: number;
 }
 
-export type Resource = `seed:${CropId}` | `ingredient:${CropId}` | 'xp' | 'stamp';
+export type Resource = `seed:${CropId}` | `ingredient:${CropId}` | 'xp' | 'stamp' | 'coin';
 
 /** Append-only reward ledger entry. `key` doubles as the idempotency key. */
 export interface LedgerEntry {
@@ -68,6 +70,23 @@ export interface GuestProgress {
   missions: { date: string; done: MissionKind[] };
   streak: { count: number; lastActiveDate: string; restPasses: number };
   reminder: { slotKey: string; at: number } | null;
+  /** Watering can: `used` of today's refills, plus `bonus` earned by check-ins today. */
+  water: { date: string; used: number; bonus: number };
+  /** Cô Ba's daily orders already delivered, for `date` only. */
+  orders: { date: string; done: string[] };
+  /** Crops opened by levelling up (the starting six are always available). */
+  unlockedCrops: CropId[];
+  /** Crop opened by the latest level-up, shown once in the garden. */
+  recentCropUnlock: CropId | null;
+  /** Xu earned at the market. */
+  coins: number;
+  /** Decorations bought for the garden. */
+  decor: DecorId[];
+  /**
+   * Meal slots that have a check-in photo. The images themselves stay on this
+   * device (IndexedDB, see services/photoStore.ts) and never sync.
+   */
+  photos: string[];
   journeySaved: boolean;
   settings: { motion: MotionPref; simulateFailure: boolean };
   ledger: LedgerEntry[];
@@ -80,6 +99,10 @@ export const EMPTY_CROPS: Record<CropId, number> = {
   scallion: 0,
   bean: 0,
   tomato: 0,
+  lemongrass: 0,
+  garlic: 0,
+  cucumber: 0,
+  lime: 0,
 };
 
 function randomId(): string {
@@ -98,6 +121,7 @@ export function createInitialProgress(now: number): GuestProgress {
     plantedAt: null,
     readyAt: null,
     sourceDishId: null,
+    wateredAt: null,
   }));
   plots[0] = {
     id: 1,
@@ -105,6 +129,7 @@ export function createInitialProgress(now: number): GuestProgress {
     plantedAt: now - 6 * HOUR_MS,
     readyAt: now - 3 * HOUR_MS,
     sourceDishId: null,
+    wateredAt: null,
   };
   plots[1] = {
     id: 2,
@@ -112,6 +137,7 @@ export function createInitialProgress(now: number): GuestProgress {
     plantedAt: now - HOUR_MS,
     readyAt: now + 2 * HOUR_MS,
     sourceDishId: null,
+    wateredAt: null,
   };
   return {
     guestId: randomId(),
@@ -131,6 +157,13 @@ export function createInitialProgress(now: number): GuestProgress {
     missions: { date: dateKey(now), done: [] },
     streak: { count: 2, lastActiveDate: dateKey(now - 24 * HOUR_MS), restPasses: 1 },
     reminder: null,
+    water: { date: dateKey(now), used: 0, bonus: 0 },
+    orders: { date: dateKey(now), done: [] },
+    unlockedCrops: [],
+    recentCropUnlock: null,
+    coins: 0,
+    decor: [],
+    photos: [],
     journeySaved: false,
     settings: { motion: 'system', simulateFailure: false },
     ledger: [],

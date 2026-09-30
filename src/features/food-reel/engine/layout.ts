@@ -12,13 +12,19 @@ export interface ReelLayout {
   half: number;
   /** Whether fake motion blur via CSS filter is affordable. */
   blur: boolean;
-  /** Phones: vertical centre of the reel in px (CSS positions it otherwise). */
+  /** Vertical centre of the reel in px (tablets: CSS positions it). */
   centerY?: number;
+  /** Desktop: one-line headline size in px, sized so the reel never runs into it. */
+  headlineFont?: number;
 }
 
 export function layoutFor(width: number, height: number, saveData = false): ReelLayout {
   if (width >= 1024) {
-    const size = Math.round(Math.min(width * 0.4, height * 0.54, 620));
+    // The headline sits on one line above the reel; the plates live in the band
+    // between it and the dock, so neighbours never cover the title.
+    const { top, bottom, font } = desktopBands(width, height);
+    const room = height - top - bottom;
+    const size = Math.round(Math.max(260, Math.min(width * 0.34, room, 620)));
     const step = (21 * Math.PI) / 180;
     return {
       tier: 'desktop',
@@ -27,6 +33,8 @@ export function layoutFor(width: number, height: number, saveData = false): Reel
       radius: (size * 1.02) / step,
       half: saveData ? 4 : 6,
       blur: !saveData,
+      centerY: Math.round(top + room / 2),
+      headlineFont: font,
     };
   }
   if (width >= 768) {
@@ -50,18 +58,30 @@ export function layoutFor(width: number, height: number, saveData = false): Reel
   };
 }
 
+/**
+ * Desktop chrome, mirroring reel.scene.css: header, one-line headline + sub-line
+ * on top; caption + dock at the bottom.
+ */
+function desktopBands(width: number, height: number) {
+  const font = Math.round(Math.min(width * 0.052, height * 0.1, 108));
+  const top = 84 + font * 0.92 + 30 + 28;
+  const bottom = 118 + DESKTOP_CAPTION;
+  return { top, bottom, font };
+}
+const DESKTOP_CAPTION = 46;
+
 /** Phones shorter than this drop the ingredient rail (see reel.responsive.css). */
 export const MOBILE_COMPACT_HEIGHT = 640;
 const MOBILE_CAPTION = 34;
 
 /**
  * Vertical space taken by the chrome on phones, mirroring reel.responsive.css:
- * header + two-line headline on top; ingredient rail + dock at the bottom.
+ * header + two-line headline on top; ingredient rail + dock (spin + Rổ switch) at the bottom.
  */
 function mobileBands(width: number, height: number) {
   const headlineFont = Math.min(width * 0.155, height * 0.082, 83);
   const top = 68 + 1.8 * headlineFont + 30;
-  const dock = 112;
+  const dock = 136;
   const rail = height < MOBILE_COMPACT_HEIGHT ? 0 : 82;
   return { top, bottom: dock + rail + MOBILE_CAPTION };
 }
@@ -120,9 +140,9 @@ export function itemVisual(d: number, layout: ReelLayout, s: SceneValues): ItemV
   opacity *= 1 - Math.min(1, ad) * (0.8 * s.focus + 0.13 * s.hover * (1 - s.focus));
   if (ad > layout.half + 0.5) opacity = 0;
 
-  const spinBlur = layout.blur && ad > 0.35 ? Math.min(3, s.speed * 0.05) : 0;
-  const focusBlur = layout.blur ? Math.min(1, ad) * 2 * s.focus : 0;
-  const blur = Math.min(4, spinBlur + focusBlur);
+  // No motion blur while spinning: it smeared the plates and re-rasterised every
+  // item every frame. Only the winner spotlight softens its neighbours.
+  const blur = layout.blur ? Math.min(1, ad) * 2 * s.focus : 0;
 
   return {
     transform: `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px) rotateY(${rot.toFixed(2)}deg) scale(${scale.toFixed(4)})`,

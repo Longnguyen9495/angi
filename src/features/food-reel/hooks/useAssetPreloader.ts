@@ -24,6 +24,22 @@ export function preloadImage(src: string): Promise<void> {
 }
 
 /**
+ * Starts loading `sources` a few per animation frame, in order, so a burst of
+ * requests never lands inside one frame. Returns a cancel function.
+ */
+export function preloadGradually(sources: readonly string[], perFrame = 3): () => void {
+  let i = 0;
+  let id = 0;
+  const pending = [...new Set(sources)].filter((src) => !cache.has(src));
+  const step = () => {
+    for (let n = 0; n < perFrame && i < pending.length; n++) void preloadImage(pending[i++]!);
+    if (i < pending.length) id = requestAnimationFrame(step);
+  };
+  id = requestAnimationFrame(step);
+  return () => cancelAnimationFrame(id);
+}
+
+/**
  * Boot gate: waits for the first visible thumbnails (bounded by a timeout so a
  * slow network never blocks the scene) and reports progress 0–1.
  */

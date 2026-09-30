@@ -1,17 +1,23 @@
 import {
   ArrowLeft,
   ArrowsClockwise,
+  Basket,
   BookmarkSimple,
   CheckCircle,
+  CookingPot,
   MapPin,
   WarningCircle,
 } from '@phosphor-icons/react';
 import { m } from 'motion/react';
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { RECIPE_LIST } from '../../../data/game';
+import { useGame } from '../../../state/hooks';
 import { formatReelPrice, REGION_LABEL } from '../data/reelCatalogue';
 import { flyImage, type FlightHandle } from '../engine/sharedTransition';
 import type { ReelDish, ReelPhase } from '../foodReel.types';
+import type { ShopeeCity } from '../data/orderLinks';
 import { FlavorProfile } from './FlavorProfile';
+import { OrderLinks } from './OrderLinks';
 import { FoodVideo } from './FoodVideo';
 import { splitName } from '../utils';
 import { SplitLines } from './SplitLines';
@@ -37,6 +43,11 @@ interface FoodStoryProps {
   onVideoMuted: (muted: boolean) => void;
   saved: boolean;
   onToggleSave: () => void;
+  /** Whether the dish is in the Rổ quay. */
+  inPool: boolean;
+  onTogglePool: () => void;
+  orderCity: ShopeeCity;
+  onOrderCity: (city: ShopeeCity) => void;
   onOpened: () => void;
   onClosed: () => void;
   onClose: (then?: 'spin') => void;
@@ -62,6 +73,10 @@ export function FoodStory({
   onVideoMuted,
   saved,
   onToggleSave,
+  inPool,
+  onTogglePool,
+  orderCity,
+  onOrderCity,
   onOpened,
   onClosed,
   onClose,
@@ -203,10 +218,23 @@ export function FoodStory({
           <span className="fr-story__no" aria-hidden="true">
             {String(number).padStart(3, '0')}
           </span>
-          <button type="button" className="fr-ghost" aria-pressed={saved} onClick={onToggleSave}>
-            <BookmarkSimple aria-hidden="true" size={16} weight={saved ? 'fill' : 'regular'} />
-            {saved ? 'Đã lưu' : 'Lưu món'}
-          </button>
+          <span className="fr-story__tools">
+            <button type="button" className="fr-ghost" aria-pressed={saved} onClick={onToggleSave}>
+              <BookmarkSimple aria-hidden="true" size={16} weight={saved ? 'fill' : 'regular'} />
+              {saved ? 'Đã lưu' : 'Lưu món'}
+            </button>
+            <button
+              type="button"
+              className="fr-ghost"
+              aria-pressed={inPool}
+              onClick={onTogglePool}
+              aria-label="Rổ quay"
+              title={inPool ? 'Đang trong rổ quay — nhấn để bỏ ra' : 'Thêm vào rổ quay'}
+            >
+              <Basket aria-hidden="true" size={16} weight={inPool ? 'fill' : 'regular'} />
+              <span className="fr-hide-sm">Rổ quay</span>
+            </button>
+          </span>
         </header>
 
         <section className="fr-story__hero">
@@ -246,6 +274,7 @@ export function FoodStory({
             >
               {dish.story}
             </m.p>
+            <CookedBadge dishId={dish.id} />
           </div>
         </section>
 
@@ -286,6 +315,8 @@ export function FoodStory({
           </div>
         </m.section>
 
+        <OrderLinks dishName={dish.name} city={orderCity} onCity={onOrderCity} compact />
+
         <p className="fr-story__credit">Ảnh món: {dish.credit}. Giá chỉ mang tính tham khảo.</p>
 
         <div className="fr-story__actions">
@@ -311,5 +342,21 @@ export function FoodStory({
         </div>
       </div>
     </div>
+  );
+}
+
+/** "Tự nấu": the guest cooked this dish's recipe in the Journey kitchen. */
+function CookedBadge({ dishId }: { dishId: string }) {
+  const { state } = useGame();
+  const recipe = RECIPE_LIST.find((r) => r.dishId === dishId);
+  const n = recipe ? (state.cooked[recipe.id] ?? 0) : 0;
+  if (!recipe || n === 0) return null;
+  return (
+    <p className="fr-story__cooked">
+      <CookingPot aria-hidden="true" size={16} weight="fill" />
+      <span>
+        Tự nấu ×{n} ở Hành trình · <em>{recipe.fact}</em>
+      </span>
+    </p>
   );
 }

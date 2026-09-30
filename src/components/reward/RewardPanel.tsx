@@ -31,7 +31,7 @@ import { formatClock, currentTime } from '../../domain/time';
 import { burstSoil, flyTo, pulseOnce, type EffectHandle } from '../../motion/effects';
 import { createTimeline, type Timeline } from '../../motion/timeline';
 import { confirmCommand, isAbortError } from '../../services/mockApi';
-import { useFeedback, useGame, useUi } from '../../state/hooks';
+import { useAccount, useFeedback, useGame, useUi } from '../../state/hooks';
 import { SeedToken } from '../ui/CropVisual';
 import { ProgressBar } from '../ui/ProgressBar';
 import { NpcTeaser } from './NpcTeaser';
@@ -62,7 +62,8 @@ const PLANT_TIMELINE: { at: number; step: PlantStep }[] = [
 export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChosen: boolean }) {
   const { state, dispatch, reduced, now } = useGame();
   const { announce, toast } = useFeedback();
-  const { openCheckIn, focusSection } = useUi();
+  const { openCheckIn, focusSection, openAccount } = useUi();
+  const accountSaved = useAccount().status === 'signed-in';
 
   const dish = getDish(meal.rewardDishId) ?? getDish(meal.dishId);
   const crop = CROPS[meal.seedCrop];
@@ -395,22 +396,18 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
             <button
               type="button"
               className="btn btn--ghost btn--sm"
-              aria-pressed={state.journeySaved}
+              aria-pressed={accountSaved}
               onClick={() => {
-                if (state.journeySaved) return;
-                dispatch({ type: 'SAVE_JOURNEY' });
-                toast({
-                  message: 'Hành trình đã lưu trên thiết bị này — không cần tài khoản.',
-                  tone: 'success',
-                });
+                // Signing in is optional and only ever offered, never required.
+                if (!accountSaved) openAccount();
               }}
             >
-              {state.journeySaved ? (
+              {accountSaved ? (
                 <SealCheck aria-hidden="true" size={18} />
               ) : (
                 <FloppyDisk aria-hidden="true" size={18} />
               )}
-              {state.journeySaved ? 'Đã lưu hành trình' : 'Lưu hành trình'}
+              {accountSaved ? 'Đã lưu vào tài khoản' : 'Lưu hành trình'}
             </button>
             {!meal.checkedIn && (
               <button type="button" className="btn btn--link btn--sm" onClick={openCheckIn}>

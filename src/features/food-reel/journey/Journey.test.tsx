@@ -2,7 +2,8 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../../../App';
-import { STORAGE_KEY } from '../../../domain/persistence';
+import { STORAGE_KEY, saveProgress } from '../../../domain/persistence';
+import { EMPTY_CROPS, createInitialProgress } from '../../../domain/progress';
 import { mockConfig } from '../../../services/mockApi';
 import { FeedbackProvider } from '../../../state/FeedbackProvider';
 import { GameProvider } from '../../../state/GameProvider';
@@ -231,5 +232,117 @@ describe('dialog behaviour', () => {
     await user.click(await screen.findByRole('radio', { name: /^giảm chuyển động/i }));
     expect(document.documentElement.dataset.motion).toBe('reduced');
     vi.restoreAllMocks();
+  });
+});
+
+describe('watering the garden', () => {
+  it('waters a growing plot once, then the soil stays wet until the next hour', async () => {
+    const user = userEvent.setup();
+    renderApp();
+    await screen.findByRole('button', { name: /quay món/i }, { timeout: 2000 });
+    const layer = await openJourney(user);
+    const can = within(layer).getByRole('button', { name: /tưới cây, còn 3 lượt/i });
+    await user.click(can);
+    expect(can).toHaveAttribute('aria-pressed', 'true');
+    // New guests have one sprouting scallion (plot 2); the ready herbs cannot be watered.
+    expect(within(layer).queryByRole('button', { name: /tưới ô 1/i })).not.toBeInTheDocument();
+    const before = stored().plots[1].readyAt;
+    await user.click(within(layer).getByRole('button', { name: /tưới ô 2/i }));
+    const after = stored();
+    expect(after.plots[1].readyAt).toBeLessThan(before);
+    expect(after.water.used).toBe(1);
+
+    // A second tap is refused: the soil is still wet.
+    const again = within(layer).getByRole('button', { name: /tưới ô 2.*đất còn ẩm/i });
+    expect(again).toHaveAttribute('aria-disabled', 'true');
+    await user.click(again);
+    expect(stored().water.used).toBe(1);
+    // With nothing else thirsty the can can still be put away.
+    await user.click(within(layer).getByRole('button', { name: /cất bình/i }));
+    expect(within(layer).queryByRole('button', { name: /tưới ô/i })).not.toBeInTheDocument();
+  });
+});
+
+describe('after the harvest', () => {
+  it('suggests the next step and can spin the reel over dishes that grant the missing seed', async () => {
+    const user = userEvent.setup();
+    renderApp();
+    await screen.findByRole('button', { name: /quay món/i }, { timeout: 2000 });
+    const layer = await openJourney(user);
+    // New guests have one herb plot ready: the card asks to harvest it first.
+    const card = within(layer).getByRole('region', { name: /ô đã chín/i });
+    await user.click(within(card).getByRole('button', { name: 'Thu hoạch' }));
+    expect(stored().ingredients.herbs).toBe(1);
+
+    // Nothing ready, tray empty, plots free → find the seed the closest recipe needs.
+    const find = await within(layer).findByRole('button', { name: /quay các món cho/i });
+    await user.click(find);
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    await screen.findByRole('button', { name: /khám phá món này/i }, { timeout: 3000 });
+    expect(document.querySelector('.fr-headline__sub')).toHaveTextContent(/món cho (hạt|củ)/i);
+  });
+});
+
+describe('the kitchen', () => {
+  it('cooks from the next-step card, commits once and fills the cookbook page', async () => {
+    const user = userEvent.setup();
+    const now = Date.now();
+    const base = createInitialProgress(now);
+    saveProgress(
+      {
+        ...base,
+        plots: base.plots.map((p) => ({ ...p, crop: null, plantedAt: null, readyAt: null })),
+        ingredients: { ...EMPTY_CROPS, rice: 1, scallion: 1 },
+      },
+      now,
+    );
+    renderApp();
+    await screen.findByRole('button', { name: /quay món/i }, { timeout: 2000 });
+    const layer = await openJourney(user);
+    const card = within(layer).getByRole('region', { name: /đủ nguyên liệu nấu cơm tấm sườn/i });
+    await user.click(within(card).getByRole('button', { name: 'Nấu Cơm tấm sườn' }));
+    const sheet = await screen.findByRole('dialog', { name: 'Cơm tấm sườn' });
+    const start = within(sheet).getByRole('button', { name: /bắt đầu nấu/i });
+    await user.click(start);
+    await user.click(start);
+    expect(within(sheet).getByRole('list', { name: 'Các bước nấu' })).toBeInTheDocument();
+    expect(within(sheet).getByText('Bước 1/4')).toBeInTheDocument();
+    // Jump the kitchen clock past the whole cooking timeline.
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(now + 60_000);
+    expect(await within(sheet).findByText(/đã nấu xong/i)).toBeInTheDocument();
+    clock.mockRestore();
+    const data = stored();
+    expect(data.cooked['com-tam']).toBe(1);
+    expect(data.ingredients.rice).toBe(0);
+
+    await user.click(within(sheet).getByRole('button', { name: /xem sổ bếp/i }));
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog', { name: 'Cơm tấm sườn' })).not.toBeInTheDocument(),
+    );
+    expect(within(layer).getByRole('heading', { name: 'Sổ bếp · 1/12 trang' })).toBeInTheDocument();
+    expect(document.querySelector('.fj-page.is-cooked .fj-page__name')).toHaveTextContent(
+      'Cơm tấm sườn',
+    );
+  });
+});
+
+describe('after choosing', () => {
+  it('offers map and delivery searches for the chosen dish, remembering the ShopeeFood city', async () => {
+    const user = userEvent.setup();
+    await chooseDish(user, 'com-tam');
+    const box = screen.getByRole('region', { name: /tìm quán & đặt món · cơm tấm/i });
+    const links = within(box).getAllByRole('link');
+    expect(links).toHaveLength(4);
+    for (const a of links) {
+      expect(a).toHaveAttribute('target', '_blank');
+      expect(a.getAttribute('href')).toMatch(/C%C6%A1m\+t%E1%BA%A5m|C%C6%A1m%20t%E1%BA%A5m/);
+    }
+    await user.selectOptions(within(box).getByRole('combobox'), 'ha-noi');
+    expect(
+      within(box)
+        .getByRole('link', { name: /shopeefood/i })
+        .getAttribute('href'),
+    ).toContain('shopeefood.vn/ha-noi/');
+    expect(JSON.parse(localStorage.getItem('hanh-trinh-bep-viet/reel')!).orderCity).toBe('ha-noi');
   });
 });

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Quyền riêng tư — Bếp Việt</title>
+  <meta name="description" content="Bếp Việt lưu gì, lưu ở đâu, và cách bạn xem, tải về hay xoá dữ liệu của mình.">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <style>
+    :root { color-scheme: dark; --bg: #0c0c0b; --panel: #151513; --text: #f4ede1; --muted: #a9a095; --gold: #d7a85d; --line: rgb(244 237 225 / 13%); }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 'Be Vietnam Pro', system-ui, sans-serif; }
+    main { max-width: 760px; margin: 0 auto; padding: 48px 20px 72px; }
+    a { color: var(--gold); }
+    .back { display: inline-block; margin-bottom: 28px; text-decoration: none; }
+    h1 { margin: 0 0 8px; font: 480 clamp(2rem, 6vw, 3rem)/1.1 Georgia, serif; }
+    h2 { margin: 40px 0 10px; font: 480 1.35rem/1.3 Georgia, serif; }
+    .updated, .muted { color: var(--muted); font-size: .9rem; }
+    .summary { margin: 28px 0; padding: 18px 20px; border: 1px solid var(--line); border-radius: 18px; background: var(--panel); }
+    .summary p { margin: 6px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    th, td { padding: 10px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { color: var(--gold); font-weight: 600; }
+    li { margin: 6px 0; }
+    @media (max-width: 560px) { table, tbody, tr, td, th { display: block; } thead { display: none; } td:first-child { color: var(--gold); padding-bottom: 0; border: 0; } }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="/">← Về Bếp Việt</a>
+    <h1>Quyền riêng tư</h1>
+    <p class="updated">Phiên bản 2026-09-30</p>
+
+    <div class="summary">
+      <p><strong>Không cần tài khoản.</strong> Mọi tính năng — quay món, trồng cây, nấu ăn, check-in — dùng được mà không đăng nhập. Tiến trình khi đó chỉ nằm trên trình duyệt của bạn.</p>
+      <p><strong>Ảnh check-in không bao giờ rời máy bạn.</strong> Ảnh được nén và xoá thông tin vị trí (EXIF/GPS) ngay trên máy, rồi lưu trong trình duyệt.</p>
+      <p><strong>Tài khoản chỉ cần email</strong> — không mật khẩu, không tên, không số điện thoại.</p>
+    </div>
+
+    <h2>1. Chúng tôi lưu gì, ở đâu</h2>
+    <table>
+      <thead><tr><th>Dữ liệu</th><th>Lưu ở đâu</th><th>Để làm gì</th></tr></thead>
+      <tbody>
+        <tr><td>Tiến trình trò chơi (cấp, hạt giống, khu vườn, sổ bếp, lịch sử check-in, món đã ẩn)</td><td>Trình duyệt của bạn (localStorage). Nếu bạn tạo tài khoản: thêm một bản trên máy chủ Bếp Việt.</td><td>Hiển thị hành trình; đồng bộ giữa các thiết bị khi có tài khoản.</td></tr>
+        <tr><td>Ảnh check-in</td><td>Chỉ trình duyệt của bạn (IndexedDB). Không tải lên, không đồng bộ.</td><td>Album bữa ăn của riêng bạn.</td></tr>
+        <tr><td>Email</td><td>Máy chủ Bếp Việt, chỉ khi bạn tạo tài khoản.</td><td>Gửi mã đăng nhập và nhận diện tài khoản. Gửi tin ưu đãi <em>chỉ khi</em> bạn bật ô "Nhận tin ưu đãi".</td></tr>
+        <tr><td>Phiên đăng nhập</td><td>Cookie <code>bepviet_guest</code> (HttpOnly, 180 ngày) và bản băm của nó trên máy chủ.</td><td>Giữ bạn đăng nhập.</td></tr>
+        <tr><td>Mã đăng nhập</td><td>Máy chủ, chỉ dạng băm; hết hạn sau 10 phút. Kèm bản băm địa chỉ IP để chống spam.</td><td>Xác nhận bạn giữ email.</td></tr>
+        <tr><td>Lựa chọn nhỏ (âm thanh, món đã lưu, rổ quay, thành phố ShopeeFood)</td><td>Trình duyệt của bạn.</td><td>Ghi nhớ tuỳ chọn trên máy này.</td></tr>
+      </tbody>
+    </table>
+    <p class="muted">Chúng tôi không thu vị trí GPS, danh bạ, số điện thoại hay tên của bạn.</p>
+
+    <h2>2. Đồng ý và cơ sở xử lý</h2>
+    <p>Khi tạo tài khoản, bạn đánh dấu đồng ý cho việc lưu email và tiến trình để đồng bộ (bắt buộc cho tính năng này). Việc nhận tin ưu đãi là một lựa chọn riêng, mặc định tắt. Chúng tôi ghi lại thời điểm và phiên bản chính sách bạn đã đồng ý. Theo Nghị định 13/2023/NĐ-CP, bạn có thể rút lại đồng ý bất cứ lúc nào bằng cách tắt ô ưu đãi hoặc xoá tài khoản.</p>
+
+    <h2>3. Liên kết sang dịch vụ khác</h2>
+    <p>Các nút Google Maps, GrabFood, ShopeeFood, beFood chỉ mở trang tìm kiếm của dịch vụ đó với tên món. Bếp Việt không gửi email hay tiến trình của bạn sang các dịch vụ này; từ lúc mở, việc xử lý dữ liệu theo chính sách của họ.</p>
+
+    <h2>4. Quyền của bạn</h2>
+    <ul>
+      <li><strong>Xem và tải về:</strong> Hồ sơ → "Tải bản sao" (dữ liệu trên máy) và "Tải dữ liệu trên máy chủ" (dữ liệu tài khoản).</li>
+      <li><strong>Sửa lựa chọn nhận tin:</strong> Hồ sơ → Tài khoản → "Nhận tin ưu đãi qua email".</li>
+      <li><strong>Xoá:</strong> Hồ sơ → "Xoá tài khoản" xoá vĩnh viễn email, tiến trình và phiên trên máy chủ. "Xoá tiến trình" xoá dữ liệu và ảnh trên máy này. Xoá dữ liệu trang web trong trình duyệt cũng xoá bản trên máy.</li>
+    </ul>
+
+    <h2>5. Thời gian lưu và bảo vệ</h2>
+    <p>Dữ liệu tài khoản được giữ đến khi bạn xoá tài khoản. Mã đăng nhập hết hạn sau 10 phút; phiên đăng nhập hết hạn sau 180 ngày. Mã và phiên chỉ lưu dưới dạng băm SHA-256; kết nối dùng HTTPS.</p>
+
+    <h2>6. Liên hệ</h2>
+    <!-- TODO(chủ dự án): điền email hoặc kênh liên hệ chính thức cho yêu cầu về dữ liệu cá nhân. -->
+    <p>Yêu cầu về dữ liệu cá nhân: <strong data-todo="contact">[điền email liên hệ]</strong>. Chúng tôi sẽ cập nhật trang này khi cách xử lý dữ liệu thay đổi và ghi rõ ngày phiên bản.</p>
+  </main>
+</body>
+</html>

@@ -1,11 +1,13 @@
 import {
+  useCallback,
   useEffect,
   useRef,
+  useState,
   type CSSProperties,
   type KeyboardEvent,
   type PointerEvent,
 } from 'react';
-import { dishAt, formatReelPrice, reelCount, REGION_LABEL } from '../data/reelCatalogue';
+import { formatReelPrice, REGION_LABEL, type ReelView } from '../data/reelCatalogue';
 import type { FrameState } from '../engine/ReelEngine';
 import { itemVisual, type ReelLayout, type SceneValues } from '../engine/layout';
 import { mod } from '../engine/spin';
@@ -13,6 +15,8 @@ import type { ReelPhase } from '../foodReel.types';
 import { ReelItem } from './ReelItem';
 
 interface ReelSceneProps {
+  /** Whole catalogue or the guest's shortlist; items wrap over its count. */
+  view: ReelView;
   center: number;
   layout: ReelLayout;
   phase: ReelPhase;
@@ -35,6 +39,7 @@ const LERP = 0.14;
  * keyed by virtual index, and their pose is written directly each frame.
  */
 export function ReelScene({
+  view,
   center,
   layout,
   phase,
@@ -49,6 +54,35 @@ export function ReelScene({
   winnerIndex,
 }: ReelSceneProps) {
   const nodes = useRef(new Map<number, HTMLElement>());
+  const painted = useRef(
+    new WeakMap<
+      HTMLElement,
+      { transform: string; opacity: string; filter: string; zIndex: string }
+    >(),
+  );
+  // Stable per-slot ref and click callbacks keep ReelItem's memo effective: a
+  // spin re-renders the scene on every new dish, but untouched items stay put.
+  const activateRef = useRef(onActivate);
+  const positionRef = useRef(getPosition);
+  useEffect(() => {
+    activateRef.current = onActivate;
+    positionRef.current = getPosition;
+  });
+  const activate = useCallback((vi: number) => activateRef.current(vi), []);
+  // The scene follows the engine itself, so a spin re-renders only the reel —
+  // not the whole experience — each time a new dish passes the centre.
+  const [live, setLive] = useState(center);
+  const liveRef = useRef(center);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // Keep focus on the centred item while navigating with the keyboard.
+  useEffect(() => {
+    const root = rootRef.current;
+    const active = document.activeElement;
+    if (root && active instanceof HTMLElement && root.contains(active)) {
+      root.querySelector<HTMLElement>('[data-reel-centre]')?.focus({ preventScroll: true });
+    }
+  }, [live]);
   const scene = useRef<Omit<SceneValues, 'speed' | 'settleAge'>>({ focus: 0, hover: 0, camera: 1 });
   const target = useRef({ focus: 0, hover: 0, camera: 1 });
   const lastFrame = useRef<FrameState>({
@@ -73,10 +107,16 @@ export function ReelScene({
       // No overshoot "bounce" under reduced motion.
       settleAge: reduced ? Infinity : f.settleAge,
     });
-    el.style.transform = v.transform;
-    el.style.opacity = String(v.opacity);
-    el.style.filter = v.filter;
-    el.style.zIndex = String(v.zIndex);
+    // Only touch what changed: redundant inline-style writes still cost a style
+    // recalc per item per frame, which is what phones felt during a spin.
+    const last = painted.current.get(el);
+    const opacity = String(v.opacity);
+    const zIndex = String(v.zIndex);
+    if (last?.transform !== v.transform) el.style.transform = v.transform;
+    if (last?.opacity !== opacity) el.style.opacity = opacity;
+    if (last?.filter !== v.filter) el.style.filter = v.filter;
+    if (last?.zIndex !== zIndex) el.style.zIndex = zIndex;
+    painted.current.set(el, { transform: v.transform, opacity, filter: v.filter, zIndex });
   };
   const paintRef = useRef(paint);
   useEffect(() => {
@@ -87,6 +127,11 @@ export function ReelScene({
     () =>
       subscribe((f) => {
         lastFrame.current = f;
+        const c = Math.round(f.position);
+        if (c !== liveRef.current) {
+          liveRef.current = c;
+          setLive(c);
+        }
         const s = scene.current;
         const t = target.current;
         const k = reduced ? 1 : LERP;
@@ -100,15 +145,18 @@ export function ReelScene({
     [subscribe, reduced],
   );
 
-  const register = (vi: number) => (el: HTMLElement | null) => {
-    if (el) {
-      nodes.current.set(vi, el);
-      // Pose new items immediately so they never flash at the origin.
-      paintRef.current(el, vi, { ...lastFrame.current, position: getPosition() });
-    } else {
-      nodes.current.delete(vi);
-    }
-  };
+  // One stable ref callback for every slot (React 19 ref cleanup): items read
+  // their virtual index from data-vi, so re-renders never detach and re-attach.
+  const register = useCallback((el: HTMLElement | null) => {
+    if (!el) return;
+    const vi = Number(el.dataset.vi);
+    nodes.current.set(vi, el);
+    // Pose new items immediately so they never flash at the origin.
+    paintRef.current(el, vi, { ...lastFrame.current, position: positionRef.current() });
+    return () => {
+      if (nodes.current.get(vi) === el) nodes.current.delete(vi);
+    };
+  }, []);
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
@@ -127,16 +175,17 @@ export function ReelScene({
   };
 
   const indices: number[] = [];
-  for (let vi = center - layout.half; vi <= center + layout.half; vi++) indices.push(vi);
+  for (let vi = live - layout.half; vi <= live + layout.half; vi++) indices.push(vi);
   const busy = phase === 'spinning' || phase === 'settling';
-  const centreDish = dishAt(center);
+  const centreDish = view.dishAt(live);
 
   return (
     <div
+      ref={rootRef}
       className="fr-reel"
       role="group"
       aria-roledescription="băng chuyền món ăn"
-      aria-label={`Vũ trụ món ăn: ${reelCount()} món. Dùng phím mũi tên để đổi món, Enter để xem câu chuyện.`}
+      aria-label={`${view.pooled ? 'Rổ quay' : 'Vũ trụ món ăn'}: ${view.count} món. Dùng phím mũi tên để đổi món, Enter để xem câu chuyện.`}
       aria-busy={busy}
       onKeyDown={onKeyDown}
       onPointerDown={onPointerDown}
@@ -148,30 +197,35 @@ export function ReelScene({
       }
     >
       <p className="sr-only" aria-live="off">
-        Đang ở món {mod(center, reelCount()) + 1}: {centreDish.name},{' '}
-        {REGION_LABEL[centreDish.region]}, {formatReelPrice(centreDish.price)}
+        Đang ở món {mod(live, view.count) + 1}: {centreDish.name}, {REGION_LABEL[centreDish.region]}
+        , {formatReelPrice(centreDish.price)}
       </p>
       <div className="fr-track">
         {indices.map((vi) => {
-          const dish = dishAt(vi);
-          const isCentre = vi === center;
+          const dish = view.dishAt(vi);
+          const isCentre = vi === live;
           return (
             <ReelItem
-              key={vi}
-              ref={register(vi)}
+              // The dish id is part of the key: switching to the shortlist swaps the
+              // dish behind a slot, and its sharp image must not reuse the old load state.
+              key={`${vi}:${dish.id}`}
+              ref={register}
               dish={dish}
-              number={mod(vi, reelCount()) + 1}
+              number={mod(vi, view.count) + 1}
               isCentre={isCentre}
               isWinner={phase === 'selected' && isCentre}
               useFull={
-                // Plan budget: 768 px only for the winner/detail; desktop may also
-                // sharpen the resting centre dish, touch layouts stay on thumbnails.
-                (isCentre && !busy && (layout.tier === 'desktop' || phase === 'selected')) ||
+                // The 384 px thumbnail is upscaled on every screen, so the resting centre
+                // always gets the 768 px image; desktop also sharpens its two neighbours
+                // and the slow tail of a spin (preloaded when the spin starts).
+                (isCentre && !busy) ||
+                (layout.tier === 'desktop' && Math.abs(vi - live) <= 1 && phase !== 'spinning') ||
                 (winnerIndex !== null && vi === winnerIndex && !reduced)
               }
               busy={busy}
               driftSeed={mod(vi, 7)}
-              onActivate={() => onActivate(vi)}
+              vi={vi}
+              onActivate={activate}
               onHover={isCentre ? onCenterHover : undefined}
             />
           );

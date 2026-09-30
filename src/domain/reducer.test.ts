@@ -3,7 +3,14 @@ import { getDish } from '../data/dishes';
 import { reelGameDishes } from '../features/food-reel/data/reelCatalogue';
 import { createInitialProgress } from './progress';
 import { gameReducer, touchStreak } from './reducer';
-import { plotStage, recipeProgress, regionProgress } from './selectors';
+import {
+  isWet,
+  plotStage,
+  recipeProgress,
+  regionProgress,
+  waterBlock,
+  waterLeft,
+} from './selectors';
 import { HOUR_MS, dateKey } from './time';
 
 // A fixed lunch-time instant so slot keys are deterministic.
@@ -183,5 +190,124 @@ describe('soft streak', () => {
 
   it('keeps dish metadata consistent for the seed reward', () => {
     expect(getDish('com-tam')?.seed).toBe('rice');
+  });
+});
+
+describe('watering', () => {
+  // Plot 2 of a new guest is a scallion sprouting: planted 1h ago, ready in 2h.
+  const fresh = () => createInitialProgress(NOON);
+
+  it('shortens a quarter of the remaining time and uses one can', () => {
+    const s0 = fresh();
+    const s1 = gameReducer(s0, { type: 'WATER', plotId: 2, now: NOON });
+    const plot = s1.plots[1]!;
+    expect(plot.readyAt).toBe(NOON + 1.5 * HOUR_MS);
+    expect(plot.wateredAt).toBe(NOON);
+    expect(isWet(plot, NOON + 10)).toBe(true);
+    expect(waterLeft(s1, NOON)).toBe(waterLeft(s0, NOON) - 1);
+  });
+
+  it('waits an hour between waterings of the same plot', () => {
+    const s1 = gameReducer(fresh(), { type: 'WATER', plotId: 2, now: NOON });
+    expect(waterBlock(s1, s1.plots[1]!, NOON + 60_000)).toBe('wet');
+    expect(gameReducer(s1, { type: 'WATER', plotId: 2, now: NOON + 60_000 })).toBe(s1);
+    const s2 = gameReducer(s1, { type: 'WATER', plotId: 2, now: NOON + HOUR_MS });
+    expect(s2.plots[1]!.readyAt).toBeLessThan(s1.plots[1]!.readyAt!);
+  });
+
+  it('ignores empty and ready plots', () => {
+    const s = fresh();
+    expect(gameReducer(s, { type: 'WATER', plotId: 1, now: NOON })).toBe(s); // ready herbs
+    expect(gameReducer(s, { type: 'WATER', plotId: 3, now: NOON })).toBe(s); // empty
+  });
+
+  it('runs dry after three cans, refills the next day, and a check-in adds one', () => {
+    let s = fresh();
+    s = {
+      ...s,
+      plots: s.plots.map((p) => ({
+        ...p,
+        crop: 'bean',
+        plantedAt: NOON,
+        readyAt: NOON + 4 * HOUR_MS,
+      })),
+    };
+    for (const id of [1, 2, 3]) s = gameReducer(s, { type: 'WATER', plotId: id, now: NOON });
+    expect(waterLeft(s, NOON)).toBe(0);
+    expect(waterBlock(s, s.plots[3]!, NOON)).toBe('empty-can');
+    expect(gameReducer(s, { type: 'WATER', plotId: 4, now: NOON })).toBe(s);
+
+    const ate = gameReducer(gameReducer(s, { type: 'CHOOSE_DISH', dishId: 'com-tam', now: NOON }), {
+      type: 'CHECK_IN',
+      outcome: 'ate',
+      rating: 5,
+      again: 'yes',
+      now: NOON + 1,
+    });
+    expect(waterLeft(ate, NOON + 1)).toBe(1);
+
+    const tomorrow = NOON + 24 * HOUR_MS;
+    expect(waterLeft(s, tomorrow)).toBe(3);
+  });
+
+  it('marks the meal plot wet when the check-in rain ripens it', () => {
+    const planted = gameReducer(chosen('com-tam'), { type: 'PLANT_MEAL_SEED', now: NOON + 10 });
+    const s = gameReducer(planted, {
+      type: 'CHECK_IN',
+      outcome: 'ate',
+      rating: 5,
+      again: 'yes',
+      now: NOON + 20,
+    });
+    expect(s.plots.find((p) => p.id === s.meal?.plotId)?.wateredAt).toBe(NOON + 20);
+  });
+});
+
+describe('levelling up', () => {
+  it('opens a new crop with a gift seed, and more plots, exactly once', () => {
+    // 95 XP + a 10 XP choice crosses into level 2 → lemongrass opens.
+    const s0 = { ...createInitialProgress(NOON), xp: 95 };
+    const s1 = gameReducer(s0, { type: 'CHOOSE_DISH', dishId: 'com-tam', now: NOON });
+    expect(s1.unlockedCrops).toEqual(['lemongrass']);
+    expect(s1.seeds.lemongrass).toBe(1);
+    expect(s1.recentCropUnlock).toBe('lemongrass');
+    expect(s1.plots).toHaveLength(6);
+    const s2 = gameReducer(s1, { type: 'PLANT_MEAL_SEED', now: NOON + 1 });
+    expect(s2.seeds.lemongrass).toBe(1);
+
+    // Level 3 adds garlic and plot 7.
+    const s3 = gameReducer({ ...s2, xp: 200 }, { type: 'WATER', plotId: 2, now: NOON + 2 });
+    expect(s3.unlockedCrops).toEqual(['lemongrass', 'garlic']);
+    expect(s3.plots).toHaveLength(7);
+    expect(s3.plots[6]).toMatchObject({ id: 7, crop: null });
+  });
+});
+
+describe('the market', () => {
+  it('sells produce for xu and buys seeds and decorations, never going negative', () => {
+    const s0 = {
+      ...createInitialProgress(NOON),
+      ingredients: { ...createInitialProgress(NOON).ingredients, herbs: 3 },
+    };
+    let s = s0;
+    for (let i = 0; i < 3; i++) s = gameReducer(s, { type: 'SELL', crop: 'herbs', now: NOON + i });
+    expect(s.ingredients.herbs).toBe(0);
+    expect(s.coins).toBe(12);
+    expect(gameReducer(s, { type: 'SELL', crop: 'herbs', now: NOON + 9 })).toBe(s);
+
+    s = gameReducer(s, { type: 'BUY_SEED', crop: 'chili', now: NOON + 10 });
+    expect(s.seeds.chili).toBe(1);
+    expect(s.coins).toBe(6);
+    // Locked crops cannot be bought; decorations cost more than we have.
+    expect(gameReducer(s, { type: 'BUY_SEED', crop: 'lime', now: NOON + 11 })).toBe(s);
+    expect(gameReducer(s, { type: 'BUY_DECOR', decor: 'jar', now: NOON + 12 })).toBe(s);
+
+    const rich = { ...s, coins: 60 };
+    const decorated = gameReducer(rich, { type: 'BUY_DECOR', decor: 'jar', now: NOON + 13 });
+    expect(decorated.decor).toEqual(['jar']);
+    expect(decorated.coins).toBe(35);
+    expect(gameReducer(decorated, { type: 'BUY_DECOR', decor: 'jar', now: NOON + 14 })).toBe(
+      decorated,
+    );
   });
 });

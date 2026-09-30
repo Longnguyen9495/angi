@@ -90,8 +90,9 @@ describe('Food Reel landing', () => {
     const items = document.querySelectorAll('.fr-item');
     expect(items.length).toBeGreaterThan(0);
     expect(items.length).toBeLessThanOrEqual(15);
-    // Reel items use 384 px thumbnails; only the centre may add its 768 px image.
-    expect(document.querySelectorAll('.fr-item__img--full').length).toBeLessThanOrEqual(1);
+    // Reel items use 384 px thumbnails; at rest only the centre (and, on desktop,
+    // its two neighbours) add the 768 px image.
+    expect(document.querySelectorAll('.fr-item__img--full').length).toBeLessThanOrEqual(3);
   });
 
   it('moves between dishes with arrow keys and keeps focus on the centre dish', async () => {
@@ -256,5 +257,45 @@ describe('FoodVideo', () => {
     );
     expect(screen.queryByLabelText(/video câu chuyện/i)).not.toBeInTheDocument();
     expect(screen.getByText(/food story đang được hoàn thiện/i)).toBeInTheDocument();
+  });
+});
+
+describe('Rổ quay', () => {
+  it('spins only between the dishes the guest picked, then knocks them out one by one', async () => {
+    const user = userEvent.setup();
+    renderApp();
+    await booted();
+    await user.click(screen.getByRole('button', { name: /chọn vài món/i }));
+    const sheet = await screen.findByRole('dialog', { name: 'Rổ quay' });
+    const picks = [dishAt(4), dishAt(9), dishAt(20)];
+    await user.type(within(sheet).getByRole('searchbox'), picks[0]!.name);
+    await user.click(within(sheet).getByRole('checkbox', { name: new RegExp(picks[0]!.name) }));
+    await user.clear(within(sheet).getByRole('searchbox'));
+    for (const d of picks.slice(1)) {
+      await user.click(within(sheet).getAllByRole('checkbox', { name: new RegExp(d.name) })[0]!);
+    }
+    await user.click(within(sheet).getByRole('button', { name: 'Quay 3 món' }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+
+    const names = picks.map((d) => d.name);
+    await screen.findByRole('button', { name: /khám phá món này/i }, { timeout: 2000 });
+    const first = headingName(screen.getByRole('heading', { level: 2 }));
+    expect(names).toContain(first);
+
+    // "Loại & quay tiếp" removes the winner and spins over the other two.
+    const knock = screen.getByRole('button', { name: /loại & quay tiếp/i });
+    await waitFor(() => expect(knock).not.toHaveAttribute('aria-disabled', 'true'));
+    await user.click(knock);
+    await waitFor(() =>
+      expect(headingName(screen.getByRole('heading', { level: 2 }))).not.toBe(first),
+    );
+    expect(names).toContain(headingName(screen.getByRole('heading', { level: 2 })));
+    // Two left: nothing more to knock out.
+    expect(screen.queryByRole('button', { name: /loại & quay tiếp/i })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /quay lại/i }));
+    expect(screen.getByLabelText(/^Món [12] trên 2$/)).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /tất cả/i }));
+    expect(screen.getByLabelText(new RegExp(`trên ${reelCount()}$`))).toBeInTheDocument();
   });
 });

@@ -11,7 +11,9 @@ interface ReelItemProps {
   useFull: boolean;
   busy: boolean;
   driftSeed: number;
-  onActivate: () => void;
+  /** Virtual index of this slot, handed back on activation. */
+  vi: number;
+  onActivate: (vi: number) => void;
   onHover?: (hover: boolean) => void;
   ref?: Ref<HTMLButtonElement>;
 }
@@ -28,6 +30,7 @@ export const ReelItem = memo(function ReelItem({
   useFull,
   busy,
   driftSeed,
+  vi,
   onActivate,
   onHover,
   ref,
@@ -40,9 +43,10 @@ export const ReelItem = memo(function ReelItem({
       className={`fr-item ${isCentre ? 'is-centre' : ''} ${isWinner ? 'is-winner' : ''}`}
       tabIndex={isCentre ? 0 : -1}
       data-reel-centre={isCentre || undefined}
+      data-vi={vi}
       aria-disabled={busy || undefined}
       onClick={() => {
-        if (!busy) onActivate();
+        if (!busy) onActivate(vi);
       }}
       onPointerEnter={onHover ? (e) => e.pointerType === 'mouse' && onHover(true) : undefined}
       onPointerLeave={onHover ? () => onHover(false) : undefined}

@@ -11,3 +11,6 @@ storage/uploads/*
 backups/
 *.log
 storage/database/
+
+# Dev mail log (contains login codes)
+storage/logs/

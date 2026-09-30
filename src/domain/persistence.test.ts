@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { STORAGE_KEY, SCHEMA_VERSION, loadProgress, saveProgress } from './persistence';
 import { createInitialProgress } from './progress';
 import { gameReducer } from './reducer';
+import { dateKey } from './time';
 
 const NOON = new Date(2026, 8, 29, 12, 0, 0).getTime();
 
@@ -46,5 +47,19 @@ describe('guest progress persistence', () => {
     );
     const r = loadProgress(NOON);
     expect(r.status).toBe('recovered');
+  });
+
+  it('restores saves made before watering existed, with dry soil and a full can', () => {
+    const old = createInitialProgress(NOON) as unknown as Record<string, unknown>;
+    delete old.water;
+    for (const plot of old.plots as Record<string, unknown>[]) delete plot.wateredAt;
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ version: SCHEMA_VERSION, savedAt: NOON, data: old }),
+    );
+    const r = loadProgress(NOON);
+    expect(r.status).toBe('restored');
+    expect(r.progress.plots.every((p) => p.wateredAt === null)).toBe(true);
+    expect(r.progress.water).toEqual({ date: dateKey(NOON), used: 0, bonus: 0 });
   });
 });

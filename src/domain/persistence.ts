@@ -1,5 +1,5 @@
-import { FARM_PLOT_COUNT } from '../data/game';
-import type { CropId } from '../data/types';
+import { DECOR, FARM_PLOT_COUNT, MAX_PLOT_COUNT } from '../data/game';
+import type { CropId, DecorId } from '../data/types';
 import { createInitialProgress, EMPTY_CROPS, type GuestProgress } from './progress';
 import { DEFAULT_FILTERS } from './recommend';
 
@@ -48,7 +48,12 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
   const ingredients = cropCounts(raw.ingredients);
   if (!seeds || !ingredients) return null;
   if (typeof raw.guestId !== 'string' || typeof raw.xp !== 'number') return null;
-  if (!Array.isArray(raw.plots) || raw.plots.length !== FARM_PLOT_COUNT) return null;
+  if (
+    !Array.isArray(raw.plots) ||
+    raw.plots.length < FARM_PLOT_COUNT ||
+    raw.plots.length > MAX_PLOT_COUNT
+  )
+    return null;
   if (!raw.plots.every((p) => isObject(p) && typeof p.id === 'number')) return null;
   const stamps = raw.stamps;
   if (!isObject(stamps) || !isStringArray(stamps.discovered) || !isStringArray(stamps.eaten)) {
@@ -69,6 +74,35 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
     missions: isObject(raw.missions) ? p.missions : base.missions,
     streak: isObject(raw.streak) ? p.streak : base.streak,
     cooked: isObject(raw.cooked) ? p.cooked : {},
+    // Added after v1 shipped: older saves simply start with a full can and dry soil.
+    plots: p.plots.map((pl) => ({
+      ...pl,
+      wateredAt: typeof pl.wateredAt === 'number' ? pl.wateredAt : null,
+    })),
+    water:
+      isObject(raw.water) &&
+      typeof p.water.date === 'string' &&
+      Number.isFinite(p.water.used) &&
+      Number.isFinite(p.water.bonus)
+        ? p.water
+        : base.water,
+    orders:
+      isObject(raw.orders) && typeof p.orders.date === 'string' && isStringArray(p.orders.done)
+        ? p.orders
+        : base.orders,
+    coins:
+      typeof raw.coins === 'number' && Number.isFinite(raw.coins) && raw.coins >= 0
+        ? Math.floor(raw.coins)
+        : 0,
+    photos: isStringArray(raw.photos) ? raw.photos : [],
+    decor: isStringArray(raw.decor) ? (raw.decor.filter((d) => d in DECOR) as DecorId[]) : [],
+    recentCropUnlock:
+      typeof raw.recentCropUnlock === 'string' && raw.recentCropUnlock in EMPTY_CROPS
+        ? (raw.recentCropUnlock as CropId)
+        : null,
+    unlockedCrops: isStringArray(raw.unlockedCrops)
+      ? (raw.unlockedCrops.filter((c) => c in EMPTY_CROPS) as CropId[])
+      : [],
   };
 }
 

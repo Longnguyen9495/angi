@@ -1,0 +1,336 @@
+/* ——— Account: "Lưu hành trình" sheet, profile block, journey offer ——— */
+.account {
+  display: grid;
+  gap: 16px;
+}
+
+.account__lead {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.account__lead svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--fr-leaf);
+}
+
+.account__perks {
+  display: grid;
+  gap: 8px;
+  color: var(--fr-muted);
+  font-size: 0.88rem;
+}
+
+.account__perks li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.account__perks svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--fr-gold);
+}
+
+.account__field {
+  display: grid;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--fr-muted);
+}
+
+.account__field input {
+  min-height: 50px;
+  padding: 0 16px;
+  border: 1px solid var(--fr-line-strong);
+  border-radius: 14px;
+  background: var(--fr-canvas);
+  color: var(--fr-ivory);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.account__field input:focus {
+  outline: none;
+  border-color: var(--fr-gold);
+}
+
+.account__field input[aria-invalid='true'] {
+  border-color: var(--fr-danger);
+}
+
+.account__code {
+  max-width: 220px;
+  letter-spacing: 0.5em;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.4rem !important;
+  text-align: center;
+}
+
+.account__note {
+  color: var(--fr-soft);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.account__check {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  cursor: pointer;
+}
+
+.account__check input {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  accent-color: var(--fr-gold);
+}
+
+.account__check a {
+  color: var(--fr-gold);
+}
+
+.account__error {
+  color: var(--fr-danger);
+  font-size: 0.86rem;
+}
+
+.account__dev {
+  padding: 8px 12px;
+  border: 1px dashed var(--fr-gold);
+  border-radius: 10px;
+  color: var(--fr-gold);
+  font-size: 0.82rem;
+}
+
+.account__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.account__link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--fr-muted);
+  font: inherit;
+  font-size: 0.82rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.account__compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.account__side {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+  border: 1px solid var(--fr-line-strong);
+  border-radius: 16px;
+  font-size: 0.84rem;
+  color: var(--fr-muted);
+}
+
+.account__side-title {
+  color: var(--fr-ivory);
+  font-family: var(--fr-display);
+  font-size: 1rem;
+}
+
+.profile__confirm-note {
+  flex-basis: 100%;
+  color: var(--fr-muted);
+  font-size: 0.8rem;
+}
+
+/* Journey hero: the quiet "keep this journey?" offer */
+.fj-keep {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin-top: 24px;
+  padding: 14px 18px;
+  border: 1px solid var(--fr-line-strong);
+  border-radius: 18px;
+  background: rgb(215 168 93 / 6%);
+}
+
+.fj-keep__icon {
+  flex-shrink: 0;
+  color: var(--fr-gold);
+}
+
+.fj-keep__copy {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.fj-keep__title {
+  font-family: var(--fr-display);
+  font-size: 1.05rem;
+}
+
+.fj-keep__body {
+  color: var(--fr-muted);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.fj-keep__actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ——— Check-in photo ——— */
+.photo-capture {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.photo-capture__pick {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 16px;
+  border: 1px dashed var(--fr-line-strong);
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.photo-capture__pick:hover,
+.photo-capture__pick:focus-within {
+  border-color: var(--fr-gold);
+}
+
+.photo-capture__pick.is-busy {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.photo-capture__xp {
+  color: var(--fr-gold);
+  font-weight: 500;
+}
+
+.photo-capture__done {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.88rem;
+}
+
+.photo-capture__done p {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--fr-leaf);
+}
+
+.photo-capture__img {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.photo-capture__note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--fr-soft);
+  font-size: 0.74rem;
+}
+
+.photo-capture__error {
+  color: var(--fr-danger);
+  font-size: 0.84rem;
+}
+
+/* ——— Meal album ——— */
+.fj-album-wrap {
+  display: grid;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.fj-album {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.fj-album__item {
+  position: relative;
+  display: grid;
+  gap: 6px;
+}
+
+.fj-album__item img {
+  width: 100%;
+  aspect-ratio: 1;
+  height: auto;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+.fj-album__caption {
+  display: grid;
+  font-size: 0.8rem;
+}
+
+.fj-album__name {
+  font-family: var(--fr-display);
+  font-size: 0.95rem;
+}
+
+.fj-album__when {
+  color: var(--fr-soft);
+}
+
+.fj-album__delete {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(12 12 11 / 72%);
+  color: var(--fr-ivory);
+  cursor: pointer;
+}
+
+.fj-album__delete:focus-visible {
+  outline: 2px solid var(--fr-gold);
+}
+
+@media (max-width: 480px) {
+  .account__compare {
+    grid-template-columns: 1fr;
+  }
+
+  .fj-album {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

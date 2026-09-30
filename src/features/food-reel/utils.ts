@@ -30,3 +30,13 @@ export function orbitPositions(count: number, size: number): { x: number; y: num
     return { x: Math.cos(a) * rx, y: Math.sin(a) * ry };
   });
 }
+
+/** Case- and accent-insensitive text for Vietnamese search ("bun bo" finds "Bún bò"). */
+export function fold(text: string): string {
+  return text
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLowerCase();
+}

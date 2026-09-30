@@ -17,8 +17,21 @@ npm run build          # build production vào dist/ + nén sẵn .br/.gz (Apach
 npm run reel:manifest  # tạo lại manifest gọn từ public/images/food-reel/manifest.json
 ```
 
+Sprite khu vườn (10 loại cây × 4 giai đoạn, nông sản, đồ trang trí — WebP trong suốt ở `public/images/garden/`)
+được vẽ lại bằng `npm run assets:garden`; prompt để thay bằng ảnh AI nằm ở `prompts/garden-sprite-prompts.md`.
+
 Ảnh món (JPEG cục bộ) được sinh lại bằng:
 `powershell -ExecutionPolicy Bypass -File scripts/generate-dish-images.ps1`
+
+## Tài khoản khách (tuỳ chọn) & ảnh check-in
+
+- Khách không cần đăng nhập. `Lưu hành trình` chỉ hỏi **email** → mã 6 số (không mật khẩu). Chi tiết: `plans/anh-check-in-va-tai-khoan.md`.
+- Ảnh check-in lưu **trên máy khách** (IndexedDB), đã nén và xoá EXIF/GPS — không bao giờ tải lên.
+- Sau khi pull bản này, chạy `php server/bin/migrate.php` (local và VPS) để tạo bảng `users`, `login_codes`, `user_sessions`, `user_progress`.
+- `.env`: `APP_URL`, `APP_KEY` (chuỗi ngẫu nhiên dài), `MAIL_DRIVER` = `log` (dev, ghi `storage/logs/mail.log`) | `mail` | `smtp` (+ `SMTP_*`).
+  `APP_ENV=local` trả mã trong response để test không cần hộp thư — **không** bật trên production.
+- Kiểm tra: `npm run test:account` (chạy trên SQLite tạm, không đụng dữ liệu thật).
+- Trang quyền riêng tư: `public/quyen-rieng-tu.html` — cần điền email liên hệ (chỗ đánh dấu `[điền email liên hệ]`).
 
 ## http://angi.local (XAMPP/Apache)
 

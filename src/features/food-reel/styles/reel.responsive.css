@@ -169,6 +169,15 @@
     font-size: 0.85rem;
   }
 
+  /* Phones: the Rổ switch takes the hint's row; the hint itself goes. */
+  .fr-dock__side {
+    grid-area: hint;
+  }
+
+  .fr-dock__side .fr-hint {
+    display: none;
+  }
+
   .fr-hint {
     grid-area: hint;
     justify-self: stretch;

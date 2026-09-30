@@ -3,6 +3,7 @@ import type {
   BudgetId,
   CropDef,
   CropId,
+  DecorId,
   DishGroup,
   MissionDef,
   MoodId,
@@ -74,7 +75,54 @@ export const CROPS: Record<CropId, CropDef> = {
     regions: ['north', 'south'],
     color: '#d6452f',
   },
+  lemongrass: {
+    id: 'lemongrass',
+    name: 'Sả',
+    seedName: 'Gốc sả giống',
+    produceName: 'Sả',
+    growHours: 4,
+    yield: 1,
+    regions: ['central', 'south'],
+    color: '#b9c96a',
+    unlock: { level: 2 },
+  },
+  garlic: {
+    id: 'garlic',
+    name: 'Tỏi',
+    seedName: 'Tép tỏi giống',
+    produceName: 'Tỏi',
+    growHours: 5,
+    yield: 1,
+    regions: ['north', 'central'],
+    color: '#efe6d2',
+    unlock: { level: 3 },
+  },
+  cucumber: {
+    id: 'cucumber',
+    name: 'Dưa leo',
+    seedName: 'Hạt dưa leo',
+    produceName: 'Dưa leo',
+    growHours: 4,
+    yield: 1,
+    regions: ['north', 'south'],
+    color: '#5f9a3a',
+    unlock: { level: 4 },
+  },
+  lime: {
+    id: 'lime',
+    name: 'Chanh',
+    seedName: 'Cây chanh giống',
+    produceName: 'Chanh',
+    growHours: 6,
+    yield: 1,
+    regions: ['north', 'central', 'south'],
+    color: '#8cc43f',
+    unlock: { level: 5 },
+  },
 };
+
+/** The six crops every guest starts with; the rest open by level. */
+export const BASE_CROPS: CropId[] = ['rice', 'herbs', 'chili', 'scallion', 'bean', 'tomato'];
 
 export const CROP_LIST: CropDef[] = Object.values(CROPS);
 
@@ -83,6 +131,7 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
   'com-tam': {
     id: 'com-tam',
     name: 'Cơm tấm sườn',
+    dishId: 'com-tam',
     region: 'south',
     group: 'rice',
     ingredients: [
@@ -90,12 +139,14 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
       { crop: 'scallion', qty: 1 },
     ],
     xp: 30,
+    starter: true,
     unlockNote: 'Công thức khởi đầu — mở sẵn cho mọi khách.',
     fact: 'Cơm tấm vốn nấu từ hạt gạo vỡ trong lúc xay xát, nay thành đặc sản Sài Gòn.',
   },
   'bun-rieu': {
     id: 'bun-rieu',
     name: 'Bún riêu cua',
+    dishId: 'bun-rieu',
     region: 'north',
     group: 'noodle-soup',
     ingredients: [
@@ -104,12 +155,14 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
       { crop: 'bean', qty: 1 },
     ],
     xp: 45,
+    starter: true,
     unlockNote: 'Mở sẵn — cần ba nguyên liệu.',
     fact: 'Riêu được làm từ cua đồng giã nhỏ, lọc lấy nước rồi đun cho gạch cua kết lại.',
   },
   'bun-bo-hue': {
     id: 'bun-bo-hue',
     name: 'Bún bò Huế',
+    dishId: 'bun-bo-hue',
     region: 'central',
     group: 'noodle-soup',
     ingredients: [
@@ -119,8 +172,153 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
       { crop: 'scallion', qty: 1 },
     ],
     xp: 60,
+    starter: true,
     unlockNote: 'Mở sẵn — công thức bốn nguyên liệu.',
     fact: 'Nước dùng bún bò Huế thơm nhờ sả và mắm ruốc, sợi bún to hơn bún thường.',
+  },
+  // ——— Nam Bộ ———
+  'goi-cuon': {
+    id: 'goi-cuon',
+    name: 'Gỏi cuốn tôm thịt',
+    dishId: 'goi-cuon',
+    region: 'south',
+    group: 'bread-roll',
+    ingredients: [
+      { crop: 'rice', qty: 1 },
+      { crop: 'herbs', qty: 1 },
+      { crop: 'bean', qty: 1 },
+    ],
+    xp: 45,
+    unlockNote: 'Mở cùng Nam Bộ.',
+    fact: 'Gỏi cuốn không chiên: bánh tráng chỉ nhúng nước, cuốn tôm, thịt, bún và rau sống.',
+  },
+  'banh-xeo': {
+    id: 'banh-xeo',
+    name: 'Bánh xèo',
+    dishId: 'banh-xeo',
+    region: 'south',
+    group: 'pancake',
+    ingredients: [
+      { crop: 'rice', qty: 1 },
+      { crop: 'bean', qty: 1 },
+      { crop: 'herbs', qty: 1 },
+      { crop: 'scallion', qty: 1 },
+    ],
+    xp: 55,
+    unlockNote: 'Mở cùng Nam Bộ.',
+    fact: 'Tên bánh xèo lấy từ tiếng bột gạo xèo lên khi đổ vào chảo nóng.',
+  },
+  'bo-luc-lac': {
+    id: 'bo-luc-lac',
+    name: 'Bò lúc lắc',
+    dishId: 'bo-luc-lac',
+    region: 'south',
+    group: 'rice',
+    ingredients: [
+      { crop: 'tomato', qty: 1 },
+      { crop: 'garlic', qty: 1 },
+      { crop: 'cucumber', qty: 1 },
+      { crop: 'scallion', qty: 1 },
+    ],
+    xp: 65,
+    unlockNote: 'Mở cùng Nam Bộ — cần tỏi và dưa leo.',
+    fact: 'Thịt bò cắt hạt lựu được lắc đều trên chảo thật nóng, nên có tên "lúc lắc".',
+  },
+  // ——— Trung Bộ ———
+  'mi-quang': {
+    id: 'mi-quang',
+    name: 'Mì Quảng',
+    dishId: 'mi-quang',
+    region: 'central',
+    group: 'noodle-dry',
+    ingredients: [
+      { crop: 'rice', qty: 1 },
+      { crop: 'bean', qty: 1 },
+      { crop: 'herbs', qty: 1 },
+    ],
+    xp: 45,
+    unlockNote: 'Mở cùng Trung Bộ.',
+    fact: 'Mì Quảng chỉ chan xâm xấp nước nhưng rất đậm, ăn kèm bánh tráng nướng và đậu phộng.',
+  },
+  'com-ga-hoi-an': {
+    id: 'com-ga-hoi-an',
+    name: 'Cơm gà Hội An',
+    dishId: 'com-ga-hoi-an',
+    region: 'central',
+    group: 'rice',
+    ingredients: [
+      { crop: 'rice', qty: 1 },
+      { crop: 'scallion', qty: 1 },
+      { crop: 'herbs', qty: 1 },
+      { crop: 'lime', qty: 1 },
+    ],
+    xp: 60,
+    unlockNote: 'Mở cùng Trung Bộ — cần chanh.',
+    fact: 'Gạo được nấu bằng nước luộc gà và chút nghệ nên hạt cơm vàng và thơm.',
+  },
+  'nem-nuong': {
+    id: 'nem-nuong',
+    name: 'Nem nướng Ninh Hòa',
+    dishId: 'nem-nuong',
+    region: 'central',
+    group: 'bread-roll',
+    ingredients: [
+      { crop: 'rice', qty: 1 },
+      { crop: 'herbs', qty: 1 },
+      { crop: 'garlic', qty: 1 },
+      { crop: 'cucumber', qty: 1 },
+    ],
+    xp: 60,
+    unlockNote: 'Mở cùng Trung Bộ — cần tỏi và dưa leo.',
+    fact: 'Nem được nướng trên than hoa rồi cuốn cùng rau sống, dưa leo và chấm nước sốt gan.',
+  },
+  // ——— Bắc Bộ ———
+  'pho-bo': {
+    id: 'pho-bo',
+    name: 'Phở bò',
+    dishId: 'pho-bo',
+    region: 'north',
+    group: 'noodle-soup',
+    ingredients: [
+      { crop: 'rice', qty: 1 },
+      { crop: 'scallion', qty: 1 },
+      { crop: 'herbs', qty: 1 },
+      { crop: 'lime', qty: 1 },
+    ],
+    xp: 60,
+    unlockNote: 'Mở cùng Bắc Bộ — cần chanh.',
+    fact: 'Nước phở trong nhờ xương bò ninh nhỏ lửa nhiều giờ cùng gừng, hành nướng và hoa hồi.',
+  },
+  'bun-cha': {
+    id: 'bun-cha',
+    name: 'Bún chả Hà Nội',
+    dishId: 'bun-cha',
+    region: 'north',
+    group: 'noodle-dry',
+    ingredients: [
+      { crop: 'rice', qty: 1 },
+      { crop: 'herbs', qty: 1 },
+      { crop: 'garlic', qty: 1 },
+      { crop: 'chili', qty: 1 },
+    ],
+    xp: 60,
+    unlockNote: 'Mở cùng Bắc Bộ — cần tỏi.',
+    fact: 'Chả được nướng trên than hoa, thả vào bát nước chấm chua ngọt có tỏi ớt ngâm.',
+  },
+  'banh-cuon': {
+    id: 'banh-cuon',
+    name: 'Bánh cuốn Thanh Trì',
+    dishId: 'banh-cuon',
+    region: 'north',
+    group: 'bread-roll',
+    ingredients: [
+      { crop: 'rice', qty: 1 },
+      { crop: 'scallion', qty: 1 },
+      { crop: 'bean', qty: 1 },
+    ],
+    xp: 45,
+    unlockNote: 'Mở cùng Bắc Bộ.',
+    fact: 'Lá bánh được tráng trên khuôn vải căng trên nồi nước sôi, mỏng đến mức nhìn xuyên được.',
   },
 };
 
@@ -186,10 +384,59 @@ export const XP = {
   checkinSwapped: 15,
   checkinSkipped: 5,
   harvestPerPlot: 5,
+  checkinPhoto: 5,
 } as const;
+
+/**
+ * Watering is a bonus, never a chore: an unwatered crop still ripens on time and
+ * nothing ever withers. Each can shortens what is left of the grow time.
+ */
+export const WATERING = {
+  /** Cans per local day; a check-in after a real meal adds one more. */
+  perDay: 3,
+  /** Share of the remaining grow time one watering removes. */
+  cut: 0.25,
+  /** A plot can be watered again only after this long. */
+  cooldownMs: 60 * 60 * 1000,
+} as const;
+
+/**
+ * Chợ quê: spare produce sells for xu, xu buy seeds of any open crop and
+ * decorations for the garden. Prices favour growing over trading.
+ */
+export const MARKET = {
+  /** What the market pays for one produce. */
+  sell: (crop: CropId): number => (CROPS[crop].unlock ? 6 : 4),
+  /** What one seed costs. */
+  seed: (crop: CropId): number => (CROPS[crop].unlock ? 10 : 6),
+} as const;
+
+export interface DecorDef {
+  id: DecorId;
+  name: string;
+  price: number;
+  note: string;
+}
+
+export const DECOR: Record<DecorId, DecorDef> = {
+  scarecrow: {
+    id: 'scarecrow',
+    name: 'Bù nhìn nón lá',
+    price: 40,
+    note: 'Đứng gác khu vườn, đội nón lá.',
+  },
+  lantern: { id: 'lantern', name: 'Đèn lồng đỏ', price: 30, note: 'Sáng lên khi trời tối.' },
+  jar: { id: 'jar', name: 'Chum nước sành', price: 25, note: 'Chum hứng nước mưa cạnh luống.' },
+  fence: { id: 'fence', name: 'Hàng rào tre', price: 35, note: 'Rào tre bao quanh khu vườn.' },
+};
+
+export const DECOR_LIST: DecorDef[] = Object.values(DECOR);
 
 export const XP_PER_LEVEL = 100;
 export const FARM_PLOT_COUNT = 6;
+/** One more plot at each of these levels (6 → 9). */
+export const PLOT_UNLOCK_LEVELS = [3, 5, 7] as const;
+export const MAX_PLOT_COUNT = FARM_PLOT_COUNT + PLOT_UNLOCK_LEVELS.length;
 
 export const BUDGET_OPTIONS: { id: BudgetId | 'any'; label: string; hint: string }[] = [
   { id: 'low', label: 'Dưới 40k', hint: 'Tiết kiệm' },

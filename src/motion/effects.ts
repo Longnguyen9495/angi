@@ -131,3 +131,54 @@ export function pulseOnce(el: HTMLElement | null, className = 'is-pulsing', redu
   const clear = () => el.classList.remove(className);
   el.addEventListener('animationend', clear, { once: true });
 }
+
+/**
+ * Water drops falling from a watering can's spout onto the soil. Same rules as
+ * burstSoil: plain <span>s, transform + opacity only, capped, self-removing.
+ */
+export function sprinkle(container: HTMLElement, count = 8, reduced = false): EffectHandle {
+  if (reduced || !canAnimate(container)) return noop;
+  const n = Math.min(Math.max(0, count), MAX_PARTICLES);
+  const nodes: HTMLSpanElement[] = [];
+  const anims: Animation[] = [];
+  for (let i = 0; i < n; i++) {
+    const drop = document.createElement('span');
+    drop.className = 'water-drop';
+    drop.setAttribute('aria-hidden', 'true');
+    container.appendChild(drop);
+    nodes.push(drop);
+    // Drops leave the spout in a narrow fan and land spread over the soil.
+    const dx = (i - (n - 1) / 2) * 7 + ((i * 13) % 5) - 2;
+    const fall = 46 + (i % 3) * 6;
+    const a = drop.animate(
+      [
+        { transform: 'translate(0, 0) scale(0.6, 0.8)', opacity: 0 },
+        {
+          transform: `translate(${(dx * 0.3).toFixed(1)}px, 8px) scale(0.8, 1.2)`,
+          opacity: 1,
+          offset: 0.2,
+        },
+        {
+          transform: `translate(${dx.toFixed(1)}px, ${fall}px) scale(1, 1.3)`,
+          opacity: 0.9,
+          offset: 0.85,
+        },
+        { transform: `translate(${dx.toFixed(1)}px, ${fall + 2}px) scale(1.8, 0.4)`, opacity: 0 },
+      ],
+      {
+        duration: 520,
+        delay: 160 + i * 55,
+        easing: 'cubic-bezier(.5,0,.9,.6)',
+        fill: 'both',
+      },
+    );
+    a.onfinish = () => drop.remove();
+    anims.push(a);
+  }
+  return {
+    cancel() {
+      anims.forEach((a) => a.cancel());
+      nodes.forEach((d) => d.remove());
+    },
+  };
+}

@@ -1,92 +1,124 @@
-import { CookingPot, SealCheck } from '@phosphor-icons/react';
-import { useState } from 'react';
+import { CookingPot, LockSimple, SealCheck } from '@phosphor-icons/react';
 import { CropIcon } from '../../../components/ui/CropIcon';
 import { ProgressBar } from '../../../components/ui/ProgressBar';
 import { CROPS, RECIPE_LIST, REGIONS } from '../../../data/game';
 import type { RecipeId } from '../../../data/types';
-import { recipeProgress } from '../../../domain/selectors';
-import { currentTime } from '../../../domain/time';
-import { useFeedback, useGame } from '../../../state/hooks';
+import {
+  cropAvailable,
+  recipeAvailable,
+  recipeProgress,
+  regionProgress,
+} from '../../../domain/selectors';
+import { useGame } from '../../../state/hooks';
 
-const STATUS = { have: 'Có', growing: 'Đang lớn', missing: 'Thiếu' } as const;
+const STATUS = { have: 'Có', growing: 'Đang lớn', missing: 'Thiếu', locked: 'Chưa mở' } as const;
 
 /** Recipes fill from harvested ingredients plus crops still in the ground. */
-export function RecipesSection() {
-  const { state, dispatch } = useGame();
-  const { toast } = useFeedback();
-  const [justCooked, setJustCooked] = useState<RecipeId | null>(null);
+export function RecipesSection({ onCook }: { onCook: (recipe: RecipeId) => void }) {
+  const { state } = useGame();
+  const open = RECIPE_LIST.filter((r) => recipeAvailable(state, r.id));
+  const locked = RECIPE_LIST.filter((r) => !recipeAvailable(state, r.id));
 
   return (
-    <ol className="fj-recipes">
-      {RECIPE_LIST.map((r, i) => {
-        const p = recipeProgress(state, r.id);
-        const have = p.ingredients.reduce((s, x) => s + Math.min(x.qty, x.have), 0);
-        const cooked = state.cooked[r.id] ?? 0;
-        return (
-          <li key={r.id} className={`fj-recipe ${justCooked === r.id ? 'is-cooked' : ''}`}>
-            <div className="fj-recipe__head">
-              <span className="fj-recipe__no" aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <h3 className="fj-recipe__name">{r.name}</h3>
-              <span className={`fj-region-tag fj-region-tag--${r.region}`}>
-                {REGIONS[r.region].name}
-              </span>
-            </div>
-            <ProgressBar
-              label={`Tiến độ ${r.name}`}
-              hideLabel
-              value={have}
-              pending={p.secured - have}
-              max={p.total}
-              valueText={`${p.secured}/${p.total} nguyên liệu${p.secured > have ? ` · ${p.secured - have} đang lớn` : ''}`}
-              size="sm"
-              tone={r.region}
-            />
-            <ul className="fj-ingredients">
-              {p.ingredients.map((x) => {
-                const status = x.have >= x.qty ? 'have' : x.growing > 0 ? 'growing' : 'missing';
-                return (
-                  <li key={x.crop} className={`fj-ingredient fj-ingredient--${status}`}>
-                    <CropIcon crop={x.crop} size={14} />
-                    {CROPS[x.crop].produceName}
-                    <span className="fj-ingredient__status">{STATUS[status]}</span>
-                  </li>
-                );
-              })}
-            </ul>
-            <div className="fj-recipe__foot">
-              {p.canCook ? (
-                <button
-                  type="button"
-                  className="fr-cta"
-                  onClick={() => {
-                    dispatch({ type: 'COOK', recipeId: r.id, now: currentTime() });
-                    setJustCooked(r.id);
-                    toast({ message: `Đã nấu ${r.name}! +${r.xp} XP.`, tone: 'success' });
-                  }}
-                >
-                  <CookingPot aria-hidden="true" size={18} />
-                  Nấu {r.name}
-                </button>
-              ) : (
-                <p className="fj-note">
-                  {p.ingredients.some((x) => x.have < x.qty && x.growing === 0)
-                    ? 'Chốt một món có nguyên liệu còn thiếu để nhận hạt.'
-                    : 'Chờ cây lớn rồi thu hoạch là nấu được.'}
-                </p>
-              )}
-              <span className="fj-recipe__xp">+{r.xp} XP</span>
-              {cooked > 0 && (
-                <span className="fj-recipe__cooked">
-                  <SealCheck aria-hidden="true" size={16} weight="fill" /> Đã nấu ×{cooked}
+    <>
+      <ol className="fj-recipes">
+        {open.map((r, i) => {
+          const p = recipeProgress(state, r.id);
+          const have = p.ingredients.reduce((s, x) => s + Math.min(x.qty, x.have), 0);
+          const cooked = state.cooked[r.id] ?? 0;
+          return (
+            <li key={r.id} className="fj-recipe">
+              <div className="fj-recipe__head">
+                <span className="fj-recipe__no" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
                 </span>
-              )}
-            </div>
-            {justCooked === r.id && <p className="fj-recipe__fact">{r.fact}</p>}
-          </li>
-        );
-      })}
-    </ol>
+                <h3 className="fj-recipe__name">{r.name}</h3>
+                <span className={`fj-region-tag fj-region-tag--${r.region}`}>
+                  {REGIONS[r.region].name}
+                </span>
+              </div>
+              <ProgressBar
+                label={`Tiến độ ${r.name}`}
+                hideLabel
+                value={have}
+                pending={p.secured - have}
+                max={p.total}
+                valueText={`${p.secured}/${p.total} nguyên liệu${p.secured > have ? ` · ${p.secured - have} đang lớn` : ''}`}
+                size="sm"
+                tone={r.region}
+              />
+              <ul className="fj-ingredients">
+                {p.ingredients.map((x) => {
+                  const status = !cropAvailable(state, x.crop)
+                    ? 'locked'
+                    : x.have >= x.qty
+                      ? 'have'
+                      : x.growing > 0
+                        ? 'growing'
+                        : 'missing';
+                  return (
+                    <li key={x.crop} className={`fj-ingredient fj-ingredient--${status}`}>
+                      <CropIcon crop={x.crop} size={14} />
+                      {CROPS[x.crop].produceName}
+                      <span className="fj-ingredient__status">{STATUS[status]}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <div className="fj-recipe__foot">
+                {p.canCook ? (
+                  <button type="button" className="fr-cta" onClick={() => onCook(r.id)}>
+                    <CookingPot aria-hidden="true" size={18} />
+                    Nấu {r.name}
+                  </button>
+                ) : (
+                  <p className="fj-note">
+                    {(() => {
+                      const lockedCrop = p.ingredients.find((x) => !cropAvailable(state, x.crop));
+                      if (lockedCrop) {
+                        const c = CROPS[lockedCrop.crop];
+                        return `Cần ${c.name.toLowerCase()} — mở ở cấp ${c.unlock?.level}.`;
+                      }
+                      return p.ingredients.some((x) => x.have < x.qty && x.growing === 0)
+                        ? 'Chốt một món có nguyên liệu còn thiếu để nhận hạt.'
+                        : 'Chờ cây lớn rồi thu hoạch là nấu được.';
+                    })()}
+                  </p>
+                )}
+                <span className="fj-recipe__xp">+{r.xp} XP</span>
+                {cooked > 0 && (
+                  <span className="fj-recipe__cooked">
+                    <SealCheck aria-hidden="true" size={16} weight="fill" /> Đã nấu ×{cooked}
+                  </span>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+      {locked.length > 0 && (
+        <div className="fj-locked">
+          <h3 className="fj-h3">Chưa mở · {locked.length} công thức</h3>
+          <ul className="fj-locked__list">
+            {locked.map((r) => {
+              const need = regionProgress(state, r.region).stampsNeeded;
+              return (
+                <li key={r.id} className="fj-locked__item">
+                  <LockSimple aria-hidden="true" size={14} />
+                  <span className="fj-locked__name">{r.name}</span>
+                  <span className={`fj-region-tag fj-region-tag--${r.region}`}>
+                    {REGIONS[r.region].name}
+                  </span>
+                  <span className="fj-locked__note">
+                    Mở cùng {REGIONS[r.region].name}
+                    {need > 0 ? ` · còn ${need} dấu hành trình` : ''}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+    </>
   );
 }

@@ -20,14 +20,22 @@ import { IngredientOrbit, IngredientRail } from './components/IngredientOrbit';
 import { ReelScene } from './components/ReelScene';
 import { SelectedDishOverlay } from './components/SelectedDishOverlay';
 import { SceneCounter, SpinControl } from './components/SpinControl';
+import { PoolPicker, PoolSwitch } from './components/SpinPool';
 import { SplitLines } from './components/SplitLines';
-import { dishAt, getReelDish, getReelDishBySlug, reelCount } from './data/reelCatalogue';
+import {
+  CATALOGUE_VIEW,
+  createReelView,
+  getReelDish,
+  getReelDishBySlug,
+  poolDishes,
+  reelCount,
+} from './data/reelCatalogue';
 import { layoutFor } from './engine/layout';
 import { mod, randomSeed } from './engine/spin';
 import type { ReelEvent, ReelState } from './foodReel.types';
 import { foodReelReducer, initialReelState } from './foodReelReducer';
 import { isBusy, isDetailPhase, isInteractive } from './foodReelMachine';
-import { preloadImage, useAssetPreloader } from './hooks/useAssetPreloader';
+import { preloadGradually, preloadImage, useAssetPreloader } from './hooks/useAssetPreloader';
 import { usePointerParallax } from './hooks/usePointerParallax';
 import { useReelMotionPrefs } from './hooks/useReducedMotion';
 import { useReelPhysics } from './hooks/useReelPhysics';
@@ -35,13 +43,15 @@ import { useReelPrefs } from './hooks/useReelPrefs';
 import type { Route } from './hooks/useRoute';
 import { useSound } from './hooks/useSound';
 import { useCanHover, useViewport } from './hooks/useViewport';
+import { CROPS } from '../../data/game';
+import type { CropId } from '../../data/types';
+import { dishIdsForSeed } from '../../domain/nextStep';
 
 // Story and epilogue load after the reel is on screen (preloaded when idle).
 const loadStory = () => import('./components/FoodStory');
 const loadEpilogue = () => import('./components/ChosenEpilogue');
 
 const UNLOCK_MS = 700;
-const sceneReducer = (s: ReelState, e: ReelEvent) => foodReelReducer(s, e);
 const ORBIT_DWELL_MS = 180;
 const DRAG_THRESHOLD = 6;
 
@@ -53,6 +63,8 @@ interface FoodReelExperienceProps {
   onOpenProfile: () => void;
   /** Pauses the reel loop while another full-screen layer covers it. */
   covered: boolean;
+  /** Journey asked for a spin over the dishes that grant this seed. */
+  spinRequest?: { crop: CropId; nonce: number } | null;
 }
 
 export function FoodReelExperience({
@@ -62,11 +74,12 @@ export function FoodReelExperience({
   onOpenJourney,
   onOpenProfile,
   covered,
+  spinRequest = null,
 }: FoodReelExperienceProps) {
   const { state: game, dispatch: gameDispatch } = useGame();
   const { announce } = useFeedback();
   const { reduced, saveData, autoplayVideo } = useReelMotionPrefs();
-  const { prefs, update, toggleSaved } = useReelPrefs();
+  const { prefs, update, toggleSaved, togglePool } = useReelPrefs();
   const viewport = useViewport();
   const canHover = useCanHover();
   const layout = useMemo(
@@ -82,8 +95,38 @@ export function FoodReelExperience({
     }
     return prefs.lastIndex;
   });
+  // ——— Rổ quay: spin over the whole catalogue or only the guest's shortlist ———
+  // The list persists per device; the mode does not, so a visit always opens on the full reel.
+  // Dishes knocked out with "Loại & quay tiếp" stay out for this visit only.
+  // A crop scope is a temporary shortlist opened from the Journey ("món cho hạt ớt").
+  const [scope, setScope] = useState<'all' | 'pool' | CropId>('all');
+  const [excluded, setExcluded] = useState<string[]>([]);
+  const poolSize = poolDishes(prefs.pool).length;
+  const scopeIds = useMemo(
+    () => (scope === 'all' ? null : scope === 'pool' ? prefs.pool : dishIdsForSeed(scope)),
+    [scope, prefs.pool],
+  );
+  const view = useMemo(
+    () =>
+      scopeIds ? createReelView(scopeIds.filter((id) => !excluded.includes(id))) : CATALOGUE_VIEW,
+    [scopeIds, excluded],
+  );
+  const cropScope = scope !== 'all' && scope !== 'pool' && view.pooled ? scope : null;
+  const viewRef = useRef(view);
+  useEffect(() => {
+    viewRef.current = view;
+  });
+  const [picker, setPicker] = useState(false);
+  // Bumped to spin once the reducer has picked up a new view (see the effect below).
+  const [spinNonce, setSpinNonce] = useState(0);
+  // The reducer closes over the view, so a SPIN always plans over what is on screen.
+  const sceneReducer = useCallback(
+    (s: ReelState, e: ReelEvent) => foodReelReducer(s, e, view),
+    [view],
+  );
   const [scene, send] = useReducer(sceneReducer, initialIndex, initialReelState);
   const [center, setCenter] = useState(initialIndex);
+  const centerAt = useRef(0);
   const [hoverCentre, setHoverCentre] = useState(false);
   const [orbitKeep, setOrbitKeep] = useState(false);
   const [orbitVisible, setOrbitVisible] = useState(false);
@@ -102,21 +145,32 @@ export function FoodReelExperience({
   const detailDish = getReelDish(scene.detailId);
   const winner = getReelDish(scene.winnerId);
   const chosenDish = getReelDish(scene.chosenId);
-  const centreDish = dishAt(center);
+  const centreDish = view.dishAt(center);
 
   // ——— Physics ———
   const callbacks = useMemo(
     () => ({
       onIndexChange: (i: number) => {
+        if (phaseRef.current === 'spinning' || phaseRef.current === 'settling') {
+          sound.tick(30);
+          // The reel repaints itself; the counter only needs a few updates a second.
+          const t = performance.now();
+          if (t - centerAt.current < 140) return;
+          centerAt.current = t;
+        }
         setCenter(i);
-        if (phaseRef.current === 'spinning' || phaseRef.current === 'settling') sound.tick(30);
       },
       onRest: (i: number) => {
+        setCenter(i);
         if (phaseRef.current === 'dragging') send({ type: 'DRAG_END', velocity: 0, index: i });
         else send({ type: 'NAVIGATE', index: i });
       },
       onDecelerate: () => send({ type: 'DECELERATE' }),
-      onSettle: (target: number) => send({ type: 'SETTLE', dishId: dishAt(target).id }),
+      onSettle: (target: number) => {
+        // Counter updates are throttled mid-spin; snap to the exact dish on landing.
+        setCenter(target);
+        send({ type: 'SETTLE', dishId: viewRef.current.dishAt(target).id });
+      },
     }),
     [sound],
   );
@@ -130,12 +184,13 @@ export function FoodReelExperience({
   usePointerParallax(rootRef, canHover && !reduced && !reelHidden);
 
   // ——— Boot: first visible thumbnails, bounded by a timeout ———
+  const [bootView] = useState(view);
   const bootSources = useMemo(() => {
     const out: string[] = [];
     // Only the centre and its neighbours gate the first paint; the rest stream in.
-    for (let i = -1; i <= 1; i++) out.push(dishAt(initialIndex + i).thumbnail);
+    for (let i = -1; i <= 1; i++) out.push(bootView.dishAt(initialIndex + i).thumbnail);
     return out;
-  }, [initialIndex]);
+  }, [initialIndex, bootView]);
   const boot = useAssetPreloader(bootSources);
   // Scene modules are held in state rather than React.lazy: a lazy component
   // suspends on first render and React throttles that fallback (~300 ms),
@@ -175,13 +230,74 @@ export function FoodReelExperience({
     send({ type: 'SPIN', seed: randomSeed() });
   }, []);
 
+  // A spin requested together with a view change runs one commit later, so the
+  // reducer that plans it already spins over the new view.
+  useEffect(() => {
+    if (spinNonce > 0) spin();
+  }, [spinNonce, spin]);
+
+  const setPoolMode = (on: boolean) => {
+    if (!isInteractive(phaseRef.current)) return;
+    if ((on ? 'pool' : 'all') === scope && excluded.length === 0) return;
+    send({ type: 'RESET' });
+    setExcluded([]);
+    setScope(on ? 'pool' : 'all');
+    announce(on ? `Quay trong rổ: ${poolSize} món.` : `Quay trong tất cả ${reelCount()} món.`);
+  };
+
+  const spinPool = () => {
+    setPicker(false);
+    if (!isInteractive(phaseRef.current)) return;
+    send({ type: 'RESET' });
+    setExcluded([]);
+    setScope('pool');
+    setSpinNonce((n) => n + 1);
+  };
+
+  // "Quay các món cho hạt ớt" from the Journey: spin over the dishes that grant that seed.
+  const handledRequest = useRef(0);
+  useEffect(() => {
+    if (!spinRequest || spinRequest.nonce === handledRequest.current) return;
+    const current = phaseRef.current;
+    if (current === 'chosen') send({ type: 'RESET' });
+    else if (!isInteractive(current)) return;
+    handledRequest.current = spinRequest.nonce;
+    send({ type: 'RESET' });
+    setExcluded([]);
+    setScope(spinRequest.crop);
+    setSpinNonce((n) => n + 1);
+    announce(`Quay giữa các món cho ${CROPS[spinRequest.crop].seedName.toLowerCase()}.`);
+  }, [spinRequest, phase, announce]);
+
+  const eliminate = (dishId: string) => {
+    if (phaseRef.current !== 'selected' || !view.pooled || view.count <= 2) return;
+    const dish = getReelDish(dishId);
+    send({ type: 'RESET' });
+    setExcluded((x) => [...x, dishId]);
+    setSpinNonce((n) => n + 1);
+    if (dish) announce(`Đã loại ${dish.name}. Quay tiếp ${view.count - 1} món.`);
+  };
+
   useEffect(() => {
     if (!scene.spin || scene.phase !== 'spinning') return;
-    const winnerDish = dishAt(scene.spin.target);
-    // Preload the winner's 768 px image the moment the target is known.
-    void preloadImage(winnerDish.image);
+    const winnerDish = view.dishAt(scene.spin.target);
+    // Preload the winner's 768 px image the moment the target is known, plus
+    // (desktop) the last few plates of the slow tail, and every thumbnail on the
+    // way so none decodes mid-spin.
+    // The spin starts first; the loads are fed a few per frame so starting them
+    // never costs a dropped frame.
     engine.spinTo(scene.spin, performance.now());
+    void preloadImage(winnerDish.image);
+    const { from, target } = scene.spin;
+    const queue: string[] = [];
+    for (let vi = from - layout.half; vi <= target + layout.half; vi++) {
+      const d = view.dishAt(vi);
+      queue.push(d.thumbnail);
+      if (layout.tier === 'desktop' && vi >= target - 6 && vi <= target + 1) queue.push(d.image);
+    }
+    const stopPreload = preloadGradually(queue);
     sound.whoosh();
+    return stopPreload;
     // Only react to a new spin, not to phase changes within it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scene.spinCount]);
@@ -198,9 +314,10 @@ export function FoodReelExperience({
 
   // Remember the reel position between visits.
   useEffect(() => {
-    if (phase === 'idle' || phase === 'selected')
+    // A shortlist index means nothing on the full reel, so only the full reel is remembered.
+    if ((phase === 'idle' || phase === 'selected') && !view.pooled)
       update({ lastIndex: mod(scene.index, reelCount()) });
-  }, [phase, scene.index, update]);
+  }, [phase, scene.index, update, view.pooled]);
 
   // ——— Navigation & keyboard ———
   const goStep = useCallback(
@@ -210,16 +327,6 @@ export function FoodReelExperience({
     },
     [engine],
   );
-
-  // Keep focus on the centred item while navigating with the keyboard.
-  useEffect(() => {
-    const active = document.activeElement;
-    if (active instanceof HTMLElement && active.closest('.fr-reel')) {
-      rootRef.current
-        ?.querySelector<HTMLElement>('[data-reel-centre]')
-        ?.focus({ preventScroll: true });
-    }
-  }, [center]);
 
   const openDetail = useCallback((dishId?: string) => {
     send({ type: 'OPEN_DETAIL', dishId });
@@ -380,6 +487,9 @@ export function FoodReelExperience({
 
   const rootStyle = {
     '--fr-accent-dish': (detailDish ?? winner ?? centreDish).palette[2],
+    // Reel centre and headline size come from the layout so plates and title never overlap.
+    ...(layout.centerY !== undefined && { '--fr-reel-y': `${layout.centerY}px` }),
+    ...(layout.headlineFont !== undefined && { '--fr-headline-size': `${layout.headlineFont}px` }),
   } as CSSProperties;
 
   return (
@@ -435,12 +545,17 @@ export function FoodReelExperience({
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.7, duration: 0.6 }}
                 >
-                  {reelCount()} món · ba miền & thế giới
+                  {cropScope
+                    ? `${view.count} món cho ${CROPS[cropScope].seedName.toLowerCase()}`
+                    : view.pooled
+                      ? `Rổ quay · ${view.count} món bạn chọn`
+                      : `${reelCount()} món · ba miền & thế giới`}
                 </m.p>
               </div>
 
               <div onWheel={onWheel} className="fr-reel-wrap">
                 <ReelScene
+                  view={view}
                   center={center}
                   layout={layout}
                   phase={phase}
@@ -473,10 +588,14 @@ export function FoodReelExperience({
                   key={scene.spinCount}
                   dish={winner}
                   number={winner.index + 1}
+                  pooled={view.pooled}
                   ready={scene.ready}
                   exploreRef={exploreRef}
                   onExplore={() => openDetail(winner.id)}
                   onBack={() => send({ type: 'RESET' })}
+                  onEliminate={
+                    view.pooled && view.count > 2 ? () => eliminate(winner.id) : undefined
+                  }
                   extra={
                     layout.tier !== 'desktop' ? <IngredientRail dish={winner} inline /> : undefined
                   }
@@ -485,13 +604,26 @@ export function FoodReelExperience({
 
               {showDock && (
                 <footer className="fr-dock">
-                  <SceneCounter current={mod(center, reelCount()) + 1} total={reelCount()} />
+                  <SceneCounter current={mod(center, view.count) + 1} total={view.count} />
                   <SpinControl ref={spinRef} busy={busy} onSpin={spin} />
-                  <p className="fr-hint">
-                    {canHover
-                      ? 'Kéo để khám phá · Nhấn để xem câu chuyện'
-                      : 'Vuốt để lướt · Chạm để xem chuyện'}
-                  </p>
+                  <div className="fr-dock__side">
+                    <PoolSwitch
+                      pooled={view.pooled}
+                      crop={cropScope}
+                      size={cropScope ? view.count : poolSize}
+                      left={view.pooled ? view.count : poolSize}
+                      total={reelCount()}
+                      disabled={busy || phase === 'dragging'}
+                      onAll={() => setPoolMode(false)}
+                      onPool={() => setPoolMode(true)}
+                      onEdit={() => setPicker(true)}
+                    />
+                    <p className="fr-hint">
+                      {canHover
+                        ? 'Kéo để khám phá · Nhấn để xem câu chuyện'
+                        : 'Vuốt để lướt · Chạm để xem chuyện'}
+                    </p>
+                  </div>
                 </footer>
               )}
             </main>
@@ -508,6 +640,18 @@ export function FoodReelExperience({
               onVideoMuted={(videoMuted) => update({ videoMuted })}
               saved={saved}
               onToggleSave={() => toggleSaved(detailDish.id)}
+              orderCity={prefs.orderCity}
+              onOrderCity={(orderCity) => update({ orderCity })}
+              inPool={prefs.pool.includes(detailDish.id)}
+              onTogglePool={() => {
+                const inPool = prefs.pool.includes(detailDish.id);
+                togglePool(detailDish.id);
+                announce(
+                  inPool
+                    ? `Đã bỏ ${detailDish.name} khỏi rổ quay.`
+                    : `Đã thêm ${detailDish.name} vào rổ quay.`,
+                );
+              }}
               onOpened={() => send({ type: 'DETAIL_OPENED' })}
               onClosed={onDetailClosed}
               onClose={closeDetail}
@@ -521,12 +665,24 @@ export function FoodReelExperience({
             <ChosenEpilogue
               dish={chosenDish}
               onJourney={onOpenJourney}
+              orderCity={prefs.orderCity}
+              onOrderCity={(orderCity) => update({ orderCity })}
               onSpinAgain={() => {
                 send({ type: 'RESET' });
                 send({ type: 'SPIN', seed: randomSeed() });
               }}
             />
           )}
+
+          <PoolPicker
+            open={picker}
+            onClose={() => setPicker(false)}
+            pool={prefs.pool}
+            saved={prefs.saved}
+            onToggle={togglePool}
+            onChange={(pool) => update({ pool })}
+            onSpin={spinPool}
+          />
 
           <SavedPanel
             open={panel === 'saved'}

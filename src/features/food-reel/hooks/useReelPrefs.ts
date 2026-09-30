@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { DEFAULT_CITY, isShopeeCity, type ShopeeCity } from '../data/orderLinks';
 
 const KEY = 'hanh-trinh-bep-viet/reel';
 
@@ -8,9 +9,27 @@ interface ReelPrefs {
   videoMuted: boolean;
   saved: string[];
   lastIndex: number;
+  /**
+   * Rổ quay: dish ids the guest wants to spin between. Only the list is kept;
+   * every visit starts on the full reel.
+   */
+  pool: string[];
+  /** City for ShopeeFood search links (it needs one; maps and other apps use location). */
+  orderCity: ShopeeCity;
 }
 
-const DEFAULTS: ReelPrefs = { version: 1, sound: false, videoMuted: true, saved: [], lastIndex: 0 };
+const DEFAULTS: ReelPrefs = {
+  version: 1,
+  sound: false,
+  videoMuted: true,
+  saved: [],
+  lastIndex: 0,
+  pool: [],
+  orderCity: DEFAULT_CITY,
+};
+
+const strings = (v: unknown): string[] =>
+  Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : [];
 
 function read(): ReelPrefs {
   try {
@@ -22,17 +41,17 @@ function read(): ReelPrefs {
       version: 1,
       sound: p.sound === true,
       videoMuted: p.videoMuted !== false,
-      saved: Array.isArray(p.saved)
-        ? p.saved.filter((x): x is string => typeof x === 'string')
-        : [],
+      saved: strings(p.saved),
       lastIndex: Number.isFinite(p.lastIndex) ? Math.round(p.lastIndex!) : 0,
+      pool: strings(p.pool),
+      orderCity: isShopeeCity(p.orderCity) ? p.orderCity : DEFAULT_CITY,
     };
   } catch {
     return DEFAULTS;
   }
 }
 
-/** Per-device reel conveniences: sound/mute choice, saved dishes, last position. */
+/** Per-device reel conveniences: sound/mute choice, saved dishes, last position, Rổ quay. */
 export function useReelPrefs() {
   const [prefs, setPrefs] = useState<ReelPrefs>(read);
 
@@ -57,5 +76,14 @@ export function useReelPrefs() {
     [],
   );
 
-  return { prefs, update, toggleSaved };
+  const togglePool = useCallback(
+    (id: string) =>
+      setPrefs((p) => ({
+        ...p,
+        pool: p.pool.includes(id) ? p.pool.filter((x) => x !== id) : [...p.pool, id],
+      })),
+    [],
+  );
+
+  return { prefs, update, toggleSaved, togglePool };
 }

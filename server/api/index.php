@@ -5,6 +5,7 @@ declare(strict_types=1);
 /*
  * Front controller for http://angi.local/api/*
  *   Public : GET /api/dishes, GET /api/health
+ *   Account: /api/account/* (optional guest account; writes need X-Bepviet: 1)
  *   Admin  : /api/admin/* (session + CSRF header on writes)
  */
 
@@ -12,6 +13,7 @@ require_once __DIR__ . '/../lib/Catalogue.php';
 require_once __DIR__ . '/../lib/AiEnricher.php';
 require_once __DIR__ . '/../lib/Images.php';
 require_once __DIR__ . '/../lib/Auth.php';
+require_once __DIR__ . '/../lib/Account.php';
 
 header('X-Content-Type-Options: nosniff');
 
@@ -37,6 +39,34 @@ try {
     }
     if ($method === 'GET' && $path === '/health') {
         json_response(['ok' => true, 'dishes' => $catalogue->stats()['dishes']]);
+    }
+
+    // ——— Guest account (email + one-time code) ———
+    if ($path === '/account' || str_starts_with($path, '/account/')) {
+        $account = new Account(db());
+        if ($method !== 'GET') {
+            Account::requireAppHeader();
+        }
+        $route = $method . ' ' . $path;
+        match ($route) {
+            'POST /account/code' => json_response($account->requestCode(read_json_body(), (string) ($_SERVER['REMOTE_ADDR'] ?? ''))),
+            'POST /account/verify' => json_response($account->verifyCode(read_json_body())),
+            'GET /account/link' => $account->verifyLink((string) ($_GET['t'] ?? '')),
+            'GET /account/me' => json_response(['user' => $account->me()]),
+            'GET /account/progress' => json_response($account->getProgress()),
+            'PUT /account/progress' => json_response($account->putProgress(read_json_body())),
+            'PUT /account/preferences' => json_response($account->setPreferences(read_json_body())),
+            'GET /account/export' => json_response($account->export()),
+            'POST /account/logout' => (function () use ($account) {
+                $account->logout();
+                json_response(['ok' => true]);
+            })(),
+            'DELETE /account' => (function () use ($account) {
+                $account->delete();
+                json_response(['ok' => true]);
+            })(),
+            default => throw new HttpError(404, 'Không có API này.'),
+        };
     }
 
     // ——— Admin session ———

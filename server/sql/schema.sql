@@ -56,3 +56,51 @@ CREATE TABLE IF NOT EXISTS dish_ingredients (
   CONSTRAINT fk_di_dish FOREIGN KEY (dish_id) REFERENCES dishes (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT fk_di_ingredient FOREIGN KEY (ingredient_id) REFERENCES ingredients (id) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ——— Guest accounts (optional: email + one-time code, see plans/anh-check-in-va-tai-khoan.md) ———
+-- Times are Unix seconds so the same queries run on MariaDB and SQLite.
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(254) NOT NULL,
+  marketing TINYINT(1) NOT NULL DEFAULT 0,
+  consent_version VARCHAR(20) NOT NULL,
+  consent_at INT UNSIGNED NOT NULL,
+  created_at INT UNSIGNED NOT NULL,
+  UNIQUE KEY uq_users_email (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS login_codes (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(254) NOT NULL,
+  code_hash CHAR(64) NOT NULL,
+  link_hash CHAR(64) NOT NULL,
+  ip_hash CHAR(64) NOT NULL,
+  consent_version VARCHAR(20) NOT NULL,
+  marketing TINYINT(1) NOT NULL DEFAULT 0,
+  attempts TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  expires_at INT UNSIGNED NOT NULL,
+  used_at INT UNSIGNED NULL,
+  created_at INT UNSIGNED NOT NULL,
+  KEY idx_codes_email (email, created_at),
+  KEY idx_codes_ip (ip_hash, created_at),
+  KEY idx_codes_link (link_hash)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS user_sessions (
+  token_hash CHAR(64) NOT NULL PRIMARY KEY,
+  user_id INT UNSIGNED NOT NULL,
+  created_at INT UNSIGNED NOT NULL,
+  last_seen INT UNSIGNED NOT NULL,
+  expires_at INT UNSIGNED NOT NULL,
+  KEY idx_sessions_user (user_id),
+  CONSTRAINT fk_sessions_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS user_progress (
+  user_id INT UNSIGNED NOT NULL PRIMARY KEY,
+  data MEDIUMTEXT NOT NULL,
+  version INT UNSIGNED NOT NULL DEFAULT 1,
+  updated_at INT UNSIGNED NOT NULL,
+  CONSTRAINT fk_progress_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

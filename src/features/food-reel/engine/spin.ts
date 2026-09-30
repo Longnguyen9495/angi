@@ -33,13 +33,22 @@ export const DECELERATE_AT = 0.56;
 /**
  * Decides the whole spin up-front: winner, exact virtual target and duration.
  * The animation only performs the path to this target — it never decides it.
+ *
+ * On the full catalogue the dish already at the centre is skipped so a spin
+ * always changes something. A shortlist keeps every dish in play: skipping
+ * would make a two-dish spin always land on the other one.
  */
-export function planSpin(from: number, seed: number, count: number): SpinPlan {
+export function planSpin(
+  from: number,
+  seed: number,
+  count: number,
+  { avoidCurrent = true }: { avoidCurrent?: boolean } = {},
+): SpinPlan {
   const rnd = mulberry32(seed);
   const start = Math.round(from);
   const current = mod(start, count);
   let winnerIndex = Math.floor(rnd() * count);
-  if (winnerIndex === current && count > 1) {
+  if (avoidCurrent && winnerIndex === current && count > 1) {
     winnerIndex = mod(winnerIndex + 1 + Math.floor(rnd() * (count - 1)), count);
   }
   const travel = SPIN_MIN_TRAVEL + Math.floor(rnd() * 12);

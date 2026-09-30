@@ -77,7 +77,13 @@ export function AboutPanel({ open, onClose }: { open: boolean; onClose: () => vo
         </p>
         <p>
           Sau khi chốt món, phần <em>Hành trình</em> mở ra: hạt giống, khu vườn, bản đồ ẩm thực và
-          check-in sau bữa. Tiến trình lưu trên thiết bị của bạn.
+          check-in sau bữa. Tiến trình lưu trên thiết bị của bạn; muốn giữ khi đổi máy thì lưu bằng
+          email trong Hồ sơ (không bắt buộc).
+        </p>
+        <p>
+          <a href="/quyen-rieng-tu.html" target="_blank" rel="noopener">
+            Quyền riêng tư — Bếp Việt lưu gì và cách xoá
+          </a>
         </p>
         <p className="fr-panel-note">
           Ảnh món: bộ ảnh food reel lấy từ kho truanayangi (xem ghi chú trong từng câu chuyện). Giá
