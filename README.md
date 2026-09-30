@@ -20,6 +20,10 @@ npm run reel:manifest  # tạo lại manifest gọn từ public/images/food-reel
 Sprite khu vườn (10 loại cây × 4 giai đoạn, nông sản, đồ trang trí — WebP trong suốt ở `public/images/garden/`)
 được vẽ lại bằng `npm run assets:garden`; prompt để thay bằng ảnh AI nằm ở `prompts/garden-sprite-prompts.md`.
 
+Logo & ảnh xem trước khi gửi link: `node scripts/generate-brand.mjs` tạo favicon/apple-touch-icon/icon 192–512;
+`public/og-image.jpg` (1200×630) chụp từ `scripts/brand/og-image.html` (mở ở 1200×630, DPR 1). Link tuyệt đối
+trong thẻ `og:*` lấy từ biến `SITE_URL` lúc build (mặc định domain production).
+
 Ảnh món (JPEG cục bộ) được sinh lại bằng:
 `powershell -ExecutionPolicy Bypass -File scripts/generate-dish-images.ps1`
 

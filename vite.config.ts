@@ -1,8 +1,17 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 
+/** Absolute site URL for canonical + link-preview tags (crawlers need absolute URLs). */
+const SITE_URL = (process.env.SITE_URL ?? 'https://angi.221-121-1-68.sslip.io').replace(/\/$/, '');
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: 'site-url',
+      transformIndexHtml: (html) => html.replaceAll('%SITE_URL%', SITE_URL),
+    },
+  ],
   base: '/',
   build: {
     outDir: 'dist',
