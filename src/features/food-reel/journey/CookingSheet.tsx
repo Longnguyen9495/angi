@@ -182,10 +182,11 @@ function CookingScene({
         <div className="fj-timer">
           <div className="fj-timer__head">
             <span className="fj-timer__ring" aria-hidden="true">
-              <svg viewBox="0 0 48 48">
-                <circle className="fj-timer__track" cx="24" cy="24" r="21" />
-                <circle className="fj-timer__fill" cx="24" cy="24" r="21" pathLength={100} />
-              </svg>
+              {/* A CSS conic ring fed by the elapsed time — no SVG is animated. */}
+              <span
+                className="fj-timer__fill"
+                style={{ '--p': Math.min(1, elapsed / plan.totalMs).toFixed(4) } as CSSProperties}
+              />
               <span className="fj-timer__clock">{formatClock(plan.totalMs - elapsed)}</span>
             </span>
             <p className="fj-timer__now" role="status">

@@ -382,17 +382,6 @@
   }
 }
 
-@keyframes fj-ring {
-  from {
-    stroke-dashoffset: 0;
-    stroke: var(--fr-gold);
-  }
-  to {
-    stroke-dashoffset: -100;
-    stroke: var(--fr-copper-ink);
-  }
-}
-
 @keyframes fj-tick {
   0%,
   100% {

@@ -1706,28 +1706,23 @@ button.fj-plot:disabled {
   animation: fj-tick 1s ease-in-out calc(var(--total) - 3000ms) 3;
 }
 
-.fj-timer__ring svg {
-  width: 100%;
-  height: 100%;
-  rotate: -90deg;
-  overflow: visible;
-}
-
-.fj-timer__ring circle {
-  fill: none;
-  stroke-width: 3.5;
-}
-
-.fj-timer__track {
-  stroke: var(--fr-line);
-}
-
+/* Progress ring: a conic gradient cut to a 4 px band by a radial mask. */
 .fj-timer__fill {
-  stroke: var(--fr-gold);
-  stroke-linecap: round;
-  stroke-dasharray: 100;
-  filter: drop-shadow(0 0 4px rgb(229 137 95 / 55%));
-  animation: fj-ring var(--total) linear both;
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--fr-gold) 0turn,
+    var(--fr-copper-ink) calc(var(--p, 0) * 1turn),
+    var(--fr-line) calc(var(--p, 0) * 1turn)
+  );
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 4px),
+    #000 calc(100% - 3.5px)
+  );
+  mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3.5px));
+  filter: drop-shadow(0 0 4px rgb(229 137 95 / 45%));
 }
 
 .fj-timer__clock {

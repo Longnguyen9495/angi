@@ -31,7 +31,7 @@ Sprite khu vườn (10 loại cây × 4 giai đoạn, nông sản, đồ trang t
 - `.env`: `APP_URL`, `APP_KEY` (chuỗi ngẫu nhiên dài), `MAIL_DRIVER` = `log` (dev, ghi `storage/logs/mail.log`) | `mail` | `smtp` (+ `SMTP_*`).
   `APP_ENV=local` trả mã trong response để test không cần hộp thư — **không** bật trên production.
 - Kiểm tra: `npm run test:account` (chạy trên SQLite tạm, không đụng dữ liệu thật).
-- Trang quyền riêng tư: `public/quyen-rieng-tu.html` — cần điền email liên hệ (chỗ đánh dấu `[điền email liên hệ]`).
+- Trang quyền riêng tư: `public/quyen-rieng-tu.html`
 
 ## http://angi.local (XAMPP/Apache)
 
