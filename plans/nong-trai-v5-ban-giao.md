@@ -12,6 +12,26 @@ Ngày: 2026-10-01. Nhánh: `farm-v5-colourful-showcase`.
 - Game `/journey` vẫn chạy như cũ trên tranh mới: ô ruộng, vùng bấm, bong bóng, camera, trời ngày/đêm.
 - **Chưa** làm thêm cơ chế gameplay mới. Đợt này chỉ làm chuyển động và chuyển tranh.
 
+## Production
+
+- **Đã deploy ngày 2026-10-01**: commit `5c68678` (nhánh `farm-v5-colourful-showcase` đã gộp thẳng vào `main`).
+  - Đã mở thử trên production: https://angi.221-121-1-68.sslip.io/farm-animation-test và `/journey`.
+  - 60 fps, không lỗi console, mọi ảnh trả 200.
+- Cách cập nhật lần sau:
+  ```bash
+  cd /var/www/angi
+  sudo -u rexllm -H git pull --ff-only
+  sudo -u rexllm -H npm ci
+  sudo -u rexllm -H npm run build
+  ```
+  - Phải chạy dưới quyền `rexllm`, vì repo thuộc `rexllm:www-data`. Chạy git bằng root sẽ báo "dubious ownership".
+  - Đừng thêm `safe.directory`: file build ra sẽ bị đổi chủ sang root.
+  - Chỉ chạy `php server/bin/migrate.php` khi cấu trúc database đổi.
+- Thông tin đăng nhập VPS **không** ghi ở đây (repo public): xem `docs/PAGESEED-SERVER-ACCESS.md` trên máy, file này không nằm trong git.
+- Cảnh báo vô hại khi build trên server: `Database unavailable … readonly database`.
+  - Bước xuất snapshot chạy dưới `rexllm` không ghi được vào SQLite, nên giữ nguyên snapshot đã commit.
+  - Khi cần đưa dữ liệu món mới lên server, làm theo mục "Production" trong README.
+
 ## Chạy trên máy mới
 
 ```bash
