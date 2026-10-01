@@ -77,7 +77,7 @@ export interface FarmPlayCanvasProps {
   activeSeed: CropId | null;
   seeds: CropId[];
   onPickSeed: (crop: CropId) => void;
-  /** The existing GardenSection handlers: they dispatch, announce and toast. */
+  /** The farm game (FarmGame) handlers: they dispatch, announce and toast. */
   onPlant: (plotId: number, crop: CropId) => void;
   onWater: (plotId: number) => void;
   onHarvest: () => void;

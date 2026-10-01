@@ -41,8 +41,8 @@ export function FarmPlotCard({
   onClose,
 }: {
   plotId: number;
-  /** Anchor in the scene box (top of the plot), CSS px; `below` when the plot is near the top. */
-  at: { x: number; y: number; below: boolean };
+  /** Anchor in the scene box (top of the plot), CSS px; `below` near the top; null = docked at the bottom (phones). */
+  at: { x: number; y: number; below: boolean } | null;
   mode: PlotCardMode;
   seeds: { id: CropId; name: string; count: number }[];
   onSeedDown: (crop: CropId) => (e: ReactPointerEvent) => void;
@@ -54,8 +54,9 @@ export function FarmPlotCard({
 }) {
   return (
     <div
-      className={`fj-plot-card${at.below ? ' is-below' : ''}`}
-      style={{ left: at.x, top: at.y }}
+      className={`fj-plot-card${!at ? ' is-docked' : at.below ? ' is-below' : ''}`}
+      style={at ? { left: at.x, top: at.y } : undefined}
+      data-game-overlay
       role="dialog"
       aria-label={m.cardPlot(plotId)}
     >

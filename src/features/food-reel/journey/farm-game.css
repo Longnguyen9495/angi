@@ -1,0 +1,1004 @@
+/* ——— The farm as a full-screen game (/journey) ———
+   Layers, back to front: the painted island (canvas), HUD on top, hint + tray + dock at the
+   bottom, then panels and the docked plot card. Everything sizes from the viewport, so the same
+   layout runs on a phone held upright, a phone on its side and a desktop window. */
+
+.fr-journey--game {
+  background: #8fd3f3;
+  touch-action: none;
+}
+
+.fr-journey__game {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.fr-journey__game:focus,
+.fr .fr-journey__game:focus-visible {
+  outline: none;
+  border-radius: 0;
+}
+
+.fj--game {
+  position: absolute;
+  inset: 0;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.fg {
+  --fg-ink: #fff4d6;
+  --fg-glass: rgb(30 22 14 / 64%);
+  --fg-glass-strong: rgb(30 22 14 / 86%);
+  --fg-edge: rgb(255 244 214 / 18%);
+  --fg-gold: #ffd36b;
+  --fg-top: calc(env(safe-area-inset-top) + 10px);
+  --fg-dock: 66px;
+  --fg-bottom: env(safe-area-inset-bottom);
+  --fg-side: max(12px, env(safe-area-inset-left));
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  color: var(--fg-ink);
+  font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fg button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.fg :focus-visible {
+  outline: 2px solid var(--fg-gold);
+  outline-offset: 2px;
+}
+
+/* ——— The island ——— */
+.fg-stage {
+  position: absolute;
+  inset: 0;
+}
+
+/* Doubled class: the lazy scene chunk brings `.fa-scene { position: relative }` later in the
+   cascade; without the extra weight the scene box collapses and the canvas falls back to 150px. */
+.fg .fg-scene.fa-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.fg .fg-scene .fa-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.fg .fa-canvas {
+  touch-action: none;
+}
+
+.fg-stage__failed {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: #1d4660;
+  font-weight: 700;
+}
+
+/* ——— Glass buttons and chips ——— */
+.fg-round,
+.fg-chip {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--fg-edge);
+  background: var(--fg-glass);
+  box-shadow: 0 4px 14px rgb(0 0 0 / 22%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.fg-round {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.fg-chip {
+  gap: 6px;
+  height: 40px;
+  padding: 0 12px 0 9px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.fg-round:active,
+.fg-chip:active,
+.fg-tool:active,
+.fg-dock__item:active,
+.fg-pan:active {
+  transform: scale(0.95);
+}
+
+/* ——— HUD ——— */
+.fg-hud {
+  position: absolute;
+  z-index: 6;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: var(--fg-top) var(--fg-side) 0;
+  pointer-events: none;
+}
+
+.fg-hud > * {
+  pointer-events: auto;
+}
+
+.fg-hud .fg-hud__spacer {
+  flex: 1;
+  pointer-events: none;
+}
+
+.fg-chip--level {
+  padding-left: 4px;
+}
+
+.fg-chip__lv {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ffe39a, #f0a536);
+  box-shadow: inset 0 -2px 0 rgb(0 0 0 / 18%);
+  color: #4a2a08;
+  font-weight: 900;
+  font-size: 15px;
+}
+
+.fg-chip__xp {
+  width: clamp(44px, 14vw, 90px);
+  height: 8px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: rgb(255 255 255 / 18%);
+}
+
+.fg-chip__xp span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #a6e872, #5cc04a);
+  transform-origin: left;
+  transition: transform 400ms ease-out;
+}
+
+.fg-coin {
+  color: var(--fg-gold);
+}
+
+.fg-chip--cans svg {
+  color: #7fd0f2;
+}
+
+/* Time of day and weather at a glance (the island shows it too). */
+.fg-chip--sky {
+  gap: 2px;
+  padding: 0 10px;
+  color: #ffd36b;
+}
+
+.fg-chip--sky[data-part='night'] {
+  color: #dfe6ff;
+}
+
+.fg-chip--sky span + span {
+  color: #cfe3f5;
+}
+
+/* Narrow phones: the HUD keeps level, coins, water and the menu. */
+@media (max-width: 420px) {
+  .fg-chip--sky {
+    display: none;
+  }
+}
+
+.fg-menu {
+  position: absolute;
+  top: calc(var(--fg-top) + 52px);
+  right: var(--fg-side);
+  min-width: 180px;
+  margin: 0;
+  padding: 6px;
+  border-radius: 16px;
+  background: var(--fg-glass-strong);
+  box-shadow: 0 10px 28px rgb(0 0 0 / 35%);
+  list-style: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: fg-pop 160ms ease-out;
+}
+
+.fg-menu button {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: left;
+}
+
+.fg-menu button:hover {
+  background: rgb(255 255 255 / 8%);
+}
+
+/* ——— Next-step hint, as a quest bubble under the HUD ——— */
+.fg-quest {
+  position: absolute;
+  z-index: 4;
+  top: calc(var(--fg-top) + 54px);
+  left: var(--fg-side);
+  width: min(430px, calc(100% - 2 * var(--fg-side)));
+}
+
+.fg-quest.is-closed {
+  width: auto;
+}
+
+.fg-quest .fj-next {
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 10px;
+  padding: 10px 38px 10px 10px;
+  border: 1.5px solid var(--fg-edge);
+  border-radius: 18px;
+  background: var(--fg-glass-strong);
+  box-shadow: 0 8px 22px rgb(0 0 0 / 25%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.fg-quest .fj-next.is-highlight {
+  border-color: var(--fg-gold);
+}
+
+.fg-quest .fj-next__icon {
+  width: 38px;
+  height: 38px;
+  background: rgb(255 211 107 / 18%);
+  color: var(--fg-gold);
+}
+
+.fg-quest .fj-next__kicker {
+  color: var(--fg-gold);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+}
+
+.fg-quest .fj-next__title {
+  margin: 2px 0 1px;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.fg-quest .fj-next__body {
+  display: -webkit-box;
+  overflow: hidden;
+  color: rgb(255 244 214 / 78%);
+  font-size: 12px;
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* The action sits under the text, never beside it: a long label ("Quay các món cho hạt lúa")
+   beside the copy would squeeze the title to one word per line. */
+.fg-quest .fj-next__cta {
+  grid-column: 2;
+  justify-self: start;
+  min-height: 36px;
+  max-width: 100%;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--fg-gold);
+  color: #3a2410;
+  font-weight: 800;
+  font-size: 12px;
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-align: left;
+  text-transform: none;
+  white-space: normal;
+}
+
+.fg-quest__toggle {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 10%);
+}
+
+.fg-quest__open {
+  color: var(--fg-gold);
+}
+
+/* Phones: the island needs the room; the title already says what to do next. */
+@media (max-width: 520px) {
+  .fg-quest .fj-next__kicker {
+    display: none;
+  }
+}
+
+/* ——— Look around: side arrows and the first-time drag hint ——— */
+.fg-pan {
+  position: absolute;
+  z-index: 3;
+  bottom: calc(var(--fg-dock) + var(--fg-bottom) + 90px);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1.5px solid var(--fg-edge);
+  border-radius: 999px;
+  background: var(--fg-glass);
+  font-weight: 700;
+  font-size: 12px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.fg-pan:active {
+  transform: scale(0.95);
+}
+
+.fg-pan--left {
+  left: var(--fg-side);
+  padding-left: 8px;
+}
+
+.fg-pan--right {
+  right: max(12px, env(safe-area-inset-right));
+  padding-right: 8px;
+}
+
+.fg-hint {
+  position: absolute;
+  z-index: 4;
+  bottom: calc(var(--fg-dock) + var(--fg-bottom) + 142px);
+  left: 50%;
+  max-width: calc(100% - 32px);
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--fg-glass-strong);
+  font-weight: 700;
+  font-size: 12px;
+  text-align: center;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.fg-hint--drag {
+  animation: fg-hint-fade 5s ease-in-out forwards;
+}
+
+.fg.is-watering .fg-hint--drag {
+  display: none;
+}
+
+/* ——— Seeds and tools, right above the dock ——— */
+.fg-tray {
+  position: absolute;
+  z-index: 4;
+  right: var(--fg-side);
+  bottom: calc(var(--fg-dock) + var(--fg-bottom) + 12px);
+  left: var(--fg-side);
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.fg-tray > * {
+  pointer-events: auto;
+}
+
+.fg-seeds {
+  display: flex;
+  flex: 0 1 auto;
+  gap: 6px;
+  min-width: 0;
+  margin-right: auto;
+  padding: 6px;
+  overflow-x: auto;
+  border: 1.5px solid var(--fg-edge);
+  border-radius: 18px;
+  background: var(--fg-glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  scrollbar-width: none;
+}
+
+.fg-seeds .fj-farm-seed {
+  min-height: 44px;
+  padding: 4px 10px 4px 6px;
+  font-size: 13px;
+}
+
+.fg-seeds .fj-farm-seed svg,
+.fg-seeds .fj-farm-seed img {
+  width: 30px;
+  height: 30px;
+}
+
+.fg-tools {
+  display: flex;
+  flex: none;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.fg-tool {
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  width: 62px;
+  height: 62px;
+  padding: 0;
+  border: 2px solid var(--fg-edge);
+  border-radius: 20px;
+  background: var(--fg-glass);
+  box-shadow: 0 6px 16px rgb(0 0 0 / 25%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.fg-tool__label {
+  font-weight: 800;
+  font-size: 10.5px;
+  line-height: 1.1;
+}
+
+.fg-tool:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.fg-tool--water.is-on {
+  border-color: #7fd0f2;
+  background: rgb(14 58 82 / 82%);
+  box-shadow:
+    0 0 0 4px rgb(127 208 242 / 30%),
+    0 6px 16px rgb(0 0 0 / 25%);
+}
+
+.fg-tool--harvest.is-ready {
+  border-color: var(--fg-gold);
+  background: linear-gradient(180deg, rgb(255 211 107 / 95%), rgb(232 165 42 / 95%));
+  color: #3a2410;
+  animation: fg-glow 1.8s ease-in-out infinite;
+}
+
+.fg-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border: 2px solid #fff4d6;
+  border-radius: 99px;
+  background: #e5533b;
+  color: #fff;
+  font-weight: 900;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.fg-dot {
+  position: absolute;
+  top: -2px;
+  right: -4px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #fff4d6;
+  border-radius: 50%;
+  background: #e5533b;
+}
+
+/* ——— Dock: the farm's areas ——— */
+.fg-dock {
+  position: absolute;
+  z-index: 5;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  height: calc(var(--fg-dock) + var(--fg-bottom));
+  padding: 6px max(6px, env(safe-area-inset-right)) var(--fg-bottom)
+    max(6px, env(safe-area-inset-left));
+  border-top: 1.5px solid var(--fg-edge);
+  background: var(--fg-glass-strong);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.fg-dock__item {
+  display: grid;
+  flex: 1 1 0;
+  place-items: center;
+  align-content: center;
+  gap: 3px;
+  max-width: 96px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  background: none;
+}
+
+.fg-dock__icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 30px;
+  border-radius: 999px;
+  transition: background 160ms ease-out;
+}
+
+.fg-dock__label {
+  max-width: 100%;
+  overflow: hidden;
+  font-weight: 700;
+  font-size: 11px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.fg-dock__item[aria-current='true'] .fg-dock__icon {
+  background: rgb(255 211 107 / 22%);
+  color: var(--fg-gold);
+}
+
+.fg-dock__item[aria-current='true'] .fg-dock__label {
+  color: var(--fg-gold);
+}
+
+/* Wide screens: the dock floats as a pill instead of a full-width bar. */
+@media (min-width: 900px) {
+  .fg {
+    --fg-dock: 70px;
+  }
+
+  .fg-dock {
+    right: auto;
+    bottom: calc(14px + var(--fg-bottom));
+    left: 50%;
+    width: min(560px, calc(100% - 32px));
+    height: var(--fg-dock);
+    padding: 6px 10px;
+    border: 1.5px solid var(--fg-edge);
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 28%);
+    transform: translateX(-50%);
+  }
+
+  .fg-tray {
+    bottom: calc(var(--fg-dock) + var(--fg-bottom) + 28px);
+  }
+
+  .fg-hint {
+    bottom: calc(var(--fg-dock) + var(--fg-bottom) + 100px);
+  }
+}
+
+/* Phones on their side: little height, so HUD and dock slim down. */
+@media (max-height: 480px) and (orientation: landscape) {
+  .fg {
+    --fg-dock: 52px;
+    --fg-top: calc(env(safe-area-inset-top) + 6px);
+  }
+
+  .fg-dock__label {
+    display: none;
+  }
+
+  .fg-tool {
+    width: 52px;
+    height: 52px;
+  }
+
+  .fg-tool__label {
+    display: none;
+  }
+
+  .fg-quest {
+    width: min(360px, 46%);
+  }
+
+  .fg-quest .fj-next__body {
+    display: none;
+  }
+}
+
+/* ——— Plot card: docked over the tray on phones ——— */
+.fg .fj-plot-card {
+  z-index: 7;
+}
+
+.fg .fj-plot-card.is-docked {
+  position: absolute;
+  right: var(--fg-side);
+  bottom: calc(var(--fg-dock) + var(--fg-bottom) + 12px);
+  left: var(--fg-side);
+  width: auto;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 12px 14px 14px;
+  border: 1.5px solid var(--fg-edge);
+  border-radius: 20px;
+  background: var(--fg-glass-strong);
+  transform: none;
+  animation: fg-rise 180ms ease-out;
+}
+
+.fg .fj-plot-card.is-docked::after {
+  display: none;
+}
+
+.fg .fj-plot-card__seed {
+  min-height: 40px;
+  font-size: 13px;
+}
+
+.fg .fj-plot-card__act {
+  min-height: 44px;
+}
+
+.fg .fj-plot-card__x {
+  width: 32px;
+  height: 32px;
+}
+
+/* ——— Plots as buttons (keyboard / screen reader); shown only while one has focus ——— */
+.fg-plots {
+  position: absolute;
+  z-index: 8;
+  bottom: calc(var(--fg-dock) + var(--fg-bottom) + 12px);
+  left: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  list-style: none;
+  transform: translateX(-50%);
+}
+
+.fg-plots:focus-within {
+  width: min(560px, calc(100% - 24px));
+  height: auto;
+  padding: 10px;
+  overflow: visible;
+  border-radius: 16px;
+  background: var(--fg-glass-strong);
+  clip-path: none;
+}
+
+.fg-plots li {
+  font-size: 12px;
+}
+
+.fg-plots button {
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1.5px solid var(--fg-edge);
+  border-radius: 12px;
+  background: rgb(255 255 255 / 8%);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* ——— Panels: bottom sheet on phones, side drawer on wide screens ——— */
+.fg-panel-backdrop {
+  position: absolute;
+  z-index: 9;
+  inset: 0;
+  background: rgb(0 0 0 / 42%);
+  animation: fg-fade 200ms ease-out;
+}
+
+.fg-panel {
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  max-height: min(86dvh, calc(100dvh - var(--fg-top, 10px) - 40px));
+  border: 1px solid var(--fr-line-strong, rgb(244 237 225 / 22%));
+  border-bottom: 0;
+  border-radius: 26px 26px 0 0;
+  background: var(--fr-canvas, #0c0c0b);
+  color: var(--fr-ivory, #f4ede1);
+  box-shadow: 0 -12px 40px rgb(0 0 0 / 40%);
+  user-select: text;
+  animation: fg-sheet-up 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.fg-panel:focus {
+  outline: none;
+}
+
+.fg-panel__head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 16px 12px 20px;
+  border-bottom: 1px solid var(--fr-line, rgb(244 237 225 / 13%));
+}
+
+.fg-panel__grip {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  width: 40px;
+  height: 4px;
+  border-radius: 99px;
+  background: rgb(244 237 225 / 22%);
+  transform: translateX(-50%);
+}
+
+.fg-panel__title {
+  flex: 1;
+  margin: 0;
+  font-family: var(--fr-display, serif);
+  font-weight: 480;
+  font-size: 1.35rem;
+}
+
+.fg-panel .fg-round {
+  width: 40px;
+  height: 40px;
+  border-color: var(--fr-line, rgb(244 237 225 / 13%));
+  background: rgb(255 255 255 / 6%);
+  box-shadow: none;
+  color: inherit;
+}
+
+.fg-panel__body {
+  display: grid;
+  align-content: start;
+  gap: 22px;
+  padding: 16px 20px calc(28px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fg-panel__body .fj-section__intro {
+  grid-column: auto;
+  margin: 0;
+}
+
+/* The page's section layouts are sized for the viewport; a panel is at most ~520px wide
+   whatever the screen, so it always gets their phone layout. */
+.fg-panel .fj-split,
+.fg-panel .fj-garden__shelves,
+.fg-panel .fj-meal,
+.fg-panel .fj-recipes,
+.fg-panel .fj-orders,
+.fg-panel .fj-friends__grid,
+.fg-panel .fj-friends--invite,
+.fg-panel .fj-atlas {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.fg-panel .fj-stall {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fg-panel .fj-album {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fg-panel .fj-garden__shelves {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.fg-panel .fj-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fg-panel .fj-stat {
+  padding-right: 12px;
+}
+
+.fg-panel .fj-stat + .fj-stat {
+  padding-left: 12px;
+}
+
+.fg-panel .fj-stat:nth-child(3) {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.fg-panel .fj-stat:nth-child(n + 3) {
+  border-top: 1px solid var(--fr-line, rgb(244 237 225 / 13%));
+}
+
+@media (min-width: 900px) {
+  .fg-panel {
+    top: 12px;
+    right: 12px;
+    bottom: 12px;
+    left: auto;
+    width: min(520px, 44vw);
+    max-height: none;
+    border: 1px solid var(--fr-line-strong, rgb(244 237 225 / 22%));
+    border-radius: 24px;
+    animation-name: fg-drawer-in;
+  }
+
+  .fg-panel__grip {
+    display: none;
+  }
+
+  /* The farm stays visible beside the drawer. */
+  .fg-panel-backdrop {
+    background: rgb(0 0 0 / 18%);
+  }
+
+  /* The dock stays in reach beside the drawer, to hop from one area to the next. */
+  .fg.has-panel .fg-dock {
+    z-index: 11;
+    left: calc((100% - min(520px, 44vw) - 12px) / 2);
+    width: min(560px, calc(100% - min(520px, 44vw) - 56px));
+  }
+}
+
+/* ——— Notices are in-game banners while the farm is open ——— */
+/* Phones: right above the seed tray and tools, clear of the next-step hint at the top. */
+html[data-farm-game='on'] .toast-region {
+  bottom: calc(66px + env(safe-area-inset-bottom) + 88px);
+  width: min(420px, calc(100vw - 24px));
+}
+
+@media (max-height: 480px) and (orientation: landscape) {
+  html[data-farm-game='on'] .toast-region {
+    bottom: calc(52px + env(safe-area-inset-bottom) + 74px);
+  }
+}
+
+html[data-farm-game='on'] .toast {
+  border: 1.5px solid rgb(255 244 214 / 22%);
+  background: rgb(30 22 14 / 90%);
+  box-shadow: 0 10px 28px rgb(0 0 0 / 30%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Wide screens: top right under the coins, opposite the hint on the left. */
+@media (min-width: 900px) {
+  html[data-farm-game='on'] .toast-region {
+    top: calc(env(safe-area-inset-top) + 66px);
+    right: 12px;
+    bottom: auto;
+    left: auto;
+    width: min(400px, calc(100vw - 480px));
+    transform: none;
+  }
+}
+
+/* ——— Motion ——— */
+@keyframes fg-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+  }
+}
+
+@keyframes fg-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes fg-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fg-sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes fg-drawer-in {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+@keyframes fg-glow {
+  50% {
+    box-shadow:
+      0 0 0 5px rgb(255 211 107 / 35%),
+      0 6px 16px rgb(0 0 0 / 25%);
+  }
+}
+
+@keyframes fg-hint-fade {
+  0%,
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fg *,
+  .fg-panel,
+  .fg-panel-backdrop {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+html[data-motion='reduced'] .fg *,
+html[data-motion='reduced'] .fg-panel,
+html[data-motion='reduced'] .fg-panel-backdrop {
+  animation: none !important;
+  transition: none !important;
+}

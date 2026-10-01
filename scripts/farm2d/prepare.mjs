@@ -12,7 +12,7 @@ import sharp from 'sharp';
  * Run: node scripts/farm2d/prepare.mjs
  */
 
-const PACK = resolve('FARM_GAME_ASSET_PACK_V4_ULTRA_CLAUDE_PLAYCANVA');
+const PACK = resolve('FARM_GAME_ASSET_PACK_V4_ULTRA_CLAUDE_PLAYCANVA_UPDATED');
 const OUT = resolve('public/farm2d');
 mkdirSync(OUT, { recursive: true });
 

@@ -1,10 +1,12 @@
-import type { Vec2 } from '../engine/types';
+import type { Assets } from '../engine/assets';
+import type { FxId, Vec2 } from '../engine/types';
 import { type AnimSystem, type World, clamp } from '../engine/world';
 
 /**
- * Ambient life: a few birds crossing the sky every 10–40 s, butterflies that flutter round the
- * flowers (and sometimes settle on one) before flying off, leaves falling from the crowns
- * (more in a gust), pollen over the flowers and dust motes in the light.
+ * Ambient life: a few birds crossing the sky every 10–40 s, butterflies (the sheet's orange and
+ * blue ones) that flutter round the flowers (and sometimes settle on one) before flying off,
+ * leaves (sheet leaves) falling from the crowns and tumbling (more in a gust), pollen over the
+ * flowers and dust motes in the light. A butterfly close to a flower makes it tremble.
  */
 
 interface Bird {
@@ -29,7 +31,7 @@ interface Butterfly {
   life: number;
   land: number;
   flap: number;
-  colors: [string, string];
+  kind: FxId;
   leaving: boolean;
 }
 
@@ -42,15 +44,15 @@ interface Leaf {
   tumble: number;
   age: number;
   life: number;
-  hue: string;
+  kind: FxId;
+  size: number;
 }
 
-const BUTTERFLY_COLORS: [string, string][] = [
-  ['#ff9f43', '#ffd9a0'],
-  ['#fffaf0', '#c9d3e0'],
-  ['#ffe066', '#fff3b8'],
-  ['#8fd3ff', '#e2f4ff'],
-];
+const BUTTERFLIES: FxId[] = ['butterflyOrange', 'butterflyBlue'];
+const LEAVES: FxId[] = ['leaf1', 'leaf2', 'leaf3', 'leaf4'];
+/** Drawn size (picture px, longest side) of a butterfly and of a falling leaf. */
+const BUTTERFLY_PX = 15;
+const LEAF_PX = 9;
 
 export function animateBird(b: Bird, w: World) {
   b.x += b.vx * w.dt;
@@ -120,13 +122,32 @@ export class AmbientSystem implements AnimSystem {
   private nextFly = 2.5;
   private nextLeaf = 3;
   private motes = 0;
+  private fx: Partial<Record<FxId, { img: HTMLImageElement; w: number; h: number }>> = {};
 
   constructor(
     private crowns: Vec2[],
     private flowers: Vec2[],
     /** Where the sky band is, for the birds. */
     private skyBand: [number, number],
-  ) {}
+    assets?: Assets,
+  ) {
+    for (const [id, def] of Object.entries(assets?.layout.fx ?? {}))
+      this.fx[id as FxId] = { img: assets!.img(def.file), w: def.w, h: def.h };
+  }
+
+  /** Flowers a butterfly is hovering close to (for the flowers' tremble). */
+  near(): Vec2[] {
+    return this.flies.filter((f) => f.land <= 0 && !f.leaving).map((f) => [f.x, f.y]);
+  }
+
+  /** Draws a sheet piece centred on (0, 0), its longest side `px` long. */
+  private sprite(ctx: CanvasRenderingContext2D, id: FxId, px: number) {
+    const s = this.fx[id];
+    if (!s) return false;
+    const k = px / Math.max(s.w, s.h);
+    ctx.drawImage(s.img, (-s.w * k) / 2, (-s.h * k) / 2, s.w * k, s.h * k);
+    return true;
+  }
 
   update(w: World) {
     const density = w.settings.particles ? w.settings.particleDensity : 0;
@@ -170,10 +191,7 @@ export class AmbientSystem implements AnimSystem {
         life: 10 + w.rand() * 8,
         land: 0,
         flap: 0,
-        colors: BUTTERFLY_COLORS[Math.floor(w.rand() * BUTTERFLY_COLORS.length)] ?? [
-          '#fff',
-          '#ddd',
-        ],
+        kind: BUTTERFLIES[Math.floor(w.rand() * BUTTERFLIES.length)] ?? 'butterflyOrange',
         leaving: false,
       });
     }
@@ -186,7 +204,8 @@ export class AmbientSystem implements AnimSystem {
     const gust = w.wind.gust;
     this.nextLeaf -= w.dt * (1 + gust * 4) * Math.max(0.2, density);
     if (this.nextLeaf <= 0 && this.crowns.length && density > 0) {
-      this.nextLeaf = 4 + w.rand() * 6;
+      this.nextLeaf = this.leafBurstLeft > 0 ? 0.12 : 4 + w.rand() * 6;
+      if (this.leafBurstLeft > 0) this.leafBurstLeft--;
       const c = this.crowns[Math.floor(w.rand() * this.crowns.length)] ?? [400, 200];
       this.leaves.push({
         x: c[0] + (w.rand() - 0.5) * 50,
@@ -197,7 +216,8 @@ export class AmbientSystem implements AnimSystem {
         tumble: w.rand() * 6,
         age: 0,
         life: 4.5 + w.rand() * 2.5,
-        hue: w.rand() < 0.75 ? '#6cbf3a' : '#d9b23c',
+        kind: LEAVES[Math.floor(w.rand() * LEAVES.length)] ?? 'leaf1',
+        size: LEAF_PX * (0.75 + w.rand() * 0.5),
       });
     }
     for (const l of this.leaves) animateLeaf(l, w);
@@ -233,17 +253,14 @@ export class AmbientSystem implements AnimSystem {
       ctx.save();
       ctx.translate(l.x, l.y);
       ctx.rotate(l.rot);
-      ctx.scale(Math.cos(l.tumble), 1);
-      ctx.fillStyle = l.hue;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, 4.2, 2.1, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(40,80,20,0.7)';
-      ctx.lineWidth = 0.6;
-      ctx.beginPath();
-      ctx.moveTo(-4, 0);
-      ctx.lineTo(4, 0);
-      ctx.stroke();
+      // Tumbling: the leaf turns edge-on and back as it falls.
+      ctx.scale(0.25 + 0.75 * Math.abs(Math.cos(l.tumble)), 1);
+      if (!this.sprite(ctx, l.kind, l.size)) {
+        ctx.fillStyle = '#6cbf3a';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 4.2, 2.1, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
       ctx.restore();
     }
     ctx.globalAlpha = 1;
@@ -256,25 +273,9 @@ export class AmbientSystem implements AnimSystem {
       ctx.save();
       ctx.translate(f.x, f.y);
       ctx.rotate(clamp(f.vx * 0.01, -0.4, 0.4));
-      for (const side of [-1, 1]) {
-        ctx.save();
-        ctx.scale(side * (0.25 + 0.75 * open), 1);
-        ctx.fillStyle = f.colors[0];
-        ctx.strokeStyle = 'rgba(60,40,30,0.75)';
-        ctx.lineWidth = 0.5;
-        ctx.beginPath();
-        ctx.ellipse(2.6, -1.6, 2.8, 2.2, -0.4, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-        ctx.fillStyle = f.colors[1];
-        ctx.beginPath();
-        ctx.ellipse(2, 1.6, 1.9, 1.5, 0.4, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-        ctx.restore();
-      }
-      ctx.fillStyle = '#4a3326';
-      ctx.fillRect(-0.5, -2.6, 1, 5);
+      // Wing beat: the sheet butterfly is seen from above, so a beat folds it about its body.
+      ctx.scale((f.vx < 0 ? -1 : 1) * (0.2 + 0.8 * open), 1);
+      this.sprite(ctx, f.kind, BUTTERFLY_PX);
       ctx.restore();
     }
     ctx.strokeStyle = 'rgba(42,64,86,0.85)';
@@ -295,6 +296,14 @@ export class AmbientSystem implements AnimSystem {
       ctx.stroke();
     }
   }
+
+  /** Showcase: a handful of leaves off the crowns at once and a butterfly. */
+  leafBurst() {
+    this.nextLeaf = 0;
+    this.leafBurstLeft = 6;
+    this.nextFly = 0;
+  }
+  private leafBurstLeft = 0;
 
   /** Debug: send birds now. */
   birdsNow() {

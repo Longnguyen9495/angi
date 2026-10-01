@@ -1,0 +1,278 @@
+/* ——— Animation showcase panel (/farm-animation-test) ———
+   A dark glass panel on the right (bottom sheet on phones); the scene stays clickable around it. */
+
+.fa-show,
+.fa-show-toggle {
+  --show-ink: #fff4d6;
+  --show-muted: rgb(255 244 214 / 68%);
+  --show-glass: rgb(30 22 14 / 86%);
+  --show-edge: rgb(255 244 214 / 16%);
+  --show-gold: #ffd36b;
+  font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+  color: var(--show-ink);
+}
+
+.fa-show {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(340px, calc(100vw - 24px));
+  overflow-y: auto;
+  padding: 14px 16px 16px;
+  border: 1px solid var(--show-edge);
+  border-radius: 16px;
+  background: var(--show-glass);
+  box-shadow: 0 12px 40px rgb(0 0 0 / 35%);
+  backdrop-filter: blur(6px);
+  font-size: 13px;
+  line-height: 1.4;
+  overscroll-behavior: contain;
+}
+
+.fa-show h1,
+.fa-show h2 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--show-gold);
+}
+
+.fa-show p {
+  margin: 0;
+}
+
+.fa-show button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.fa-show button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.fa-show :focus-visible,
+.fa-show-toggle:focus-visible {
+  outline: 2px solid var(--show-gold);
+  outline-offset: 2px;
+}
+
+.fa-show__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.fa-show__x {
+  padding: 4px 10px;
+  border: 1px solid var(--show-edge);
+  border-radius: 999px;
+  background: none;
+  font-size: 12px;
+}
+
+.fa-show__stats {
+  font-variant-numeric: tabular-nums;
+  color: var(--show-muted);
+  font-size: 12px;
+}
+
+.fa-show__note {
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgb(255 211 107 / 14%);
+  font-size: 12px;
+}
+
+.fa-show__modes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.fa-show__mode {
+  min-height: 34px;
+  padding: 6px 8px;
+  border: 1px solid var(--show-edge);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 6%);
+  font-weight: 600;
+  text-align: left;
+  transition:
+    background 140ms ease-out,
+    border-color 140ms ease-out;
+}
+
+.fa-show__mode:first-child {
+  grid-column: 1 / -1;
+}
+
+.fa-show__mode:hover {
+  background: rgb(255 255 255 / 12%);
+}
+
+.fa-show__mode.is-on {
+  border-color: var(--show-gold);
+  background: rgb(255 211 107 / 20%);
+  color: #fff8e6;
+}
+
+.fa-show__hint {
+  color: var(--show-muted);
+  font-size: 12px;
+}
+
+.fa-show__row {
+  display: flex;
+  gap: 6px;
+}
+
+.fa-show__btn {
+  flex: 1;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--show-edge);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 8%);
+  font-weight: 600;
+}
+
+.fa-show__btn.is-on {
+  border-color: transparent;
+  background: var(--show-gold);
+  color: #3a2608;
+}
+
+.fa-show__slider {
+  display: grid;
+  gap: 4px;
+}
+
+.fa-show__slider span {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--show-muted);
+  font-size: 12px;
+}
+
+.fa-show__slider b {
+  font-variant-numeric: tabular-nums;
+  color: var(--show-ink);
+}
+
+.fa-show__slider input {
+  width: 100%;
+  accent-color: var(--show-gold);
+}
+
+.fa-show__rule {
+  width: 100%;
+  margin: 2px 0;
+  border: 0;
+  border-top: 1px solid var(--show-edge);
+}
+
+.fa-show__counts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+
+.fa-show__counts li {
+  display: flex;
+  justify-content: space-between;
+}
+
+.fa-show__counts b {
+  font-variant-numeric: tabular-nums;
+}
+
+.fa-show code {
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  font-size: 11.5px;
+  color: #ffe7a8;
+  overflow-wrap: anywhere;
+}
+
+.fa-show__sprite {
+  display: grid;
+  gap: 4px;
+}
+
+.fa-show__sprite span {
+  color: var(--show-muted);
+}
+
+.fa-show__sprite ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.fa-show-toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  padding: 8px 14px;
+  border: 1px solid var(--show-edge);
+  border-radius: 999px;
+  background: var(--show-glass);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Phones: a bottom sheet over the lower part of the scene. */
+@media (max-width: 640px) {
+  .fa-show {
+    top: auto;
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    width: auto;
+    max-height: 52vh;
+  }
+
+  .fa-show__modes {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .fa-show__mode:first-child {
+    grid-column: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fa-show__mode {
+    transition: none;
+  }
+}
+
+/* Wide screens: the scene makes room for the open panel instead of hiding under it. */
+@media (min-width: 900px) {
+  .fa-root--show.has-panel .fa-scene--full {
+    right: 364px;
+  }
+}
+
+/* Phones: the scene fits the part of the screen above the open sheet. */
+@media (max-width: 640px) {
+  .fa-root--show.has-panel .fa-scene--full {
+    bottom: calc(52vh + 12px);
+  }
+}

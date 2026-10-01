@@ -1,4 +1,3 @@
-import { ArrowLeft } from '@phosphor-icons/react';
 import { Suspense, lazy, useEffect, useRef } from 'react';
 import { t } from '../../../i18n';
 import type { ReelDish } from '../foodReel.types';
@@ -25,7 +24,13 @@ export function JourneyDrawer({ open, onClose, onOpenDish }: JourneyDrawerProps)
     const opener = document.activeElement as HTMLElement | null;
     panelRef.current?.focus({ preventScroll: true });
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !document.querySelector('.sheet-layer')) closeRef.current();
+      // A sheet, a panel or a card on the farm closes first (each handles its own Escape).
+      if (
+        e.key === 'Escape' &&
+        !e.defaultPrevented &&
+        !document.querySelector('.sheet-layer, [data-game-overlay]')
+      )
+        closeRef.current();
     };
     document.addEventListener('keydown', onKey);
     return () => {
@@ -37,20 +42,13 @@ export function JourneyDrawer({ open, onClose, onOpenDish }: JourneyDrawerProps)
   if (!open) return null;
   return (
     <div
-      className="fr fr-journey"
+      className="fr fr-journey fr-journey--game"
       role="dialog"
       aria-modal="true"
       aria-label={t.reel.journey.dialog}
     >
-      <div className="fr-grain" aria-hidden="true" />
-      <div className="fr-journey__scroll" ref={panelRef} tabIndex={-1}>
-        <div className="fr-journey__bar">
-          <button type="button" className="fr-ghost" onClick={onClose}>
-            <ArrowLeft aria-hidden="true" size={16} />
-            {t.reel.journey.back}
-          </button>
-          <span className="fr-journey__title">{t.reel.journey.title}</span>
-        </div>
+      {/* The farm is a full-screen game: its own HUD carries the way back to the reel. */}
+      <div className="fr-journey__game" ref={panelRef} tabIndex={-1}>
         <Suspense
           fallback={
             <p className="fr-journey__loading" aria-busy="true">

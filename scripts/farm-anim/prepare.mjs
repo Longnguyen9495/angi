@@ -1,28 +1,40 @@
-import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import sharp from 'sharp';
+import { box as wBox, ell as wEll, pt as wPt, SCALE, vec as wVec } from './warp.mjs';
 
 /*
- * Layers for the farm animation demo (/farm-animation-test), cut from the owner's painting
- * (FARM_GAME_ASSET_PACK_V4…/00_MASTER/MASTER_REFERENCE.png, 1678×937).
+ * Layers for the living farm (/farm-animation-test and the /journey game), cut from the owner's
+ * colourful painting (…_UPDATED/15_NEW_REFERENCE_AND_SPRITE_SHEET/
+ * MASTER_REFERENCE_COLORFUL_FLOATING_FARM.png = nongtraivuive.png, 1678×937, island on true alpha),
+ * plus loose pieces from the generated asset sheet (16_EXTRACTED_SPRITES, written by
+ * split-sprite-sheet.mjs): clouds, smoke, leaves, butterflies, birds, sparkles, splashes.
  *
- *  sky.jpg       clean sky gradient (clouds and island removed)
- *  cloud-*.webp  clouds matted against the sky colour (true alpha), drifting or front banks
- *  island.webp   the island with alpha; things that move a lot are painted out of it
- *                (koi, chickens, the yard cow, windmill blades, lily pads, painted sprouts)
+ *  sky.jpg       soft sky gradient (the painting has no sky)
+ *  cloud-*.webp  sheet clouds: drifting sky clouds and front banks over the cut cliff bottoms
+ *  island.webp   the island; things that move a lot are painted out of it
+ *                (koi, chickens, windmill blades, lily pads, painted sprouts)
  *  <id>.webp     a sprite per animated object (tree crowns, bushes, reeds, flowers, animals…)
+ *  fx-*.webp     sheet pieces the particle and ambient systems draw
  *  water-mask / glass-mask  alpha masks for water waves and greenhouse reflections
- *  layers.json   placement, pivots and kinds for the runtime
+ *  layers.json   placement, pivots, kinds and tap places for the runtime
  *
  * Small-motion objects (trees, grass, reeds…) are soft-edged copies laid over the island: the
  * painting stays underneath, so a sway of a few pixels reads as bending, not as a hole.
  *
- * Run: node scripts/farm-anim/prepare.mjs
+ * Coordinates: the boxes, ellipses and points below were measured on the first painting (V4
+ * MASTER_REFERENCE.png); warp.mjs carries them onto the repaint (wPt / wBox / wEll / wVec).
+ * New things measured on the repaint itself are written as plain numbers.
+ *
+ * Run: node scripts/farm-anim/split-sprite-sheet.mjs (once), then node scripts/farm-anim/prepare.mjs
  */
 
-const SRC = resolve(
-  'FARM_GAME_ASSET_PACK_V4_ULTRA_CLAUDE_PLAYCANVA/00_MASTER/MASTER_REFERENCE.png',
+const PACK = resolve('FARM_GAME_ASSET_PACK_V4_ULTRA_CLAUDE_PLAYCANVA_UPDATED');
+const SRC = join(
+  PACK,
+  '15_NEW_REFERENCE_AND_SPRITE_SHEET/MASTER_REFERENCE_COLORFUL_FLOATING_FARM.png',
 );
+const SHEET = join(PACK, '16_EXTRACTED_SPRITES');
 const OUT = resolve('public/farm-anim');
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
@@ -34,33 +46,16 @@ const { data: M, info } = await sharp(SRC)
 const W = info.width;
 const H = info.height;
 const N = W * H;
+// The repaint's island is stored at 252–253 alpha all over: make it solid, keep the soft rim.
+for (let p = 0; p < N; p++) {
+  const a = M[p * 4 + 3];
+  M[p * 4 + 3] = a >= 240 ? 255 : a < 8 ? 0 : Math.round((a / 240) * 255);
+}
 const px = (p) => [M[p * 4], M[p * 4 + 1], M[p * 4 + 2]];
 
-// ——— 1. Sky: flood from the border over sky-blue and cloud pixels ———
-const isSky = (r, g, b) => b > 195 && b - r > 55 && g > 140;
-const isCloud = (r, g, b) => r > 165 && g > 195 && b > 215 && b - r < 85;
+// ——— 1. Sky: whatever the painting leaves transparent ———
 const F = new Uint8Array(N);
-{
-  const q = [];
-  const push = (p) => {
-    if (F[p]) return;
-    const [r, g, b] = px(p);
-    if (isSky(r, g, b) || isCloud(r, g, b)) {
-      F[p] = 1;
-      q.push(p);
-    }
-  };
-  for (let x = 0; x < W; x++) (push(x), push((H - 1) * W + x));
-  for (let y = 0; y < H; y++) (push(y * W), push(y * W + W - 1));
-  while (q.length) {
-    const p = q.pop();
-    const x = p % W;
-    if (x > 0) push(p - 1);
-    if (x < W - 1) push(p + 1);
-    if (p >= W) push(p - W);
-    if (p < N - W) push(p + W);
-  }
-}
+for (let p = 0; p < N; p++) if (M[p * 4 + 3] < 128) F[p] = 1;
 
 /** Distance (px, 4-connected, capped) from every pixel to the nearest pixel where `src` is 1. */
 function distanceTo(src, cap) {
@@ -79,176 +74,110 @@ function distanceTo(src, cap) {
   return d;
 }
 
-// ——— 2. Sky colour: a smooth cubic in (x, y) fitted to the pure-sky pixels (least squares) ———
-const basis = (x, y) => {
-  const u = x / W - 0.5;
-  const v = y / H - 0.5;
-  return [1, u, v, u * u, u * v, v * v, u * u * u, u * u * v, u * v * v, v * v * v];
-};
-const NB = 10;
-const ATA = Array.from({ length: NB }, () => new Float64Array(NB));
-const ATb = [new Float64Array(NB), new Float64Array(NB), new Float64Array(NB)];
-for (let y = 0; y < H; y += 2)
-  for (let x = 0; x < W; x += 2) {
-    const p = y * W + x;
-    if (!F[p]) continue;
-    const [r, g, b] = px(p);
-    if (!isSky(r, g, b) || r > 140) continue;
-    const f = basis(x, y);
-    for (let i = 0; i < NB; i++) {
-      for (let j = 0; j < NB; j++) ATA[i][j] += f[i] * f[j];
-      ATb[0][i] += f[i] * r;
-      ATb[1][i] += f[i] * g;
-      ATb[2][i] += f[i] * b;
-    }
-  }
-function solve(A0, b0) {
-  const A = A0.map((r) => Float64Array.from(r));
-  const b = Float64Array.from(b0);
-  for (let i = 0; i < NB; i++) {
-    let m = i;
-    for (let k = i + 1; k < NB; k++) if (Math.abs(A[k][i]) > Math.abs(A[m][i])) m = k;
-    [A[i], A[m]] = [A[m], A[i]];
-    [b[i], b[m]] = [b[m], b[i]];
-    for (let k = i + 1; k < NB; k++) {
-      const t = A[k][i] / A[i][i];
-      for (let j = i; j < NB; j++) A[k][j] -= t * A[i][j];
-      b[k] -= t * b[i];
-    }
-  }
-  const x = new Float64Array(NB);
-  for (let i = NB - 1; i >= 0; i--) {
-    let t = b[i];
-    for (let j = i + 1; j < NB; j++) t -= A[i][j] * x[j];
-    x[i] = t / A[i][i];
-  }
-  return x;
-}
-const coef = ATb.map((b) => solve(ATA, b));
-const sky = new Float32Array(N * 3);
-for (let y = 0; y < H; y++)
-  for (let x = 0; x < W; x++) {
-    const f = basis(x, y);
-    for (let k = 0; k < 3; k++) {
-      let v = 0;
-      for (let i = 0; i < NB; i++) v += coef[k][i] * f[i];
-      sky[(y * W + x) * 3 + k] = Math.max(0, Math.min(255, v));
-    }
-  }
+// ——— 2. Sky colour: the first painting's sky (fitted there), as a smooth gradient ———
+// Rows top → bottom of [edge colour, centre colour]; columns blend edge → centre → edge.
+const SKY_ROWS = [
+  [0, [75, 189, 252], [100, 201, 253]],
+  [150, [88, 197, 254], [114, 214, 250]],
+  [300, [107, 208, 254], [134, 229, 249]],
+  [450, [125, 217, 254], [156, 244, 246]],
+  [600, [134, 220, 253], [171, 252, 245]],
+  [750, [128, 211, 255], [170, 249, 243]],
+  [936, [90, 173, 253], [143, 221, 241]],
+];
 {
   const out = Buffer.alloc(N * 3);
-  for (let i = 0; i < N * 3; i++) out[i] = Math.round(sky[i]);
+  for (let y = 0; y < H; y++) {
+    let k = 0;
+    while (k < SKY_ROWS.length - 2 && SKY_ROWS[k + 1][0] < y) k++;
+    const [y0, e0, c0] = SKY_ROWS[k];
+    const [y1, e1, c1] = SKY_ROWS[k + 1];
+    const t = Math.max(0, Math.min(1, (y - y0) / (y1 - y0)));
+    for (let x = 0; x < W; x++) {
+      const u = 1 - Math.abs(x / (W - 1) - 0.5) * 2; // 0 at the sides, 1 in the middle
+      const s = u * u * (3 - 2 * u);
+      for (let c = 0; c < 3; c++) {
+        const edge = e0[c] + (e1[c] - e0[c]) * t;
+        const mid = c0[c] + (c1[c] - c0[c]) * t;
+        out[(y * W + x) * 3 + c] = Math.round(edge + (mid - edge) * s);
+      }
+    }
+  }
   await sharp(out, { raw: { width: W, height: H, channels: 3 } })
     .jpeg({ quality: 90 })
     .toFile(join(OUT, 'sky.jpg'));
 }
 
-// ——— 3. Clouds: matte against the sky colour; cores (dense parts) split the sky into pieces ———
-const A = new Float32Array(N);
-for (let p = 0; p < N; p++) {
-  if (!F[p]) continue;
-  const [r, g, b] = px(p);
-  let a = 0;
-  for (const [v, sv] of [
-    [r, sky[p * 3]],
-    [g, sky[p * 3 + 1]],
-    [b, sky[p * 3 + 2]],
-  ])
-    a = Math.max(a, (v - sv) / Math.max(8, 252 - sv));
-  // Small residues are the sky fit, not cloud: cut them so drifting clouds carry no halo.
-  A[p] = Math.max(0, Math.min(1, (a - 0.07) / 0.93));
+// ——— 3. Pieces from the asset sheet, picked by where they sit on the sheet ———
+const SHEET_INDEX = JSON.parse(readFileSync(join(SHEET, 'index.json'), 'utf8'));
+/** The sheet item whose box holds sheet point (x, y). */
+function sheetItem(x, y, what) {
+  const hit = SHEET_INDEX.filter((s) => x >= s.x && x < s.x + s.w && y >= s.y && y < s.y + s.h);
+  hit.sort((a, b) => a.w * a.h - b.w * b.h);
+  if (!hit.length)
+    throw new Error(`no sheet item at ${x},${y} (${what}); run split-sprite-sheet.mjs`);
+  return hit[0];
 }
-const distIsland = distanceTo(
-  Uint8Array.from(F, (f) => (f ? 0 : 1)),
-  24,
-);
-const label = new Int32Array(N).fill(-1);
-const comps = [];
-for (let p0 = 0; p0 < N; p0++) {
-  if (label[p0] !== -1 || A[p0] < 0.4) continue;
-  const c = { id: comps.length, n: 0, touch: 0, sy: 0 };
-  const stack = [p0];
-  label[p0] = c.id;
-  while (stack.length) {
-    const p = stack.pop();
-    const x = p % W;
-    c.n++;
-    c.sy += (p / W) | 0;
-    if (distIsland[p] <= 3) c.touch++;
-    for (const n of [x > 0 ? p - 1 : -1, x < W - 1 ? p + 1 : -1, p - W, p + W])
-      if (n >= 0 && n < N && label[n] === -1 && A[n] >= 0.4) ((label[n] = c.id), stack.push(n));
-  }
-  comps.push(c);
-}
-// Grow the cores over the faint cloud pixels, nearest core first (breadth-first), so every
-// wisp belongs to exactly one piece.
-{
-  let front = [];
-  for (let p = 0; p < N; p++) if (label[p] >= 0) front.push(p);
-  while (front.length) {
-    const next = [];
-    for (const p of front) {
-      const x = p % W;
-      for (const n of [x > 0 ? p - 1 : -1, x < W - 1 ? p + 1 : -1, p - W, p + W])
-        if (n >= 0 && n < N && label[n] === -1 && A[n] >= 0.02)
-          ((label[n] = label[p]), next.push(n));
-    }
-    front = next;
-  }
-}
-const stats = comps.map((c) => ({ ...c, x0: W, y0: H, x1: 0, y1: 0, m: 0 }));
-for (let p = 0; p < N; p++) {
-  const l = label[p];
-  if (l < 0) continue;
-  const c = stats[l];
-  const x = p % W;
-  const y = (p / W) | 0;
-  c.m++;
-  if (x < c.x0) c.x0 = x;
-  if (x > c.x1) c.x1 = x;
-  if (y < c.y0) c.y0 = y;
-  if (y > c.y1) c.y1 = y;
-}
-// Front banks: pieces that run into the island (they sit in front of its cliffs).
-const clouds = [];
-const bankOf = new Uint8Array(comps.length);
-for (const c of stats) {
-  if (c.n < 60) continue;
-  // Upper clouds touching the island are behind it (trees in front); only low ones overlap cliffs.
-  const bank = c.touch > 25 && c.sy / c.n > 450;
-  bankOf[c.id] = bank ? 1 : 0;
-  const x0 = Math.max(0, c.x0 - 1);
-  const y0 = Math.max(0, c.y0 - 1);
-  const w = Math.min(W - 1, c.x1 + 1) - x0 + 1;
-  const h = Math.min(H - 1, c.y1 + 1) - y0 + 1;
-  const buf = Buffer.alloc(w * h * 4);
-  for (let y = 0; y < h; y++)
-    for (let x = 0; x < w; x++) {
-      const p = (y0 + y) * W + x0 + x;
-      if (label[p] !== c.id) continue;
-      const a = A[p];
-      const o = (y * w + x) * 4;
-      for (let k = 0; k < 3; k++)
-        buf[o + k] = Math.max(
-          0,
-          Math.min(255, (M[p * 4 + k] - sky[p * 3 + k] * (1 - a)) / Math.max(a, 0.05)),
-        );
-      buf[o + 3] = Math.round(a * 255);
-    }
-  const file = `cloud-${clouds.length + 1}.webp`;
-  await sharp(buf, { raw: { width: w, height: h, channels: 4 } })
-    .webp({ quality: 88, alphaQuality: 90 })
-    .toFile(join(OUT, file));
-  clouds.push({ file, x: x0, y: y0, w, h, bank });
+/** Copies a sheet item into the output as webp; returns { file, w, h }. */
+async function fromSheet(id, x, y) {
+  const s = sheetItem(x, y, id);
+  const file = `${id}.webp`;
+  await sharp(join(SHEET, s.file)).webp({ quality: 90, alphaQuality: 95 }).toFile(join(OUT, file));
+  return { file, w: s.w, h: s.h };
 }
 
-// ——— 4. Island: everything that is not sky; it keeps a copy of front cloud banks near its edge ———
+// Clouds: the four big puffs along the bottom of the sheet, reused at several sizes (flipped
+// copies look like new clouds). Banks sit low, over the cliff bottoms cut by the picture edge.
+const CLOUD_SRC = [
+  await fromSheet('cloud-1', 110, 950),
+  await fromSheet('cloud-2', 300, 960),
+  await fromSheet('cloud-3', 500, 970),
+  await fromSheet('cloud-4', 640, 965),
+];
+const C = (i, x, y, scale, bank = false, flip = false) => {
+  const s = CLOUD_SRC[i];
+  return { file: s.file, x, y, w: Math.round(s.w * scale), h: Math.round(s.h * scale), bank, flip };
+};
+const clouds = [
+  // Sky: high and small far away, bigger lower down; spread so a loop never shows a gap.
+  C(0, 20, 20, 0.95),
+  C(2, 380, -10, 0.7, false, true),
+  C(1, 760, 10, 0.6),
+  C(3, 1040, -6, 0.85, false, true),
+  C(0, 1300, 30, 1.0, false, true),
+  C(2, 1520, 140, 0.8),
+  C(1, -80, 200, 1.15, false, true),
+  C(3, 1540, 320, 1.1),
+  C(2, -90, 440, 1.2),
+  // Banks in front of the cliffs: the island is cut flat at the bottom of the painting.
+  C(0, -60, 760, 1.5, true),
+  C(1, 230, 820, 1.45, true, true),
+  C(2, 520, 850, 1.35, true),
+  C(1, 800, 860, 1.4, true),
+  C(0, 1060, 845, 1.45, true, true),
+  C(2, 1330, 800, 1.4, true, true),
+  C(3, 1560, 700, 1.4, true),
+];
+
+// Loose pieces the runtime animates on their own (falling leaves, butterflies, birds, sparkle,
+// smoke, splash).
+const fx = {
+  leaf1: await fromSheet('fx-leaf-1', 931, 951),
+  leaf2: await fromSheet('fx-leaf-2', 981, 922),
+  leaf3: await fromSheet('fx-leaf-3', 886, 970),
+  leaf4: await fromSheet('fx-leaf-4', 961, 970),
+  butterflyOrange: await fromSheet('fx-butterfly-1', 837, 926),
+  butterflyBlue: await fromSheet('fx-butterfly-2', 882, 924),
+  birdWhite: await fromSheet('fx-bird-1', 770, 928),
+  birdBrown: await fromSheet('fx-bird-2', 784, 973),
+  sparkle: await fromSheet('fx-sparkle', 1196, 924),
+  smoke: await fromSheet('fx-smoke', 1080, 950),
+  splash: await fromSheet('fx-splash', 1450, 826),
+  flower: await fromSheet('fx-flower', 914, 1000),
+};
+
+// ——— 4. Island: the painting itself ———
 const island = Buffer.from(M);
-for (let p = 0; p < N; p++) {
-  if (!F[p]) continue;
-  const keep = label[p] >= 0 && bankOf[label[p]] && distIsland[p] <= 18;
-  island[p * 4 + 3] = keep ? 255 : 0;
-}
 
 // ——— Masks and helpers ———
 const inEllipse = ([cx, cy, rx, ry], x, y) => Math.hypot((x - cx) / rx, (y - cy) / ry);
@@ -429,98 +358,137 @@ const KOI = [
   [899, 737, 961, 779],
   [974, 769, 1030, 801],
   [1054, 753, 1133, 807],
-];
+].map(wBox);
 for (const [k, box] of KOI.entries()) {
   const fish = (r, g, b) => !(r < 40 && g > 145 && b > 170);
   sprites[`koi-${k + 1}`] = await sprite(`koi-${k + 1}`, M, box, (x, y, r, g, b) =>
     fish(r, g, b) && b - r < 40 ? 1 : 0,
   );
+  // The repaint's koi are a little larger than their boxes and carry a pale halo of lit water.
+  const PAD = 7;
   for (let y = box[1] - 12; y <= box[3] + 12; y++)
     for (let x = box[0] - 12; x <= box[2] + 12; x++) {
       const p = y * W + x;
       const [r, g, b] = px(p);
-      const inside = x >= box[0] && x <= box[2] && y >= box[1] && y <= box[3];
-      // Inside the box anything that is not clean water; around it only the darker shadow.
+      const inside =
+        x >= box[0] - PAD && x <= box[2] + PAD && y >= box[1] - PAD && y <= box[3] + PAD;
+      // Near the fish anything that is not clean water; further out only the darker shadow.
       if ((inside && fish(r, g, b)) || (r < 40 && g < 186 && b < 213)) removed[p] = 1;
     }
 }
-// Chickens: their cream feathers are sand-coloured, so the hen is cut by its outline (traced on
-// the painting). The second hen stands against the coop post and can't be cut cleanly: it is
-// painted out (post kept) and the first hen's sprite plays both, with its own timing.
-const HEN = [
-  [1232, 471],
-  [1236, 466],
-  [1242, 469.5],
-  [1246, 470.5],
-  [1252, 460.5],
-  [1256, 462],
-  [1259, 469],
-  [1260.5, 477],
-  [1260, 485],
-  [1258, 494],
-  [1253, 498],
-  [1255, 500],
-  [1255, 507],
-  [1245, 508.5],
-  [1240, 506],
-  [1238, 502],
-  [1235, 494],
-  [1233.5, 485],
-  [1234, 476],
-];
+// The little fifth koi beside the fourth one (repaint only).
+for (let y = 730; y <= 758; y++)
+  for (let x = 1060; x <= 1084; x++) {
+    const [r, g, b] = px(y * W + x);
+    if (!(r < 40 && g > 145 && b > 170)) removed[y * W + x] = 1;
+  }
+// Chickens: the two painted hens are painted out; the yard gets four hens from the asset sheet
+// instead (different breeds and poses, so each can keep its own pace and habits). Measured on the
+// repaint: hen left of the coop x 1240..1270, y 446..492; hen at its right x 1373..1400,
+// y 460..499 (the coop's corner post above its head, x 1380..1387 above y 468, is kept).
 {
-  const box = polyBox(HEN);
-  const hen = await sprite(
-    'chicken-1',
-    M,
-    [box[0] - 1, box[1] - 1, box[2] + 1, box[3] + 1],
-    (x, y) => (inPoly(HEN, x + 0.5, y + 0.5) ? 1 : 0),
-  );
-  sprites['chicken-1'] = { ...hen, feet: [1247, 508] };
-  sprites['chicken-2'] = { ...hen, feet: [1247, 508], start: [1378, 523] };
   const m = new Uint8Array(N);
-  const shape2 = (x, y) =>
-    (inEllipse([1376, 504, 13, 11], x, y) < 1 ||
-      inEllipse([1384, 482, 9, 9], x, y) < 1 ||
-      inEllipse([1377, 518, 8, 7], x, y) < 1 ||
-      inEllipse([1366, 491, 7, 7], x, y) < 1) &&
-    !(x >= 1369 && x <= 1378 && y < 494);
-  for (let y = 450; y <= 530; y++)
-    for (let x = 1220; x <= 1400; x++) {
+  const isCoopPost = (x, y) => x >= 1380 && x <= 1387 && y < 468;
+  for (let y = 436; y <= 510; y++)
+    for (let x = 1225; x <= 1415; x++) {
       const [r, g, b] = px(y * W + x);
-      const near1 = Math.abs(x - 1247) < 20 && y > 498 && y < 514;
-      const near2 = Math.abs(x - 1377) < 20 && y > 514 && y < 530;
-      const shadow = isSand(r, g, b) && r < 205 && (near1 || near2);
-      if (inPoly(HEN, x + 0.5, y + 0.5) || shape2(x, y) || shadow) m[y * W + x] = 1;
+      const hen1 = inEllipse([1255, 469, 17, 25], x, y) < 1;
+      const hen2 = inEllipse([1387, 480, 16, 22], x, y) < 1 && !isCoopPost(x, y);
+      // Their soft shadows on the sand, just below the feet.
+      const shadow =
+        isSand(r, g, b) &&
+        r < 215 &&
+        (inEllipse([1255, 491, 21, 6], x, y) < 1 || inEllipse([1388, 498, 21, 6], x, y) < 1);
+      if (hen1 || hen2 || shadow) m[y * W + x] = 1;
     }
   dilate(m, 2);
-  for (let p = 0; p < N; p++)
-    if (m[p] && !(p % W >= 1369 && p % W <= 1378 && p / W < 494)) removed[p] = 1;
+  for (let p = 0; p < N; p++) if (m[p] && !isCoopPost(p % W, (p / W) | 0)) removed[p] = 1;
+  // Sheet hens, scaled to the painted ones (~46 px tall), feet at the bottom centre. `faces` is
+  // the side the head points to on the sheet, so the runtime flips the right way.
+  const HENS = [
+    { id: 'chicken-1', at: [1273, 388], faces: 'right', start: [1238, 474] },
+    { id: 'chicken-2', at: [1324, 388], faces: 'left', start: [1186, 458] },
+    { id: 'chicken-3', at: [1286, 442], faces: 'left', start: [1418, 468] },
+    { id: 'chicken-4', at: [1334, 442], faces: 'left', start: [1458, 458] },
+  ];
+  for (const h of HENS) {
+    const s = sheetItem(h.at[0], h.at[1], h.id);
+    const tall = 46;
+    const k = tall / s.h;
+    const w = Math.round(s.w * k);
+    const file = `${h.id}.webp`;
+    await sharp(join(SHEET, s.file))
+      .resize(w, tall)
+      .webp({ quality: 92, alphaQuality: 95 })
+      .toFile(join(OUT, file));
+    const feet = [Math.round(w / 2), tall - 4];
+    sprites[h.id] = {
+      file,
+      x: h.start[0] - feet[0],
+      y: h.start[1] - feet[1],
+      w,
+      h: tall,
+      feet: h.start,
+      faces: h.faces,
+    };
+  }
 }
 // Cows stay painted in the island: they move as soft-edged copies of themselves (body breathing
 // and shifting weight, head grazing and nodding, tail swishing). The motion is a few pixels, so
 // the painting underneath fills in and nothing shows a cut edge.
 const COWS = [
   // Yard cow (in front of the barn door, facing left).
-  { id: 'cowY', body: [1328, 368, 36, 33], head: [1308, 360, 18, 24], neck: [1327, 362], feet: [1330, 398] },
+  {
+    id: 'cowY',
+    body: [1328, 368, 36, 33],
+    head: [1308, 360, 18, 24],
+    neck: [1327, 362],
+    feet: [1330, 398],
+  },
   // House cow (by the tree, facing left).
-  { id: 'cowH', body: [895, 189, 37, 36], head: [877, 182, 19, 25], neck: [896, 186], feet: [896, 224], tail: [918, 156, 6, 5], tailPivot: [914, 159] },
-];
+  {
+    id: 'cowH',
+    body: [895, 189, 37, 36],
+    head: [877, 182, 19, 25],
+    neck: [896, 186],
+    feet: [896, 224],
+    tail: [918, 156, 6, 5],
+    tailPivot: [914, 159],
+  },
+].map((c) => ({
+  ...c,
+  body: wEll(c.body),
+  head: wEll(c.head),
+  neck: wPt(c.neck),
+  feet: wPt(c.feet),
+  ...(c.tail ? { tail: wEll(c.tail), tailPivot: wPt(c.tailPivot) } : {}),
+}));
 for (const c of COWS) {
   const soft = async (id, e, feather) =>
-    sprite(id, M, [Math.floor(e[0] - e[2] - 2), Math.floor(e[1] - e[3] - 2), Math.ceil(e[0] + e[2] + 2), Math.ceil(e[1] + e[3] + 2)], (x, y) => ellipseWeight(e, x, y, feather));
+    sprite(
+      id,
+      M,
+      [
+        Math.floor(e[0] - e[2] - 2),
+        Math.floor(e[1] - e[3] - 2),
+        Math.ceil(e[0] + e[2] + 2),
+        Math.ceil(e[1] + e[3] + 2),
+      ],
+      (x, y) => ellipseWeight(e, x, y, feather),
+    );
   sprites[`${c.id}-body`] = { ...(await soft(`${c.id}-body`, c.body, 7)), feet: c.feet };
   sprites[`${c.id}-head`] = { ...(await soft(`${c.id}-head`, c.head, 6)), base: c.neck };
-  if (c.tail) sprites[`${c.id}-tail`] = { ...(await soft(`${c.id}-tail`, c.tail, 3)), base: c.tailPivot };
+  if (c.tail)
+    sprites[`${c.id}-tail`] = { ...(await soft(`${c.id}-tail`, c.tail, 3)), base: c.tailPivot };
 }
 // Windmill blades: four arms round the hub, in the tilted plane of the sails.
-const HUB = [868, 285];
+const HUB = wPt([868, 285]);
 const TIPS = [
   [828, 230],
   [904, 247],
   [908, 328],
   [827, 320],
-];
+].map(wPt);
 const armPoly = ([tx, ty], half) => {
   const dx = tx - HUB[0];
   const dy = ty - HUB[1];
@@ -536,16 +504,56 @@ const armPoly = ([tx, ty], half) => {
     [HUB[0] - nx, HUB[1] - ny],
   ];
 };
-const ARMS = TIPS.map((t) => armPoly(t, 8.5));
+// The repaint's sails are broad (≈ 16 px) and the upper-right one carries an orange cloth: all of
+// it is painted out with a generous mask (a narrow one lets the fill copy the sail back from its
+// own edge). The turning sails are the asset sheet's separate windmill blades, sized to span the
+// painted ones, their hub on the painted hub.
+const ARMS = TIPS.map((t) => armPoly(t, 11));
 const inBlades = (x, y) =>
-  ARMS.some((a) => inPoly(a, x, y)) || Math.hypot(x - HUB[0], y - HUB[1]) < 9;
-sprites.blades = {
-  ...(await sprite('blades', M, [818, 220, 918, 338], (x, y) => (inBlades(x, y) ? 1 : 0))),
-  hub: HUB,
-  tips: TIPS,
-};
-for (let y = 218; y <= 340; y++)
-  for (let x = 816; x <= 920; x++) if (inBlades(x, y)) removed[y * W + x] = 1;
+  ARMS.some((a) => inPoly(a, x, y)) ||
+  Math.hypot(x - HUB[0], y - HUB[1]) < 13 ||
+  inEllipse([887, 267, 18, 17], x, y) < 1;
+{
+  const [x0, y0, x1, y1] = wBox([810, 210, 926, 346]);
+  for (let y = y0; y <= y1; y++)
+    for (let x = x0; x <= x1; x++) if (inBlades(x, y)) removed[y * W + x] = 1;
+  // Sheet blades (sprite on the sheet at 1260,238, 111×122): hub and arm ends in its own pixels.
+  const s = sheetItem(1315, 300, 'blades');
+  const HUB_AT = [53, 60];
+  const ENDS = [
+    [12, 10],
+    [100, 23],
+    [88, 108],
+    [13, 107],
+  ];
+  // Span of the painted sails (tip to opposite tip), matched by the sheet sails.
+  const span =
+    (Math.hypot(TIPS[0][0] - TIPS[2][0], TIPS[0][1] - TIPS[2][1]) +
+      Math.hypot(TIPS[1][0] - TIPS[3][0], TIPS[1][1] - TIPS[3][1])) /
+    2;
+  const sheetSpan =
+    (Math.hypot(ENDS[0][0] - ENDS[2][0], ENDS[0][1] - ENDS[2][1]) +
+      Math.hypot(ENDS[1][0] - ENDS[3][0], ENDS[1][1] - ENDS[3][1])) /
+    2;
+  const k = (span * 1.04) / sheetSpan;
+  const w = Math.round(s.w * k);
+  const h = Math.round(s.h * k);
+  await sharp(join(SHEET, s.file))
+    .resize(w, h)
+    .webp({ quality: 92, alphaQuality: 95 })
+    .toFile(join(OUT, 'blades.webp'));
+  const x = Math.round(HUB[0] - HUB_AT[0] * k);
+  const y = Math.round(HUB[1] - HUB_AT[1] * k);
+  sprites.blades = {
+    file: 'blades.webp',
+    x,
+    y,
+    w,
+    h,
+    hub: HUB,
+    tips: ENDS.map(([ex, ey]) => [x + ex * k, y + ey * k]),
+  };
+}
 // Lily pads and painted sprouts: cut by colour inside a small ellipse, painted out underneath.
 const LILIES = [
   [828, 733, 16, 9],
@@ -554,7 +562,7 @@ const LILIES = [
   [948, 666, 14, 6],
   [1244, 625, 22, 10],
   [1290, 641, 20, 9],
-];
+].map(wEll);
 const lilies = [];
 for (const [k, e] of LILIES.entries()) {
   const id = `lily-${k + 1}`;
@@ -575,10 +583,16 @@ const SPROUTS = [
   { id: 'sprout-2', e: [532, 402, 27, 27], base: [534, 426] },
   { id: 'sprout-3', e: [432, 444, 27, 27], base: [434, 468] },
   { id: 'sprout-4', e: [712, 410, 27, 27], base: [713, 433] },
-];
+].map((s) => ({ ...s, e: wEll(s.e), base: wPt(s.base) }));
 for (const s of SPROUTS) {
   const box = [s.e[0] - s.e[2], s.e[1] - s.e[3], s.e[0] + s.e[2], s.e[1] + s.e[3]];
-  const leafy = (r, g, b) => (isLeaf(r, g, b) && g > 90) || (isDark(r, g, b) && g > r * 0.9);
+  // Leaves, their dark outlines and the bright highlights of the repaint's glossier leaves.
+  const leafy = (r, g, b) =>
+    ((isLeaf(r, g, b) && g > 70) ||
+      (isDark(r, g, b) && g > r * 0.9) ||
+      (g > r + 25 && g > b + 25)) &&
+    // ...but not the pale grass strip along the fence the top tiles touch.
+    r < 110;
   const m = new Uint8Array(N);
   for (let y = box[1]; y <= box[3]; y++)
     for (let x = box[0]; x <= box[2]; x++) {
@@ -590,6 +604,8 @@ for (const s of SPROUTS) {
     ...(await sprite(s.id, M, box, (x, y, r, g, b, p) => (m[p] ? 1 : 0))),
     base: s.base,
   };
+  // Paint out a pixel wider than the sprite: stray leaf tips would stay painted on the soil.
+  dilate(m, 2);
   for (let p = 0; p < N; p++) if (m[p]) removed[p] = 1;
 }
 dilate(removed, 1);
@@ -600,7 +616,7 @@ inpaintGuided(island, removed);
 // kind: tree crown parts, bush, grass, flower, reed, crop field fringe, hay, dock.
 // e = ellipse [cx, cy, rx, ry] in picture px, pivot = the point that stays put (stem base).
 // sky: the crown also replaces the island's edge pixels against the sky (no ghost edge there).
-const L = (id, kind, e, pivot, opts = {}) => ({ id, kind, e, pivot, ...opts });
+const L = (id, kind, e, pivot, opts = {}) => ({ id, kind, e: wEll(e), pivot: wPt(pivot), ...opts });
 const LAYERS = [
   // Mango trees: three crown parts each so they don't move as one block; fruit hangs separately.
   L('mango1-top', 'tree', [405, 170, 72, 42], [410, 330], {
@@ -753,10 +769,10 @@ const POND = [
   [930, 880],
   [800, 845],
   [770, 760],
-];
+].map(wPt);
 const water = await maskFile(
   'water-mask.png',
-  [760, 560, 1440, 930],
+  wBox([760, 560, 1440, 930]).map((v, i) => Math.max(0, Math.min(i % 2 ? H - 1 : W - 1, v))),
   (x, y, r, g, b) => inPoly(POND, x, y) && isWaterPx(r, g, b),
 );
 const GLASS = [
@@ -768,7 +784,7 @@ const GLASS = [
   [1290, 300],
   [1105, 172],
   [1040, 172],
-];
+].map(wPt);
 const glass = await maskFile(
   'glass-mask.png',
   polyBox(GLASS),
@@ -778,22 +794,41 @@ const glass = await maskFile(
 // ——— 7b. Field plots: the game's 9 plots on the painted lattice, and an empty-soil tile ———
 // Lattice measured on the seams (i along R, j along L). Plots 1–6 are the painted tilled tiles,
 // 7–9 (unlocked later) the clear grass tiles in front; the runtime stamps soil on unlocked ones.
-const FIELD = { v0: [620, 342], R: [88, 51], L: [-92.5, 43.5] };
-const corner = (i, j) => [FIELD.v0[0] + FIELD.R[0] * i + FIELD.L[0] * j, FIELD.v0[1] + FIELD.R[1] * i + FIELD.L[1] * j];
+const FIELD = { v0: wPt([620, 342]), R: wVec([88, 51]), L: wVec([-92.5, 43.5]) };
+const corner = (i, j) => [
+  FIELD.v0[0] + FIELD.R[0] * i + FIELD.L[0] * j,
+  FIELD.v0[1] + FIELD.R[1] * i + FIELD.L[1] * j,
+];
 const tileQuad = (i, j) => [corner(i, j), corner(i + 1, j), corner(i + 1, j + 1), corner(i, j + 1)];
-const PLOT_TILES = [[0, 0], [1, 0], [0, 1], [1, 1], [0, 2], [1, 2], [0, 3], [1, 3], [2, 2]];
-const plots = PLOT_TILES.map(([i, j], k) => ({ id: k + 1, quad: tileQuad(i, j), centre: corner(i + 0.5, j + 0.5) }));
+const PLOT_TILES = [
+  [0, 0],
+  [1, 0],
+  [0, 1],
+  [1, 1],
+  [0, 2],
+  [1, 2],
+  [0, 3],
+  [1, 3],
+  [2, 2],
+];
+const plots = PLOT_TILES.map(([i, j], k) => ({
+  id: k + 1,
+  quad: tileQuad(i, j),
+  centre: corner(i + 0.5, j + 0.5),
+}));
 let soilTile;
 {
   // Tile (1, 2) with its painted seed clump patched from the soil beside it.
   const pix = Buffer.from(M);
-  const [cx, cy] = [525, 522];
+  const [cx, cy] = wPt([525, 522]).map(Math.round);
   for (let y = cy - 18; y <= cy + 14; y++)
     for (let x = cx - 26; x <= cx + 26; x++) {
       const e = Math.hypot((x - cx) / 26, (y - cy + 2) / 16);
       if (e > 1) continue;
       const t = Math.min(1, (1 - e) / 0.35);
-      for (let c = 0; c < 3; c++) pix[(y * W + x) * 4 + c] = pix[(y * W + x) * 4 + c] * (1 - t) + M[((y + 6) * W + x - 44) * 4 + c] * t;
+      for (let c = 0; c < 3; c++)
+        pix[(y * W + x) * 4 + c] =
+          pix[(y * W + x) * 4 + c] * (1 - t) + M[((y + 6) * W + x - 44) * 4 + c] * t;
     }
   const q = tileQuad(1, 2);
   const edge = (x, y) => {
@@ -806,20 +841,31 @@ let soilTile;
     return d; // > 0 inside (clockwise on screen)
   };
   const box = polyBox(q);
-  soilTile = { ...(await sprite('tile-soil', pix, [box[0] - 3, box[1] - 3, box[2] + 3, box[3] + 3], (x, y) => Math.max(0, Math.min(1, (edge(x + 0.5, y + 0.5) + 2.5) / 2.5)))), anchor: corner(1, 2) };
+  soilTile = {
+    ...(await sprite('tile-soil', pix, [box[0] - 3, box[1] - 3, box[2] + 3, box[3] + 3], (x, y) =>
+      Math.max(0, Math.min(1, (edge(x + 0.5, y + 0.5) + 2.5) / 2.5)),
+    )),
+    anchor: corner(1, 2),
+  };
 }
 
 // ——— 8. Places for things drawn by the runtime ———
+const chimneyTop = wPt([770, 30]);
+const doorBox = wBox([740, 240, 780, 293]);
+const pondC = wPt([1060, 760]);
+/** Rectangle [x0, y0, x1, y1] measured on the first painting, carried over. */
+const rect = (r) => wBox(r);
 const places = {
   chimney: {
-    x: 770,
+    x: chimneyTop[0],
     ridge: [
       [698, 85],
       [820, 33],
-    ],
-    top: 30,
-    w: 15,
+    ].map(wPt),
+    top: chimneyTop[1],
+    w: Math.round(15 * SCALE),
   },
+  // [x, y, w, h]: the top-left corner moves, the size scales.
   windows: [
     [657, 160, 10, 13],
     [632, 191, 8, 9],
@@ -830,26 +876,54 @@ const places = {
     [781, 191, 9, 12],
     [825, 150, 8, 8],
     [823, 211, 7, 9],
-  ],
-  door: { x0: 740, y0: 240, x1: 780, y1: 293 },
+  ].map(([x, y, w, h]) => [...wPt([x, y]), Math.round(w * SCALE), Math.round(h * SCALE)]),
+  door: { x0: doorBox[0], y0: doorBox[1], x1: doorBox[2], y1: doorBox[3] },
   dockPosts: [
     [993, 646],
     [1026, 658],
     [1066, 683],
     [1130, 651],
+  ].map(wPt),
+  rope: { from: wPt([1131, 600]), to: wPt([1137, 640]) },
+  pond: { cx: pondC[0], cy: pondC[1], rx: Math.round(230 * SCALE), ry: 70, poly: POND },
+  // Tap areas checked after the animals and the pond: [place, x0, y0, x1, y1].
+  taps: [
+    ['market', ...rect([845, 60, 1345, 300])],
+    ['farmhouse', ...rect([470, 10, 860, 300])],
   ],
-  rope: { from: [1131, 600], to: [1137, 640] },
-  pond: { cx: 1060, cy: 760, rx: 230, ry: 70, poly: POND },
-  yard: {
-    chickens: [
-      [1180, 400],
-      [1440, 470],
-    ],
-    cow: [1290, 1330],
+  // Tap ellipses round the cows [cx, cy, rx, ry].
+  cowSpots: [
+    [1328, 368, 38, 34],
+    [895, 189, 38, 36],
+  ].map(wEll),
+  hens: {
+    // Two patches either side of the coop [x0, y0, x1, y1].
+    zones: [rect([1150, 448, 1250, 492]), rect([1395, 440, 1470, 488])],
+    // The yard's front fence, as a line the hens stay behind: from, to.
+    fence: [wPt([1130, 457]), wPt([1257, 500])],
+    // The coop itself (no walking through it).
+    coop: rect([1255, 395, 1392, 532]),
   },
-  sky: { y0: 0, y1: 330 },
+  // Where the game's need bubbles float over the animals.
+  bubbles: { cow: wPt([1296, 318]), chicken: wPt([1350, 384]) },
+  // Camera stops in the game: the field, the barn yard.
+  focus: { field: wPt([560, 470]), barn: wPt([1230, 430]) },
+  // Band of sky the birds cross (picture y).
+  skyBand: [40, 230],
 };
-const layout = { size: [W, H], field: { ...FIELD, plots, soil: soilTile }, clouds, sprites, layers, lilies, water, glass, places, koi: KOI };
+const layout = {
+  size: [W, H],
+  field: { ...FIELD, plots, soil: soilTile },
+  clouds,
+  sprites,
+  layers,
+  lilies,
+  water,
+  glass,
+  places,
+  koi: KOI,
+  fx,
+};
 writeFileSync(join(OUT, 'layers.json'), `${JSON.stringify(layout)}\n`);
 console.log(
   `farm-anim: ${clouds.length} clouds (${clouds.filter((c) => c.bank).length} banks), ${Object.keys(sprites).length} sprites, ${layers.length} layers`,

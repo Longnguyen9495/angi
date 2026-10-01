@@ -35,12 +35,10 @@ export function App() {
 
   const focusSection = useCallback<UiContextValue['focusSection']>(
     (id) => {
-      // Reward actions such as "Xem khu vườn" open the Journey on that section.
+      // Reward actions such as "Xem khu vườn" open the farm game and land focus on it.
       openJourney();
       window.setTimeout(() => {
-        const section = document.getElementById(id);
-        section?.scrollIntoView({ block: 'start' });
-        section?.querySelector<HTMLElement>('h2[tabindex="-1"]')?.focus({ preventScroll: true });
+        document.getElementById(`${id}-title`)?.focus({ preventScroll: true });
       }, 350);
     },
     [openJourney],

@@ -1,0 +1,279 @@
+/* ——— Sky, light and weather over the painted farm (see Atmosphere.tsx) ———
+   Order, back to front: colour grade (multiply) → light (screen) → sun rays → stars → clouds →
+   rain → fireflies. Every layer ignores the pointer; taps go straight to the island. */
+
+/* No z-index, opacity or isolation here: any of them would make this a stacking context, and
+   the blend modes below would mix with nothing instead of with the painted island. It paints
+   above the scene by coming after it; the cards and HUD sit higher. */
+.fg-atmo {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fg-atmo > * {
+  position: absolute;
+  inset: 0;
+}
+
+/* ——— Colour grade: the painting is lit for midday; other hours tint it ——— */
+.fg-atmo__grade {
+  mix-blend-mode: multiply;
+  transition: opacity 2s ease;
+}
+
+/* The sky behind the island takes the full mood in the canvas (SkySystem); over the island
+   itself only a light tint, so the farm stays bright and readable at every hour. */
+.fg-atmo[data-part='morning'] .fg-atmo__grade {
+  background: linear-gradient(180deg, rgb(255 190 150), rgb(255 222 186));
+  opacity: 0.22;
+}
+
+.fg-atmo[data-part='evening'] .fg-atmo__grade {
+  background: linear-gradient(180deg, rgb(255 170 120), rgb(240 170 150));
+  opacity: 0.3;
+}
+
+.fg-atmo[data-part='night'] .fg-atmo__grade {
+  background: linear-gradient(180deg, #8e9ad6, #a9b3e2);
+  opacity: 0.3;
+}
+
+/* Overcast and rain grey the scene a little more, whatever the hour. */
+.fg-atmo__grade::after {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: multiply;
+  content: '';
+}
+
+.fg-atmo[data-weather='cloudy'] .fg-atmo__grade::after {
+  background: rgb(200 206 216 / 30%);
+}
+
+.fg-atmo[data-weather='rain'] .fg-atmo__grade::after {
+  background: rgb(168 178 196 / 38%);
+}
+
+/* ——— Light: low sun at dawn, haze at noon, sunset glow, moonlight ——— */
+.fg-atmo__glow {
+  mix-blend-mode: screen;
+  transition: opacity 2s ease;
+}
+
+.fg-atmo[data-part='morning'] .fg-atmo__glow {
+  background: radial-gradient(
+    70% 60% at 10% 4%,
+    rgb(255 214 150 / 70%),
+    rgb(255 190 140 / 18%) 55%,
+    transparent 78%
+  );
+}
+
+.fg-atmo[data-part='noon'] .fg-atmo__glow {
+  background: radial-gradient(50% 40% at 85% 0%, rgb(255 252 230 / 40%), transparent 70%);
+}
+
+.fg-atmo[data-part='evening'] .fg-atmo__glow {
+  background:
+    radial-gradient(70% 45% at 92% 18%, rgb(255 170 90 / 55%), transparent 70%),
+    linear-gradient(0deg, rgb(255 120 60 / 18%), transparent 40%);
+}
+
+/* Moonlight from the upper right (the moon itself is in the canvas sky). */
+.fg-atmo[data-part='night'] .fg-atmo__glow {
+  background: radial-gradient(60% 45% at 88% 4%, rgb(190 210 255 / 22%), transparent 75%);
+}
+
+.fg-atmo[data-weather='rain'] .fg-atmo__glow {
+  opacity: 0.35;
+}
+
+/* ——— Sun rays on a clear midday ——— */
+.fg-atmo__rays {
+  inset: -30% -10% auto auto;
+  width: 120%;
+  height: 160%;
+  background: repeating-conic-gradient(
+    from 200deg at 92% 0%,
+    rgb(255 250 220 / 0%) 0deg 6deg,
+    rgb(255 250 220 / 22%) 8deg 10deg,
+    rgb(255 250 220 / 0%) 13deg 20deg
+  );
+  mask-image: radial-gradient(80% 70% at 92% 0%, #000 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(80% 70% at 92% 0%, #000 20%, transparent 75%);
+  mix-blend-mode: screen;
+  transform-origin: 92% 0%;
+  animation: fg-rays 14s ease-in-out infinite alternate;
+}
+
+/* ——— Clouds drifting across (cloudy and rain) ——— */
+.fg-atmo__clouds {
+  display: none;
+}
+
+.fg-atmo[data-weather='cloudy'] .fg-atmo__clouds,
+.fg-atmo[data-weather='rain'] .fg-atmo__clouds {
+  display: block;
+}
+
+.fg-cloud {
+  --cloud: 255 255 255;
+  position: absolute;
+  left: 0;
+  width: 280px;
+  height: 80px;
+  border-radius: 999px;
+  background: rgb(var(--cloud) / var(--o));
+  filter: blur(10px);
+  animation: fg-drift 100s linear infinite;
+}
+
+.fg-cloud::before,
+.fg-cloud::after {
+  position: absolute;
+  border-radius: 50%;
+  background: inherit;
+  content: '';
+}
+
+.fg-cloud::before {
+  top: -46px;
+  left: 50px;
+  width: 120px;
+  height: 110px;
+}
+
+.fg-cloud::after {
+  top: -28px;
+  left: 140px;
+  width: 100px;
+  height: 84px;
+}
+
+.fg-atmo[data-weather='rain'] .fg-cloud {
+  --cloud: 120 130 150;
+}
+
+.fg-atmo[data-part='night'] .fg-cloud {
+  --cloud: 70 80 115;
+}
+
+.fg-atmo[data-part='evening'] .fg-cloud {
+  --cloud: 255 196 170;
+}
+
+.fg-atmo[data-part='evening'][data-weather='rain'] .fg-cloud {
+  --cloud: 140 120 130;
+}
+
+/* ——— Rain ——— */
+.fg-atmo__rainveil {
+  background: linear-gradient(180deg, rgb(40 50 70 / 20%), transparent 45%);
+}
+
+.fg-atmo__rain {
+  width: 100%;
+  height: 100%;
+}
+
+.fg-atmo__rainstill {
+  background: repeating-linear-gradient(
+    105deg,
+    transparent 0 18px,
+    rgb(210 228 255 / 16%) 18px 19px
+  );
+}
+
+/* ——— Fireflies (clear or cloudy nights) ——— */
+.fg-atmo__flies span {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff6a6;
+  box-shadow:
+    0 0 6px 2px rgb(255 238 120 / 85%),
+    0 0 18px 6px rgb(255 214 80 / 35%);
+  mix-blend-mode: screen;
+  animation:
+    fg-fly var(--dur, 9s) ease-in-out infinite alternate,
+    fg-blink var(--blink, 2.4s) ease-in-out infinite;
+}
+
+/* ——— Motion ——— */
+@keyframes fg-drift {
+  from {
+    transform: translateX(-340px) scale(var(--s, 1));
+  }
+
+  to {
+    transform: translateX(calc(100vw + 60px)) scale(var(--s, 1));
+  }
+}
+
+@keyframes fg-rays {
+  from {
+    opacity: 0.55;
+    transform: rotate(-2deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes fg-fly {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(calc(var(--dx) * 0.6), calc(var(--dy) * -0.4));
+  }
+
+  100% {
+    transform: translate(var(--dx), var(--dy));
+  }
+}
+
+@keyframes fg-blink {
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+
+  45%,
+  60% {
+    opacity: 1;
+  }
+}
+
+/* Reduced motion: the same moods, held still (fireflies glow in place, stars steady). */
+.fg-atmo[data-reduced='true'],
+.fg-atmo[data-reduced='true'] * {
+  animation: none !important;
+}
+
+.fg-atmo[data-reduced='true'] .fg-atmo__flies span {
+  opacity: 0.8;
+}
+
+.fg-atmo[data-reduced='true'] .fg-cloud:nth-child(1) {
+  transform: translateX(8vw) scale(var(--s, 1));
+}
+
+.fg-atmo[data-reduced='true'] .fg-cloud:nth-child(2) {
+  transform: translateX(46vw) scale(var(--s, 1));
+}
+
+.fg-atmo[data-reduced='true'] .fg-cloud:nth-child(n + 3) {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fg-atmo,
+  .fg-atmo * {
+    animation: none !important;
+  }
+}

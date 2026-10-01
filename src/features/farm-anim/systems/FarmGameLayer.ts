@@ -53,7 +53,7 @@ interface PlotFx {
   picked: { img: HTMLImageElement; t: number } | null;
 }
 
-type Event = { kind: 'plant' | 'water' | 'harvest'; at: Vec2 };
+type Event = { kind: 'plant' | 'water' | 'harvest' | 'grow'; at: Vec2; img?: HTMLImageElement };
 
 const CROP_PX = 96;
 const STAGE_SCALE: Record<PlotStageView, number> = {
@@ -63,8 +63,6 @@ const STAGE_SCALE: Record<PlotStageView, number> = {
   flowering: 0.88,
   ready: 1,
 };
-/** Where the bubbles float (picture px). */
-const BUBBLES: Record<'cow' | 'chicken', Vec2> = { cow: [1296, 318], chicken: [1350, 384] };
 
 function inQuad(q: Vec2[], x: number, y: number) {
   let pos = 0;
@@ -105,9 +103,12 @@ export class FarmGameLayer {
   private events: Event[] = [];
   private images = new Map<string, HTMLImageElement>();
   private float: { x: number; y: number; t: number; bite: number } | null = null;
+  /** Where the bubbles float over the cow and the hens (picture px). */
+  private bubbles: Record<'cow' | 'chicken', Vec2>;
 
   constructor(assets: Assets) {
     this.field = assets.layout.field;
+    this.bubbles = assets.layout.places.bubbles;
     this.soil = assets.img(this.field.soil.file);
     for (const p of this.field.plots)
       this.fx.set(p.id, {
@@ -138,13 +139,16 @@ export class FarmGameLayer {
         if (!f || !def) continue;
         const prev = f.prev;
         if (prev) {
-          if (prev.stage !== v.stage && v.stage !== 'empty') f.pop = 0;
+          if (prev.stage !== v.stage && v.stage !== 'empty') {
+            f.pop = 0;
+            if (prev.stage !== 'empty') this.events.push({ kind: 'grow', at: def.centre });
+          }
           if (prev.stage === 'empty' && v.stage !== 'empty')
             this.events.push({ kind: 'plant', at: def.centre });
           if (!prev.wet && v.wet) this.events.push({ kind: 'water', at: def.centre });
           if (prev.crop && !v.crop && prev.image) {
             f.picked = { img: this.img(prev.image), t: 0 };
-            this.events.push({ kind: 'harvest', at: def.centre });
+            this.events.push({ kind: 'harvest', at: def.centre, img: f.picked.img });
           }
         }
         f.prev = v;
@@ -178,17 +182,58 @@ export class FarmGameLayer {
     for (const e of this.events.splice(0)) {
       const [x, y] = e.at;
       if (!w.settings.particles) continue;
-      if (e.kind === 'plant')
+      if (e.kind === 'plant') {
+        // The hoe throws up clods, then seeds drop in an arc.
+        for (let i = 0; i < 10; i++)
+          w.particles.spawn(
+            'soil',
+            x + (w.rand() - 0.5) * 30,
+            y + (w.rand() - 0.5) * 10,
+            (w.rand() - 0.5) * 70,
+            -60 - w.rand() * 60,
+            1.1,
+            1.2 + w.rand() * 1.2,
+            y + 4 + (w.rand() - 0.5) * 14,
+          );
+        for (let i = 0; i < 6; i++)
+          w.particles.spawn(
+            'seed',
+            x - 20 + w.rand() * 10,
+            y - 46 - w.rand() * 8,
+            30 + w.rand() * 25,
+            -20 - w.rand() * 30,
+            1.4,
+            1.4,
+            y + (w.rand() - 0.5) * 12,
+          );
+      }
+      if (e.kind === 'grow')
         for (let i = 0; i < 8; i++)
           w.particles.spawn(
-            'dust',
-            x + (w.rand() - 0.5) * 40,
-            y + (w.rand() - 0.5) * 16,
-            (w.rand() - 0.5) * 30,
-            -10 - w.rand() * 20,
-            0.8,
-            1.4,
+            'grow',
+            x + (w.rand() - 0.5) * 50,
+            y - 10 - w.rand() * 40,
+            0,
+            -18 - w.rand() * 12,
+            0.9 + w.rand() * 0.5,
+            1.8 + w.rand() * 1.4,
           );
+      if (e.kind === 'harvest') {
+        for (let i = 0; i < 16; i++) {
+          const a = -Math.PI / 2 + (w.rand() - 0.5) * 2.2;
+          const v = 60 + w.rand() * 70;
+          w.particles.spawn(
+            'harvest',
+            x,
+            y - 20,
+            Math.cos(a) * v,
+            Math.sin(a) * v,
+            1.2 + w.rand() * 0.5,
+            1.6 + w.rand(),
+          );
+        }
+        if (e.img) w.particles.spawn('reward', x, y - 70, 0, -38, 1.6, 15, 1e9, e.img);
+      }
       if (e.kind === 'plant' || e.kind === 'harvest')
         for (let i = 0; i < (e.kind === 'harvest' ? 10 : 5); i++)
           w.particles.spawn(
@@ -385,7 +430,7 @@ export class FarmGameLayer {
     for (const key of ['cow', 'chicken'] as const) {
       const b = view[key];
       if (b.kind === 'busy') continue;
-      const [bx, by0] = BUBBLES[key];
+      const [bx, by0] = this.bubbles[key];
       const by = by0 + Math.sin(w.t * 2.2 + (key === 'cow' ? 0 : 1.5)) * 3;
       const r = b.kind === 'ready' ? 17 : 14;
       ctx.save();

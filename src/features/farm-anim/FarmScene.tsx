@@ -1,11 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { t } from '../../i18n';
-import { AnimationManager, type FarmPlace, type PlaceInfo } from './engine/AnimationManager';
+import {
+  AnimationManager,
+  type CameraView,
+  type FarmPlace,
+  type FocusName,
+  type PlaceInfo,
+  type Stats,
+} from './engine/AnimationManager';
 import type { FarmView } from './systems/FarmGameLayer';
+import type { SkyMood } from './systems/SkySystem';
 import { loadAssets } from './engine/assets';
 import './farm-anim.css';
 
-export type { FarmPlace, PlaceInfo };
+export type { CameraView, FarmPlace, FocusName, PlaceInfo };
 export type { BubbleView, FarmView, PlotView } from './systems/FarmGameLayer';
 
 /** What the page can ask of a running scene. */
@@ -21,6 +29,10 @@ export interface FarmSceneApi {
   plotAtClient: (clientX: number, clientY: number) => number | null;
   select: (id: number | null) => void;
   dropTarget: (id: number | null) => void;
+  /** Game mode: glide the camera to centre picture point (x, y). */
+  panTo: (x: number, y?: number) => void;
+  /** Game mode: glide the camera to a named stop (the field, the barn yard). */
+  panToPlace: (name: FocusName) => void;
 }
 
 /**
@@ -35,6 +47,13 @@ export default function FarmScene({
   onPlace,
   onReady,
   label = t.farm.anim.title,
+  mode = 'scene',
+  focus,
+  onCamera,
+  onPanStart,
+  sky,
+  onManager,
+  onStats,
 }: {
   className?: string;
   /** The game's reduced-motion setting (the system setting is always honoured too). */
@@ -44,6 +63,18 @@ export default function FarmScene({
   onPlace?: (place: FarmPlace, info: PlaceInfo) => void;
   onReady?: (api: FarmSceneApi) => void;
   label?: string;
+  /** 'game': full screen, large island, drag to move the camera. */
+  mode?: 'scene' | 'game';
+  /** Picture point (or named stop) the game camera starts on. */
+  focus?: [number, number] | FocusName;
+  onCamera?: (v: CameraView) => void;
+  onPanStart?: () => void;
+  /** Hour and weather painted into the sky behind the island (default: clear midday). */
+  sky?: SkyMood;
+  /** The running scene itself (the animation showcase drives it directly). */
+  onManager?: (m: AnimationManager | null) => void;
+  /** Frame rate, object count and wind, twice a second. */
+  onStats?: (s: Stats) => void;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const manager = useRef<AnimationManager | null>(null);
@@ -51,9 +82,19 @@ export default function FarmScene({
   // Latest callbacks without restarting the scene.
   const onPlaceRef = useRef(onPlace);
   const onReadyRef = useRef(onReady);
+  const onCameraRef = useRef(onCamera);
+  const onPanStartRef = useRef(onPanStart);
+  const onManagerRef = useRef(onManager);
+  const onStatsRef = useRef(onStats);
+  // Read once: the camera mode and start point are fixed for the life of the scene.
+  const start = useRef({ mode, focus });
   useEffect(() => {
     onPlaceRef.current = onPlace;
     onReadyRef.current = onReady;
+    onCameraRef.current = onCamera;
+    onPanStartRef.current = onPanStart;
+    onManagerRef.current = onManager;
+    onStatsRef.current = onStats;
   });
 
   useEffect(() => {
@@ -64,11 +105,17 @@ export default function FarmScene({
         if (cancelled || !ref.current) return;
         m = new AnimationManager(ref.current, assets, {
           onPlace: (p, info) => onPlaceRef.current?.(p, info),
+          mode: start.current.mode,
+          focus: start.current.focus,
+          onCamera: (v) => onCameraRef.current?.(v),
+          onPanStart: () => onPanStartRef.current?.(),
+          onStats: (st) => onStatsRef.current?.(st),
         });
         manager.current = m;
         window.__farmAnim = m;
         m.start();
         setState('ready');
+        onManagerRef.current?.(m);
         onReadyRef.current?.({
           jump: () => m?.jump(),
           cast: (x, y) => m?.cast(x, y),
@@ -77,6 +124,8 @@ export default function FarmScene({
           plotAtClient: (x, y) => m?.plotAtClient(x, y) ?? null,
           select: (id) => m?.select(id),
           dropTarget: (id) => m?.dropTarget(id),
+          panTo: (x, y) => m?.panTo(x, y),
+          panToPlace: (name) => m?.panToPlace(name),
         });
       })
       .catch(() => {
@@ -85,6 +134,7 @@ export default function FarmScene({
     return () => {
       cancelled = true;
       m?.destroy();
+      if (m) onManagerRef.current?.(null);
       manager.current = null;
       if (window.__farmAnim === m) delete window.__farmAnim;
     };
@@ -97,6 +147,12 @@ export default function FarmScene({
   useEffect(() => {
     manager.current?.setFarm(farm);
   }, [farm, state]);
+
+  const skyPart = sky?.part ?? 'noon';
+  const skyWeather = sky?.weather ?? 'clear';
+  useEffect(() => {
+    manager.current?.setSky({ part: skyPart, weather: skyWeather });
+  }, [skyPart, skyWeather, state]);
 
   if (state === 'failed') return null;
   return (

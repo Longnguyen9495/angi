@@ -48,6 +48,46 @@ const journey = {
     },
   },
 
+  /** The farm as a full-screen game: HUD, dock and in-game panels. */
+  game: {
+    level: (lv: number) => `Cấp ${lv}`,
+    levelLabel: (lv: number, into: number, span: number) =>
+      `Cấp ${lv}, ${into}/${span} XP. Xem thống kê`,
+    coins: (n: number) => `${n} xu`,
+    menu: 'Thêm',
+    dockLabel: 'Các khu trong nông trại',
+    dock: {
+      meal: 'Bữa này',
+      storage: 'Kho',
+      kitchen: 'Bếp',
+      orders: 'Đơn',
+      market: 'Chợ',
+      map: 'Bản đồ',
+      missions: 'Nhiệm vụ',
+      friends: 'Bạn vườn',
+      stats: 'Thống kê',
+    },
+    panel: {
+      storage: 'Kho & hạt giống',
+      kitchen: 'Bếp',
+      friends: 'Bạn vườn',
+      stats: 'Thống kê nông trại',
+    },
+    close: 'Đóng',
+    toField: 'Ruộng',
+    toBarn: 'Chuồng & ao',
+    toFieldLabel: 'Đưa khung nhìn về ruộng',
+    toBarnLabel: 'Đưa khung nhìn sang chuồng và ao',
+    dragHint: 'Kéo để xem cả nông trại',
+    questHide: 'Thu gọn gợi ý',
+    questShow: 'Mở gợi ý tiếp theo',
+    harvest: 'Thu hoạch',
+    plotsTitle: 'Các ô đất',
+    sky: (part: string, weather: string) => `${part}, ${weather}`,
+    daypart: { morning: 'Sáng sớm', noon: 'Buổi trưa', evening: 'Chiều tà', night: 'Ban đêm' },
+    weather: { clear: 'trời quang', cloudy: 'nhiều mây', rain: 'đang mưa' },
+  },
+
   stats: {
     level: 'Cấp độ',
     levelNote: (into: number, span: number, next: number) => `${into}/${span} XP tới cấp ${next}`,

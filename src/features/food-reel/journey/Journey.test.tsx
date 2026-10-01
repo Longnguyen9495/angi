@@ -66,6 +66,26 @@ async function openJourney(user: ReturnType<typeof userEvent.setup>) {
   return layer;
 }
 
+type User = ReturnType<typeof userEvent.setup>;
+
+/** Opens a farm area from the game's dock (or its "Thêm" menu) and returns the panel. */
+async function openPanel(user: User, layer: HTMLElement, name: string) {
+  const dock = within(layer).getByRole('navigation', { name: /các khu trong nông trại/i });
+  const inDock = within(dock).queryByRole('button', { name });
+  if (inDock) await user.click(inDock);
+  else {
+    await user.click(within(layer).getByRole('button', { name: 'Thêm' }));
+    await user.click(within(layer).getByRole('button', { name }));
+  }
+  return within(layer).findByRole('region', { name: new RegExp(name, 'i') });
+}
+
+/** Closes the open panel; the farm stays open. */
+async function closePanel(user: User, layer: HTMLElement) {
+  await user.keyboard('{Escape}');
+  await waitFor(() => expect(layer.querySelector('.fg-panel')).toBeNull());
+}
+
 describe('Journey layer', () => {
   it('is always reachable from the reel header and shows the accumulated numbers', async () => {
     const user = userEvent.setup();
@@ -74,22 +94,36 @@ describe('Journey layer', () => {
     expect(entry).toHaveTextContent(/cấp 1 · 2 ngày/i);
     const layer = await openJourney(user);
     expect(window.location.pathname).toBe('/journey');
-    for (const label of ['Cấp độ', 'Chuỗi ngày', 'Con dấu', 'Món đã khám phá']) {
-      expect(within(layer).getByText(label)).toBeInTheDocument();
+    // The farm is only the game: no page sections, every area sits behind the dock.
+    expect(within(layer).queryByRole('heading', { name: 'Công thức' })).not.toBeInTheDocument();
+    const dock = within(layer).getByRole('navigation', { name: /các khu trong nông trại/i });
+    for (const area of ['Bữa này', 'Kho', 'Bếp', 'Đơn', 'Chợ']) {
+      expect(within(dock).getByRole('button', { name: area })).toBeInTheDocument();
     }
-    expect(within(layer).getByText(`/${reelCount()}`)).toBeInTheDocument();
-    for (const title of [
-      'Bữa này',
-      'Khu vườn',
-      'Công thức',
-      'Bản đồ ẩm thực',
-      'Nhiệm vụ & nhật ký',
-    ]) {
+
+    // The level chip opens the numbers.
+    await user.click(within(layer).getByRole('button', { name: /cấp 1, .*xem thống kê/i }));
+    const stats = await within(layer).findByRole('region', { name: /thống kê nông trại/i });
+    for (const label of ['Cấp độ', 'Chuỗi ngày', 'Con dấu', 'Món đã khám phá']) {
+      expect(within(stats).getByText(label)).toBeInTheDocument();
+    }
+    expect(within(stats).getByText(`/${reelCount()}`)).toBeInTheDocument();
+    await closePanel(user, layer);
+
+    for (const [area, title] of [
+      ['Bữa này', 'Bữa này'],
+      ['Bếp', 'Bếp'],
+      ['Bản đồ', 'Bản đồ ẩm thực'],
+      ['Nhiệm vụ', 'Nhiệm vụ & nhật ký'],
+    ] as const) {
+      await openPanel(user, layer, area);
       expect(within(layer).getByRole('heading', { name: title })).toBeInTheDocument();
+      await closePanel(user, layer);
     }
     // The old filter-based chooser is gone for good.
     expect(within(layer).queryByRole('switch')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /chọn món ngay/i })).not.toBeInTheDocument();
+    // With nothing open on the farm, Escape leaves it.
     await user.keyboard('{Escape}');
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
   });
@@ -99,6 +133,7 @@ describe('Journey layer', () => {
     renderApp();
     await screen.findByRole('button', { name: /quay món/i }, { timeout: 2000 });
     const layer = await openJourney(user);
+    await openPanel(user, layer, 'Bữa này');
     expect(within(layer).getByText(/chưa chốt món cho/i)).toBeInTheDocument();
     await user.click(within(layer).getByRole('button', { name: /quay món/i }));
     await waitFor(() => expect(window.location.pathname).toBe('/'));
@@ -141,6 +176,7 @@ describe('seed reward loop', () => {
     const xpBefore = stored().xp;
 
     const layer = await openJourney(user);
+    await openPanel(user, layer, 'Bữa này');
     expect(within(layer).getByText('Đã gieo hạt')).toBeInTheDocument();
     await user.click(within(layer).getByRole('button', { name: /check-in bữa này/i }));
     const sheet = await screen.findByRole('dialog', { name: /check-in sau bữa/i });
@@ -159,13 +195,19 @@ describe('seed reward loop', () => {
     expect(data.xp).toBeGreaterThan(xpBefore);
     expect(data.meal.checkedIn).toBe(true);
     expect(within(layer).getByText(/^đã check-in · đã ăn$/i)).toBeInTheDocument();
+    // The sheet closed on Escape; the panel is still open over the farm.
+    await closePanel(user, layer);
+    expect(screen.getByRole('dialog', { name: /nông trại của bạn/i })).toBeInTheDocument();
 
     // Onboarding herb plot + the meal's plot are both ready now.
     await user.click(within(layer).getByRole('button', { name: /thu hoạch tất cả \(2\)/i }));
     const after = stored();
     expect(after.ingredients.herbs + after.ingredients.rice).toBe(2);
-    expect(within(layer).getByText(/kho nguyên liệu/i)).toBeInTheDocument();
-    expect(within(layer).getByText('Mới mở!')).toBeInTheDocument();
+    const storage = await openPanel(user, layer, 'Kho');
+    expect(within(storage).getByText(/kho nguyên liệu/i)).toBeInTheDocument();
+    await closePanel(user, layer);
+    const atlas = await openPanel(user, layer, 'Bản đồ');
+    expect(within(atlas).getByText('Mới mở!')).toBeInTheDocument();
   });
 
   it('plants from the seed tray into a chosen empty plot', async () => {
@@ -177,7 +219,8 @@ describe('seed reward loop', () => {
     const data = stored();
     expect(data.plots[2].crop).toBeTruthy();
     expect(data.meal.planted).toBe(true);
-    expect(within(layer).queryByText(/khay trống/i)).toBeInTheDocument();
+    const storage = await openPanel(user, layer, 'Kho');
+    expect(within(storage).queryByText(/khay trống/i)).toBeInTheDocument();
   });
 
   it('restores the journey after a reload and opens discovered dishes from the atlas', async () => {
@@ -195,9 +238,12 @@ describe('seed reward loop', () => {
       { timeout: 2000 },
     );
     await within(layer).findByRole('heading', { name: 'Khu vườn' }, { timeout: 3000 });
+    await openPanel(user, layer, 'Bữa này');
     expect(within(layer).getByText('Bún mọc')).toBeInTheDocument();
     expect(within(layer).getByText('Đã gieo hạt')).toBeInTheDocument();
+    await closePanel(user, layer);
 
+    await openPanel(user, layer, 'Bản đồ');
     await user.click(within(layer).getByRole('button', { name: /xem câu chuyện bún mọc/i }));
     await waitFor(() => expect(window.location.pathname).toBe('/mon/bun-moc'));
     expect(

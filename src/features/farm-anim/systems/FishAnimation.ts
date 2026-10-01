@@ -112,10 +112,23 @@ function pickTarget(f: Fish, w: World, water: WaterAnimation) {
   f.timer = 6 + w.rand() * 6;
 }
 
+/** The sheet's splash crown (cached per asset set). */
+let crown: { assets: World['assets']; img: HTMLImageElement | null } | null = null;
+function crownImg(w: World) {
+  if (crown?.assets !== w.assets) {
+    const def = w.assets.layout.fx?.splash;
+    crown = { assets: w.assets, img: def ? w.assets.img(def.file) : null };
+  }
+  return crown.img;
+}
+
 function splash(w: World, water: WaterAnimation, x: number, y: number, size: number) {
   water.ripple(x, y, size);
   water.ripple(x, y, size * 0.6);
   if (!w.settings.particles) return;
+  const img = crownImg(w);
+  if (img)
+    w.particles.spawn('splash', x, y + 2, 0, 0, 0.55 + size * 0.15, 18 + size * 10, 1e9, img);
   const n = Math.round(6 + size * 6);
   for (let i = 0; i < n; i++) {
     const a = -Math.PI / 2 + (w.rand() - 0.5) * 2.2;

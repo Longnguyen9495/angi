@@ -1,0 +1,3776 @@
+[
+  {
+    "id": "sprite_001",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_001.png",
+    "source_bbox": [
+      690,
+      3,
+      245,
+      242
+    ],
+    "foreground_area_px": 44674,
+    "size_px": [
+      246,
+      242
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_002",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_002.png",
+    "source_bbox": [
+      918,
+      6,
+      87,
+      75
+    ],
+    "foreground_area_px": 3489,
+    "size_px": [
+      87,
+      75
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_003",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_003.png",
+    "source_bbox": [
+      1028,
+      45,
+      35,
+      52
+    ],
+    "foreground_area_px": 346,
+    "size_px": [
+      35,
+      52
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_004",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_004.png",
+    "source_bbox": [
+      1066,
+      6,
+      307,
+      236
+    ],
+    "foreground_area_px": 46370,
+    "size_px": [
+      307,
+      236
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_005",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_005.png",
+    "source_bbox": [
+      1265,
+      3,
+      26,
+      36
+    ],
+    "foreground_area_px": 721,
+    "size_px": [
+      26,
+      36
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_006",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_006.png",
+    "source_bbox": [
+      1301,
+      5,
+      48,
+      45
+    ],
+    "foreground_area_px": 1575,
+    "size_px": [
+      48,
+      45
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_007",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_007.png",
+    "source_bbox": [
+      1344,
+      56,
+      68,
+      53
+    ],
+    "foreground_area_px": 2279,
+    "size_px": [
+      68,
+      53
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_008",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_008.png",
+    "source_bbox": [
+      1359,
+      6,
+      41,
+      45
+    ],
+    "foreground_area_px": 1521,
+    "size_px": [
+      41,
+      45
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_009",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_009.png",
+    "source_bbox": [
+      1410,
+      6,
+      41,
+      44
+    ],
+    "foreground_area_px": 1705,
+    "size_px": [
+      41,
+      44
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_010",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_010.png",
+    "source_bbox": [
+      1423,
+      60,
+      50,
+      63
+    ],
+    "foreground_area_px": 2366,
+    "size_px": [
+      50,
+      63
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_011",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_011.png",
+    "source_bbox": [
+      1461,
+      7,
+      32,
+      55
+    ],
+    "foreground_area_px": 1381,
+    "size_px": [
+      32,
+      55
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_012",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_012.png",
+    "source_bbox": [
+      1485,
+      63,
+      36,
+      70
+    ],
+    "foreground_area_px": 2161,
+    "size_px": [
+      36,
+      70
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_013",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_013.png",
+    "source_bbox": [
+      1502,
+      6,
+      25,
+      50
+    ],
+    "foreground_area_px": 1083,
+    "size_px": [
+      25,
+      50
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_014",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_014.png",
+    "source_bbox": [
+      942,
+      106,
+      60,
+      105
+    ],
+    "foreground_area_px": 4093,
+    "size_px": [
+      60,
+      105
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_015",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_015.png",
+    "source_bbox": [
+      998,
+      193,
+      220,
+      177
+    ],
+    "foreground_area_px": 24698,
+    "size_px": [
+      220,
+      177
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_016",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_016.png",
+    "source_bbox": [
+      1003,
+      104,
+      54,
+      96
+    ],
+    "foreground_area_px": 3407,
+    "size_px": [
+      54,
+      96
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_017",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_017.png",
+    "source_bbox": [
+      1350,
+      118,
+      172,
+      358
+    ],
+    "foreground_area_px": 27879,
+    "size_px": [
+      172,
+      358
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_018",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_018.png",
+    "source_bbox": [
+      1492,
+      143,
+      35,
+      53
+    ],
+    "foreground_area_px": 1323,
+    "size_px": [
+      35,
+      53
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_019",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_019.png",
+    "source_bbox": [
+      690,
+      226,
+      71,
+      129
+    ],
+    "foreground_area_px": 7033,
+    "size_px": [
+      72,
+      129
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_020",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_020.png",
+    "source_bbox": [
+      773,
+      241,
+      78,
+      78
+    ],
+    "foreground_area_px": 3363,
+    "size_px": [
+      78,
+      78
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_021",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_021.png",
+    "source_bbox": [
+      841,
+      296,
+      51,
+      57
+    ],
+    "foreground_area_px": 1786,
+    "size_px": [
+      51,
+      57
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_022",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_022.png",
+    "source_bbox": [
+      851,
+      238,
+      54,
+      50
+    ],
+    "foreground_area_px": 1812,
+    "size_px": [
+      54,
+      50
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_023",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_023.png",
+    "source_bbox": [
+      896,
+      274,
+      89,
+      82
+    ],
+    "foreground_area_px": 4415,
+    "size_px": [
+      89,
+      82
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_024",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_024.png",
+    "source_bbox": [
+      903,
+      217,
+      57,
+      42
+    ],
+    "foreground_area_px": 1641,
+    "size_px": [
+      57,
+      42
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_025",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_025.png",
+    "source_bbox": [
+      971,
+      244,
+      29,
+      54
+    ],
+    "foreground_area_px": 1164,
+    "size_px": [
+      29,
+      54
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_026",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_026.png",
+    "source_bbox": [
+      1216,
+      256,
+      39,
+      91
+    ],
+    "foreground_area_px": 2639,
+    "size_px": [
+      39,
+      91
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_027",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_027.png",
+    "source_bbox": [
+      1264,
+      242,
+      103,
+      114
+    ],
+    "foreground_area_px": 4353,
+    "size_px": [
+      103,
+      114
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_028",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_028.png",
+    "source_bbox": [
+      1299,
+      209,
+      57,
+      40
+    ],
+    "foreground_area_px": 1527,
+    "size_px": [
+      57,
+      40
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_029",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_029.png",
+    "source_bbox": [
+      1484,
+      276,
+      48,
+      56
+    ],
+    "foreground_area_px": 1740,
+    "size_px": [
+      48,
+      56
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_030",
+    "category": "buildings_and_props",
+    "file": "buildings_and_props/sprite_030.png",
+    "source_bbox": [
+      1496,
+      206,
+      27,
+      59
+    ],
+    "foreground_area_px": 1244,
+    "size_px": [
+      27,
+      59
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_031",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_031.png",
+    "source_bbox": [
+      715,
+      363,
+      96,
+      62
+    ],
+    "foreground_area_px": 3247,
+    "size_px": [
+      96,
+      62
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_032",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_032.png",
+    "source_bbox": [
+      742,
+      351,
+      59,
+      32
+    ],
+    "foreground_area_px": 1169,
+    "size_px": [
+      59,
+      32
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_033",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_033.png",
+    "source_bbox": [
+      760,
+      312,
+      44,
+      40
+    ],
+    "foreground_area_px": 1259,
+    "size_px": [
+      44,
+      40
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_034",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_034.png",
+    "source_bbox": [
+      811,
+      339,
+      132,
+      65
+    ],
+    "foreground_area_px": 3928,
+    "size_px": [
+      132,
+      65
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_035",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_035.png",
+    "source_bbox": [
+      816,
+      391,
+      66,
+      62
+    ],
+    "foreground_area_px": 2216,
+    "size_px": [
+      66,
+      62
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_036",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_036.png",
+    "source_bbox": [
+      893,
+      389,
+      82,
+      54
+    ],
+    "foreground_area_px": 3010,
+    "size_px": [
+      82,
+      54
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_037",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_037.png",
+    "source_bbox": [
+      963,
+      329,
+      107,
+      79
+    ],
+    "foreground_area_px": 5287,
+    "size_px": [
+      107,
+      79
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_038",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_038.png",
+    "source_bbox": [
+      1046,
+      379,
+      106,
+      78
+    ],
+    "foreground_area_px": 5241,
+    "size_px": [
+      106,
+      78
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_039",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_039.png",
+    "source_bbox": [
+      1057,
+      319,
+      31,
+      44
+    ],
+    "foreground_area_px": 899,
+    "size_px": [
+      31,
+      44
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_040",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_040.png",
+    "source_bbox": [
+      1161,
+      352,
+      87,
+      85
+    ],
+    "foreground_area_px": 4193,
+    "size_px": [
+      87,
+      85
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_041",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_041.png",
+    "source_bbox": [
+      1253,
+      362,
+      40,
+      52
+    ],
+    "foreground_area_px": 1341,
+    "size_px": [
+      40,
+      52
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_042",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_042.png",
+    "source_bbox": [
+      1303,
+      361,
+      43,
+      52
+    ],
+    "foreground_area_px": 1558,
+    "size_px": [
+      43,
+      52
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_043",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_043.png",
+    "source_bbox": [
+      1486,
+      376,
+      42,
+      56
+    ],
+    "foreground_area_px": 1465,
+    "size_px": [
+      42,
+      56
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_044",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_044.png",
+    "source_bbox": [
+      7,
+      440,
+      242,
+      42
+    ],
+    "foreground_area_px": 6578,
+    "size_px": [
+      242,
+      43
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_045",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_045.png",
+    "source_bbox": [
+      10,
+      471,
+      327,
+      70
+    ],
+    "foreground_area_px": 11165,
+    "size_px": [
+      327,
+      70
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_046",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_046.png",
+    "source_bbox": [
+      259,
+      440,
+      78,
+      43
+    ],
+    "foreground_area_px": 2116,
+    "size_px": [
+      78,
+      44
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_047",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_047.png",
+    "source_bbox": [
+      348,
+      440,
+      49,
+      76
+    ],
+    "foreground_area_px": 2022,
+    "size_px": [
+      49,
+      76
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_048",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_048.png",
+    "source_bbox": [
+      406,
+      440,
+      39,
+      34
+    ],
+    "foreground_area_px": 634,
+    "size_px": [
+      39,
+      35
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_049",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_049.png",
+    "source_bbox": [
+      406,
+      477,
+      37,
+      37
+    ],
+    "foreground_area_px": 661,
+    "size_px": [
+      37,
+      37
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_050",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_050.png",
+    "source_bbox": [
+      458,
+      440,
+      40,
+      33
+    ],
+    "foreground_area_px": 701,
+    "size_px": [
+      40,
+      34
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_051",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_051.png",
+    "source_bbox": [
+      459,
+      476,
+      38,
+      34
+    ],
+    "foreground_area_px": 828,
+    "size_px": [
+      38,
+      34
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_052",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_052.png",
+    "source_bbox": [
+      512,
+      440,
+      41,
+      33
+    ],
+    "foreground_area_px": 872,
+    "size_px": [
+      41,
+      34
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_053",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_053.png",
+    "source_bbox": [
+      515,
+      476,
+      36,
+      36
+    ],
+    "foreground_area_px": 796,
+    "size_px": [
+      36,
+      36
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_054",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_054.png",
+    "source_bbox": [
+      565,
+      440,
+      41,
+      35
+    ],
+    "foreground_area_px": 966,
+    "size_px": [
+      41,
+      36
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_055",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_055.png",
+    "source_bbox": [
+      566,
+      477,
+      37,
+      35
+    ],
+    "foreground_area_px": 808,
+    "size_px": [
+      37,
+      35
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_056",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_056.png",
+    "source_bbox": [
+      615,
+      476,
+      47,
+      36
+    ],
+    "foreground_area_px": 948,
+    "size_px": [
+      47,
+      36
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_057",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_057.png",
+    "source_bbox": [
+      618,
+      440,
+      39,
+      34
+    ],
+    "foreground_area_px": 947,
+    "size_px": [
+      39,
+      35
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_058",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_058.png",
+    "source_bbox": [
+      667,
+      440,
+      33,
+      32
+    ],
+    "foreground_area_px": 771,
+    "size_px": [
+      33,
+      33
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_059",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_059.png",
+    "source_bbox": [
+      672,
+      476,
+      83,
+      85
+    ],
+    "foreground_area_px": 3260,
+    "size_px": [
+      83,
+      85
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_060",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_060.png",
+    "source_bbox": [
+      708,
+      435,
+      21,
+      38
+    ],
+    "foreground_area_px": 516,
+    "size_px": [
+      21,
+      38
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_061",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_061.png",
+    "source_bbox": [
+      736,
+      436,
+      28,
+      37
+    ],
+    "foreground_area_px": 642,
+    "size_px": [
+      28,
+      37
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_062",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_062.png",
+    "source_bbox": [
+      766,
+      476,
+      51,
+      25
+    ],
+    "foreground_area_px": 954,
+    "size_px": [
+      51,
+      25
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_063",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_063.png",
+    "source_bbox": [
+      783,
+      437,
+      39,
+      33
+    ],
+    "foreground_area_px": 986,
+    "size_px": [
+      39,
+      33
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_064",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_064.png",
+    "source_bbox": [
+      823,
+      493,
+      51,
+      48
+    ],
+    "foreground_area_px": 2269,
+    "size_px": [
+      51,
+      48
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_065",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_065.png",
+    "source_bbox": [
+      824,
+      454,
+      56,
+      28
+    ],
+    "foreground_area_px": 1028,
+    "size_px": [
+      56,
+      28
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_066",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_066.png",
+    "source_bbox": [
+      886,
+      487,
+      87,
+      49
+    ],
+    "foreground_area_px": 3495,
+    "size_px": [
+      87,
+      49
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_067",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_067.png",
+    "source_bbox": [
+      891,
+      448,
+      81,
+      32
+    ],
+    "foreground_area_px": 2146,
+    "size_px": [
+      81,
+      32
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_068",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_068.png",
+    "source_bbox": [
+      982,
+      418,
+      56,
+      51
+    ],
+    "foreground_area_px": 2146,
+    "size_px": [
+      56,
+      51
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_069",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_069.png",
+    "source_bbox": [
+      986,
+      480,
+      33,
+      52
+    ],
+    "foreground_area_px": 1343,
+    "size_px": [
+      33,
+      52
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_070",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_070.png",
+    "source_bbox": [
+      1031,
+      464,
+      104,
+      71
+    ],
+    "foreground_area_px": 4525,
+    "size_px": [
+      104,
+      71
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_071",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_071.png",
+    "source_bbox": [
+      1136,
+      426,
+      65,
+      42
+    ],
+    "foreground_area_px": 1581,
+    "size_px": [
+      65,
+      42
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_072",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_072.png",
+    "source_bbox": [
+      1147,
+      468,
+      103,
+      71
+    ],
+    "foreground_area_px": 4747,
+    "size_px": [
+      103,
+      71
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_073",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_073.png",
+    "source_bbox": [
+      1225,
+      426,
+      30,
+      31
+    ],
+    "foreground_area_px": 674,
+    "size_px": [
+      30,
+      31
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_074",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_074.png",
+    "source_bbox": [
+      1260,
+      485,
+      93,
+      55
+    ],
+    "foreground_area_px": 3659,
+    "size_px": [
+      93,
+      55
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_075",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_075.png",
+    "source_bbox": [
+      1269,
+      417,
+      34,
+      51
+    ],
+    "foreground_area_px": 889,
+    "size_px": [
+      34,
+      51
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_076",
+    "category": "buildings_animals_props",
+    "file": "buildings_animals_props/sprite_076.png",
+    "source_bbox": [
+      1313,
+      415,
+      40,
+      55
+    ],
+    "foreground_area_px": 1382,
+    "size_px": [
+      40,
+      55
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_077",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_077.png",
+    "source_bbox": [
+      1358,
+      482,
+      93,
+      70
+    ],
+    "foreground_area_px": 4525,
+    "size_px": [
+      93,
+      70
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_078",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_078.png",
+    "source_bbox": [
+      1364,
+      443,
+      58,
+      37
+    ],
+    "foreground_area_px": 1354,
+    "size_px": [
+      58,
+      37
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_079",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_079.png",
+    "source_bbox": [
+      1431,
+      451,
+      37,
+      27
+    ],
+    "foreground_area_px": 626,
+    "size_px": [
+      37,
+      27
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_080",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_080.png",
+    "source_bbox": [
+      1452,
+      476,
+      78,
+      89
+    ],
+    "foreground_area_px": 4170,
+    "size_px": [
+      78,
+      89
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_081",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_081.png",
+    "source_bbox": [
+      8,
+      538,
+      56,
+      58
+    ],
+    "foreground_area_px": 1854,
+    "size_px": [
+      56,
+      58
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_082",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_082.png",
+    "source_bbox": [
+      74,
+      531,
+      57,
+      66
+    ],
+    "foreground_area_px": 2343,
+    "size_px": [
+      57,
+      66
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_083",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_083.png",
+    "source_bbox": [
+      142,
+      535,
+      57,
+      66
+    ],
+    "foreground_area_px": 2229,
+    "size_px": [
+      57,
+      66
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_084",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_084.png",
+    "source_bbox": [
+      209,
+      531,
+      56,
+      73
+    ],
+    "foreground_area_px": 2443,
+    "size_px": [
+      56,
+      73
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_085",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_085.png",
+    "source_bbox": [
+      269,
+      517,
+      110,
+      88
+    ],
+    "foreground_area_px": 5550,
+    "size_px": [
+      110,
+      88
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_086",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_086.png",
+    "source_bbox": [
+      387,
+      525,
+      33,
+      32
+    ],
+    "foreground_area_px": 687,
+    "size_px": [
+      33,
+      32
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_087",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_087.png",
+    "source_bbox": [
+      388,
+      563,
+      52,
+      71
+    ],
+    "foreground_area_px": 2136,
+    "size_px": [
+      52,
+      71
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_088",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_088.png",
+    "source_bbox": [
+      423,
+      514,
+      39,
+      49
+    ],
+    "foreground_area_px": 1266,
+    "size_px": [
+      39,
+      49
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_089",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_089.png",
+    "source_bbox": [
+      447,
+      563,
+      49,
+      57
+    ],
+    "foreground_area_px": 1728,
+    "size_px": [
+      49,
+      57
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_090",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_090.png",
+    "source_bbox": [
+      472,
+      514,
+      47,
+      50
+    ],
+    "foreground_area_px": 1632,
+    "size_px": [
+      47,
+      50
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_091",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_091.png",
+    "source_bbox": [
+      506,
+      564,
+      88,
+      67
+    ],
+    "foreground_area_px": 2881,
+    "size_px": [
+      88,
+      67
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_092",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_092.png",
+    "source_bbox": [
+      530,
+      510,
+      47,
+      51
+    ],
+    "foreground_area_px": 1705,
+    "size_px": [
+      47,
+      51
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_093",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_093.png",
+    "source_bbox": [
+      587,
+      515,
+      115,
+      120
+    ],
+    "foreground_area_px": 5983,
+    "size_px": [
+      115,
+      120
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_094",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_094.png",
+    "source_bbox": [
+      592,
+      517,
+      57,
+      49
+    ],
+    "foreground_area_px": 1975,
+    "size_px": [
+      57,
+      49
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_095",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_095.png",
+    "source_bbox": [
+      699,
+      571,
+      57,
+      60
+    ],
+    "foreground_area_px": 2229,
+    "size_px": [
+      57,
+      60
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_096",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_096.png",
+    "source_bbox": [
+      701,
+      586,
+      393,
+      243
+    ],
+    "foreground_area_px": 57290,
+    "size_px": [
+      393,
+      243
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_097",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_097.png",
+    "source_bbox": [
+      765,
+      544,
+      47,
+      27
+    ],
+    "foreground_area_px": 1144,
+    "size_px": [
+      47,
+      27
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_098",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_098.png",
+    "source_bbox": [
+      765,
+      578,
+      48,
+      49
+    ],
+    "foreground_area_px": 1426,
+    "size_px": [
+      48,
+      49
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_099",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_099.png",
+    "source_bbox": [
+      766,
+      509,
+      46,
+      25
+    ],
+    "foreground_area_px": 1100,
+    "size_px": [
+      46,
+      25
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_100",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_100.png",
+    "source_bbox": [
+      823,
+      552,
+      50,
+      38
+    ],
+    "foreground_area_px": 1584,
+    "size_px": [
+      50,
+      38
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_101",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_101.png",
+    "source_bbox": [
+      887,
+      545,
+      47,
+      32
+    ],
+    "foreground_area_px": 1415,
+    "size_px": [
+      47,
+      32
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_102",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_102.png",
+    "source_bbox": [
+      945,
+      545,
+      45,
+      31
+    ],
+    "foreground_area_px": 1297,
+    "size_px": [
+      45,
+      31
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_103",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_103.png",
+    "source_bbox": [
+      977,
+      578,
+      45,
+      30
+    ],
+    "foreground_area_px": 893,
+    "size_px": [
+      45,
+      30
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_104",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_104.png",
+    "source_bbox": [
+      1000,
+      545,
+      42,
+      31
+    ],
+    "foreground_area_px": 1193,
+    "size_px": [
+      42,
+      31
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_105",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_105.png",
+    "source_bbox": [
+      1023,
+      533,
+      200,
+      158
+    ],
+    "foreground_area_px": 14724,
+    "size_px": [
+      200,
+      158
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_106",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_106.png",
+    "source_bbox": [
+      1052,
+      544,
+      40,
+      32
+    ],
+    "foreground_area_px": 1124,
+    "size_px": [
+      40,
+      32
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_107",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_107.png",
+    "source_bbox": [
+      1183,
+      548,
+      50,
+      26
+    ],
+    "foreground_area_px": 935,
+    "size_px": [
+      50,
+      26
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_108",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_108.png",
+    "source_bbox": [
+      1234,
+      546,
+      40,
+      44
+    ],
+    "foreground_area_px": 1064,
+    "size_px": [
+      40,
+      44
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_109",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_109.png",
+    "source_bbox": [
+      1279,
+      544,
+      44,
+      56
+    ],
+    "foreground_area_px": 1566,
+    "size_px": [
+      44,
+      56
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_110",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_110.png",
+    "source_bbox": [
+      1329,
+      588,
+      41,
+      31
+    ],
+    "foreground_area_px": 839,
+    "size_px": [
+      41,
+      31
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_111",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_111.png",
+    "source_bbox": [
+      1334,
+      551,
+      48,
+      26
+    ],
+    "foreground_area_px": 1023,
+    "size_px": [
+      48,
+      26
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_112",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_112.png",
+    "source_bbox": [
+      1379,
+      562,
+      62,
+      46
+    ],
+    "foreground_area_px": 1867,
+    "size_px": [
+      62,
+      46
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_113",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_113.png",
+    "source_bbox": [
+      1431,
+      566,
+      53,
+      108
+    ],
+    "foreground_area_px": 3000,
+    "size_px": [
+      53,
+      108
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_114",
+    "category": "crops_nature_props",
+    "file": "crops_nature_props/sprite_114.png",
+    "source_bbox": [
+      1493,
+      568,
+      35,
+      35
+    ],
+    "foreground_area_px": 924,
+    "size_px": [
+      35,
+      35
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_115",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_115.png",
+    "source_bbox": [
+      0,
+      602,
+      151,
+      200
+    ],
+    "foreground_area_px": 16963,
+    "size_px": [
+      151,
+      200
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_116",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_116.png",
+    "source_bbox": [
+      129,
+      610,
+      149,
+      159
+    ],
+    "foreground_area_px": 12071,
+    "size_px": [
+      149,
+      159
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_117",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_117.png",
+    "source_bbox": [
+      283,
+      608,
+      119,
+      152
+    ],
+    "foreground_area_px": 11276,
+    "size_px": [
+      119,
+      152
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_118",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_118.png",
+    "source_bbox": [
+      392,
+      642,
+      83,
+      123
+    ],
+    "foreground_area_px": 5435,
+    "size_px": [
+      83,
+      123
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_119",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_119.png",
+    "source_bbox": [
+      459,
+      625,
+      40,
+      35
+    ],
+    "foreground_area_px": 867,
+    "size_px": [
+      40,
+      35
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_120",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_120.png",
+    "source_bbox": [
+      470,
+      666,
+      36,
+      34
+    ],
+    "foreground_area_px": 886,
+    "size_px": [
+      36,
+      34
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_121",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_121.png",
+    "source_bbox": [
+      509,
+      636,
+      39,
+      39
+    ],
+    "foreground_area_px": 917,
+    "size_px": [
+      39,
+      39
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_122",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_122.png",
+    "source_bbox": [
+      509,
+      680,
+      63,
+      85
+    ],
+    "foreground_area_px": 3081,
+    "size_px": [
+      63,
+      85
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_123",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_123.png",
+    "source_bbox": [
+      557,
+      641,
+      73,
+      48
+    ],
+    "foreground_area_px": 2592,
+    "size_px": [
+      73,
+      48
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_124",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_124.png",
+    "source_bbox": [
+      563,
+      609,
+      23,
+      22
+    ],
+    "foreground_area_px": 330,
+    "size_px": [
+      23,
+      22
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_125",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_125.png",
+    "source_bbox": [
+      577,
+      693,
+      72,
+      64
+    ],
+    "foreground_area_px": 3329,
+    "size_px": [
+      72,
+      64
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_126",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_126.png",
+    "source_bbox": [
+      635,
+      634,
+      59,
+      53
+    ],
+    "foreground_area_px": 2299,
+    "size_px": [
+      59,
+      53
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_127",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_127.png",
+    "source_bbox": [
+      654,
+      695,
+      51,
+      40
+    ],
+    "foreground_area_px": 1386,
+    "size_px": [
+      51,
+      40
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_128",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_128.png",
+    "source_bbox": [
+      663,
+      604,
+      26,
+      23
+    ],
+    "foreground_area_px": 380,
+    "size_px": [
+      26,
+      23
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_129",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_129.png",
+    "source_bbox": [
+      715,
+      641,
+      21,
+      16
+    ],
+    "foreground_area_px": 234,
+    "size_px": [
+      21,
+      16
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_130",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_130.png",
+    "source_bbox": [
+      1098,
+      695,
+      54,
+      49
+    ],
+    "foreground_area_px": 1989,
+    "size_px": [
+      54,
+      49
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_131",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_131.png",
+    "source_bbox": [
+      1159,
+      665,
+      103,
+      73
+    ],
+    "foreground_area_px": 5007,
+    "size_px": [
+      103,
+      73
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_132",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_132.png",
+    "source_bbox": [
+      1229,
+      600,
+      96,
+      70
+    ],
+    "foreground_area_px": 4550,
+    "size_px": [
+      96,
+      70
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_133",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_133.png",
+    "source_bbox": [
+      1260,
+      674,
+      86,
+      70
+    ],
+    "foreground_area_px": 2396,
+    "size_px": [
+      86,
+      70
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_134",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_134.png",
+    "source_bbox": [
+      1325,
+      632,
+      36,
+      31
+    ],
+    "foreground_area_px": 650,
+    "size_px": [
+      36,
+      31
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_135",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_135.png",
+    "source_bbox": [
+      1345,
+      673,
+      71,
+      58
+    ],
+    "foreground_area_px": 2160,
+    "size_px": [
+      71,
+      58
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_136",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_136.png",
+    "source_bbox": [
+      1364,
+      618,
+      60,
+      49
+    ],
+    "foreground_area_px": 2127,
+    "size_px": [
+      60,
+      49
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_137",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_137.png",
+    "source_bbox": [
+      1424,
+      685,
+      72,
+      46
+    ],
+    "foreground_area_px": 2189,
+    "size_px": [
+      72,
+      46
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_138",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_138.png",
+    "source_bbox": [
+      1485,
+      610,
+      47,
+      83
+    ],
+    "foreground_area_px": 2258,
+    "size_px": [
+      47,
+      83
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_139",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_139.png",
+    "source_bbox": [
+      47,
+      772,
+      62,
+      45
+    ],
+    "foreground_area_px": 1873,
+    "size_px": [
+      62,
+      45
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_140",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_140.png",
+    "source_bbox": [
+      119,
+      772,
+      52,
+      42
+    ],
+    "foreground_area_px": 1667,
+    "size_px": [
+      52,
+      42
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_141",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_141.png",
+    "source_bbox": [
+      184,
+      764,
+      60,
+      47
+    ],
+    "foreground_area_px": 2030,
+    "size_px": [
+      60,
+      47
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_142",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_142.png",
+    "source_bbox": [
+      243,
+      723,
+      49,
+      46
+    ],
+    "foreground_area_px": 1469,
+    "size_px": [
+      49,
+      46
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_143",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_143.png",
+    "source_bbox": [
+      256,
+      774,
+      38,
+      38
+    ],
+    "foreground_area_px": 1051,
+    "size_px": [
+      38,
+      38
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_144",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_144.png",
+    "source_bbox": [
+      303,
+      775,
+      34,
+      39
+    ],
+    "foreground_area_px": 871,
+    "size_px": [
+      34,
+      39
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_145",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_145.png",
+    "source_bbox": [
+      347,
+      761,
+      51,
+      56
+    ],
+    "foreground_area_px": 2176,
+    "size_px": [
+      51,
+      56
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_146",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_146.png",
+    "source_bbox": [
+      408,
+      772,
+      38,
+      40
+    ],
+    "foreground_area_px": 1004,
+    "size_px": [
+      38,
+      40
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_147",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_147.png",
+    "source_bbox": [
+      453,
+      756,
+      36,
+      39
+    ],
+    "foreground_area_px": 933,
+    "size_px": [
+      36,
+      39
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_148",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_148.png",
+    "source_bbox": [
+      474,
+      715,
+      31,
+      28
+    ],
+    "foreground_area_px": 514,
+    "size_px": [
+      31,
+      28
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_149",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_149.png",
+    "source_bbox": [
+      489,
+      778,
+      52,
+      34
+    ],
+    "foreground_area_px": 1122,
+    "size_px": [
+      52,
+      34
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_150",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_150.png",
+    "source_bbox": [
+      496,
+      747,
+      30,
+      29
+    ],
+    "foreground_area_px": 590,
+    "size_px": [
+      30,
+      29
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_151",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_151.png",
+    "source_bbox": [
+      547,
+      750,
+      69,
+      52
+    ],
+    "foreground_area_px": 2406,
+    "size_px": [
+      69,
+      52
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_152",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_152.png",
+    "source_bbox": [
+      616,
+      773,
+      46,
+      29
+    ],
+    "foreground_area_px": 839,
+    "size_px": [
+      46,
+      29
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_153",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_153.png",
+    "source_bbox": [
+      648,
+      740,
+      70,
+      51
+    ],
+    "foreground_area_px": 2235,
+    "size_px": [
+      70,
+      51
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_154",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_154.png",
+    "source_bbox": [
+      656,
+      794,
+      57,
+      43
+    ],
+    "foreground_area_px": 1579,
+    "size_px": [
+      57,
+      43
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_155",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_155.png",
+    "source_bbox": [
+      711,
+      731,
+      24,
+      24
+    ],
+    "foreground_area_px": 382,
+    "size_px": [
+      24,
+      24
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_156",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_156.png",
+    "source_bbox": [
+      713,
+      776,
+      55,
+      47
+    ],
+    "foreground_area_px": 1947,
+    "size_px": [
+      55,
+      47
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_157",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_157.png",
+    "source_bbox": [
+      740,
+      749,
+      21,
+      20
+    ],
+    "foreground_area_px": 261,
+    "size_px": [
+      21,
+      20
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_158",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_158.png",
+    "source_bbox": [
+      774,
+      775,
+      80,
+      57
+    ],
+    "foreground_area_px": 3266,
+    "size_px": [
+      80,
+      57
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_159",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_159.png",
+    "source_bbox": [
+      1061,
+      752,
+      123,
+      72
+    ],
+    "foreground_area_px": 4890,
+    "size_px": [
+      123,
+      72
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_160",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_160.png",
+    "source_bbox": [
+      1146,
+      799,
+      61,
+      51
+    ],
+    "foreground_area_px": 1922,
+    "size_px": [
+      61,
+      51
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_161",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_161.png",
+    "source_bbox": [
+      1161,
+      735,
+      54,
+      39
+    ],
+    "foreground_area_px": 1437,
+    "size_px": [
+      54,
+      39
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_162",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_162.png",
+    "source_bbox": [
+      1203,
+      779,
+      62,
+      75
+    ],
+    "foreground_area_px": 3077,
+    "size_px": [
+      62,
+      75
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_163",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_163.png",
+    "source_bbox": [
+      1219,
+      742,
+      32,
+      29
+    ],
+    "foreground_area_px": 393,
+    "size_px": [
+      32,
+      29
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_164",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_164.png",
+    "source_bbox": [
+      1263,
+      740,
+      58,
+      43
+    ],
+    "foreground_area_px": 1482,
+    "size_px": [
+      58,
+      43
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_165",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_165.png",
+    "source_bbox": [
+      1276,
+      791,
+      50,
+      72
+    ],
+    "foreground_area_px": 2690,
+    "size_px": [
+      50,
+      72
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_166",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_166.png",
+    "source_bbox": [
+      1331,
+      729,
+      100,
+      51
+    ],
+    "foreground_area_px": 3065,
+    "size_px": [
+      100,
+      51
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_167",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_167.png",
+    "source_bbox": [
+      1334,
+      789,
+      78,
+      74
+    ],
+    "foreground_area_px": 4098,
+    "size_px": [
+      78,
+      74
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_168",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_168.png",
+    "source_bbox": [
+      1419,
+      790,
+      63,
+      72
+    ],
+    "foreground_area_px": 2633,
+    "size_px": [
+      63,
+      72
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_169",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_169.png",
+    "source_bbox": [
+      1441,
+      737,
+      49,
+      46
+    ],
+    "foreground_area_px": 1109,
+    "size_px": [
+      49,
+      46
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_170",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_170.png",
+    "source_bbox": [
+      1487,
+      769,
+      40,
+      60
+    ],
+    "foreground_area_px": 1259,
+    "size_px": [
+      40,
+      60
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_171",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_171.png",
+    "source_bbox": [
+      1492,
+      700,
+      42,
+      59
+    ],
+    "foreground_area_px": 1239,
+    "size_px": [
+      42,
+      58
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_172",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_172.png",
+    "source_bbox": [
+      7,
+      898,
+      211,
+      98
+    ],
+    "foreground_area_px": 7755,
+    "size_px": [
+      211,
+      98
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_173",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_173.png",
+    "source_bbox": [
+      15,
+      819,
+      400,
+      99
+    ],
+    "foreground_area_px": 24839,
+    "size_px": [
+      400,
+      99
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_174",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_174.png",
+    "source_bbox": [
+      410,
+      884,
+      57,
+      48
+    ],
+    "foreground_area_px": 1744,
+    "size_px": [
+      57,
+      48
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_175",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_175.png",
+    "source_bbox": [
+      421,
+      817,
+      76,
+      75
+    ],
+    "foreground_area_px": 3666,
+    "size_px": [
+      76,
+      75
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_176",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_176.png",
+    "source_bbox": [
+      477,
+      889,
+      66,
+      45
+    ],
+    "foreground_area_px": 1873,
+    "size_px": [
+      66,
+      45
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_177",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_177.png",
+    "source_bbox": [
+      516,
+      807,
+      131,
+      125
+    ],
+    "foreground_area_px": 10471,
+    "size_px": [
+      131,
+      125
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_178",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_178.png",
+    "source_bbox": [
+      651,
+      842,
+      54,
+      70
+    ],
+    "foreground_area_px": 2369,
+    "size_px": [
+      54,
+      70
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_179",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_179.png",
+    "source_bbox": [
+      710,
+      822,
+      49,
+      34
+    ],
+    "foreground_area_px": 1070,
+    "size_px": [
+      49,
+      34
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_180",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_180.png",
+    "source_bbox": [
+      712,
+      859,
+      47,
+      53
+    ],
+    "foreground_area_px": 1498,
+    "size_px": [
+      47,
+      53
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_181",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_181.png",
+    "source_bbox": [
+      767,
+      837,
+      68,
+      49
+    ],
+    "foreground_area_px": 2364,
+    "size_px": [
+      68,
+      49
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_182",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_182.png",
+    "source_bbox": [
+      840,
+      826,
+      104,
+      67
+    ],
+    "foreground_area_px": 4863,
+    "size_px": [
+      104,
+      67
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_183",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_183.png",
+    "source_bbox": [
+      950,
+      829,
+      59,
+      56
+    ],
+    "foreground_area_px": 2806,
+    "size_px": [
+      59,
+      56
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_184",
+    "category": "trees_water_animals",
+    "file": "trees_water_animals/sprite_184.png",
+    "source_bbox": [
+      1015,
+      809,
+      83,
+      71
+    ],
+    "foreground_area_px": 4479,
+    "size_px": [
+      83,
+      71
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_185",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_185.png",
+    "source_bbox": [
+      1101,
+      833,
+      55,
+      54
+    ],
+    "foreground_area_px": 1610,
+    "size_px": [
+      55,
+      54
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_186",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_186.png",
+    "source_bbox": [
+      1169,
+      861,
+      77,
+      29
+    ],
+    "foreground_area_px": 1112,
+    "size_px": [
+      77,
+      29
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_187",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_187.png",
+    "source_bbox": [
+      1254,
+      880,
+      65,
+      22
+    ],
+    "foreground_area_px": 1022,
+    "size_px": [
+      65,
+      22
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_188",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_188.png",
+    "source_bbox": [
+      1331,
+      877,
+      64,
+      26
+    ],
+    "foreground_area_px": 1220,
+    "size_px": [
+      64,
+      26
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_189",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_189.png",
+    "source_bbox": [
+      1408,
+      878,
+      74,
+      29
+    ],
+    "foreground_area_px": 1592,
+    "size_px": [
+      74,
+      29
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_190",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_190.png",
+    "source_bbox": [
+      1482,
+      837,
+      47,
+      54
+    ],
+    "foreground_area_px": 1237,
+    "size_px": [
+      47,
+      54
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_191",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_191.png",
+    "source_bbox": [
+      170,
+      925,
+      34,
+      47
+    ],
+    "foreground_area_px": 211,
+    "size_px": [
+      34,
+      47
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_192",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_192.png",
+    "source_bbox": [
+      220,
+      919,
+      180,
+      90
+    ],
+    "foreground_area_px": 5819,
+    "size_px": [
+      180,
+      90
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_193",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_193.png",
+    "source_bbox": [
+      402,
+      933,
+      189,
+      76
+    ],
+    "foreground_area_px": 5713,
+    "size_px": [
+      189,
+      76
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_194",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_194.png",
+    "source_bbox": [
+      477,
+      932,
+      71,
+      27
+    ],
+    "foreground_area_px": 262,
+    "size_px": [
+      71,
+      27
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_195",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_195.png",
+    "source_bbox": [
+      592,
+      921,
+      93,
+      95
+    ],
+    "foreground_area_px": 2926,
+    "size_px": [
+      93,
+      95
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_196",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_196.png",
+    "source_bbox": [
+      681,
+      916,
+      51,
+      32
+    ],
+    "foreground_area_px": 517,
+    "size_px": [
+      51,
+      32
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_197",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_197.png",
+    "source_bbox": [
+      699,
+      991,
+      58,
+      25
+    ],
+    "foreground_area_px": 621,
+    "size_px": [
+      58,
+      25
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_198",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_198.png",
+    "source_bbox": [
+      705,
+      957,
+      35,
+      27
+    ],
+    "foreground_area_px": 521,
+    "size_px": [
+      35,
+      27
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_199",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_199.png",
+    "source_bbox": [
+      742,
+      906,
+      57,
+      45
+    ],
+    "foreground_area_px": 776,
+    "size_px": [
+      57,
+      45
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_200",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_200.png",
+    "source_bbox": [
+      761,
+      955,
+      46,
+      37
+    ],
+    "foreground_area_px": 794,
+    "size_px": [
+      46,
+      37
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_201",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_201.png",
+    "source_bbox": [
+      814,
+      993,
+      37,
+      22
+    ],
+    "foreground_area_px": 507,
+    "size_px": [
+      37,
+      22
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_202",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_202.png",
+    "source_bbox": [
+      818,
+      907,
+      38,
+      39
+    ],
+    "foreground_area_px": 814,
+    "size_px": [
+      38,
+      39
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_203",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_203.png",
+    "source_bbox": [
+      832,
+      967,
+      23,
+      14
+    ],
+    "foreground_area_px": 213,
+    "size_px": [
+      23,
+      14
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_204",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_204.png",
+    "source_bbox": [
+      864,
+      906,
+      36,
+      37
+    ],
+    "foreground_area_px": 716,
+    "size_px": [
+      36,
+      37
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_205",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_205.png",
+    "source_bbox": [
+      871,
+      956,
+      29,
+      29
+    ],
+    "foreground_area_px": 520,
+    "size_px": [
+      29,
+      29
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_206",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_206.png",
+    "source_bbox": [
+      897,
+      983,
+      35,
+      33
+    ],
+    "foreground_area_px": 684,
+    "size_px": [
+      35,
+      33
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_207",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_207.png",
+    "source_bbox": [
+      916,
+      933,
+      31,
+      35
+    ],
+    "foreground_area_px": 558,
+    "size_px": [
+      31,
+      35
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_208",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_208.png",
+    "source_bbox": [
+      947,
+      950,
+      27,
+      39
+    ],
+    "foreground_area_px": 538,
+    "size_px": [
+      27,
+      39
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_209",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_209.png",
+    "source_bbox": [
+      967,
+      906,
+      27,
+      31
+    ],
+    "foreground_area_px": 481,
+    "size_px": [
+      27,
+      31
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_210",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_210.png",
+    "source_bbox": [
+      989,
+      966,
+      32,
+      23
+    ],
+    "foreground_area_px": 467,
+    "size_px": [
+      32,
+      23
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_211",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_211.png",
+    "source_bbox": [
+      1000,
+      936,
+      26,
+      15
+    ],
+    "foreground_area_px": 271,
+    "size_px": [
+      26,
+      15
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_212",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_212.png",
+    "source_bbox": [
+      1045,
+      948,
+      50,
+      52
+    ],
+    "foreground_area_px": 297,
+    "size_px": [
+      50,
+      52
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_213",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_213.png",
+    "source_bbox": [
+      1093,
+      929,
+      55,
+      14
+    ],
+    "foreground_area_px": 276,
+    "size_px": [
+      55,
+      14
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_214",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_214.png",
+    "source_bbox": [
+      1176,
+      904,
+      39,
+      41
+    ],
+    "foreground_area_px": 577,
+    "size_px": [
+      39,
+      41
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_215",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_215.png",
+    "source_bbox": [
+      1228,
+      920,
+      37,
+      41
+    ],
+    "foreground_area_px": 565,
+    "size_px": [
+      37,
+      41
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_216",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_216.png",
+    "source_bbox": [
+      1254,
+      954,
+      57,
+      55
+    ],
+    "foreground_area_px": 1278,
+    "size_px": [
+      57,
+      55
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_217",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_217.png",
+    "source_bbox": [
+      1299,
+      956,
+      62,
+      53
+    ],
+    "foreground_area_px": 1264,
+    "size_px": [
+      62,
+      53
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_218",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_218.png",
+    "source_bbox": [
+      1300,
+      910,
+      34,
+      36
+    ],
+    "foreground_area_px": 456,
+    "size_px": [
+      34,
+      36
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_219",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_219.png",
+    "source_bbox": [
+      1362,
+      913,
+      45,
+      39
+    ],
+    "foreground_area_px": 631,
+    "size_px": [
+      45,
+      39
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_220",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_220.png",
+    "source_bbox": [
+      1430,
+      920,
+      37,
+      40
+    ],
+    "foreground_area_px": 414,
+    "size_px": [
+      37,
+      40
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_221",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_221.png",
+    "source_bbox": [
+      1466,
+      960,
+      52,
+      41
+    ],
+    "foreground_area_px": 755,
+    "size_px": [
+      52,
+      41
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  },
+  {
+    "id": "sprite_222",
+    "category": "environment_effects",
+    "file": "environment_effects/sprite_222.png",
+    "source_bbox": [
+      1477,
+      911,
+      52,
+      36
+    ],
+    "foreground_area_px": 822,
+    "size_px": [
+      52,
+      36
+    ],
+    "note": "Connected foreground component extracted from supplied sprite sheet; inspect small/overlapping details."
+  }
+]

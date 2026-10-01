@@ -47,6 +47,7 @@ interface Hen {
   zone: [number, number, number, number];
   ok: (x: number, y: number) => boolean;
   seed: number;
+  temper: { walk: number; peck: number; flap: number; speed: number };
 }
 
 const PECK = 0.42;
@@ -84,7 +85,7 @@ export function animateChicken(h: Hen, w: World) {
       h.pecks = 1 + Math.floor(w.rand() * 3);
       h.timer = PECK;
     } else {
-      const v = Math.min(d, 18 * dt);
+      const v = Math.min(d, h.temper.speed * dt);
       h.x += (dx / d) * v;
       h.y += (dy / d) * v;
       h.phase += v / 7;
@@ -98,7 +99,8 @@ export function animateChicken(h: Hen, w: World) {
     return;
   }
   const r = w.rand();
-  if (r < 0.45) {
+  const t = h.temper;
+  if (r < t.walk) {
     for (let k = 0; k < 12; k++) {
       const [x0, y0, x1, y1] = h.zone;
       const tx = clamp(h.x + (w.rand() - 0.5) * 56, x0, x1);
@@ -113,11 +115,11 @@ export function animateChicken(h: Hen, w: World) {
       }
     }
   }
-  if (r < 0.75) {
+  if (r < t.peck) {
     h.state = 'peck';
     h.pecks = 1 + Math.floor(w.rand() * 3);
     h.timer = PECK;
-  } else if (r < 0.86) {
+  } else if (r < t.flap) {
     h.state = 'flap';
     h.timer = 0.6;
   } else {
@@ -127,10 +129,19 @@ export function animateChicken(h: Hen, w: World) {
   }
 }
 
-/** Front fence of the yard runs from (1130, 457) to (1257, 500): hens stay behind it. */
-const behindFence = (x: number, y: number) => y < 457 + (x - 1130) * 0.34 - 4;
-/** The coop stands between the two patches. */
-const offCoop = (x: number, y: number) => !(x > 1255 && x < 1392 && y > 395 && y < 532);
+/** Each hen's habits: how often it wanders, pecks, flaps, and how fast it walks. */
+interface Temper {
+  walk: number;
+  peck: number;
+  flap: number;
+  speed: number;
+}
+const TEMPERS: Temper[] = [
+  { walk: 0.45, peck: 0.75, flap: 0.86, speed: 18 }, // busy
+  { walk: 0.25, peck: 0.8, flap: 0.86, speed: 14 }, // a pecker
+  { walk: 0.55, peck: 0.7, flap: 0.9, speed: 22 }, // restless
+  { walk: 0.3, peck: 0.55, flap: 0.95, speed: 15 }, // a looker (more idle, head jerks)
+];
 
 export class AnimalAnimation implements AnimSystem {
   private cows: Cow[] = [];
@@ -160,18 +171,34 @@ export class AnimalAnimation implements AnimSystem {
         seed: i * 2.3,
       });
     }
-    const left: Hen['zone'] = [1150, 448, 1250, 492];
-    const right: Hen['zone'] = [1395, 440, 1470, 488];
-    const hen = (id: string, zone: Hen['zone'], dir: 1 | -1, seed: number) => {
+    const { zones, fence, coop } = assets.layout.places.hens;
+    const [[fx0, fy0], [fx1, fy1]] = fence;
+    const slope = (fy1 - fy0) / (fx1 - fx0);
+    // Hens stay behind the yard's front fence and out of the coop.
+    const ok = (x: number, y: number) =>
+      y < fy0 + (x - fx0) * slope - 4 &&
+      !(x > coop[0] && x < coop[2] && y > coop[1] && y < coop[3]);
+    const ids = Object.keys(sprites)
+      .filter((k) => /^chicken-\d+$/.test(k))
+      .sort();
+    ids.forEach((id, i) => {
       const s = sprites[id] as (SpriteDef & { feet: Vec2 }) | undefined;
       if (!s) return;
       const [x, y] = s.start ?? s.feet;
+      // The patch the hen starts in (nearest centre).
+      const zone =
+        [...zones].sort(
+          (a, b) =>
+            Math.hypot((a[0] + a[2]) / 2 - x, (a[1] + a[3]) / 2 - y) -
+            Math.hypot((b[0] + b[2]) / 2 - x, (b[1] + b[3]) / 2 - y),
+        )[0] ?? ([x - 50, y - 20, x + 50, y + 20] as Hen['zone']);
+      const seed = 0.2 + i * 1.1;
       this.flock.push({
         sprite: s,
         img: img(s.file),
         x,
         y,
-        dir,
+        dir: i % 2 ? 1 : -1,
         state: 'idle',
         timer: 0.5 + seed,
         pecks: 0,
@@ -179,12 +206,45 @@ export class AnimalAnimation implements AnimSystem {
         ty: y,
         phase: 0,
         zone,
-        ok: (px, py) => behindFence(px, py) && offCoop(px, py),
+        ok,
         seed,
+        temper: TEMPERS[i % TEMPERS.length]!,
       });
-    };
-    hen('chicken-1', left, -1, 0.2);
-    hen('chicken-2', right, 1, 1.3);
+    });
+  }
+
+  /** Showcase: the cows graze and swish, the hens each do something different at once. */
+  replay() {
+    for (const c of this.cows) {
+      c.state = 'graze';
+      c.timer = 4.5;
+      c.flick = 0.35;
+      c.swish = 1.1;
+    }
+    this.flock.forEach((h, i) => {
+      const act = (['flap', 'peck', 'flap', 'peck'] as const)[i % 4]!;
+      h.state = act;
+      h.timer = act === 'flap' ? 0.6 : 0.42;
+      h.pecks = 3;
+    });
+  }
+
+  /** Cows and hens for the sprite inspector: id, file and where they stand. */
+  pieces(): { id: string; file: string; at: Vec2; r: number }[] {
+    return [
+      ...this.cows.map((c, i) => ({
+        id: ['cowY', 'cowH'][i] ?? 'cow',
+        file: c.body.file,
+        at: [c.body.x + c.body.w / 2, c.body.y + c.body.h / 2] as Vec2,
+        r: Math.max(c.body.w, c.body.h) / 2,
+      })),
+      ...this.flock.map((h) => ({
+        id: h.sprite.file.replace('.webp', ''),
+        file: h.sprite.file,
+        at: [h.x, h.y - 20] as Vec2,
+        r: 22,
+      })),
+    ];
   }
 
   /** Where the hens stand now (for taps). */
@@ -264,10 +324,13 @@ export class AnimalAnimation implements AnimSystem {
     ctx.fill();
     ctx.save();
     ctx.translate(h.x, h.y - lift);
-    // The painted hen faces left; flip when it goes right.
-    ctx.scale(h.dir === 1 ? -sx : sx, sy);
-    ctx.rotate(rot);
-    ctx.drawImage(h.img, s.x - s.feet[0], s.y - s.feet[1]);
+    // Mirror when it walks the other way from where its head points in the file.
+    const facesRight = s.faces === 'right';
+    const flip = (h.dir === 1) !== facesRight;
+    ctx.scale(flip ? -sx : sx, sy);
+    // Pecking tips the head end down: for a right-facing file that is a clockwise turn.
+    ctx.rotate(facesRight ? -rot : rot);
+    ctx.drawImage(h.img, s.x - s.feet[0], s.y - s.feet[1], s.w, s.h);
     ctx.restore();
   }
 

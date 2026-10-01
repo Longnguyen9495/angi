@@ -3,8 +3,14 @@ import { AnimalAnimation } from '../systems/AnimalAnimation';
 import { BuildingAnimation } from '../systems/BuildingAnimation';
 import { CloudAnimation } from '../systems/CloudAnimation';
 import { EnvironmentAnimation } from '../systems/EnvironmentAnimation';
-import { FarmGameLayer, type FarmView } from '../systems/FarmGameLayer';
+import {
+  FarmGameLayer,
+  type FarmView,
+  type PlotStageView,
+  type PlotView,
+} from '../systems/FarmGameLayer';
 import { FishAnimation } from '../systems/FishAnimation';
+import { SkySystem, type SkyMood } from '../systems/SkySystem';
 import { WaterAnimation } from '../systems/WaterAnimation';
 import type { Assets } from './assets';
 import { ParticleSystem } from './ParticleSystem';
@@ -36,21 +42,59 @@ export interface PlaceInfo {
   plotId?: number;
 }
 
+/**
+ * What part of the island is in view (game mode): whether it can be dragged at all, and which
+ * half the screen centre is over (the field on the left, the barn and pond on the right).
+ */
+export interface CameraView {
+  canPan: boolean;
+  side: 'field' | 'barn';
+}
+
+/** Named camera stops (layers.json places.focus). */
+export type FocusName = 'field' | 'barn';
+
+/** Animation groups: each can be frozen, sped up or replayed on its own (showcase). */
+export type GroupId = 'environment' | 'buildings' | 'animals' | 'crops' | 'water' | 'particles';
+export const GROUPS: GroupId[] = [
+  'environment',
+  'buildings',
+  'animals',
+  'crops',
+  'water',
+  'particles',
+];
+
+/** A sprite picked in the showcase: what it is, its file and where to ring it. */
+export interface SpriteInfo {
+  id: string;
+  file: string;
+  group: GroupId;
+  /** Layer kind or object type (tree, reed, cow, windmill, koi…), keys the animation list. */
+  kind: string;
+  fruit?: boolean;
+  /** Ellipse in picture px [cx, cy, rx, ry]. */
+  ring: [number, number, number, number];
+}
+
 export interface ManagerOptions {
   onStats?: (s: Stats) => void;
   /** A tap on a place of the island. */
   onPlace?: (place: FarmPlace, info: PlaceInfo) => void;
+  /**
+   * 'scene' fits the picture into a box on a page; 'game' fills the screen, keeps the island
+   * large on tall phones and lets a drag move the camera across it.
+   */
+  mode?: 'scene' | 'game';
+  /** Picture point (or named camera stop) the game camera starts on. */
+  focus?: [number, number] | FocusName;
+  onCamera?: (v: CameraView) => void;
+  /** A drag started moving the camera (cards anchored to the picture should close). */
+  onPanStart?: () => void;
 }
 
-/** Tap areas in picture px (checked in this order after the cows, hens and the pond). */
-const PLACES: [FarmPlace, number, number, number, number][] = [
-  ['market', 845, 60, 1345, 300],
-  ['farmhouse', 470, 10, 860, 300],
-];
-const COW_SPOTS: [number, number, number, number][] = [
-  [1328, 368, 38, 34],
-  [895, 189, 38, 36],
-];
+/** A press that travels further than this (CSS px) is a drag, not a tap. */
+const DRAG_PX = 8;
 
 /** Parallax travel in CSS px at strength 1: background, island, foreground. */
 const DEPTH = { back: 1.5, mid: 3, front: 7 };
@@ -75,12 +119,30 @@ export class AnimationManager {
   private pointerCss: { x: number; y: number } | null = null;
   private par = { x: 0, y: 0 };
   private fit = { s: 1, ox: 0, oy: 0, cw: 1, ch: 1, dpr: 1 };
+  /** Centred picture offset and how far the camera may travel from it (CSS px). */
+  private base = { ox: 0, oy: 0, mx: 0, my: 0 };
+  private cam = { x: 0, y: 0 };
+  private camGoal: { x: number; y: number } | null = null;
+  private camView: CameraView = { canPan: false, side: 'field' };
+  private mode: 'scene' | 'game';
+  private focusAt: [number, number] | null;
+  private onCamera: (v: CameraView) => void;
+  private onPanStart: () => void;
+  private press: {
+    id: number;
+    x: number;
+    y: number;
+    cx: number;
+    cy: number;
+    moved: boolean;
+  } | null = null;
   private frames = 0;
   private frameTime = 0;
   private statClock = 0;
   private stats: Stats = { fps: 0, frameMs: 0, objects: 0, wind: 0, gust: 'calm' };
   private rand = rng(2024);
   private sky: HTMLImageElement;
+  private skyMood = new SkySystem();
   private island: HTMLImageElement;
   private size: [number, number];
   private onStats: (s: Stats) => void;
@@ -90,6 +152,11 @@ export class AnimationManager {
   private mediaReduced = false;
   private forcedReduced = false;
   private inView = true;
+  private groups = Object.fromEntries(
+    GROUPS.map((id) => [id, { on: true, speed: 1, t: 0, dt: 0 }]),
+  ) as Record<GroupId, { on: boolean; speed: number; t: number; dt: number }>;
+  private worlds: Record<GroupId, World> | null = null;
+  private selected: SpriteInfo | null = null;
 
   constructor(
     private canvas: HTMLCanvasElement,
@@ -101,18 +168,29 @@ export class AnimationManager {
     this.ctx = ctx;
     this.onStats = opts.onStats ?? (() => {});
     this.onPlace = opts.onPlace ?? (() => {});
+    this.mode = opts.mode ?? 'scene';
+    const f = opts.focus;
+    this.focusAt =
+      this.mode !== 'game' || !f ? null : typeof f === 'string' ? assets.layout.places.focus[f] : f;
+    this.onCamera = opts.onCamera ?? (() => {});
+    this.onPanStart = opts.onPanStart ?? (() => {});
     const { layout, img } = assets;
     this.size = layout.size;
     this.sky = img('sky.jpg');
     this.island = img('island.webp');
-    this.clouds = new CloudAnimation(layout.clouds, img);
+    this.clouds = new CloudAnimation(layout.clouds, img, layout.size);
     this.env = new EnvironmentAnimation(assets);
     this.game = new FarmGameLayer(assets);
     this.water = new WaterAnimation(assets, layout.places.dockPosts);
     this.fish = new FishAnimation(assets, this.water);
     this.animals = new AnimalAnimation(assets);
     this.buildings = new BuildingAnimation(assets, layout.places);
-    this.ambient = new AmbientSystem(this.env.crowns(), this.env.flowers(), [40, 230]);
+    this.ambient = new AmbientSystem(
+      this.env.crowns(),
+      this.env.flowers(),
+      layout.places.skyBand,
+      assets,
+    );
 
     const rm = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.mediaReduced = rm.matches;
@@ -144,16 +222,58 @@ export class AnimationManager {
     const move = (e: PointerEvent) => {
       const r = canvas.getBoundingClientRect();
       this.pointerCss = { x: e.clientX - r.left, y: e.clientY - r.top };
+      const press = this.press;
+      if (press && press.id === e.pointerId) {
+        const dx = e.clientX - press.x;
+        const dy = e.clientY - press.y;
+        if (!press.moved && Math.hypot(dx, dy) > DRAG_PX && this.camView.canPan) {
+          press.moved = true;
+          this.camGoal = null;
+          this.game.hover = null;
+          this.onPanStart();
+        }
+        if (press.moved) {
+          this.cam = { x: press.cx + dx, y: press.cy + dy };
+          this.applyCam();
+          if (!this.raf) this.frame(performance.now(), true);
+          canvas.style.cursor = 'grabbing';
+          return;
+        }
+      }
       const p = this.toPicture(this.pointerCss);
       this.game.hover = this.game.hit(p);
-      canvas.style.cursor = this.buildings.hover(p) || this.hit(p) ? 'pointer' : '';
+      canvas.style.cursor =
+        this.buildings.hover(p) || this.hit(p) ? 'pointer' : this.camView.canPan ? 'grab' : '';
     };
     const leave = () => {
       this.pointerCss = null;
       this.game.hover = null;
       this.buildings.hover(null);
     };
+    const down = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      this.press = {
+        id: e.pointerId,
+        x: e.clientX,
+        y: e.clientY,
+        cx: this.cam.x,
+        cy: this.cam.y,
+        moved: false,
+      };
+      // Keep receiving the drag when the finger leaves the canvas (e.g. over the dock).
+      try {
+        if (this.camView.canPan) canvas.setPointerCapture?.(e.pointerId);
+      } catch {
+        /* the pointer is already gone */
+      }
+    };
     const click = (e: PointerEvent) => {
+      const press = this.press;
+      this.press = null;
+      if (press && press.id === e.pointerId && press.moved) {
+        canvas.style.cursor = 'grab';
+        return;
+      }
       const r = canvas.getBoundingClientRect();
       const p = this.toPicture({ x: e.clientX - r.left, y: e.clientY - r.top });
       // The door swings open and counts as the farmhouse.
@@ -163,13 +283,20 @@ export class AnimationManager {
       const place = this.hit(p);
       if (place) this.onPlace(place, p);
     };
+    const cancel = () => {
+      this.press = null;
+    };
     canvas.addEventListener('pointermove', move);
     canvas.addEventListener('pointerleave', leave);
+    canvas.addEventListener('pointerdown', down);
     canvas.addEventListener('pointerup', click);
+    canvas.addEventListener('pointercancel', cancel);
     this.cleanup.push(() => {
       canvas.removeEventListener('pointermove', move);
       canvas.removeEventListener('pointerleave', leave);
+      canvas.removeEventListener('pointerdown', down);
       canvas.removeEventListener('pointerup', click);
+      canvas.removeEventListener('pointercancel', cancel);
     });
     this.resize();
   }
@@ -182,6 +309,12 @@ export class AnimationManager {
   setReduced(on: boolean) {
     this.forcedReduced = on;
     this.reduced = this.mediaReduced || on;
+  }
+
+  /** Hour and weather for the sky behind the island. */
+  setSky(mood: SkyMood) {
+    this.skyMood.mood = mood;
+    if (!this.raf) this.frame(performance.now(), true);
   }
 
   /** The game's state drawn into the scene (plots, animal bubbles); null = scenery only. */
@@ -228,10 +361,50 @@ export class AnimationManager {
     this.fish.jumpNow();
   }
 
+  /** Glide the game camera so picture point (x, y) is centred (as far as the edges allow). */
+  panTo(x: number, y?: number, smooth = true) {
+    const [W, H] = this.size;
+    const { s } = this.fit;
+    const goal = { x: (W / 2 - x) * s, y: y === undefined ? this.cam.y : (H / 2 - y) * s };
+    if (!smooth || this.reduced) {
+      this.camGoal = null;
+      this.cam = goal;
+      this.applyCam();
+    } else this.camGoal = goal;
+    if (!this.raf) this.frame(performance.now(), true);
+  }
+
+  /** Glide the game camera to a named stop (the field, the barn yard). */
+  panToPlace(name: FocusName, smooth = true) {
+    const [x, y] = this.assets.layout.places.focus[name];
+    this.panTo(x, y, smooth);
+  }
+
+  /** Clamp the camera to the picture, place the picture, and report what is in view. */
+  private applyCam() {
+    const { ox, oy, mx, my } = this.base;
+    this.cam.x = Math.max(-mx, Math.min(mx, this.cam.x));
+    this.cam.y = Math.max(-my, Math.min(my, this.cam.y));
+    this.fit.ox = ox + this.cam.x;
+    this.fit.oy = oy + this.cam.y;
+    const { s, cw } = this.fit;
+    const centre = (cw / 2 - this.fit.ox) / s;
+    const v: CameraView = {
+      canPan: mx > 1 || my > 1,
+      side: centre < this.size[0] * 0.5 ? 'field' : 'barn',
+    };
+    const c = this.camView;
+    if (c.canPan !== v.canPan || c.side !== v.side) {
+      this.camView = v;
+      this.onCamera(v);
+    }
+  }
+
   /** What a tap at picture point p means. */
   hit(p: { x: number; y: number }): FarmPlace | null {
     if (this.game.hit(p) !== null) return 'plot';
-    if (COW_SPOTS.some(([cx, cy, rx, ry]) => ((p.x - cx) / rx) ** 2 + ((p.y - cy) / ry) ** 2 < 1))
+    const { cowSpots, taps } = this.assets.layout.places;
+    if (cowSpots.some(([cx, cy, rx, ry]) => ((p.x - cx) / rx) ** 2 + ((p.y - cy) / ry) ** 2 < 1))
       return 'cow';
     if (
       this.animals
@@ -240,8 +413,8 @@ export class AnimationManager {
     )
       return 'chicken';
     if (this.water.isWater(p.x, p.y)) return 'pond';
-    for (const [place, x0, y0, x1, y1] of PLACES)
-      if (p.x >= x0 && p.x <= x1 && p.y >= y0 && p.y <= y1) return place;
+    for (const [place, x0, y0, x1, y1] of taps)
+      if (p.x >= x0 && p.x <= x1 && p.y >= y0 && p.y <= y1) return place as FarmPlace;
     return null;
   }
 
@@ -263,9 +436,29 @@ export class AnimationManager {
     const [W, H] = this.size;
     const cover = Math.max(cw / W, ch / H);
     const contain = Math.min(cw / W, ch / H);
-    // Wide screens fill; tall phones show more of the island than a hard crop would.
-    const s = Math.min(cover, contain * 1.9);
-    this.fit = { s, ox: (cw - W * s) / 2, oy: (ch - H * s) / 2, cw, ch, dpr };
+    // Scene: wide screens fill; tall phones show more of the island than a hard crop would.
+    // Game: the whole island when it fits, otherwise two thirds of the screen tall, dragged.
+    const s =
+      this.mode === 'game'
+        ? Math.max(contain, Math.min(cover, (ch * 0.66) / H))
+        : Math.min(cover, contain * 1.9);
+    // Keep looking at the same spot across a resize (rotation, address bar).
+    const k = s / this.fit.s;
+    this.cam = { x: this.cam.x * k, y: this.cam.y * k };
+    if (this.camGoal) this.camGoal = { x: this.camGoal.x * k, y: this.camGoal.y * k };
+    this.fit = { s, ox: 0, oy: 0, cw, ch, dpr };
+    const game = this.mode === 'game';
+    this.base = {
+      ox: (cw - W * s) / 2,
+      oy: (ch - H * s) / 2,
+      mx: game ? Math.max(0, (W * s - cw) / 2) : 0,
+      my: game ? Math.max(0, (H * s - ch) / 2) : 0,
+    };
+    if (this.focusAt && cw > 1) {
+      this.cam = { x: (W / 2 - this.focusAt[0]) * s, y: (H / 2 - this.focusAt[1]) * s };
+      this.focusAt = null;
+    }
+    this.applyCam();
     if (!this.raf) this.frame(performance.now(), true);
   }
 
@@ -305,7 +498,10 @@ export class AnimationManager {
   }
 
   private frame(now: number, once = false) {
-    const raw = Math.min(0.05, Math.max(0, (now - this.last) / 1000));
+    // Real time since the last frame, and the step the scene takes (capped: a long stall must
+    // not throw things across the screen).
+    const elapsed = Math.max(0, (now - this.last) / 1000);
+    const raw = Math.min(0.05, elapsed);
     this.last = now;
     const st = this.settings;
     const t0 = performance.now();
@@ -330,30 +526,66 @@ export class AnimationManager {
       view,
       rand: this.rand,
     };
+    // Each group runs on its own clock: switched off it freezes in place (still drawn), and its
+    // own speed scales it on top of the global one.
+    for (const id of GROUPS) {
+      const g = this.groups[id];
+      const on =
+        g.on && (id !== 'animals' || st.animals) && (id !== 'environment' || st.environment);
+      g.dt = on ? dt * g.speed : 0;
+      g.t += g.dt;
+    }
+    const gw = (id: GroupId): World => ({ ...w, t: this.groups[id].t, dt: this.groups[id].dt });
+    this.worlds = {
+      environment: gw('environment'),
+      buildings: gw('buildings'),
+      animals: gw('animals'),
+      crops: gw('crops'),
+      water: gw('water'),
+      particles: gw('particles'),
+    };
+    const W = this.worlds;
     if (dt > 0) {
       this.wind.update(dt);
-      if (st.environment) {
-        this.clouds.update(w);
-        this.env.update(w);
-        this.water.update(w);
-        this.buildings.update(w);
-        this.game.update(w);
+      this.env.nudges = this.ambient.near();
+      if (W.environment.dt > 0) {
+        this.clouds.update(W.environment);
+        this.env.update(W.environment);
+        this.ambient.update(W.environment);
+        this.spawnWind(W.environment);
       }
-      if (st.animals) {
-        this.fish.update(w);
-        this.animals.update(w);
+      if (W.buildings.dt > 0) this.buildings.update(W.buildings);
+      if (W.crops.dt > 0) {
+        this.runCropDemo(W.crops.dt);
+        this.game.update(W.crops);
       }
-      this.ambient.update({
-        ...w,
-        settings: { ...w.settings, particles: w.settings.particles && st.animals },
-      });
-      this.particles.update(w);
+      if (W.water.dt > 0) {
+        this.water.update(W.water);
+        this.fish.update(W.water);
+      }
+      if (W.animals.dt > 0) this.animals.update(W.animals);
+      if (W.particles.dt > 0) this.particles.update(W.particles);
       if (!st.particles) this.particles.clear();
     }
 
     // Parallax eases towards the pointer.
+    // The camera glides to a place asked for (side arrows, a hint pointing at the cows).
+    if (this.camGoal) {
+      const g = this.camGoal;
+      const k = Math.min(1, raw * 7);
+      this.cam = { x: this.cam.x + (g.x - this.cam.x) * k, y: this.cam.y + (g.y - this.cam.y) * k };
+      if (Math.abs(g.x - this.cam.x) + Math.abs(g.y - this.cam.y) < 0.5 || once) {
+        this.cam = { ...g };
+        this.camGoal = null;
+      }
+      this.applyCam();
+    }
+
+    // No pointer parallax under a dragging finger.
     const strength =
-      st.parallax && !this.reduced ? st.parallaxStrength * (this.coarse ? 0.4 : 1) : 0;
+      st.parallax && !this.reduced && !(this.mode === 'game' && this.coarse)
+        ? st.parallaxStrength * (this.coarse ? 0.4 : 1)
+        : 0;
     const target = this.pointerCss
       ? {
           x: (this.pointerCss.x / cw - 0.5) * -2 * strength,
@@ -368,7 +600,8 @@ export class AnimationManager {
     // Stats twice a second.
     this.frames++;
     this.frameTime += performance.now() - t0;
-    this.statClock += raw;
+    // Frame rate on real time (a capped step would never show less than 20 fps).
+    this.statClock += Math.min(1, elapsed);
     if (this.statClock >= 0.5) {
       this.stats = {
         fps: Math.round(this.frames / this.statClock),
@@ -394,8 +627,16 @@ export class AnimationManager {
     if (!once) this.raf = requestAnimationFrame((t) => this.frame(t));
   }
 
-  private draw(w: World) {
+  private draw(w0: World) {
     const ctx = this.ctx;
+    const G = this.worlds ?? {
+      environment: w0,
+      buildings: w0,
+      animals: w0,
+      crops: w0,
+      water: w0,
+      particles: w0,
+    };
     const { s, ox, oy, cw, ch, dpr } = this.fit;
     const [W, H] = this.size;
     // Sky fills the whole canvas, whatever the aspect.
@@ -419,31 +660,419 @@ export class AnimationManager {
       );
 
     layer(DEPTH.back);
-    this.clouds.drawSky(ctx, w);
+    this.clouds.drawSky(ctx, G.environment);
+    // The hour and weather shade the backdrop only (sky picture and its clouds), not the island.
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    this.skyMood.draw(ctx, cw, ch, this.t);
 
     layer(DEPTH.mid);
     ctx.drawImage(this.island, 0, 0);
-    this.game.drawTiles(ctx, w);
-    this.water.drawSurface(ctx, w);
+    this.game.drawTiles(ctx, G.crops);
+    this.water.drawSurface(ctx, G.water);
     this.fish.drawUnder(ctx);
     this.water.drawRipples(ctx);
-    this.env.drawLilies(ctx, w);
-    this.env.drawDock(ctx, w, this.assets.layout.places.rope);
+    this.env.drawLilies(ctx, G.water);
+    this.env.drawDock(ctx, G.water, this.assets.layout.places.rope);
     this.env.drawCrops(ctx);
-    this.game.drawCrops(ctx, w);
+    this.game.drawCrops(ctx, G.crops);
     this.env.drawPlants(ctx);
     this.buildings.drawWindmill(ctx);
     this.buildings.drawChimney(ctx);
     this.particles.draw(ctx, 'smoke');
-    this.buildings.drawHouse(ctx, w);
-    this.animals.draw(ctx, w);
+    this.buildings.drawHouse(ctx, G.buildings);
+    this.animals.draw(ctx, G.animals);
     this.fish.drawAir(ctx);
     this.particles.draw(ctx, 'front');
-    this.game.drawOverlay(ctx, w);
+    this.game.drawOverlay(ctx, G.crops);
+    this.drawSelection(ctx);
 
     layer(DEPTH.front);
-    this.clouds.drawBanks(ctx, w);
+    const bank = this.skyMood.bankFilter();
+    if (bank !== 'none' && 'filter' in ctx) ctx.filter = bank;
+    this.clouds.drawBanks(ctx, G.environment);
+    if ('filter' in ctx) ctx.filter = 'none';
     this.ambient.drawLeaves(ctx);
     this.ambient.drawCreatures(ctx);
+  }
+
+  /** Showcase: a dashed ring round the inspected sprite, softly pulsing. */
+  private drawSelection(ctx: CanvasRenderingContext2D) {
+    const sel = this.selected;
+    if (!sel) return;
+    const [cx, cy, rx, ry] = sel.ring;
+    const pulse = 1 + 0.04 * Math.sin(performance.now() / 260);
+    ctx.save();
+    ctx.setLineDash([6, 4]);
+    ctx.lineWidth = 2 / this.fit.s;
+    ctx.strokeStyle = 'rgba(255, 211, 107, 0.95)';
+    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+    ctx.shadowBlur = 4;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, rx * pulse + 4, ry * pulse + 4, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // ——— Showcase (/farm-animation-test) ———
+
+  /** Groups' switches and speeds, for the panel. */
+  getGroups(): Record<GroupId, { on: boolean; speed: number }> {
+    const out = {} as Record<GroupId, { on: boolean; speed: number }>;
+    for (const id of GROUPS) out[id] = { on: this.groups[id].on, speed: this.groups[id].speed };
+    return out;
+  }
+
+  setGroup(id: GroupId, patch: { on?: boolean; speed?: number }) {
+    Object.assign(this.groups[id], patch);
+    if (!this.raf) this.frame(performance.now(), true);
+  }
+
+  /** Plays a group's showcase moment again (gust, sails spin-up, fish jump, crop cycle…). */
+  replay(id: GroupId) {
+    switch (id) {
+      case 'environment':
+        this.wind.trigger();
+        this.ambient.leafBurst();
+        this.ambient.birdsNow();
+        break;
+      case 'buildings':
+        this.buildings.replay();
+        break;
+      case 'animals':
+        this.animals.replay();
+        break;
+      case 'crops':
+        this.startCropDemo();
+        break;
+      case 'water': {
+        this.fish.jumpNow();
+        const { cx, cy, rx, ry } = this.assets.layout.places.pond;
+        for (let i = 0; i < 4; i++)
+          this.water.ripple(
+            cx + (this.rand() - 0.5) * rx,
+            cy + (this.rand() - 0.5) * ry,
+            0.7 + this.rand() * 0.6,
+          );
+        break;
+      }
+      case 'particles':
+        this.particleShow();
+        break;
+    }
+  }
+
+  /** Live particles by kind (panel). */
+  particleCounts() {
+    return this.particles.counts();
+  }
+
+  /**
+   * Faint wind streaks drifting across the island, more of them (and faster) in a gust.
+   * At most a dozen alive at once.
+   */
+  private windClock = 0;
+  private spawnWind(w: World) {
+    if (!w.settings.particles) return;
+    const strength = this.wind.at(800);
+    this.windClock += w.dt * (0.4 + strength * 2.2) * w.settings.particleDensity;
+    while (this.windClock > 1) {
+      this.windClock--;
+      if ((this.particles.counts().wind ?? 0) > 12) break;
+      const [x0, y0, x1, y1] = w.view;
+      this.particles.spawn(
+        'wind',
+        x0 + this.rand() * (x1 - x0) * 0.6,
+        y0 + 60 + this.rand() * (y1 - y0 - 160),
+        40,
+        0,
+        1.6 + this.rand() * 1.2,
+        10 + this.rand() * 16,
+      );
+    }
+  }
+
+  /** Every particle kind once, each where it belongs, so they can be compared side by side. */
+  private particleShow() {
+    const r = this.rand;
+    const P = this.particles;
+    const { chimney, pond } = this.assets.layout.places;
+    const plot = this.assets.layout.field.plots[3]?.centre ?? [500, 500];
+    const [fx, fy] = this.env.flowers()[0] ?? [1000, 480];
+    const [hx, hy] = this.assets.layout.places.focus.barn;
+    for (let i = 0; i < 8; i++)
+      P.spawn('wind', 200 + r() * 600, 120 + r() * 300, 60, 0, 2, 12 + r() * 14);
+    for (let i = 0; i < 6; i++)
+      P.spawn('smoke', chimney.x, chimney.top - i * 6, (r() - 0.5) * 6, -18, 4.5, 6 + r() * 3);
+    for (let i = 0; i < 14; i++) {
+      const a = -Math.PI / 2 + (r() - 0.5) * 2;
+      P.spawn(
+        'drop',
+        pond.cx,
+        pond.cy,
+        Math.cos(a) * 60,
+        Math.sin(a) * 80,
+        1,
+        1 + r(),
+        pond.cy + 4,
+      );
+    }
+    const crownFx = this.assets.layout.fx?.splash;
+    if (crownFx)
+      P.spawn(
+        'splash',
+        pond.cx + 60,
+        pond.cy + 10,
+        0,
+        0,
+        0.8,
+        30,
+        1e9,
+        this.assets.img(crownFx.file),
+      );
+    for (let i = 0; i < 10; i++)
+      P.spawn('dust', hx + (r() - 0.5) * 120, hy + (r() - 0.5) * 40, 0, -4, 2, 2 + r() * 2);
+    for (let i = 0; i < 10; i++)
+      P.spawn(
+        'soil',
+        plot[0],
+        plot[1],
+        (r() - 0.5) * 80,
+        -60 - r() * 60,
+        1.2,
+        1.4 + r(),
+        plot[1] + 6,
+      );
+    for (let i = 0; i < 6; i++)
+      P.spawn(
+        'seed',
+        plot[0] - 30,
+        plot[1] - 40,
+        40 + r() * 20,
+        -20,
+        1.4,
+        1.5,
+        plot[1] + (r() - 0.5) * 10,
+      );
+    for (let i = 0; i < 8; i++)
+      P.spawn('grow', plot[0] + 90 + (r() - 0.5) * 40, plot[1] - 20 - r() * 30, 0, -20, 1.2, 2.2);
+    for (let i = 0; i < 16; i++) {
+      const a = -Math.PI / 2 + (r() - 0.5) * 2.2;
+      P.spawn('harvest', plot[0] + 180, plot[1] - 10, Math.cos(a) * 90, Math.sin(a) * 90, 1.4, 2);
+    }
+    for (let i = 0; i < 8; i++)
+      P.spawn('sparkle', pond.cx - 120 + r() * 240, pond.cy - 40 + r() * 60, 0, -6, 1, 2.5);
+    for (let i = 0; i < 12; i++)
+      P.spawn('pollen', fx + (r() - 0.5) * 40, fy - r() * 16, 0, -3, 2.5, 2);
+    for (let i = 0; i < 6; i++) P.spawn('straw', hx - 30, hy - 10, 20 + r() * 20, -12, 2.5, 4);
+    const icon = this.assets.layout.fx?.flower;
+    if (icon)
+      P.spawn(
+        'reward',
+        plot[0] + 180,
+        plot[1] - 70,
+        0,
+        -38,
+        1.8,
+        16,
+        1e9,
+        this.assets.img(icon.file),
+      );
+  }
+
+  // Crop cycle demo: six plots go through sprout → young (watered) → flowering → ready → harvested,
+  // staggered, with the crops' own pictures; the last three plots stay locked.
+  private demo: { t: number; last: string } | null = null;
+
+  startCropDemo() {
+    this.demo = { t: 0, last: '' };
+  }
+
+  stopCropDemo() {
+    this.demo = null;
+  }
+
+  private runCropDemo(dt: number) {
+    const d = this.demo;
+    if (!d) return;
+    d.t += dt;
+    const CYCLE = 13;
+    const crops = ['chili', 'bean', 'cucumber', 'garlic', 'herbs', 'lemongrass'];
+    const stageAt = (u: number): PlotStageView =>
+      u < 1.4
+        ? 'empty'
+        : u < 4
+          ? 'sprout'
+          : u < 6.6
+            ? 'young'
+            : u < 9.2
+              ? 'flowering'
+              : u < 11.8
+                ? 'ready'
+                : 'empty';
+    const plots: PlotView[] = this.assets.layout.field.plots.map((p, i) => {
+      if (i >= 6)
+        return {
+          id: p.id,
+          unlocked: false,
+          unlockLevel: 3,
+          crop: null,
+          stage: 'empty',
+          image: null,
+          wet: false,
+          thirsty: false,
+          label: '',
+        };
+      const u = (((d.t - i * 0.7) % CYCLE) + CYCLE) % CYCLE;
+      const stage = d.t < i * 0.7 ? 'empty' : stageAt(u);
+      const crop = stage === 'empty' ? null : crops[i]!;
+      return {
+        id: p.id,
+        unlocked: true,
+        unlockLevel: null,
+        crop,
+        stage,
+        image: crop ? `/images/garden/${crop}-${stage}.webp` : null,
+        // Watered while young: the soil darkens and drops fall.
+        wet: stage === 'young' && u < 5.4,
+        thirsty: false,
+        label: crop ? `${crop} · ${stage}` : '',
+      };
+    });
+    const key = plots.map((p) => `${p.stage}${p.wet ? 'w' : ''}`).join(',');
+    if (key === d.last) return;
+    d.last = key;
+    this.game.setView({
+      plots,
+      cow: { icon: null, kind: 'busy', label: '' },
+      chicken: { icon: null, kind: 'busy', label: '' },
+      watering: false,
+    });
+    this.env.showCrops = false;
+  }
+
+  /** What is under a viewport point, for the sprite inspector; also rings it in the scene. */
+  inspect(clientX: number, clientY: number): SpriteInfo | null {
+    const r = this.canvas.getBoundingClientRect();
+    const p = this.toPicture({ x: clientX - r.left, y: clientY - r.top });
+    const L = this.assets.layout;
+    const info = ((): SpriteInfo | null => {
+      for (const a of this.animals.pieces())
+        if (Math.hypot(p.x - a.at[0], p.y - a.at[1]) < a.r)
+          return {
+            id: a.id,
+            file: a.file,
+            group: 'animals',
+            kind: a.id.startsWith('cow') ? 'cow' : 'chicken',
+            ring: [a.at[0], a.at[1], a.r, a.r * 0.9],
+          };
+      const b = L.sprites.blades;
+      if (b?.hub && Math.hypot(p.x - b.hub[0], p.y - b.hub[1]) < b.w / 2)
+        return {
+          id: 'blades',
+          file: b.file,
+          group: 'buildings',
+          kind: 'windmill',
+          ring: [b.hub[0], b.hub[1], b.w / 2, b.h / 2],
+        };
+      const ch = L.places.chimney;
+      if (Math.abs(p.x - ch.x) < 18 && p.y < ch.top + 40 && p.y > ch.top - 60)
+        return {
+          id: 'chimney',
+          file: 'fx-smoke.webp',
+          group: 'buildings',
+          kind: 'chimney',
+          ring: [ch.x, ch.top - 10, 18, 40],
+        };
+      const { x0, y0, x1, y1 } = L.places.door;
+      if (p.x >= x0 && p.x <= x1 && p.y >= y0 && p.y <= y1)
+        return {
+          id: 'door',
+          file: 'island.webp',
+          group: 'buildings',
+          kind: 'door',
+          ring: [(x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0) / 2, (y1 - y0) / 2],
+        };
+      const g = L.glass;
+      if (p.x >= g.x && p.x <= g.x + g.w && p.y >= g.y && p.y <= g.y + g.h * 0.8)
+        return {
+          id: 'greenhouse',
+          file: g.file,
+          group: 'buildings',
+          kind: 'glass',
+          ring: [g.x + g.w / 2, g.y + g.h / 2, g.w / 2, g.h / 2],
+        };
+      const plotId = this.game.hit(p);
+      if (plotId !== null) {
+        const d = L.field.plots.find((q) => q.id === plotId)!;
+        return {
+          id: `plot-${plotId}`,
+          file: L.field.soil.file,
+          group: 'crops',
+          kind: 'plot',
+          ring: [d.centre[0], d.centre[1], 70, 40],
+        };
+      }
+      for (const [i, k] of (L.koi ?? []).entries())
+        if (p.x >= k[0] && p.x <= k[2] && p.y >= k[1] && p.y <= k[3])
+          return {
+            id: `koi-${i + 1}`,
+            file: `koi-${i + 1}.webp`,
+            group: 'water',
+            kind: 'koi',
+            ring: [(k[0] + k[2]) / 2, (k[1] + k[3]) / 2, (k[2] - k[0]) / 2, (k[3] - k[1]) / 2],
+          };
+      for (const l of L.lilies) {
+        const s = L.sprites[l.id];
+        if (s && Math.hypot(p.x - l.cx, p.y - l.cy) < 18)
+          return {
+            id: l.id,
+            file: s.file,
+            group: 'water',
+            kind: 'lily',
+            ring: [l.cx, l.cy, s.w / 2, s.h / 2],
+          };
+      }
+      const layer = this.env.layerAt(p);
+      if (layer) {
+        const [cx, cy, rx, ry] = layer.e;
+        const group: GroupId =
+          layer.kind === 'reed' || layer.kind === 'dock' ? 'water' : 'environment';
+        return {
+          id: layer.id,
+          file: layer.file,
+          group,
+          kind: layer.kind,
+          fruit: !!layer.fruit,
+          ring: [cx, cy, rx, ry],
+        };
+      }
+      if (this.water.isWater(p.x, p.y)) {
+        const { cx, cy, rx, ry } = L.places.pond;
+        return {
+          id: 'pond',
+          file: L.water.file,
+          group: 'water',
+          kind: 'water',
+          ring: [cx, cy, rx, ry],
+        };
+      }
+      for (const c of L.clouds)
+        if (p.x >= c.x && p.x <= c.x + c.w && p.y >= c.y && p.y <= c.y + c.h && c.bank)
+          return {
+            id: c.file.replace('.webp', ''),
+            file: c.file,
+            group: 'environment',
+            kind: 'cloud',
+            ring: [c.x + c.w / 2, c.y + c.h / 2, c.w / 2, c.h / 2],
+          };
+      return null;
+    })();
+    this.selected = info;
+    if (!this.raf) this.frame(performance.now(), true);
+    return info;
+  }
+
+  clearInspect() {
+    this.selected = null;
   }
 }

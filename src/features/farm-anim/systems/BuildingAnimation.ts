@@ -26,6 +26,7 @@ export class BuildingAnimation implements AnimSystem {
   private planeInv: [number, number, number, number];
   private mill = { angle: 0, omega: 0.5 };
   private smokeClock = 0;
+  private smokeBurst = 0;
   private door: {
     left: HTMLCanvasElement;
     right: HTMLCanvasElement;
@@ -79,6 +80,14 @@ export class BuildingAnimation implements AnimSystem {
     this.flicker = places.windows.map(() => Math.random());
   }
 
+  /** Showcase: spin the sails up, open the door for a moment, a burst of smoke. */
+  replay() {
+    this.mill.omega += 3.5;
+    this.door.target = 1;
+    this.door.ajar = 2.4;
+    this.smokeBurst = 6;
+  }
+
   /** Pointer helpers for the door. Returns true when the click was used. */
   hover(p: { x: number; y: number } | null) {
     const { x0, y0, x1, y1 } = this.places.door;
@@ -97,7 +106,8 @@ export class BuildingAnimation implements AnimSystem {
     const { chimney } = this.places;
     this.smokeClock -= w.dt;
     if (this.smokeClock <= 0 && w.settings.particles) {
-      this.smokeClock = 0.2 + w.rand() * 0.1;
+      this.smokeClock = this.smokeBurst > 0 ? 0.05 : 0.2 + w.rand() * 0.1;
+      if (this.smokeBurst > 0) this.smokeBurst--;
       const wind = w.wind.at(chimney.x);
       w.particles.spawn(
         'smoke',
@@ -114,7 +124,7 @@ export class BuildingAnimation implements AnimSystem {
     d.idle -= w.dt;
     if (d.ajar > 0) {
       d.ajar -= w.dt;
-      if (d.ajar <= 0 && d.target === 0.18) d.target = 0;
+      if (d.ajar <= 0 && d.target !== 0) d.target = 0;
     } else if (d.idle <= 0) {
       if (d.target === 0) {
         d.target = 0.18;

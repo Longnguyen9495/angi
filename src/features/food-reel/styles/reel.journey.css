@@ -359,125 +359,8 @@
 }
 
 /* ——— Garden ——— */
-.fj-garden {
-  display: grid;
-  gap: 24px;
-}
-
-.fj-garden__head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.fj-plots {
-  display: grid;
-  grid-template-columns: repeat(var(--plot-cols, 6), minmax(0, 1fr));
-  gap: 12px;
-}
-
-.fj-plot {
-  position: relative;
-  display: grid;
-  justify-items: center;
-  align-content: start;
-  gap: 4px;
-  width: 100%;
-  min-height: 200px;
-  padding: 14px 10px 16px;
-  border: 1px solid var(--fr-line);
-  border-radius: 22px;
-  background: radial-gradient(ellipse at 50% 40%, rgb(143 191 122 / 7%), transparent 70%);
-  color: var(--fr-ivory);
-  font: inherit;
-  text-align: center;
-}
-
-button.fj-plot {
-  cursor: pointer;
-  transition:
-    border-color 180ms var(--fr-ease),
-    background-color 180ms var(--fr-ease);
-}
-
-button.fj-plot:hover:not(:disabled) {
-  border-color: var(--fr-line-strong);
-  background-color: rgb(244 237 225 / 3%);
-}
-
-button.fj-plot:disabled {
-  cursor: default;
-}
-
-.fj-plot__no {
-  justify-self: start;
-  font-size: 0.62rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--fr-soft);
-}
-
-.fj-plot__bed {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 168px;
-}
-
-.fj-plot__bed .plot__soil {
-  left: 8%;
-  right: 8%;
-  bottom: 6px;
-  height: 38px;
-}
-
-.fj-plot__bed .crop {
-  bottom: 28px;
-}
-
-.fj-plot--empty .plot__soil {
-  opacity: 0.55;
-}
-
-.fj-plot__crop {
-  font-family: var(--fr-display);
-  font-size: 1.1rem;
-}
-
-.fj-plot__state {
-  color: var(--fr-muted);
-  font-size: 0.76rem;
-  line-height: 1.35;
-}
-
-.fj-plot--ready {
-  border-color: rgb(215 168 93 / 55%);
-  background: radial-gradient(ellipse at 50% 40%, rgb(215 168 93 / 12%), transparent 70%);
-}
-
-.fj-plot--ready .fj-plot__state {
-  color: var(--fr-gold);
-  font-weight: 600;
-}
-
-.fj-plot.is-target {
-  border-style: dashed;
-  border-color: var(--fr-gold);
-}
 
 /* ——— Garden: field, light and life ——— */
-.fj-garden__tools {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.fj-garden__mode {
-  margin-top: -8px;
-  color: #9fc7e0;
-}
 
 .fj-can-btn {
   display: inline-flex;
@@ -526,302 +409,24 @@ button.fj-plot:disabled {
   background: #7fb6d6;
 }
 
-.fj-field {
-  position: relative;
-  padding: 18px;
-  border-radius: 28px;
-  overflow: hidden;
-  isolation: isolate;
-}
-
-.fj-field__sky {
-  --field-ground: linear-gradient(180deg, rgb(35 56 44 / 35%), rgb(58 36 22 / 28%));
-  --field-light: radial-gradient(
-    ellipse 80% 60% at 50% -10%,
-    rgb(244 224 170 / 12%),
-    transparent 70%
-  );
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--field-light), var(--field-ground);
-}
-
-.fj-garden[data-daypart='morning'] .fj-field__sky {
-  --field-light: radial-gradient(
-    ellipse 70% 60% at 15% -10%,
-    rgb(255 214 160 / 16%),
-    transparent 70%
-  );
-}
-
-.fj-garden[data-daypart='evening'] .fj-field__sky {
-  --field-light: radial-gradient(
-    ellipse 80% 70% at 90% -5%,
-    rgb(232 138 82 / 20%),
-    transparent 70%
-  );
-}
-
-.fj-garden[data-daypart='night'] .fj-field__sky {
-  --field-light: radial-gradient(
-    ellipse 60% 50% at 80% -10%,
-    rgb(160 180 230 / 12%),
-    transparent 70%
-  );
-  --field-ground: linear-gradient(180deg, rgb(16 24 40 / 55%), rgb(20 16 12 / 40%));
-}
-
-.fj-field .fj-plot {
-  background-color: rgb(12 12 11 / 45%);
-}
-
 /*
  * Plant: sways around soil level and pops in once per stage. The pop uses
  * `scale` and the sway `rotate`, so the two never fight over `transform`.
  */
-.fj-plot__plant {
-  position: absolute;
-  inset: 0;
-  transform-origin: 50% calc(100% - 34px);
-  animation:
-    fj-stage-in 520ms var(--fr-ease-bounce) both,
-    fj-sway 3.8s ease-in-out var(--sway-delay, 0s) infinite alternate;
-}
-
-.fj-plot--sprout .fj-plot__plant {
-  animation-duration: 520ms, 2.6s;
-}
-
-.fj-plot--ready .crop__img {
-  animation: fj-ripe-glow 2.8s ease-in-out var(--sway-delay, 0s) infinite;
-}
-
-.fj-plot--ready .fj-plot__plant::after {
-  content: '';
-  position: absolute;
-  left: 64%;
-  top: 14%;
-  width: 9px;
-  height: 9px;
-  background: #fff6d8;
-  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
-  animation: fj-twinkle 1.9s ease-in-out var(--sway-delay, 0s) infinite;
-}
 
 /* Growth bar */
-.fj-plot__grow {
-  display: block;
-  width: 70%;
-  height: 3px;
-  border-radius: 2px;
-  background: rgb(244 237 225 / 10%);
-  overflow: hidden;
-}
-
-.fj-plot__grow span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--fr-leaf), var(--fr-gold));
-  transform-origin: left;
-  transform: scaleX(var(--grow, 0));
-  transition: transform 600ms var(--fr-ease);
-}
 
 /* Wet soil after watering or post-meal rain */
-.fj-plot.is-wet .plot__soil {
-  filter: brightness(0.72) saturate(1.2);
-}
-
-.fj-plot.is-wet .plot__soil::after {
-  content: '';
-  position: absolute;
-  left: 22%;
-  right: 30%;
-  top: 30%;
-  height: 7px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, rgb(190 225 245 / 45%), transparent 70%);
-}
-
-.fj-plot.is-wet .fj-plot__grow span {
-  background: linear-gradient(90deg, #7fb6d6, var(--fr-leaf));
-}
 
 /* Watering mode: only thirsty plots stay bright */
-.fj-garden.is-watering .fj-plot {
-  opacity: 0.55;
-  transition: opacity 200ms var(--fr-ease);
-}
-
-.fj-garden.is-watering .fj-plot.is-thirsty,
-.fj-garden.is-watering .fj-plot.is-pouring {
-  opacity: 1;
-  border-color: rgb(127 182 214 / 60%);
-  cursor: pointer;
-}
-
-.fj-plot.is-thirsty:hover {
-  background-color: rgb(127 182 214 / 8%);
-}
-
-.fj-plot.is-thirsty .fj-plot__state {
-  color: #a9d3ec;
-}
-
-.fj-plot.is-pouring .fj-plot__plant {
-  animation:
-    fj-drink 700ms var(--fr-ease) 420ms both,
-    fj-sway 3.8s ease-in-out var(--sway-delay, 0s) infinite alternate;
-}
 
 /* The can: DOM body + spout + handle; tilts in, pours, leaves */
-.fj-can {
-  position: absolute;
-  left: 58%;
-  top: -4px;
-  z-index: 3;
-  width: 30px;
-  height: 22px;
-  border-radius: 6px 6px 8px 8px;
-  background: linear-gradient(160deg, #9cc9e2, #4f86a6);
-  box-shadow: inset 0 -4px 0 rgb(0 0 0 / 18%);
-  transform-origin: 20% 80%;
-  animation: fj-can-pour 1100ms var(--fr-ease) both;
-}
-
-.fj-can::before {
-  content: '';
-  position: absolute;
-  right: 100%;
-  top: 5px;
-  width: 18px;
-  height: 5px;
-  border-radius: 3px 0 0 3px;
-  background: #5f97b7;
-  transform: rotate(-24deg);
-  transform-origin: right center;
-}
-
-.fj-can::after {
-  content: '';
-  position: absolute;
-  left: 7px;
-  top: -9px;
-  width: 16px;
-  height: 12px;
-  border: 3px solid #5f97b7;
-  border-bottom: 0;
-  border-radius: 10px 10px 0 0;
-}
 
 /* Particle origin: drops leave from under the spout, crumbs from the soil */
-.fj-plot__fx {
-  position: absolute;
-  left: 44%;
-  top: 14px;
-  width: 0;
-  height: 0;
-}
-
-.water-drop {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 4px;
-  height: 6px;
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-  background: #a9d8f2;
-  will-change: transform, opacity;
-}
-
-.fj-plot__fx .soil-particle {
-  top: 58px;
-}
 
 /* Butterfly over ready plots: two CSS wings flapping along a looping route */
-.fj-butterfly {
-  position: absolute;
-  z-index: 4;
-  left: 0;
-  top: 0;
-  width: 24px;
-  height: 18px;
-  pointer-events: none;
-  animation: fj-flutter-path 16s ease-in-out infinite;
-}
-
-.fj-butterfly::before,
-.fj-butterfly::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  width: 12px;
-  height: 16px;
-  background: radial-gradient(circle at 50% 35%, #fff1c9 0 25%, #e6b24f 26% 70%, #b8722c 71%);
-  animation: fj-flap 260ms ease-in-out infinite alternate;
-}
-
-.fj-butterfly::before {
-  left: 0;
-  border-radius: 70% 20% 60% 40%;
-  transform-origin: right center;
-}
-
-.fj-butterfly::after {
-  right: 0;
-  border-radius: 20% 70% 40% 60%;
-  transform-origin: left center;
-}
 
 /* Fireflies at night */
-.fj-fireflies span {
-  position: absolute;
-  z-index: 4;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #f4f0a0;
-  box-shadow: 0 0 8px 2px rgb(244 240 160 / 55%);
-  pointer-events: none;
-  animation: fj-firefly 7s ease-in-out infinite;
-}
-
-.fj-fireflies span:nth-child(1) {
-  left: 8%;
-  top: 30%;
-}
-
-.fj-fireflies span:nth-child(2) {
-  left: 27%;
-  top: 70%;
-  animation-delay: -2.2s;
-}
-
-.fj-fireflies span:nth-child(3) {
-  left: 46%;
-  top: 22%;
-  animation-delay: -4.1s;
-}
-
-.fj-fireflies span:nth-child(4) {
-  left: 63%;
-  top: 64%;
-  animation-delay: -1.3s;
-}
-
-.fj-fireflies span:nth-child(5) {
-  left: 81%;
-  top: 36%;
-  animation-delay: -5.4s;
-}
-
-.fj-fireflies span:nth-child(6) {
-  left: 93%;
-  top: 76%;
-  animation-delay: -3.3s;
-}
 
 .fj-chip__count.is-bump {
   display: inline-block;
@@ -1275,10 +880,6 @@ button.fj-plot:disabled {
   .fj-atlas {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .fj-plots {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 900px) {
@@ -1314,19 +915,6 @@ button.fj-plot:disabled {
 
   .fj-stat + .fj-stat {
     padding-left: 12px;
-  }
-
-  .fj-plot {
-    min-height: 176px;
-    padding-inline: 6px;
-  }
-
-  .fj-plot__bed {
-    height: 128px;
-  }
-
-  .fj-plot__crop {
-    font-size: 0.98rem;
   }
 
   .fj-section__intro {
@@ -2106,60 +1694,7 @@ button.fj-plot:disabled {
   opacity: 0.55;
 }
 
-.fj-plot--locked {
-  border-style: dashed;
-  opacity: 0.5;
-}
-
-.fj-plot--locked .plot__soil {
-  filter: grayscale(0.6);
-}
-
 /* ——— Garden decorations ——— */
-.fj-yard {
-  position: relative;
-  height: 86px;
-  margin: -6px 0 6px;
-}
-
-.fj-yard__fence {
-  position: absolute;
-  left: -18px;
-  right: -18px;
-  bottom: 0;
-  height: 62px;
-  background: url('/images/garden/decor-fence.webp') repeat-x left bottom / 128px 128px;
-  opacity: 0.85;
-}
-
-.fj-yard__item {
-  position: absolute;
-  bottom: -4px;
-  width: 92px;
-  height: 92px;
-  object-fit: contain;
-}
-
-.fj-yard__item--scarecrow {
-  left: 2%;
-  transform-origin: 50% 100%;
-  animation: fj-sway 5.2s ease-in-out infinite alternate;
-}
-
-.fj-yard__item--jar {
-  right: 16%;
-  width: 70px;
-  height: 70px;
-}
-
-.fj-yard__item--lantern {
-  right: 2%;
-}
-
-.fj-garden[data-daypart='evening'] .fj-yard__item--lantern,
-.fj-garden[data-daypart='night'] .fj-yard__item--lantern {
-  filter: drop-shadow(0 0 14px rgb(255 170 90 / 75%));
-}
 
 /* ——— Market ——— */
 .fj-market {
@@ -2269,11 +1804,6 @@ button.fj-plot:disabled {
 @media (max-width: 640px) {
   .fj-stall {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .fj-yard__item {
-    width: 72px;
-    height: 72px;
   }
 }
 

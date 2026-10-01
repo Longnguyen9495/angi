@@ -182,7 +182,25 @@ export class EnvironmentAnimation implements AnimSystem {
       .map((p) => [p.def.e[0], p.def.e[1] - 4]);
   }
 
+  /** Points a butterfly hovers at this frame: flowers close by tremble. */
+  nudges: Vec2[] = [];
+
+  /** The plant layer under picture point p (smallest ellipse first), for the sprite inspector. */
+  layerAt(p: { x: number; y: number }) {
+    const hits = [...this.plants, ...(this.dockPlant ? [this.dockPlant] : [])].filter(({ def }) => {
+      const [cx, cy, rx, ry] = def.e;
+      return ((p.x - cx) / rx) ** 2 + ((p.y - cy) / ry) ** 2 < 1;
+    });
+    hits.sort((a, b) => a.def.e[2] * a.def.e[3] - b.def.e[2] * b.def.e[3]);
+    return hits[0]?.def ?? null;
+  }
+
   update(w: World) {
+    for (const p of this.plants) {
+      if (p.def.kind !== 'flower') continue;
+      for (const [nx, ny] of this.nudges)
+        if (Math.hypot(nx - p.def.e[0], ny - p.def.e[1]) < 28) p.part.v += (w.rand() - 0.5) * 0.5;
+    }
     const done = new Set<Spring>();
     for (const p of this.plants) {
       if (

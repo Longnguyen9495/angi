@@ -19,12 +19,37 @@ export interface SpriteDef extends Placed {
   base?: Vec2;
   hub?: Vec2;
   tips?: Vec2[];
+  /** Which way the head points in the file (sheet animals), so the runtime flips correctly. */
+  faces?: 'left' | 'right';
 }
 
 export interface CloudDef extends Placed {
   /** Front bank in front of the cliffs (sways in place) rather than a drifting sky cloud. */
   bank: boolean;
+  /** Drawn mirrored (one sheet cloud reads as another). */
+  flip?: boolean;
 }
+
+/** A loose piece from the asset sheet (leaf, butterfly, sparkle…), drawn at its own size. */
+export interface FxDef {
+  file: string;
+  w: number;
+  h: number;
+}
+
+export type FxId =
+  | 'leaf1'
+  | 'leaf2'
+  | 'leaf3'
+  | 'leaf4'
+  | 'butterflyOrange'
+  | 'butterflyBlue'
+  | 'birdWhite'
+  | 'birdBrown'
+  | 'sparkle'
+  | 'smoke'
+  | 'splash'
+  | 'flower';
 
 export type LayerKind = 'tree' | 'pine' | 'bush' | 'grass' | 'flower' | 'reed' | 'hay' | 'dock';
 
@@ -50,8 +75,24 @@ export interface Places {
   dockPosts: Vec2[];
   rope: { from: Vec2; to: Vec2 };
   pond: { cx: number; cy: number; rx: number; ry: number; poly: Vec2[] };
-  yard: { chickens: [Vec2, Vec2]; cow: Vec2 };
-  sky: { y0: number; y1: number };
+  /** Tap rectangles checked after the animals and the pond: [place, x0, y0, x1, y1]. */
+  taps: [string, number, number, number, number][];
+  /** Tap ellipses round the cows [cx, cy, rx, ry]. */
+  cowSpots: [number, number, number, number][];
+  hens: {
+    /** Patches the hens wander in [x0, y0, x1, y1]. */
+    zones: [number, number, number, number][];
+    /** Front fence of the yard (from, to): hens stay behind it. */
+    fence: [Vec2, Vec2];
+    /** The coop box: no walking through it. */
+    coop: [number, number, number, number];
+  };
+  /** Where the game's need bubbles float. */
+  bubbles: { cow: Vec2; chicken: Vec2 };
+  /** Camera stops in the game. */
+  focus: { field: Vec2; barn: Vec2 };
+  /** Picture rows the birds cross. */
+  skyBand: [number, number];
 }
 
 /** The game plots on the painted field lattice. */
@@ -74,6 +115,9 @@ export interface FarmLayout {
   water: Placed;
   glass: Placed;
   places: Places;
+  /** Koi boxes on the painting [x0, y0, x1, y1] (their start spots). */
+  koi: [number, number, number, number][];
+  fx: Record<FxId, FxDef>;
 }
 
 /** Debug-panel settings, read by every system each frame. */

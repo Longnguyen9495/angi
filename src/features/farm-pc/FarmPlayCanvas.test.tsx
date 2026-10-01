@@ -52,7 +52,7 @@ function fakeEngine(opts: { failFirst?: boolean } = {}) {
   };
 }
 
-/** Same wiring as GardenSection: real reducer, real persistence. */
+/** Same wiring as FarmGame: real reducer, real persistence. */
 function Harness({ create }: { create: CreateFarmEngine }) {
   const { state, dispatch, now, reduced } = useGame();
   const [picked, setPicked] = useState<CropId | null>(null);

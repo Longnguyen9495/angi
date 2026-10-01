@@ -190,14 +190,17 @@ describe('chosen epilogue and journey', () => {
     await user.click(screen.getByRole('button', { name: /mở nông trại/i }));
     const drawer = await screen.findByRole('dialog', { name: /nông trại của bạn/i });
     expect(window.location.pathname).toBe('/journey');
-    // Farm, map and missions live in the Journey layer, lazy loaded.
+    // The farm game, lazy loaded; map, missions and this meal open as panels inside it.
     expect(
       await within(drawer).findByRole('heading', { name: 'Khu vườn' }, { timeout: 3000 }),
     ).toBeInTheDocument();
+    await user.click(within(drawer).getByRole('button', { name: 'Thêm' }));
+    await user.click(within(drawer).getByRole('button', { name: 'Nhiệm vụ' }));
     expect(
-      within(drawer).getByRole('heading', { name: /nhiệm vụ & nhật ký/i }),
+      await within(drawer).findByRole('heading', { name: /nhiệm vụ & nhật ký/i }),
     ).toBeInTheDocument();
-    expect(within(drawer).getByText(/bạn nhận được|đã gieo/i)).toBeInTheDocument();
+    await user.click(within(drawer).getByRole('button', { name: 'Bữa này' }));
+    expect(await within(drawer).findByText(/bạn nhận được|đã gieo/i)).toBeInTheDocument();
     await user.click(within(drawer).getByRole('button', { name: /về reel/i }));
     await waitFor(() => expect(screen.queryByRole('dialog', { name: /nông trại/i })).toBeNull());
   });

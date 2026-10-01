@@ -1,16 +1,16 @@
+import { X } from '@phosphor-icons/react';
 import { LazyMotion, MotionConfig, domAnimation } from 'motion/react';
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { RecipeId } from '../../../data/types';
-import { BRAND, t } from '../../../i18n';
+import { t } from '../../../i18n';
 import { useGame } from '../../../state/hooks';
-import { SplitLines } from '../components/SplitLines';
 import type { ReelDish } from '../foodReel.types';
 import { AtlasSection } from './AtlasSection';
 import { Cookbook } from './Cookbook';
 import { CookingSheet } from './CookingSheet';
 import { CurrentMeal } from './CurrentMeal';
+import { FarmGame, type PanelId } from './FarmGame';
 import { FriendsSection } from './FriendsSection';
-import { GardenSection } from './GardenSection';
 import { JourneyStats } from './JourneyStats';
 import { MealLog, MissionsSection } from './MissionsSection';
 import { MarketSection } from './MarketSection';
@@ -19,130 +19,93 @@ import { OrdersSection } from './OrdersSection';
 import { pressFx } from './pressFx';
 import { RecipesSection } from './RecipesSection';
 import { SaveJourneyPrompt } from './SaveJourneyPrompt';
+import { StoragePanel } from './StoragePanel';
 
-const m = t.journey.scene;
-const sec = m.sections;
+const sec = t.journey.scene.sections;
+const g = t.journey.game;
 
-const SECTIONS = [
-  { id: 'bua-nay', label: m.nav.meal },
-  { id: 'khu-vuon', label: m.nav.garden },
-  { id: 'cong-thuc', label: m.nav.recipes },
-  { id: 'don-co-ba', label: m.nav.orders },
-  { id: 'cho-que', label: m.nav.market },
-  { id: 'ban-do', label: m.nav.map },
-  { id: 'nhiem-vu', label: m.nav.missions },
-] as const;
+const PANEL_TITLE: Record<PanelId, string> = {
+  meal: sec.meal.title,
+  storage: g.panel.storage,
+  kitchen: g.panel.kitchen,
+  orders: sec.orders.title,
+  market: sec.market.title,
+  map: sec.map.title,
+  missions: sec.missions.title,
+  friends: g.panel.friends,
+  stats: g.panel.stats,
+};
 
-function Section({
-  id,
-  no,
-  title,
-  intro,
-  children,
-}: {
-  id: string;
-  no: string;
-  title: string;
-  intro?: string;
-  children: ReactNode;
-}) {
-  return (
-    <section id={id} className="fj-section" aria-labelledby={`${id}-title`}>
-      <header className="fj-section__head">
-        <span className="fj-section__no" aria-hidden="true">
-          {no}
-        </span>
-        {/* tabIndex -1 lets reward actions jump here ("Xem khu vườn"). */}
-        <h2 id={`${id}-title`} className="fj-section__title" tabIndex={-1}>
-          {title}
-        </h2>
-        {intro && <p className="fj-section__intro">{intro}</p>}
-      </header>
-      {children}
-    </section>
-  );
-}
-
-type SectionId = (typeof SECTIONS)[number]['id'];
+const PANEL_INTRO: Partial<Record<PanelId, string>> = {
+  kitchen: sec.recipes.intro,
+  orders: sec.orders.intro,
+  market: sec.market.intro,
+  map: sec.map.intro,
+};
 
 /**
- * Section tabs with a pill that glides to whichever section is being read,
- * tracked from the Journey's own scroll container.
+ * A farm area opened over the game: a bottom sheet on phones, a side drawer on wide screens.
+ * The farm stays live behind it; Escape or the close button returns to the island.
  */
-function SectionNav({ onJump }: { onJump: (id: SectionId) => void }) {
-  const navRef = useRef<HTMLElement>(null);
-  const [active, setActive] = useState<SectionId>(SECTIONS[0].id);
-  const [pill, setPill] = useState<{ x: number; w: number } | null>(null);
+function GamePanel({
+  id,
+  onClose,
+  children,
+}: {
+  id: PanelId;
+  onClose: () => void;
+  children: ReactNode;
+}) {
+  const ref = useRef<HTMLElement>(null);
+  const closeRef = useRef(onClose);
+  useEffect(() => {
+    closeRef.current = onClose;
+  });
 
   useEffect(() => {
-    const nav = navRef.current;
-    const scroller = nav?.closest<HTMLElement>('.fr-journey__scroll');
-    const target: HTMLElement | Window = scroller ?? window;
-    let frame = 0;
-    const measure = () => {
-      frame = 0;
-      const line = (nav?.getBoundingClientRect().bottom ?? 0) + 120;
-      let current: SectionId = SECTIONS[0].id;
-      for (const s of SECTIONS) {
-        const el = document.getElementById(s.id);
-        if (el && el.getBoundingClientRect().top <= line) current = s.id;
-      }
-      if (scroller && scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 4) {
-        current = SECTIONS[SECTIONS.length - 1]!.id;
-      }
-      setActive(current);
+    const opener = document.activeElement as HTMLElement | null;
+    ref.current?.focus({ preventScroll: true });
+    const onKey = (e: KeyboardEvent) => {
+      // A sheet over the panel (cooking, check-in) closes first.
+      if (e.key !== 'Escape' || e.defaultPrevented || document.querySelector('.sheet-layer'))
+        return;
+      e.preventDefault();
+      closeRef.current();
     };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(measure);
-    };
-    measure();
-    target.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+    document.addEventListener('keydown', onKey);
     return () => {
-      cancelAnimationFrame(frame);
-      target.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      document.removeEventListener('keydown', onKey);
+      if (opener && document.contains(opener)) opener.focus({ preventScroll: true });
     };
-  }, []);
-
-  useLayoutEffect(() => {
-    const nav = navRef.current;
-    const btn = nav?.querySelector<HTMLElement>(`[data-section="${active}"]`);
-    if (!nav || !btn) return;
-    const place = () => setPill({ x: btn.offsetLeft, w: btn.offsetWidth });
-    place();
-    // Keep the active tab in view when the row scrolls sideways (phones).
-    const left = btn.offsetLeft - (nav.clientWidth - btn.offsetWidth) / 2;
-    if (nav.scrollWidth > nav.clientWidth) nav.scrollTo({ left, behavior: 'smooth' });
-    window.addEventListener('resize', place);
-    return () => window.removeEventListener('resize', place);
-  }, [active]);
+  }, [id]);
 
   return (
-    <nav className="fj-nav" aria-label={m.navLabel} ref={navRef}>
-      {pill && (
-        <span
-          className="fj-nav__pill"
-          aria-hidden="true"
-          style={{ transform: `translateX(${pill.x}px)`, width: pill.w }}
-        />
-      )}
-      {SECTIONS.map((s) => (
-        <button
-          key={s.id}
-          type="button"
-          className="fj-nav__item"
-          data-section={s.id}
-          aria-current={active === s.id ? 'true' : undefined}
-          onClick={() => {
-            setActive(s.id);
-            onJump(s.id);
-          }}
-        >
-          {s.label}
-        </button>
-      ))}
-    </nav>
+    <>
+      <div className="fg-panel-backdrop" onClick={onClose} aria-hidden="true" />
+      <section
+        className="fg-panel"
+        data-panel={id}
+        role="region"
+        aria-labelledby="fg-panel-title"
+        tabIndex={-1}
+        ref={ref}
+        data-game-overlay
+      >
+        <header className="fg-panel__head">
+          <span className="fg-panel__grip" aria-hidden="true" />
+          <h2 id="fg-panel-title" className="fg-panel__title">
+            {PANEL_TITLE[id]}
+          </h2>
+          <button type="button" className="fg-round" onClick={onClose} aria-label={g.close}>
+            <X size={18} weight="bold" aria-hidden="true" />
+          </button>
+        </header>
+        <div className="fg-panel__body">
+          {PANEL_INTRO[id] && <p className="fj-section__intro">{PANEL_INTRO[id]}</p>}
+          {children}
+        </div>
+      </section>
+    </>
   );
 }
 
@@ -152,79 +115,74 @@ interface JourneySceneProps {
 }
 
 /**
- * The Journey: everything the guest accumulates after choosing food, in the
- * same dark, editorial language as the reel.
+ * The farm ("Nông trại"): nothing but the game. Every other part of the journey (this meal,
+ * the kitchen, orders, the market, the map, missions, friends) opens as a panel inside it.
  */
 export default function JourneyScene({ onBackToReel, onOpenDish }: JourneySceneProps) {
   const { reduced } = useGame();
   const [cooking, setCooking] = useState<RecipeId | null>(null);
-  const jump = (id: string) => {
-    const el = document.getElementById(id);
-    el?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
-    document.getElementById(`${id}-title`)?.focus({ preventScroll: true });
+  const [panel, setPanel] = useState<PanelId | null>(null);
+
+  const content: Record<PanelId, () => ReactNode> = {
+    meal: () => (
+      <>
+        <CurrentMeal onSpin={onBackToReel} />
+        <SaveJourneyPrompt />
+      </>
+    ),
+    storage: () => <StoragePanel />,
+    kitchen: () => (
+      <>
+        <RecipesSection onCook={setCooking} />
+        <Cookbook />
+      </>
+    ),
+    orders: () => <OrdersSection />,
+    market: () => <MarketSection />,
+    map: () => <AtlasSection onOpenDish={onOpenDish} />,
+    missions: () => (
+      <>
+        <div className="fj-split">
+          <div>
+            <h3 className="fj-h3">{sec.missions.today}</h3>
+            <MissionsSection />
+          </div>
+          <div>
+            <h3 className="fj-h3">{sec.missions.recent}</h3>
+            <MealLog />
+          </div>
+        </div>
+        <div className="fj-album-wrap">
+          <h3 className="fj-h3">{sec.missions.album}</h3>
+          <MealAlbum />
+        </div>
+      </>
+    ),
+    friends: () => <FriendsSection />,
+    stats: () => (
+      <>
+        <JourneyStats />
+        <SaveJourneyPrompt />
+      </>
+    ),
   };
 
   return (
     <MotionConfig reducedMotion={reduced ? 'always' : 'never'}>
       <LazyMotion features={domAnimation} strict>
-        <div className="fj" onPointerDown={(e) => pressFx(e, reduced)}>
-          <header className="fj-hero">
-            <p className="fr-kicker">{m.kicker(BRAND)}</p>
-            <SplitLines as="h1" className="fj-hero__title" lines={m.titleLines} delay={0.05} />
-            <p className="fj-hero__lede">{m.lede}</p>
-            <JourneyStats />
-            <SaveJourneyPrompt />
-          </header>
-
-          <SectionNav onJump={jump} />
-
-          <Section id="bua-nay" no="01" title={sec.meal.title}>
-            <CurrentMeal onSpin={onBackToReel} />
-          </Section>
-
-          <Section id="khu-vuon" no="02" title={sec.garden.title}>
-            <GardenSection onCook={setCooking} onOrders={() => jump('don-co-ba')} onGo={jump} />
-            <FriendsSection />
-          </Section>
-
-          <Section id="cong-thuc" no="03" title={sec.recipes.title} intro={sec.recipes.intro}>
-            <RecipesSection onCook={setCooking} />
-            <Cookbook />
-          </Section>
-
-          <Section id="don-co-ba" no="04" title={sec.orders.title} intro={sec.orders.intro}>
-            <OrdersSection />
-          </Section>
-
-          <Section id="cho-que" no="05" title={sec.market.title} intro={sec.market.intro}>
-            <MarketSection />
-          </Section>
-
-          <Section id="ban-do" no="06" title={sec.map.title} intro={sec.map.intro}>
-            <AtlasSection onOpenDish={onOpenDish} />
-          </Section>
-
-          <Section id="nhiem-vu" no="07" title={sec.missions.title}>
-            <div className="fj-split">
-              <div>
-                <h3 className="fj-h3">{sec.missions.today}</h3>
-                <MissionsSection />
-              </div>
-              <div>
-                <h3 className="fj-h3">{sec.missions.recent}</h3>
-                <MealLog />
-              </div>
-            </div>
-            <div className="fj-album-wrap">
-              <h3 className="fj-h3">{sec.missions.album}</h3>
-              <MealAlbum />
-            </div>
-          </Section>
+        <div className="fj fj--game" onPointerDown={(e) => pressFx(e, reduced)}>
+          <FarmGame onCook={setCooking} onPanel={setPanel} onBack={onBackToReel} panel={panel} />
+          {panel && (
+            <GamePanel key={panel} id={panel} onClose={() => setPanel(null)}>
+              {content[panel]()}
+            </GamePanel>
+          )}
           <CookingSheet
             recipeId={cooking}
             onClose={() => setCooking(null)}
             onOpenCookbook={() => {
               setCooking(null);
+              setPanel('kitchen');
               window.setTimeout(() => {
                 const el = document.getElementById('so-bep');
                 el?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
