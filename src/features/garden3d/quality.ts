@@ -3,6 +3,8 @@
  * "low" unless they look capable; everything else starts at "medium".
  */
 
+import { t } from '../../i18n';
+
 export type Quality = 'low' | 'medium' | 'high';
 
 export interface QualitySettings {
@@ -50,7 +52,7 @@ export const QUALITY: Record<Quality, QualitySettings> = {
   },
 };
 
-export const QUALITY_LABEL: Record<Quality, string> = { low: 'Nhẹ', medium: 'Vừa', high: 'Đẹp' };
+export const QUALITY_LABEL: Record<Quality, string> = t.farm.common.qualityLevels;
 
 let webgl: boolean | null = null;
 

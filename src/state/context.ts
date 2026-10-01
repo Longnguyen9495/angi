@@ -17,12 +17,15 @@ export interface GameContextValue {
 
 export const GameContext = createContext<GameContextValue | null>(null);
 
-export type ToastTone = 'info' | 'success' | 'warning';
+/** `reward`: something landed in the guest's hands (harvest, level-up, gift). */
+export type ToastTone = 'info' | 'success' | 'warning' | 'error' | 'reward';
 
 export interface ToastInput {
   message: string;
   tone?: ToastTone;
   action?: { label: string; onClick: () => void };
+  /** Milliseconds on screen; defaults by tone. */
+  duration?: number;
 }
 
 export interface FeedbackContextValue {
@@ -39,7 +42,7 @@ export interface UiContextValue {
   focusSection: (id: 'chon-mon' | 'khu-vuon' | 'cong-thuc' | 'ban-do' | 'check-in') => void;
   /** Closes the Journey and spins the reel over the dishes that grant this seed. */
   spinForSeed: (crop: CropId) => void;
-  /** Opens the optional "Lưu hành trình" sign-in sheet. */
+  /** Opens the optional "Lưu nông trại" sign-in sheet. */
   openAccount: () => void;
 }
 

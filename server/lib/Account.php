@@ -34,13 +34,13 @@ final class Account
     {
         $email = self::normaliseEmail((string) ($body['email'] ?? ''));
         if (($body['consent'] ?? false) !== true) {
-            throw new HttpError(422, 'Bạn cần đồng ý với cách lưu dữ liệu để tạo tài khoản.');
+            throw new HttpError(422, __t('account.consentRequired'));
         }
         $now = time();
         $ipHash = self::hash($ip . '|' . env('APP_KEY', 'bepviet'));
         if ($this->count('SELECT COUNT(*) FROM login_codes WHERE email = ? AND created_at > ?', [$email, $now - 900]) >= self::CODES_PER_EMAIL
             || $this->count('SELECT COUNT(*) FROM login_codes WHERE ip_hash = ? AND created_at > ?', [$ipHash, $now - 3600]) >= self::CODES_PER_IP) {
-            throw new HttpError(429, 'Bạn đã yêu cầu nhiều mã quá — đợi khoảng 15 phút rồi thử lại nhé.');
+            throw new HttpError(429, __t('account.tooManyCodes'));
         }
         $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
         $link = bin2hex(random_bytes(24));
@@ -53,7 +53,7 @@ final class Account
         ]);
 
         $url = rtrim((string) env('APP_URL', 'http://angi.local'), '/') . '/api/account/link?t=' . $link;
-        $mail = LoginCodeEmail::build($code, $url, ($body['marketing'] ?? false) === true);
+        $mail = LoginCodeEmail::build($code, $url, ($body['marketing'] ?? false) === true, Lang::locale());
         Mailer::send($email, $mail['subject'], $mail['text'], $mail['html']);
         $out = ['sent' => true, 'email' => $email, 'expiresIn' => self::CODE_TTL];
         if (env('APP_ENV', 'production') === 'local') {
@@ -71,15 +71,15 @@ final class Account
             [$email, time()],
         );
         if (!$row) {
-            throw new HttpError(410, 'Mã đã hết hạn — bấm "Gửi lại mã" nhé.');
+            throw new HttpError(410, __t('account.codeExpired'));
         }
         if ((int) $row['attempts'] >= self::MAX_ATTEMPTS) {
-            throw new HttpError(429, 'Nhập sai quá nhiều lần — hãy gửi mã mới.');
+            throw new HttpError(429, __t('account.tooManyAttempts'));
         }
         if (strlen($code) !== 6 || !hash_equals($row['code_hash'], self::hash($code))) {
             $this->db->prepare('UPDATE login_codes SET attempts = attempts + 1 WHERE id = ?')->execute([$row['id']]);
             $left = self::MAX_ATTEMPTS - (int) $row['attempts'] - 1;
-            throw new HttpError(422, $left > 0 ? "Mã chưa đúng, bạn còn $left lần thử." : 'Nhập sai quá nhiều lần — hãy gửi mã mới.');
+            throw new HttpError(422, $left > 0 ? __t('account.wrongCode', ['left' => $left]) : __t('account.tooManyAttempts'));
         }
         return $this->signIn($row);
     }
@@ -155,7 +155,8 @@ final class Account
         if (!$row) {
             return null;
         }
-        if ((int) $row['last_seen'] < time() - 3600) {
+        // Once a minute at most: fresh enough for the admin's "online now" view.
+        if ((int) $row['last_seen'] < time() - 60) {
             $this->db->prepare('UPDATE user_sessions SET last_seen = ? WHERE token_hash = ?')->execute([time(), $row['token_hash']]);
         }
         return $row;
@@ -194,16 +195,16 @@ final class Account
         $data = $body['data'] ?? null;
         $base = (int) ($body['baseVersion'] ?? -1);
         if (!is_array($data) || !isset($data['guestId'])) {
-            throw new HttpError(422, 'Dữ liệu hành trình không hợp lệ.');
+            throw new HttpError(422, __t('account.badProgress'));
         }
         $json = json_encode($data, JSON_UNESCAPED_UNICODE);
         if ($json === false || strlen($json) > self::MAX_PROGRESS_BYTES) {
-            throw new HttpError(413, 'Dữ liệu hành trình quá lớn.');
+            throw new HttpError(413, __t('account.progressTooLarge'));
         }
         $row = $this->one('SELECT version FROM user_progress WHERE user_id = ?', [$u['id']]);
         $current = $row ? (int) $row['version'] : 0;
         if ($base !== $current) {
-            json_response(['error' => 'Hành trình đã đổi ở máy khác.', 'version' => $current], 409);
+            json_response(['error' => __t('account.progressConflict'), 'version' => $current], 409);
         }
         $now = time();
         if ($row) {
@@ -259,14 +260,14 @@ final class Account
 
     public function requireUser(): array
     {
-        return $this->current() ?? throw new HttpError(401, 'Bạn chưa đăng nhập.');
+        return $this->current() ?? throw new HttpError(401, __t('account.notSignedIn'));
     }
 
     /** Writes must carry this header: a cross-site form can't set it, so it doubles as CSRF protection. */
     public static function requireAppHeader(): void
     {
         if (($_SERVER['HTTP_X_BEPVIET'] ?? '') !== '1') {
-            throw new HttpError(403, 'Yêu cầu không hợp lệ.');
+            throw new HttpError(403, __t('account.badRequest'));
         }
     }
 
@@ -279,7 +280,7 @@ final class Account
     {
         $email = mb_strtolower(trim($email), 'UTF-8');
         if (strlen($email) > 254 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new HttpError(422, 'Email chưa đúng định dạng.');
+            throw new HttpError(422, __t('account.badEmail'));
         }
         return $email;
     }

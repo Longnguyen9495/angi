@@ -1,0 +1,408 @@
+/* ——— Header dock (desktop ≥ 768) ———
+   The actions live in one frosted capsule: language · sound/about · saved/farm · profile.
+   A highlight pill glides under the hovered/focused button (vars set by ExperienceHeader).
+   Phones keep the compact icon row from reel.responsive.css; nothing here applies there. */
+
+.fr-dock__glide,
+.fr-dock__sep,
+.fr-chrome__eq {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .fr-header__nav {
+    --glide-x: 0px;
+    --glide-w: 44px;
+    position: relative;
+    isolation: isolate;
+    gap: 2px;
+    padding: 5px;
+    border-radius: 999px;
+    background:
+      linear-gradient(180deg, rgb(244 237 225 / 7%), rgb(244 237 225 / 2%)),
+      rgb(18 17 15 / 55%);
+    box-shadow:
+      inset 0 0 0 1px var(--fr-line),
+      inset 0 1px 0 rgb(244 237 225 / 9%),
+      0 18px 40px -18px rgb(0 0 0 / 80%);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    animation: fr-dock-in 720ms var(--fr-ease) 120ms both;
+  }
+
+  /* A slow sheen sweeps across the rim on hover. */
+  .fr-header__nav::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--dock-angle, 0deg),
+      transparent 0 70%,
+      rgb(215 168 93 / 55%) 80%,
+      transparent 90% 100%
+    );
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+    opacity: 0;
+    transition: opacity 400ms var(--fr-ease);
+  }
+
+  .fr-header__nav:hover::before,
+  .fr-header__nav:focus-within::before {
+    opacity: 1;
+    animation: fr-dock-sheen 4.5s linear infinite;
+  }
+
+  /* Gliding highlight */
+  .fr-dock__glide {
+    display: block;
+    position: absolute;
+    z-index: -1;
+    top: 5px;
+    bottom: 5px;
+    left: 0;
+    width: var(--glide-w);
+    border-radius: 999px;
+    background: rgb(244 237 225 / 9%);
+    box-shadow: inset 0 0 0 1px rgb(244 237 225 / 8%);
+    transform: translateX(var(--glide-x)) scale(0.92);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform 420ms var(--fr-ease-bounce),
+      width 420ms var(--fr-ease-bounce),
+      opacity 220ms var(--fr-ease);
+  }
+
+  .fr-header__nav[data-glide] .fr-dock__glide {
+    opacity: 1;
+    transform: translateX(var(--glide-x)) scale(1);
+  }
+
+  /* First touch: appear in place instead of sliding in from the left edge. */
+  .fr-header__nav[data-glide='enter'] .fr-dock__glide {
+    transition:
+      transform 0s,
+      width 0s,
+      opacity 220ms var(--fr-ease);
+  }
+
+  .fr-dock__sep {
+    display: block;
+    flex: none;
+    width: 1px;
+    height: 18px;
+    margin: 0 6px;
+    background: linear-gradient(transparent, var(--fr-line-strong), transparent);
+  }
+
+  /* Language: an inner segmented control with no border of its own. */
+  .fr-header .fr-lang {
+    margin: 0;
+    padding: 2px;
+    border: 0;
+    background: rgb(0 0 0 / 28%);
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 40%);
+  }
+
+  .fr-header .fr-lang .lang-switch__option {
+    min-height: 34px;
+    min-width: 36px;
+  }
+
+  .fr-header .fr-lang .lang-switch__option[aria-pressed='true'] {
+    background: linear-gradient(180deg, rgb(215 168 93 / 22%), rgb(215 168 93 / 10%));
+    box-shadow: inset 0 0 0 1px rgb(215 168 93 / 28%);
+  }
+
+  /* Buttons */
+  .fr-header .fr-chrome {
+    position: relative;
+    min-height: 40px;
+    padding: 0 14px;
+    letter-spacing: 0.14em;
+    font-size: 0.66rem;
+  }
+
+  .fr-header .fr-chrome:focus-visible {
+    outline: none;
+    color: var(--fr-ivory);
+  }
+
+  .fr-header .fr-chrome > svg {
+    flex: none;
+    transition: transform 360ms var(--fr-ease-bounce);
+  }
+
+  .fr-header .fr-chrome:hover > svg {
+    transform: translateY(-1px) scale(1.12);
+  }
+
+  .fr-header .fr-chrome:active > svg {
+    transform: scale(0.9);
+    transition-duration: 90ms;
+  }
+
+  /* Sound & About: icon-only, the label rises as a tooltip. */
+  .fr-header .fr-chrome--tip {
+    width: 40px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .fr-header .fr-chrome--tip .fr-chrome__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .fr-header .fr-chrome--tip::after {
+    content: attr(data-tip);
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 50%;
+    padding: 7px 11px;
+    border-radius: 8px;
+    background: var(--fr-ivory);
+    color: var(--fr-canvas);
+    font: 600 0.62rem/1 var(--fr-body);
+    letter-spacing: 0.16em;
+    white-space: nowrap;
+    box-shadow: 0 10px 24px -10px rgb(0 0 0 / 70%);
+    opacity: 0;
+    transform: translate(-50%, -4px) scale(0.96);
+    transform-origin: 50% 0;
+    pointer-events: none;
+    transition:
+      opacity 180ms var(--fr-ease),
+      transform 260ms var(--fr-ease-bounce);
+  }
+
+  .fr-header .fr-chrome--tip:hover::after,
+  .fr-header .fr-chrome--tip:focus-visible::after {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+    transition-delay: 260ms;
+  }
+
+  /* Sound on: three tiny equaliser bars breathe beside the speaker. */
+  .fr-header .fr-chrome--sound[aria-pressed='true'] {
+    width: 52px;
+    gap: 4px;
+    color: var(--fr-gold);
+  }
+
+  .fr-header .fr-chrome--sound[aria-pressed='true'] .fr-chrome__eq {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 10px;
+  }
+
+  .fr-chrome__eq i {
+    width: 2px;
+    height: 100%;
+    border-radius: 1px;
+    background: currentcolor;
+    transform-origin: 50% 100%;
+    animation: fr-eq 1.1s ease-in-out infinite;
+  }
+
+  .fr-chrome__eq i:nth-child(2) {
+    animation-delay: -0.35s;
+    animation-duration: 0.9s;
+  }
+
+  .fr-chrome__eq i:nth-child(3) {
+    animation-delay: -0.7s;
+    animation-duration: 1.3s;
+  }
+
+  /* Saved: count in a soft gold chip that pops when it changes. */
+  .fr-header .fr-chrome__count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 22px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: rgb(215 168 93 / 14%);
+    font-size: 0.74rem;
+    line-height: 1;
+    animation: fr-count-pop 520ms var(--fr-ease-bounce);
+  }
+
+  .fr-header .fr-chrome--saved:hover > svg {
+    transform: translateY(-2px) rotate(-8deg) scale(1.12);
+  }
+
+  /* Farm: the compass needle swings on hover; stats sit as a chip. */
+  .fr-header .fr-chrome--journey:hover .fr-chrome__compass {
+    animation: fr-compass 900ms var(--fr-ease) both;
+  }
+
+  .fr-header .fr-chrome__stats {
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: rgb(215 168 93 / 12%);
+    box-shadow: inset 0 0 0 1px rgb(215 168 93 / 18%);
+    font-size: 0.74rem;
+    line-height: 1;
+  }
+
+  .fr-header .fr-chrome__dot {
+    position: absolute;
+    top: 8px;
+    left: 24px;
+    width: 7px;
+    height: 7px;
+    box-shadow: none;
+  }
+
+  .fr-header .fr-chrome__dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: inherit;
+    animation: fr-ping 1.8s var(--fr-ease) infinite;
+  }
+
+  /* Profile: an avatar ring; the copper arc draws around it on hover. */
+  .fr-header .fr-chrome--icon {
+    width: 40px;
+    min-height: 40px;
+    margin-left: 4px;
+    border: 0;
+    background: rgb(244 237 225 / 6%);
+    box-shadow: inset 0 0 0 1px var(--fr-line);
+  }
+
+  .fr-header .fr-chrome--icon::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: conic-gradient(var(--fr-gold), var(--fr-copper) var(--ring, 0%), transparent 0);
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+    transition: --ring 600ms var(--fr-ease);
+  }
+
+  .fr-header .fr-chrome--icon:hover::before,
+  .fr-header .fr-chrome--icon:focus-visible::before {
+    --ring: 100%;
+  }
+
+  /* Staggered entrance of the dock's contents. */
+  .fr-header__nav > :not(.fr-dock__glide) {
+    animation: fr-dock-item 560ms var(--fr-ease) both;
+  }
+
+  .fr-header__nav > :nth-child(2) { animation-delay: 260ms; }
+  .fr-header__nav > :nth-child(3) { animation-delay: 300ms; }
+  .fr-header__nav > :nth-child(4) { animation-delay: 330ms; }
+  .fr-header__nav > :nth-child(5) { animation-delay: 360ms; }
+  .fr-header__nav > :nth-child(6) { animation-delay: 390ms; }
+  .fr-header__nav > :nth-child(7) { animation-delay: 420ms; }
+  .fr-header__nav > :nth-child(8) { animation-delay: 450ms; }
+  .fr-header__nav > :nth-child(9) { animation-delay: 480ms; }
+}
+
+@property --ring {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --dock-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes fr-dock-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.97);
+    filter: blur(6px);
+  }
+}
+
+@keyframes fr-dock-item {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes fr-dock-sheen {
+  to {
+    --dock-angle: 360deg;
+  }
+}
+
+@keyframes fr-eq {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes fr-count-pop {
+  0% {
+    transform: scale(0.6);
+    background: rgb(215 168 93 / 45%);
+  }
+  60% {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes fr-compass {
+  30% {
+    transform: rotate(-40deg) scale(1.12);
+  }
+  65% {
+    transform: rotate(20deg) scale(1.12);
+  }
+  to {
+    transform: rotate(0deg) scale(1.12);
+  }
+}
+
+@keyframes fr-ping {
+  to {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
+html[data-motion='reduced'] .fr-header__nav,
+html[data-motion='reduced'] .fr-header__nav > *,
+html[data-motion='reduced'] .fr-header__nav::before,
+html[data-motion='reduced'] .fr-chrome__eq i,
+html[data-motion='reduced'] .fr-chrome__count,
+html[data-motion='reduced'] .fr-chrome__dot::after,
+html[data-motion='reduced'] .fr-chrome__compass {
+  animation: none !important;
+}
+
+html[data-motion='reduced'] .fr-dock__glide {
+  transition: opacity 150ms linear !important;
+}

@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { DISHES } from '../data/dishes';
 import { AVOID_OPTIONS, BUDGET_OPTIONS } from '../data/game';
 import type { AvoidId, BudgetId, Dish, MoodId } from '../data/types';
@@ -84,24 +85,24 @@ export function diagnoseEmpty(filters: Filters, hidden: string[], dishes = DISHE
   if (filters.budget !== 'any') {
     const n = count({ ...filters, budget: 'any' });
     const label = BUDGET_OPTIONS.find((b) => b.id === filters.budget)?.label ?? '';
-    if (n > 0) out.push({ kind: 'budget', label: `Bỏ giới hạn ngân sách “${label}”`, count: n });
+    if (n > 0) out.push({ kind: 'budget', label: t.domain.relax.budget(label), count: n });
   }
   if (filters.vegetarian) {
     const n = count({ ...filters, vegetarian: false });
-    if (n > 0) out.push({ kind: 'vegetarian', label: 'Tắt lọc “Chỉ món chay”', count: n });
+    if (n > 0) out.push({ kind: 'vegetarian', label: t.domain.relax.vegetarian, count: n });
   }
   if (filters.moods.length > 0) {
     const n = count({ ...filters, moods: [] });
-    if (n > 0) out.push({ kind: 'moods', label: 'Bỏ chọn khẩu vị', count: n });
+    if (n > 0) out.push({ kind: 'moods', label: t.domain.relax.moods, count: n });
   }
   for (const a of filters.avoid) {
     const n = count({ ...filters, avoid: filters.avoid.filter((x) => x !== a) });
     const label = AVOID_OPTIONS.find((o) => o.id === a)?.label ?? a;
-    if (n > 0) out.push({ kind: 'avoid', avoid: a, label: `Thôi tránh “${label}”`, count: n });
+    if (n > 0) out.push({ kind: 'avoid', avoid: a, label: t.domain.relax.avoid(label), count: n });
   }
   if (hidden.length > 0) {
     const n = count(filters, []);
-    if (n > 0) out.push({ kind: 'hidden', label: 'Hiện lại các món đã ẩn', count: n });
+    if (n > 0) out.push({ kind: 'hidden', label: t.domain.relax.hidden, count: n });
   }
   return out.sort((a, b) => b.count - a.count);
 }

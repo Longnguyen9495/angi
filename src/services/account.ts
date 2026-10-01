@@ -1,7 +1,10 @@
 /*
  * Client for the optional guest account (server/lib/Account.php). Every write
  * carries X-Bepviet: 1 — the server refuses writes without it (CSRF guard).
+ * Every request carries X-Locale so server errors and the login email come
+ * back in the visitor's language.
  */
+import { locale, t } from '../i18n';
 
 export interface AccountUser {
   email: string;
@@ -28,7 +31,7 @@ export class AccountError extends Error {
 const BASE = '/api/account';
 
 async function call<T>(method: string, path: string, body?: unknown): Promise<T> {
-  if (typeof fetch !== 'function') throw new AccountError('Không có kết nối.', 0);
+  if (typeof fetch !== 'function') throw new AccountError(t.account.api.offline, 0);
   let res: Response;
   try {
     res = await fetch(BASE + path, {
@@ -36,20 +39,17 @@ async function call<T>(method: string, path: string, body?: unknown): Promise<T>
       credentials: 'same-origin',
       headers: {
         Accept: 'application/json',
+        'X-Locale': locale,
         ...(method !== 'GET' && { 'X-Bepviet': '1', 'Content-Type': 'application/json' }),
       },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
   } catch {
-    throw new AccountError('Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại nhé.', 0);
+    throw new AccountError(t.account.api.unreachable, 0);
   }
   const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
   if (!res.ok) {
-    throw new AccountError(
-      String(data.error ?? 'Có lỗi xảy ra, bạn thử lại nhé.'),
-      res.status,
-      data,
-    );
+    throw new AccountError(String(data.error ?? t.account.api.generic), res.status, data);
   }
   return data as T;
 }

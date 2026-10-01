@@ -1,4 +1,4 @@
--- Bếp Việt · Food Reel catalogue (SQLite 3.35+). Same tables as schema.sql.
+-- Ăn gì? catalogue (SQLite 3.35+). Same tables as schema.sql.
 -- Apply with: DB_DRIVER=sqlite php server/bin/migrate.php
 
 CREATE TABLE IF NOT EXISTS ingredients (
@@ -51,6 +51,15 @@ CREATE TABLE IF NOT EXISTS dish_ingredients (
 );
 CREATE INDEX IF NOT EXISTS idx_ingredient ON dish_ingredients (ingredient_id);
 
+CREATE TABLE IF NOT EXISTS dish_youtube_videos (
+  dish_id TEXT NOT NULL REFERENCES dishes(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  video_id TEXT NOT NULL,
+  position INTEGER NOT NULL CHECK(position >= 0 AND position < 5),
+  metadata TEXT NOT NULL,
+  PRIMARY KEY (dish_id, video_id),
+  UNIQUE (dish_id, position)
+);
+
 -- Stand-in for MySQL's ON UPDATE CURRENT_TIMESTAMP (Catalogue::version() relies on it).
 CREATE TRIGGER IF NOT EXISTS trg_dishes_touch AFTER UPDATE ON dishes
 WHEN NEW.updated_at = OLD.updated_at
@@ -63,6 +72,27 @@ WHEN NEW.updated_at = OLD.updated_at
 BEGIN
   UPDATE ingredients SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
 END;
+
+-- ——— Content translations (same tables as schema.sql) ———
+
+CREATE TABLE IF NOT EXISTS dish_translations (
+  dish_id TEXT NOT NULL REFERENCES dishes (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  locale TEXT NOT NULL,
+  name TEXT NOT NULL DEFAULT '',
+  subtitle TEXT NOT NULL DEFAULT '',
+  story TEXT NOT NULL DEFAULT '',
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (dish_id, locale)
+);
+
+CREATE TABLE IF NOT EXISTS ingredient_translations (
+  ingredient_id TEXT NOT NULL REFERENCES ingredients (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  locale TEXT NOT NULL,
+  name TEXT NOT NULL DEFAULT '',
+  description TEXT NOT NULL DEFAULT '',
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (ingredient_id, locale)
+);
 
 -- ——— Guest accounts (same tables as schema.sql; times are Unix seconds) ———
 

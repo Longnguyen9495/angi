@@ -1,5 +1,6 @@
 import type { GuestProgress } from '../../domain/progress';
 import { gameReducer, type Action } from '../../domain/reducer';
+import { t } from '../../i18n';
 import {
   isGrowing,
   isWet,
@@ -81,17 +82,7 @@ export function planCommand(state: GuestProgress, now: number, cmd: FarmCommand)
   return { ok: true, action, effect };
 }
 
-export const BLOCK_TEXT: Record<FarmBlock, string> = {
-  'no-plot': 'Không tìm thấy ô đất này.',
-  occupied: 'Ô này đã có cây.',
-  'no-seed': 'Khay đã hết loại hạt này.',
-  'not-growing': 'Chỉ tưới được cây đang lớn.',
-  wet: 'Đất còn ẩm — tưới lại sau 1 giờ.',
-  'empty-can': 'Hết lượt tưới hôm nay.',
-  'nothing-ready': 'Chưa có ô nào chín.',
-  busy: 'Đang xử lý thao tác trước…',
-  rejected: 'Thao tác chưa thực hiện được.',
-};
+export const BLOCK_TEXT: Record<FarmBlock, string> = t.farm.pc.blocks;
 
 /**
  * One command per progress version. A double tap arrives before React has

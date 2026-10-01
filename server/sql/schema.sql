@@ -1,4 +1,4 @@
--- Bếp Việt · Food Reel catalogue (MariaDB 10.4+, utf8mb4).
+-- Ăn gì? catalogue (MariaDB 10.4+, utf8mb4).
 -- Apply with: php server/bin/migrate.php
 
 CREATE DATABASE IF NOT EXISTS angi CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -55,6 +55,40 @@ CREATE TABLE IF NOT EXISTS dish_ingredients (
   KEY idx_ingredient (ingredient_id),
   CONSTRAINT fk_di_dish FOREIGN KEY (dish_id) REFERENCES dishes (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT fk_di_ingredient FOREIGN KEY (ingredient_id) REFERENCES ingredients (id) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS dish_youtube_videos (
+  dish_id VARCHAR(80) NOT NULL,
+  video_id VARCHAR(11) NOT NULL,
+  position INT NOT NULL,
+  metadata TEXT NOT NULL,
+  PRIMARY KEY (dish_id, video_id),
+  UNIQUE KEY uq_youtube_position (dish_id, position),
+  CONSTRAINT fk_youtube_dish FOREIGN KEY (dish_id) REFERENCES dishes(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ——— Content translations (Vietnamese stays in dishes/ingredients; one row per extra locale) ———
+-- Empty strings mean "not translated": clients fall back to the Vietnamese field.
+
+CREATE TABLE IF NOT EXISTS dish_translations (
+  dish_id VARCHAR(80) NOT NULL,
+  locale VARCHAR(10) NOT NULL,
+  name VARCHAR(160) NOT NULL DEFAULT '',
+  subtitle VARCHAR(200) NOT NULL DEFAULT '',
+  story VARCHAR(400) NOT NULL DEFAULT '',
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (dish_id, locale),
+  CONSTRAINT fk_dt_dish FOREIGN KEY (dish_id) REFERENCES dishes (id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS ingredient_translations (
+  ingredient_id VARCHAR(64) NOT NULL,
+  locale VARCHAR(10) NOT NULL,
+  name VARCHAR(120) NOT NULL DEFAULT '',
+  description VARCHAR(400) NOT NULL DEFAULT '',
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (ingredient_id, locale),
+  CONSTRAINT fk_it_ingredient FOREIGN KEY (ingredient_id) REFERENCES ingredients (id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ——— Guest accounts (optional: email + one-time code, see plans/anh-check-in-va-tai-khoan.md) ———

@@ -1,5 +1,6 @@
 import { ArrowsClockwise } from '@phosphor-icons/react';
 import type { Ref } from 'react';
+import { t } from '../../../i18n';
 
 interface SpinControlProps {
   busy: boolean;
@@ -9,7 +10,7 @@ interface SpinControlProps {
 }
 
 /** The single primary CTA of the idle scene. */
-export function SpinControl({ busy, onSpin, label = 'Quay món', ref }: SpinControlProps) {
+export function SpinControl({ busy, onSpin, label = t.reel.spin.label, ref }: SpinControlProps) {
   return (
     <button
       ref={ref}
@@ -22,14 +23,14 @@ export function SpinControl({ busy, onSpin, label = 'Quay món', ref }: SpinCont
     >
       <span className="fr-spin__ring" aria-hidden="true" />
       <ArrowsClockwise className="fr-spin__icon" aria-hidden="true" size={20} />
-      <span className="fr-spin__label">{busy ? 'Đang quay…' : label}</span>
+      <span className="fr-spin__label">{busy ? t.reel.spin.busy : label}</span>
     </button>
   );
 }
 
 export function SceneCounter({ current, total }: { current: number; total: number }) {
   return (
-    <p className="fr-counter" aria-label={`Món ${current} trên ${total}`}>
+    <p className="fr-counter" aria-label={t.reel.spin.counter(current, total)}>
       <span className="fr-counter__now">{String(current).padStart(3, '0')}</span>
       <span className="fr-counter__sep" aria-hidden="true">
         /

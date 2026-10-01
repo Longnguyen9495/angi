@@ -1,10 +1,10 @@
-# Bếp Việt · Food Reel
+# Ăn gì?
 
 Trải nghiệm chọn món motion-first (Vite + React 19 + TypeScript + Motion): reel 3D 128 món, quay có quán tính,
-Food Story với shared-element transition, và Hành trình (nông trại, bản đồ, check-in) trong drawer `/journey`.
+Food Story với shared-element transition, và Nông trại (khu vườn, bản đồ, check-in) trong drawer `/journey`.
 
 - `src/features/food-reel/` — trải nghiệm chính (state machine, engine vật lý, scene, styles).
-- `src/components/journey/JourneyApp.tsx` — hub hành trình cũ (bộ lọc, nông trại, bản đồ), mở trong drawer.
+- `src/components/journey/JourneyApp.tsx` — hub nông trại cũ (bộ lọc, khu vườn, bản đồ), mở trong drawer.
 - Video food story: khai báo trong `src/features/food-reel/data/videos.ts`, file đặt ở `public/videos/food-reel/` (hiện chưa có video nào).
 
 ## Lệnh
@@ -31,19 +31,38 @@ Link từng món (`/mon/<slug>`) có ảnh xem trước riêng: nginx gửi `/mo
 
 ## Tài khoản khách (tuỳ chọn) & ảnh check-in
 
-- Khách không cần đăng nhập. `Lưu hành trình` chỉ hỏi **email** → mã 6 số (không mật khẩu). Chi tiết: `plans/anh-check-in-va-tai-khoan.md`.
+- Khách không cần đăng nhập. `Lưu nông trại` chỉ hỏi **email** → mã 6 số (không mật khẩu). Chi tiết: `plans/anh-check-in-va-tai-khoan.md`.
 - Ảnh check-in lưu **trên máy khách** (IndexedDB), đã nén và xoá EXIF/GPS — không bao giờ tải lên.
 - Sau khi pull bản này, chạy `php server/bin/migrate.php` (local và VPS) để tạo bảng `users`, `login_codes`, `user_sessions`, `user_progress`.
 - `.env`: `APP_URL`, `APP_KEY` (chuỗi ngẫu nhiên dài), `MAIL_DRIVER` = `log` (dev, ghi `storage/logs/mail.log`) | `mail` | `smtp` (+ `SMTP_*`).
   `APP_ENV=local` trả mã trong response để test không cần hộp thư — **không** bật trên production.
 - Kiểm tra: `npm run test:account` (chạy trên SQLite tạm, không đụng dữ liệu thật).
-- Trang quyền riêng tư: `public/quyen-rieng-tu.html`
+- Trang quyền riêng tư: `public/quyen-rieng-tu.html` (tiếng Anh: `public/privacy.html`, hai trang link qua lại)
 
 ## Khu vườn 3D & bạn vườn
 
 - Vườn 3D (three.js + @react-three/fiber) ở `src/features/garden3d/`, có nút chuyển 2D. Chi tiết: `plans/khu-vuon-3d.md`.
 - Bạn vườn cần tài khoản: mã khu vườn 6 ký tự, ghé đảo của bạn, tưới giúp 1 ô/bạn/ngày (tối đa 5 bạn), quà hạt của Cô Ba mỗi ngày.
   API `/api/account/garden|friends|events` (`server/lib/Friends.php`); sau khi pull chạy lại `php server/bin/migrate.php`.
+
+## Ngôn ngữ / i18n
+
+Tiếng Việt là ngôn ngữ gốc và là bản dự phòng ở mọi lớp; tên thương hiệu “Ăn gì?” không dịch. Thêm một ngôn ngữ (ví dụ `ja`):
+
+1. **Giao diện (frontend):** khai báo trong `src/i18n/locales.ts`, rồi tạo `src/i18n/messages/ja/` với đủ namespace như
+   `messages/vi/` (kiểu `Messages['<namespace>']` để `tsc` bắt thiếu key; `src/i18n/i18n.test.ts` kiểm tra khớp key).
+2. **Máy chủ:** tạo `server/lang/ja.php` (chép từ `server/lang/vi.php` rồi dịch giá trị). Có file là ngôn ngữ được bật:
+   lỗi API, email mã đăng nhập và trang chia sẻ `/mon/<slug>` tự theo `X-Locale` → `?lang=` → `Accept-Language` → `vi`
+   (`server/lib/Lang.php`, dùng `__t('key', ['param' => …])`). Key thiếu sẽ hiện tiếng Việt; `npm run test:server` báo key thiếu.
+3. **Nội dung món & nguyên liệu:** bảng `dish_translations` / `ingredient_translations` (chạy `php server/bin/migrate.php`).
+   Trang admin tự hiện ô dịch cho mọi ngôn ngữ có file ở bước 2 (`GET /api/admin/locales`). Dịch hàng loạt bằng
+   `server/sql/i18n/ja.json`:
+   `{ "dishes": { "<dishId>": { "name", "subtitle", "story" } }, "ingredients": { "<ingredientId>": { "name", "description" } } }`
+   (mọi trường đều tuỳ chọn), rồi `php server/bin/import-translations.php --locale=ja` (thêm `--dry-run` để chỉ đếm;
+   bỏ `--locale` để nạp mọi file; `--file=…` cho file khác). Lệnh chỉ ghi bản dịch, không đụng trường tiếng Việt, bỏ qua id
+   không có trong DB; `seed.php` cũng tự nạp các file này. API `/api/dishes` trả `translations: { "ja": { … } }` cho từng món
+   và nguyên liệu, nên `npm run build` (export snapshot) mang luôn bản dịch.
+4. **Trang tĩnh:** nếu cần, thêm bản dịch trang quyền riêng tư và đặt đường dẫn ở key `privacy.path` trong `server/lang/ja.php`.
 
 ## http://angi.local (XAMPP/Apache)
 

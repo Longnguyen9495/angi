@@ -1,0 +1,158 @@
+{
+  "canvas_size": [
+    1678,
+    937
+  ],
+  "hotspots": [
+    {
+      "id": "farmhouse",
+      "label": "FARMHOUSE",
+      "bbox_px": [
+        475,
+        10,
+        900,
+        350
+      ],
+      "center_px": [
+        687,
+        180
+      ],
+      "interaction": "click"
+    },
+    {
+      "id": "crops",
+      "label": "CROPS",
+      "bbox_px": [
+        190,
+        295,
+        940,
+        775
+      ],
+      "center_px": [
+        565,
+        535
+      ],
+      "interaction": "click"
+    },
+    {
+      "id": "greenhouse",
+      "label": "GREENHOUSE",
+      "bbox_px": [
+        845,
+        45,
+        1345,
+        385
+      ],
+      "center_px": [
+        1095,
+        215
+      ],
+      "interaction": "click"
+    },
+    {
+      "id": "windmill",
+      "label": "WINDMILL",
+      "bbox_px": [
+        775,
+        195,
+        955,
+        410
+      ],
+      "center_px": [
+        865,
+        302
+      ],
+      "interaction": "click"
+    },
+    {
+      "id": "animal_barn",
+      "label": "ANIMAL_BARN",
+      "bbox_px": [
+        1210,
+        145,
+        1595,
+        465
+      ],
+      "center_px": [
+        1402,
+        305
+      ],
+      "interaction": "click"
+    },
+    {
+      "id": "chicken_coop",
+      "label": "CHICKEN_COOP",
+      "bbox_px": [
+        1140,
+        325,
+        1415,
+        550
+      ],
+      "center_px": [
+        1277,
+        437
+      ],
+      "interaction": "click"
+    },
+    {
+      "id": "pond_fish",
+      "label": "POND/FISH",
+      "bbox_px": [
+        775,
+        445,
+        1550,
+        930
+      ],
+      "center_px": [
+        1162,
+        687
+      ],
+      "interaction": "click"
+    },
+    {
+      "id": "dock",
+      "label": "DOCK",
+      "bbox_px": [
+        895,
+        490,
+        1210,
+        745
+      ],
+      "center_px": [
+        1052,
+        617
+      ],
+      "interaction": "click"
+    },
+    {
+      "id": "fruit_trees",
+      "label": "FRUIT_TREES",
+      "bbox_px": [
+        245,
+        80,
+        625,
+        370
+      ],
+      "center_px": [
+        435,
+        225
+      ],
+      "interaction": "click"
+    },
+    {
+      "id": "well",
+      "label": "WELL",
+      "bbox_px": [
+        170,
+        240,
+        375,
+        430
+      ],
+      "center_px": [
+        272,
+        335
+      ],
+      "interaction": "click"
+    }
+  ]
+}

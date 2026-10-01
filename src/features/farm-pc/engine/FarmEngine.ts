@@ -48,6 +48,8 @@ import {
   type ContainerResource,
   type GraphicsDevice,
   type Geometry,
+  type CameraComponent,
+  type Material,
 } from 'playcanvas';
 import { CROPS } from '../../../data/game';
 import type { CropId } from '../../../data/types';
@@ -75,6 +77,7 @@ import {
   TUFTS,
   bedCell,
   bedSize,
+  type CameraConfig,
   type Vec3,
 } from '../sceneLayout';
 import { cliffGeometry, groundGeometry, groundHeight, prismGeometry } from './geometry';
@@ -120,6 +123,41 @@ const BACKDROP_DIST = 70;
 const PATH_TEX: TexUse = { set: 'rock_boulder_dry', tiling: [0.5, 0.5] };
 const LEAF_TEX: TexUse = { set: 'leafy_grass', tiling: [2, 2] };
 
+/** Gameplay framing from an authored camera: orbit the point it looks at on the ground (y = 0). */
+function framingFrom(cam: CameraComponent): CameraConfig | null {
+  const p = cam.entity.getPosition();
+  const f = cam.entity.forward;
+  if (f.y > -0.05) return null;
+  const t = -p.y / f.y;
+  const target = new V3(p.x + f.x * t, 0, p.z + f.z * t);
+  const d = p.distance(target);
+  const k = d / CAMERA.distance;
+  return {
+    ...CAMERA,
+    target: [target.x, target.y, target.z],
+    distance: d,
+    pitch: Math.asin(p.y / d),
+    yaw: Math.atan2(p.x - target.x, p.z - target.z),
+    fov: cam.fov,
+    zoom: { min: CAMERA.zoom.min * k, max: CAMERA.zoom.max * k },
+  };
+}
+
+/** Garden crop models carry their stage size; this only adds the garden's gentle per-stage scale. */
+const MODEL_STAGE_SCALE: Record<PlotStage, number> = {
+  empty: 0,
+  sprout: 0.9,
+  young: 0.8,
+  flowering: 0.95,
+  ready: 1,
+};
+/** Three plants along the bed's ridges, as in src/features/garden3d/scene/Plots.tsx. */
+const MODEL_SPOTS: readonly (readonly [number, number])[] = [
+  [-0.38, -0.47],
+  [0.36, 0],
+  [-0.08, 0.47],
+];
+
 interface PlotNode {
   root: Entity;
   soil: Entity;
@@ -127,6 +165,10 @@ interface PlotNode {
   anchor: Entity;
   crop: Entity | null;
   cropKey: string;
+  /** The crop is an exported garden model (not the primitive placeholder). */
+  model?: boolean;
+  /** Authored soil keeps its own (vertex-painted) look; watering darkens a copy. */
+  soilMats?: { dry: Material[]; wet: Material[] };
   thirsty: Entity;
   ripe: Entity;
 }
@@ -189,6 +231,8 @@ export class FarmEngine implements FarmEngineHandle {
   private destroyed = false;
   private readonly sceneAbort = new AbortController();
   private loadedCorner: LoadedCorner | null = null;
+  /** Every authored plot of the loaded scene by plot ID; locked ones stay hidden. */
+  private readonly scenePlots = new Map<number, PlotNode>();
   private proceduralWorld: Entity | null = null;
   /** Settles even on export errors: the procedural presentation remains available. */
   sceneReady: Promise<void> = Promise.resolve();
@@ -203,6 +247,8 @@ export class FarmEngine implements FarmEngineHandle {
   private readonly assets: Asset[] = [];
   private readonly shapes = new Map<Prim, Mesh>();
   private frame: CameraFrame | null = null;
+  /** Every first-load file (settled either way), for the loading veil. */
+  private readonly loading: Promise<unknown>[] = [];
   private backdrop!: Entity;
 
   private camera!: Entity;
@@ -224,6 +270,11 @@ export class FarmEngine implements FarmEngineHandle {
   private view: FarmView | null = null;
   private time = 0;
 
+  /** Framing in use: the code corner's CAMERA, or one derived from a loaded scene's camera. */
+  private camCfg: CameraConfig = CAMERA;
+  /** Exported garden crop models by `crop-stage`; null while loading or after a failed load. */
+  private readonly cropModels = new Map<string, ContainerResource | null>();
+  private filesEnabled = false;
   private readonly cam = {
     yaw: CAMERA.yaw,
     dist: CAMERA.distance,
@@ -337,11 +388,9 @@ export class FarmEngine implements FarmEngineHandle {
           return;
         }
         try {
-          if (
-            this.view &&
-            this.view.plots.map((p) => p.id).join(',') !== loaded.plotIds.join(',')
-          ) {
-            throw new Error('Scene plot IDs do not match domain view');
+          // The scene authors every plot up to the maximum; the domain may own fewer.
+          if (this.view && this.view.plots.some((p) => !loaded.plotIds.includes(p.id))) {
+            throw new Error('Domain plot missing from scene');
           }
           const corner = (
             loaded.hierarchy.name === CORNER.root
@@ -349,12 +398,28 @@ export class FarmEngine implements FarmEngineHandle {
               : loaded.hierarchy.findByName(CORNER.root)
           ) as Entity;
           const nodes = new Map<number, PlotNode>();
-          loaded.plotIds.forEach((id, i) => {
+          loaded.plotIds.forEach((id) => {
             const root = corner.findByName(CORNER.plot(id)) as Entity;
             const soil = root.children.find((c) => c.name === CORNER.soil) as Entity;
             const anchor = root.children.find((c) => c.name === CORNER.crop) as Entity;
             if (!soil.render?.meshInstances.length || anchor.children.length)
               throw new Error('Soil render / empty crop anchor required');
+            const dryMats = soil.render.meshInstances.map((mi) => mi.material);
+            const soilMats = {
+              dry: dryMats,
+              wet: dryMats.map((m) => {
+                const wet = (m as StandardMaterial).clone();
+                // Same darkening as the garden's wet tint (#8a8078), a little sheen.
+                wet.diffuse = new Color(
+                  wet.diffuse.r * 0.54,
+                  wet.diffuse.g * 0.5,
+                  wet.diffuse.b * 0.47,
+                );
+                wet.gloss = 0.55;
+                wet.update();
+                return wet;
+              }),
+            };
             const thirsty = new Entity('thirsty');
             const ripe = new Entity('ripe');
             root.addChild(thirsty);
@@ -378,14 +443,21 @@ export class FarmEngine implements FarmEngineHandle {
               false,
             );
             thirsty.enabled = ripe.enabled = false;
-            nodes.set(i, { root, soil, anchor, crop: null, cropKey: '', thirsty, ripe });
+            nodes.set(id, { root, soil, anchor, crop: null, cropKey: '', thirsty, ripe, soilMats });
           });
           const sun = corner.findByName(CORNER.sun) as Entity;
           if (!sun.light) throw new Error('Scene sun requires light component');
           const door = corner.findByName(CORNER.barnDoor) as Entity;
-          door.addComponent('script');
-          door.script!.create(DoorOnSelect, { properties: { openAngle: -105 } });
-          for (const camera of loaded.hierarchy.findComponents('camera')) camera.enabled = false;
+          // The export may already bind farmDoor (attached from its script data).
+          if (!door.script) door.addComponent('script');
+          if (!door.script!.has('farmDoor'))
+            door.script!.create(DoorOnSelect, { properties: { openAngle: -105 } });
+          const sceneCam = loaded.hierarchy.findComponent('camera') as CameraComponent | null;
+          const framing = sceneCam ? framingFrom(sceneCam) : null;
+          // Authored cameras (and helpers parented to them, like a cloud backdrop) stay off:
+          // the engine's own camera and backdrop render the scene.
+          for (const camera of loaded.hierarchy.findComponents('camera'))
+            (camera as CameraComponent).entity.enabled = false;
           this.proceduralWorld = this.world;
           this.proceduralWorld.enabled = false;
           this.app.root.addChild(loaded.hierarchy);
@@ -396,9 +468,6 @@ export class FarmEngine implements FarmEngineHandle {
           this.world = corner;
           this.sun = sun;
           this.world.addChild(this.ring);
-          this.plots.clear();
-          nodes.forEach((node, i) => this.plots.set(i, node));
-          this.bedCount = loaded.plotIds.length;
           this.picks.length = 0;
           const hit = corner.findByName(CORNER.barnHit) as Entity;
           const box = new BoundingBox();
@@ -407,18 +476,10 @@ export class FarmEngine implements FarmEngineHandle {
             hit.getWorldTransform(),
           );
           this.picks.push({ sel: { kind: 'barn' }, box });
-          nodes.forEach((node, i) =>
-            this.picks.push({
-              sel: { kind: 'plot', id: loaded.plotIds[i]! },
-              box: new BoundingBox(
-                node.root
-                  .getPosition()
-                  .clone()
-                  .add(new V3(0, 0.3, 0)),
-                new V3(BED.cell / 2, 0.45, BED.cell / 2),
-              ),
-            }),
-          );
+          this.scenePlots.clear();
+          nodes.forEach((node, id) => this.scenePlots.set(id, node));
+          this.bindScenePlots(this.view ? this.view.plots.map((p) => p.id) : loaded.plotIds);
+          if (framing) this.useFraming(framing);
           this.applyEnv(this.env, false);
           if (this.view) this.setView(this.view);
         } catch (error) {
@@ -430,6 +491,43 @@ export class FarmEngine implements FarmEngineHandle {
         if (!this.destroyed) this.sceneError = error;
       })
       .finally(() => window.clearTimeout(timer));
+  }
+
+  /** Shows the scene plots the domain owns (in view order) and hides the locked rest. */
+  private bindScenePlots(ids: readonly number[]) {
+    this.plots.clear();
+    this.picks.splice(0, this.picks.length, ...this.picks.filter((p) => p.sel.kind !== 'plot'));
+    for (const [id, node] of this.scenePlots) node.root.enabled = ids.includes(id);
+    ids.forEach((id, i) => {
+      const node = this.scenePlots.get(id)!;
+      this.plots.set(i, node);
+      // Tap area: the authored soil's footprint (scene beds differ in size from the code bed).
+      const soil = this.worldBox(node.soil);
+      const half = soil
+        ? new V3(soil.halfExtents.x, 0.45, soil.halfExtents.z)
+        : new V3(BED.cell / 2, 0.45, BED.cell / 2);
+      const at = (soil?.center ?? node.root.getPosition()).clone();
+      this.picks.push({
+        sel: { kind: 'plot', id },
+        box: new BoundingBox(new V3(at.x, node.root.getPosition().y + 0.3, at.z), half),
+      });
+    });
+    this.bedCount = ids.length;
+  }
+
+  /** Switches camera framing (and fog/far clip, which scale with it) and snaps to it. */
+  private useFraming(cfg: CameraConfig) {
+    this.camCfg = cfg;
+    const k = cfg.distance / CAMERA.distance;
+    this.camera.camera!.fov = cfg.fov;
+    this.camera.camera!.farClip = 80 * Math.max(1, k);
+    this.app.scene.fog.start = 24 * k;
+    this.app.scene.fog.end = 60 * k;
+    this.cam.yaw = this.cam.goalYaw = cfg.yaw;
+    this.cam.dist = this.cam.goalDist = cfg.distance;
+    this.cam.target.set(...cfg.target);
+    this.cam.goalTarget.set(...cfg.target);
+    this.resize();
   }
 
   private fallbackScene() {
@@ -444,6 +542,8 @@ export class FarmEngine implements FarmEngineHandle {
     this.bed = this.world.findByName(CORNER.bed) as Entity | null;
     this.bedCount = -1;
     this.plots.clear();
+    this.scenePlots.clear();
+    this.useFraming(CAMERA);
     this.picks.length = 0;
     this.picks.push({
       sel: { kind: 'barn' },
@@ -531,6 +631,7 @@ export class FarmEngine implements FarmEngineHandle {
    * file only costs that detail: the flat palette stays, gameplay is untouched.
    */
   loadAssets() {
+    this.filesEnabled = true;
     this.loadProps();
     const sets = [...new Set(this.texMats.map((t) => t.use.set))];
     const maps: [TexMap, boolean][] = [
@@ -547,11 +648,13 @@ export class FarmEngine implements FarmEngineHandle {
         }),
       ),
     );
-    void Promise.allSettled(jobs).then(() => {
-      if (!this.destroyed) this.applyMaps();
-    });
+    this.track(
+      Promise.allSettled(jobs).then(() => {
+        if (!this.destroyed) this.applyMaps();
+      }),
+    );
 
-    this.loadTexture(ENV_HDR(), false, false)
+    const hdr = this.loadTexture(ENV_HDR(), false, false)
       .then((hdr) => {
         if (this.destroyed) return;
         const source = EnvLighting.generateLightingSource(hdr);
@@ -564,8 +667,9 @@ export class FarmEngine implements FarmEngineHandle {
       .catch(() => {
         /* no IBL: the constant ambient light stays */
       });
+    this.track(hdr);
 
-    this.loadTexture(ENV_BACKDROP(), true)
+    const backdrop = this.loadTexture(ENV_BACKDROP(), true)
       .then((tex) => {
         if (this.destroyed) return;
         const m = matOf(this.backdrop);
@@ -578,6 +682,31 @@ export class FarmEngine implements FarmEngineHandle {
       .catch(() => {
         /* the plain sky colour stays */
       });
+    this.track(backdrop);
+  }
+
+  private track(job: Promise<unknown>) {
+    this.loading.push(job.catch(() => undefined));
+  }
+
+  /**
+   * Resolves once first-load files (textures, IBL, props, scene export) have
+   * settled and a couple of frames have drawn, so shaders are compiled before
+   * the veil lifts. Never rejects: a missing file only costs that detail.
+   */
+  async whenLoaded(onProgress?: (done: number, total: number) => void): Promise<void> {
+    const jobs = [...this.loading, this.sceneReady.catch(() => undefined)];
+    let done = 0;
+    onProgress?.(0, jobs.length);
+    await Promise.all(jobs.map((j) => j.then(() => onProgress?.(++done, jobs.length))));
+    for (let i = 0; i < 2 && !this.destroyed; i++) {
+      await new Promise<void>((resolve) => {
+        this.app.once('frameend', () => resolve());
+        this.requestFrame();
+        // A paused app (scrolled away, reduced motion) still settles.
+        window.setTimeout(resolve, 250);
+      });
+    }
   }
 
   /**
@@ -619,13 +748,48 @@ export class FarmEngine implements FarmEngineHandle {
       a.once('error', () => {
         /* placeholder stays */
       });
+      this.track(
+        new Promise<void>((resolve) => {
+          a.once('load', () => resolve());
+          a.once('error', () => resolve());
+        }),
+      );
       this.app.assets.add(a);
       this.app.assets.load(a);
     }
   }
 
+  /**
+   * The garden's model for a crop stage, loaded on first ask (from the export of
+   * src/features/garden3d); null until it arrives, then plots showing it rebuild.
+   */
+  private cropModel(crop: string, stage: string): ContainerResource | null {
+    const key = `${crop}-${stage}`;
+    if (this.cropModels.has(key)) return this.cropModels.get(key)!;
+    this.cropModels.set(key, null);
+    if (!this.filesEnabled) return null;
+    const url = `${import.meta.env.BASE_URL}models/farm/garden/crops/crop-${key}.glb`;
+    const a = new Asset(`crop-${key}`, 'container', { url });
+    this.assets.push(a);
+    a.once('load', (loaded: Asset) => {
+      if (this.destroyed) return;
+      this.cropModels.set(key, loaded.resource as ContainerResource);
+      for (const n of this.plots.values()) if (n.cropKey === `${crop}:${stage}`) n.cropKey = '';
+      if (this.view) this.setView(this.view);
+    });
+    a.once('error', () => {
+      /* the primitive placeholder stays */
+    });
+    this.app.assets.add(a);
+    this.app.assets.load(a);
+    return null;
+  }
+
   /** World-space bounds of every mesh under `e`, or null if it has none. */
   private worldBox(e: Entity): BoundingBox | null {
+    // getWorldTransform first: it brings unsynced ancestors along. syncHierarchy alone
+    // would bake a stale parent transform into `e` and clear its dirty flag for good.
+    e.getWorldTransform();
     e.syncHierarchy();
     let box: BoundingBox | null = null;
     for (const r of e.findComponents('render') as unknown as { meshInstances: MeshInstance[] }[]) {
@@ -1240,7 +1404,22 @@ export class FarmEngine implements FarmEngineHandle {
     const flower = this.mat('fl1', PALETTE.flower, { glow: 0.05 });
     const blade = BLADE_CROPS.has(p.crop);
     const bush = BUSH_CROPS.has(p.crop);
-    for (let i = 0; i < count; i++) {
+    // Scene corners use the garden's crop models; the code corner keeps its primitives.
+    const model = this.loadedCorner ? this.cropModel(p.crop, p.stage) : null;
+    node.model = Boolean(model);
+    if (model) {
+      const spots = count >= 3 ? MODEL_SPOTS : ([[0, 0]] as const);
+      spots.forEach(([sx, sz], i) => {
+        const plant = new Entity('plant');
+        plant.setLocalPosition(sx, 0, sz);
+        plant.setLocalEulerAngles(0, ((i * 2.1 + p.id) * 180) / Math.PI, 0);
+        const k = spots.length > 1 ? (i === 0 ? 1.05 : 0.92) : 1;
+        plant.setLocalScale(k, k, k);
+        plant.addChild(model.instantiateRenderEntity({ castShadows: true }));
+        pop.addChild(plant);
+      });
+    }
+    for (let i = 0; i < (model ? 0 : count); i++) {
       const plant = new Entity('plant');
       const px = count === 1 ? 0 : (i - (count - 1) / 2) * 0.3;
       plant.setLocalPosition(px, 0.06, (r() - 0.5) * 0.18);
@@ -1319,6 +1498,11 @@ export class FarmEngine implements FarmEngineHandle {
 
   private scaleCrop(node: PlotNode, p: FarmPlotView) {
     if (!node.crop) return;
+    if (node.model) {
+      const s = MODEL_STAGE_SCALE[p.stage] * (p.stage === 'ready' ? 1 : 0.92 + 0.08 * p.growth);
+      node.crop.setLocalScale(s, s, s);
+      return;
+    }
     const base = STAGE_SCALE[p.stage];
     // 1.3: plants must read at the gameplay camera, not only when zoomed in.
     const s = 1.3 * (p.stage === 'ready' ? 1 : base * (0.88 + 0.12 * p.growth));
@@ -1330,15 +1514,13 @@ export class FarmEngine implements FarmEngineHandle {
   setView(view: FarmView) {
     if (this.destroyed) return;
     this.view = view;
-    if (
-      this.loadedCorner &&
-      view.plots.map((p) => p.id).join(',') !== this.loadedCorner.plotIds.join(',')
-    )
-      this.fallbackScene();
-    if (
+    const changed =
       view.plots.length !== this.bedCount ||
-      view.plots.some((p, i) => this.plots.get(i)?.root.name !== CORNER.plot(p.id))
-    ) {
+      view.plots.some((p, i) => this.plots.get(i)?.root.name !== CORNER.plot(p.id));
+    if (this.loadedCorner && view.plots.some((p) => !this.scenePlots.has(p.id)))
+      this.fallbackScene();
+    else if (this.loadedCorner && changed) this.bindScenePlots(view.plots.map((p) => p.id));
+    if (!this.loadedCorner && (changed || this.bedCount < 0)) {
       this.buildBed(view.plots.map((p) => p.id));
       view.plots.forEach((_, i) => {
         const c = bedCell(i, view.plots.length);
@@ -1358,7 +1540,10 @@ export class FarmEngine implements FarmEngineHandle {
       if (!node) return;
       if (node.cropKey !== `${p.crop}:${p.stage}`) this.buildCrop(node, p);
       else this.scaleCrop(node, p);
-      setMat(node.soil, p.wet ? wet : dry);
+      if (node.soilMats) {
+        const mats = p.wet ? node.soilMats.wet : node.soilMats.dry;
+        node.soil.render!.meshInstances.forEach((mi, k) => (mi.material = mats[k]!));
+      } else setMat(node.soil, p.wet ? wet : dry);
       node.thirsty.enabled = p.thirsty;
       node.ripe.enabled = p.stage === 'ready';
     });
@@ -1411,13 +1596,15 @@ export class FarmEngine implements FarmEngineHandle {
 
   resize() {
     if (this.destroyed) return;
-    const cap = QUALITY[this.env.quality].dpr[1];
+    let cap = QUALITY[this.env.quality].dpr[1];
+    // Post effects scale with pixels: phones stop at 1.5× even on Đẹp.
+    if (window.matchMedia?.('(pointer: coarse)').matches) cap = Math.min(cap, 1.5);
     this.device.maxPixelRatio = Math.min(window.devicePixelRatio || 1, cap);
     const w = Math.max(1, this.canvas.clientWidth);
     const h = Math.max(1, this.canvas.clientHeight);
     this.app.resizeCanvas(w, h);
     this.fit = Math.max(1, 1.35 / (w / h)) ** 0.85;
-    const bh = 2 * BACKDROP_DIST * Math.tan(((CAMERA.fov / 2) * Math.PI) / 180) * 1.08;
+    const bh = 2 * BACKDROP_DIST * Math.tan(((this.camCfg.fov / 2) * Math.PI) / 180) * 1.08;
     this.backdrop.setLocalScale(bh * (w / h), 1, bh);
     this.updateCamera(0, true);
     this.requestFrame();
@@ -1425,16 +1612,16 @@ export class FarmEngine implements FarmEngineHandle {
 
   zoom(factor: number) {
     this.cam.goalDist = Math.min(
-      CAMERA.zoom.max,
-      Math.max(CAMERA.zoom.min, this.cam.goalDist * factor),
+      this.camCfg.zoom.max,
+      Math.max(this.camCfg.zoom.min, this.cam.goalDist * factor),
     );
     this.requestFrame();
   }
 
   resetCamera() {
-    this.cam.goalYaw = CAMERA.yaw;
-    this.cam.goalDist = CAMERA.distance;
-    this.cam.goalTarget.set(...CAMERA.target);
+    this.cam.goalYaw = this.camCfg.yaw;
+    this.cam.goalDist = this.camCfg.distance;
+    this.cam.goalTarget.set(...this.camCfg.target);
     this.requestFrame();
   }
 
@@ -1486,8 +1673,8 @@ export class FarmEngine implements FarmEngineHandle {
       // Fake contact shadows carry grounding alone on the light tier.
       this.blobMat.opacity = q.shadows ? 0.42 : 0.62;
       this.blobMat.update();
-      this.applyFrame(env);
       this.resize();
+      this.applyFrame(env);
     }
     const scene = this.app.scene;
     scene.ambientLight = new Color(...L.ambient);
@@ -1516,14 +1703,20 @@ export class FarmEngine implements FarmEngineHandle {
     }
     if (!this.frame) this.frame = new CameraFrame(this.app, this.camera.camera!);
     const f = this.frame;
+    const high = env.quality === 'high';
     f.rendering.toneMapping = TONEMAP_NEUTRAL;
-    f.rendering.samples = 4;
+    // A retina buffer is already supersampled: 2× MSAA is plenty there.
+    f.rendering.samples = this.device.maxPixelRatio > 1.25 ? 2 : 4;
     f.ssao.type = SSAOTYPE_LIGHTING;
     f.ssao.intensity = 0.55;
     f.ssao.radius = 30;
-    f.ssao.samples = env.quality === 'high' ? 20 : 12;
+    // Half-resolution AO: soft creases look the same at a quarter of the cost.
+    f.ssao.scale = 0.5;
+    f.ssao.samples = high ? 12 : 8;
     f.ssao.blurEnabled = true;
-    f.bloom.intensity = 0.01;
+    // The lamp glow is a whisper; only the top tier pays for the blur chain.
+    f.bloom.intensity = high ? 0.01 : 0;
+    f.bloom.blurLevel = 8;
     f.grading.enabled = true;
     f.grading.saturation = 0.88;
     f.grading.contrast = 1.06;
@@ -1538,7 +1731,7 @@ export class FarmEngine implements FarmEngineHandle {
   private placeRing(sel: FarmSelection) {
     if (!sel || !this.view) {
       this.ring.enabled = false;
-      this.cam.goalTarget.set(...CAMERA.target);
+      this.cam.goalTarget.set(...this.camCfg.target);
       return;
     }
     let x: number;
@@ -1579,7 +1772,7 @@ export class FarmEngine implements FarmEngineHandle {
     this.ringScale = s;
     this.ring.setLocalScale(s, 1, s);
     // Lean the camera gently towards the selection; never lose the whole corner.
-    const t = CAMERA.target;
+    const t = this.camCfg.target;
     this.cam.goalTarget.set(t[0] + (x - t[0]) * 0.35, t[1], t[2] + (z - t[2]) * 0.35);
   }
 
@@ -1633,10 +1826,10 @@ export class FarmEngine implements FarmEngineHandle {
     c.yaw += (c.goalYaw - c.yaw) * k;
     c.dist += (c.goalDist - c.dist) * k;
     c.target.lerp(c.target, c.goalTarget, k);
-    const cp = Math.cos(CAMERA.pitch);
+    const cp = Math.cos(this.camCfg.pitch);
     this.camera.setPosition(
       c.target.x + Math.sin(c.yaw) * cp * c.dist * this.fit,
-      c.target.y + Math.sin(CAMERA.pitch) * c.dist * this.fit,
+      c.target.y + Math.sin(this.camCfg.pitch) * c.dist * this.fit,
       c.target.z + Math.cos(c.yaw) * cp * c.dist * this.fit,
     );
     this.camera.lookAt(c.target);
@@ -1702,7 +1895,10 @@ export class FarmEngine implements FarmEngineHandle {
       this.canvas.setPointerCapture?.(e.pointerId);
     }
     if (d.moved) {
-      this.cam.goalYaw = Math.max(-CAMERA.yawLimit, Math.min(CAMERA.yawLimit, d.yaw - dx * 0.006));
+      this.cam.goalYaw = Math.max(
+        -this.camCfg.yawLimit,
+        Math.min(this.camCfg.yawLimit, d.yaw - dx * 0.006),
+      );
       this.requestFrame();
     }
   };
@@ -1798,7 +1994,8 @@ export function startFarmEngine(
 export const createFarmEngine: CreateFarmEngine = async (opts) => {
   const device = await createGraphicsDevice(opts.canvas, {
     deviceTypes: [DEVICETYPE_WEBGL2],
-    antialias: opts.env.quality !== 'low',
+    // Vừa/Đẹp anti-alias inside CameraFrame; an MSAA backbuffer would be paid twice.
+    antialias: false,
     powerPreference: 'high-performance',
   });
   const engine = startFarmEngine(device as GraphicsDevice, opts);

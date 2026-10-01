@@ -18,6 +18,13 @@
 **Script trong Editor:** đã upload `farm/scripts/farm-motion.mjs` (đóng gói từ `src/features/farm-pc/scripts/motion.ts`). Sửa script thì sửa file TS, đóng gói lại bằng `npx esbuild src/features/farm-pc/scripts/motion.ts --bundle --format=esm --external:playcanvas --target=es2022 --outfile=farm-motion.mjs`, đổi `var X = class extends Script` thành `export class X extends Script` (parser của Editor chỉ nhận dạng này), rồi upload lại. Ghi chú cũ: các file trong `scripts/` là TypeScript. Để upload lên Editor cần bản JS; đây là việc của giai đoạn 6 (thêm bước build `scripts/*.ts` → `.mjs`, hoặc đồng bộ bằng `playcanvas-sync`).
 > Mục tiêu: thay các khối dựng bằng code trong góc mẫu bằng mô hình thật và hiệu ứng chuyển động do bạn chỉnh trực quan, **không đổi luật chơi, tiến độ hay backend**.
 
+## Cảnh `corner` v3: bằng khu vườn Three.js (2026-10-01)
+
+- Toàn bộ khu vườn của `src/features/garden3d` (đảo, vách đá, cây, bụi, hoa, cỏ, đường đá, bếp Cô Ba, nhà kho, giếng, chuồng gà, chuồng bò, 9 luống, mây, đảo nhỏ) được xuất ra GLB bằng `node scripts/export-garden-glb.mjs` (Edge/Chrome headless, `public/models/farm/garden/`) và đặt trong Editor đúng bố cục `garden3d/layout.ts`. Khối cũ của góc mẫu vẫn còn trong cảnh, đã tắt.
+- Bản xuất: `public/farm-scenes/corner-v3/` (lọc bằng `scripts/prune-scene-export.mjs`), bật bằng `?renderer=playcanvas&scene=corner-v3`. Xem nhanh: `node scripts/preview-farm-pc.mjs corner-v3 storage/preview.png`.
+- Engine: camera lấy theo entity `Camera` của cảnh; cảnh có đủ 9 ô, game chỉ hiện ô đã mở; vùng chạm theo kích thước đất thật; cây trồng dùng 40 GLB của garden; đất của cảnh tối đi khi tưới.
+- Chưa có: nhãn tên (Kho, Bếp Cô Ba…), ô khoá "Mở ở cấp N", Cô Ba đi lại, gà/bò cử động, gió lay cây (chỉ có trong shader Three.js), khói bếp. Dung lượng 9,3 MB (vượt mục tiêu 3 MB; .glb chưa được nén khi phục vụ).
+
 ## Làm tiếp trên máy khác
 
 1. `git fetch && git switch playcanvas-corner`, rồi `npm ci`.

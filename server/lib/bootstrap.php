@@ -3,13 +3,15 @@
 declare(strict_types=1);
 
 /*
- * Shared bootstrap for the Bếp Việt API, admin and CLI tools.
+ * Shared bootstrap for the Ăn gì? API, admin and CLI tools.
  * Secrets come from the project-root .env, which is never served or bundled.
  */
 
 const APP_ROOT = __DIR__ . '/../..';
 const UPLOAD_DIR = APP_ROOT . '/storage/uploads';
 const UPLOAD_URL = '/uploads';
+
+require_once __DIR__ . '/Lang.php';
 
 function env(string $key, ?string $default = null): ?string
 {
@@ -128,7 +130,7 @@ function read_json_body(): array
     }
     $data = json_decode($raw, true);
     if (!is_array($data)) {
-        throw new HttpError(400, 'Dữ liệu gửi lên không phải JSON hợp lệ.');
+        throw new HttpError(400, __t('api.badJson'));
     }
     return $data;
 }

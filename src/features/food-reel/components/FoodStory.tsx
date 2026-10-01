@@ -11,6 +11,7 @@ import {
 import { m } from 'motion/react';
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { RECIPE_LIST } from '../../../data/game';
+import { t } from '../../../i18n';
 import { useGame } from '../../../state/hooks';
 import { formatReelPrice, REGION_LABEL } from '../data/reelCatalogue';
 import { flyImage, type FlightHandle } from '../engine/sharedTransition';
@@ -22,13 +23,7 @@ import { FoodVideo } from './FoodVideo';
 import { splitName } from '../utils';
 import { SplitLines } from './SplitLines';
 
-const REGION_STORY: Record<ReelDish['region'], string> = {
-  north:
-    'Bắc Bộ chuộng vị thanh và cân bằng: nước dùng trong, gia vị vừa đủ để nguyên liệu tự lên tiếng.',
-  central: 'Trung Bộ đậm đà và nồng nàn: sả, ớt, mắm ruốc và những món nhỏ tinh tế của đất cố đô.',
-  south: 'Nam Bộ phóng khoáng, ngọt thanh, nhiều rau sống — bữa ăn luôn có chút vui của sông nước.',
-  world: 'Một món từ bếp thế giới, đã quen thuộc trên những con phố ăn trưa ở Việt Nam.',
-};
+const REGION_STORY: Record<ReelDish['region'], string> = t.reel.story.regionStory;
 
 const OPEN_MS = 700;
 const CLOSE_MS = 560;
@@ -161,6 +156,7 @@ export function FoodStory({
   // Escape closes the story; Tab stays inside it.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (e.defaultPrevented || document.querySelector('.fr-youtube-layer')) return;
       if (e.key === 'Escape' && !document.querySelector('.sheet-layer')) {
         e.preventDefault();
         cbs.current.onClose();
@@ -213,7 +209,8 @@ export function FoodStory({
         <header className="fr-story__bar">
           <button type="button" className="fr-ghost" onClick={() => onClose()}>
             <ArrowLeft aria-hidden="true" size={16} />
-            Quay lại<span className="fr-hide-sm"> reel</span>
+            {t.reel.story.back}
+            <span className="fr-hide-sm">{t.reel.story.backSuffix}</span>
           </button>
           <span className="fr-story__no" aria-hidden="true">
             {String(number).padStart(3, '0')}
@@ -221,18 +218,18 @@ export function FoodStory({
           <span className="fr-story__tools">
             <button type="button" className="fr-ghost" aria-pressed={saved} onClick={onToggleSave}>
               <BookmarkSimple aria-hidden="true" size={16} weight={saved ? 'fill' : 'regular'} />
-              {saved ? 'Đã lưu' : 'Lưu món'}
+              {saved ? t.reel.story.saved : t.reel.story.save}
             </button>
             <button
               type="button"
               className="fr-ghost"
               aria-pressed={inPool}
               onClick={onTogglePool}
-              aria-label="Rổ quay"
-              title={inPool ? 'Đang trong rổ quay — nhấn để bỏ ra' : 'Thêm vào rổ quay'}
+              aria-label={t.reel.story.pool}
+              title={inPool ? t.reel.story.poolIn : t.reel.story.poolAdd}
             >
               <Basket aria-hidden="true" size={16} weight={inPool ? 'fill' : 'regular'} />
-              <span className="fr-hide-sm">Rổ quay</span>
+              <span className="fr-hide-sm">{t.reel.story.pool}</span>
             </button>
           </span>
         </header>
@@ -240,6 +237,8 @@ export function FoodStory({
         <section className="fr-story__hero">
           <div className="fr-story__media" ref={mediaRef}>
             <FoodVideo
+              key={dish.id}
+              active={!closing}
               dish={dish}
               autoplay={autoplay}
               opened={videoGate && !closing}
@@ -280,7 +279,7 @@ export function FoodStory({
 
         <m.section className="fr-story__section" aria-labelledby="fr-sec-ing" {...section}>
           <h3 id="fr-sec-ing" className="fr-story__h">
-            <span className="fr-story__h-no">01</span> Thành phần
+            <span className="fr-story__h-no">01</span> {t.reel.story.ingredients}
           </h3>
           <ol className="fr-ingredients">
             {dish.ingredients.map((ing, i) => (
@@ -302,22 +301,28 @@ export function FoodStory({
         >
           <div>
             <h3 id="fr-sec-origin" className="fr-story__h">
-              <span className="fr-story__h-no">02</span> Vùng miền & xuất xứ
+              <span className="fr-story__h-no">02</span> {t.reel.story.origin}
             </h3>
             <p className="fr-story__origin-region">{REGION_LABEL[dish.region]}</p>
             <p className="fr-story__text">{REGION_STORY[dish.region]}</p>
           </div>
           <div>
             <h3 id="fr-sec-flavor" className="fr-story__h">
-              <span className="fr-story__h-no">03</span> Hồ sơ vị
+              <span className="fr-story__h-no">03</span> {t.reel.story.flavor}
             </h3>
             <FlavorProfile flavor={dish.flavor} />
           </div>
         </m.section>
 
-        <OrderLinks dishName={dish.name} city={orderCity} onCity={onOrderCity} compact />
+        <OrderLinks
+          dishName={dish.name}
+          searchName={dish.nameVi}
+          city={orderCity}
+          onCity={onOrderCity}
+          compact
+        />
 
-        <p className="fr-story__credit">Ảnh món: {dish.credit}. Giá chỉ mang tính tham khảo.</p>
+        <p className="fr-story__credit">{t.reel.story.credit(dish.credit)}</p>
 
         <div className="fr-story__actions">
           {confirmError && (
@@ -333,11 +338,15 @@ export function FoodStory({
             aria-busy={confirming}
           >
             <CheckCircle aria-hidden="true" size={18} />
-            {confirming ? 'Đang chốt…' : confirmError ? 'Thử chốt lại' : 'Chốt món này'}
+            {confirming
+              ? t.reel.story.confirming
+              : confirmError
+                ? t.reel.story.retry
+                : t.reel.story.confirm}
           </button>
           <button type="button" className="fr-ghost" onClick={() => onClose('spin')}>
             <ArrowsClockwise aria-hidden="true" size={16} />
-            Quay món khác
+            {t.reel.story.spinOther}
           </button>
         </div>
       </div>
@@ -355,7 +364,8 @@ function CookedBadge({ dishId }: { dishId: string }) {
     <p className="fr-story__cooked">
       <CookingPot aria-hidden="true" size={16} weight="fill" />
       <span>
-        Tự nấu ×{n} ở Hành trình · <em>{recipe.fact}</em>
+        {t.reel.story.cooked(n)}
+        <em>{recipe.fact}</em>
       </span>
     </p>
   );

@@ -4,7 +4,7 @@ import process from 'node:process';
 import sharp from 'sharp';
 
 const ROOT = process.cwd();
-const DEFAULT_SOURCE_ROOT = path.join(ROOT, '.tmp-truanayangi-repo');
+const DEFAULT_SOURCE_ROOT = path.join(ROOT, '.tmp-food-source');
 const DEFAULT_OUTPUT_ROOT = path.join(ROOT, 'public', 'images', 'food-reel');
 const SOURCE_SIZE = 768;
 const THUMB_SIZE = 384;
@@ -175,8 +175,7 @@ async function main() {
   if (!hasSource) {
     console.error(
       `Source repo not found at ${options.sourceRoot}.\n` +
-        'Clone it first, then rerun:\n' +
-        '  git clone --depth 1 https://github.com/truanayangi-com/truanayangi.git .tmp-truanayangi-repo',
+        'Put the source repo there (or pass --source <path>), then rerun.',
     );
     process.exit(1);
   }
@@ -268,7 +267,6 @@ async function main() {
         sourceEntropy: Number(sourceMetrics.entropy.toFixed(4)),
       },
       source: {
-        repository: 'https://github.com/truanayangi-com/truanayangi',
         atlas: placement.atlas,
         column: placement.column,
         row: placement.row,

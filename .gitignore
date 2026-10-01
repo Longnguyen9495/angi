@@ -11,6 +11,8 @@ storage/uploads/*
 backups/
 *.log
 storage/database/
+storage/youtube-pilot/
+storage/review-private/
 
 # Dev mail log (contains login codes)
 storage/logs/

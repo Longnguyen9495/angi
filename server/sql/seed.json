@@ -892,7 +892,7 @@
    },
    "image": "/images/food-reel/full/000-com-tam.webp",
    "thumbnail": "/images/food-reel/thumb/000-com-tam.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "gao-tam"
@@ -937,7 +937,7 @@
    },
    "image": "/images/food-reel/full/001-pho-bo.webp",
    "thumbnail": "/images/food-reel/thumb/001-pho-bo.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-pho"
@@ -979,7 +979,7 @@
    },
    "image": "/images/food-reel/full/002-banh-mi.webp",
    "thumbnail": "/images/food-reel/thumb/002-banh-mi.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-mi-vo"
@@ -1021,7 +1021,7 @@
    },
    "image": "/images/food-reel/full/003-bun-cha.webp",
    "thumbnail": "/images/food-reel/thumb/003-bun-cha.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "bun"
@@ -1063,7 +1063,7 @@
    },
    "image": "/images/food-reel/full/004-sushi-ca-hoi.webp",
    "thumbnail": "/images/food-reel/thumb/004-sushi-ca-hoi.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -1102,7 +1102,7 @@
    },
    "image": "/images/food-reel/full/005-pizza.webp",
    "thumbnail": "/images/food-reel/thumb/005-pizza.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "de-pizza"
@@ -1138,7 +1138,7 @@
    },
    "image": "/images/food-reel/full/006-ga-ran.webp",
    "thumbnail": "/images/food-reel/thumb/006-ga-ran.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "ga-gion"
@@ -1174,7 +1174,7 @@
    },
    "image": "/images/food-reel/full/007-com-chay.webp",
    "thumbnail": "/images/food-reel/thumb/007-com-chay.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -1213,7 +1213,7 @@
    },
    "image": "/images/food-reel/full/008-bibimbap.webp",
    "thumbnail": "/images/food-reel/thumb/008-bibimbap.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -1258,7 +1258,7 @@
    },
    "image": "/images/food-reel/full/009-com-ga-hoi-an.webp",
    "thumbnail": "/images/food-reel/thumb/009-com-ga-hoi-an.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com-nghe"
@@ -1297,7 +1297,7 @@
    },
    "image": "/images/food-reel/full/010-bun-bo-hue.webp",
    "thumbnail": "/images/food-reel/thumb/010-bun-bo-hue.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "bun-to"
@@ -1339,7 +1339,7 @@
    },
    "image": "/images/food-reel/full/011-hu-tieu.webp",
    "thumbnail": "/images/food-reel/thumb/011-hu-tieu.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "hu-tieu-soi"
@@ -1381,7 +1381,7 @@
    },
    "image": "/images/food-reel/full/012-mi-quang.webp",
    "thumbnail": "/images/food-reel/thumb/012-mi-quang.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "soi-mi-quang"
@@ -1423,7 +1423,7 @@
    },
    "image": "/images/food-reel/full/013-bun-thit-nuong.webp",
    "thumbnail": "/images/food-reel/thumb/013-bun-thit-nuong.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "bun"
@@ -1465,7 +1465,7 @@
    },
    "image": "/images/food-reel/full/014-banh-cuon.webp",
    "thumbnail": "/images/food-reel/thumb/014-banh-cuon.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-cuon-la"
@@ -1507,7 +1507,7 @@
    },
    "image": "/images/food-reel/full/015-bun-dau-mam-tom.webp",
    "thumbnail": "/images/food-reel/thumb/015-bun-dau-mam-tom.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "bun"
@@ -1549,7 +1549,7 @@
    },
    "image": "/images/food-reel/full/016-com-rang-dua-bo.webp",
    "thumbnail": "/images/food-reel/thumb/016-com-rang-dua-bo.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-4.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -1588,7 +1588,7 @@
    },
    "image": "/images/food-reel/full/017-bo-luc-lac.webp",
    "thumbnail": "/images/food-reel/thumb/017-bo-luc-lac.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-4.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "thit-bo"
@@ -1630,7 +1630,7 @@
    },
    "image": "/images/food-reel/full/018-banh-xeo.webp",
    "thumbnail": "/images/food-reel/thumb/018-banh-xeo.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-4.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-xeo-vo"
@@ -1672,7 +1672,7 @@
    },
    "image": "/images/food-reel/full/019-banh-da-cua.webp",
    "thumbnail": "/images/food-reel/thumb/019-banh-da-cua.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-4.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-da-do"
@@ -1711,7 +1711,7 @@
    },
    "image": "/images/food-reel/full/020-mi-xao-bo.webp",
    "thumbnail": "/images/food-reel/thumb/020-mi-xao-bo.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-5.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-trung"
@@ -1750,7 +1750,7 @@
    },
    "image": "/images/food-reel/full/021-bun-ca.webp",
    "thumbnail": "/images/food-reel/thumb/021-bun-ca.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-5.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "bun"
@@ -1789,7 +1789,7 @@
    },
    "image": "/images/food-reel/full/022-goi-cuon.webp",
    "thumbnail": "/images/food-reel/thumb/022-goi-cuon.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-5.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-trang"
@@ -1831,7 +1831,7 @@
    },
    "image": "/images/food-reel/full/023-chao-suon.webp",
    "thumbnail": "/images/food-reel/thumb/023-chao-suon.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-5.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "chao-gao"
@@ -1870,7 +1870,7 @@
    },
    "image": "/images/food-reel/full/024-ramen.webp",
    "thumbnail": "/images/food-reel/thumb/024-ramen.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-6.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "soi-ramen"
@@ -1912,7 +1912,7 @@
    },
    "image": "/images/food-reel/full/025-udon.webp",
    "thumbnail": "/images/food-reel/thumb/025-udon.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-6.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "soi-udon"
@@ -1951,7 +1951,7 @@
    },
    "image": "/images/food-reel/full/026-com-ca-ri-nhat.webp",
    "thumbnail": "/images/food-reel/thumb/026-com-ca-ri-nhat.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-6.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -1990,7 +1990,7 @@
    },
    "image": "/images/food-reel/full/027-tteokbokki.webp",
    "thumbnail": "/images/food-reel/thumb/027-tteokbokki.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-6.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "rice-cake"
@@ -2029,7 +2029,7 @@
    },
    "image": "/images/food-reel/full/028-burger-bo.webp",
    "thumbnail": "/images/food-reel/thumb/028-burger-bo.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-7.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-burger"
@@ -2071,7 +2071,7 @@
    },
    "image": "/images/food-reel/full/029-mi-y-bo-bam.webp",
    "thumbnail": "/images/food-reel/thumb/029-mi-y-bo-bam.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-7.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-y"
@@ -2110,7 +2110,7 @@
    },
    "image": "/images/food-reel/full/030-pad-thai.webp",
    "thumbnail": "/images/food-reel/thumb/030-pad-thai.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-7.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-pho"
@@ -2155,7 +2155,7 @@
    },
    "image": "/images/food-reel/full/031-mi-tom-yum.webp",
    "thumbnail": "/images/food-reel/thumb/031-mi-tom-yum.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-7.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-trung"
@@ -2197,7 +2197,7 @@
    },
    "image": "/images/food-reel/full/032-lau-nam-chay.webp",
    "thumbnail": "/images/food-reel/thumb/032-lau-nam-chay.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-8.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "nam"
@@ -2236,7 +2236,7 @@
    },
    "image": "/images/food-reel/full/033-mi-nam-chay.webp",
    "thumbnail": "/images/food-reel/thumb/033-mi-nam-chay.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-8.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-trung"
@@ -2275,7 +2275,7 @@
    },
    "image": "/images/food-reel/full/034-banh-mi-chay.webp",
    "thumbnail": "/images/food-reel/thumb/034-banh-mi-chay.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-8.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-mi-vo"
@@ -2317,7 +2317,7 @@
    },
    "image": "/images/food-reel/full/035-goi-cuon-chay.webp",
    "thumbnail": "/images/food-reel/thumb/035-goi-cuon-chay.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-hd-8.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-trang"
@@ -2356,7 +2356,7 @@
    },
    "image": "/images/food-reel/full/036-com-binh-dan.webp",
    "thumbnail": "/images/food-reel/thumb/036-com-binh-dan.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -2395,7 +2395,7 @@
    },
    "image": "/images/food-reel/full/039-com-ga-xoi-mo.webp",
    "thumbnail": "/images/food-reel/thumb/039-com-ga-xoi-mo.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -2434,7 +2434,7 @@
    },
    "image": "/images/food-reel/full/042-bun-rieu.webp",
    "thumbnail": "/images/food-reel/thumb/042-bun-rieu.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "bun"
@@ -2476,7 +2476,7 @@
    },
    "image": "/images/food-reel/full/043-banh-canh-cua.webp",
    "thumbnail": "/images/food-reel/thumb/043-banh-canh-cua.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-canh"
@@ -2515,7 +2515,7 @@
    },
    "image": "/images/food-reel/full/044-bo-ne.webp",
    "thumbnail": "/images/food-reel/thumb/044-bo-ne.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "thit-bo"
@@ -2554,7 +2554,7 @@
    },
    "image": "/images/food-reel/full/045-com-ga-teriyaki.webp",
    "thumbnail": "/images/food-reel/thumb/045-com-ga-teriyaki.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -2593,7 +2593,7 @@
    },
    "image": "/images/food-reel/full/046-com-heo-chien-xu.webp",
    "thumbnail": "/images/food-reel/thumb/046-com-heo-chien-xu.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -2632,7 +2632,7 @@
    },
    "image": "/images/food-reel/full/047-com-chien-hai-san.webp",
    "thumbnail": "/images/food-reel/thumb/047-com-chien-hai-san.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -2671,7 +2671,7 @@
    },
    "image": "/images/food-reel/full/048-mi-vit-tiem.webp",
    "thumbnail": "/images/food-reel/thumb/048-mi-vit-tiem.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-trung"
@@ -2710,7 +2710,7 @@
    },
    "image": "/images/food-reel/full/049-kimbap.webp",
    "thumbnail": "/images/food-reel/thumb/049-kimbap.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -2749,7 +2749,7 @@
    },
    "image": "/images/food-reel/full/050-mi-tron-han-quoc.webp",
    "thumbnail": "/images/food-reel/thumb/050-mi-tron-han-quoc.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-trung"
@@ -2788,7 +2788,7 @@
    },
    "image": "/images/food-reel/full/051-salad-uc-ga.webp",
    "thumbnail": "/images/food-reel/thumb/051-salad-uc-ga.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "ga-nuong"
@@ -2827,7 +2827,7 @@
    },
    "image": "/images/food-reel/full/052-mi-y-sot-kem-bacon.webp",
    "thumbnail": "/images/food-reel/thumb/052-mi-y-sot-kem-bacon.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-y"
@@ -2866,7 +2866,7 @@
    },
    "image": "/images/food-reel/full/053-lasagna-bo.webp",
    "thumbnail": "/images/food-reel/thumb/053-lasagna-bo.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "lasagna"
@@ -2905,7 +2905,7 @@
    },
    "image": "/images/food-reel/full/054-burger-bo-pho-mai-va-khoai-tay.webp",
    "thumbnail": "/images/food-reel/thumb/054-burger-bo-pho-mai-va-khoai-tay.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-burger"
@@ -2944,7 +2944,7 @@
    },
    "image": "/images/food-reel/full/055-pizza-pepperoni.webp",
    "thumbnail": "/images/food-reel/thumb/055-pizza-pepperoni.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "de-pizza"
@@ -2980,7 +2980,7 @@
    },
    "image": "/images/food-reel/full/056-com-bo-gyudon.webp",
    "thumbnail": "/images/food-reel/thumb/056-com-bo-gyudon.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -3019,7 +3019,7 @@
    },
    "image": "/images/food-reel/full/057-com-ca-saba-nuong.webp",
    "thumbnail": "/images/food-reel/thumb/057-com-ca-saba-nuong.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -3058,7 +3058,7 @@
    },
    "image": "/images/food-reel/full/058-mi-soba-nhat.webp",
    "thumbnail": "/images/food-reel/thumb/058-mi-soba-nhat.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "soi-soba"
@@ -3097,7 +3097,7 @@
    },
    "image": "/images/food-reel/full/059-com-ca-ri-thai.webp",
    "thumbnail": "/images/food-reel/thumb/059-com-ca-ri-thai.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -3139,7 +3139,7 @@
    },
    "image": "/images/food-reel/full/060-salad-ca-ngu.webp",
    "thumbnail": "/images/food-reel/thumb/060-salad-ca-ngu.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "ca-ngu"
@@ -3178,7 +3178,7 @@
    },
    "image": "/images/food-reel/full/061-salad-quinoa-dau-ga.webp",
    "thumbnail": "/images/food-reel/thumb/061-salad-quinoa-dau-ga.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "quinoa"
@@ -3220,7 +3220,7 @@
    },
    "image": "/images/food-reel/full/062-bo-bit-tet.webp",
    "thumbnail": "/images/food-reel/thumb/062-bo-bit-tet.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "thit-bo"
@@ -3259,7 +3259,7 @@
    },
    "image": "/images/food-reel/full/063-ca-hoi-ap-chao.webp",
    "thumbnail": "/images/food-reel/thumb/063-ca-hoi-ap-chao.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "ca-hoi"
@@ -3298,7 +3298,7 @@
    },
    "image": "/images/food-reel/full/064-com-luon-nhat.webp",
    "thumbnail": "/images/food-reel/thumb/064-com-luon-nhat.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -3334,7 +3334,7 @@
    },
    "image": "/images/food-reel/full/065-com-bo-nuong-han.webp",
    "thumbnail": "/images/food-reel/thumb/065-com-bo-nuong-han.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -3373,7 +3373,7 @@
    },
    "image": "/images/food-reel/full/066-com-ca-hoi-teriyaki.webp",
    "thumbnail": "/images/food-reel/thumb/066-com-ca-hoi-teriyaki.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -3412,7 +3412,7 @@
    },
    "image": "/images/food-reel/full/067-poke-ca-hoi.webp",
    "thumbnail": "/images/food-reel/thumb/067-poke-ca-hoi.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -3454,7 +3454,7 @@
    },
    "image": "/images/food-reel/full/068-suon-nuong-bbq.webp",
    "thumbnail": "/images/food-reel/thumb/068-suon-nuong-bbq.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "suon-nuong"
@@ -3490,7 +3490,7 @@
    },
    "image": "/images/food-reel/full/069-pizza-hai-san.webp",
    "thumbnail": "/images/food-reel/thumb/069-pizza-hai-san.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "de-pizza"
@@ -3529,7 +3529,7 @@
    },
    "image": "/images/food-reel/full/070-mi-y-hai-san.webp",
    "thumbnail": "/images/food-reel/thumb/070-mi-y-hai-san.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-y"
@@ -3568,7 +3568,7 @@
    },
    "image": "/images/food-reel/full/071-lau-bo-ca-nhan.webp",
    "thumbnail": "/images/food-reel/thumb/071-lau-bo-ca-nhan.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-expanded-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "thit-bo"
@@ -3607,7 +3607,7 @@
    },
    "image": "/images/food-reel/full/072-pho-ga.webp",
    "thumbnail": "/images/food-reel/thumb/072-pho-ga.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-pho"
@@ -3646,7 +3646,7 @@
    },
    "image": "/images/food-reel/full/073-pho-cuon.webp",
    "thumbnail": "/images/food-reel/thumb/073-pho-cuon.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-pho"
@@ -3685,7 +3685,7 @@
    },
    "image": "/images/food-reel/full/074-bun-moc.webp",
    "thumbnail": "/images/food-reel/thumb/074-bun-moc.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "bun"
@@ -3727,7 +3727,7 @@
    },
    "image": "/images/food-reel/full/075-bun-mang-vit.webp",
    "thumbnail": "/images/food-reel/thumb/075-bun-mang-vit.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "bun"
@@ -3769,7 +3769,7 @@
    },
    "image": "/images/food-reel/full/076-bun-bo-nam-bo.webp",
    "thumbnail": "/images/food-reel/thumb/076-bun-bo-nam-bo.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "bun"
@@ -3811,7 +3811,7 @@
    },
    "image": "/images/food-reel/full/077-bun-mam.webp",
    "thumbnail": "/images/food-reel/thumb/077-bun-mam.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "bun"
@@ -3853,7 +3853,7 @@
    },
    "image": "/images/food-reel/full/078-bun-chay.webp",
    "thumbnail": "/images/food-reel/thumb/078-bun-chay.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "bun"
@@ -3892,7 +3892,7 @@
    },
    "image": "/images/food-reel/full/079-banh-canh-gio-heo.webp",
    "thumbnail": "/images/food-reel/thumb/079-banh-canh-gio-heo.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-canh"
@@ -3931,7 +3931,7 @@
    },
    "image": "/images/food-reel/full/080-mien-ga.webp",
    "thumbnail": "/images/food-reel/thumb/080-mien-ga.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mien"
@@ -3970,7 +3970,7 @@
    },
    "image": "/images/food-reel/full/081-mien-luon.webp",
    "thumbnail": "/images/food-reel/thumb/081-mien-luon.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mien"
@@ -4009,7 +4009,7 @@
    },
    "image": "/images/food-reel/full/082-chao-vit.webp",
    "thumbnail": "/images/food-reel/thumb/082-chao-vit.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "chao-gao"
@@ -4048,7 +4048,7 @@
    },
    "image": "/images/food-reel/full/083-chao-long.webp",
    "thumbnail": "/images/food-reel/thumb/083-chao-long.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "chao-gao"
@@ -4087,7 +4087,7 @@
    },
    "image": "/images/food-reel/full/084-banh-hoi-heo-quay.webp",
    "thumbnail": "/images/food-reel/thumb/084-banh-hoi-heo-quay.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-hoi"
@@ -4126,7 +4126,7 @@
    },
    "image": "/images/food-reel/full/085-nem-nuong.webp",
    "thumbnail": "/images/food-reel/thumb/085-nem-nuong.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "nem-thit"
@@ -4165,7 +4165,7 @@
    },
    "image": "/images/food-reel/full/086-dimsum.webp",
    "thumbnail": "/images/food-reel/thumb/086-dimsum.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "dimsum"
@@ -4204,7 +4204,7 @@
    },
    "image": "/images/food-reel/full/087-mi-hoanh-thanh.webp",
    "thumbnail": "/images/food-reel/thumb/087-mi-hoanh-thanh.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-trung"
@@ -4243,7 +4243,7 @@
    },
    "image": "/images/food-reel/full/088-mi-bo-dai-loan.webp",
    "thumbnail": "/images/food-reel/thumb/088-mi-bo-dai-loan.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-trung"
@@ -4282,7 +4282,7 @@
    },
    "image": "/images/food-reel/full/089-mi-xao-gion.webp",
    "thumbnail": "/images/food-reel/thumb/089-mi-xao-gion.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-trung"
@@ -4321,7 +4321,7 @@
    },
    "image": "/images/food-reel/full/090-com-nieu-singapore.webp",
    "thumbnail": "/images/food-reel/thumb/090-com-nieu-singapore.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -4360,7 +4360,7 @@
    },
    "image": "/images/food-reel/full/091-com-ga-hai-nam.webp",
    "thumbnail": "/images/food-reel/thumb/091-com-ga-hai-nam.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com-nghe"
@@ -4399,7 +4399,7 @@
    },
    "image": "/images/food-reel/full/092-com-ga-trung-nhat.webp",
    "thumbnail": "/images/food-reel/thumb/092-com-ga-trung-nhat.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -4438,7 +4438,7 @@
    },
    "image": "/images/food-reel/full/093-com-tempura.webp",
    "thumbnail": "/images/food-reel/thumb/093-com-tempura.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -4477,7 +4477,7 @@
    },
    "image": "/images/food-reel/full/094-mi-cay-han-quoc.webp",
    "thumbnail": "/images/food-reel/thumb/094-mi-cay-han-quoc.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-trung"
@@ -4516,7 +4516,7 @@
    },
    "image": "/images/food-reel/full/095-mi-tuong-den.webp",
    "thumbnail": "/images/food-reel/thumb/095-mi-tuong-den.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-1.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-trung"
@@ -4555,7 +4555,7 @@
    },
    "image": "/images/food-reel/full/096-mi-lanh-han-quoc.webp",
    "thumbnail": "/images/food-reel/thumb/096-mi-lanh-han-quoc.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-trung"
@@ -4594,7 +4594,7 @@
    },
    "image": "/images/food-reel/full/097-canh-kimchi-kem-com.webp",
    "thumbnail": "/images/food-reel/thumb/097-canh-kimchi-kem-com.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "kimchi"
@@ -4633,7 +4633,7 @@
    },
    "image": "/images/food-reel/full/098-canh-dau-hu-non-kem-com.webp",
    "thumbnail": "/images/food-reel/thumb/098-canh-dau-hu-non-kem-com.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "dau-hu-non"
@@ -4672,7 +4672,7 @@
    },
    "image": "/images/food-reel/full/099-ga-pho-mai-han-quoc.webp",
    "thumbnail": "/images/food-reel/thumb/099-ga-pho-mai-han-quoc.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "ga-gion"
@@ -4708,7 +4708,7 @@
    },
    "image": "/images/food-reel/full/100-com-chien-kimchi.webp",
    "thumbnail": "/images/food-reel/thumb/100-com-chien-kimchi.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -4747,7 +4747,7 @@
    },
    "image": "/images/food-reel/full/101-lau-thai-mot-nguoi.webp",
    "thumbnail": "/images/food-reel/thumb/101-lau-thai-mot-nguoi.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "nuoc-dung-tom-yum"
@@ -4786,7 +4786,7 @@
    },
    "image": "/images/food-reel/full/102-lau-sukiyaki-mot-nguoi.webp",
    "thumbnail": "/images/food-reel/thumb/102-lau-sukiyaki-mot-nguoi.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "thit-bo"
@@ -4828,7 +4828,7 @@
    },
    "image": "/images/food-reel/full/103-ca-ri-an-do-va-naan.webp",
    "thumbnail": "/images/food-reel/thumb/103-ca-ri-an-do-va-naan.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "ca-ri"
@@ -4867,7 +4867,7 @@
    },
    "image": "/images/food-reel/full/104-com-biryani.webp",
    "thumbnail": "/images/food-reel/thumb/104-com-biryani.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "gao-basmati"
@@ -4906,7 +4906,7 @@
    },
    "image": "/images/food-reel/full/105-banh-xeo-nhat.webp",
    "thumbnail": "/images/food-reel/thumb/105-banh-xeo-nhat.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "bap-cai"
@@ -4945,7 +4945,7 @@
    },
    "image": "/images/food-reel/full/106-sandwich.webp",
    "thumbnail": "/images/food-reel/thumb/106-sandwich.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-sandwich"
@@ -4984,7 +4984,7 @@
    },
    "image": "/images/food-reel/full/107-banh-mi-kebab.webp",
    "thumbnail": "/images/food-reel/thumb/107-banh-mi-kebab.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-2.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "pita"
@@ -5023,7 +5023,7 @@
    },
    "image": "/images/food-reel/full/108-banh-cuon-ga.webp",
    "thumbnail": "/images/food-reel/thumb/108-banh-cuon-ga.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "tortilla"
@@ -5062,7 +5062,7 @@
    },
    "image": "/images/food-reel/full/109-burrito.webp",
    "thumbnail": "/images/food-reel/thumb/109-burrito.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "tortilla"
@@ -5104,7 +5104,7 @@
    },
    "image": "/images/food-reel/full/110-taco.webp",
    "thumbnail": "/images/food-reel/thumb/110-taco.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "tortilla"
@@ -5146,7 +5146,7 @@
    },
    "image": "/images/food-reel/full/111-quesadilla.webp",
    "thumbnail": "/images/food-reel/thumb/111-quesadilla.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "tortilla"
@@ -5185,7 +5185,7 @@
    },
    "image": "/images/food-reel/full/112-fish-va-chips.webp",
    "thumbnail": "/images/food-reel/thumb/112-fish-va-chips.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "ca-chien"
@@ -5221,7 +5221,7 @@
    },
    "image": "/images/food-reel/full/113-ga-nuong-kem-khoai-tay.webp",
    "thumbnail": "/images/food-reel/thumb/113-ga-nuong-kem-khoai-tay.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "ga-nuong"
@@ -5260,7 +5260,7 @@
    },
    "image": "/images/food-reel/full/114-mac-va-cheese.webp",
    "thumbnail": "/images/food-reel/thumb/114-mac-va-cheese.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "nui"
@@ -5296,7 +5296,7 @@
    },
    "image": "/images/food-reel/full/115-mi-y-pesto.webp",
    "thumbnail": "/images/food-reel/thumb/115-mi-y-pesto.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-y"
@@ -5335,7 +5335,7 @@
    },
    "image": "/images/food-reel/full/116-mi-y-ca-hoi.webp",
    "thumbnail": "/images/food-reel/thumb/116-mi-y-ca-hoi.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-y"
@@ -5374,7 +5374,7 @@
    },
    "image": "/images/food-reel/full/117-com-risotto.webp",
    "thumbnail": "/images/food-reel/thumb/117-com-risotto.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "gao-arborio"
@@ -5413,7 +5413,7 @@
    },
    "image": "/images/food-reel/full/118-gnocchi.webp",
    "thumbnail": "/images/food-reel/thumb/118-gnocchi.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "gnocchi"
@@ -5449,7 +5449,7 @@
    },
    "image": "/images/food-reel/full/119-falafel-kem-pita.webp",
    "thumbnail": "/images/food-reel/thumb/119-falafel-kem-pita.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-lunch-3.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "falafel"
@@ -5488,7 +5488,7 @@
    },
    "image": "/images/food-reel/full/120-nui-xao-bo.webp",
    "thumbnail": "/images/food-reel/thumb/120-nui-xao-bo.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "nui"
@@ -5527,7 +5527,7 @@
    },
    "image": "/images/food-reel/full/121-chao-ga.webp",
    "thumbnail": "/images/food-reel/thumb/121-chao-ga.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "chao-gao"
@@ -5566,7 +5566,7 @@
    },
    "image": "/images/food-reel/full/122-bo-kho-banh-mi.webp",
    "thumbnail": "/images/food-reel/thumb/122-bo-kho-banh-mi.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "bo-ham"
@@ -5605,7 +5605,7 @@
    },
    "image": "/images/food-reel/full/123-xoi-man.webp",
    "thumbnail": "/images/food-reel/thumb/123-xoi-man.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "xoi-nep"
@@ -5644,7 +5644,7 @@
    },
    "image": "/images/food-reel/full/124-banh-mi-chao.webp",
    "thumbnail": "/images/food-reel/thumb/124-banh-mi-chao.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "trung"
@@ -5683,7 +5683,7 @@
    },
    "image": "/images/food-reel/full/125-com-xa-xiu.webp",
    "thumbnail": "/images/food-reel/thumb/125-com-xa-xiu.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -5722,7 +5722,7 @@
    },
    "image": "/images/food-reel/full/126-com-vit-quay.webp",
    "thumbnail": "/images/food-reel/thumb/126-com-vit-quay.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "com"
@@ -5761,7 +5761,7 @@
    },
    "image": "/images/food-reel/full/127-mi-xa-xiu.webp",
    "thumbnail": "/images/food-reel/thumb/127-mi-xa-xiu.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-trung"
@@ -5800,7 +5800,7 @@
    },
    "image": "/images/food-reel/full/128-mi-udon-xao.webp",
    "thumbnail": "/images/food-reel/thumb/128-mi-udon-xao.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "soi-udon"
@@ -5839,7 +5839,7 @@
    },
    "image": "/images/food-reel/full/129-burger-ga-va-khoai-tay.webp",
    "thumbnail": "/images/food-reel/thumb/129-burger-ga-va-khoai-tay.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "banh-burger"
@@ -5878,7 +5878,7 @@
    },
    "image": "/images/food-reel/full/130-mi-y-sot-ca-chua-va-pho-mai.webp",
    "thumbnail": "/images/food-reel/thumb/130-mi-y-sot-ca-chua-va-pho-mai.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mi-y"
@@ -5917,7 +5917,7 @@
    },
    "image": "/images/food-reel/full/131-mien-xao.webp",
    "thumbnail": "/images/food-reel/thumb/131-mien-xao.webp",
-   "credit": "https://github.com/truanayangi-com/truanayangi (food-common-0.webp)",
+   "credit": "Ăn gì?",
    "ingredients": [
     {
      "id": "mien"

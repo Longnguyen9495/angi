@@ -79,6 +79,9 @@ export const CAMERA = {
   fov: 34,
 };
 
+/** Camera framing: the corner's own, or one derived from a loaded scene's camera. */
+export type CameraConfig = typeof CAMERA;
+
 export interface Lighting {
   sun: Vec3;
   sunIntensity: number;

@@ -1,0 +1,351 @@
+{
+  "source": "src/features/garden3d (scripts/export-garden-glb.mjs)",
+  "pieces": [
+    {
+      "file": "island.glb",
+      "tris": 53106,
+      "bytes": 3340988
+    },
+    {
+      "file": "islets.glb",
+      "tris": 1658,
+      "bytes": 155984
+    },
+    {
+      "file": "kitchen.glb",
+      "tris": 4620,
+      "at": {
+        "x": 0,
+        "z": -5.3,
+        "rot": 0
+      },
+      "bytes": 306352
+    },
+    {
+      "file": "barn.glb",
+      "tris": 8230,
+      "at": {
+        "x": -5.2,
+        "z": -2.6,
+        "rot": 0.6283185307179586
+      },
+      "bytes": 544628
+    },
+    {
+      "file": "well.glb",
+      "tris": 5668,
+      "at": {
+        "x": 4.9,
+        "z": -1.9,
+        "rot": -0.4487989505128276
+      },
+      "bytes": 374796
+    },
+    {
+      "file": "coop.glb",
+      "tris": 6284,
+      "at": {
+        "x": -5.1,
+        "z": 3.1,
+        "rot": 0.9817477042468103
+      },
+      "bytes": 416192
+    },
+    {
+      "file": "pen.glb",
+      "tris": 3330,
+      "at": {
+        "x": 5,
+        "z": 3.2,
+        "rot": -0.8975979010256552
+      },
+      "bytes": 221184
+    },
+    {
+      "file": "building-shadows.glb",
+      "tris": 8,
+      "bytes": 4660
+    },
+    {
+      "file": "plot-bed.glb",
+      "tris": 1760,
+      "bytes": 118660
+    },
+    {
+      "file": "plot-soil.glb",
+      "tris": 1280,
+      "bytes": 147380
+    },
+    {
+      "file": "crops/crop-rice-sprout.glb",
+      "tris": 60,
+      "bytes": 5392
+    },
+    {
+      "file": "crops/crop-rice-young.glb",
+      "tris": 180,
+      "bytes": 13352
+    },
+    {
+      "file": "crops/crop-rice-flowering.glb",
+      "tris": 3060,
+      "bytes": 203452
+    },
+    {
+      "file": "crops/crop-rice-ready.glb",
+      "tris": 3060,
+      "bytes": 203444
+    },
+    {
+      "file": "crops/crop-herbs-sprout.glb",
+      "tris": 60,
+      "bytes": 5396
+    },
+    {
+      "file": "crops/crop-herbs-young.glb",
+      "tris": 180,
+      "bytes": 13352
+    },
+    {
+      "file": "crops/crop-herbs-flowering.glb",
+      "tris": 456,
+      "bytes": 31584
+    },
+    {
+      "file": "crops/crop-herbs-ready.glb",
+      "tris": 520,
+      "bytes": 35800
+    },
+    {
+      "file": "crops/crop-chili-sprout.glb",
+      "tris": 60,
+      "bytes": 5396
+    },
+    {
+      "file": "crops/crop-chili-young.glb",
+      "tris": 260,
+      "bytes": 18636
+    },
+    {
+      "file": "crops/crop-chili-flowering.glb",
+      "tris": 660,
+      "bytes": 45048
+    },
+    {
+      "file": "crops/crop-chili-ready.glb",
+      "tris": 358,
+      "bytes": 25108
+    },
+    {
+      "file": "crops/crop-scallion-sprout.glb",
+      "tris": 60,
+      "bytes": 5400
+    },
+    {
+      "file": "crops/crop-scallion-young.glb",
+      "tris": 144,
+      "bytes": 10984
+    },
+    {
+      "file": "crops/crop-scallion-flowering.glb",
+      "tris": 328,
+      "bytes": 23136
+    },
+    {
+      "file": "crops/crop-scallion-ready.glb",
+      "tris": 248,
+      "bytes": 17848
+    },
+    {
+      "file": "crops/crop-bean-sprout.glb",
+      "tris": 60,
+      "bytes": 5392
+    },
+    {
+      "file": "crops/crop-bean-young.glb",
+      "tris": 240,
+      "bytes": 17312
+    },
+    {
+      "file": "crops/crop-bean-flowering.glb",
+      "tris": 720,
+      "bytes": 49004
+    },
+    {
+      "file": "crops/crop-bean-ready.glb",
+      "tris": 760,
+      "bytes": 51636
+    },
+    {
+      "file": "crops/crop-tomato-sprout.glb",
+      "tris": 60,
+      "bytes": 5396
+    },
+    {
+      "file": "crops/crop-tomato-young.glb",
+      "tris": 420,
+      "bytes": 29204
+    },
+    {
+      "file": "crops/crop-tomato-flowering.glb",
+      "tris": 1140,
+      "bytes": 76704
+    },
+    {
+      "file": "crops/crop-tomato-ready.glb",
+      "tris": 1200,
+      "bytes": 80656
+    },
+    {
+      "file": "crops/crop-lemongrass-sprout.glb",
+      "tris": 60,
+      "bytes": 5404
+    },
+    {
+      "file": "crops/crop-lemongrass-young.glb",
+      "tris": 192,
+      "bytes": 14152
+    },
+    {
+      "file": "crops/crop-lemongrass-flowering.glb",
+      "tris": 292,
+      "bytes": 20760
+    },
+    {
+      "file": "crops/crop-lemongrass-ready.glb",
+      "tris": 292,
+      "bytes": 20756
+    },
+    {
+      "file": "crops/crop-garlic-sprout.glb",
+      "tris": 60,
+      "bytes": 5396
+    },
+    {
+      "file": "crops/crop-garlic-young.glb",
+      "tris": 100,
+      "bytes": 8072
+    },
+    {
+      "file": "crops/crop-garlic-flowering.glb",
+      "tris": 240,
+      "bytes": 17320
+    },
+    {
+      "file": "crops/crop-garlic-ready.glb",
+      "tris": 220,
+      "bytes": 15996
+    },
+    {
+      "file": "crops/crop-cucumber-sprout.glb",
+      "tris": 60,
+      "bytes": 5400
+    },
+    {
+      "file": "crops/crop-cucumber-young.glb",
+      "tris": 100,
+      "bytes": 8076
+    },
+    {
+      "file": "crops/crop-cucumber-flowering.glb",
+      "tris": 400,
+      "bytes": 27892
+    },
+    {
+      "file": "crops/crop-cucumber-ready.glb",
+      "tris": 454,
+      "bytes": 31452
+    },
+    {
+      "file": "crops/crop-lime-sprout.glb",
+      "tris": 60,
+      "bytes": 5392
+    },
+    {
+      "file": "crops/crop-lime-young.glb",
+      "tris": 264,
+      "bytes": 18896
+    },
+    {
+      "file": "crops/crop-lime-flowering.glb",
+      "tris": 904,
+      "bytes": 61152
+    },
+    {
+      "file": "crops/crop-lime-ready.glb",
+      "tris": 984,
+      "bytes": 66424
+    },
+    {
+      "file": "clouds.glb",
+      "tris": 8280,
+      "bytes": 548080
+    }
+  ],
+  "plots": [
+    [
+      -1.95,
+      -1.75
+    ],
+    [
+      0,
+      -1.75
+    ],
+    [
+      1.95,
+      -1.75
+    ],
+    [
+      -1.95,
+      0.2
+    ],
+    [
+      0,
+      0.2
+    ],
+    [
+      1.95,
+      0.2
+    ],
+    [
+      -1.95,
+      2.15
+    ],
+    [
+      0,
+      2.15
+    ],
+    [
+      1.95,
+      2.15
+    ]
+  ],
+  "buildings": {
+    "kitchen": {
+      "x": 0,
+      "z": -5.3,
+      "rot": 0
+    },
+    "barn": {
+      "x": -5.2,
+      "z": -2.6,
+      "rot": 0.6283185307179586
+    },
+    "well": {
+      "x": 4.9,
+      "z": -1.9,
+      "rot": -0.4487989505128276
+    },
+    "chicken": {
+      "x": -5.1,
+      "z": 3.1,
+      "rot": 0.9817477042468103
+    },
+    "cow": {
+      "x": 5,
+      "z": 3.2,
+      "rot": -0.8975979010256552
+    }
+  },
+  "bytes": 7490076
+}

@@ -1,0 +1,117 @@
+{
+  "pieces": [
+    {
+      "file": "painted-island.glb",
+      "tris": 7034
+    },
+    {
+      "file": "painted-field.glb",
+      "tris": 12784
+    },
+    {
+      "file": "painted-sprouts.glb",
+      "tris": 3688
+    },
+    {
+      "file": "painted-house.glb",
+      "tris": 53376,
+      "at": [
+        -4.2,
+        0,
+        -5.75
+      ]
+    },
+    {
+      "file": "painted-windmill.glb",
+      "tris": 5684,
+      "at": [
+        0,
+        0,
+        -1.3
+      ]
+    },
+    {
+      "file": "painted-sails.glb",
+      "tris": 544,
+      "at": [
+        0,
+        1.98,
+        -0.66
+      ]
+    },
+    {
+      "file": "painted-market.glb",
+      "tris": 24064,
+      "at": [
+        1.6,
+        0,
+        -5.6
+      ]
+    },
+    {
+      "file": "painted-paddock.glb",
+      "tris": 13588,
+      "at": [
+        5.9,
+        0,
+        -4.4
+      ]
+    },
+    {
+      "file": "painted-paddock-fence.glb",
+      "tris": 4080
+    },
+    {
+      "file": "painted-animals.glb",
+      "tris": 6484
+    },
+    {
+      "file": "painted-pond.glb",
+      "tris": 17512
+    },
+    {
+      "file": "painted-water.glb",
+      "tris": 1992
+    },
+    {
+      "file": "painted-koi-a.glb",
+      "tris": 616,
+      "at": [
+        4.6,
+        0,
+        1
+      ]
+    },
+    {
+      "file": "painted-koi-b.glb",
+      "tris": 616,
+      "at": [
+        5.8,
+        0,
+        4.6
+      ]
+    },
+    {
+      "file": "painted-koi-c.glb",
+      "tris": 616,
+      "at": [
+        4.8,
+        0,
+        6
+      ]
+    },
+    {
+      "file": "painted-koi.glb",
+      "tris": 3696
+    },
+    {
+      "file": "painted-greenery.glb",
+      "tris": 50696
+    },
+    {
+      "file": "painted-clouds.glb",
+      "tris": 5400
+    }
+  ],
+  "bytes": 24489940
+}

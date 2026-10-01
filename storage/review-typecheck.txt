@@ -1,0 +1,4 @@
+
+> hanh-trinh-bep-viet@0.1.0 typecheck
+> tsc -b
+

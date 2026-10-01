@@ -7,6 +7,7 @@ import {
   type KeyboardEvent,
   type PointerEvent,
 } from 'react';
+import { t } from '../../../i18n';
 import { formatReelPrice, REGION_LABEL, type ReelView } from '../data/reelCatalogue';
 import type { FrameState } from '../engine/ReelEngine';
 import { itemVisual, type ReelLayout, type SceneValues } from '../engine/layout';
@@ -133,12 +134,12 @@ export function ReelScene({
           setLive(c);
         }
         const s = scene.current;
-        const t = target.current;
+        const goal = target.current;
         const k = reduced ? 1 : LERP;
         scene.current = {
-          focus: s.focus + (t.focus - s.focus) * k,
-          hover: s.hover + (t.hover - s.hover) * k,
-          camera: s.camera + (t.camera - s.camera) * k,
+          focus: s.focus + (goal.focus - s.focus) * k,
+          hover: s.hover + (goal.hover - s.hover) * k,
+          camera: s.camera + (goal.camera - s.camera) * k,
         };
         nodes.current.forEach((el, vi) => paintRef.current(el, vi, f));
       }),
@@ -184,8 +185,8 @@ export function ReelScene({
       ref={rootRef}
       className="fr-reel"
       role="group"
-      aria-roledescription="băng chuyền món ăn"
-      aria-label={`${view.pooled ? 'Rổ quay' : 'Vũ trụ món ăn'}: ${view.count} món. Dùng phím mũi tên để đổi món, Enter để xem câu chuyện.`}
+      aria-roledescription={t.reel.reel.roleDescription}
+      aria-label={t.reel.reel.label(view.pooled, view.count)}
       aria-busy={busy}
       onKeyDown={onKeyDown}
       onPointerDown={onPointerDown}
@@ -197,8 +198,12 @@ export function ReelScene({
       }
     >
       <p className="sr-only" aria-live="off">
-        Đang ở món {mod(live, view.count) + 1}: {centreDish.name}, {REGION_LABEL[centreDish.region]}
-        , {formatReelPrice(centreDish.price)}
+        {t.reel.reel.current(
+          mod(live, view.count) + 1,
+          centreDish.name,
+          REGION_LABEL[centreDish.region],
+          formatReelPrice(centreDish.price),
+        )}
       </p>
       <div className="fr-track">
         {indices.map((vi) => {

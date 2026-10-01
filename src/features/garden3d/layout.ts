@@ -34,7 +34,7 @@ export function plotBounds(count: number): {
   return { minX: -PLOT_STEP - half, maxX: PLOT_STEP + half, minZ: z0 - half, maxZ: z1 + half };
 }
 
-export type BuildingId = 'barn' | 'well' | 'kitchen' | AnimalId;
+export type BuildingId = 'barn' | 'well' | 'kitchen' | 'pond' | AnimalId;
 
 export interface Placement {
   x: number;
@@ -49,7 +49,20 @@ export const BUILDINGS: Record<BuildingId, Placement> = {
   well: { x: 4.9, z: -1.9, rot: -Math.PI / 7 },
   chicken: { x: -5.1, z: 3.1, rot: Math.PI / 3.2 },
   cow: { x: 5.0, z: 3.2, rot: -Math.PI / 3.5 },
+  // Front right, like a village pond by the path: fishing for the pantry.
+  pond: { x: 2.7, z: 5.35, rot: 0.12 },
 };
+
+/** The pond's water, an ellipse in the pond's own space (x across, z deep). */
+export const POND_SHAPE = { rx: 1.55, rz: 1.05 } as const;
+
+/** Scenery that is not tapped but needs flat ground and room around it. */
+export const LANDMARKS = {
+  windmill: { x: -2.75, z: -4.85, rot: 0.35 },
+} satisfies Record<string, Placement>;
+
+/** Everything with a footprint: buildings and landmarks. */
+export const FOOTPRINTS: Placement[] = [...Object.values(BUILDINGS), ...Object.values(LANDMARKS)];
 
 /** Where each decoration stands until the guest moves it (grid cells). */
 export const DEFAULT_DECOR_CELLS: Record<
@@ -67,7 +80,7 @@ export function cellIsFree(x: number, z: number, plotCount: number): boolean {
   const b = plotBounds(plotCount);
   if (x >= b.minX - 0.4 && x <= b.maxX + 0.4 && z >= b.minZ - 0.4 && z <= b.maxZ + 0.4)
     return false;
-  for (const p of Object.values(BUILDINGS)) {
+  for (const p of FOOTPRINTS) {
     if (Math.hypot(x - p.x, z - p.z) < 1.9) return false;
   }
   return true;
@@ -163,7 +176,7 @@ export function groundAt(x: number, z: number): number {
   const d = Math.hypot(x, z);
   const rim = edgeRadius(Math.atan2(z, x));
   let m = smooth(5.9, rim - 1.1, d);
-  for (const b of Object.values(BUILDINGS)) m *= smooth(1.8, 2.8, Math.hypot(x - b.x, z - b.z));
+  for (const b of FOOTPRINTS) m *= smooth(1.8, 2.8, Math.hypot(x - b.x, z - b.z));
   if (m <= 0) return 0;
   const knoll = 0.5 + 0.5 * Math.sin(x * 1.05 + 0.4) * Math.cos(z * 0.85 - 0.7);
   const lip = smooth(rim - 0.9, rim, d) * 0.18;

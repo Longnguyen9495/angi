@@ -1,4 +1,5 @@
 import { memo, useState, type CSSProperties, type Ref } from 'react';
+import { t } from '../../../i18n';
 import { formatReelPrice, REGION_LABEL } from '../data/reelCatalogue';
 import type { ReelDish } from '../foodReel.types';
 import { pad3 } from '../utils';
@@ -89,8 +90,8 @@ export const ReelItem = memo(function ReelItem({
           <span className="fr-item__name">{dish.name}</span>
         </span>
         <span className="sr-only">
-          {` — ${dish.subtitle}, ${REGION_LABEL[dish.region]}, khoảng ${formatReelPrice(dish.price)}. ${
-            isCentre ? 'Nhấn để xem câu chuyện món ăn' : 'Nhấn để đưa món ra giữa'
+          {`${t.reel.reel.itemDetails(dish.subtitle, REGION_LABEL[dish.region], formatReelPrice(dish.price))} ${
+            isCentre ? t.reel.reel.itemOpen : t.reel.reel.itemCentre
           }`}
         </span>
       </span>

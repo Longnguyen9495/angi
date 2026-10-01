@@ -1,30 +1,42 @@
+import { t } from '../i18n';
 import { reelGameDishes } from '../features/food-reel/data/reelCatalogue';
 import {
   ANIMALS,
+  CATCHES,
   CROPS,
   DAILY_MISSIONS,
   RECIPES,
   REGIONS,
   REGION_ORDER,
   FARM_PLOT_COUNT,
+  FISHING,
   PLOT_UNLOCK_LEVELS,
   WATERING,
   XP_PER_LEVEL,
   animalOf,
+  isAnimalProduct,
   isCrop,
 } from '../data/game';
-import type { AnimalId, CropId, MissionKind, ProduceId, RecipeId, RegionId } from '../data/types';
+import type {
+  AnimalId,
+  Catch,
+  CropId,
+  MissionKind,
+  ProduceId,
+  RecipeId,
+  RegionId,
+} from '../data/types';
 import type { GuestProgress, Plot } from './progress';
 import { dateKey } from './time';
 
 export type PlotStage = 'empty' | 'sprout' | 'young' | 'flowering' | 'ready';
 
 export const STAGE_LABEL: Record<PlotStage, string> = {
-  empty: 'Ô trống',
-  sprout: 'Mầm non',
-  young: 'Đang lớn',
-  flowering: 'Ra hoa',
-  ready: 'Sẵn sàng thu hoạch',
+  empty: t.domain.plotStage.empty,
+  sprout: t.domain.plotStage.sprout,
+  young: t.domain.plotStage.young,
+  flowering: t.domain.plotStage.flowering,
+  ready: t.domain.plotStage.ready,
 };
 
 /** Planted and not ripe yet: the stages that can still be watered. */
@@ -57,6 +69,31 @@ export function isWet(plot: Plot, now: number): boolean {
 export function waterLeft(p: GuestProgress, now: number): number {
   if (p.water.date !== dateKey(now)) return WATERING.perDay;
   return Math.max(0, WATERING.perDay + p.water.bonus - p.water.used);
+}
+
+/** Catches left today at the pond (the day rolls over at local midnight). */
+export function fishingLeft(p: GuestProgress, now: number): number {
+  if (p.fishing.date !== dateKey(now)) return FISHING.perDay;
+  return Math.max(0, FISHING.perDay - p.fishing.used);
+}
+
+/**
+ * What bites on a cast: decided by the cast time alone (deterministic, so the
+ * garden can show it and the reducer grants the same thing).
+ */
+export function catchFor(castAt: number): Catch {
+  // Integer hash of the cast time → [0, 1).
+  let h = Math.floor(castAt) | 0;
+  h = Math.imul(h ^ (h >>> 16), 0x45d9f3b);
+  h = Math.imul(h ^ (h >>> 16), 0x45d9f3b);
+  const t = ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+  return t < CATCHES.fish.chance ? 'fish' : 'shrimp';
+}
+
+/** Wait before the bite for a cast, between FISHING.biteMinMs and biteMaxMs. */
+export function biteDelay(castAt: number): number {
+  const t = (Math.floor(castAt / 7) % 997) / 997;
+  return Math.round(FISHING.biteMinMs + t * (FISHING.biteMaxMs - FISHING.biteMinMs));
 }
 
 export type WaterBlock = 'not-growing' | 'wet' | 'empty-can';
@@ -110,7 +147,7 @@ export function recipeProgress(p: GuestProgress, id: RecipeId): RecipeProgress {
     // Crops in the ground, or an animal busy producing it, count as "đang lớn".
     growing: isCrop(crop)
       ? p.plots.filter((pl) => pl.crop === crop).length
-      : p.animals[animalOf(crop)].readyAt !== null
+      : isAnimalProduct(crop) && p.animals[animalOf(crop)].readyAt !== null
         ? ANIMALS[animalOf(crop)].yield
         : 0,
   }));
@@ -138,7 +175,8 @@ export function cropAvailable(p: GuestProgress, crop: CropId): boolean {
 
 /** A pantry item can be obtained: its crop is open, or its animal is unlocked. */
 export function produceAvailable(p: GuestProgress, id: ProduceId): boolean {
-  return isCrop(id) ? cropAvailable(p, id) : animalUnlocked(p, animalOf(id));
+  if (isCrop(id)) return cropAvailable(p, id);
+  return isAnimalProduct(id) ? animalUnlocked(p, animalOf(id)) : true;
 }
 
 export function animalUnlocked(p: GuestProgress, id: AnimalId): boolean {

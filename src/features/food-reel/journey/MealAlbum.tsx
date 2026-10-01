@@ -2,19 +2,22 @@ import { Camera, Trash } from '@phosphor-icons/react';
 import { useEffect, useState } from 'react';
 import { getDish } from '../../../data/dishes';
 import { deletePhoto, listPhotos, type MealPhoto } from '../../../services/photoStore';
+import { formatDate, t } from '../../../i18n';
 import { useGame } from '../../../state/hooks';
 
 interface Shown extends MealPhoto {
   url: string;
 }
 
-const SLOT = { breakfast: 'Sáng', lunch: 'Trưa', dinner: 'Tối' } as Record<string, string>;
+const msg = t.journey.album;
 
-/** "2026-09-30:lunch" → "Trưa 30/9". */
+/** "2026-09-30:lunch" → "Trưa 30/9" (day/month order follows the language). */
 function slotLabel(slotKey: string): string {
   const [date = '', slot = ''] = slotKey.split(':');
-  const [, m, d] = date.split('-');
-  return `${SLOT[slot] ?? ''} ${Number(d)}/${Number(m)}`.trim();
+  const [y, m, d] = date.split('-').map(Number);
+  const day =
+    y && m && d ? formatDate(new Date(y, m - 1, d), { day: 'numeric', month: 'numeric' }) : '';
+  return msg.when(msg.slot[slot] ?? '', day);
 }
 
 /** Check-in photos kept on this device. Deleting one never takes XP back. */
@@ -45,20 +48,19 @@ export function MealAlbum() {
   if (photos.length === 0) {
     return (
       <p className="fj-note">
-        <Camera aria-hidden="true" size={16} /> Khi check-in sau bữa, chụp món vừa ăn để lưu album
-        (tuỳ chọn, +5 XP). Ảnh chỉ nằm trên máy này.
+        <Camera aria-hidden="true" size={16} /> {msg.empty}
       </p>
     );
   }
   return (
-    <ul className="fj-album" aria-label="Album bữa ăn">
+    <ul className="fj-album" aria-label={msg.label}>
       {photos.map((p) => {
-        const name = getDish(p.dishId)?.name ?? 'Bữa ăn';
+        const name = getDish(p.dishId)?.name ?? msg.fallbackName;
         return (
           <li key={p.slotKey} className="fj-album__item">
             <img
               src={p.url}
-              alt={`${name}, ${slotLabel(p.slotKey)}`}
+              alt={msg.photoAlt(name, slotLabel(p.slotKey))}
               width={p.width}
               height={p.height}
               loading="lazy"
@@ -70,7 +72,7 @@ export function MealAlbum() {
             <button
               type="button"
               className="fj-album__delete"
-              aria-label={`Xoá ảnh ${name}, ${slotLabel(p.slotKey)}`}
+              aria-label={msg.delete(name, slotLabel(p.slotKey))}
               onClick={async () => {
                 await deletePhoto(p.slotKey).catch(() => undefined);
                 dispatch({ type: 'REMOVE_PHOTO', slotKey: p.slotKey });

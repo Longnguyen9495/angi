@@ -1,16 +1,15 @@
 import { CloudArrowUp, DownloadSimple, SignOut, Trash } from '@phosphor-icons/react';
 import { useState } from 'react';
+import { formatTime, t } from '../../i18n';
 import { accountApi, maskEmail } from '../../services/account';
 import { useAccount, useFeedback, useUi } from '../../state/hooks';
 
 function syncText(sync: string, at: number | null): string {
-  if (sync === 'saving') return 'Đang lưu…';
-  if (sync === 'offline') return 'Chưa kết nối được — sẽ thử lại khi có thay đổi.';
-  if (at) {
-    const t = new Date(at).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-    return `Đã đồng bộ lúc ${t}`;
-  }
-  return 'Đã kết nối';
+  const m = t.account.block.sync;
+  if (sync === 'saving') return m.saving;
+  if (sync === 'offline') return m.offline;
+  if (at) return m.syncedAt(formatTime(at));
+  return m.connected;
 }
 
 /** Profile block: the account's data and every control over it, in one place. */
@@ -20,21 +19,19 @@ export function AccountBlock() {
   const { toast } = useFeedback();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [busy, setBusy] = useState(false);
+  const m = t.account.block;
 
   if (account.status !== 'signed-in' || !account.user) {
     return (
       <section className="profile__block" aria-labelledby="pf-account">
         <h3 id="pf-account" className="profile__heading">
-          Tài khoản
+          {m.heading}
         </h3>
-        <p className="empty-note">
-          Tiến trình chỉ nằm trên máy này. Lưu bằng email để không mất khi đổi máy — không cần mật
-          khẩu, tên hay số điện thoại.
-        </p>
+        <p className="empty-note">{m.guestNote}</p>
         <div className="profile__actions">
           <button type="button" className="btn btn--ghost btn--sm" onClick={openAccount}>
             <CloudArrowUp aria-hidden="true" size={18} />
-            Lưu hành trình bằng email
+            {m.saveWithEmail}
           </button>
         </div>
       </section>
@@ -48,18 +45,18 @@ export function AccountBlock() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'bep-viet-du-lieu-tai-khoan.json';
+      a.download = 'an-gi-du-lieu-tai-khoan.json';
       a.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch {
-      toast({ message: 'Chưa tải được dữ liệu, bạn thử lại nhé.', tone: 'warning' });
+      toast({ message: m.downloadFailed, tone: 'error' });
     }
   };
 
   return (
     <section className="profile__block" aria-labelledby="pf-account">
       <h3 id="pf-account" className="profile__heading">
-        Tài khoản
+        {m.heading}
       </h3>
       <p className="profile__stats">
         <strong>{maskEmail(account.user.email)}</strong> ·{' '}
@@ -74,35 +71,33 @@ export function AccountBlock() {
           onChange={(e) =>
             void account
               .setMarketing(e.target.checked)
-              .catch(() => toast({ message: 'Chưa lưu được lựa chọn.', tone: 'warning' }))
+              .catch(() => toast({ message: m.marketingFailed, tone: 'error' }))
           }
         />
         <span className="switch__track" aria-hidden="true">
           <span className="switch__thumb" />
         </span>
-        <span className="switch__label">Nhận tin ưu đãi qua email</span>
+        <span className="switch__label">{m.marketing}</span>
       </label>
-      <p className="empty-note">
-        Máy chủ chỉ giữ email và tiến trình trò chơi. Ảnh check-in không bao giờ được tải lên.
-      </p>
+      <p className="empty-note">{m.serverNote}</p>
       <div className="profile__actions">
         <button type="button" className="btn btn--ghost btn--sm" onClick={downloadServerCopy}>
           <DownloadSimple aria-hidden="true" size={18} />
-          Tải dữ liệu trên máy chủ
+          {m.download}
         </button>
         <button
           type="button"
           className="btn btn--ghost btn--sm"
           onClick={() => {
             void account.logout();
-            toast({ message: 'Đã đăng xuất. Tiến trình vẫn còn trên máy này.', tone: 'info' });
+            toast({ message: m.loggedOut, tone: 'info' });
           }}
         >
           <SignOut aria-hidden="true" size={18} />
-          Đăng xuất
+          {m.logout}
         </button>
         {confirmDelete ? (
-          <span className="profile__confirm" role="group" aria-label="Xác nhận xoá tài khoản">
+          <span className="profile__confirm" role="group" aria-label={m.confirmDeleteLabel}>
             <button
               type="button"
               className="btn btn--danger btn--sm"
@@ -111,26 +106,23 @@ export function AccountBlock() {
                 setBusy(true);
                 try {
                   await account.deleteAccount();
-                  toast({
-                    message: 'Đã xoá tài khoản và mọi dữ liệu trên máy chủ.',
-                    tone: 'info',
-                  });
+                  toast({ message: m.deleted, tone: 'info' });
                 } catch {
-                  toast({ message: 'Chưa xoá được, bạn thử lại nhé.', tone: 'warning' });
+                  toast({ message: m.deleteFailed, tone: 'error' });
                 } finally {
                   setBusy(false);
                   setConfirmDelete(false);
                 }
               }}
             >
-              Xoá vĩnh viễn
+              {m.deleteForever}
             </button>
             <button
               type="button"
               className="btn btn--ghost btn--sm"
               onClick={() => setConfirmDelete(false)}
             >
-              Giữ lại
+              {m.keep}
             </button>
           </span>
         ) : (
@@ -140,7 +132,7 @@ export function AccountBlock() {
             onClick={() => setConfirmDelete(true)}
           >
             <Trash aria-hidden="true" size={18} />
-            Xoá tài khoản
+            {m.delete}
           </button>
         )}
       </div>

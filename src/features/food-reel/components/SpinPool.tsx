@@ -10,6 +10,7 @@ import { CropIcon } from '../../../components/ui/CropIcon';
 import { Sheet } from '../../../components/ui/Sheet';
 import { CROPS } from '../../../data/game';
 import type { CropId } from '../../../data/types';
+import { t } from '../../../i18n';
 import {
   formatReelPrice,
   POOL_MIN,
@@ -51,7 +52,7 @@ export function PoolSwitch({
   const usable = size >= POOL_MIN;
   if (crop) {
     return (
-      <div className="fr-pool" role="group" aria-label="Quay trong">
+      <div className="fr-pool" role="group" aria-label={t.reel.pool.groupLabel}>
         <button
           type="button"
           className="fr-pool__opt"
@@ -59,7 +60,7 @@ export function PoolSwitch({
           disabled={disabled}
           onClick={onAll}
         >
-          Tất cả <span className="fr-pool__n">{total}</span>
+          {t.reel.pool.all} <span className="fr-pool__n">{total}</span>
         </button>
         <span className="fr-pool__opt fr-pool__opt--crop" aria-current="true">
           <CropIcon crop={crop} size={14} />
@@ -69,7 +70,7 @@ export function PoolSwitch({
     );
   }
   return (
-    <div className="fr-pool" role="group" aria-label="Quay trong">
+    <div className="fr-pool" role="group" aria-label={t.reel.pool.groupLabel}>
       <button
         type="button"
         className="fr-pool__opt"
@@ -77,7 +78,7 @@ export function PoolSwitch({
         disabled={disabled}
         onClick={onAll}
       >
-        Tất cả <span className="fr-pool__n">{total}</span>
+        {t.reel.pool.all} <span className="fr-pool__n">{total}</span>
       </button>
       <button
         type="button"
@@ -89,18 +90,18 @@ export function PoolSwitch({
         <Basket aria-hidden="true" size={14} />
         {usable ? (
           <>
-            Rổ{' '}
+            {t.reel.pool.basket}{' '}
             <span className="fr-pool__n">{pooled && left < size ? `${left}/${size}` : size}</span>
           </>
         ) : (
-          'Chọn vài món'
+          t.reel.pool.pickSome
         )}
       </button>
       {usable && (
         <button
           type="button"
           className="fr-pool__edit"
-          aria-label="Sửa rổ quay"
+          aria-label={t.reel.pool.edit}
           disabled={disabled}
           onClick={onEdit}
         >
@@ -114,13 +115,13 @@ export function PoolSwitch({
 type Filter = ReelRegion | 'all' | 'veg' | 'picked';
 
 const FILTERS: { id: Filter; label: string }[] = [
-  { id: 'all', label: 'Tất cả' },
-  { id: 'picked', label: 'Trong rổ' },
+  { id: 'all', label: t.reel.picker.filterAll },
+  { id: 'picked', label: t.reel.picker.filterPicked },
   { id: 'north', label: REGION_LABEL.north },
   { id: 'central', label: REGION_LABEL.central },
   { id: 'south', label: REGION_LABEL.south },
   { id: 'world', label: REGION_LABEL.world },
-  { id: 'veg', label: 'Món chay' },
+  { id: 'veg', label: t.reel.picker.filterVeg },
 ];
 
 interface PoolPickerProps {
@@ -160,7 +161,7 @@ export function PoolPicker({
         if (filter === 'veg' && !d.vegetarian) return false;
         if (filter !== 'all' && filter !== 'picked' && filter !== 'veg' && d.region !== filter)
           return false;
-        return !q || fold(`${d.name} ${d.subtitle}`).includes(q);
+        return !q || fold(`${d.name} ${d.nameVi ?? ''} ${d.subtitle}`).includes(q);
       }),
     [filter, picked, q],
   );
@@ -169,25 +170,25 @@ export function PoolPicker({
     <Sheet
       open={open}
       onClose={onClose}
-      title="Rổ quay"
-      description={`Chọn từ ${POOL_MIN} món trở lên — reel sẽ chỉ quay giữa các món này.`}
+      title={t.reel.picker.title}
+      description={t.reel.picker.description(POOL_MIN)}
       variant="dark"
       fullOnMobile
       footer={
         <>
           <p className="fr-picker__count" aria-live="polite">
             {size === 0 ? (
-              'Chưa chọn món'
+              t.reel.picker.none
             ) : (
               <>
-                <span className="fr-hide-sm">Đã chọn </span>
-                {size} món
+                <span className="fr-hide-sm">{t.reel.picker.pickedPrefix}</span>
+                {t.reel.picker.pickedCount(size)}
               </>
             )}
           </p>
           {size > 0 && (
             <button type="button" className="fr-ghost" onClick={() => onChange([])}>
-              Bỏ hết
+              {t.reel.picker.clear}
             </button>
           )}
           <button
@@ -199,7 +200,7 @@ export function PoolPicker({
             }}
           >
             <Basket aria-hidden="true" size={18} />
-            {size < POOL_MIN ? `Thêm ${POOL_MIN - size} món` : `Quay ${size} món`}
+            {size < POOL_MIN ? t.reel.picker.addMore(POOL_MIN - size) : t.reel.picker.spinN(size)}
           </button>
         </>
       }
@@ -209,19 +210,23 @@ export function PoolPicker({
         <div className="fr-picker__bar">
           <label className="fr-picker__search">
             <MagnifyingGlass aria-hidden="true" size={18} />
-            <span className="sr-only">Tìm món</span>
+            <span className="sr-only">{t.reel.picker.search}</span>
             <input
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Tìm món: phở, bún, cơm…"
+              placeholder={t.reel.picker.searchPlaceholder}
               autoComplete="off"
               // Touch screens: don't pop the keyboard over the list on open.
               data-autofocus={canHover || undefined}
             />
           </label>
 
-          <div className="fr-picker__filters" role="radiogroup" aria-label="Lọc món">
+          <div
+            className="fr-picker__filters"
+            role="radiogroup"
+            aria-label={t.reel.picker.filtersLabel}
+          >
             {FILTERS.map((f) => (
               <label key={f.id} className="fj-chip">
                 <input
@@ -246,14 +251,14 @@ export function PoolPicker({
             onClick={() => onChange([...pool, ...savedMissing.map((d) => d.id)])}
           >
             <BookmarkSimple aria-hidden="true" size={16} />
-            Thêm {savedMissing.length} món đã lưu
+            {t.reel.picker.addSaved(savedMissing.length)}
           </button>
         )}
 
         {list.length === 0 ? (
-          <p className="fr-panel-note">Không có món nào khớp.</p>
+          <p className="fr-panel-note">{t.reel.picker.noMatch}</p>
         ) : (
-          <ul className="fr-picker__grid" aria-label="Món có thể thêm vào rổ">
+          <ul className="fr-picker__grid" aria-label={t.reel.picker.gridLabel}>
             {list.map((d) => {
               const on = picked.has(d.id);
               return (

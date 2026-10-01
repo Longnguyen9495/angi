@@ -19,7 +19,7 @@ const view = (wet = false) => ({
   ],
   selected: { kind: 'barn' as const },
 });
-function fixture() {
+function fixture(plots = 1) {
   const entities: Record<string, unknown> = {};
   const add = (
     name: string,
@@ -47,9 +47,15 @@ function fixture() {
   add('tree', 'corner-root');
   add('sun', 'corner-root', { light: { type: 'directional' } });
   add('bed', 'corner-root');
-  add('plot-1', 'bed', {}, [1, 0.3, 2]);
-  add('soil', 'plot-1', { render: { type: 'box' } });
-  add('crop', 'plot-1');
+  for (let id = 1; id <= plots; id++) {
+    add(`plot-${id}`, 'bed', {}, [id, 0.3, 2]);
+    // Keys must be unique; later plots rename their children back to soil/crop.
+    const key = (name: string) => (id === 1 ? name : `${name}-${id}`);
+    add(key('soil'), `plot-${id}`, { render: { type: 'box' } });
+    add(key('crop'), `plot-${id}`);
+    (entities[key('soil')] as { name: string }).name = 'soil';
+    (entities[key('crop')] as { name: string }).name = 'crop';
+  }
   return { entities };
 }
 function start(data = fixture(), configOverrides = {}) {
@@ -106,10 +112,58 @@ describe('versioned scene with real NullGraphicsDevice parser', () => {
     e.appForDebug.update(1 / 30);
     const door = e.root.findByName('barn-door') as Entity;
     expect((door.script!.get('farmDoor') as unknown as { openness: number })?.openness).toBe(1);
-    e.setView({ plots: [], selected: null });
+    // A domain plot the scene does not author forces the code-built corner back.
+    e.setView({ plots: [{ ...view().plots[0]!, id: 2 }], selected: null });
     expect(e.root).toBe(old);
     expect(old.enabled).toBe(true);
     expect(e.appForDebug.assets.get(123)).toBeUndefined();
+  });
+  it('frames the game camera from the authored camera and keeps that camera off', async () => {
+    const data = fixture();
+    data.entities['Camera'] = {
+      name: 'Camera',
+      resource_id: 'Camera',
+      parent: 'corner-root',
+      children: [],
+      position: [0, 14, 17],
+      rotation: [-39.5, 0, 0],
+      scale: [1, 1, 1],
+      components: { camera: { fov: 38 } },
+    };
+    (data.entities['corner-root'] as { children: string[] }).children.push('Camera');
+    const e = start(data);
+    await e.sceneReady;
+    expect(e.sceneError).toBeNull();
+    expect((e.root.findByName('Camera') as Entity).enabled).toBe(false);
+    const game = e.appForDebug.root.findByName('camera') as Entity;
+    expect(game.camera!.fov).toBe(38);
+    // Orbiting the ground point the authored camera looks at: (0, 0, ~0), about 22 m away.
+    expect(game.getPosition().length()).toBeGreaterThan(18);
+  });
+  it('darkens a copy of authored soil when wet and restores it when dry', async () => {
+    const e = start();
+    await e.sceneReady;
+    const soil = e.root.findByName('soil') as Entity;
+    const authored = soil.render!.meshInstances[0]!.material;
+    e.setView(view(true));
+    const wet = soil.render!.meshInstances[0]!.material as StandardMaterial;
+    expect(wet).not.toBe(authored);
+    expect(wet.diffuse.r).toBeLessThan((authored as StandardMaterial).diffuse.r);
+    e.setView(view(false));
+    expect(soil.render!.meshInstances[0]!.material).toBe(authored);
+  });
+  it('hides authored plots the domain has not unlocked and shows them when it does', async () => {
+    const e = start(fixture(2), { plotIds: [1, 2] });
+    const old = e.root;
+    await e.sceneReady;
+    expect(e.sceneError).toBeNull();
+    expect(e.root).not.toBe(old);
+    const plot2 = e.root.findByName('plot-2') as Entity;
+    expect(plot2.enabled).toBe(false);
+    e.setView({ plots: [view().plots[0]!, { ...view().plots[0]!, id: 2 }], selected: null });
+    expect(e.root).not.toBe(old);
+    expect(plot2.enabled).toBe(true);
+    expect(plot2.findByName('crop-model')).toBeTruthy();
   });
   it('falls back without destroying the active corner on invalid naming', async () => {
     const data = fixture();
@@ -170,7 +224,7 @@ describe('versioned scene with real NullGraphicsDevice parser', () => {
       '/farm-scenes/raw/config.json',
       new AbortController().signal,
     );
-    expect(corner.plotIds).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(corner.plotIds).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     expect(corner.scriptAssetPolicy).toBe('host-imported-farm-scripts-only');
     expect(corner.exemptScriptAssetIds).toEqual([309265356, 309300378]);
     expect(load.mock.calls.every(([asset]) => asset.type !== 'script')).toBe(true);
@@ -260,10 +314,10 @@ describe('versioned scene with real NullGraphicsDevice parser', () => {
       expect(e.sceneError).toBeNull();
       const tree = e.root.findByName('tree') as Entity;
       expect(tree.script!.enabled).toBe(enabled);
-      expect(tree.script!.get('farmLamp')).toMatchObject({
-        glow: e.root.findByName('barn-door'),
-        intensity: 4,
-      });
+      const lamp = tree.script!.get('farmLamp') as unknown as Lamp;
+      // Identity, not toMatchObject: deep-comparing an Entity walks the whole app graph.
+      expect(lamp.glow).toBe(e.root.findByName('barn-door'));
+      expect(lamp.intensity).toBe(4);
     },
   );
   it('rejects an unresolved glow reference', async () => {

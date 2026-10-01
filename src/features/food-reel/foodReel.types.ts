@@ -4,6 +4,28 @@ export type ReelRegion = 'north' | 'central' | 'south' | 'world';
 export type ReelTone = 'amber' | 'copper' | 'herb' | 'crimson' | 'ivory' | 'ocean' | 'gold';
 
 /** One dish as served by GET /api/dishes (and the bundled snapshot). */
+export interface YoutubeVideo {
+  videoId: string;
+  title: string;
+  channelId: string;
+  channelTitle: string;
+  publishedAt: string;
+  duration: string;
+  thumbnail: string;
+}
+
+/** Per-language overrides keyed by locale code (e.g. 'en'); blank fields fall back to Vietnamese. */
+export type DishTranslations = Record<string, { name?: string; subtitle?: string; story?: string }>;
+export type IngredientTranslations = Record<string, { name?: string; description?: string }>;
+
+export interface CatalogueIngredient {
+  id: string;
+  name: string;
+  description: string;
+  crop: string | null;
+  translations?: IngredientTranslations;
+}
+
 export interface CatalogueItem {
   id: string;
   position: number;
@@ -20,7 +42,9 @@ export interface CatalogueItem {
   thumbnail: string;
   credit: string;
   video: { src: string; poster: string; credit: string | null } | null;
-  ingredients: { id: string; name: string; description: string; crop: string | null }[];
+  youtubeVideos?: YoutubeVideo[];
+  ingredients: CatalogueIngredient[];
+  translations?: DishTranslations;
 }
 
 export interface CataloguePayload {
@@ -31,7 +55,10 @@ export interface CataloguePayload {
 
 export interface Ingredient {
   id: string;
+  /** Name in the active language. */
   name: string;
+  /** The original Vietnamese name. */
+  nameVi?: string;
   description?: string;
   image?: string;
   /** Approximate spot on the dish photo (0–1), used to draw the hint line. */
@@ -61,7 +88,10 @@ export interface ReelDish {
   index: number;
   sourceImageId: number;
   slug: string;
+  /** Name in the active language (falls back to Vietnamese). */
   name: string;
+  /** The original Vietnamese name — for search and Vietnamese-only rules. */
+  nameVi?: string;
   subtitle: string;
   price: number;
   vegetarian: boolean;
@@ -69,6 +99,7 @@ export interface ReelDish {
   image: string;
   thumbnail: string;
   video?: ReelVideo;
+  youtubeVideos?: YoutubeVideo[];
   ingredients: Ingredient[];
   flavor: Flavor;
   story: string;

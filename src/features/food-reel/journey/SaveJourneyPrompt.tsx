@@ -1,7 +1,10 @@
 import { CloudArrowUp } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { stampCount } from '../../../domain/selectors';
+import { t } from '../../../i18n';
 import { useAccount, useGame, useUi } from '../../../state/hooks';
+
+const m = t.journey.savePrompt;
 
 const KEY = 'hanh-trinh-bep-viet/account-prompt';
 const SNOOZE_MS = 7 * 24 * 60 * 60 * 1000;
@@ -56,21 +59,18 @@ export function SaveJourneyPrompt() {
       <CloudArrowUp className="fj-keep__icon" aria-hidden="true" size={26} />
       <div className="fj-keep__copy">
         <p id="fj-keep-title" className="fj-keep__title">
-          Giữ hành trình này?
+          {m.title}
         </p>
         <p className="fj-keep__body">
-          {cooked
-            ? 'Bạn đã có món trong sổ bếp.'
-            : `Bạn đã có ${stampCount(state)} dấu hành trình.`}{' '}
-          Lưu bằng email để không mất khi đổi máy — không cần mật khẩu.
+          {cooked ? m.hasCookbook : m.hasStamps(stampCount(state))} {m.body}
         </p>
       </div>
       <div className="fj-keep__actions">
         <button type="button" className="fr-cta fr-cta--quiet" onClick={openAccount}>
-          Lưu bằng email
+          {m.save}
         </button>
         <button type="button" className="fr-ghost" onClick={later}>
-          Để sau
+          {m.later}
         </button>
       </div>
     </aside>

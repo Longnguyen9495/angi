@@ -4,6 +4,7 @@ import { BufferAttribute, BufferGeometry, Color, ConeGeometry, CylinderGeometry 
 import {
   BUILDINGS,
   CHEF_PATH,
+  FOOTPRINTS,
   edgeRadius,
   groundAt,
   noise2,
@@ -229,8 +230,13 @@ interface Scape {
   blobs: { x: number; y?: number; z: number; r: number; sx?: number }[];
 }
 
+/** Buildings that stand on dry land (the pond dresses its own banks). */
+const DRY_BUILDINGS = Object.entries(BUILDINGS)
+  .filter(([id]) => id !== 'pond')
+  .map(([, b]) => b);
+
 function nearBuilding(x: number, z: number, d: number) {
-  return Object.values(BUILDINGS).some((b) => Math.hypot(b.x - x, b.z - z) < d);
+  return FOOTPRINTS.some((b) => Math.hypot(b.x - x, b.z - z) < d);
 }
 
 /** Where every tree, stone, tuft and flower goes — deterministic, clustered, with breathing room. */
@@ -278,7 +284,7 @@ function landscape(density: number): Scape {
     s.blobs.push({ x, y, z, r: 0.95 * sc });
   }
   // Shrubs tucked at building corners anchor them to the ground.
-  for (const b of Object.values(BUILDINGS)) {
+  for (const b of DRY_BUILDINGS) {
     for (let k = 0; k < 2; k++) {
       const a = b.rot + (k ? 2.3 : -2.5) + (r() - 0.5) * 0.4;
       const x = b.x + Math.cos(a) * 1.55;
@@ -345,7 +351,7 @@ function landscape(density: number): Scape {
     if (r() < 0.6 * density) tuftAt(pb.maxX + 0.25, z);
   }
   // Around building feet.
-  for (const b of Object.values(BUILDINGS)) {
+  for (const b of DRY_BUILDINGS) {
     for (let k = 0; k < Math.round(7 * density); k++) {
       const a = r() * Math.PI * 2;
       const d = 1.25 + r() * 0.5;

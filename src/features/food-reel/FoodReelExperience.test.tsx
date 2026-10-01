@@ -167,7 +167,7 @@ describe('spin → story → back', () => {
     window.history.replaceState(null, '', '/mon/bun-moc');
     renderApp();
     const story = await screen.findByRole('dialog', { name: 'Bún mọc' }, { timeout: 2000 });
-    expect(within(story).getByText(/giò sống viên/i)).toBeInTheDocument();
+    expect(within(story).getByText(/mọc mềm thơm/i)).toBeInTheDocument();
     expect(document.querySelector('[data-reel-centre]')).toHaveAccessibleName(/^Bún mọc/);
   });
 });
@@ -187,8 +187,8 @@ describe('chosen epilogue and journey', () => {
     const seedGrants = data.ledger.filter((e: { key: string }) => e.key.startsWith('seed:'));
     expect(seedGrants).toHaveLength(1);
 
-    await user.click(screen.getByRole('button', { name: /mở hành trình/i }));
-    const drawer = await screen.findByRole('dialog', { name: /hành trình của bạn/i });
+    await user.click(screen.getByRole('button', { name: /mở nông trại/i }));
+    const drawer = await screen.findByRole('dialog', { name: /nông trại của bạn/i });
     expect(window.location.pathname).toBe('/journey');
     // Farm, map and missions live in the Journey layer, lazy loaded.
     expect(
@@ -199,7 +199,7 @@ describe('chosen epilogue and journey', () => {
     ).toBeInTheDocument();
     expect(within(drawer).getByText(/bạn nhận được|đã gieo/i)).toBeInTheDocument();
     await user.click(within(drawer).getByRole('button', { name: /về reel/i }));
-    await waitFor(() => expect(screen.queryByRole('dialog', { name: /hành trình/i })).toBeNull());
+    await waitFor(() => expect(screen.queryByRole('dialog', { name: /nông trại/i })).toBeNull());
   });
 
   it('saves a dish from its story into “Đã lưu”', async () => {

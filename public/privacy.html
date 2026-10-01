@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Privacy — Ăn gì?</title>
+  <meta name="description" content="What Ăn gì? stores, where it is kept, and how you can view, download or delete your data.">
+  <link rel="alternate" hreflang="vi" href="/quyen-rieng-tu.html">
+  <link rel="alternate" hreflang="en" href="/privacy.html">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <style>
+    :root { color-scheme: dark; --bg: #0c0c0b; --panel: #151513; --text: #f4ede1; --muted: #a9a095; --gold: #d7a85d; --line: rgb(244 237 225 / 13%); }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 'Be Vietnam Pro', system-ui, sans-serif; }
+    main { max-width: 760px; margin: 0 auto; padding: 48px 20px 72px; }
+    a { color: var(--gold); }
+    .top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 28px; }
+    .back, .lang { text-decoration: none; }
+    .lang { font-size: .9rem; }
+    h1 { margin: 0 0 8px; font: 480 clamp(2rem, 6vw, 3rem)/1.1 Georgia, serif; }
+    h2 { margin: 40px 0 10px; font: 480 1.35rem/1.3 Georgia, serif; }
+    .updated, .muted { color: var(--muted); font-size: .9rem; }
+    .summary { margin: 28px 0; padding: 18px 20px; border: 1px solid var(--line); border-radius: 18px; background: var(--panel); }
+    .summary p { margin: 6px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    th, td { padding: 10px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { color: var(--gold); font-weight: 600; }
+    li { margin: 6px 0; }
+    @media (max-width: 560px) { table, tbody, tr, td, th { display: block; } thead { display: none; } td:first-child { color: var(--gold); padding-bottom: 0; border: 0; } }
+  </style>
+</head>
+<body>
+  <main>
+    <nav class="top"><a class="back" href="/">← Back to Ăn gì?</a><a class="lang" href="/quyen-rieng-tu.html" hreflang="vi" lang="vi">Tiếng Việt</a></nav>
+    <h1>Privacy</h1>
+    <p class="updated">Version 2026-09-30</p>
+
+    <div class="summary">
+      <p><strong>No account needed.</strong> Every feature — spinning for a dish, growing crops, cooking, check-ins — works without signing in. Your progress then lives only in your browser.</p>
+      <p><strong>Check-in photos never leave your device.</strong> Photos are compressed and stripped of location data (EXIF/GPS) on your device, then kept in your browser.</p>
+      <p><strong>An account needs only an email</strong> — no password, no name, no phone number.</p>
+    </div>
+
+    <h2>1. What we store, and where</h2>
+    <table>
+      <thead><tr><th>Data</th><th>Where it is stored</th><th>What it is for</th></tr></thead>
+      <tbody>
+        <tr><td>Game progress (level, seeds, garden, cookbook, check-in history, hidden dishes)</td><td>Your browser (localStorage). If you create an account: also one copy on our server.</td><td>Showing your farm; syncing between devices when you have an account.</td></tr>
+        <tr><td>Check-in photos</td><td>Only your browser (IndexedDB). Never uploaded, never synced.</td><td>Your own meal album.</td></tr>
+        <tr><td>Email</td><td>Our server, only if you create an account.</td><td>Sending sign-in codes and identifying your account. Sending offers <em>only if</em> you turn on "Get offers by email".</td></tr>
+        <tr><td>Sign-in session</td><td>The <code>bepviet_guest</code> cookie (HttpOnly, 180 days) and a hash of it on the server.</td><td>Keeping you signed in.</td></tr>
+        <tr><td>Sign-in codes</td><td>The server, as a hash only; they expire after 10 minutes. Stored with a hash of your IP address to prevent spam.</td><td>Confirming that the email is yours.</td></tr>
+        <tr><td>Small preferences (sound, saved dishes, spin basket, ShopeeFood city, language)</td><td>Your browser.</td><td>Remembering your choices on this device.</td></tr>
+      </tbody>
+    </table>
+    <p class="muted">We do not collect your GPS location, contacts, phone number or name.</p>
+
+    <h2>2. Consent and legal basis</h2>
+    <p>When you create an account, you tick a box agreeing that we store your email and progress for syncing (required for this feature). Receiving offers is a separate choice and is off by default. We record when you agreed and which version of this policy you agreed to. Under Vietnam's Decree 13/2023/NĐ-CP on personal data protection, you can withdraw your consent at any time by turning off offers or deleting your account.</p>
+
+    <h2>3. Links to other services</h2>
+    <p>The Google Maps, GrabFood, ShopeeFood and beFood buttons only open that service's search page with the dish name. We do not send your email or progress to these services; once they open, your data is handled under their own policies.</p>
+
+    <h2>4. Your rights</h2>
+    <ul>
+      <li><strong>View and download:</strong> Profile → "Download a copy" (data on this device) and "Download my server data" (account data).</li>
+      <li><strong>Change your email preferences:</strong> Profile → Account → "Get offers by email".</li>
+      <li><strong>Delete:</strong> Profile → "Delete account" permanently deletes your email, progress and sessions from the server. "Reset progress" deletes the data and photos on this device. Clearing this site's data in your browser also deletes the copy on your device.</li>
+    </ul>
+
+    <h2>5. How long we keep data, and how we protect it</h2>
+    <p>Account data is kept until you delete your account. Sign-in codes expire after 10 minutes; sign-in sessions expire after 180 days. Codes and sessions are stored only as SHA-256 hashes; connections use HTTPS.</p>
+
+    <h2>6. Contact</h2>
+    <p>For requests about your personal data (view, correct, delete, withdraw consent): <a href="mailto:kenzjkudo@gmail.com">kenzjkudo@gmail.com</a>. We will update this page when the way we handle data changes, and note the version date.</p>
+  </main>
+</body>
+</html>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 // Creates the database and tables (idempotent). Usage: php server/bin/migrate.php
 
 require_once __DIR__ . '/../lib/bootstrap.php';
+require_once __DIR__ . '/../lib/ReviewService.php';
 
 if (env('DB_DRIVER', 'mysql') === 'sqlite') {
     $dir = dirname(sqlite_path());
@@ -14,6 +15,7 @@ if (env('DB_DRIVER', 'mysql') === 'sqlite') {
     }
     // PDO's SQLite driver runs a multi-statement script (triggers included) in one exec.
     db()->exec(file_get_contents(__DIR__ . '/../sql/schema.sqlite.sql'));
+    (new ReviewService(db()))->migrate();
     echo 'Schema ready in ' . sqlite_path() . ".\n";
     exit;
 }
@@ -26,4 +28,5 @@ $sql = str_replace('USE angi;', 'USE `' . env('DB_NAME', 'angi') . '`;', $sql);
 foreach (array_filter(array_map('trim', explode(';', preg_replace('/^--.*$/m', '', $sql)))) as $statement) {
     $pdo->exec($statement);
 }
+(new ReviewService(db()))->migrate();
 echo "Schema ready in database " . env('DB_NAME', 'angi') . ".\n";

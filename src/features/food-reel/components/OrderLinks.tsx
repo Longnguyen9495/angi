@@ -1,9 +1,13 @@
 import { ArrowSquareOut, MapPin, Moped } from '@phosphor-icons/react';
 import { useId } from 'react';
+import { t } from '../../../i18n';
 import { SHOPEEFOOD_CITIES, orderLinks, type ShopeeCity } from '../data/orderLinks';
 
 interface OrderLinksProps {
+  /** Name shown in the heading (active language). */
   dishName: string;
+  /** Name sent to the services; local apps index Vietnamese names. Defaults to dishName. */
+  searchName?: string;
   city: ShopeeCity;
   onCity: (city: ShopeeCity) => void;
   /** Story layout is quieter: no heading kicker. */
@@ -11,9 +15,15 @@ interface OrderLinksProps {
 }
 
 /** Map + delivery apps, each opening a search for this dish in a new tab (or the app). */
-export function OrderLinks({ dishName, city, onCity, compact = false }: OrderLinksProps) {
+export function OrderLinks({
+  dishName,
+  searchName,
+  city,
+  onCity,
+  compact = false,
+}: OrderLinksProps) {
   const cityId = useId();
-  const links = orderLinks(dishName, city);
+  const links = orderLinks(searchName ?? dishName, city);
   return (
     <section
       className={`fr-order ${compact ? 'fr-order--compact' : ''}`}
@@ -21,10 +31,10 @@ export function OrderLinks({ dishName, city, onCity, compact = false }: OrderLin
     >
       <div className="fr-order__head">
         <h3 id={`${cityId}-t`} className="fr-order__title">
-          Tìm quán &amp; đặt món · {dishName}
+          {t.reel.order.title(dishName)}
         </h3>
         <label className="fr-order__city" htmlFor={cityId}>
-          <span>ShopeeFood giao ở</span>
+          <span>{t.reel.order.cityLabel}</span>
           <select id={cityId} value={city} onChange={(e) => onCity(e.target.value as ShopeeCity)}>
             {SHOPEEFOOD_CITIES.map((c) => (
               <option key={c.id} value={c.id}>
@@ -55,14 +65,12 @@ export function OrderLinks({ dishName, city, onCity, compact = false }: OrderLin
                 <span className="fr-order__note">{l.note}</span>
               </span>
               <ArrowSquareOut className="fr-order__out" aria-hidden="true" size={14} />
-              <span className="sr-only"> (mở tab mới)</span>
+              <span className="sr-only">{t.reel.order.newTab}</span>
             </a>
           </li>
         ))}
       </ul>
-      <p className="fr-order__fine">
-        Mở trang tìm kiếm của từng dịch vụ với tên món. Giá và quán do họ cung cấp.
-      </p>
+      <p className="fr-order__fine">{t.reel.order.fine}</p>
     </section>
   );
 }

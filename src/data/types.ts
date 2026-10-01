@@ -12,8 +12,10 @@ export type CropId =
   | 'lime';
 /** Animal products: they fill the pantry like crops but are not grown in plots. */
 export type AnimalProduct = 'egg' | 'milk';
+/** Caught at the pond: they fill the pantry like crops but come from fishing. */
+export type Catch = 'fish' | 'shrimp';
 /** Anything that can sit in the pantry and go into a recipe. */
-export type ProduceId = CropId | AnimalProduct;
+export type ProduceId = CropId | AnimalProduct | Catch;
 export type AnimalId = 'chicken' | 'cow';
 export type RecipeId =
   | 'com-tam'
@@ -28,7 +30,8 @@ export type RecipeId =
   | 'pho-bo'
   | 'bun-cha'
   | 'banh-cuon'
-  | 'banh-mi-chao';
+  | 'banh-mi-chao'
+  | 'canh-chua-ca';
 export type DecorId = 'scarecrow' | 'lantern' | 'jar' | 'fence';
 export type BudgetId = 'low' | 'mid' | 'high';
 export type MoodId = 'quick' | 'filling' | 'light' | 'novel';

@@ -11,18 +11,24 @@ declare(strict_types=1);
  *                      in storage/og/)
  * Anything unexpected falls back to the plain app shell: this script must never
  * be the reason a page fails to load.
+ *
+ * Language: the page follows ?lang= or Accept-Language (server/lang/<code>.php) and
+ * uses the dish's translation for that language when the catalogue has one. The
+ * preview image only follows an explicit ?lang= (the page adds it to og:image), so
+ * the plain /og/<slug>.jpg stays Vietnamese and caches per language.
  */
 
 require_once __DIR__ . '/../lib/Catalogue.php';
 
 const DIST_INDEX = APP_ROOT . '/dist/index.html';
 const OG_CACHE = APP_ROOT . '/storage/og';
-const REGION_LABEL = ['north' => 'Bắc Bộ', 'central' => 'Trung Bộ', 'south' => 'Nam Bộ', 'world' => 'Thế giới'];
 
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 
 try {
     if (preg_match('#^/og/([a-z0-9-]{1,80})\.jpg$#', $path, $m)) {
+        // Explicit ?lang= only: crawlers' Accept-Language must not change the default image.
+        Lang::setLocale(is_string($_GET['lang'] ?? null) ? $_GET['lang'] : Lang::FALLBACK);
         serve_og_image($m[1]);
     }
     if (preg_match('#^/mon/([a-z0-9-]{1,80})/?$#', $path, $m)) {
@@ -38,11 +44,25 @@ serve_page(null);
 function find_dish(string $slug): ?array
 {
     try {
-        return (new Catalogue(db()))->getDish($slug);
+        $dish = (new Catalogue(db()))->getDish($slug);
+        return $dish ? localize_dish($dish, Lang::locale()) : null;
     } catch (Throwable $e) {
         error_log('[angi share] ' . $e->getMessage());
         return null;
     }
+}
+
+/** Swaps in the dish's translated name/subtitle/story where the catalogue has them. */
+function localize_dish(array $dish, string $locale): array
+{
+    $all = (array) ($dish['translations'] ?? []);
+    $t = (array) ($all[$locale] ?? []);
+    foreach (['name', 'subtitle', 'story'] as $field) {
+        if (is_string($t[$field] ?? null) && trim($t[$field]) !== '') {
+            $dish[$field] = $t[$field];
+        }
+    }
+    return $dish;
 }
 
 function site_url(): string
@@ -59,7 +79,13 @@ function site_url(): string
 function og_version(array $dish): string
 {
     $base = @filemtime(__DIR__ . '/og-dish-base.png') ?: 0;
-    return substr(sha1($dish['name'] . '|' . $dish['subtitle'] . '|' . $dish['image'] . '|' . $base . '|v3'), 0, 10);
+    return substr(sha1($dish['name'] . '|' . $dish['subtitle'] . '|' . $dish['image'] . '|' . $base . '|' . Lang::locale() . '|v3'), 0, 10);
+}
+
+/** Cache file prefix: plain slug for Vietnamese (as before), slug.<locale> otherwise. */
+function og_prefix(string $slug): string
+{
+    return Lang::locale() === Lang::FALLBACK ? $slug : $slug . '.' . Lang::locale();
 }
 
 function set_meta(string $html, string $key, string $value): string
@@ -79,20 +105,23 @@ function serve_page(?array $dish): never
     if ($html === false) {
         http_response_code(503);
         header('Content-Type: text/plain; charset=utf-8');
-        echo 'Bếp Việt đang cập nhật, bạn tải lại sau ít phút nhé.';
+        echo __t('share.updating');
         exit;
     }
+    $locale = Lang::locale();
+    $html = preg_replace('#<html lang="[^"]*"#', '<html lang="' . $locale . '"', $html, 1) ?? $html;
+    $html = set_meta($html, 'og:locale', __t('meta.ogLocale'));
     if ($dish) {
         $site = site_url();
         $url = $site . '/mon/' . $dish['id'];
-        $title = $dish['name'] . ' — Bếp Việt';
+        $title = __t('share.title', ['name' => $dish['name']]);
         $desc = trim($dish['story']) !== ''
             ? $dish['story']
-            : $dish['name'] . ' · ' . $dish['subtitle'] . '. Quay món và tìm quán trên Bếp Việt.';
+            : __t('share.description', ['name' => $dish['name'], 'subtitle' => $dish['subtitle']]);
         if (mb_strlen($desc) > 180) {
             $desc = rtrim(mb_substr($desc, 0, 177)) . '…';
         }
-        $image = $site . '/og/' . $dish['id'] . '.jpg?v=' . og_version($dish);
+        $image = $site . '/og/' . $dish['id'] . '.jpg?v=' . og_version($dish) . ($locale !== Lang::FALLBACK ? '&lang=' . $locale : '');
         $alt = $dish['name'] . ($dish['subtitle'] !== '' ? ' — ' . $dish['subtitle'] : '');
 
         $html = preg_replace('#<title>.*?</title>#s', '<title>' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '</title>', $html, 1) ?? $html;
@@ -115,6 +144,8 @@ function serve_page(?array $dish): never
     }
     header('Content-Type: text/html; charset=utf-8');
     header('Cache-Control: no-cache');
+    header('Content-Language: ' . $locale);
+    header('Vary: Accept-Language');
     header('X-Content-Type-Options: nosniff');
     echo $html;
     exit;
@@ -128,17 +159,17 @@ function serve_og_image(string $slug): never
     if (!$dish) {
         http_response_code(404);
         header('Content-Type: text/plain; charset=utf-8');
-        echo 'Không có món này.';
+        echo __t('share.notFound');
         exit;
     }
-    $file = OG_CACHE . '/' . $slug . '-' . og_version($dish) . '.jpg';
+    $file = OG_CACHE . '/' . og_prefix($slug) . '-' . og_version($dish) . '.jpg';
     if (!is_file($file)) {
         if (!is_dir(OG_CACHE)) {
             @mkdir(OG_CACHE, 0775, true);
         }
         $jpeg = render_og_image($dish);
         // Drop older versions of this dish's preview before caching the new one.
-        foreach (glob(OG_CACHE . '/' . $slug . '-*.jpg') ?: [] as $old) {
+        foreach (glob(OG_CACHE . '/' . og_prefix($slug) . '-*.jpg') ?: [] as $old) {
             @unlink($old);
         }
         @file_put_contents($file, $jpeg, LOCK_EX);
@@ -248,11 +279,11 @@ function render_og_image(array $dish): string
         $y += (int) ($size * 1.18);
     }
     // Some subtitles already name the region ("Sườn nướng • Nam Bộ"): don't say it twice.
-    $region = REGION_LABEL[$dish['region']] ?? '';
+    $region = in_array($dish['region'], Catalogue::REGIONS, true) ? __t('region.' . $dish['region']) : '';
     $details = array_filter([
         $dish['subtitle'],
         $region !== '' && !str_contains(mb_strtolower($dish['subtitle']), mb_strtolower($region)) ? $region : '',
-        $dish['price'] > 0 ? 'khoảng ' . $dish['price'] . 'k' : '',
+        $dish['price'] > 0 ? __t('share.price', ['price' => $dish['price']]) : '',
     ]);
     // Up to two lines of details; a line never ends on a dangling separator.
     $info = wrap_text(implode(' · ', $details), $regular, 22, 540);

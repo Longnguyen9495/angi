@@ -6,14 +6,17 @@ import { CROP_LIST, DECOR_LIST, MARKET, PRODUCE_IDS, produceName } from '../../.
 import { decorSprite } from '../../../data/sprites';
 import { cropAvailable } from '../../../domain/selectors';
 import { currentTime } from '../../../domain/time';
+import { t } from '../../../i18n';
 import { useFeedback, useGame } from '../../../state/hooks';
 
 type Tab = 'sell' | 'seeds' | 'decor';
 
+const m = t.journey.market;
+
 const TABS: { id: Tab; label: string }[] = [
-  { id: 'sell', label: 'Bán nông sản' },
-  { id: 'seeds', label: 'Mua hạt' },
-  { id: 'decor', label: 'Trang trí vườn' },
+  { id: 'sell', label: m.tabs.sell },
+  { id: 'seeds', label: m.tabs.seeds },
+  { id: 'decor', label: m.tabs.decor },
 ];
 
 /** Chợ quê: sell spare produce for xu, spend xu on seeds and garden decorations. */
@@ -32,19 +35,19 @@ export function MarketSection() {
       <div className="fj-market__head">
         <p className="fj-market__purse" aria-live="polite">
           <Coins aria-hidden="true" size={20} weight="fill" />
-          <span className="fj-market__coins">{state.coins}</span> xu
+          <span className="fj-market__coins">{state.coins}</span> {m.coins}
         </p>
-        <div className="fj-chips" role="tablist" aria-label="Quầy trong chợ">
-          {TABS.map((t) => (
+        <div className="fj-chips" role="tablist" aria-label={m.stallsLabel}>
+          {TABS.map((tb) => (
             <button
-              key={t.id}
+              key={tb.id}
               type="button"
               role="tab"
-              aria-selected={tab === t.id}
+              aria-selected={tab === tb.id}
               className="fj-market__tab"
-              onClick={() => setTab(t.id)}
+              onClick={() => setTab(tb.id)}
             >
-              {t.label}
+              {tb.label}
             </button>
           ))}
         </div>
@@ -52,23 +55,23 @@ export function MarketSection() {
 
       {tab === 'sell' &&
         (pantry.length === 0 ? (
-          <p className="fj-note">Kho đang trống — thu hoạch rồi mang ra chợ bán nhé.</p>
+          <p className="fj-note">{m.pantryEmpty}</p>
         ) : (
           <ul className="fj-stall">
             {pantry.map((c) => (
               <li key={c.id} className="fj-stall__item">
                 <ProduceImage crop={c.id} size={56} />
                 <span className="fj-stall__name">{c.produceName}</span>
-                <span className="fj-stall__meta">Trong kho ×{state.ingredients[c.id]}</span>
+                <span className="fj-stall__meta">{m.inPantry(state.ingredients[c.id])}</span>
                 <button
                   type="button"
                   className="fr-ghost fr-ghost--compact"
                   onClick={() => {
                     dispatch({ type: 'SELL', crop: c.id, now: currentTime() });
-                    announce(`Đã bán 1 ${c.produceName.toLowerCase()}, +${MARKET.sell(c.id)} xu.`);
+                    announce(m.sold(c.produceName.toLowerCase(), MARKET.sell(c.id)));
                   }}
                 >
-                  Bán 1 · +{MARKET.sell(c.id)} xu
+                  {m.sell(MARKET.sell(c.id))}
                 </button>
               </li>
             ))}
@@ -86,9 +89,7 @@ export function MarketSection() {
                   <CropIcon crop={c.id} size={40} />
                 </span>
                 <span className="fj-stall__name">{c.seedName}</span>
-                <span className="fj-stall__meta">
-                  Chín sau {c.growHours} giờ · khay ×{state.seeds[c.id]}
-                </span>
+                <span className="fj-stall__meta">{m.seedMeta(c.growHours, state.seeds[c.id])}</span>
                 <button
                   type="button"
                   className="fr-ghost fr-ghost--compact"
@@ -96,10 +97,10 @@ export function MarketSection() {
                   onClick={() => {
                     if (!afford) return;
                     dispatch({ type: 'BUY_SEED', crop: c.id, now: currentTime() });
-                    announce(`Đã mua 1 ${c.seedName.toLowerCase()}.`);
+                    announce(m.boughtSeed(c.seedName.toLowerCase()));
                   }}
                 >
-                  Mua · {price} xu
+                  {m.buy(price)}
                 </button>
               </li>
             );
@@ -127,7 +128,7 @@ export function MarketSection() {
                 <span className="fj-stall__meta">{d.note}</span>
                 {owned ? (
                   <span className="fj-order__done">
-                    <SealCheck aria-hidden="true" size={16} weight="fill" /> Đã đặt trong vườn
+                    <SealCheck aria-hidden="true" size={16} weight="fill" /> {m.owned}
                   </span>
                 ) : (
                   <button
@@ -137,10 +138,10 @@ export function MarketSection() {
                     onClick={() => {
                       if (!afford) return;
                       dispatch({ type: 'BUY_DECOR', decor: d.id, now: currentTime() });
-                      announce(`Đã mua ${d.name.toLowerCase()} cho khu vườn.`);
+                      announce(m.boughtDecor(d.name.toLowerCase()));
                     }}
                   >
-                    <Storefront aria-hidden="true" size={14} /> Mua · {d.price} xu
+                    <Storefront aria-hidden="true" size={14} /> {m.buy(d.price)}
                   </button>
                 )}
               </li>

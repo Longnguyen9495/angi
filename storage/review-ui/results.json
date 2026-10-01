@@ -1,0 +1,586 @@
+[
+  {
+    "origin": "http://localhost:5199",
+    "width": 1440,
+    "dish": "com-tam",
+    "hero": {
+      "secure": true,
+      "frames": 0,
+      "trigger": true
+    },
+    "initial": {
+      "gpsCalls": 0,
+      "frames": 0,
+      "focus": "Close the video gallery",
+      "bodyLock": "hidden",
+      "parentLock": "hidden",
+      "inert": true
+    },
+    "manual": {
+      "cards": 5,
+      "frames": 0,
+      "province": "HCMC",
+      "overflow": false,
+      "privacy": true
+    },
+    "player": {
+      "frames": 1,
+      "src": "https://www.youtube-nocookie.com/embed/G5sG68QHC9I?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Flocalhost%3A5199"
+    },
+    "hn": {
+      "cards": 0,
+      "frames": 0
+    },
+    "gps": {
+      "calls": 1,
+      "province": "HCMC",
+      "text": "Review quán ăn theo tỉnhThử nghiệm Hà Nội và Hồ Chí Minh, chỉ cơm tấm và phở bò; tối đa 5 video, không đảm bảo đủ 5.Chọn dựa trên tiêu đề và mô tả (title-description-only), không xác minh hình/âm thanh và không tuyên bố AI đã xem video. Không thay bằng video công thức.Tỉnh/thành Chọn tỉnhHà NộiHồ Chí MinhChỉ lưu mã tỉnh trên thiết bị, không lưu GPS. Khi bấm dùng vị trí, tọa độ được gửi qua backend tới Nominatim để xác định tỉnh; ứng dụng không lưu tọa độ, không cam kết việc lưu/log của nhà cung cấp.Dùng vị trí của tôiThử tải lạiĐã chọn Hồ Chí Minh.5 review phù hợp metadata.▶CLIP 01Đi Đây Đi ĐóCơm Tấm Ba Ghiền Có Miếng Sườn To Nhất Sài Gòn 157k/Đĩa Thập Cẩm Liệu Có Xứng Đáng?▶CLIP 02Địa điểm ăn uốngĐông khủng khiếp quán CƠM TẤM MA hơn 40 năm ở Sài Gòn, sườn nướng 5 thau vẫn không đủ cho khách▶CLIP 03PM FOOD TRAVELHiếm Thấy Cơm Tấm Nạc Giòn Bà Chị Hai 43K Với Các Topping Sáng Tạo Ngon Lạ Ăn Là Ghiền▶CLIP 04HẢI VI VU ( Ước Mơ Vòng Quanh Thế Gian )Quán cơm tấm mắc nhất Sài Gòn - Cơm tấm Nguyễn Văn Cừ , địa chỉ uy tín của những tín đồ ẩm thực !▶CLIP 05Dori Yun Travel[Review Nhanh] Quán Cơm Tấm Đêm Cực Ngon tại Gò Vấp - Cơm Tấm Tài |DoriYunTravel",
+      "requests": [
+        {
+          "route": "reviews",
+          "province": "HCMC",
+          "dishId": "com-tam",
+          "source": "stored-public-cache"
+        },
+        {
+          "route": "reviews",
+          "province": "HN",
+          "dishId": "com-tam",
+          "source": "mock"
+        },
+        {
+          "route": "reverse",
+          "method": "POST",
+          "query": false,
+          "source": "mock",
+          "bodyKeys": [
+            "latitude",
+            "longitude"
+          ]
+        },
+        {
+          "route": "reviews",
+          "province": "HCMC",
+          "dishId": "com-tam",
+          "source": "stored-public-cache"
+        }
+      ]
+    },
+    "denied": true,
+    "trap": true,
+    "closed": {
+      "popup": false,
+      "parent": true,
+      "frames": 0,
+      "focus": "fr-youtube-trigger",
+      "bodyLock": "",
+      "parentLock": "",
+      "inert": false,
+      "province": "HCMC"
+    },
+    "pass": true
+  },
+  {
+    "origin": "http://localhost:5199",
+    "width": 1440,
+    "dish": "pho-bo",
+    "hero": {
+      "secure": true,
+      "frames": 0,
+      "trigger": true
+    },
+    "initial": {
+      "gpsCalls": 0,
+      "frames": 0,
+      "focus": "Close the video gallery",
+      "bodyLock": "hidden",
+      "parentLock": "hidden",
+      "inert": true
+    },
+    "manual": {
+      "cards": 4,
+      "frames": 0,
+      "province": "HCMC",
+      "overflow": false,
+      "privacy": true
+    },
+    "player": {
+      "frames": 1,
+      "src": "https://www.youtube-nocookie.com/embed/pKEwLpqtNn8?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Flocalhost%3A5199"
+    },
+    "hn": {
+      "cards": 0,
+      "frames": 0
+    },
+    "gps": {
+      "calls": 1,
+      "province": "HCMC",
+      "text": "Review quán ăn theo tỉnhThử nghiệm Hà Nội và Hồ Chí Minh, chỉ cơm tấm và phở bò; tối đa 5 video, không đảm bảo đủ 5.Chọn dựa trên tiêu đề và mô tả (title-description-only), không xác minh hình/âm thanh và không tuyên bố AI đã xem video. Không thay bằng video công thức.Tỉnh/thành Chọn tỉnhHà NộiHồ Chí MinhChỉ lưu mã tỉnh trên thiết bị, không lưu GPS. Khi bấm dùng vị trí, tọa độ được gửi qua backend tới Nominatim để xác định tỉnh; ứng dụng không lưu tọa độ, không cam kết việc lưu/log của nhà cung cấp.Dùng vị trí của tôiThử tải lạiĐã chọn Hồ Chí Minh.4 review phù hợp metadata.▶CLIP 01Beard Eats WorldI Tried EVERY MICHELIN PHO in Ho Chi Minh City▶CLIP 02VNT FOOD & TRAVELBất ngờ Quán Phở Bò Vỉa Hè bán hơn nửa Con Bò chỉ một buổi ở Sài Gòn▶CLIP 03Saigon TravelPHỞ BÒ TƯƠI cực chất ngon bất ngờ | Thịt Tươi Nóng xếp núi khách xếp hàng ăn bằng được▶CLIP 04VNT FOOD & TRAVELSiêu khủng Quán Phở Bò bán nguyên Con Bò trong ngày ở Sài Gòn",
+      "requests": [
+        {
+          "route": "reviews",
+          "province": "HCMC",
+          "dishId": "pho-bo",
+          "source": "stored-public-cache"
+        },
+        {
+          "route": "reviews",
+          "province": "HN",
+          "dishId": "pho-bo",
+          "source": "mock"
+        },
+        {
+          "route": "reverse",
+          "method": "POST",
+          "query": false,
+          "source": "mock",
+          "bodyKeys": [
+            "latitude",
+            "longitude"
+          ]
+        },
+        {
+          "route": "reviews",
+          "province": "HCMC",
+          "dishId": "pho-bo",
+          "source": "stored-public-cache"
+        }
+      ]
+    },
+    "denied": true,
+    "trap": true,
+    "closed": {
+      "popup": false,
+      "parent": true,
+      "frames": 0,
+      "focus": "fr-youtube-trigger",
+      "bodyLock": "",
+      "parentLock": "",
+      "inert": false,
+      "province": "HCMC"
+    },
+    "pass": true
+  },
+  {
+    "origin": "http://localhost:5199",
+    "width": 390,
+    "dish": "com-tam",
+    "hero": {
+      "secure": true,
+      "frames": 0,
+      "trigger": true
+    },
+    "initial": {
+      "gpsCalls": 0,
+      "frames": 0,
+      "focus": "Close the video gallery",
+      "bodyLock": "hidden",
+      "parentLock": "hidden",
+      "inert": true
+    },
+    "manual": {
+      "cards": 5,
+      "frames": 0,
+      "province": "HCMC",
+      "overflow": false,
+      "privacy": true
+    },
+    "player": {
+      "frames": 1,
+      "src": "https://www.youtube-nocookie.com/embed/G5sG68QHC9I?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Flocalhost%3A5199"
+    },
+    "hn": {
+      "cards": 0,
+      "frames": 0
+    },
+    "gps": {
+      "calls": 1,
+      "province": "HCMC",
+      "text": "Review quán ăn theo tỉnhThử nghiệm Hà Nội và Hồ Chí Minh, chỉ cơm tấm và phở bò; tối đa 5 video, không đảm bảo đủ 5.Chọn dựa trên tiêu đề và mô tả (title-description-only), không xác minh hình/âm thanh và không tuyên bố AI đã xem video. Không thay bằng video công thức.Tỉnh/thành Chọn tỉnhHà NộiHồ Chí MinhChỉ lưu mã tỉnh trên thiết bị, không lưu GPS. Khi bấm dùng vị trí, tọa độ được gửi qua backend tới Nominatim để xác định tỉnh; ứng dụng không lưu tọa độ, không cam kết việc lưu/log của nhà cung cấp.Dùng vị trí của tôiThử tải lạiĐã chọn Hồ Chí Minh.5 review phù hợp metadata.▶CLIP 01Đi Đây Đi ĐóCơm Tấm Ba Ghiền Có Miếng Sườn To Nhất Sài Gòn 157k/Đĩa Thập Cẩm Liệu Có Xứng Đáng?▶CLIP 02Địa điểm ăn uốngĐông khủng khiếp quán CƠM TẤM MA hơn 40 năm ở Sài Gòn, sườn nướng 5 thau vẫn không đủ cho khách▶CLIP 03PM FOOD TRAVELHiếm Thấy Cơm Tấm Nạc Giòn Bà Chị Hai 43K Với Các Topping Sáng Tạo Ngon Lạ Ăn Là Ghiền▶CLIP 04HẢI VI VU ( Ước Mơ Vòng Quanh Thế Gian )Quán cơm tấm mắc nhất Sài Gòn - Cơm tấm Nguyễn Văn Cừ , địa chỉ uy tín của những tín đồ ẩm thực !▶CLIP 05Dori Yun Travel[Review Nhanh] Quán Cơm Tấm Đêm Cực Ngon tại Gò Vấp - Cơm Tấm Tài |DoriYunTravel",
+      "requests": [
+        {
+          "route": "reviews",
+          "province": "HCMC",
+          "dishId": "com-tam",
+          "source": "stored-public-cache"
+        },
+        {
+          "route": "reviews",
+          "province": "HN",
+          "dishId": "com-tam",
+          "source": "mock"
+        },
+        {
+          "route": "reverse",
+          "method": "POST",
+          "query": false,
+          "source": "mock",
+          "bodyKeys": [
+            "latitude",
+            "longitude"
+          ]
+        },
+        {
+          "route": "reviews",
+          "province": "HCMC",
+          "dishId": "com-tam",
+          "source": "stored-public-cache"
+        }
+      ]
+    },
+    "denied": true,
+    "trap": true,
+    "closed": {
+      "popup": false,
+      "parent": true,
+      "frames": 0,
+      "focus": "fr-youtube-trigger",
+      "bodyLock": "",
+      "parentLock": "",
+      "inert": false,
+      "province": "HCMC"
+    },
+    "pass": true
+  },
+  {
+    "origin": "http://localhost:5199",
+    "width": 390,
+    "dish": "pho-bo",
+    "hero": {
+      "secure": true,
+      "frames": 0,
+      "trigger": true
+    },
+    "initial": {
+      "gpsCalls": 0,
+      "frames": 0,
+      "focus": "Close the video gallery",
+      "bodyLock": "hidden",
+      "parentLock": "hidden",
+      "inert": true
+    },
+    "manual": {
+      "cards": 4,
+      "frames": 0,
+      "province": "HCMC",
+      "overflow": false,
+      "privacy": true
+    },
+    "player": {
+      "frames": 1,
+      "src": "https://www.youtube-nocookie.com/embed/pKEwLpqtNn8?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Flocalhost%3A5199"
+    },
+    "hn": {
+      "cards": 0,
+      "frames": 0
+    },
+    "gps": {
+      "calls": 1,
+      "province": "HCMC",
+      "text": "Review quán ăn theo tỉnhThử nghiệm Hà Nội và Hồ Chí Minh, chỉ cơm tấm và phở bò; tối đa 5 video, không đảm bảo đủ 5.Chọn dựa trên tiêu đề và mô tả (title-description-only), không xác minh hình/âm thanh và không tuyên bố AI đã xem video. Không thay bằng video công thức.Tỉnh/thành Chọn tỉnhHà NộiHồ Chí MinhChỉ lưu mã tỉnh trên thiết bị, không lưu GPS. Khi bấm dùng vị trí, tọa độ được gửi qua backend tới Nominatim để xác định tỉnh; ứng dụng không lưu tọa độ, không cam kết việc lưu/log của nhà cung cấp.Dùng vị trí của tôiThử tải lạiĐã chọn Hồ Chí Minh.4 review phù hợp metadata.▶CLIP 01Beard Eats WorldI Tried EVERY MICHELIN PHO in Ho Chi Minh City▶CLIP 02VNT FOOD & TRAVELBất ngờ Quán Phở Bò Vỉa Hè bán hơn nửa Con Bò chỉ một buổi ở Sài Gòn▶CLIP 03Saigon TravelPHỞ BÒ TƯƠI cực chất ngon bất ngờ | Thịt Tươi Nóng xếp núi khách xếp hàng ăn bằng được▶CLIP 04VNT FOOD & TRAVELSiêu khủng Quán Phở Bò bán nguyên Con Bò trong ngày ở Sài Gòn",
+      "requests": [
+        {
+          "route": "reviews",
+          "province": "HCMC",
+          "dishId": "pho-bo",
+          "source": "stored-public-cache"
+        },
+        {
+          "route": "reviews",
+          "province": "HN",
+          "dishId": "pho-bo",
+          "source": "mock"
+        },
+        {
+          "route": "reverse",
+          "method": "POST",
+          "query": false,
+          "source": "mock",
+          "bodyKeys": [
+            "latitude",
+            "longitude"
+          ]
+        },
+        {
+          "route": "reviews",
+          "province": "HCMC",
+          "dishId": "pho-bo",
+          "source": "stored-public-cache"
+        }
+      ]
+    },
+    "denied": true,
+    "trap": true,
+    "closed": {
+      "popup": false,
+      "parent": true,
+      "frames": 0,
+      "focus": "fr-youtube-trigger",
+      "bodyLock": "",
+      "parentLock": "",
+      "inert": false,
+      "province": "HCMC"
+    },
+    "pass": true
+  },
+  {
+    "origin": "http://angi.local",
+    "width": 1440,
+    "dish": "com-tam",
+    "hero": {
+      "secure": false,
+      "frames": 0,
+      "trigger": true
+    },
+    "initial": {
+      "gpsCalls": 0,
+      "frames": 0,
+      "focus": "Close the video gallery",
+      "bodyLock": "hidden",
+      "parentLock": "hidden",
+      "inert": true
+    },
+    "manual": {
+      "cards": 5,
+      "frames": 0,
+      "province": "HCMC",
+      "overflow": false,
+      "privacy": true
+    },
+    "player": {
+      "frames": 1,
+      "src": "https://www.youtube-nocookie.com/embed/G5sG68QHC9I?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "hn": {
+      "cards": 0,
+      "frames": 0
+    },
+    "gps": {
+      "calls": 0,
+      "province": "HN",
+      "text": "Review quán ăn theo tỉnhThử nghiệm Hà Nội và Hồ Chí Minh, chỉ cơm tấm và phở bò; tối đa 5 video, không đảm bảo đủ 5.Chọn dựa trên tiêu đề và mô tả (title-description-only), không xác minh hình/âm thanh và không tuyên bố AI đã xem video. Không thay bằng video công thức.Tỉnh/thành Chọn tỉnhHà NộiHồ Chí MinhChỉ lưu mã tỉnh trên thiết bị, không lưu GPS. Khi bấm dùng vị trí, tọa độ được gửi qua backend tới Nominatim để xác định tỉnh; ứng dụng không lưu tọa độ, không cam kết việc lưu/log của nhà cung cấp.Dùng vị trí của tôiThử tải lạiGPS cần HTTPS hoặc localhost. HTTP angi.local không phải ngữ cảnh an toàn; hãy chọn tỉnh thủ công. Không bỏ qua bảo vệ trình duyệt.Chưa có review phù hợp metadata cho món và tỉnh này.",
+      "requests": [
+        {
+          "route": "reviews",
+          "province": "HCMC",
+          "dishId": "com-tam",
+          "source": "stored-public-cache"
+        },
+        {
+          "route": "reviews",
+          "province": "HN",
+          "dishId": "com-tam",
+          "source": "mock"
+        }
+      ]
+    },
+    "denied": false,
+    "trap": true,
+    "closed": {
+      "popup": false,
+      "parent": true,
+      "frames": 0,
+      "focus": "fr-youtube-trigger",
+      "bodyLock": "",
+      "parentLock": "",
+      "inert": false,
+      "province": "HN"
+    },
+    "pass": true
+  },
+  {
+    "origin": "http://angi.local",
+    "width": 1440,
+    "dish": "pho-bo",
+    "hero": {
+      "secure": false,
+      "frames": 0,
+      "trigger": true
+    },
+    "initial": {
+      "gpsCalls": 0,
+      "frames": 0,
+      "focus": "Close the video gallery",
+      "bodyLock": "hidden",
+      "parentLock": "hidden",
+      "inert": true
+    },
+    "manual": {
+      "cards": 4,
+      "frames": 0,
+      "province": "HCMC",
+      "overflow": false,
+      "privacy": true
+    },
+    "player": {
+      "frames": 1,
+      "src": "https://www.youtube-nocookie.com/embed/pKEwLpqtNn8?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "hn": {
+      "cards": 0,
+      "frames": 0
+    },
+    "gps": {
+      "calls": 0,
+      "province": "HN",
+      "text": "Review quán ăn theo tỉnhThử nghiệm Hà Nội và Hồ Chí Minh, chỉ cơm tấm và phở bò; tối đa 5 video, không đảm bảo đủ 5.Chọn dựa trên tiêu đề và mô tả (title-description-only), không xác minh hình/âm thanh và không tuyên bố AI đã xem video. Không thay bằng video công thức.Tỉnh/thành Chọn tỉnhHà NộiHồ Chí MinhChỉ lưu mã tỉnh trên thiết bị, không lưu GPS. Khi bấm dùng vị trí, tọa độ được gửi qua backend tới Nominatim để xác định tỉnh; ứng dụng không lưu tọa độ, không cam kết việc lưu/log của nhà cung cấp.Dùng vị trí của tôiThử tải lạiGPS cần HTTPS hoặc localhost. HTTP angi.local không phải ngữ cảnh an toàn; hãy chọn tỉnh thủ công. Không bỏ qua bảo vệ trình duyệt.Chưa có review phù hợp metadata cho món và tỉnh này.",
+      "requests": [
+        {
+          "route": "reviews",
+          "province": "HCMC",
+          "dishId": "pho-bo",
+          "source": "stored-public-cache"
+        },
+        {
+          "route": "reviews",
+          "province": "HN",
+          "dishId": "pho-bo",
+          "source": "mock"
+        }
+      ]
+    },
+    "denied": false,
+    "trap": true,
+    "closed": {
+      "popup": false,
+      "parent": true,
+      "frames": 0,
+      "focus": "fr-youtube-trigger",
+      "bodyLock": "",
+      "parentLock": "",
+      "inert": false,
+      "province": "HN"
+    },
+    "pass": true
+  },
+  {
+    "origin": "http://angi.local",
+    "width": 390,
+    "dish": "com-tam",
+    "hero": {
+      "secure": false,
+      "frames": 0,
+      "trigger": true
+    },
+    "initial": {
+      "gpsCalls": 0,
+      "frames": 0,
+      "focus": "Close the video gallery",
+      "bodyLock": "hidden",
+      "parentLock": "hidden",
+      "inert": true
+    },
+    "manual": {
+      "cards": 5,
+      "frames": 0,
+      "province": "HCMC",
+      "overflow": false,
+      "privacy": true
+    },
+    "player": {
+      "frames": 1,
+      "src": "https://www.youtube-nocookie.com/embed/G5sG68QHC9I?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "hn": {
+      "cards": 0,
+      "frames": 0
+    },
+    "gps": {
+      "calls": 0,
+      "province": "HN",
+      "text": "Review quán ăn theo tỉnhThử nghiệm Hà Nội và Hồ Chí Minh, chỉ cơm tấm và phở bò; tối đa 5 video, không đảm bảo đủ 5.Chọn dựa trên tiêu đề và mô tả (title-description-only), không xác minh hình/âm thanh và không tuyên bố AI đã xem video. Không thay bằng video công thức.Tỉnh/thành Chọn tỉnhHà NộiHồ Chí MinhChỉ lưu mã tỉnh trên thiết bị, không lưu GPS. Khi bấm dùng vị trí, tọa độ được gửi qua backend tới Nominatim để xác định tỉnh; ứng dụng không lưu tọa độ, không cam kết việc lưu/log của nhà cung cấp.Dùng vị trí của tôiThử tải lạiGPS cần HTTPS hoặc localhost. HTTP angi.local không phải ngữ cảnh an toàn; hãy chọn tỉnh thủ công. Không bỏ qua bảo vệ trình duyệt.Chưa có review phù hợp metadata cho món và tỉnh này.",
+      "requests": [
+        {
+          "route": "reviews",
+          "province": "HCMC",
+          "dishId": "com-tam",
+          "source": "stored-public-cache"
+        },
+        {
+          "route": "reviews",
+          "province": "HN",
+          "dishId": "com-tam",
+          "source": "mock"
+        }
+      ]
+    },
+    "denied": false,
+    "trap": true,
+    "closed": {
+      "popup": false,
+      "parent": true,
+      "frames": 0,
+      "focus": "fr-youtube-trigger",
+      "bodyLock": "",
+      "parentLock": "",
+      "inert": false,
+      "province": "HN"
+    },
+    "pass": true
+  },
+  {
+    "origin": "http://angi.local",
+    "width": 390,
+    "dish": "pho-bo",
+    "hero": {
+      "secure": false,
+      "frames": 0,
+      "trigger": true
+    },
+    "initial": {
+      "gpsCalls": 0,
+      "frames": 0,
+      "focus": "Close the video gallery",
+      "bodyLock": "hidden",
+      "parentLock": "hidden",
+      "inert": true
+    },
+    "manual": {
+      "cards": 4,
+      "frames": 0,
+      "province": "HCMC",
+      "overflow": false,
+      "privacy": true
+    },
+    "player": {
+      "frames": 1,
+      "src": "https://www.youtube-nocookie.com/embed/pKEwLpqtNn8?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "hn": {
+      "cards": 0,
+      "frames": 0
+    },
+    "gps": {
+      "calls": 0,
+      "province": "HN",
+      "text": "Review quán ăn theo tỉnhThử nghiệm Hà Nội và Hồ Chí Minh, chỉ cơm tấm và phở bò; tối đa 5 video, không đảm bảo đủ 5.Chọn dựa trên tiêu đề và mô tả (title-description-only), không xác minh hình/âm thanh và không tuyên bố AI đã xem video. Không thay bằng video công thức.Tỉnh/thành Chọn tỉnhHà NộiHồ Chí MinhChỉ lưu mã tỉnh trên thiết bị, không lưu GPS. Khi bấm dùng vị trí, tọa độ được gửi qua backend tới Nominatim để xác định tỉnh; ứng dụng không lưu tọa độ, không cam kết việc lưu/log của nhà cung cấp.Dùng vị trí của tôiThử tải lạiGPS cần HTTPS hoặc localhost. HTTP angi.local không phải ngữ cảnh an toàn; hãy chọn tỉnh thủ công. Không bỏ qua bảo vệ trình duyệt.Chưa có review phù hợp metadata cho món và tỉnh này.",
+      "requests": [
+        {
+          "route": "reviews",
+          "province": "HCMC",
+          "dishId": "pho-bo",
+          "source": "stored-public-cache"
+        },
+        {
+          "route": "reviews",
+          "province": "HN",
+          "dishId": "pho-bo",
+          "source": "mock"
+        }
+      ]
+    },
+    "denied": false,
+    "trap": true,
+    "closed": {
+      "popup": false,
+      "parent": true,
+      "frames": 0,
+      "focus": "fr-youtube-trigger",
+      "bodyLock": "",
+      "parentLock": "",
+      "inert": false,
+      "province": "HN"
+    },
+    "pass": true
+  }
+]

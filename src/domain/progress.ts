@@ -80,6 +80,8 @@ export interface GuestProgress {
   reminder: { slotKey: string; at: number } | null;
   /** Watering can: `used` of today's refills, plus `bonus` earned by check-ins today. */
   water: { date: string; used: number; bonus: number };
+  /** Pond: catches landed on `date` (local day); a missed bite is free. */
+  fishing: { date: string; used: number };
   /** Cô Ba's daily orders already delivered, for `date` only. */
   orders: { date: string; done: string[] };
   /** Crops opened by levelling up (the starting six are always available). */
@@ -143,7 +145,13 @@ export const EMPTY_CROPS: Record<CropId, number> = {
   lime: 0,
 };
 
-export const EMPTY_PRODUCE: Record<ProduceId, number> = { ...EMPTY_CROPS, egg: 0, milk: 0 };
+export const EMPTY_PRODUCE: Record<ProduceId, number> = {
+  ...EMPTY_CROPS,
+  egg: 0,
+  milk: 0,
+  fish: 0,
+  shrimp: 0,
+};
 
 function randomId(): string {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) return crypto.randomUUID();
@@ -198,6 +206,7 @@ export function createInitialProgress(now: number): GuestProgress {
     streak: { count: 2, lastActiveDate: dateKey(now - 24 * HOUR_MS), restPasses: 1 },
     reminder: null,
     water: { date: dateKey(now), used: 0, bonus: 0 },
+    fishing: { date: dateKey(now), used: 0 },
     orders: { date: dateKey(now), done: [] },
     unlockedCrops: [],
     recentCropUnlock: null,

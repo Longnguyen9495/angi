@@ -335,48 +335,7 @@
   }
 }
 
-/* ——— Toasts ——— */
-.toast-region {
-  position: fixed;
-  left: 50%;
-  bottom: calc(18px + env(safe-area-inset-bottom));
-  z-index: 99;
-  display: grid;
-  gap: 8px;
-  width: min(460px, calc(100vw - 32px));
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-
-.toast {
-  pointer-events: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 12px 12px 18px;
-  border: 1px solid var(--fr-line-strong);
-  border-radius: 16px;
-  background: rgb(29 28 25 / 96%);
-  color: var(--fr-ivory);
-  font-size: 0.9rem;
-  box-shadow: 0 20px 50px -20px rgb(0 0 0 / 80%);
-}
-
-.toast--success {
-  border-color: rgb(143 191 122 / 45%);
-}
-
-.toast--warning {
-  border-color: rgb(224 135 108 / 55%);
-}
-
-.toast__msg {
-  flex: 1;
-}
-
-.toast .btn {
-  min-height: 34px;
-}
+/* ——— Toasts: see components/feedback/toast.css ——— */
 
 /* ——— Forms (check-in, profile) ——— */
 .option-group {
@@ -1097,4 +1056,110 @@
 .fr-empty__cta:focus-visible {
   outline: 2px solid var(--fr-gold);
   outline-offset: 3px;
+}
+
+/* ——— Language switcher (components/ui/LanguageSwitcher) ——— */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--fr-line);
+  border-radius: 999px;
+}
+
+.lang-switch__option {
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fr-muted);
+  font: 600 0.68rem/1 var(--fr-body);
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  transition:
+    color 180ms var(--fr-ease),
+    background-color 180ms var(--fr-ease);
+}
+
+.lang-switch__option:hover {
+  color: var(--fr-ivory);
+}
+
+.lang-switch__option[aria-pressed='true'] {
+  background: rgb(244 237 225 / 10%);
+  color: var(--fr-gold);
+  cursor: default;
+}
+
+.lang-switch__option:focus-visible {
+  outline: 2px solid var(--fr-gold);
+  outline-offset: 2px;
+}
+
+/* Full names (About panel, settings): a calmer, sentence-case pill. */
+.lang-switch--full .lang-switch__option {
+  min-height: 40px;
+  padding: 0 16px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* Header: sits with the chrome buttons, slightly apart from them. */
+.fr-header .fr-lang {
+  margin-right: 6px;
+}
+
+.fr-about__lang {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+
+.fr-about__lang-label {
+  color: var(--fr-muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Phones: only the other language is offered in the header (one tap away), so
+   the logo and the five actions still fit on one row. */
+@media (max-width: 767px) {
+  .fr-header {
+    gap: 8px;
+  }
+
+  .fr-header .fr-lang {
+    margin-right: 2px;
+    padding: 0;
+    border: 0;
+  }
+
+  .fr-header .fr-lang .lang-switch__option[aria-pressed='true'] {
+    display: none;
+  }
+
+  .fr-header .fr-lang .lang-switch__option {
+    min-width: 34px;
+    padding: 0 6px;
+    border: 1px solid var(--fr-line);
+  }
+}
+
+@media (max-width: 419px) {
+  .fr-header .fr-chrome {
+    width: 36px;
+  }
+
+  .fr-header .fr-lang .lang-switch__option {
+    min-width: 32px;
+    padding: 0 4px;
+  }
 }

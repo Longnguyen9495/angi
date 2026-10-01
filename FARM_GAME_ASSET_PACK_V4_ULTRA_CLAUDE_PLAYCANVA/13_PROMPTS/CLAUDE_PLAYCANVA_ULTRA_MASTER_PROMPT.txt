@@ -1,0 +1,143 @@
+CLAUDE + PLAYCANVA — ULTRA MASTER PROMPT
+
+I am giving you FARM_GAME_ASSET_PACK_V4_ULTRA.
+
+WEBSITE:
+https://angi.221-121-1-68.sslip.io/
+
+MASTER VISUAL:
+00_MASTER/MASTER_REFERENCE.png
+
+Read first:
+10_UI_DESIGN_SYSTEM/DESIGN_SYSTEM.md
+11_ANIMATION/ANIMATION_SPEC.md
+12_GAMEPLAY_SPECS/GAMEPLAY_SPEC.md
+09_MAPS_AND_LAYOUT/INTERACTION_HOTSPOTS.json
+09_MAPS_AND_LAYOUT/DEPTH_ORDER_REFERENCE.png
+
+MISSION
+=======
+Use Canva/PlayCanva to recreate and refine the master farm scene as a highly detailed, interactive,
+living farming-game world, then adapt/integrate the result into the existing website.
+
+DO NOT:
+- merely use MASTER_REFERENCE.png as a flat background
+- collage crops without preserving perspective
+- rewrite the existing website
+- create a generic SaaS UI
+- introduce a mismatched art style
+
+DO:
+- preserve the master composition
+- use the asset categories as detailed references
+- make major objects independently controllable where possible
+- recreate/refine transparent candidates in Canva if edges are imperfect
+- add micro-details
+- add animations
+- add interactions
+- keep game state modular
+- integrate into existing website architecture
+
+VISUAL LAYOUT
+=============
+Center: farmhouse + path + windmill.
+Left/lower-left: farm tile grid and crops.
+Upper-left: fruit trees, well, bushes.
+Upper-right: greenhouse/market.
+Right: animal barn + chicken coop + hay.
+Bottom-right: pond + dock + fish.
+
+OBJECTS TO SEPARATE
+====================
+farmhouse
+greenhouse
+market
+windmill body
+windmill blades
+animal barn
+chicken coop
+well
+fruit trees
+center tree
+cow
+chickens
+haystack
+dock
+fish
+pond water
+lily pads
+water plants
+fences
+farm tiles
+crops
+clouds
+island cliff
+
+ANIMATION
+=========
+Implement idle animations even when player does nothing:
+clouds drift, trees sway, grass moves, windmill rotates, water ripples,
+fish swim, animals idle/walk/eat, occasional birds/butterflies.
+
+Implement interaction animations:
+hover highlight, click bounce, hoe, plant, water, crop growth, harvest,
+reward fly-to-inventory, XP/coin float, level-up, fishing.
+
+GAME
+====
+Farm tile states:
+EMPTY → TILLED → PLANTED → WATERED → GROWING → MATURE → HARVESTABLE
+
+Implement:
+- crops
+- inventory
+- coins
+- XP
+- level
+- energy
+- animals
+- fishing
+- shop
+- localStorage
+
+PERFORMANCE
+===========
+Prefer transform/opacity.
+Avoid hundreds of JS loops.
+Use event-driven animation.
+Support responsive desktop/tablet/mobile.
+Respect reduced-motion when possible.
+
+WEBSITE INTEGRATION
+====================
+First inspect the current site architecture and framework.
+Create an isolated FarmGame module.
+Do not rewrite unrelated code.
+Reuse existing components/styles where sensible.
+Canva is the visual/prototype/asset tool; production state/logic should live in the website.
+
+WORKFLOW
+========
+1. Inspect website.
+2. Inspect Canva connection.
+3. Load master + asset pack.
+4. Build scene.
+5. Separate major layers.
+6. Refine micro-details.
+7. Add idle animations.
+8. Add interactions.
+9. Add gameplay state.
+10. Add save/load.
+11. Preview/test.
+12. Integrate.
+13. Test responsive/performance.
+14. Fix visual inconsistencies.
+
+QUALITY BAR
+===========
+The final result should feel like a polished casual farming game:
+alive, colorful, detailed, cohesive, responsive and satisfying to interact with.
+
+Do not stop at a static mockup.
+Do not stop at a screenshot.
+The goal is an interactive farm-game experience that can live inside the existing website.

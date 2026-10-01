@@ -3,6 +3,7 @@ import { memo, useMemo, useRef } from 'react';
 import type { Group, Mesh } from 'three';
 import type { Plot } from '../../../domain/progress';
 import { isWet, plotGrowth, plotStage, type PlotStage } from '../../../domain/selectors';
+import { t } from '../../../i18n';
 import { PLOT_SIZE, plotPosition } from '../layout';
 import { RIDGE_TOP, RIDGE_Z, bedGeometries } from './bedGeometry';
 import { CropModel } from './Crop';
@@ -168,7 +169,7 @@ const STAKES: [number, number][] = [
 /** The "coming soon" plot: staked-out earth and a level sign. */
 function LockedPlot({ index, level }: { index: number; level: number }) {
   const [x, z] = plotPosition(index);
-  const tex = useMemo(() => labelTexture(`Mở ở cấp ${level}`), [level]);
+  const tex = useMemo(() => labelTexture(t.farm.garden3d.signs.unlockAt(level)), [level]);
   const aspect = tex.image.width / tex.image.height;
   return (
     <group position={[x, 0, z]}>

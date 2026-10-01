@@ -1,8 +1,10 @@
+import { t } from '../i18n';
 import type {
   AvoidId,
   BudgetId,
   AnimalId,
   AnimalProduct,
+  Catch,
   CropDef,
   CropId,
   DecorId,
@@ -20,9 +22,9 @@ import type {
 export const CROPS: Record<CropId, CropDef> = {
   rice: {
     id: 'rice',
-    name: 'Lúa',
-    seedName: 'Hạt lúa',
-    produceName: 'Gạo',
+    name: t.data.crops.rice.name,
+    seedName: t.data.crops.rice.seedName,
+    produceName: t.data.crops.rice.produceName,
     growHours: 5,
     yield: 1,
     regions: ['north', 'central', 'south'],
@@ -30,9 +32,9 @@ export const CROPS: Record<CropId, CropDef> = {
   },
   herbs: {
     id: 'herbs',
-    name: 'Rau thơm',
-    seedName: 'Hạt rau thơm',
-    produceName: 'Rau thơm',
+    name: t.data.crops.herbs.name,
+    seedName: t.data.crops.herbs.seedName,
+    produceName: t.data.crops.herbs.produceName,
     growHours: 3,
     yield: 1,
     regions: ['north', 'central', 'south'],
@@ -40,9 +42,9 @@ export const CROPS: Record<CropId, CropDef> = {
   },
   chili: {
     id: 'chili',
-    name: 'Ớt',
-    seedName: 'Hạt ớt',
-    produceName: 'Ớt',
+    name: t.data.crops.chili.name,
+    seedName: t.data.crops.chili.seedName,
+    produceName: t.data.crops.chili.produceName,
     growHours: 4,
     yield: 1,
     regions: ['central', 'south'],
@@ -50,9 +52,9 @@ export const CROPS: Record<CropId, CropDef> = {
   },
   scallion: {
     id: 'scallion',
-    name: 'Hành',
-    seedName: 'Củ hành giống',
-    produceName: 'Hành',
+    name: t.data.crops.scallion.name,
+    seedName: t.data.crops.scallion.seedName,
+    produceName: t.data.crops.scallion.produceName,
     growHours: 3,
     yield: 1,
     regions: ['north', 'south'],
@@ -60,9 +62,9 @@ export const CROPS: Record<CropId, CropDef> = {
   },
   bean: {
     id: 'bean',
-    name: 'Đậu',
-    seedName: 'Hạt đậu',
-    produceName: 'Đậu',
+    name: t.data.crops.bean.name,
+    seedName: t.data.crops.bean.seedName,
+    produceName: t.data.crops.bean.produceName,
     growHours: 4,
     yield: 1,
     regions: ['north', 'central'],
@@ -70,9 +72,9 @@ export const CROPS: Record<CropId, CropDef> = {
   },
   tomato: {
     id: 'tomato',
-    name: 'Cà chua',
-    seedName: 'Hạt cà chua',
-    produceName: 'Cà chua',
+    name: t.data.crops.tomato.name,
+    seedName: t.data.crops.tomato.seedName,
+    produceName: t.data.crops.tomato.produceName,
     growHours: 5,
     yield: 1,
     regions: ['north', 'south'],
@@ -80,9 +82,9 @@ export const CROPS: Record<CropId, CropDef> = {
   },
   lemongrass: {
     id: 'lemongrass',
-    name: 'Sả',
-    seedName: 'Gốc sả giống',
-    produceName: 'Sả',
+    name: t.data.crops.lemongrass.name,
+    seedName: t.data.crops.lemongrass.seedName,
+    produceName: t.data.crops.lemongrass.produceName,
     growHours: 4,
     yield: 1,
     regions: ['central', 'south'],
@@ -91,9 +93,9 @@ export const CROPS: Record<CropId, CropDef> = {
   },
   garlic: {
     id: 'garlic',
-    name: 'Tỏi',
-    seedName: 'Tép tỏi giống',
-    produceName: 'Tỏi',
+    name: t.data.crops.garlic.name,
+    seedName: t.data.crops.garlic.seedName,
+    produceName: t.data.crops.garlic.produceName,
     growHours: 5,
     yield: 1,
     regions: ['north', 'central'],
@@ -102,9 +104,9 @@ export const CROPS: Record<CropId, CropDef> = {
   },
   cucumber: {
     id: 'cucumber',
-    name: 'Dưa leo',
-    seedName: 'Hạt dưa leo',
-    produceName: 'Dưa leo',
+    name: t.data.crops.cucumber.name,
+    seedName: t.data.crops.cucumber.seedName,
+    produceName: t.data.crops.cucumber.produceName,
     growHours: 4,
     yield: 1,
     regions: ['north', 'south'],
@@ -113,9 +115,9 @@ export const CROPS: Record<CropId, CropDef> = {
   },
   lime: {
     id: 'lime',
-    name: 'Chanh',
-    seedName: 'Cây chanh giống',
-    produceName: 'Chanh',
+    name: t.data.crops.lime.name,
+    seedName: t.data.crops.lime.seedName,
+    produceName: t.data.crops.lime.produceName,
     growHours: 6,
     yield: 1,
     regions: ['north', 'central', 'south'],
@@ -143,8 +145,8 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
     ],
     xp: 30,
     starter: true,
-    unlockNote: 'Công thức khởi đầu — mở sẵn cho mọi khách.',
-    fact: 'Cơm tấm vốn nấu từ hạt gạo vỡ trong lúc xay xát, nay thành đặc sản Sài Gòn.',
+    unlockNote: t.data.recipes['com-tam'].unlockNote,
+    fact: t.data.recipes['com-tam'].fact,
   },
   'bun-rieu': {
     id: 'bun-rieu',
@@ -159,8 +161,8 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
     ],
     xp: 45,
     starter: true,
-    unlockNote: 'Mở sẵn — cần ba nguyên liệu.',
-    fact: 'Riêu được làm từ cua đồng giã nhỏ, lọc lấy nước rồi đun cho gạch cua kết lại.',
+    unlockNote: t.data.recipes['bun-rieu'].unlockNote,
+    fact: t.data.recipes['bun-rieu'].fact,
   },
   'bun-bo-hue': {
     id: 'bun-bo-hue',
@@ -176,8 +178,8 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
     ],
     xp: 60,
     starter: true,
-    unlockNote: 'Mở sẵn — công thức bốn nguyên liệu.',
-    fact: 'Nước dùng bún bò Huế thơm nhờ sả và mắm ruốc, sợi bún to hơn bún thường.',
+    unlockNote: t.data.recipes['bun-bo-hue'].unlockNote,
+    fact: t.data.recipes['bun-bo-hue'].fact,
   },
   // ——— Nam Bộ ———
   'goi-cuon': {
@@ -189,11 +191,11 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
     ingredients: [
       { crop: 'rice', qty: 1 },
       { crop: 'herbs', qty: 1 },
-      { crop: 'bean', qty: 1 },
+      { crop: 'shrimp', qty: 1 },
     ],
     xp: 45,
-    unlockNote: 'Mở cùng Nam Bộ.',
-    fact: 'Gỏi cuốn không chiên: bánh tráng chỉ nhúng nước, cuốn tôm, thịt, bún và rau sống.',
+    unlockNote: t.data.recipes['goi-cuon'].unlockNote,
+    fact: t.data.recipes['goi-cuon'].fact,
   },
   'banh-xeo': {
     id: 'banh-xeo',
@@ -208,8 +210,8 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
       { crop: 'scallion', qty: 1 },
     ],
     xp: 55,
-    unlockNote: 'Mở cùng Nam Bộ.',
-    fact: 'Tên bánh xèo lấy từ tiếng bột gạo xèo lên khi đổ vào chảo nóng.',
+    unlockNote: t.data.recipes['banh-xeo'].unlockNote,
+    fact: t.data.recipes['banh-xeo'].fact,
   },
   'bo-luc-lac': {
     id: 'bo-luc-lac',
@@ -224,8 +226,8 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
       { crop: 'scallion', qty: 1 },
     ],
     xp: 65,
-    unlockNote: 'Mở cùng Nam Bộ — cần tỏi và dưa leo.',
-    fact: 'Thịt bò cắt hạt lựu được lắc đều trên chảo thật nóng, nên có tên "lúc lắc".',
+    unlockNote: t.data.recipes['bo-luc-lac'].unlockNote,
+    fact: t.data.recipes['bo-luc-lac'].fact,
   },
   // ——— Trung Bộ ———
   'mi-quang': {
@@ -240,8 +242,8 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
       { crop: 'herbs', qty: 1 },
     ],
     xp: 45,
-    unlockNote: 'Mở cùng Trung Bộ.',
-    fact: 'Mì Quảng chỉ chan xâm xấp nước nhưng rất đậm, ăn kèm bánh tráng nướng và đậu phộng.',
+    unlockNote: t.data.recipes['mi-quang'].unlockNote,
+    fact: t.data.recipes['mi-quang'].fact,
   },
   'com-ga-hoi-an': {
     id: 'com-ga-hoi-an',
@@ -256,8 +258,8 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
       { crop: 'lime', qty: 1 },
     ],
     xp: 60,
-    unlockNote: 'Mở cùng Trung Bộ — cần chanh.',
-    fact: 'Gạo được nấu bằng nước luộc gà và chút nghệ nên hạt cơm vàng và thơm.',
+    unlockNote: t.data.recipes['com-ga-hoi-an'].unlockNote,
+    fact: t.data.recipes['com-ga-hoi-an'].fact,
   },
   'nem-nuong': {
     id: 'nem-nuong',
@@ -272,8 +274,8 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
       { crop: 'cucumber', qty: 1 },
     ],
     xp: 60,
-    unlockNote: 'Mở cùng Trung Bộ — cần tỏi và dưa leo.',
-    fact: 'Nem được nướng trên than hoa rồi cuốn cùng rau sống, dưa leo và chấm nước sốt gan.',
+    unlockNote: t.data.recipes['nem-nuong'].unlockNote,
+    fact: t.data.recipes['nem-nuong'].fact,
   },
   // ——— Bắc Bộ ———
   'pho-bo': {
@@ -289,8 +291,8 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
       { crop: 'lime', qty: 1 },
     ],
     xp: 60,
-    unlockNote: 'Mở cùng Bắc Bộ — cần chanh.',
-    fact: 'Nước phở trong nhờ xương bò ninh nhỏ lửa nhiều giờ cùng gừng, hành nướng và hoa hồi.',
+    unlockNote: t.data.recipes['pho-bo'].unlockNote,
+    fact: t.data.recipes['pho-bo'].fact,
   },
   'bun-cha': {
     id: 'bun-cha',
@@ -305,8 +307,8 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
       { crop: 'chili', qty: 1 },
     ],
     xp: 60,
-    unlockNote: 'Mở cùng Bắc Bộ — cần tỏi.',
-    fact: 'Chả được nướng trên than hoa, thả vào bát nước chấm chua ngọt có tỏi ớt ngâm.',
+    unlockNote: t.data.recipes['bun-cha'].unlockNote,
+    fact: t.data.recipes['bun-cha'].fact,
   },
   'banh-cuon': {
     id: 'banh-cuon',
@@ -320,8 +322,8 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
       { crop: 'bean', qty: 1 },
     ],
     xp: 45,
-    unlockNote: 'Mở cùng Bắc Bộ.',
-    fact: 'Lá bánh được tráng trên khuôn vải căng trên nồi nước sôi, mỏng đến mức nhìn xuyên được.',
+    unlockNote: t.data.recipes['banh-cuon'].unlockNote,
+    fact: t.data.recipes['banh-cuon'].fact,
   },
   // ——— From the animals ———
   'banh-mi-chao': {
@@ -336,8 +338,23 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
       { crop: 'tomato', qty: 1 },
     ],
     xp: 50,
-    unlockNote: 'Mở cùng Nam Bộ — cần trứng gà và sữa bò trong vườn.',
-    fact: 'Chảo gang nóng xèo xèo: trứng ốp la, pa tê và xíu mại ăn kèm ổ bánh mì giòn, một kiểu điểm tâm của Sài Gòn.',
+    unlockNote: t.data.recipes['banh-mi-chao'].unlockNote,
+    fact: t.data.recipes['banh-mi-chao'].fact,
+  },
+  'canh-chua-ca': {
+    id: 'canh-chua-ca',
+    name: 'Canh chua cá',
+    dishId: 'canh-chua-ca',
+    region: 'south',
+    group: 'rice',
+    ingredients: [
+      { crop: 'fish', qty: 1 },
+      { crop: 'tomato', qty: 1 },
+      { crop: 'herbs', qty: 1 },
+    ],
+    xp: 45,
+    unlockNote: t.data.recipes['canh-chua-ca'].unlockNote,
+    fact: t.data.recipes['canh-chua-ca'].fact,
   },
 };
 
@@ -358,7 +375,7 @@ export interface AnimalDef {
 export const ANIMALS: Record<AnimalId, AnimalDef> = {
   chicken: {
     id: 'chicken',
-    name: 'Gà mái',
+    name: t.data.animals.chicken,
     feed: 'rice',
     product: 'egg',
     yield: 2,
@@ -367,7 +384,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
   },
   cow: {
     id: 'cow',
-    name: 'Bò sữa',
+    name: t.data.animals.cow,
     feed: 'herbs',
     product: 'milk',
     yield: 1,
@@ -379,26 +396,69 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
 export const ANIMAL_LIST: AnimalDef[] = Object.values(ANIMALS);
 
 const ANIMAL_PRODUCE: Record<AnimalProduct, { name: string; animal: AnimalId }> = {
-  egg: { name: 'Trứng gà', animal: 'chicken' },
-  milk: { name: 'Sữa bò', animal: 'cow' },
+  egg: { name: t.data.animalProduce.egg, animal: 'chicken' },
+  milk: { name: t.data.animalProduce.milk, animal: 'cow' },
 };
 
-export const PRODUCE_IDS: ProduceId[] = [...(Object.keys(CROPS) as CropId[]), 'egg', 'milk'];
+// ——— The pond: a few casts a day; what bites is fish or shrimp. Nothing is ever lost. ———
+
+export interface CatchDef {
+  id: Catch;
+  name: string;
+  /** Share of bites that are this catch (weights sum to 1). */
+  chance: number;
+}
+
+export const CATCHES: Record<Catch, CatchDef> = {
+  fish: { id: 'fish', name: t.data.catches.fish, chance: 0.65 },
+  shrimp: { id: 'shrimp', name: t.data.catches.shrimp, chance: 0.35 },
+};
+
+/**
+ * Fishing is a bonus like watering: a limited number of catches per local day
+ * (a missed bite costs nothing), timings for the bite mini-game in the garden.
+ */
+export const FISHING = {
+  perDay: 5,
+  /** Wait before a bite, picked between these (ms). */
+  biteMinMs: 1800,
+  biteMaxMs: 5200,
+  /** How long the bobber stays under before the fish slips away (ms). */
+  windowMs: 2000,
+  /** A catch must be reported within this long of its cast (ms). */
+  maxCastMs: 60_000,
+} as const;
+
+export const PRODUCE_IDS: ProduceId[] = [
+  ...(Object.keys(CROPS) as CropId[]),
+  'egg',
+  'milk',
+  'fish',
+  'shrimp',
+];
 
 export function isCrop(id: ProduceId): id is CropId {
   return id in CROPS;
 }
 
+export function isCatch(id: ProduceId): id is Catch {
+  return id in CATCHES;
+}
+
+export function isAnimalProduct(id: ProduceId): id is AnimalProduct {
+  return id in ANIMAL_PRODUCE;
+}
+
 /** Display name of anything in the pantry. */
 export function produceName(id: ProduceId): string {
-  return isCrop(id) ? CROPS[id].produceName : ANIMAL_PRODUCE[id].name;
+  if (isCrop(id)) return CROPS[id].produceName;
+  return isCatch(id) ? CATCHES[id].name : ANIMAL_PRODUCE[id].name;
 }
 
 /** Level at which a pantry item can first be obtained (crops by unlock, products by their animal). */
 export function produceUnlockLevel(id: ProduceId): number {
-  return isCrop(id)
-    ? (CROPS[id].unlock?.level ?? 1)
-    : ANIMALS[ANIMAL_PRODUCE[id].animal].unlockLevel;
+  if (isCrop(id)) return CROPS[id].unlock?.level ?? 1;
+  return isCatch(id) ? 1 : ANIMALS[ANIMAL_PRODUCE[id].animal].unlockLevel;
 }
 
 export function animalOf(id: AnimalProduct): AnimalId {
@@ -410,27 +470,27 @@ export const RECIPE_LIST: RecipeDef[] = Object.values(RECIPES);
 export const REGIONS: Record<RegionId, RegionDef> = {
   north: {
     id: 'north',
-    name: 'Bắc Bộ',
-    shortName: 'Bắc',
-    tagline: 'Nước dùng thanh, vị cân bằng',
+    name: t.data.regions.north.name,
+    shortName: t.data.regions.north.shortName,
+    tagline: t.data.regions.north.tagline,
     stampsToUnlock: 4,
     featuredDishIds: ['pho-bo', 'bun-cha', 'bun-rieu', 'banh-cuon', 'com-dau-phu-sot-ca'],
-    specialty: 'Phở bò tái chín',
+    specialty: t.data.regions.north.specialty,
   },
   central: {
     id: 'central',
-    name: 'Trung Bộ',
-    shortName: 'Trung',
-    tagline: 'Đậm đà, cay nồng, nhiều món nhỏ',
+    name: t.data.regions.central.name,
+    shortName: t.data.regions.central.shortName,
+    tagline: t.data.regions.central.tagline,
     stampsToUnlock: 2,
     featuredDishIds: ['bun-bo-hue', 'mi-quang', 'com-ga-hoi-an', 'banh-beo', 'com-chay-hue'],
-    specialty: 'Bún bò Huế',
+    specialty: t.data.regions.central.specialty,
   },
   south: {
     id: 'south',
-    name: 'Nam Bộ',
-    shortName: 'Nam',
-    tagline: 'Ngọt thanh, nhiều rau, phóng khoáng',
+    name: t.data.regions.south.name,
+    shortName: t.data.regions.south.shortName,
+    tagline: t.data.regions.south.tagline,
     stampsToUnlock: 0,
     featuredDishIds: [
       'com-tam',
@@ -441,7 +501,7 @@ export const REGIONS: Record<RegionId, RegionDef> = {
       'banh-xeo',
       'lau-nam-chay',
     ],
-    specialty: 'Cơm tấm sườn bì chả',
+    specialty: t.data.regions.south.specialty,
   },
 };
 
@@ -451,14 +511,14 @@ export const STARTING_REGION: RegionId = 'south';
 
 export const CHEF: NpcDef = {
   id: 'co-ba',
-  name: 'Cô Ba Bếp',
-  role: 'Đầu bếp dẫn đường',
+  name: t.data.chef.name,
+  role: t.data.chef.role,
 };
 
 export const DAILY_MISSIONS: MissionDef[] = [
-  { id: 'choose', title: 'Chốt một món', xp: 10 },
-  { id: 'checkin', title: 'Check-in một bữa', xp: 15 },
-  { id: 'harvest-or-cook', title: 'Thu hoạch hoặc nấu một món', xp: 10 },
+  { id: 'choose', title: t.data.missions.choose, xp: 10 },
+  { id: 'checkin', title: t.data.missions.checkin, xp: 15 },
+  { id: 'harvest-or-cook', title: t.data.missions.harvestOrCook, xp: 10 },
 ];
 
 export const XP = {
@@ -470,6 +530,7 @@ export const XP = {
   collectAnimal: 4,
   friendHelp: 3,
   checkinPhoto: 5,
+  catch: 3,
 } as const;
 
 /**
@@ -491,7 +552,8 @@ export const WATERING = {
  */
 export const MARKET = {
   /** What the market pays for one produce. */
-  sell: (item: ProduceId): number => (isCrop(item) ? (CROPS[item].unlock ? 6 : 4) : 7),
+  sell: (item: ProduceId): number =>
+    isCrop(item) ? (CROPS[item].unlock ? 6 : 4) : item === 'shrimp' ? 9 : 7,
   /** What one seed costs. */
   seed: (crop: CropId): number => (CROPS[crop].unlock ? 10 : 6),
 } as const;
@@ -506,13 +568,18 @@ export interface DecorDef {
 export const DECOR: Record<DecorId, DecorDef> = {
   scarecrow: {
     id: 'scarecrow',
-    name: 'Bù nhìn nón lá',
+    name: t.data.decor.scarecrow.name,
     price: 40,
-    note: 'Đứng gác khu vườn, đội nón lá.',
+    note: t.data.decor.scarecrow.note,
   },
-  lantern: { id: 'lantern', name: 'Đèn lồng đỏ', price: 30, note: 'Sáng lên khi trời tối.' },
-  jar: { id: 'jar', name: 'Chum nước sành', price: 25, note: 'Chum hứng nước mưa cạnh luống.' },
-  fence: { id: 'fence', name: 'Hàng rào tre', price: 35, note: 'Rào tre bao quanh khu vườn.' },
+  lantern: {
+    id: 'lantern',
+    name: t.data.decor.lantern.name,
+    price: 30,
+    note: t.data.decor.lantern.note,
+  },
+  jar: { id: 'jar', name: t.data.decor.jar.name, price: 25, note: t.data.decor.jar.note },
+  fence: { id: 'fence', name: t.data.decor.fence.name, price: 35, note: t.data.decor.fence.note },
 };
 
 export const DECOR_LIST: DecorDef[] = Object.values(DECOR);
@@ -523,31 +590,22 @@ export const FARM_PLOT_COUNT = 6;
 export const PLOT_UNLOCK_LEVELS = [3, 5, 7] as const;
 export const MAX_PLOT_COUNT = FARM_PLOT_COUNT + PLOT_UNLOCK_LEVELS.length;
 
-export const BUDGET_OPTIONS: { id: BudgetId | 'any'; label: string; hint: string }[] = [
-  { id: 'low', label: 'Dưới 40k', hint: 'Tiết kiệm' },
-  { id: 'mid', label: '40–70k', hint: 'Vừa túi' },
-  { id: 'high', label: 'Trên 70k', hint: 'Thoải mái' },
-  { id: 'any', label: 'Sao cũng được', hint: 'Mọi mức giá' },
-];
+export const BUDGET_OPTIONS: { id: BudgetId | 'any'; label: string; hint: string }[] = (
+  ['low', 'mid', 'high', 'any'] as const
+).map((id) => ({ id, ...t.data.budgets[id] }));
 
-export const MOOD_OPTIONS: { id: MoodId; label: string }[] = [
-  { id: 'quick', label: 'Nhanh' },
-  { id: 'filling', label: 'No' },
-  { id: 'light', label: 'Nhẹ' },
-  { id: 'novel', label: 'Đổi vị' },
-];
+export const MOOD_OPTIONS: { id: MoodId; label: string }[] = (
+  ['quick', 'filling', 'light', 'novel'] as const
+).map((id) => ({ id, label: t.data.moods[id] }));
 
-export const AVOID_OPTIONS: { id: AvoidId; label: string }[] = [
-  { id: 'seafood', label: 'Hải sản' },
-  { id: 'beef', label: 'Thịt bò' },
-  { id: 'pork', label: 'Thịt heo' },
-  { id: 'spicy', label: 'Đồ cay' },
-];
+export const AVOID_OPTIONS: { id: AvoidId; label: string }[] = (
+  ['seafood', 'beef', 'pork', 'spicy'] as const
+).map((id) => ({ id, label: t.data.avoid[id] }));
 
 export const GROUP_LABEL: Record<DishGroup, string> = {
-  'noodle-soup': 'Món nước',
-  'noodle-dry': 'Bún/mì khô',
-  rice: 'Cơm',
-  'bread-roll': 'Bánh mì & cuốn',
-  pancake: 'Bánh',
+  'noodle-soup': t.data.groups.noodleSoup,
+  'noodle-dry': t.data.groups.noodleDry,
+  rice: t.data.groups.rice,
+  'bread-roll': t.data.groups.breadRoll,
+  pancake: t.data.groups.pancake,
 };

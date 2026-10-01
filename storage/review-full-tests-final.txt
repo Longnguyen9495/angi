@@ -1,0 +1,219 @@
+
+> hanh-trinh-bep-viet@0.1.0 test
+> node scripts/run-vitest.mjs run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.2 [39m[90mC:/xampp/htdocs/angi[39m
+
+ [32m✓[39m src/motion/motion.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 111[2mms[22m[39m
+ [32m✓[39m src/domain/reducer.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+ [32m✓[39m src/features/food-reel/foodReel.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 234[2mms[22m[39m
+ [32m✓[39m src/features/food-reel/data/reelCatalogue.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 506[2mms[22m[39m
+   [32m✓[39m catalogue translations [2m(2)[22m
+     [33m[2m✓[22m[39m applies the English translation field by field, falling back to Vietnamese[33m 401[2mms[22m[39m
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/FarmEngine.test.ts[2m > [22m[2mFarmEngine on a null device[2m > [22m[2mbuilds a corner that satisfies the naming convention
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/FarmEngine.test.ts[2m > [22m[2mFarmEngine on a null device[2m > [22m[2mreports what an incomplete scene is missing
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mregisters assets and binds dynamic soil/crop and barn selection
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+[90mstdout[2m | src/features/farm-pc/engine/FarmEngine.test.ts[2m > [22m[2mFarmEngine on a null device[2m > [22m[2mdarkens the soil of a wet plot on the mesh itself (regression)
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/FarmEngine.test.ts[2m > [22m[2mFarmEngine on a null device[2m > [22m[2mbuilds crops into the plot anchor; only later changes pop in
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mframes the game camera from the authored camera and keeps that camera off
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/FarmEngine.test.ts[2m > [22m[2mFarmEngine on a null device[2m > [22m[2mopens the barn door while the barn is selected
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/FarmEngine.test.ts[2m > [22m[2mFarmEngine on a null device[2m > [22m[2mlights the lamp by day part
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mdarkens a copy of authored soil when wet and restores it when dry
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+ [32m✓[39m src/domain/pond.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/FarmEngine.test.ts[2m > [22m[2mFarmEngine on a null device[2m > [22m[2msways plants, and holds them still under reduced motion
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mhides authored plots the domain has not unlocked and shows them when it does
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/FarmEngine.test.ts[2m > [22m[2mFarmEngine on a null device[2m > [22m[2mbroadcasts accepted effects and pauses script time when inactive
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mfalls back without destroying the active corner on invalid naming
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/FarmEngine.test.ts[2m > [22m[2mFarmEngine on a null device[2m > [22m[2mcancels an in-flight pop and refuses replay under reduced motion
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mloads Editor format with inferred domain plot IDs
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mrejects unknown bindings without replacing fallback
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+[90mstdout[2m | src/features/farm-pc/engine/FarmEngine.test.ts[2m > [22m[2mFarmEngine on a null device[2m > [22m[2mcan be destroyed twice
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+ [32m✓[39m src/features/farm-pc/engine/FarmEngine.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 1313[2mms[22m[39m
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mparses the raw exported hierarchy and reports the explicit script asset exemption
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+ [32m✓[39m src/features/garden3d/garden3d.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mattaches all imported classes in authored order with attributes and GUID glow
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mrejects unsafe nested asset URLs before loading
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+ [32m✓[39m src/features/farm-pc/bridge.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mrejects unsafe nested asset URLs before loading
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mrejects unsafe nested asset URLs before loading
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mresolves optional glow by unique name and preserves component enabled=true
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+ [32m✓[39m src/domain/sync.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mresolves optional glow by unique name and preserves component enabled=false
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mrejects an unresolved glow reference
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mrejects unknown script asset metadata
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2munloads an asset that completes after abort and keeps disposal idempotent
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mrejects incompatible versions
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+[90mstdout[2m | src/features/farm-pc/engine/sceneLoader.test.ts[2m > [22m[2mversioned scene with real NullGraphicsDevice parser[2m > [22m[2mdoes not parse or attach hierarchy after destruction during fetch
+[22m[39mPowered by PlayCanvas 2.22.6 dfcc50f
+
+ [32m✓[39m src/features/farm-pc/engine/sceneLoader.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 2312[2mms[22m[39m
+   [32m✓[39m versioned scene with real NullGraphicsDevice parser [2m(23)[22m
+     [33m[2m✓[22m[39m registers assets and binds dynamic soil/crop and barn selection[33m 358[2mms[22m[39m
+ [32m✓[39m src/domain/persistence.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m src/i18n/i18n.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m src/features/farm-pc/assets.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m src/domain/orders.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m src/features/food-reel/spinPool.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m src/domain/nextStep.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m src/domain/recommend.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m src/features/food-reel/data/orderLinks.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/data/cooking.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/domain/animals.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m src/features/food-reel/components/FoodVideo.test.tsx [2m([22m[2m19 tests[22m[2m)[22m[33m 1799[2mms[22m[39m
+   [32m✓[39m review UI [2m(19)[22m
+     [33m[2m✓[22m[39m requires manual choice or explicit GPS; ignores recipe videos and preserves local[33m 706[2mms[22m[39m
+[90mstderr[2m | src/features/food-reel/journey/Journey.test.tsx[2m > [22m[2mJourney layer[2m > [22m[2mis always reachable from the reel header and shows the accumulated numbers
+[22m[39mYou have Reduced Motion enabled on your device. Animations may not appear as expected.. For more information and steps for solving, visit https://motion.dev/troubleshooting/reduced-motion-disabled
+
+[90mstderr[2m | src/features/food-reel/FoodReelExperience.test.tsx[2m > [22m[2mFood Reel landing[2m > [22m[2mis a full-screen reel with one CTA — no filters, no dashboard panels
+[22m[39mYou have Reduced Motion enabled on your device. Animations may not appear as expected.. For more information and steps for solving, visit https://motion.dev/troubleshooting/reduced-motion-disabled
+
+ [32m✓[39m src/features/farm-pc/FarmPlayCanvas.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1196[2mms[22m[39m
+   [32m✓[39m PlayCanvas host [2m(6)[22m
+     [33m[2m✓[22m[39m plants from a canvas tap through the reducer, saves it, and plays one effect on a double tap[33m 393[2mms[22m[39m
+[90mstderr[2m | src/features/food-reel/FoodReelExperience.test.tsx[2m > [22m[2mFood Reel landing[2m > [22m[2mmoves between dishes with arrow keys and keeps focus on the centre dish
+[22m[39mAn update to FoodReelExperience inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32m✓[39m src/components/account/Account.test.tsx [2m([22m[2m1 test[22m[2m)[22m[33m 2441[2mms[22m[39m
+   [32m✓[39m Lưu nông trại (optional account) [2m(1)[22m
+     [33m[2m✓[22m[39m asks only for an email plus consent, signs in with the code and saves the journey[33m 2436[2mms[22m[39m
+ [32m✓[39m src/features/food-reel/journey/Journey.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 16214[2mms[22m[39m
+   [32m✓[39m Journey layer [2m(2)[22m
+     [33m[2m✓[22m[39m is always reachable from the reel header and shows the accumulated numbers[33m 1919[2mms[22m[39m
+     [33m[2m✓[22m[39m asks a guest without a meal to spin first[33m 752[2mms[22m[39m
+   [32m✓[39m seed reward loop [2m(5)[22m
+     [33m[2m✓[22m[39m plants the meal seed exactly once, even on rapid taps, without particles in reduced motion[33m 872[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps the seed and offers a retry when planting fails[33m 1667[2mms[22m[39m
+     [33m[2m✓[22m[39m checks in from the Journey, ripens the crop and harvests it[33m 2663[2mms[22m[39m
+     [33m[2m✓[22m[39m plants from the seed tray into a chosen empty plot[33m 1084[2mms[22m[39m
+     [33m[2m✓[22m[39m restores the journey after a reload and opens discovered dishes from the atlas[33m 1358[2mms[22m[39m
+   [32m✓[39m dialog behaviour [2m(2)[22m
+     [33m[2m✓[22m[39m profile sheet closes on Escape and returns focus to the opener[33m 319[2mms[22m[39m
+     [33m[2m✓[22m[39m reduced-motion toggle in the profile applies app-wide[33m 393[2mms[22m[39m
+   [32m✓[39m watering the garden [2m(1)[22m
+     [33m[2m✓[22m[39m waters a growing plot once, then the soil stays wet until the next hour[33m 897[2mms[22m[39m
+   [32m✓[39m after the harvest [2m(1)[22m
+     [33m[2m✓[22m[39m suggests the next step and can spin the reel over dishes that grant the missing seed[33m 2097[2mms[22m[39m
+   [32m✓[39m the kitchen [2m(1)[22m
+     [33m[2m✓[22m[39m cooks from the next-step card, commits once and fills the cookbook page[33m 1336[2mms[22m[39m
+   [32m✓[39m after choosing [2m(1)[22m
+     [33m[2m✓[22m[39m offers map and delivery searches for the chosen dish, remembering the ShopeeFood city[33m 853[2mms[22m[39m
+ [32m✓[39m src/features/food-reel/FoodReelExperience.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 16597[2mms[22m[39m
+   [32m✓[39m Food Reel landing [2m(3)[22m
+     [33m[2m✓[22m[39m is a full-screen reel with one CTA — no filters, no dashboard panels[33m 776[2mms[22m[39m
+     [33m[2m✓[22m[39m virtualises the reel: never more than 15 dishes mounted[33m 390[2mms[22m[39m
+     [33m[2m✓[22m[39m moves between dishes with arrow keys and keeps focus on the centre dish[33m 772[2mms[22m[39m
+   [32m✓[39m spin → story → back [2m(3)[22m
+     [33m[2m✓[22m[39m announces the winner, opens its story, and restores the reel on close[33m 2091[2mms[22m[39m
+     [33m[2m✓[22m[39m closes the story with Escape and can spin another dish from it[33m 3123[2mms[22m[39m
+     [33m[2m✓[22m[39m opens a story straight from a /mon/<slug> deep link[33m 327[2mms[22m[39m
+   [32m✓[39m chosen epilogue and journey [2m(2)[22m
+     [33m[2m✓[22m[39m confirms a dish once, shows the seed reward, and opens the Journey drawer[33m 2457[2mms[22m[39m
+     [33m[2m✓[22m[39m saves a dish from its story into “Đã lưu”[33m 1908[2mms[22m[39m
+   [32m✓[39m Rổ quay [2m(1)[22m
+     [33m[2m✓[22m[39m spins only between the dishes the guest picked, then knocks them out one by one[33m 4727[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m25 passed[39m[22m[90m (25)[39m
+[2m      Tests [22m [1m[32m212 passed[39m[22m[90m (212)[39m
+[2m   Start at [22m 17:30:36
+[2m   Duration [22m 38.33s[2m (import 39%, environment 32%, tests 18%, setup 8%, transform 3%)[22m
+
+[2mEnvironment [22m [33mjsdom was created 25 times[39m[2m · 76.15s total, 32% of tracked time[22m
+[2m            [22m [2mcreate it once per worker with [22m[33mpool: 'vmThreads'[39m[2m (keeps per-file isolation) or [22m[33misolate: false[39m[2m (shares it across files)[22m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-environments[22m
+

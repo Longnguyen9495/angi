@@ -2,9 +2,14 @@ import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
 
+// Tests run in Vietnamese (jsdom reports en-US); see src/i18n/index.ts.
+const forceVietnamese = () => localStorage.setItem('an-gi/locale', 'vi');
+forceVietnamese();
+
 afterEach(() => {
   cleanup();
   localStorage.clear();
+  forceVietnamese();
   document.documentElement.removeAttribute('data-motion');
 });
 

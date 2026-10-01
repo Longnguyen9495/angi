@@ -1,0 +1,107 @@
+{
+  "assets": 65,
+  "of": 365,
+  "bytes": 9294687,
+  "files": [
+    {
+      "path": "files/assets/309265030/1/leafy_grass_arm.webp",
+      "type": "texture",
+      "bytes": 200098
+    },
+    {
+      "path": "files/assets/309265031/1/leafy_grass_diff.webp",
+      "type": "texture",
+      "bytes": 354036
+    },
+    {
+      "path": "files/assets/309265032/1/leafy_grass_nor.webp",
+      "type": "texture",
+      "bytes": 115878
+    },
+    {
+      "path": "files/assets/309265039/1/sky_backdrop.webp",
+      "type": "texture",
+      "bytes": 28040
+    },
+    {
+      "path": "./js/esm-scripts/farm/scripts/farm-motion.mjs",
+      "type": "script",
+      "bytes": 9377
+    },
+    {
+      "path": "files/assets/309379222/1/1.png",
+      "type": "texture",
+      "bytes": 34360
+    },
+    {
+      "path": "files/assets/309379223/1/0.png",
+      "type": "texture",
+      "bytes": 1503
+    },
+    {
+      "path": "files/assets/309379227/1/g3d-island.glb",
+      "type": "container",
+      "bytes": 4477612
+    },
+    {
+      "path": "files/assets/309379246/1/0.png",
+      "type": "texture",
+      "bytes": 34360
+    },
+    {
+      "path": "files/assets/309379247/1/g3d-islets.glb",
+      "type": "container",
+      "bytes": 151388
+    },
+    {
+      "path": "files/assets/309379255/1/g3d-kitchen.glb",
+      "type": "container",
+      "bytes": 416776
+    },
+    {
+      "path": "files/assets/309379260/1/g3d-barn.glb",
+      "type": "container",
+      "bytes": 741688
+    },
+    {
+      "path": "files/assets/309379266/1/g3d-well.glb",
+      "type": "container",
+      "bytes": 509244
+    },
+    {
+      "path": "files/assets/309379271/1/g3d-coop.glb",
+      "type": "container",
+      "bytes": 566544
+    },
+    {
+      "path": "files/assets/309379277/1/g3d-pen.glb",
+      "type": "container",
+      "bytes": 300660
+    },
+    {
+      "path": "files/assets/309379281/1/g3d-building-shadows.glb",
+      "type": "container",
+      "bytes": 1684
+    },
+    {
+      "path": "files/assets/309379282/1/0.png",
+      "type": "texture",
+      "bytes": 1503
+    },
+    {
+      "path": "files/assets/309379287/1/g3d-plot-bed.glb",
+      "type": "container",
+      "bytes": 160160
+    },
+    {
+      "path": "files/assets/309379294/1/g3d-plot-soil.glb",
+      "type": "container",
+      "bytes": 116220
+    },
+    {
+      "path": "files/assets/309379299/1/g3d-clouds.glb",
+      "type": "container",
+      "bytes": 746260
+    }
+  ]
+}

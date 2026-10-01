@@ -1,5 +1,6 @@
 import { useState, type CSSProperties } from 'react';
 import type { Ingredient, ReelDish } from '../foodReel.types';
+import { t } from '../../../i18n';
 import { orbitPositions } from '../utils';
 
 interface NodePos {
@@ -97,8 +98,8 @@ export function IngredientOrbit({ dish, size, onKeepOpen }: IngredientOrbitProps
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) onKeepOpen(false);
       }}
     >
-      <p className="sr-only">Thành phần của {dish.name}</p>
-      <ul className="fr-orbit__list" aria-label={`Thành phần của ${dish.name}`}>
+      <p className="sr-only">{t.reel.ingredients.of(dish.name)}</p>
+      <ul className="fr-orbit__list" aria-label={t.reel.ingredients.of(dish.name)}>
         {list.map((ing, i) => (
           <IngredientNode
             key={ing.id}
@@ -121,7 +122,7 @@ export function IngredientRail({ dish, inline = false }: { dish: ReelDish; inlin
   const current = dish.ingredients.find((i) => i.id === active);
   return (
     <div className={`fr-rail ${inline ? 'fr-rail--inline' : ''}`}>
-      <ul className="fr-rail__list" aria-label={`Thành phần của ${dish.name}`}>
+      <ul className="fr-rail__list" aria-label={t.reel.ingredients.of(dish.name)}>
         {dish.ingredients.map((ing) => (
           <li key={ing.id}>
             <button

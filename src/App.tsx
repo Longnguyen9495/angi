@@ -6,6 +6,7 @@ import type { CropId } from './data/types';
 import { AccountProvider } from './state/AccountProvider';
 import { UiContext, type UiContextValue } from './state/context';
 import { useAccount } from './state/hooks';
+import { t } from './i18n';
 
 const CheckInSheet = lazy(() =>
   import('./components/checkin/CheckInSheet').then((m) => ({ default: m.CheckInSheet })),
@@ -71,7 +72,7 @@ export function App() {
     <UiContext.Provider value={ui}>
       <AccountProvider>
         <a className="skip-link" href="#noi-dung">
-          Bỏ qua, tới reel món ăn
+          {t.account.app.skipLink}
         </a>
         <FoodReelExperience
           route={route}

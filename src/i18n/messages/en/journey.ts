@@ -1,0 +1,404 @@
+import type { Messages } from '../../types';
+
+// English strings for the "journey" namespace. Must mirror vi/journey.ts key for key.
+// The drawer is shown to guests as "Farm".
+
+const s = (n: number, one: string, many: string) => (n === 1 ? one : many);
+
+const journey: Messages['journey'] = {
+  scene: {
+    kicker: (brand) => `${brand} · Farm`,
+    titleLines: ['Your', 'farm'],
+    lede: 'Every real meal brings a seed, a stamp and a little progress. No countdowns, no wilting plants — take your time.',
+    navLabel: 'Farm sections',
+    nav: {
+      meal: 'This meal',
+      garden: 'Garden',
+      recipes: 'Recipes',
+      orders: 'Cô Ba’s orders',
+      market: 'Market',
+      map: 'Map',
+      missions: 'Missions',
+    },
+    sections: {
+      meal: { title: 'This meal' },
+      garden: { title: 'Garden' },
+      recipes: {
+        title: 'Recipes',
+        intro:
+          'Harvested ingredients and crops still growing both count. Once you have enough, cook with one tap.',
+      },
+      orders: {
+        title: 'Cô Ba’s orders',
+        intro:
+          'Every morning Cô Ba sends two small orders. Deliver spare produce in exchange for seeds, waterings and XP.',
+      },
+      market: {
+        title: 'Village market',
+        intro:
+          'Sell spare produce for coins, buy seeds for every crop you have unlocked and decorations for your garden.',
+      },
+      map: {
+        title: 'Food map',
+        intro:
+          'Every dish you plant or check in is added to its region’s album. Tap a dish to read its story again.',
+      },
+      missions: {
+        title: 'Missions & log',
+        today: 'Today',
+        recent: 'Recent meals',
+        album: 'Meal album',
+      },
+    },
+  },
+
+  stats: {
+    level: 'Level',
+    levelNote: (into, span, next) => `${into}/${span} XP to level ${next}`,
+    streak: 'Streak',
+    streakNote: (passes) =>
+      `${passes} rest ${s(passes, 'pass', 'passes')} this week · missing a day only drops you back one step`,
+    stamps: 'Stamps',
+    stampsNote: (need, region) => `${need} more ${s(need, 'stamp', 'stamps')} to unlock ${region}`,
+    allRegionsOpen: 'All three regions unlocked',
+    explored: 'Dishes discovered',
+    exploredNote: 'Plant or check in a dish to add it to your book',
+  },
+
+  savePrompt: {
+    title: 'Keep this farm?',
+    hasCookbook: 'You already have a dish in your cookbook.',
+    hasStamps: (n) => `You already have ${n} ${s(n, 'stamp', 'stamps')} on your farm.`,
+    body: 'Save it with your email so it’s not lost when you switch devices — no password needed.',
+    save: 'Save with email',
+    later: 'Later',
+  },
+
+  meal: {
+    empty: (slot) =>
+      `Nothing picked for ${slot} yet. Spin the reel and choose a dish — it sends a seed back to your garden.`,
+    spin: 'Spin for a dish',
+    chosenFor: (slot) => `Picked for ${slot}`,
+    statusLabel: 'This meal’s status',
+    planted: 'Seed planted',
+    seedInTray: 'Seed waiting in the tray',
+    checkedIn: 'Checked in',
+    outcome: { ate: 'eaten', swapped: 'swapped', skipped: 'skipped' },
+    awaitingCheckIn: 'Check in after your meal',
+    allRewards: 'You’ve collected every reward for this meal. See you next meal!',
+    checkIn: 'Check in this meal',
+  },
+
+  garden: {
+    blockWet: 'Soil is still damp',
+    blockEmptyCan: 'Out of water today',
+    cropUnlocked: (crop, seed) => `Level up! ${crop} unlocked — 1 ${seed} added to your tray.`,
+    harvested: (list) => `Harvested: ${list}.`,
+    planted: (seed, plot) => `Planted ${seed} in plot ${plot}.`,
+    watered: (plot, crop, left) =>
+      `Watered plot ${plot}. The ${crop} grows faster. ${left} ${s(left, 'watering', 'waterings')} left today.`,
+    fed: (animal, hours) =>
+      `Fed the ${animal}. Come back in ${hours} ${s(hours, 'hour', 'hours')} to collect.`,
+    collected: (qty, product) => `Collected ${qty} ${product} into the pantry.`,
+    caught: (fish, xp) => `You caught a ${fish}! Added to the pantry · +${xp} XP.`,
+    noFishingLeft: 'No fishing left today — come back tomorrow.',
+    casting: 'Line cast… waiting for a bite.',
+    animalLocked: (animal, level) => `${animal} unlocks at level ${level}.`,
+    animalBusy: (animal, left) => `${animal} is full — ready to collect in ${left}.`,
+    needFeed: (feed, animal) => `You need 1 ${feed} to feed the ${animal}.`,
+    lede: (ready, empty) =>
+      `${ready} ${s(ready, 'plot', 'plots')} ready · ${empty} empty. Water to speed things up — unwatered crops still grow and never wilt.`,
+    waterOn: 'Water crops',
+    waterOff: 'Done, put the can away',
+    cansLeft: (n) => `, ${n} ${s(n, 'watering', 'waterings')} left today`,
+    harvestAll: (n) => `Harvest all${n > 0 ? ` (${n})` : ''}`,
+    waterMode: (cut) =>
+      `Watering mode: tap a growing plot. Each watering cuts ${cut}% off the time left; each plot can be watered again after 1 hour.`,
+    farmLabel:
+      'Farm on a floating island: tap a plot to plant, water or harvest; the pond to fish; the cow or chicken to tend them; the house or the market to go there',
+    farmSeedsLabel: 'Seed to plant when you tap a plot',
+    farmPlotLocked: (plot, level) => `Plot ${plot} · unlocks at level ${level}`,
+    farmPlotPlant: (plot, seed) => `Plot ${plot} · tap to plant ${seed}`,
+    farmPlotNoSeed: (plot) => `Plot ${plot} · empty, waiting for seeds`,
+    farmPlotHarvest: (plot, crop) => `Plot ${plot} · ${crop} · tap to harvest`,
+    farmPlotGrowing: (plot, crop, left) => `Plot ${plot} · ${crop} · ${left} left`,
+    farmTapToWater: ' · tap to water',
+    animalLockedBubble: (animal, level) => `${animal} · level ${level}`,
+    collectBubble: (product) => `Collect ${product}`,
+    feedBubble: (feed) => `Feed ${feed}`,
+    plotOpensAt: (plot, level) => `Plot ${plot} unlocks at level ${level}.`,
+    trayEmpty: 'Your seed tray is empty — pick a dish to get a seed.',
+    plotBlocked: (plot, note) => `Plot ${plot}: ${note}.`,
+    cantWater: 'can’t water yet',
+    placeMarket: 'Village market',
+    placeMarketText: 'Sell produce, buy seeds and decorations.',
+    placeHouse: 'Farm kitchen',
+    placeHouseText: 'Cook dishes from your pantry.',
+    placeGo: 'Go there',
+    placeClose: 'Close',
+    cardPlot: (plot) => `Plot ${plot}`,
+    cardEmpty: 'Empty soil. Drag a seed onto the plot, or tap a seed to plant it.',
+    cardNoSeed: 'Your seed tray is empty — pick a dish on the reel to get a seed.',
+    cardGrowing: (crop, left) => `${crop} is growing · ${left} left`,
+    cardWater: 'Water',
+    cardWaterLeft: (n) => `${n} left today`,
+    cardReady: (crop) => `${crop} is ready!`,
+    cardHarvest: 'Harvest',
+    cardHarvested: (produce) => `${produce} added to the pantry.`,
+    cardCookWith: 'Cook with it:',
+    cardCook: 'Cook',
+    cardMissing: (list) => `missing ${list}`,
+    cardNoRecipe: 'No recipe uses this ingredient yet.',
+    cardLocked: (level) => `This plot unlocks at level ${level}.`,
+    plotsLabel: 'Plots',
+    tapToPlant: 'Tap to plant',
+    waitingSeed: 'Waiting for seeds',
+    tapToWater: 'Tap to water',
+    timeLeft: (left) => ` · ${left} left`,
+    plotNo: (n) => `Plot ${n}`,
+    empty: 'Empty',
+    plantPlot: (plot, seed) => `Plot ${plot}, empty. Plant ${seed}`,
+    plotNoSeed: (plot) => `Plot ${plot}, empty. No seeds in the tray`,
+    waterPlot: (plot, crop, stage, left, block) =>
+      `Water plot ${plot}, ${crop}, ${stage}, ${left} left${block ? `. ${block}` : ''}`,
+    nextPlotLabel: (level) => `New plot unlocks at level ${level}`,
+    comingSoon: 'Coming soon',
+    nextPlotNote: (level) => `Reach level ${level} to expand your garden`,
+    full: 'All plots are full — harvest the ready ones to make room. Crops never wilt.',
+    seedTray: 'Seed tray',
+    seedTrayEmpty: 'The tray is empty. Every dish you pick sends back a related seed.',
+    pickSeed: 'Choose a seed to plant',
+    pantry: 'Pantry',
+    pantryEmpty: 'No ingredients yet — harvest a ready plot to get some.',
+    pantryLabel: 'Ingredients in the pantry',
+  },
+
+  next: {
+    kicker: 'Up next',
+    cook: {
+      title: (recipe) => `You have everything for ${recipe}`,
+      body: (xp) => `The kitchen is ready — cook now for +${xp} XP and a new cookbook page.`,
+      action: (recipe) => `Cook ${recipe}`,
+    },
+    order: {
+      title: 'Your pantry can fill Cô Ba’s order',
+      body: 'Deliver it in exchange for seeds, waterings and XP.',
+      action: 'See orders',
+    },
+    harvest: {
+      title: (n) => `${n} ${s(n, 'plot is', 'plots are')} ripe`,
+      body: 'Harvest to move produce into the pantry and free up the plots.',
+      action: 'Harvest',
+    },
+    collect: {
+      title: (animal, product) => `The ${animal.toLowerCase()} has ${product} ready`,
+      body: (qty, product) =>
+        `Collect ${qty} ${product} into the pantry, then feed it for the next batch.`,
+      action: (product) => `Collect ${product}`,
+    },
+    feed: {
+      title: (animal) => `Feed the ${animal}`,
+      body: (feed, hours, qty, product) =>
+        `1 ${feed} → ${qty} ${product} for your recipes after ${hours} ${s(hours, 'hour', 'hours')}.`,
+      action: 'Feed',
+    },
+    fish: {
+      title: (recipe, fish) => `${recipe} still needs ${fish}`,
+      body: (left) =>
+        `Head to the garden pond and cast a line — ${left} ${s(left, 'try', 'tries')} left today.`,
+    },
+    plant: {
+      title: (seed, plot) => `Plant ${seed} in plot ${plot}`,
+      body: (plot, crop, hours) =>
+        `You have seeds and plot ${plot} is empty — ${crop} ripens in about ${hours} ${s(hours, 'hour', 'hours')}.`,
+      action: 'Plant now',
+    },
+    find: {
+      title: (recipe, produce) => `${recipe} still needs ${produce}`,
+      notFromDishes: (crop, seed) =>
+        `${crop} doesn’t come from dishes — get ${seed} from Cô Ba’s orders or at the market.`,
+      seedSpent: (n, seed) =>
+        `This meal already gave you a seed. Next meal, pick one of the ${n} dishes that give ${seed} to keep growing.`,
+      body: (n, seed, produce) =>
+        `Pick one of the ${n} dishes that give ${seed} — the meal sends back a seed, plant it to get ${produce}.`,
+      action: (seed) => `Spin dishes for ${seed}`,
+    },
+    wait: {
+      title: (recipe) => `Crops are growing for ${recipe}`,
+      body: (left) =>
+        `The first plot ripens in ${left}. Water to speed it up, or just take it easy.`,
+    },
+    full: {
+      title: 'The garden is resting',
+      body: 'Pick a dish to get a new seed for your garden.',
+    },
+  },
+
+  friends: {
+    title: 'Garden friends',
+    invite: (xp) =>
+      `Make friends with a garden code: visit each other’s islands, help water every day (+${xp} XP) and get seed gifts from Cô Ba. You need to save your farm with an email — nobody else sees your email.`,
+    saveToFriend: 'Save your farm to add friends',
+    loadFailed: 'Couldn’t load yet.',
+    added: 'You’re garden friends now! Visit and help water each other.',
+    addFailed: 'Couldn’t add this friend.',
+    shareText: (brand, code) => `Be my garden friend on ${brand} — code ${code}`,
+    shareTitle: (brand) => `${brand} garden`,
+    inviteCopied: 'Invite copied.',
+    codeCopied: (code) => `Code ${code} copied.`,
+    yourCode: (code) => `Your code: ${code}`,
+    renameFailed: 'Couldn’t save the name.',
+    confirmRemove: (name) => `Remove ${name} as a friend?`,
+    removeFailed: 'Couldn’t remove this friend, please try again.',
+    helpsLeft: (left, xp) =>
+      `${left} watering ${s(left, 'help', 'helps')} left today · each gives +${xp} XP to you both.`,
+    myCode: 'Your garden code',
+    codeAria: (spaced) => `Code ${spaced}`,
+    copyCode: 'Copy code',
+    inviteFriend: 'Invite a friend',
+    renameCurrent: (name) => `“${name}” · rename`,
+    nameGarden: 'Name your garden',
+    gardenName: 'Garden name',
+    gardenNamePlaceholder: 'Mây’s garden',
+    save: 'Save',
+    addByCode: 'Add a friend by code',
+    codePlaceholder: 'e.g. K7QM2P',
+    add: 'Add friend',
+    limit: (max) => `Up to ${max} friends. Only your garden name and crops are shared.`,
+    boardLabel: 'Garden friends leaderboard',
+    me: (name) => `${name} (you)`,
+    boardMeta: (level, xp) => `Level ${level} · ${xp} XP`,
+    needWater: (n) => ` · ${n} ${s(n, 'plot needs', 'plots need')} water`,
+    wateredToday: ' · watered today',
+    visit: 'Visit garden',
+    removeLabel: (name) => `Remove ${name} as a friend`,
+    empty: 'No garden friends yet — send your code to friends to get started.',
+  },
+
+  visit: {
+    loadFailed: 'Couldn’t visit this garden.',
+    watered: (plot, name, xp) => `You watered plot ${plot} for ${name}. +${xp} XP for you!`,
+    waterFailed: 'Couldn’t water.',
+    loading: 'Visiting garden…',
+    description: (level, status) => `Level ${level} · ${status}`,
+    helpedToday: 'you’ve already helped water today',
+    canHelp: 'tap a plot with a green outline to help water',
+    noHelpsLeft: 'no watering helps left today',
+    flying: 'Flying to your friend’s island…',
+    plotsLabel: 'Your friend’s plots',
+    plot: (n, crop) => `Plot ${n} · ${crop}`,
+    empty: 'Empty',
+    timeLeft: (left) => ` · ${left} left`,
+    helped: 'Watered',
+    water: 'Help water',
+  },
+
+  recipes: {
+    status: { have: 'Have', growing: 'Growing', missing: 'Missing', locked: 'Locked' },
+    progress: (recipe) => `${recipe} progress`,
+    progressText: (secured, total, growing) =>
+      `${secured}/${total} ingredients${growing > 0 ? ` · ${growing} growing` : ''}`,
+    cook: (recipe) => `Cook ${recipe}`,
+    needLocked: (produce, level) => `Needs ${produce} — unlocks at level ${level}.`,
+    pickDish: 'Pick a dish that gives a missing ingredient to get its seed.',
+    waitGrow: 'Wait for the crops to grow, harvest, and you can cook.',
+    cooked: (n) => `Cooked ×${n}`,
+    lockedTitle: (n) => `Locked · ${n} ${s(n, 'recipe', 'recipes')}`,
+    opensWith: (region) => `Unlocks with ${region}`,
+    stampsLeft: (n) => ` · ${n} more ${s(n, 'stamp', 'stamps')}`,
+  },
+
+  cookbook: {
+    title: (done, total) => `Cookbook · ${done}/${total} ${s(total, 'page', 'pages')}`,
+    cooked: (n) => `Cooked ×${n}`,
+    notCooked: ' · Not cooked yet',
+  },
+
+  cooking: {
+    description: 'Cô Ba’s kitchen',
+    started: (recipe) => `Cooking ${recipe}.`,
+    finished: (recipe, xp) => `${recipe} is ready. +${xp} XP.`,
+    ingredients: 'Ingredients',
+    have: (n) => `have ${n}`,
+    plan: (steps, seconds) =>
+      `${steps} ${s(steps, 'step', 'steps')} · about ${seconds} ${s(seconds, 'second', 'seconds')}`,
+    start: 'Start cooking',
+    notEnough: 'Not enough ingredients',
+    step: (n, total) => `Step ${n}/${total}`,
+    stepsLabel: 'Cooking steps',
+    done: (xp) => `Done · +${xp} XP`,
+    firstPage:
+      'A new page in your cookbook — this dish’s story on the reel now has a “Home-cooked” stamp.',
+    cookedTimes: (n) => `You’ve cooked this dish ${n} ${s(n, 'time', 'times')}.`,
+    openCookbook: 'Open cookbook',
+  },
+
+  orders: {
+    thanks: (xp, seeds, water) =>
+      `Cô Ba says thank you! +${xp} XP, ${seeds}${water ? `, +${water} ${s(water, 'watering', 'waterings')}` : ''}.`,
+    delivered: (chef) => `Order delivered to ${chef}.`,
+    big: 'Big order',
+    small: 'Small order',
+    needed: 'To deliver',
+    have: (n) => ` · have ${n}`,
+    reward: 'Reward',
+    water: (n) => `+${n} ${s(n, 'watering', 'waterings')}`,
+    done: 'Delivered',
+    deliver: 'Deliver',
+    notEnough: 'Not enough yet',
+  },
+
+  market: {
+    tabs: { sell: 'Sell produce', seeds: 'Buy seeds', decor: 'Garden decor' },
+    coins: 'coins',
+    stallsLabel: 'Market stalls',
+    pantryEmpty: 'Your pantry is empty — harvest first, then bring it to market.',
+    inPantry: (n) => `In pantry ×${n}`,
+    sold: (produce, coins) => `Sold 1 ${produce}, +${coins} ${s(coins, 'coin', 'coins')}.`,
+    sell: (coins) => `Sell 1 · +${coins} ${s(coins, 'coin', 'coins')}`,
+    seedMeta: (hours, tray) => `Ripens in ${hours} ${s(hours, 'hour', 'hours')} · tray ×${tray}`,
+    boughtSeed: (seed) => `Bought 1 ${seed}.`,
+    buy: (price) => `Buy · ${price} ${s(price, 'coin', 'coins')}`,
+    owned: 'In your garden',
+    boughtDecor: (decor) => `Bought a ${decor} for your garden.`,
+  },
+
+  atlas: {
+    tagline: {
+      north: 'Clear broths, balanced flavours',
+      central: 'Bold, spicy, lots of small dishes',
+      south: 'Gently sweet, lots of herbs, easygoing',
+      world: 'Foreign dishes now at home on the lunch street',
+    },
+    fresh: 'Just unlocked!',
+    locked: 'Locked',
+    open: 'Unlocked',
+    dishes: 'dishes',
+    lockedNote: (need, have, left) =>
+      `Unlocks at ${need} stamps (you have ${have}, ${left} to go). You can still pick and plant dishes from this region.`,
+    albumLabel: (region) => `${region} dishes discovered`,
+    readStory: (dish) => `Read the story of ${dish}`,
+    rest: (n) => `${n} ${s(n, 'dish', 'dishes')} still to discover`,
+  },
+
+  missions: {
+    done: '(done)',
+    notDone: '(not done)',
+    logEmpty: 'No meals checked in yet. Your first check-in will show up here.',
+    outcome: { ate: 'Eaten', swapped: 'Swapped', skipped: 'Skipped' },
+    logDate: (dd, mm) => `${mm}/${dd}`,
+  },
+
+  album: {
+    empty:
+      'When you check in after a meal, snap the dish to save it in your album (optional, +5 XP). Photos stay on this device only.',
+    label: 'Meal album',
+    slot: { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner' },
+    fallbackName: 'Meal',
+    when: (slot, date) => `${slot} ${date}`.trim(),
+    photoAlt: (name, when) => `${name}, ${when}`,
+    delete: (name, when) => `Delete photo of ${name}, ${when}`,
+  },
+};
+
+export default journey;

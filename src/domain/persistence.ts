@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { DECOR, FARM_PLOT_COUNT, MAX_PLOT_COUNT } from '../data/game';
 import type { CropId, DecorId } from '../data/types';
 import {
@@ -129,6 +130,14 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
       Number.isFinite(p.water.bonus)
         ? p.water
         : base.water,
+    // Added with the pond: older saves start with today's casts unused.
+    fishing:
+      isObject(raw.fishing) &&
+      typeof p.fishing.date === 'string' &&
+      Number.isFinite(p.fishing.used) &&
+      p.fishing.used >= 0
+        ? p.fishing
+        : base.fishing,
     orders:
       isObject(raw.orders) && typeof p.orders.date === 'string' && isStringArray(p.orders.done)
         ? p.orders
@@ -174,7 +183,7 @@ export function loadProgress(now: number): LoadResult {
       return {
         status: 'recovered',
         progress: createInitialProgress(now),
-        reason: 'Dữ liệu lưu từ phiên bản cũ nên hành trình được bắt đầu lại.',
+        reason: t.domain.recovery.oldVersion,
       };
     }
     const progress = parseProgress(env.data, now);
@@ -182,7 +191,7 @@ export function loadProgress(now: number): LoadResult {
       return {
         status: 'recovered',
         progress: createInitialProgress(now),
-        reason: 'Dữ liệu lưu trên máy bị lỗi nên hành trình được bắt đầu lại.',
+        reason: t.domain.recovery.corrupt,
       };
     }
     return { status: 'restored', progress };
@@ -190,7 +199,7 @@ export function loadProgress(now: number): LoadResult {
     return {
       status: 'recovered',
       progress: createInitialProgress(now),
-      reason: 'Không đọc được dữ liệu lưu trên máy nên hành trình được bắt đầu lại.',
+      reason: t.domain.recovery.unreadable,
     };
   }
 }

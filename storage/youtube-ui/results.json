@@ -1,0 +1,230 @@
+[
+  {
+    "slug": "com-tam",
+    "width": 1440,
+    "hero": {
+      "url": "http://angi.local/mon/com-tam",
+      "frames": 0,
+      "cards": 0,
+      "overflow": false
+    },
+    "before": {
+      "url": "http://angi.local/mon/com-tam",
+      "cards": 5,
+      "frames": 0,
+      "links": 0,
+      "overflow": false
+    },
+    "after": {
+      "url": "http://angi.local/mon/com-tam",
+      "frames": 1,
+      "selected": 1,
+      "status": "Đang kết nối trình phát YouTube…",
+      "frameSrc": "https://www.youtube-nocookie.com/embed/h__kLq8NG2I?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "switched": {
+      "frames": 1,
+      "selected": 1,
+      "frameSrc": "https://www.youtube-nocookie.com/embed/7e1-KXJg0bY?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "reduced": "none",
+    "closed": {
+      "frames": 0,
+      "popup": false,
+      "parent": true,
+      "focus": "fr-youtube-trigger",
+      "bodyOverflow": "",
+      "parentOverflow": ""
+    }
+  },
+  {
+    "slug": "com-tam",
+    "width": 1920,
+    "hero": {
+      "url": "http://angi.local/mon/com-tam",
+      "frames": 0,
+      "cards": 0,
+      "overflow": false
+    },
+    "before": {
+      "url": "http://angi.local/mon/com-tam",
+      "cards": 5,
+      "frames": 0,
+      "links": 0,
+      "overflow": false
+    },
+    "after": {
+      "url": "http://angi.local/mon/com-tam",
+      "frames": 1,
+      "selected": 1,
+      "status": "Trình phát YouTube đã tải. Nếu chưa phát, nhấn Play trong trình phát.",
+      "frameSrc": "https://www.youtube-nocookie.com/embed/h__kLq8NG2I?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "switched": {
+      "frames": 1,
+      "selected": 1,
+      "frameSrc": "https://www.youtube-nocookie.com/embed/7e1-KXJg0bY?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "reduced": "none",
+    "closed": {
+      "frames": 0,
+      "popup": false,
+      "parent": true,
+      "focus": "fr-youtube-trigger",
+      "bodyOverflow": "",
+      "parentOverflow": ""
+    }
+  },
+  {
+    "slug": "com-tam",
+    "width": 390,
+    "hero": {
+      "url": "http://angi.local/mon/com-tam",
+      "frames": 0,
+      "cards": 0,
+      "overflow": false
+    },
+    "before": {
+      "url": "http://angi.local/mon/com-tam",
+      "cards": 5,
+      "frames": 0,
+      "links": 0,
+      "overflow": false
+    },
+    "after": {
+      "url": "http://angi.local/mon/com-tam",
+      "frames": 1,
+      "selected": 1,
+      "status": "Đang kết nối trình phát YouTube…",
+      "frameSrc": "https://www.youtube-nocookie.com/embed/h__kLq8NG2I?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "switched": {
+      "frames": 1,
+      "selected": 1,
+      "frameSrc": "https://www.youtube-nocookie.com/embed/7e1-KXJg0bY?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "reduced": "none",
+    "closed": {
+      "frames": 0,
+      "popup": false,
+      "parent": true,
+      "focus": "fr-youtube-trigger",
+      "bodyOverflow": "",
+      "parentOverflow": ""
+    }
+  },
+  {
+    "slug": "pho-bo",
+    "width": 1440,
+    "hero": {
+      "url": "http://angi.local/mon/pho-bo",
+      "frames": 0,
+      "cards": 0,
+      "overflow": false
+    },
+    "before": {
+      "url": "http://angi.local/mon/pho-bo",
+      "cards": 5,
+      "frames": 0,
+      "links": 0,
+      "overflow": false
+    },
+    "after": {
+      "url": "http://angi.local/mon/pho-bo",
+      "frames": 1,
+      "selected": 1,
+      "status": "Đang kết nối trình phát YouTube…",
+      "frameSrc": "https://www.youtube-nocookie.com/embed/yJuQ4tS6O18?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "switched": {
+      "frames": 1,
+      "selected": 1,
+      "frameSrc": "https://www.youtube-nocookie.com/embed/99tOr7JSr0k?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "reduced": "none",
+    "closed": {
+      "frames": 0,
+      "popup": false,
+      "parent": true,
+      "focus": "fr-youtube-trigger",
+      "bodyOverflow": "",
+      "parentOverflow": ""
+    }
+  },
+  {
+    "slug": "pho-bo",
+    "width": 1920,
+    "hero": {
+      "url": "http://angi.local/mon/pho-bo",
+      "frames": 0,
+      "cards": 0,
+      "overflow": false
+    },
+    "before": {
+      "url": "http://angi.local/mon/pho-bo",
+      "cards": 5,
+      "frames": 0,
+      "links": 0,
+      "overflow": false
+    },
+    "after": {
+      "url": "http://angi.local/mon/pho-bo",
+      "frames": 1,
+      "selected": 1,
+      "status": "Trình phát YouTube đã tải. Nếu chưa phát, nhấn Play trong trình phát.",
+      "frameSrc": "https://www.youtube-nocookie.com/embed/yJuQ4tS6O18?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "switched": {
+      "frames": 1,
+      "selected": 1,
+      "frameSrc": "https://www.youtube-nocookie.com/embed/99tOr7JSr0k?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "reduced": "none",
+    "closed": {
+      "frames": 0,
+      "popup": false,
+      "parent": true,
+      "focus": "fr-youtube-trigger",
+      "bodyOverflow": "",
+      "parentOverflow": ""
+    }
+  },
+  {
+    "slug": "pho-bo",
+    "width": 390,
+    "hero": {
+      "url": "http://angi.local/mon/pho-bo",
+      "frames": 0,
+      "cards": 0,
+      "overflow": false
+    },
+    "before": {
+      "url": "http://angi.local/mon/pho-bo",
+      "cards": 5,
+      "frames": 0,
+      "links": 0,
+      "overflow": false
+    },
+    "after": {
+      "url": "http://angi.local/mon/pho-bo",
+      "frames": 1,
+      "selected": 1,
+      "status": "Trình phát YouTube đã tải. Nếu chưa phát, nhấn Play trong trình phát.",
+      "frameSrc": "https://www.youtube-nocookie.com/embed/yJuQ4tS6O18?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "switched": {
+      "frames": 1,
+      "selected": 1,
+      "frameSrc": "https://www.youtube-nocookie.com/embed/99tOr7JSr0k?autoplay=1&playsinline=1&enablejsapi=1&origin=http%3A%2F%2Fangi.local"
+    },
+    "reduced": "none",
+    "closed": {
+      "frames": 0,
+      "popup": false,
+      "parent": true,
+      "focus": "fr-youtube-trigger",
+      "bodyOverflow": "",
+      "parentOverflow": ""
+    }
+  }
+]

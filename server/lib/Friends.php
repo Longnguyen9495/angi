@@ -102,11 +102,11 @@ final class Friends
         $code = self::normaliseCode((string) ($body['code'] ?? ''));
         $friend = $this->one('SELECT user_id FROM garden_profiles WHERE friend_code = ?', [$code]);
         if (!$friend) {
-            throw new HttpError(404, 'Không tìm thấy khu vườn có mã này.');
+            throw new HttpError(404, __t('friends.notFound'));
         }
         $fid = (int) $friend['user_id'];
         if ($fid === $me) {
-            throw new HttpError(422, 'Đây là mã khu vườn của chính bạn.');
+            throw new HttpError(422, __t('friends.ownCode'));
         }
         if ($this->one('SELECT 1 AS x FROM friendships WHERE user_id = ? AND friend_id = ?', [$me, $fid])) {
             return $this->list();
@@ -114,8 +114,8 @@ final class Friends
         foreach ([$me, $fid] as $who) {
             if ($this->count('SELECT COUNT(*) FROM friendships WHERE user_id = ?', [$who]) >= self::MAX_FRIENDS) {
                 throw new HttpError(422, $who === $me
-                    ? 'Bạn đã có ' . self::MAX_FRIENDS . ' người bạn — bớt một người để thêm mới.'
-                    : 'Khu vườn này đã đủ bạn rồi.');
+                    ? __t('friends.tooManyFriends', ['max' => self::MAX_FRIENDS])
+                    : __t('friends.friendFull'));
             }
         }
         $now = time();
@@ -182,14 +182,14 @@ final class Friends
         }
         $now = time();
         if (!$plot || !self::canWater($plot, $now * 1000)) {
-            throw new HttpError(422, 'Ô này không cần tưới lúc này.');
+            throw new HttpError(422, __t('friends.noWaterNeeded'));
         }
         $day = self::day($now);
         if ($this->one('SELECT 1 AS x FROM farm_events WHERE uniq = ?', ["water:$me:$fid:$day"])) {
-            throw new HttpError(429, 'Hôm nay bạn đã tưới giúp vườn này rồi — mai ghé lại nhé.');
+            throw new HttpError(429, __t('friends.alreadyWatered'));
         }
         if ($this->count("SELECT COUNT(*) FROM farm_events WHERE from_user = ? AND type = 'water' AND day = ?", [$me, $day]) >= self::HELPS_PER_DAY) {
-            throw new HttpError(429, 'Hôm nay bạn đã giúp ' . self::HELPS_PER_DAY . ' khu vườn — nghỉ tay thôi!');
+            throw new HttpError(429, __t('friends.helpLimit', ['max' => self::HELPS_PER_DAY]));
         }
         $this->db->beginTransaction();
         try {
@@ -199,7 +199,7 @@ final class Friends
         } catch (PDOException $e) {
             $this->db->rollBack();
             // The unique key caught a double tap.
-            throw new HttpError(429, 'Hôm nay bạn đã tưới giúp vườn này rồi — mai ghé lại nhé.');
+            throw new HttpError(429, __t('friends.alreadyWatered'));
         }
         return ['ok' => true, 'plotId' => $plotId] + $this->visit($code);
     }
@@ -274,7 +274,7 @@ final class Friends
              WHERE g.friend_code = ?',
             [$me, self::normaliseCode($code)],
         );
-        return $f ?? throw new HttpError(404, 'Khu vườn này chưa là bạn của bạn.');
+        return $f ?? throw new HttpError(404, __t('friends.notFriend'));
     }
 
     private function ensureProfile(int $userId): array
@@ -300,7 +300,7 @@ final class Friends
             }
         }
         return $this->one('SELECT * FROM garden_profiles WHERE user_id = ?', [$userId])
-            ?? throw new HttpError(500, 'Chưa tạo được mã khu vườn, thử lại nhé.');
+            ?? throw new HttpError(500, __t('friends.codeFailed'));
     }
 
     private function publicProfile(array $p): array
@@ -312,7 +312,7 @@ final class Friends
     {
         $code = strtoupper((string) preg_replace('/[^A-Za-z0-9]/', '', $code));
         if (!preg_match('/^[' . self::CODE_ALPHABET . ']{6}$/', $code)) {
-            throw new HttpError(422, 'Mã khu vườn gồm 6 ký tự, ví dụ K7QM2P.');
+            throw new HttpError(422, __t('friends.badCode'));
         }
         return $code;
     }
@@ -321,14 +321,14 @@ final class Friends
     {
         $name = trim((string) preg_replace('/\s+/u', ' ', strip_tags($name)));
         if (mb_strlen($name, 'UTF-8') > 40) {
-            throw new HttpError(422, 'Tên khu vườn tối đa 40 ký tự.');
+            throw new HttpError(422, __t('friends.nameTooLong'));
         }
         return $name;
     }
 
     private static function displayName(string $name, string $code): string
     {
-        return $name !== '' ? $name : "Khu vườn $code";
+        return $name !== '' ? $name : __t('friends.defaultName', ['code' => $code]);
     }
 
     private static function decode(?string $json): array

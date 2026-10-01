@@ -2,6 +2,7 @@ import { Camera, CheckCircle, ShieldCheck } from '@phosphor-icons/react';
 import { useEffect, useRef, useState } from 'react';
 import { XP } from '../../data/game';
 import { currentTime } from '../../domain/time';
+import { t } from '../../i18n';
 import { compressPhoto, savePhoto } from '../../services/photoStore';
 import { useFeedback, useGame } from '../../state/hooks';
 
@@ -20,6 +21,7 @@ export function PhotoCapture({ slotKey, dishId }: { slotKey: string; dishId: str
   const [earned, setEarned] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const already = state.photos.includes(slotKey);
+  const m = t.account.photoCapture;
 
   useEffect(() => () => void (preview && URL.revokeObjectURL(preview)), [preview]);
 
@@ -33,9 +35,9 @@ export function PhotoCapture({ slotKey, dishId }: { slotKey: string; dishId: str
       setEarned(!already);
       dispatch({ type: 'ATTACH_PHOTO', slotKey, now: currentTime() });
       setPreview(URL.createObjectURL(blob));
-      announce(`Đã lưu ảnh vào album${already ? '' : `, cộng ${XP.checkinPhoto} XP`}.`);
+      announce(m.savedAnnounce(already ? null : XP.checkinPhoto));
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Chưa lưu được ảnh, bạn thử lại nhé.');
+      setError(e instanceof Error ? e.message : m.saveFailed);
     } finally {
       setBusy(false);
       if (inputRef.current) inputRef.current.value = '';
@@ -46,9 +48,9 @@ export function PhotoCapture({ slotKey, dishId }: { slotKey: string; dishId: str
     <div className="photo-capture">
       {preview ? (
         <div className="photo-capture__done">
-          <img src={preview} alt="Ảnh món vừa ăn" className="photo-capture__img" />
+          <img src={preview} alt={m.previewAlt} className="photo-capture__img" />
           <p>
-            <CheckCircle aria-hidden="true" size={18} weight="fill" /> Đã lưu vào album bữa ăn
+            <CheckCircle aria-hidden="true" size={18} weight="fill" /> {m.saved}
             {earned ? ` · +${XP.checkinPhoto} XP` : ''}
           </p>
         </div>
@@ -65,9 +67,9 @@ export function PhotoCapture({ slotKey, dishId }: { slotKey: string; dishId: str
           />
           <Camera aria-hidden="true" size={20} />
           <span>
-            {busy ? 'Đang lưu ảnh…' : already ? 'Thay ảnh món vừa ăn' : 'Chụp món vừa ăn'}
+            {busy ? m.saving : already ? m.replace : m.take}
             {!already && !busy && (
-              <span className="photo-capture__xp"> · tuỳ chọn, +{XP.checkinPhoto} XP</span>
+              <span className="photo-capture__xp">{m.optionalXp(XP.checkinPhoto)}</span>
             )}
           </span>
         </label>
@@ -78,8 +80,7 @@ export function PhotoCapture({ slotKey, dishId }: { slotKey: string; dishId: str
         </p>
       )}
       <p className="photo-capture__note">
-        <ShieldCheck aria-hidden="true" size={14} /> Ảnh chỉ lưu trên máy này, đã xoá thông tin vị
-        trí. Không tải lên máy chủ.
+        <ShieldCheck aria-hidden="true" size={14} /> {m.privacy}
       </p>
     </div>
   );

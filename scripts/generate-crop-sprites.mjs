@@ -1,4 +1,5 @@
-// Renders the garden sprites: 10 crops × 4 growth stages + 10 produce icons + 4 decorations.
+// Renders the garden sprites: 10 crops × 4 growth stages + 10 produce icons, egg, milk,
+// fish, shrimp + 4 decorations.
 // Static raster output only (WebP with alpha) — the vector drawing below never ships.
 // Usage: node scripts/generate-crop-sprites.mjs
 // Output: public/images/garden/<crop>-<stage>.webp and <crop>-produce.webp (256×256).
@@ -105,6 +106,12 @@ const DEFS = `
   </radialGradient>
   <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0">
     <stop offset="0" stop-color="#cfe3ea"/><stop offset=".5" stop-color="#f4fbfd"/><stop offset="1" stop-color="#b9d2db"/>
+  </linearGradient>
+  <linearGradient id="fish" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#5f7d6a"/><stop offset=".45" stop-color="#9fb59a"/><stop offset="1" stop-color="#e8e4cf"/>
+  </linearGradient>
+  <linearGradient id="shrimp" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#ffb08a"/><stop offset=".55" stop-color="#f0744d"/><stop offset="1" stop-color="#c84a2c"/>
   </linearGradient>
   <radialGradient id="shadow" cx=".5" cy=".5" r=".5">
     <stop offset="0" stop-color="#000" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity="0"/>
@@ -893,6 +900,45 @@ function produce(crop) {
         <ellipse cx="160" cy="138" rx="36" ry="46" fill="url(#eggBrown)" transform="rotate(10 160 138)"/>
         <ellipse cx="88" cy="112" rx="10" ry="16" fill="#fff" opacity=".6" transform="rotate(-20 88 112)"/>
         <ellipse cx="150" cy="118" rx="9" ry="14" fill="#fff" opacity=".35" transform="rotate(10 150 118)"/>`;
+    case 'fish':
+      return `<ellipse cx="128" cy="214" rx="92" ry="12" fill="url(#shadow)"/>
+        <path d="M 196 128 L 236 92 Q 228 128 236 166 Z" fill="#6d8a74"/>
+        <path d="M 34 130 Q 70 70 150 82 Q 196 92 206 128 Q 196 166 150 176 Q 70 188 34 130 Z" fill="url(#fish)"/>
+        <path d="M 96 84 Q 128 52 166 88" fill="#6d8a74"/>
+        <path d="M 104 172 Q 124 196 150 174" fill="#879f86"/>
+        ${[86, 110, 134, 158]
+          .map(
+            (x) =>
+              `<path d="M ${x} 104 q 12 26 0 52" stroke="#5c7563" stroke-width="2.4" fill="none" opacity=".55"/>`,
+          )
+          .join('')}
+        <circle cx="62" cy="118" r="10" fill="#fbf7ec"/>
+        <circle cx="60" cy="117" r="5.5" fill="#1d1a16"/>
+        <path d="M 38 136 q 10 6 20 2" stroke="#3f4a3c" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M 70 98 Q 120 84 170 100" stroke="#fff" stroke-width="5" fill="none" opacity=".45" stroke-linecap="round"/>`;
+    case 'shrimp':
+      return `<ellipse cx="128" cy="218" rx="84" ry="12" fill="url(#shadow)"/>
+        <path d="M 116 62 Q 60 20 24 40 M 122 58 Q 84 8 52 14" stroke="#c84a2c" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        ${[0, 1, 2, 3, 4]
+          .map(
+            (k) =>
+              `<path d="M ${112 + k * 10} ${112 + k * 14} l -22 ${10 + k * 2}" stroke="#d6573a" stroke-width="3.2" stroke-linecap="round"/>`,
+          )
+          .join('')}
+        ${[0, 1, 2, 3, 4, 5]
+          .map((k) => {
+            const a = -0.95 + k * 0.4;
+            const x = 128 + Math.cos(a) * 60;
+            const y = 132 + Math.sin(a) * 60;
+            return `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${30 - k * 3}" ry="${24 - k * 2}" fill="url(#shrimp)" stroke="#b5402a" stroke-width="2" transform="rotate(${f((a * 180) / Math.PI + 90)} ${f(x)} ${f(y)})"/>`;
+          })
+          .join('')}
+        <path d="M 150 194 L 178 224 L 128 214 Z" fill="#e2603d" stroke="#b5402a" stroke-width="2"/>
+        <ellipse cx="136" cy="74" rx="40" ry="28" fill="url(#shrimp)" stroke="#b5402a" stroke-width="2" transform="rotate(-14 136 74)"/>
+        <path d="M 100 74 L 76 66 L 100 84 Z" fill="#e2603d"/>
+        <circle cx="116" cy="66" r="7" fill="#1d1a16"/>
+        <circle cx="114" cy="64" r="2.2" fill="#fff"/>
+        <path d="M 124 58 Q 160 50 178 76" stroke="#fff" stroke-width="5" fill="none" opacity=".45" stroke-linecap="round"/>`;
     case 'milk':
       return `<ellipse cx="128" cy="226" rx="70" ry="12" fill="url(#shadow)"/>
         <path d="M 102 40 L 154 40 L 154 70 Q 184 92 184 128 L 184 206 Q 184 222 168 222 L 88 222 Q 72 222 72 206 L 72 128 Q 72 92 102 70 Z" fill="url(#glass)"/>
@@ -907,7 +953,7 @@ function produce(crop) {
 
 const DRAW = { rice, herbs, chili, scallion, bean, tomato, lemongrass, garlic, cucumber, lime };
 const DECOR = ['scarecrow', 'lantern', 'jar', 'fence'];
-const PRODUCTS = ['egg', 'milk'];
+const PRODUCTS = ['egg', 'milk', 'fish', 'shrimp'];
 const STAGES = ['sprout', 'young', 'flowering', 'ready'];
 
 let count = 0;

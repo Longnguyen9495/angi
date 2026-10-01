@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { ANIMAL_LIST, BASE_CROPS, CROP_LIST, isCrop } from '../data/game';
 import type { CropId, ProduceId } from '../data/types';
 import type { GuestProgress } from './progress';
@@ -20,14 +21,7 @@ export interface ChefOrder {
 export const ORDERS_PER_DAY = 2;
 
 // What Cô Ba is cooking today; one line per order, picked by the day's hash.
-const LINES = [
-  'Quán đông khách trưa nay, Cô Ba cần gấp ít nguyên liệu.',
-  'Cô Ba đang ninh nồi nước dùng, còn thiếu chút nữa thôi.',
-  'Có khách đặt cỗ tối nay — giúp Cô Ba một tay nhé.',
-  'Cô Ba muốn thử một món mới, cần nguyên liệu tươi từ vườn.',
-  'Chợ sáng hết hàng, Cô Ba nhờ khu vườn của bạn.',
-  'Nồi canh chua đang chờ, chỉ thiếu vài thứ từ vườn.',
-];
+const LINES: readonly string[] = t.domain.orderLines;
 
 function hash(text: string): number {
   let h = 2166136261;

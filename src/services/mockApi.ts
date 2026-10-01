@@ -4,6 +4,7 @@ import {
   type RecommendContext,
   type RecommendResult,
 } from '../domain/recommend';
+import { t } from '../i18n';
 
 /**
  * Stand-in for the future backend. Latency is short on purpose: the skeleton
@@ -15,7 +16,7 @@ export const mockConfig = {
 };
 
 export class MockNetworkError extends Error {
-  constructor(message = 'Không kết nối được máy chủ (giả lập).') {
+  constructor(message: string = t.account.mock.unreachable) {
     super(message);
     this.name = 'MockNetworkError';
   }
@@ -27,12 +28,12 @@ function wait(ms: number, signal?: AbortSignal): Promise<void> {
       reject(new DOMException('Aborted', 'AbortError'));
       return;
     }
-    const t = setTimeout(() => {
+    const timer = setTimeout(() => {
       signal?.removeEventListener('abort', onAbort);
       resolve();
     }, ms);
     const onAbort = () => {
-      clearTimeout(t);
+      clearTimeout(timer);
       reject(new DOMException('Aborted', 'AbortError'));
     };
     signal?.addEventListener('abort', onAbort, { once: true });
@@ -55,7 +56,7 @@ export async function confirmCommand(
   opts: { fail?: boolean; signal?: AbortSignal } = {},
 ): Promise<{ ok: true; key: string }> {
   await wait(mockConfig.commandLatencyMs, opts.signal);
-  if (opts.fail) throw new MockNetworkError('Chưa gieo được — máy chủ không phản hồi (giả lập).');
+  if (opts.fail) throw new MockNetworkError(t.account.mock.plantFailed);
   return { ok: true, key: idempotencyKey };
 }
 

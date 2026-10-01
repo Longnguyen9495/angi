@@ -46,6 +46,7 @@ import { useCanHover, useViewport } from './hooks/useViewport';
 import { CROPS } from '../../data/game';
 import type { CropId } from '../../data/types';
 import { dishIdsForSeed } from '../../domain/nextStep';
+import { BRAND, t } from '../../i18n';
 
 // Story and epilogue load after the reel is on screen (preloaded when idle).
 const loadStory = () => import('./components/FoodStory');
@@ -154,9 +155,9 @@ export function FoodReelExperience({
         if (phaseRef.current === 'spinning' || phaseRef.current === 'settling') {
           sound.tick(30);
           // The reel repaints itself; the counter only needs a few updates a second.
-          const t = performance.now();
-          if (t - centerAt.current < 140) return;
-          centerAt.current = t;
+          const now = performance.now();
+          if (now - centerAt.current < 140) return;
+          centerAt.current = now;
         }
         setCenter(i);
       },
@@ -242,7 +243,7 @@ export function FoodReelExperience({
     send({ type: 'RESET' });
     setExcluded([]);
     setScope(on ? 'pool' : 'all');
-    announce(on ? `Quay trong rổ: ${poolSize} món.` : `Quay trong tất cả ${reelCount()} món.`);
+    announce(on ? t.reel.announce.spinPool(poolSize) : t.reel.announce.spinAll(reelCount()));
   };
 
   const spinPool = () => {
@@ -266,7 +267,7 @@ export function FoodReelExperience({
     setExcluded([]);
     setScope(spinRequest.crop);
     setSpinNonce((n) => n + 1);
-    announce(`Quay giữa các món cho ${CROPS[spinRequest.crop].seedName.toLowerCase()}.`);
+    announce(t.reel.announce.spinCrop(CROPS[spinRequest.crop].seedName.toLowerCase()));
   }, [spinRequest, phase, announce]);
 
   const eliminate = (dishId: string) => {
@@ -275,7 +276,7 @@ export function FoodReelExperience({
     send({ type: 'RESET' });
     setExcluded((x) => [...x, dishId]);
     setSpinNonce((n) => n + 1);
-    if (dish) announce(`Đã loại ${dish.name}. Quay tiếp ${view.count - 1} món.`);
+    if (dish) announce(t.reel.announce.eliminated(dish.name, view.count - 1));
   };
 
   useEffect(() => {
@@ -305,11 +306,11 @@ export function FoodReelExperience({
   // Winner settled: announce, then enable the CTAs after the choreography.
   useEffect(() => {
     if (phase !== 'selected' || scene.ready || !winner) return;
-    announce(`Đã chọn ${winner.name}`);
+    announce(t.reel.announce.picked(winner.name));
     sound.chime();
     exploreRef.current?.focus({ preventScroll: true });
-    const t = setTimeout(() => send({ type: 'UNLOCK' }), reduced ? 0 : UNLOCK_MS);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => send({ type: 'UNLOCK' }), reduced ? 0 : UNLOCK_MS);
+    return () => clearTimeout(timer);
   }, [phase, scene.ready, winner, announce, sound, reduced]);
 
   // Remember the reel position between visits.
@@ -364,8 +365,8 @@ export function FoodReelExperience({
 
   useEffect(() => {
     document.title = detailDish
-      ? `${detailDish.name} — Bếp Việt · Food Reel`
-      : 'Bếp Việt · Food Reel — Hôm nay ăn gì?';
+      ? t.reel.docTitleDish(BRAND, detailDish.name)
+      : t.reel.docTitle(BRAND);
   }, [detailDish]);
 
   const closeDetail = (then?: 'spin') => {
@@ -413,12 +414,12 @@ export function FoodReelExperience({
       });
     } catch (e) {
       if (isAbortError(e)) return;
-      setConfirmError('Chưa chốt được — mạng giả lập đang lỗi. Món vẫn ở đây, bạn thử lại nhé.');
+      setConfirmError(t.reel.confirmError);
       send({ type: 'CONFIRM_FAILED' });
       return;
     }
     gameDispatch({ type: 'CHOOSE_DISH', dishId: detailDish.id, now: currentTime() });
-    announce(`Đã chốt ${detailDish.name}.`);
+    announce(t.reel.announce.confirmed(detailDish.name));
     send({ type: 'CONFIRMED' });
     navigate({ name: 'reel' }, { replace: true });
   };
@@ -473,11 +474,11 @@ export function FoodReelExperience({
     (phase === 'idle' || (phase === 'selected' && scene.ready));
   useEffect(() => {
     if (!orbitWanted) {
-      const t = setTimeout(() => setOrbitVisible(false), 220);
-      return () => clearTimeout(t);
+      const timer = setTimeout(() => setOrbitVisible(false), 220);
+      return () => clearTimeout(timer);
     }
-    const t = setTimeout(() => setOrbitVisible(true), reduced ? 0 : ORBIT_DWELL_MS);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setOrbitVisible(true), reduced ? 0 : ORBIT_DWELL_MS);
+    return () => clearTimeout(timer);
   }, [orbitWanted, reduced]);
 
   const busy = isBusy(phase);
@@ -530,12 +531,12 @@ export function FoodReelExperience({
           {phase === 'booting' ? (
             <BootScreen progress={boot.progress} />
           ) : (
-            <main className="fr-stage" id="noi-dung" aria-label="Food reel">
+            <main className="fr-stage" id="noi-dung" aria-label={t.reel.stage.label}>
               <div className="fr-headline" aria-hidden={phase === 'selected'}>
                 <SplitLines
                   as="h1"
                   className="fr-headline__title"
-                  lines={['Hôm nay', 'ăn gì?']}
+                  lines={t.reel.stage.headline}
                   delay={0.1}
                   stagger={0.12}
                 />
@@ -546,10 +547,10 @@ export function FoodReelExperience({
                   transition={{ delay: 0.7, duration: 0.6 }}
                 >
                   {cropScope
-                    ? `${view.count} món cho ${CROPS[cropScope].seedName.toLowerCase()}`
+                    ? t.reel.stage.subCrop(view.count, CROPS[cropScope].seedName.toLowerCase())
                     : view.pooled
-                      ? `Rổ quay · ${view.count} món bạn chọn`
-                      : `${reelCount()} món · ba miền & thế giới`}
+                      ? t.reel.stage.subPool(view.count)
+                      : t.reel.stage.subAll(reelCount())}
                 </m.p>
               </div>
 
@@ -619,9 +620,7 @@ export function FoodReelExperience({
                       onEdit={() => setPicker(true)}
                     />
                     <p className="fr-hint">
-                      {canHover
-                        ? 'Kéo để khám phá · Nhấn để xem câu chuyện'
-                        : 'Vuốt để lướt · Chạm để xem chuyện'}
+                      {canHover ? t.reel.stage.hintHover : t.reel.stage.hintTouch}
                     </p>
                   </div>
                 </footer>
@@ -648,8 +647,8 @@ export function FoodReelExperience({
                 togglePool(detailDish.id);
                 announce(
                   inPool
-                    ? `Đã bỏ ${detailDish.name} khỏi rổ quay.`
-                    : `Đã thêm ${detailDish.name} vào rổ quay.`,
+                    ? t.reel.announce.poolRemoved(detailDish.name)
+                    : t.reel.announce.poolAdded(detailDish.name),
                 );
               }}
               onOpened={() => send({ type: 'DETAIL_OPENED' })}

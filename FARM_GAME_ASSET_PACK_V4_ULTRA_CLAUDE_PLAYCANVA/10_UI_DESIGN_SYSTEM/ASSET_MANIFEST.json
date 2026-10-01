@@ -1,0 +1,1183 @@
+[
+  {
+    "category": "01_SCENE_REFERENCES",
+    "name": "whole_farm",
+    "file": "01_SCENE_REFERENCES/whole_farm.png",
+    "source_box": [
+      0,
+      0,
+      1678,
+      937
+    ],
+    "note": "Scene/composition reference; preserve perspective and spatial relationships."
+  },
+  {
+    "category": "01_SCENE_REFERENCES",
+    "name": "farm_core",
+    "file": "01_SCENE_REFERENCES/farm_core.png",
+    "source_box": [
+      130,
+      40,
+      1530,
+      820
+    ],
+    "note": "Scene/composition reference; preserve perspective and spatial relationships."
+  },
+  {
+    "category": "01_SCENE_REFERENCES",
+    "name": "left_zone",
+    "file": "01_SCENE_REFERENCES/left_zone.png",
+    "source_box": [
+      30,
+      90,
+      850,
+      790
+    ],
+    "note": "Scene/composition reference; preserve perspective and spatial relationships."
+  },
+  {
+    "category": "01_SCENE_REFERENCES",
+    "name": "center_zone",
+    "file": "01_SCENE_REFERENCES/center_zone.png",
+    "source_box": [
+      430,
+      30,
+      1260,
+      760
+    ],
+    "note": "Scene/composition reference; preserve perspective and spatial relationships."
+  },
+  {
+    "category": "01_SCENE_REFERENCES",
+    "name": "right_zone",
+    "file": "01_SCENE_REFERENCES/right_zone.png",
+    "source_box": [
+      850,
+      80,
+      1678,
+      790
+    ],
+    "note": "Scene/composition reference; preserve perspective and spatial relationships."
+  },
+  {
+    "category": "01_SCENE_REFERENCES",
+    "name": "top_architecture",
+    "file": "01_SCENE_REFERENCES/top_architecture.png",
+    "source_box": [
+      400,
+      20,
+      1430,
+      430
+    ],
+    "note": "Scene/composition reference; preserve perspective and spatial relationships."
+  },
+  {
+    "category": "01_SCENE_REFERENCES",
+    "name": "lower_play_area",
+    "file": "01_SCENE_REFERENCES/lower_play_area.png",
+    "source_box": [
+      120,
+      290,
+      1570,
+      900
+    ],
+    "note": "Scene/composition reference; preserve perspective and spatial relationships."
+  },
+  {
+    "category": "01_SCENE_REFERENCES",
+    "name": "sky_and_clouds",
+    "file": "01_SCENE_REFERENCES/sky_and_clouds.png",
+    "source_box": [
+      0,
+      0,
+      1678,
+      360
+    ],
+    "note": "Scene/composition reference; preserve perspective and spatial relationships."
+  },
+  {
+    "category": "01_SCENE_REFERENCES",
+    "name": "floating_island",
+    "file": "01_SCENE_REFERENCES/floating_island.png",
+    "source_box": [
+      30,
+      450,
+      1650,
+      937
+    ],
+    "note": "Scene/composition reference; preserve perspective and spatial relationships."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "farmhouse_full",
+    "file": "02_BUILDINGS/farmhouse_full.png",
+    "source_box": [
+      475,
+      10,
+      900,
+      350
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "farmhouse_roof",
+    "file": "02_BUILDINGS/farmhouse_roof.png",
+    "source_box": [
+      500,
+      15,
+      850,
+      180
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "farmhouse_body",
+    "file": "02_BUILDINGS/farmhouse_body.png",
+    "source_box": [
+      515,
+      125,
+      880,
+      340
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "farmhouse_door_windows",
+    "file": "02_BUILDINGS/farmhouse_door_windows.png",
+    "source_box": [
+      525,
+      145,
+      835,
+      315
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "farmhouse_balcony",
+    "file": "02_BUILDINGS/farmhouse_balcony.png",
+    "source_box": [
+      545,
+      120,
+      805,
+      235
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "greenhouse_full",
+    "file": "02_BUILDINGS/greenhouse_full.png",
+    "source_box": [
+      845,
+      45,
+      1345,
+      385
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "greenhouse_roof_glass",
+    "file": "02_BUILDINGS/greenhouse_roof_glass.png",
+    "source_box": [
+      885,
+      50,
+      1330,
+      225
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "greenhouse_market_front",
+    "file": "02_BUILDINGS/greenhouse_market_front.png",
+    "source_box": [
+      880,
+      170,
+      1290,
+      375
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "greenhouse_supports",
+    "file": "02_BUILDINGS/greenhouse_supports.png",
+    "source_box": [
+      1000,
+      100,
+      1340,
+      355
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "windmill_full",
+    "file": "02_BUILDINGS/windmill_full.png",
+    "source_box": [
+      775,
+      195,
+      955,
+      410
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "windmill_body",
+    "file": "02_BUILDINGS/windmill_body.png",
+    "source_box": [
+      805,
+      260,
+      930,
+      405
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "windmill_blades",
+    "file": "02_BUILDINGS/windmill_blades.png",
+    "source_box": [
+      785,
+      205,
+      950,
+      315
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "animal_barn_full",
+    "file": "02_BUILDINGS/animal_barn_full.png",
+    "source_box": [
+      1210,
+      145,
+      1595,
+      465
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "barn_roof",
+    "file": "02_BUILDINGS/barn_roof.png",
+    "source_box": [
+      1240,
+      160,
+      1530,
+      315
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "barn_body",
+    "file": "02_BUILDINGS/barn_body.png",
+    "source_box": [
+      1290,
+      260,
+      1580,
+      450
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "barn_opening",
+    "file": "02_BUILDINGS/barn_opening.png",
+    "source_box": [
+      1330,
+      285,
+      1515,
+      420
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "chicken_coop_full",
+    "file": "02_BUILDINGS/chicken_coop_full.png",
+    "source_box": [
+      1140,
+      325,
+      1415,
+      550
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "chicken_coop_roof",
+    "file": "02_BUILDINGS/chicken_coop_roof.png",
+    "source_box": [
+      1170,
+      330,
+      1390,
+      440
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "02_BUILDINGS",
+    "name": "well_full",
+    "file": "02_BUILDINGS/well_full.png",
+    "source_box": [
+      175,
+      245,
+      370,
+      425
+    ],
+    "note": "Detailed architecture/material reference."
+  },
+  {
+    "category": "03_NATURE",
+    "name": "fruit_tree_left_full",
+    "file": "03_NATURE/fruit_tree_left_full.png",
+    "source_box": [
+      250,
+      85,
+      450,
+      365
+    ],
+    "note": "Nature/vegetation/terrain detail reference."
+  },
+  {
+    "category": "03_NATURE",
+    "name": "fruit_tree_right_full",
+    "file": "03_NATURE/fruit_tree_right_full.png",
+    "source_box": [
+      405,
+      105,
+      615,
+      360
+    ],
+    "note": "Nature/vegetation/terrain detail reference."
+  },
+  {
+    "category": "03_NATURE",
+    "name": "fruit_tree_fruit_detail",
+    "file": "03_NATURE/fruit_tree_fruit_detail.png",
+    "source_box": [
+      300,
+      130,
+      590,
+      325
+    ],
+    "note": "Nature/vegetation/terrain detail reference."
+  },
+  {
+    "category": "03_NATURE",
+    "name": "center_tree",
+    "file": "03_NATURE/center_tree.png",
+    "source_box": [
+      810,
+      305,
+      1020,
+      475
+    ],
+    "note": "Nature/vegetation/terrain detail reference."
+  },
+  {
+    "category": "03_NATURE",
+    "name": "background_pines",
+    "file": "03_NATURE/background_pines.png",
+    "source_box": [
+      610,
+      0,
+      1170,
+      270
+    ],
+    "note": "Nature/vegetation/terrain detail reference."
+  },
+  {
+    "category": "03_NATURE",
+    "name": "left_bushes",
+    "file": "03_NATURE/left_bushes.png",
+    "source_box": [
+      60,
+      215,
+      370,
+      500
+    ],
+    "note": "Nature/vegetation/terrain detail reference."
+  },
+  {
+    "category": "03_NATURE",
+    "name": "right_bushes",
+    "file": "03_NATURE/right_bushes.png",
+    "source_box": [
+      1360,
+      300,
+      1665,
+      650
+    ],
+    "note": "Nature/vegetation/terrain detail reference."
+  },
+  {
+    "category": "03_NATURE",
+    "name": "flowers_left",
+    "file": "03_NATURE/flowers_left.png",
+    "source_box": [
+      80,
+      320,
+      440,
+      610
+    ],
+    "note": "Nature/vegetation/terrain detail reference."
+  },
+  {
+    "category": "03_NATURE",
+    "name": "flowers_right",
+    "file": "03_NATURE/flowers_right.png",
+    "source_box": [
+      1340,
+      405,
+      1660,
+      665
+    ],
+    "note": "Nature/vegetation/terrain detail reference."
+  },
+  {
+    "category": "03_NATURE",
+    "name": "grass_left",
+    "file": "03_NATURE/grass_left.png",
+    "source_box": [
+      50,
+      410,
+      600,
+      680
+    ],
+    "note": "Nature/vegetation/terrain detail reference."
+  },
+  {
+    "category": "03_NATURE",
+    "name": "grass_right",
+    "file": "03_NATURE/grass_right.png",
+    "source_box": [
+      1060,
+      410,
+      1650,
+      700
+    ],
+    "note": "Nature/vegetation/terrain detail reference."
+  },
+  {
+    "category": "03_NATURE",
+    "name": "rock_cluster_left",
+    "file": "03_NATURE/rock_cluster_left.png",
+    "source_box": [
+      80,
+      445,
+      470,
+      690
+    ],
+    "note": "Nature/vegetation/terrain detail reference."
+  },
+  {
+    "category": "03_NATURE",
+    "name": "rock_cluster_pond",
+    "file": "03_NATURE/rock_cluster_pond.png",
+    "source_box": [
+      740,
+      485,
+      1545,
+      910
+    ],
+    "note": "Nature/vegetation/terrain detail reference."
+  },
+  {
+    "category": "03_NATURE",
+    "name": "reeds_and_water_plants",
+    "file": "03_NATURE/reeds_and_water_plants.png",
+    "source_box": [
+      785,
+      495,
+      1430,
+      850
+    ],
+    "note": "Nature/vegetation/terrain detail reference."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "field_full",
+    "file": "04_CROPS_AND_TILES/field_full.png",
+    "source_box": [
+      190,
+      295,
+      940,
+      775
+    ],
+    "note": "Farming/tile/crop-state reference."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "tilled_soil_area",
+    "file": "04_CROPS_AND_TILES/tilled_soil_area.png",
+    "source_box": [
+      290,
+      305,
+      765,
+      545
+    ],
+    "note": "Farming/tile/crop-state reference."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "seedling_area",
+    "file": "04_CROPS_AND_TILES/seedling_area.png",
+    "source_box": [
+      340,
+      320,
+      770,
+      535
+    ],
+    "note": "Farming/tile/crop-state reference."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "green_empty_tiles",
+    "file": "04_CROPS_AND_TILES/green_empty_tiles.png",
+    "source_box": [
+      385,
+      430,
+      935,
+      770
+    ],
+    "note": "Farming/tile/crop-state reference."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "crop_rows",
+    "file": "04_CROPS_AND_TILES/crop_rows.png",
+    "source_box": [
+      275,
+      300,
+      800,
+      650
+    ],
+    "note": "Farming/tile/crop-state reference."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "tile_sample_green",
+    "file": "04_CROPS_AND_TILES/tile_sample_green.png",
+    "source_box": [
+      560,
+      490,
+      700,
+      610
+    ],
+    "note": "Farming/tile/crop-state reference."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "tile_sample_soil",
+    "file": "04_CROPS_AND_TILES/tile_sample_soil.png",
+    "source_box": [
+      470,
+      360,
+      610,
+      485
+    ],
+    "note": "Farming/tile/crop-state reference."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "tile_sample_seedling",
+    "file": "04_CROPS_AND_TILES/tile_sample_seedling.png",
+    "source_box": [
+      580,
+      330,
+      735,
+      465
+    ],
+    "note": "Farming/tile/crop-state reference."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "crop_sign",
+    "file": "04_CROPS_AND_TILES/crop_sign.png",
+    "source_box": [
+      745,
+      360,
+      855,
+      475
+    ],
+    "note": "Farming/tile/crop-state reference."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "field_front_fence",
+    "file": "04_CROPS_AND_TILES/field_front_fence.png",
+    "source_box": [
+      130,
+      505,
+      850,
+      770
+    ],
+    "note": "Farming/tile/crop-state reference."
+  },
+  {
+    "category": "05_ANIMALS",
+    "name": "cow_main",
+    "file": "05_ANIMALS/cow_main.png",
+    "source_box": [
+      825,
+      110,
+      980,
+      255
+    ],
+    "note": "Animal and enclosure reference."
+  },
+  {
+    "category": "05_ANIMALS",
+    "name": "cow_area_full",
+    "file": "05_ANIMALS/cow_area_full.png",
+    "source_box": [
+      1160,
+      155,
+      1600,
+      475
+    ],
+    "note": "Animal and enclosure reference."
+  },
+  {
+    "category": "05_ANIMALS",
+    "name": "chicken_left",
+    "file": "05_ANIMALS/chicken_left.png",
+    "source_box": [
+      1185,
+      375,
+      1280,
+      485
+    ],
+    "note": "Animal and enclosure reference."
+  },
+  {
+    "category": "05_ANIMALS",
+    "name": "chicken_right",
+    "file": "05_ANIMALS/chicken_right.png",
+    "source_box": [
+      1285,
+      390,
+      1405,
+      500
+    ],
+    "note": "Animal and enclosure reference."
+  },
+  {
+    "category": "05_ANIMALS",
+    "name": "chicken_area_full",
+    "file": "05_ANIMALS/chicken_area_full.png",
+    "source_box": [
+      1120,
+      320,
+      1430,
+      550
+    ],
+    "note": "Animal and enclosure reference."
+  },
+  {
+    "category": "05_ANIMALS",
+    "name": "haystack",
+    "file": "05_ANIMALS/haystack.png",
+    "source_box": [
+      1090,
+      305,
+      1320,
+      470
+    ],
+    "note": "Animal and enclosure reference."
+  },
+  {
+    "category": "05_ANIMALS",
+    "name": "animal_fence_full",
+    "file": "05_ANIMALS/animal_fence_full.png",
+    "source_box": [
+      1060,
+      295,
+      1605,
+      615
+    ],
+    "note": "Animal and enclosure reference."
+  },
+  {
+    "category": "06_WATER_AND_FISHING",
+    "name": "pond_full",
+    "file": "06_WATER_AND_FISHING/pond_full.png",
+    "source_box": [
+      775,
+      445,
+      1550,
+      930
+    ],
+    "note": "Water/fishing visual reference."
+  },
+  {
+    "category": "06_WATER_AND_FISHING",
+    "name": "pond_surface",
+    "file": "06_WATER_AND_FISHING/pond_surface.png",
+    "source_box": [
+      870,
+      485,
+      1515,
+      790
+    ],
+    "note": "Water/fishing visual reference."
+  },
+  {
+    "category": "06_WATER_AND_FISHING",
+    "name": "pond_shore",
+    "file": "06_WATER_AND_FISHING/pond_shore.png",
+    "source_box": [
+      775,
+      465,
+      1550,
+      920
+    ],
+    "note": "Water/fishing visual reference."
+  },
+  {
+    "category": "06_WATER_AND_FISHING",
+    "name": "dock_full",
+    "file": "06_WATER_AND_FISHING/dock_full.png",
+    "source_box": [
+      895,
+      490,
+      1210,
+      745
+    ],
+    "note": "Water/fishing visual reference."
+  },
+  {
+    "category": "06_WATER_AND_FISHING",
+    "name": "dock_planks",
+    "file": "06_WATER_AND_FISHING/dock_planks.png",
+    "source_box": [
+      920,
+      505,
+      1170,
+      700
+    ],
+    "note": "Water/fishing visual reference."
+  },
+  {
+    "category": "06_WATER_AND_FISHING",
+    "name": "fish_group",
+    "file": "06_WATER_AND_FISHING/fish_group.png",
+    "source_box": [
+      925,
+      585,
+      1385,
+      865
+    ],
+    "note": "Water/fishing visual reference."
+  },
+  {
+    "category": "06_WATER_AND_FISHING",
+    "name": "fish_large",
+    "file": "06_WATER_AND_FISHING/fish_large.png",
+    "source_box": [
+      955,
+      650,
+      1090,
+      745
+    ],
+    "note": "Water/fishing visual reference."
+  },
+  {
+    "category": "06_WATER_AND_FISHING",
+    "name": "fish_small",
+    "file": "06_WATER_AND_FISHING/fish_small.png",
+    "source_box": [
+      1110,
+      600,
+      1215,
+      700
+    ],
+    "note": "Water/fishing visual reference."
+  },
+  {
+    "category": "06_WATER_AND_FISHING",
+    "name": "lily_pads",
+    "file": "06_WATER_AND_FISHING/lily_pads.png",
+    "source_box": [
+      1110,
+      495,
+      1340,
+      655
+    ],
+    "note": "Water/fishing visual reference."
+  },
+  {
+    "category": "06_WATER_AND_FISHING",
+    "name": "water_plants",
+    "file": "06_WATER_AND_FISHING/water_plants.png",
+    "source_box": [
+      790,
+      505,
+      1460,
+      860
+    ],
+    "note": "Water/fishing visual reference."
+  },
+  {
+    "category": "07_PROPS",
+    "name": "benches",
+    "file": "07_PROPS/benches.png",
+    "source_box": [
+      460,
+      210,
+      705,
+      350
+    ],
+    "note": "Prop/decor/material reference."
+  },
+  {
+    "category": "07_PROPS",
+    "name": "crates",
+    "file": "07_PROPS/crates.png",
+    "source_box": [
+      680,
+      200,
+      815,
+      350
+    ],
+    "note": "Prop/decor/material reference."
+  },
+  {
+    "category": "07_PROPS",
+    "name": "center_path",
+    "file": "07_PROPS/center_path.png",
+    "source_box": [
+      585,
+      215,
+      1180,
+      535
+    ],
+    "note": "Prop/decor/material reference."
+  },
+  {
+    "category": "07_PROPS",
+    "name": "stone_path_detail",
+    "file": "07_PROPS/stone_path_detail.png",
+    "source_box": [
+      640,
+      255,
+      1150,
+      470
+    ],
+    "note": "Prop/decor/material reference."
+  },
+  {
+    "category": "07_PROPS",
+    "name": "hay_bales",
+    "file": "07_PROPS/hay_bales.png",
+    "source_box": [
+      1080,
+      315,
+      1320,
+      475
+    ],
+    "note": "Prop/decor/material reference."
+  },
+  {
+    "category": "07_PROPS",
+    "name": "wood_sign",
+    "file": "07_PROPS/wood_sign.png",
+    "source_box": [
+      750,
+      360,
+      860,
+      480
+    ],
+    "note": "Prop/decor/material reference."
+  },
+  {
+    "category": "07_PROPS",
+    "name": "fence_detail_left",
+    "file": "07_PROPS/fence_detail_left.png",
+    "source_box": [
+      55,
+      300,
+      800,
+      650
+    ],
+    "note": "Prop/decor/material reference."
+  },
+  {
+    "category": "07_PROPS",
+    "name": "fence_detail_right",
+    "file": "07_PROPS/fence_detail_right.png",
+    "source_box": [
+      1040,
+      300,
+      1655,
+      660
+    ],
+    "note": "Prop/decor/material reference."
+  },
+  {
+    "category": "07_PROPS",
+    "name": "decorative_stones",
+    "file": "07_PROPS/decorative_stones.png",
+    "source_box": [
+      380,
+      420,
+      1110,
+      710
+    ],
+    "note": "Prop/decor/material reference."
+  },
+  {
+    "category": "08_TRANSPARENT_CANDIDATES",
+    "name": "farmhouse",
+    "file": "08_TRANSPARENT_CANDIDATES/farmhouse.png",
+    "source_box": [
+      475,
+      5,
+      900,
+      350
+    ],
+    "note": "Automated candidate cutout; refine edges in Canva/PlayCanva before production use."
+  },
+  {
+    "category": "08_TRANSPARENT_CANDIDATES",
+    "name": "greenhouse_market",
+    "file": "08_TRANSPARENT_CANDIDATES/greenhouse_market.png",
+    "source_box": [
+      840,
+      40,
+      1350,
+      390
+    ],
+    "note": "Automated candidate cutout; refine edges in Canva/PlayCanva before production use."
+  },
+  {
+    "category": "08_TRANSPARENT_CANDIDATES",
+    "name": "windmill",
+    "file": "08_TRANSPARENT_CANDIDATES/windmill.png",
+    "source_box": [
+      770,
+      190,
+      965,
+      415
+    ],
+    "note": "Automated candidate cutout; refine edges in Canva/PlayCanva before production use."
+  },
+  {
+    "category": "08_TRANSPARENT_CANDIDATES",
+    "name": "animal_barn",
+    "file": "08_TRANSPARENT_CANDIDATES/animal_barn.png",
+    "source_box": [
+      1200,
+      140,
+      1605,
+      475
+    ],
+    "note": "Automated candidate cutout; refine edges in Canva/PlayCanva before production use."
+  },
+  {
+    "category": "08_TRANSPARENT_CANDIDATES",
+    "name": "chicken_coop",
+    "file": "08_TRANSPARENT_CANDIDATES/chicken_coop.png",
+    "source_box": [
+      1135,
+      320,
+      1420,
+      555
+    ],
+    "note": "Automated candidate cutout; refine edges in Canva/PlayCanva before production use."
+  },
+  {
+    "category": "08_TRANSPARENT_CANDIDATES",
+    "name": "well",
+    "file": "08_TRANSPARENT_CANDIDATES/well.png",
+    "source_box": [
+      170,
+      240,
+      375,
+      430
+    ],
+    "note": "Automated candidate cutout; refine edges in Canva/PlayCanva before production use."
+  },
+  {
+    "category": "08_TRANSPARENT_CANDIDATES",
+    "name": "cow",
+    "file": "08_TRANSPARENT_CANDIDATES/cow.png",
+    "source_box": [
+      815,
+      100,
+      990,
+      260
+    ],
+    "note": "Automated candidate cutout; refine edges in Canva/PlayCanva before production use."
+  },
+  {
+    "category": "08_TRANSPARENT_CANDIDATES",
+    "name": "chicken_left",
+    "file": "08_TRANSPARENT_CANDIDATES/chicken_left.png",
+    "source_box": [
+      1175,
+      365,
+      1290,
+      495
+    ],
+    "note": "Automated candidate cutout; refine edges in Canva/PlayCanva before production use."
+  },
+  {
+    "category": "08_TRANSPARENT_CANDIDATES",
+    "name": "chicken_right",
+    "file": "08_TRANSPARENT_CANDIDATES/chicken_right.png",
+    "source_box": [
+      1280,
+      380,
+      1415,
+      510
+    ],
+    "note": "Automated candidate cutout; refine edges in Canva/PlayCanva before production use."
+  },
+  {
+    "category": "08_TRANSPARENT_CANDIDATES",
+    "name": "fruit_tree_left",
+    "file": "08_TRANSPARENT_CANDIDATES/fruit_tree_left.png",
+    "source_box": [
+      245,
+      80,
+      455,
+      370
+    ],
+    "note": "Automated candidate cutout; refine edges in Canva/PlayCanva before production use."
+  },
+  {
+    "category": "08_TRANSPARENT_CANDIDATES",
+    "name": "fruit_tree_right",
+    "file": "08_TRANSPARENT_CANDIDATES/fruit_tree_right.png",
+    "source_box": [
+      400,
+      100,
+      625,
+      365
+    ],
+    "note": "Automated candidate cutout; refine edges in Canva/PlayCanva before production use."
+  },
+  {
+    "category": "08_TRANSPARENT_CANDIDATES",
+    "name": "center_tree",
+    "file": "08_TRANSPARENT_CANDIDATES/center_tree.png",
+    "source_box": [
+      800,
+      295,
+      1030,
+      485
+    ],
+    "note": "Automated candidate cutout; refine edges in Canva/PlayCanva before production use."
+  },
+  {
+    "category": "08_TRANSPARENT_CANDIDATES",
+    "name": "haystack",
+    "file": "08_TRANSPARENT_CANDIDATES/haystack.png",
+    "source_box": [
+      1080,
+      300,
+      1330,
+      480
+    ],
+    "note": "Automated candidate cutout; refine edges in Canva/PlayCanva before production use."
+  },
+  {
+    "category": "08_TRANSPARENT_CANDIDATES",
+    "name": "wooden_dock",
+    "file": "08_TRANSPARENT_CANDIDATES/wooden_dock.png",
+    "source_box": [
+      885,
+      480,
+      1220,
+      755
+    ],
+    "note": "Automated candidate cutout; refine edges in Canva/PlayCanva before production use."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "grass_tile_A",
+    "file": "04_CROPS_AND_TILES/grass_tile_A.png",
+    "source_box": [
+      420,
+      505,
+      560,
+      610
+    ],
+    "note": "Individual tile reference for rebuilding tile system."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "grass_tile_B",
+    "file": "04_CROPS_AND_TILES/grass_tile_B.png",
+    "source_box": [
+      560,
+      560,
+      700,
+      670
+    ],
+    "note": "Individual tile reference for rebuilding tile system."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "grass_tile_C",
+    "file": "04_CROPS_AND_TILES/grass_tile_C.png",
+    "source_box": [
+      690,
+      610,
+      835,
+      725
+    ],
+    "note": "Individual tile reference for rebuilding tile system."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "soil_tile_A",
+    "file": "04_CROPS_AND_TILES/soil_tile_A.png",
+    "source_box": [
+      425,
+      345,
+      565,
+      450
+    ],
+    "note": "Individual tile reference for rebuilding tile system."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "soil_tile_B",
+    "file": "04_CROPS_AND_TILES/soil_tile_B.png",
+    "source_box": [
+      565,
+      385,
+      710,
+      490
+    ],
+    "note": "Individual tile reference for rebuilding tile system."
+  },
+  {
+    "category": "04_CROPS_AND_TILES",
+    "name": "seedling_tile_A",
+    "file": "04_CROPS_AND_TILES/seedling_tile_A.png",
+    "source_box": [
+      560,
+      315,
+      715,
+      430
+    ],
+    "note": "Individual tile reference for rebuilding tile system."
+  },
+  {
+    "category": "09_MAPS_AND_LAYOUT",
+    "name": "INTERACTION_HOTSPOT_MAP",
+    "file": "09_MAPS_AND_LAYOUT/INTERACTION_HOTSPOT_MAP.png"
+  }
+]

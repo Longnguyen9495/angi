@@ -13,7 +13,11 @@ import {
   type FriendGarden,
   type FriendsList,
 } from '../../../services/account';
+import { BRAND, t } from '../../../i18n';
 import { useAccount, useFeedback, useGame, useUi } from '../../../state/hooks';
+
+const m = t.journey.friends;
+const v = t.journey.visit;
 
 const FriendIsland = lazy(() => import('../../garden3d/FriendIsland'));
 
@@ -51,7 +55,7 @@ export function FriendsSection() {
         setData(r);
         setError(null);
       })
-      .catch((e: unknown) => setError(e instanceof AccountError ? e.message : 'Chưa tải được.'));
+      .catch((e: unknown) => setError(e instanceof AccountError ? e.message : m.loadFailed));
   }, []);
 
   useEffect(() => {
@@ -61,7 +65,7 @@ export function FriendsSection() {
       .list()
       .then((r) => alive && setData(r))
       .catch((e: unknown) => {
-        if (alive) setError(e instanceof AccountError ? e.message : 'Chưa tải được.');
+        if (alive) setError(e instanceof AccountError ? e.message : m.loadFailed);
       });
     return () => {
       alive = false;
@@ -73,12 +77,8 @@ export function FriendsSection() {
       <div className="fj-friends fj-friends--invite">
         <UsersThree size={28} aria-hidden="true" />
         <div>
-          <h3 className="fj-h3">Bạn vườn</h3>
-          <p className="fj-note">
-            Kết bạn bằng mã khu vườn: ghé đảo của nhau, tưới giúp mỗi ngày (+{XP.friendHelp} XP) và
-            nhận quà hạt giống của Cô Ba. Cần lưu hành trình bằng email — không ai thấy email của
-            bạn.
-          </p>
+          <h3 className="fj-h3">{m.title}</h3>
+          <p className="fj-note">{m.invite(XP.friendHelp)}</p>
         </div>
         <button
           type="button"
@@ -86,7 +86,7 @@ export function FriendsSection() {
           onClick={openAccount}
           disabled={status === 'loading'}
         >
-          Lưu hành trình để kết bạn
+          {m.saveToFriend}
         </button>
       </div>
     );
@@ -100,10 +100,10 @@ export function FriendsSection() {
       const r = await friendsApi.add(code);
       setData(r);
       setCode('');
-      toast({ message: 'Đã kết bạn vườn! Ghé thăm và tưới giúp nhau nhé.', tone: 'success' });
+      toast({ message: m.added, tone: 'success' });
     } catch (err) {
       toast({
-        message: err instanceof AccountError ? err.message : 'Chưa kết bạn được.',
+        message: err instanceof AccountError ? err.message : m.addFailed,
         tone: 'warning',
       });
     } finally {
@@ -113,15 +113,15 @@ export function FriendsSection() {
 
   const share = async () => {
     if (!data) return;
-    const text = `Kết bạn vườn với mình trên Bếp Việt nhé — mã ${data.me.code}`;
+    const text = m.shareText(BRAND, data.me.code);
     const url = shareUrl(data.me.code);
     try {
       if (navigator.share) {
-        await navigator.share({ title: 'Khu vườn Bếp Việt', text, url });
+        await navigator.share({ title: m.shareTitle(BRAND), text, url });
         return;
       }
       await navigator.clipboard.writeText(`${text}: ${url}`);
-      toast({ message: 'Đã chép lời mời kết bạn.', tone: 'success' });
+      toast({ message: m.inviteCopied, tone: 'success' });
     } catch {
       /* the guest closed the share sheet */
     }
@@ -131,9 +131,9 @@ export function FriendsSection() {
     if (!data) return;
     try {
       await navigator.clipboard.writeText(data.me.code);
-      toast({ message: `Đã chép mã ${data.me.code}.`, tone: 'success' });
+      toast({ message: m.codeCopied(data.me.code), tone: 'success' });
     } catch {
-      toast({ message: `Mã của bạn: ${data.me.code}` });
+      toast({ message: m.yourCode(data.me.code) });
     }
   };
 
@@ -146,18 +146,18 @@ export function FriendsSection() {
       load();
     } catch (err) {
       toast({
-        message: err instanceof AccountError ? err.message : 'Chưa lưu được tên.',
+        message: err instanceof AccountError ? err.message : m.renameFailed,
         tone: 'warning',
       });
     }
   };
 
   const remove = async (friendCode: string, name: string) => {
-    if (!window.confirm(`Bỏ kết bạn với ${name}?`)) return;
+    if (!window.confirm(m.confirmRemove(name))) return;
     try {
       setData(await friendsApi.remove(friendCode));
     } catch {
-      toast({ message: 'Chưa bỏ kết bạn được, thử lại nhé.', tone: 'warning' });
+      toast({ message: m.removeFailed, tone: 'error' });
     }
   };
 
@@ -171,12 +171,8 @@ export function FriendsSection() {
   return (
     <div className="fj-friends">
       <div className="fj-friends__head">
-        <h3 className="fj-h3">Bạn vườn</h3>
-        {data && (
-          <p className="fj-note">
-            Còn {data.helpsLeft} lượt tưới giúp hôm nay · mỗi lượt +{XP.friendHelp} XP cho cả hai.
-          </p>
-        )}
+        <h3 className="fj-h3">{m.title}</h3>
+        {data && <p className="fj-note">{m.helpsLeft(data.helpsLeft, XP.friendHelp)}</p>}
       </div>
 
       {error && !data && <p className="fj-note">{error}</p>}
@@ -184,16 +180,19 @@ export function FriendsSection() {
       {data && (
         <div className="fj-friends__grid">
           <div className="fj-friends__me">
-            <p className="fj-friends__label">Mã khu vườn của bạn</p>
-            <p className="fj-friends__code" aria-label={`Mã ${data.me.code.split('').join(' ')}`}>
+            <p className="fj-friends__label">{m.myCode}</p>
+            <p
+              className="fj-friends__code"
+              aria-label={m.codeAria(data.me.code.split('').join(' '))}
+            >
               {data.me.code}
             </p>
             <div className="fj-friends__row">
               <button type="button" className="fr-ghost" onClick={copy}>
-                <Copy size={16} aria-hidden="true" /> Chép mã
+                <Copy size={16} aria-hidden="true" /> {m.copyCode}
               </button>
               <button type="button" className="fr-ghost" onClick={share}>
-                <ShareNetwork size={16} aria-hidden="true" /> Mời bạn
+                <ShareNetwork size={16} aria-hidden="true" /> {m.inviteFriend}
               </button>
             </div>
             {naming === null ? (
@@ -202,23 +201,23 @@ export function FriendsSection() {
                 className="fj-friends__rename"
                 onClick={() => setNaming(data.me.name)}
               >
-                {data.me.name ? `“${data.me.name}” · đổi tên` : 'Đặt tên cho khu vườn'}
+                {data.me.name ? m.renameCurrent(data.me.name) : m.nameGarden}
               </button>
             ) : (
               <form className="fj-friends__form" onSubmit={saveName}>
                 <label className="sr-only" htmlFor="fj-garden-name">
-                  Tên khu vườn
+                  {m.gardenName}
                 </label>
                 <input
                   id="fj-garden-name"
                   value={naming}
                   maxLength={40}
-                  placeholder="Vườn nhà Mây"
+                  placeholder={m.gardenNamePlaceholder}
                   onChange={(e) => setNaming(e.target.value)}
                   autoFocus
                 />
                 <button type="submit" className="fr-ghost">
-                  Lưu
+                  {m.save}
                 </button>
               </form>
             )}
@@ -226,7 +225,7 @@ export function FriendsSection() {
 
           <form className="fj-friends__add" onSubmit={add}>
             <label className="fj-friends__label" htmlFor="fj-friend-code">
-              Thêm bạn bằng mã
+              {m.addByCode}
             </label>
             <div className="fj-friends__form">
               <input
@@ -237,42 +236,40 @@ export function FriendsSection() {
                 autoComplete="off"
                 spellCheck={false}
                 maxLength={8}
-                placeholder="VD: K7QM2P"
+                placeholder={m.codePlaceholder}
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
               />
               <button type="submit" className="fr-cta" disabled={busy || code.trim().length < 6}>
-                Kết bạn
+                {m.add}
               </button>
             </div>
-            <p className="fj-note">
-              Tối đa {data.max} bạn. Chỉ tên khu vườn và cây trồng được chia sẻ.
-            </p>
+            <p className="fj-note">{m.limit(data.max)}</p>
           </form>
         </div>
       )}
 
       {data && (
-        <ol className="fj-board" aria-label="Bảng xếp hạng bạn vườn">
+        <ol className="fj-board" aria-label={m.boardLabel}>
           {board.map((f, i) => (
             <li key={f.code} className={`fj-board__row ${f.isMe ? 'is-me' : ''}`}>
               <span className="fj-board__rank">{i + 1}</span>
               <span className="fj-board__name">
-                {f.isMe ? `${f.name} (bạn)` : f.name}
+                {f.isMe ? m.me(f.name) : f.name}
                 <span className="fj-board__meta">
-                  Cấp {f.level} · {f.xp} XP
-                  {!f.isMe && f.growing > 0 && !f.helpedToday && ` · ${f.growing} ô cần nước`}
-                  {!f.isMe && f.helpedToday && ' · đã tưới hôm nay'}
+                  {m.boardMeta(f.level, f.xp)}
+                  {!f.isMe && f.growing > 0 && !f.helpedToday && m.needWater(f.growing)}
+                  {!f.isMe && f.helpedToday && m.wateredToday}
                 </span>
               </span>
               {!f.isMe && (
                 <span className="fj-board__actions">
                   <button type="button" className="fr-ghost" onClick={() => setVisit(f.code)}>
-                    Ghé vườn
+                    {m.visit}
                   </button>
                   <button
                     type="button"
                     className="fj-board__remove"
-                    aria-label={`Bỏ kết bạn với ${f.name}`}
+                    aria-label={m.removeLabel(f.name)}
                     onClick={() => remove(f.code, f.name)}
                   >
                     <Trash size={16} aria-hidden="true" />
@@ -281,9 +278,7 @@ export function FriendsSection() {
               )}
             </li>
           ))}
-          {data.friends.length === 0 && (
-            <li className="fj-board__empty">Chưa có bạn vườn — gửi mã cho bạn bè để bắt đầu.</li>
-          )}
+          {data.friends.length === 0 && <li className="fj-board__empty">{m.empty}</li>}
         </ol>
       )}
 
@@ -325,7 +320,7 @@ function FriendVisit({
       .visit(code)
       .then((g) => alive && setGarden(g))
       .catch((e: unknown) => {
-        if (alive) setError(e instanceof AccountError ? e.message : 'Chưa ghé được khu vườn này.');
+        if (alive) setError(e instanceof AccountError ? e.message : v.loadFailed);
       });
     return () => {
       alive = false;
@@ -346,13 +341,13 @@ function FriendVisit({
       setGarden(g);
       setHelped(plotId);
       toast({
-        message: `Đã tưới giúp ô ${plotId} của ${g.name}. +${XP.friendHelp} XP cho bạn!`,
-        tone: 'success',
+        message: v.watered(plotId, g.name, XP.friendHelp),
+        tone: 'reward',
       });
       onHelped();
     } catch (e) {
       toast({
-        message: e instanceof AccountError ? e.message : 'Chưa tưới được.',
+        message: e instanceof AccountError ? e.message : v.waterFailed,
         tone: 'warning',
       });
     } finally {
@@ -364,16 +359,13 @@ function FriendVisit({
     <Sheet
       open
       onClose={onClose}
-      title={garden?.name ?? 'Đang ghé vườn…'}
+      title={garden?.name ?? v.loading}
       description={
         garden
-          ? `Cấp ${garden.level} · ${
-              garden.helpedToday
-                ? 'bạn đã tưới giúp hôm nay'
-                : canHelp
-                  ? 'chạm ô có viền xanh để tưới giúp'
-                  : 'hết lượt tưới giúp hôm nay'
-            }`
+          ? v.description(
+              garden.level,
+              garden.helpedToday ? v.helpedToday : canHelp ? v.canHelp : v.noHelpsLeft,
+            )
           : undefined
       }
       variant="dark"
@@ -381,7 +373,7 @@ function FriendVisit({
     >
       {error && <p className="fj-note">{error}</p>}
       {garden && canUseWebGL() && (
-        <Suspense fallback={<div className="g3d-loading">Đang bay tới đảo của bạn…</div>}>
+        <Suspense fallback={<div className="g3d-loading">{v.flying}</div>}>
           <FriendIsland
             garden={garden}
             now={now}
@@ -396,24 +388,24 @@ function FriendVisit({
         </Suspense>
       )}
       {garden && (
-        <ul className="fj-visit__plots" aria-label="Các ô đất của bạn vườn">
+        <ul className="fj-visit__plots" aria-label={v.plotsLabel}>
           {plots.map((p) => {
             const stage = plotStage(p, now);
             const crop = p.crop ? CROPS[p.crop as CropId] : null;
             return (
               <li key={p.id} className={picked === p.id ? 'is-picked' : ''}>
                 <span>
-                  Ô {p.id} · {crop ? crop.name : 'Trống'}
+                  {v.plot(p.id, crop ? crop.name : v.empty)}
                   {crop && (
                     <span className="fj-board__meta">
                       {STAGE_LABEL[stage]}
                       {p.readyAt && p.readyAt > now
-                        ? ` · còn ${formatDuration(p.readyAt - now)}`
+                        ? v.timeLeft(formatDuration(p.readyAt - now))
                         : ''}
                     </span>
                   )}
                 </span>
-                {helped === p.id && <span className="fj-visit__done">Đã tưới giúp</span>}
+                {helped === p.id && <span className="fj-visit__done">{v.helped}</span>}
                 {waterable.has(p.id) && (
                   <button
                     type="button"
@@ -421,7 +413,7 @@ function FriendVisit({
                     disabled={busy}
                     onClick={() => water(p.id)}
                   >
-                    <Drop size={16} aria-hidden="true" /> Tưới giúp
+                    <Drop size={16} aria-hidden="true" /> {v.water}
                   </button>
                 )}
               </li>

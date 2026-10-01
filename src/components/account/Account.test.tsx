@@ -57,7 +57,7 @@ afterEach(() => {
   globalThis.fetch = realFetch;
 });
 
-describe('Lưu hành trình (optional account)', () => {
+describe('Lưu nông trại (optional account)', () => {
   it('asks only for an email plus consent, signs in with the code and saves the journey', async () => {
     const server = fakeServer();
     globalThis.fetch = server.fetchMock as unknown as typeof fetch;
@@ -72,9 +72,9 @@ describe('Lưu hành trình (optional account)', () => {
     await screen.findByRole('button', { name: /quay món/i }, { timeout: 2000 });
     await user.click(screen.getByRole('button', { name: /hồ sơ/i }));
     const profile = await screen.findByRole('dialog', { name: /hồ sơ khách/i });
-    await user.click(within(profile).getByRole('button', { name: /lưu hành trình bằng email/i }));
+    await user.click(within(profile).getByRole('button', { name: /lưu nông trại bằng email/i }));
 
-    const sheet = await screen.findByRole('dialog', { name: 'Lưu hành trình' });
+    const sheet = await screen.findByRole('dialog', { name: 'Lưu nông trại' });
     // One field, no name or phone.
     expect(within(sheet).getAllByRole('textbox')).toHaveLength(1);
     const consent = within(sheet).getByRole('checkbox', { name: /tôi đồng ý/i });
@@ -94,11 +94,12 @@ describe('Lưu hành trình (optional account)', () => {
     const sent = server.calls.find((c) => c.path === '/code')!;
     expect(sent.body).toEqual({ email: 'khach@example.vn', consent: true, marketing: false });
     expect(sent.headers['X-Bepviet']).toBe('1');
+    expect(sent.headers['X-Locale']).toBe('vi');
 
     await user.type(codeBox, '111111');
     expect(await within(sheet).findByRole('alert')).toHaveTextContent(/mã chưa đúng/i);
     await user.type(codeBox, '246810');
-    expect(await within(sheet).findByText(/hành trình đã được lưu/i)).toBeInTheDocument();
+    expect(await within(sheet).findByText(/nông trại đã được lưu/i)).toBeInTheDocument();
 
     // An empty account receives this device's journey right away.
     await waitFor(() => expect(server.progress().version).toBe(1));

@@ -1,12 +1,13 @@
 import type { CSSProperties } from 'react';
+import { t } from '../../../i18n';
 import type { Flavor } from '../foodReel.types';
 
 const ROWS: { key: keyof Flavor; label: string }[] = [
-  { key: 'spicy', label: 'Cay' },
-  { key: 'sweet', label: 'Ngọt' },
-  { key: 'rich', label: 'Béo' },
-  { key: 'fresh', label: 'Thanh' },
-  { key: 'crunchy', label: 'Giòn' },
+  { key: 'spicy', label: t.reel.flavor.spicy },
+  { key: 'sweet', label: t.reel.flavor.sweet },
+  { key: 'rich', label: t.reel.flavor.rich },
+  { key: 'fresh', label: t.reel.flavor.fresh },
+  { key: 'crunchy', label: t.reel.flavor.crunchy },
 ];
 
 /** Five-step scales with numbers — never colour alone. */

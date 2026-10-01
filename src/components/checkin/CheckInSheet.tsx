@@ -20,25 +20,28 @@ import { useFeedback, useGame, useUi } from '../../state/hooks';
 import { Sheet } from '../ui/Sheet';
 import { PhotoCapture } from './PhotoCapture';
 import { currentTime } from '../../domain/time';
+import { t } from '../../i18n';
+
+const m = t.account.checkin;
 
 const OUTCOMES: { id: CheckInOutcome; label: string; hint: string }[] = [
-  { id: 'ate', label: 'Đã ăn món này', hint: 'Nhận dấu “đã ăn” cho món' },
-  { id: 'swapped', label: 'Đổi sang món khác', hint: 'Vẫn tính check-in, cây vẫn lớn' },
-  { id: 'skipped', label: 'Bỏ bữa', hint: 'Không sao, không mất gì' },
+  { id: 'ate', label: m.outcomes.ate.label, hint: m.outcomes.ate.hint },
+  { id: 'swapped', label: m.outcomes.swapped.label, hint: m.outcomes.swapped.hint },
+  { id: 'skipped', label: m.outcomes.skipped.label, hint: m.outcomes.skipped.hint },
 ];
 
 const RATINGS: { value: number; label: string; icon: Icon }[] = [
-  { value: 1, label: 'Không hợp', icon: SmileyXEyes },
-  { value: 2, label: 'Tạm được', icon: SmileySad },
-  { value: 3, label: 'Ổn', icon: SmileyMeh },
-  { value: 4, label: 'Ngon', icon: Smiley },
-  { value: 5, label: 'Rất ngon', icon: SmileyWink },
+  { value: 1, label: m.ratings[0], icon: SmileyXEyes },
+  { value: 2, label: m.ratings[1], icon: SmileySad },
+  { value: 3, label: m.ratings[2], icon: SmileyMeh },
+  { value: 4, label: m.ratings[3], icon: Smiley },
+  { value: 5, label: m.ratings[4], icon: SmileyWink },
 ];
 
 const AGAIN: { id: AgainAnswer; label: string }[] = [
-  { id: 'yes', label: 'Có, gợi ý lại nhé' },
-  { id: 'maybe', label: 'Thỉnh thoảng' },
-  { id: 'no', label: 'Không, ẩn món này' },
+  { id: 'yes', label: m.again.yes },
+  { id: 'maybe', label: m.again.maybe },
+  { id: 'no', label: m.again.no },
 ];
 
 interface Summary {
@@ -53,7 +56,7 @@ function buildSummary(
 ): Summary {
   const lines: string[] = [];
   const xp = after.xp - before.xp;
-  if (xp > 0) lines.push(`+${xp} XP (tính cả nhiệm vụ ngày)`);
+  if (xp > 0) lines.push(m.summary.xp(xp));
   const meal = before.meal;
   const dish = meal ? getDish(meal.dishId) : undefined;
   if (meal?.plotId) {
@@ -61,21 +64,21 @@ function buildSummary(
     const a = after.plots.find((p) => p.id === meal.plotId);
     const now = currentTime();
     if (b && a && a.crop && plotStage(b, now) !== 'ready' && plotStage(a, now) === 'ready') {
-      lines.push(`Cây ${CROPS[a.crop].name.toLowerCase()} ở ô ${a.id} đã lớn — sẵn sàng thu hoạch`);
+      lines.push(m.summary.ready(CROPS[a.crop].name.toLowerCase(), a.id));
     }
   }
   if (after.stamps.eaten.length > before.stamps.eaten.length && dish) {
-    lines.push(`+1 dấu hành trình: đã ăn ${dish.name}`);
+    lines.push(m.summary.stamp(dish.name));
   }
   for (const r of after.unlockedRegions) {
-    if (!before.unlockedRegions.includes(r)) lines.push(`Mở vùng mới: ${REGIONS[r].name}!`);
+    if (!before.unlockedRegions.includes(r)) lines.push(m.summary.region(REGIONS[r].name));
   }
   if (dish) {
     const rp = recipeProgress(after, dish.recipe);
-    lines.push(`${RECIPES[dish.recipe].name}: ${rp.secured}/${rp.total} nguyên liệu`);
+    lines.push(m.summary.recipe(RECIPES[dish.recipe].name, rp.secured, rp.total));
   }
   if (after.hiddenDishIds.length > before.hiddenDishIds.length && dish) {
-    lines.push(`Đã ẩn ${dish.name} khỏi gợi ý (bật lại trong Hồ sơ)`);
+    lines.push(m.summary.hidden(dish.name));
   }
   return { lines, outcome };
 }
@@ -139,7 +142,7 @@ export function CheckInSheet({
     dispatch(action);
     const s = buildSummary(state, next, o);
     setSummary(s);
-    announce(`Check-in xong. ${s.lines.join('. ')}.`);
+    announce(m.doneAnnounce(s.lines.join('. ')));
   };
 
   const total = outcome === 'skipped' ? 1 : 3;
@@ -157,15 +160,13 @@ export function CheckInSheet({
 
   let body;
   if (!meal || !dish) {
-    body = <p>Bạn chưa chốt món nào. Hãy chọn món trước, rồi quay lại check-in sau bữa.</p>;
+    body = <p>{m.noMeal}</p>;
   } else if (summary) {
     body = (
       <div className="checkin-summary">
         <p className="checkin-summary__lead" tabIndex={-1}>
           <CheckCircle aria-hidden="true" size={22} weight="fill" />
-          {summary.outcome === 'skipped'
-            ? 'Đã ghi nhận bỏ bữa. Cây vẫn lớn theo thời gian, không mất gì cả.'
-            : 'Cảm ơn bạn! Đây là những gì bạn nhận được:'}
+          {summary.outcome === 'skipped' ? m.skippedLead : m.thanksLead}
         </p>
         <ul className="reward-list">
           {summary.lines.map((l) => (
@@ -178,7 +179,7 @@ export function CheckInSheet({
       </div>
     );
   } else if (meal.checkedIn) {
-    body = <p>Bữa này đã check-in rồi. Mỗi bữa chỉ nhận thưởng check-in một lần.</p>;
+    body = <p>{m.alreadyCheckedIn}</p>;
   } else {
     body = (
       <form
@@ -188,12 +189,10 @@ export function CheckInSheet({
           next();
         }}
       >
-        <p className="checkin-form__step">
-          Bước {step}/{total}
-        </p>
+        <p className="checkin-form__step">{m.step(step, total)}</p>
         {step === 1 && (
           <fieldset className="option-group">
-            <legend className="option-group__legend">Bữa vừa rồi của bạn thế nào?</legend>
+            <legend className="option-group__legend">{m.outcomeQuestion}</legend>
             {OUTCOMES.map((o) => (
               <label key={o.id} className="option-card">
                 <input
@@ -206,7 +205,7 @@ export function CheckInSheet({
                 />
                 <span className="option-card__face">
                   <span className="option-card__label">
-                    {o.id === 'ate' ? `Đã ăn ${dish.name}` : o.label}
+                    {o.id === 'ate' ? m.outcomes.ateDish(dish.name) : o.label}
                   </span>
                   <span className="option-card__hint">{o.hint}</span>
                 </span>
@@ -216,7 +215,7 @@ export function CheckInSheet({
         )}
         {step === 2 && (
           <fieldset className="option-group">
-            <legend className="option-group__legend">Bạn hài lòng đến đâu?</legend>
+            <legend className="option-group__legend">{m.ratingQuestion}</legend>
             <div className="rating-row">
               {RATINGS.map((r) => {
                 const RatingIcon = r.icon;
@@ -243,7 +242,7 @@ export function CheckInSheet({
         {step === 3 && (
           <fieldset className="option-group">
             <legend className="option-group__legend">
-              <Heart aria-hidden="true" size={18} /> Muốn gặp lại món này không?
+              <Heart aria-hidden="true" size={18} /> {m.againQuestion}
             </legend>
             {AGAIN.map((a) => (
               <label key={a.id} className="option-card option-card--compact">
@@ -265,11 +264,11 @@ export function CheckInSheet({
           {step > 1 && (
             <button type="button" className="btn btn--ghost" onClick={() => setStep(step - 1)}>
               <ArrowLeft aria-hidden="true" size={18} />
-              Quay lại
+              {m.back}
             </button>
           )}
           <button type="submit" className="btn btn--primary" disabled={!canNext}>
-            {step === total || (step === 1 && outcome === 'skipped') ? 'Hoàn tất' : 'Tiếp'}
+            {step === total || (step === 1 && outcome === 'skipped') ? m.finish : m.next}
             <ArrowRight aria-hidden="true" size={18} />
           </button>
         </div>
@@ -282,10 +281,8 @@ export function CheckInSheet({
       variant={variant}
       open={open}
       onClose={close}
-      title="Check-in sau bữa"
-      description={
-        dish ? `Món đã chọn: ${dish.name}. Ảnh là tuỳ chọn, không cần viết review.` : undefined
-      }
+      title={m.title}
+      description={dish ? m.description(dish.name) : undefined}
       footer={
         summary ? (
           <>
@@ -297,10 +294,10 @@ export function CheckInSheet({
                 focusSection('khu-vuon');
               }}
             >
-              Xem khu vườn
+              {m.viewGarden}
             </button>
             <button type="button" className="btn btn--ghost" onClick={close}>
-              Đóng
+              {m.close}
             </button>
           </>
         ) : undefined

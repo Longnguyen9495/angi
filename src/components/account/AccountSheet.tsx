@@ -1,6 +1,7 @@
 import { CheckCircle, CloudCheck, DeviceMobile, EnvelopeSimple } from '@phosphor-icons/react';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { getDish } from '../../data/dishes';
+import { BRAND, t } from '../../i18n';
 import { AccountError, accountApi, maskEmail } from '../../services/account';
 import { useAccount, useFeedback } from '../../state/hooks';
 import { Sheet } from '../ui/Sheet';
@@ -10,22 +11,19 @@ type Step = 'email' | 'code' | 'done';
 const RESEND_AFTER_S = 30;
 
 /**
- * "Lưu hành trình": the only place Bếp Việt asks for personal data, and it
+ * "Lưu nông trại": the only place the app asks for personal data, and it
  * asks for one thing — an email — to send a 6-digit code. No password, no name.
  */
 export function AccountSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
   const account = useAccount();
   const conflict = account.conflict;
+  const m = t.account.sheet;
   return (
     <Sheet
       open={open || !!conflict}
       onClose={conflict ? () => undefined : onClose}
-      title={conflict ? 'Chọn hành trình để giữ' : 'Lưu hành trình'}
-      description={
-        conflict
-          ? 'Máy này và tài khoản của bạn đang có hai hành trình khác nhau.'
-          : 'Không cần mật khẩu — chỉ một email để nhận mã.'
-      }
+      title={conflict ? m.conflictTitle : m.title}
+      description={conflict ? m.conflictDescription : m.description}
       variant="dark"
     >
       {conflict ? <ConflictChoice onDone={onClose} /> : <SignIn onDone={onClose} />}
@@ -46,18 +44,19 @@ function SignIn({ onDone }: { onDone: () => void }) {
   const [busy, setBusy] = useState(false);
   const [resendIn, setResendIn] = useState(0);
   const codeRef = useRef<HTMLInputElement>(null);
+  const m = t.account.sheet;
 
   useEffect(() => {
     if (resendIn <= 0) return;
-    const t = setTimeout(() => setResendIn((s) => s - 1), 1000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setResendIn((s) => s - 1), 1000);
+    return () => clearTimeout(timer);
   }, [resendIn]);
 
   const send = async (e?: FormEvent) => {
     e?.preventDefault();
     if (busy) return;
     if (!consent) {
-      setError('Bạn cần đồng ý với cách lưu dữ liệu để tiếp tục.');
+      setError(m.consentRequired);
       return;
     }
     setBusy(true);
@@ -69,10 +68,10 @@ function SignIn({ onDone }: { onDone: () => void }) {
       setStep('code');
       setCode('');
       setResendIn(RESEND_AFTER_S);
-      announce(`Đã gửi mã tới ${maskEmail(r.email)}.`);
+      announce(m.codeSentAnnounce(maskEmail(r.email)));
       window.setTimeout(() => codeRef.current?.focus(), 50);
     } catch (err) {
-      setError(err instanceof AccountError ? err.message : 'Chưa gửi được mã, bạn thử lại nhé.');
+      setError(err instanceof AccountError ? err.message : m.sendFailed);
     } finally {
       setBusy(false);
     }
@@ -86,11 +85,9 @@ function SignIn({ onDone }: { onDone: () => void }) {
       const u = await accountApi.verify(email, value);
       await signedIn(u);
       setStep('done');
-      announce('Đã đăng nhập. Hành trình của bạn đang được lưu.');
+      announce(m.signedInAnnounce);
     } catch (err) {
-      setError(
-        err instanceof AccountError ? err.message : 'Chưa xác nhận được mã, bạn thử lại nhé.',
-      );
+      setError(err instanceof AccountError ? err.message : m.verifyFailed);
       setCode('');
       codeRef.current?.focus();
     } finally {
@@ -103,13 +100,11 @@ function SignIn({ onDone }: { onDone: () => void }) {
       <div className="account account--done">
         <p className="account__lead">
           <CheckCircle aria-hidden="true" size={22} weight="fill" />
-          <span>Hành trình đã được lưu{user ? ` với ${maskEmail(user.email)}` : ''}.</span>
+          <span>{m.saved(user ? maskEmail(user.email) : null)}</span>
         </p>
-        <p className="account__note">
-          Đăng nhập cùng email trên máy khác để chơi tiếp. Ảnh check-in vẫn chỉ nằm trên máy này.
-        </p>
+        <p className="account__note">{m.savedNote}</p>
         <button type="button" className="fr-cta" onClick={onDone}>
-          Xong
+          {m.done}
         </button>
       </div>
     );
@@ -127,16 +122,19 @@ function SignIn({ onDone }: { onDone: () => void }) {
         <p className="account__lead">
           <EnvelopeSimple aria-hidden="true" size={20} />
           <span>
-            Đã gửi mã 6 số tới <strong>{maskEmail(email)}</strong>. Mã hết hạn sau 10 phút.
+            {m.codeSent.before}
+            <strong>{maskEmail(email)}</strong>
+            {m.codeSent.after}
           </span>
         </p>
         {devCode && (
           <p className="account__dev" role="note">
-            Môi trường thử nghiệm — mã là <strong>{devCode}</strong>
+            {m.devCode}
+            <strong>{devCode}</strong>
           </p>
         )}
         <label className="account__field">
-          <span>Mã đăng nhập</span>
+          <span>{m.codeLabel}</span>
           <input
             ref={codeRef}
             className="account__code"
@@ -166,7 +164,7 @@ function SignIn({ onDone }: { onDone: () => void }) {
             aria-disabled={code.length !== 6 || busy}
             aria-busy={busy || undefined}
           >
-            Xác nhận
+            {m.confirm}
           </button>
           <button
             type="button"
@@ -176,7 +174,7 @@ function SignIn({ onDone }: { onDone: () => void }) {
               if (resendIn <= 0) void send();
             }}
           >
-            {resendIn > 0 ? `Gửi lại sau ${resendIn}s` : 'Gửi lại mã'}
+            {resendIn > 0 ? m.resendIn(resendIn) : m.resend}
           </button>
           <button
             type="button"
@@ -186,7 +184,7 @@ function SignIn({ onDone }: { onDone: () => void }) {
               setError(null);
             }}
           >
-            Đổi email
+            {m.changeEmail}
           </button>
         </div>
       </form>
@@ -197,23 +195,21 @@ function SignIn({ onDone }: { onDone: () => void }) {
     <form className="account" onSubmit={send} noValidate>
       <ul className="account__perks">
         <li>
-          <CloudCheck aria-hidden="true" size={18} /> Không mất cấp, hạt giống, sổ bếp khi xoá trình
-          duyệt hay đổi máy.
+          <CloudCheck aria-hidden="true" size={18} /> {m.perks.keep}
         </li>
         <li>
-          <DeviceMobile aria-hidden="true" size={18} /> Chơi tiếp trên điện thoại khác với cùng
-          email.
+          <DeviceMobile aria-hidden="true" size={18} /> {m.perks.otherPhone}
         </li>
       </ul>
       <label className="account__field">
-        <span>Email</span>
+        <span>{m.emailLabel}</span>
         <input
           type="email"
           inputMode="email"
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="ban@example.com"
+          placeholder={m.emailPlaceholder}
           required
           data-autofocus
           aria-invalid={!!error || undefined}
@@ -221,18 +217,17 @@ function SignIn({ onDone }: { onDone: () => void }) {
         />
       </label>
       <p id="account-email-note" className="account__note">
-        Chỉ dùng để gửi mã đăng nhập và lưu hành trình. Không cần tên hay số điện thoại.
+        {m.emailNote}
       </p>
 
       <label className="account__check">
         <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
         <span>
-          Tôi đồng ý để Bếp Việt lưu email và tiến trình trò chơi của tôi để đồng bộ giữa các thiết
-          bị (
-          <a href="/quyen-rieng-tu.html" target="_blank" rel="noopener">
-            cách xử lý dữ liệu
+          {m.consent.before(BRAND)}
+          <a href={t.common.privacyUrl} target="_blank" rel="noopener">
+            {m.consent.link}
           </a>
-          ). Bắt buộc.
+          {m.consent.after}
         </span>
       </label>
       <label className="account__check">
@@ -241,7 +236,7 @@ function SignIn({ onDone }: { onDone: () => void }) {
           checked={marketing}
           onChange={(e) => setMarketing(e.target.checked)}
         />
-        <span>Gửi tôi tin ưu đãi qua email (không bắt buộc, tắt được bất cứ lúc nào).</span>
+        <span>{m.marketing}</span>
       </label>
 
       {error && (
@@ -256,10 +251,10 @@ function SignIn({ onDone }: { onDone: () => void }) {
           aria-disabled={!email || busy}
           aria-busy={busy || undefined}
         >
-          Gửi mã
+          {m.sendCode}
         </button>
         <button type="button" className="fr-ghost" onClick={onDone}>
-          Để sau
+          {m.later}
         </button>
       </div>
     </form>
@@ -270,41 +265,32 @@ function ConflictChoice({ onDone }: { onDone: () => void }) {
   const { conflict, resolveConflict } = useAccount();
   const { toast } = useFeedback();
   const [busy, setBusy] = useState(false);
+  const m = t.account.conflict;
   if (!conflict) return null;
   const pick = async (keep: 'local' | 'remote') => {
     setBusy(true);
     await resolveConflict(keep);
     setBusy(false);
-    toast({
-      message:
-        keep === 'local'
-          ? 'Đã lưu hành trình trên máy này vào tài khoản.'
-          : 'Đã chuyển sang hành trình trong tài khoản.',
-      tone: 'success',
-    });
+    toast({ message: keep === 'local' ? m.keptLocal : m.keptRemote, tone: 'success' });
     onDone();
   };
   const card = (title: string, s: typeof conflict.local) => (
     <div className="account__side">
       <p className="account__side-title">{title}</p>
-      <p>
-        Cấp {s.level} · {s.stamps} dấu · {s.cooked} món đã nấu · {s.meals} bữa check-in
-      </p>
-      {s.lastDishId && <p>Bữa gần nhất: {getDish(s.lastDishId)?.name ?? s.lastDishId}</p>}
+      <p>{m.summary(s.level, s.stamps, s.cooked, s.meals)}</p>
+      {s.lastDishId && <p>{m.lastMeal(getDish(s.lastDishId)?.name ?? s.lastDishId)}</p>}
     </div>
   );
   return (
     <div className="account">
       <div className="account__compare">
-        {card('Trên máy này', conflict.local)}
-        {card('Đã lưu trong tài khoản', conflict.remote)}
+        {card(m.local, conflict.local)}
+        {card(m.remote, conflict.remote)}
       </div>
-      <p className="account__note">
-        Bản không chọn sẽ bị thay thế. Ảnh check-in trên máy này vẫn giữ nguyên.
-      </p>
+      <p className="account__note">{m.note}</p>
       <div className="account__actions">
         <button type="button" className="fr-cta" disabled={busy} onClick={() => void pick('local')}>
-          Giữ bản trên máy này
+          {m.keepLocal}
         </button>
         <button
           type="button"
@@ -312,7 +298,7 @@ function ConflictChoice({ onDone }: { onDone: () => void }) {
           disabled={busy}
           onClick={() => void pick('remote')}
         >
-          Dùng bản đã lưu
+          {m.useRemote}
         </button>
       </div>
     </div>

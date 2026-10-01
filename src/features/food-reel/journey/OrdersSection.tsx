@@ -6,7 +6,10 @@ import { CHEF, CROPS, produceName } from '../../../data/game';
 import { canFulfill, orderDone, todaysOrders, type ChefOrder } from '../../../domain/orders';
 import { currentTime } from '../../../domain/time';
 import { flyTo } from '../../../motion/effects';
+import { t } from '../../../i18n';
 import { useFeedback, useGame } from '../../../state/hooks';
+
+const m = t.journey.orders;
 
 /** Cô Ba's two daily orders: a place to spend spare produce. New orders every morning. */
 export function OrdersSection() {
@@ -39,10 +42,10 @@ function OrderCard({ order, big }: { order: ChefOrder; big: boolean }) {
     dispatch({ type: 'FULFILL_ORDER', orderId: order.id, now: currentTime() });
     const seeds = order.reward.seeds.map((s) => CROPS[s.crop].seedName.toLowerCase()).join(', ');
     toast({
-      message: `Cô Ba cảm ơn! +${order.reward.xp} XP, ${seeds}${order.reward.water ? `, +${order.reward.water} lượt tưới` : ''}.`,
-      tone: 'success',
+      message: m.thanks(order.reward.xp, seeds, order.reward.water),
+      tone: 'reward',
     });
-    announce(`Đã giao đơn cho ${CHEF.name}.`);
+    announce(m.delivered(CHEF.name));
   };
 
   return (
@@ -52,12 +55,12 @@ function OrderCard({ order, big }: { order: ChefOrder; big: boolean }) {
           <ChefHat size={26} weight="light" />
         </span>
         <div>
-          <p className="fj-order__kind">{big ? 'Đơn lớn' : 'Đơn nhỏ'}</p>
+          <p className="fj-order__kind">{big ? m.big : m.small}</p>
           <p className="fj-order__line">{order.line}</p>
         </div>
       </div>
 
-      <ul className="fj-order__items" ref={itemsRef} aria-label="Cần giao">
+      <ul className="fj-order__items" ref={itemsRef} aria-label={m.needed}>
         {order.items.map((i) => {
           const have = state.ingredients[i.crop];
           return (
@@ -65,7 +68,7 @@ function OrderCard({ order, big }: { order: ChefOrder; big: boolean }) {
               <ProduceImage crop={i.crop} size={34} />
               <span>
                 {produceName(i.crop)} ×{i.qty}
-                {!done && <span className="fj-order__have"> · có {have}</span>}
+                {!done && <span className="fj-order__have">{m.have(have)}</span>}
               </span>
             </li>
           );
@@ -73,7 +76,7 @@ function OrderCard({ order, big }: { order: ChefOrder; big: boolean }) {
       </ul>
 
       <div className="fj-order__foot">
-        <ul className="fj-order__reward" aria-label="Phần thưởng">
+        <ul className="fj-order__reward" aria-label={m.reward}>
           <li>+{order.reward.xp} XP</li>
           {order.reward.seeds.map((s) => (
             <li key={s.crop}>
@@ -82,17 +85,17 @@ function OrderCard({ order, big }: { order: ChefOrder; big: boolean }) {
           ))}
           {order.reward.water > 0 && (
             <li>
-              <Drop size={14} aria-hidden="true" /> +{order.reward.water} lượt tưới
+              <Drop size={14} aria-hidden="true" /> {m.water(order.reward.water)}
             </li>
           )}
         </ul>
         {done ? (
           <p className="fj-order__done">
-            <SealCheck aria-hidden="true" size={16} weight="fill" /> Đã giao
+            <SealCheck aria-hidden="true" size={16} weight="fill" /> {m.done}
           </p>
         ) : (
           <button type="button" className="fr-cta" aria-disabled={!ready} onClick={deliver}>
-            {ready ? 'Giao đơn' : 'Chưa đủ hàng'}
+            {ready ? m.deliver : m.notEnough}
           </button>
         )}
       </div>

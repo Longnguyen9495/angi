@@ -7,6 +7,7 @@ import { RECIPES, produceName } from '../../../data/game';
 import type { RecipeId } from '../../../data/types';
 import { recipeProgress } from '../../../domain/selectors';
 import { currentTime } from '../../../domain/time';
+import { t } from '../../../i18n';
 import { useFeedback, useGame } from '../../../state/hooks';
 import { getReelDish } from '../data/reelCatalogue';
 
@@ -14,6 +15,7 @@ type Step = 'prep' | 'cooking' | 'done';
 
 /** How often the countdown text refreshes; the bars and the ring animate in CSS. */
 const TICK_MS = 200;
+const m = t.journey.cooking;
 
 function formatClock(ms: number): string {
   const s = Math.max(0, Math.ceil(ms / 1000));
@@ -39,7 +41,7 @@ export function CookingSheet({ recipeId, onClose, onOpenCookbook }: CookingSheet
       open={recipeId !== null}
       onClose={onClose}
       title={recipeId ? RECIPES[recipeId].name : ''}
-      description="Bếp của Cô Ba"
+      description={m.description}
       variant="dark"
     >
       {recipeId && (
@@ -72,25 +74,25 @@ function CookingScene({
 
   useEffect(() => {
     if (step !== 'cooking') return;
-    const t = setInterval(() => {
+    const timer = setInterval(() => {
       const ms = Date.now() - startedAt.current;
       setElapsed(ms);
       if (ms >= plan.totalMs) setStep('done');
     }, TICK_MS);
-    return () => clearInterval(t);
+    return () => clearInterval(timer);
   }, [step, plan.totalMs]);
 
   const start = () => {
     if (!canCook || step !== 'prep') return;
     dispatch({ type: 'COOK', recipeId, now: currentTime() });
-    announce(`Đang nấu ${recipe.name}.`);
+    announce(m.started(recipe.name));
     startedAt.current = Date.now();
     setElapsed(0);
     setStep('cooking');
   };
 
   useEffect(() => {
-    if (step === 'done') announce(`Đã nấu xong ${recipe.name}. Cộng ${recipe.xp} XP.`);
+    if (step === 'done') announce(m.finished(recipe.name, recipe.xp));
   }, [step, announce, recipe]);
 
   let stageIndex = 0;
@@ -159,21 +161,19 @@ function CookingScene({
 
       {step === 'prep' && (
         <>
-          <ul className="fj-cook__list" aria-label="Nguyên liệu">
+          <ul className="fj-cook__list" aria-label={m.ingredients}>
             {recipe.ingredients.map((i) => (
               <li key={i.crop}>
                 <ProduceImage crop={i.crop} size={30} />
                 {produceName(i.crop)} ×{i.qty}
-                <span className="fj-cook__have">có {state.ingredients[i.crop]}</span>
+                <span className="fj-cook__have">{m.have(state.ingredients[i.crop])}</span>
               </li>
             ))}
           </ul>
-          <p className="fj-note">
-            {plan.stages.length} bước · khoảng {Math.ceil(plan.totalMs / 1000)} giây
-          </p>
+          <p className="fj-note">{m.plan(plan.stages.length, Math.ceil(plan.totalMs / 1000))}</p>
           <button type="button" className="fr-cta" onClick={start} aria-disabled={!canCook}>
             <CookingPot aria-hidden="true" size={18} />
-            {canCook ? 'Bắt đầu nấu' : 'Chưa đủ nguyên liệu'}
+            {canCook ? m.start : m.notEnough}
           </button>
         </>
       )}
@@ -190,15 +190,13 @@ function CookingScene({
               <span className="fj-timer__clock">{formatClock(plan.totalMs - elapsed)}</span>
             </span>
             <p className="fj-timer__now" role="status">
-              <span className="fj-timer__count">
-                Bước {stageIndex + 1}/{plan.stages.length}
-              </span>
+              <span className="fj-timer__count">{m.step(stageIndex + 1, plan.stages.length)}</span>
               <span key={stageIndex} className="fj-timer__label">
                 {stage?.label}…
               </span>
             </p>
           </div>
-          <ol className="fj-steps" aria-label="Các bước nấu">
+          <ol className="fj-steps" aria-label={m.stepsLabel}>
             {plan.stages.map((s, i) => (
               <li
                 key={s.label}
@@ -225,17 +223,13 @@ function CookingScene({
       {step === 'done' && (
         <div className="fj-cook__result">
           <p className="fr-kicker">
-            <SealCheck aria-hidden="true" size={16} weight="fill" /> Đã nấu xong · +{recipe.xp} XP
+            <SealCheck aria-hidden="true" size={16} weight="fill" /> {m.done(recipe.xp)}
           </p>
           <p className="fj-cook__fact">{recipe.fact}</p>
-          <p className="fj-note">
-            {cooked === 1
-              ? 'Trang mới trong sổ bếp — câu chuyện của món trên reel giờ có dấu “Tự nấu”.'
-              : `Bạn đã nấu món này ${cooked} lần.`}
-          </p>
+          <p className="fj-note">{cooked === 1 ? m.firstPage : m.cookedTimes(cooked)}</p>
           <button type="button" className="fr-ghost" onClick={onOpenCookbook}>
             <BookOpenText aria-hidden="true" size={16} />
-            Xem sổ bếp
+            {m.openCookbook}
           </button>
         </div>
       )}

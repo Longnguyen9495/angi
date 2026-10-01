@@ -1,0 +1,367 @@
+/* Full-screen demo page (/farm-animation-test). */
+.fa-root {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #7fd0f2;
+}
+
+/* The scene box: the canvas fills it; the picture is fitted inside by the engine. */
+.fa-scene {
+  position: relative;
+  overflow: hidden;
+  background: #8fd3f3;
+}
+
+.fa-scene--full {
+  position: absolute;
+  inset: 0;
+}
+
+.fa-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fa-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: #1d4660;
+  font-weight: 600;
+}
+
+/* In the Journey garden: the farm sits above the plots. */
+.fj-farm {
+  /* Height from the width (the picture is 1678×937), never under 300px on phones. No aspect-ratio:
+     with a min-height it would force a min-width and push the whole garden wider than the screen. */
+  width: 100%;
+  min-width: 0;
+  height: clamp(300px, 56vw, 72vh);
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(29, 70, 96, 0.18);
+}
+
+.fj-farm-wrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  align-self: stretch;
+  margin: 12px 0 16px;
+}
+
+/* Seed picker on the scene: the chosen seed is planted when a plot is tapped. */
+.fj-farm-seeds {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  display: flex;
+  gap: 6px;
+  max-width: calc(100% - 24px);
+  padding: 6px;
+  overflow-x: auto;
+  border-radius: 16px;
+  background: rgba(30, 22, 14, 0.62);
+  backdrop-filter: blur(6px);
+  scrollbar-width: none;
+}
+
+.fj-farm-seed {
+  display: inline-flex;
+  flex: none;
+  gap: 4px;
+  align-items: center;
+  padding: 4px 9px 4px 5px;
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff4d6;
+  font:
+    700 12px/1 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  cursor: pointer;
+}
+
+.fj-farm-seed svg,
+.fj-farm-seed img {
+  width: 26px;
+  height: 26px;
+}
+
+.fj-farm-seed.is-on {
+  border-color: #ffd36b;
+  background: rgba(255, 211, 107, 0.25);
+}
+
+.fj-farm-seed:focus-visible {
+  outline: 2px solid #ffd36b;
+  outline-offset: 2px;
+}
+
+/* A place on the island (market, kitchen) tapped: a small card on the scene, no page jump. */
+.fj-farm-card {
+  position: absolute;
+  z-index: 3;
+  top: 12px;
+  right: 12px;
+  width: min(260px, calc(100% - 24px));
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(30, 22, 14, 0.86);
+  color: #fff4d6;
+  font:
+    500 13px/1.45 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(6px);
+  animation: fj-farm-card-in 180ms ease-out;
+}
+
+.fj-farm-card strong {
+  font-size: 15px;
+}
+
+.fj-farm-card p {
+  margin: 4px 0 10px;
+  opacity: 0.85;
+}
+
+.fj-farm-card__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.fj-farm-card button {
+  padding: 7px 14px;
+  border: 1px solid rgba(255, 244, 214, 0.35);
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  font:
+    700 12px/1 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  cursor: pointer;
+}
+
+.fj-farm-card .fj-farm-card__go {
+  border-color: #ffd36b;
+  background: #ffd36b;
+  color: #3a2410;
+}
+
+@keyframes fj-farm-card-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fj-farm-card {
+    animation: none;
+  }
+}
+
+/* Card over a tapped plot: seeds to drag in, water, harvest, then dishes to cook. */
+.fj-plot-card {
+  position: absolute;
+  z-index: 3;
+  width: min(260px, calc(100% - 16px));
+  padding: 10px 12px 12px;
+  border-radius: 16px;
+  background: rgba(30, 22, 14, 0.9);
+  color: #fff4d6;
+  font:
+    500 13px/1.45 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  transform: translate(-50%, calc(-100% - 12px));
+  animation: fj-farm-card-in 160ms ease-out;
+}
+
+.fj-plot-card.is-below {
+  transform: translate(-50%, 80px);
+}
+
+.fj-plot-card::after {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  background: inherit;
+  transform: translateX(-50%) rotate(45deg);
+  content: '';
+}
+
+.fj-plot-card.is-below::after {
+  top: -7px;
+  bottom: auto;
+}
+
+.fj-plot-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+}
+
+.fj-plot-card__x {
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: inherit;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.fj-plot-card p {
+  margin: 4px 0 8px;
+}
+
+.fj-plot-card__note,
+.fj-plot-card__label {
+  opacity: 0.8;
+}
+
+.fj-plot-card__seeds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.fj-plot-card__seed,
+.fj-farm-seed {
+  touch-action: none;
+  cursor: grab;
+}
+
+.fj-plot-card__seed {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  padding: 4px 10px 4px 5px;
+  border: 1.5px solid rgba(255, 211, 107, 0.5);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  color: inherit;
+  font:
+    600 12px/1 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+}
+
+.fj-plot-card__seed:hover {
+  border-color: #ffd36b;
+  background: rgba(255, 211, 107, 0.2);
+}
+
+.fj-plot-card__seed b {
+  opacity: 0.7;
+}
+
+.fj-plot-card__act {
+  width: 100%;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 12px;
+  font:
+    700 13px/1 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  cursor: pointer;
+}
+
+.fj-plot-card__act.is-water {
+  background: #7fd0f2;
+  color: #0e3a52;
+}
+
+.fj-plot-card__act.is-harvest {
+  background: #ffd36b;
+  color: #3a2410;
+}
+
+.fj-plot-card__act small {
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.fj-plot-card__got {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-weight: 700;
+}
+
+.fj-plot-card__cook {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fj-plot-card__cook li {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fj-plot-card__cook small {
+  opacity: 0.7;
+}
+
+.fj-plot-card__cook button {
+  flex: none;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: #e8794a;
+  color: #fff;
+  font:
+    700 12px/1 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  cursor: pointer;
+}
+
+.fj-plot-card__cook button:disabled {
+  background: rgba(255, 255, 255, 0.15);
+  cursor: default;
+}
+
+/* The seed under the finger while dragging. */
+.fj-seed-ghost {
+  position: fixed;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(255, 248, 225, 0.92);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  transform: translate(-50%, -70%);
+  pointer-events: none;
+}
+
+.fj-seed-ghost img {
+  width: 32px;
+  height: 32px;
+}

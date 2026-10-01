@@ -7,6 +7,7 @@ import type { CropId } from '../data/types';
 import { AccountError, accountApi, friendsApi, type AccountUser } from '../services/account';
 import { AccountContext, type AccountContextValue, type SyncState } from './context';
 import { useFeedback, useGame } from './hooks';
+import { t } from '../i18n';
 
 /** Changes are gathered for this long before one save to the account. */
 const PUSH_DELAY_MS = 3000;
@@ -98,18 +99,18 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         now,
       });
       if (seen) continue;
-      if (e.type === 'water') lines.push(`${e.from} đã tưới giúp ô ${e.plotId}`);
+      if (e.type === 'water') lines.push(t.account.friendEvents.watered(e.from, e.plotId));
       if (e.type === 'gift' && crop)
-        lines.push(`Cô Ba gửi 1 ${CROPS[crop].seedName.toLowerCase()}`);
+        lines.push(t.account.friendEvents.gift(CROPS[crop].seedName.toLowerCase()));
     }
     await friendsApi.ack(r.events.map((e) => e.id)).catch(() => undefined);
     if (lines.length > 0) {
       toast({
         message:
           lines.slice(0, 2).join(' · ') +
-          (lines.length > 2 ? ` và ${lines.length - 2} tin khác` : '') +
+          (lines.length > 2 ? t.account.friendEvents.more(lines.length - 2) : '') +
           '.',
-        tone: 'success',
+        tone: 'reward',
       });
     }
   }, [dispatch, toast]);
@@ -151,13 +152,13 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   // While signed in: check for friends' help now and then, and when the tab comes back.
   useEffect(() => {
     if (status !== 'signed-in' || conflict) return;
-    const t = setInterval(() => void pullEvents(), EVENTS_EVERY_MS);
+    const timer = setInterval(() => void pullEvents(), EVENTS_EVERY_MS);
     const onVisible = () => {
       if (document.visibilityState === 'visible') void pullEvents();
     };
     document.addEventListener('visibilitychange', onVisible);
     return () => {
-      clearInterval(t);
+      clearInterval(timer);
       document.removeEventListener('visibilitychange', onVisible);
     };
   }, [status, conflict, pullEvents]);
@@ -179,8 +180,8 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     if (flag) {
       toast(
         flag === 'ok'
-          ? { message: 'Đã đăng nhập — hành trình của bạn đang được lưu.', tone: 'success' }
-          : { message: 'Link đăng nhập đã hết hạn. Gửi mã mới trong Hồ sơ nhé.', tone: 'warning' },
+          ? { message: t.account.toasts.signedIn, tone: 'success' }
+          : { message: t.account.toasts.linkExpired, tone: 'warning' },
       );
       params.delete('account');
       const q = params.toString();
@@ -200,8 +201,8 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       skipPush.current = false;
       return;
     }
-    const t = setTimeout(() => void push(state), PUSH_DELAY_MS);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => void push(state), PUSH_DELAY_MS);
+    return () => clearTimeout(timer);
   }, [state, status, conflict, push]);
 
   const value = useMemo<AccountContextValue>(

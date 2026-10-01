@@ -1,4 +1,5 @@
 import { CROPS, RECIPES } from '../../../data/game';
+import { localized, t } from '../../../i18n';
 import type { AvoidId, BudgetId, CropId, Dish, DishGroup, RecipeId } from '../../../data/types';
 import type {
   CatalogueItem,
@@ -9,6 +10,7 @@ import type {
   ReelTone,
 } from '../foodReel.types';
 import snapshot from './catalogue.snapshot.json';
+import { normalizeYoutubeVideos } from './youtubeVideos';
 
 /*
  * The dish catalogue lives in MariaDB (managed at /admin) and is served by
@@ -28,12 +30,7 @@ export const TONE_PALETTE: Record<ReelTone, [string, string, string]> = {
   gold: ['#16120a', '#3b2d12', '#e0b24f'],
 };
 
-export const REGION_LABEL: Record<ReelRegion, string> = {
-  north: 'Bắc Bộ',
-  central: 'Trung Bộ',
-  south: 'Nam Bộ',
-  world: 'Thế giới',
-};
+export const REGION_LABEL: Record<ReelRegion, string> = { ...t.data.reel.regionLabel };
 
 const REGIONS = new Set<string>(Object.keys(REGION_LABEL));
 const TONES = new Set<string>(Object.keys(TONE_PALETTE));
@@ -50,20 +47,29 @@ function anchorFor(i: number): { x: number; y: number } {
 function toReelDish(item: CatalogueItem, index: number): ReelDish {
   const region = (REGIONS.has(item.region) ? item.region : 'world') as ReelRegion;
   const tone = (TONES.has(item.tone) ? item.tone : 'amber') as ReelTone;
-  const ingredients: Ingredient[] = item.ingredients.map((ing, i) => ({
-    id: ing.id,
-    name: ing.name,
-    description: ing.description,
-    anchor: anchorFor(i),
-    crop: ing.crop && CROP_IDS.has(ing.crop) ? (ing.crop as CropId) : undefined,
-  }));
+  const text = localized(
+    { name: item.name, subtitle: item.subtitle, story: item.story },
+    item.translations,
+  );
+  const ingredients: Ingredient[] = item.ingredients.map((ing, i) => {
+    const own = localized({ name: ing.name, description: ing.description }, ing.translations);
+    return {
+      id: ing.id,
+      name: own.name,
+      nameVi: ing.name,
+      description: own.description,
+      anchor: anchorFor(i),
+      crop: ing.crop && CROP_IDS.has(ing.crop) ? (ing.crop as CropId) : undefined,
+    };
+  });
   return {
     id: item.id,
     index,
     sourceImageId: item.sourceImageId ?? index,
     slug: item.id,
-    name: item.name,
-    subtitle: item.subtitle,
+    name: text.name,
+    nameVi: item.name,
+    subtitle: text.subtitle,
     price: item.price,
     vegetarian: item.vegetarian,
     region,
@@ -72,9 +78,10 @@ function toReelDish(item: CatalogueItem, index: number): ReelDish {
     video: item.video
       ? { src: item.video.src, poster: item.video.poster, credit: item.video.credit ?? undefined }
       : undefined,
+    youtubeVideos: normalizeYoutubeVideos(item.youtubeVideos),
     ingredients,
     flavor: item.flavor,
-    story: item.story,
+    story: text.story,
     tone,
     palette: TONE_PALETTE[tone],
     credit: item.credit,
@@ -147,7 +154,7 @@ export function getReelDish(id: string | null | undefined): ReelDish | undefined
 }
 
 export function getReelDishBySlug(slug: string): ReelDish | undefined {
-  return byId.get(slug);
+  return byId.get(slug) ?? (slug === 'com-tam' ? byId.get('com-tam-suon-bi-cha-trung') : undefined);
 }
 
 /** Maps an unbounded virtual reel index onto the catalogue. */
@@ -207,7 +214,7 @@ export function createReelView(ids: readonly string[] | null): ReelView {
 }
 
 export function formatReelPrice(price: number): string {
-  return `${price}k`;
+  return t.data.reel.price(price);
 }
 
 // ——— Adapter into the Journey game domain ———
@@ -250,14 +257,15 @@ function recipeFor(crop: CropId, region: ReelRegion): RecipeId {
 }
 
 function tagsOf(d: ReelDish): string[] {
-  const t: string[] = [];
-  if (d.flavor.spicy >= 3) t.push('Cay');
-  if (d.flavor.rich >= 4) t.push('Đậm béo');
-  if (d.flavor.fresh >= 4) t.push('Thanh mát');
-  if (d.flavor.crunchy >= 4) t.push('Giòn');
-  if (d.flavor.sweet >= 4) t.push('Ngọt dịu');
-  if (d.vegetarian) t.push('Món chay');
-  return t.length ? t.slice(0, 3) : [REGION_LABEL[d.region]];
+  const tag = t.data.reel.tags;
+  const out: string[] = [];
+  if (d.flavor.spicy >= 3) out.push(tag.spicy);
+  if (d.flavor.rich >= 4) out.push(tag.rich);
+  if (d.flavor.fresh >= 4) out.push(tag.fresh);
+  if (d.flavor.crunchy >= 4) out.push(tag.crunchy);
+  if (d.flavor.sweet >= 4) out.push(tag.sweet);
+  if (d.vegetarian) out.push(tag.vegetarian);
+  return out.length ? out.slice(0, 3) : [REGION_LABEL[d.region]];
 }
 
 /**
@@ -267,7 +275,7 @@ function tagsOf(d: ReelDish): string[] {
 export function toGameDish(d: ReelDish): Dish {
   const seeded = d.ingredients.find((i) => i.crop);
   const seed: CropId = seeded?.crop ?? 'herbs';
-  const seedFrom = seeded?.name ?? 'Rau thơm';
+  const seedFrom = seeded?.name ?? t.data.reel.seedFallback;
   const crop = CROPS[seed];
   const ids = d.ingredients.map((i) => i.id);
   const contains: AvoidId[] = [];
@@ -279,19 +287,20 @@ export function toGameDish(d: ReelDish): Dish {
     id: d.id,
     name: d.name,
     image: d.image.replace(/^\//, ''),
-    imageAlt: `${d.name} — ${d.subtitle}`,
+    imageAlt: t.data.reel.imageAlt(d.name, d.subtitle),
     region: d.region,
     priceMin: d.price,
     priceMax: d.price + Math.max(5, Math.round((d.price * 0.2) / 5) * 5),
     budget: budgetOf(d.price),
-    group: groupOf(d.name),
+    // Grouping rules match Vietnamese dish names.
+    group: groupOf(d.nameVi ?? d.name),
     moods: [],
     vegetarian: d.vegetarian,
     contains,
     tags: tagsOf(d),
     reason: d.story,
     seed,
-    seedNote: `${seedFrom} trong ${d.name} gắn với cây ${crop.name.toLowerCase()} — bạn nhận ${crop.seedName.toLowerCase()}.`,
+    seedNote: t.data.reel.seedNote(seedFrom, d.name, crop.name, crop.seedName),
     recipe: recipeFor(seed, d.region),
   };
 }
@@ -301,3 +310,12 @@ export const getReelGameDish = (id: string): Dish | undefined => gameById.get(id
 
 // Start from the bundled snapshot; loadLiveCatalogue() may replace it at boot.
 applyCatalogue(snapshot as CataloguePayload);
+
+const snapshotThumbs = new Map(
+  (snapshot as CataloguePayload).items.map((item) => [item.id, item.thumbnail]),
+);
+
+/** The bundled thumbnail for a dish — a fallback when a live image URL fails. */
+export function snapshotThumbnail(id: string): string | undefined {
+  return snapshotThumbs.get(id);
+}

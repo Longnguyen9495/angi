@@ -1,9 +1,10 @@
 import {
   ArrowCounterClockwise,
   ArrowsClockwise,
+  Coins,
+  MapTrifold,
   Minus,
   Plus,
-  Square,
   X,
 } from '@phosphor-icons/react';
 import { Canvas } from '@react-three/fiber';
@@ -12,8 +13,10 @@ import { CropIcon } from '../../components/ui/CropIcon';
 import {
   ANIMALS,
   ANIMAL_LIST,
+  CATCHES,
   CROPS,
   DECOR,
+  FISHING,
   PRODUCE_IDS,
   WATERING,
   produceName,
@@ -23,6 +26,10 @@ import type { GuestProgress } from '../../domain/progress';
 import {
   STAGE_LABEL,
   animalStage,
+  biteDelay,
+  catchFor,
+  fishingLeft,
+  level,
   isGrowing,
   nextPlotLevel,
   plotStage,
@@ -32,6 +39,7 @@ import {
   type AnimalStage,
 } from '../../domain/selectors';
 import { formatDuration } from '../../domain/time';
+import { t } from '../../i18n';
 import {
   BUILDINGS,
   decorSpots,
@@ -49,7 +57,9 @@ import { CellMarkers, Decor3D, Fence } from './scene/Decor3D';
 import { Effects, FX_MS, type FxEvent, type FxKind } from './scene/Effects';
 import { Island } from './scene/Island';
 import { Plots } from './scene/Plots';
+import type { FishingPhase } from './scene/Pond';
 import { Sky } from './scene/Sky';
+import { Windmill } from './scene/Windmill';
 import { hourOf, skyAt } from './sky';
 import './garden3d.css';
 
@@ -67,15 +77,12 @@ function readQuality(): Quality {
   return deviceQuality();
 }
 
-const BUILDING_NAME: Record<BuildingId, string> = {
-  kitchen: 'Bếp Cô Ba',
-  barn: 'Nhà kho',
-  well: 'Giếng nước',
-  chicken: 'Chuồng gà',
-  cow: 'Chuồng bò',
-};
+const BUILDING_NAME: Record<BuildingId, string> = t.farm.garden3d.buildings;
 
-const ANIMAL_UNIT: Record<AnimalId, string> = { chicken: 'quả trứng', cow: 'bình sữa' };
+const ANIMAL_UNIT: Record<AnimalId, (n: number) => string> = t.farm.garden3d.animal.units;
+
+const copy = t.farm.garden3d;
+const common = t.farm.common;
 
 export interface Garden3DProps {
   state: GuestProgress;
@@ -90,6 +97,8 @@ export interface Garden3DProps {
   onHarvest: () => void;
   onToggleWatering: () => void;
   onAnimal: (animal: AnimalId, act: 'feed' | 'collect') => void;
+  /** A bite was hooked at the pond for the cast made at `castAt` (ms). */
+  onCatch: (castAt: number) => void;
   onPlaceDecor: (decor: DecorId, x: number, z: number, rot: number) => void;
   onStoreDecor: (decor: DecorId) => void;
   onGo: (section: 'cong-thuc' | 'don-co-ba' | 'cho-que') => void;
@@ -107,6 +116,11 @@ export default function Garden3D(props: Garden3DProps) {
   const [fx, setFx] = useState<FxEvent[]>([]);
   const [visible, setVisible] = useState(true);
   const fxId = useRef(1);
+  const [fishing, setFishing] = useState<{ phase: FishingPhase; castAt: number }>({
+    phase: 'idle',
+    castAt: 0,
+  });
+  const fishTimers = useRef<number[]>([]);
   const wrap = useRef<HTMLDivElement>(null);
   const cam = useRef<CameraHandle>(null);
 
@@ -117,6 +131,15 @@ export default function Garden3D(props: Garden3DProps) {
     } catch {
       /* not remembered — fine */
     }
+  };
+
+  const clearFishTimers = () => {
+    fishTimers.current.forEach((id) => window.clearTimeout(id));
+    fishTimers.current = [];
+  };
+  useEffect(() => clearFishTimers, []);
+  const later = (ms: number, run: () => void) => {
+    fishTimers.current.push(window.setTimeout(run, ms));
   };
 
   // Stop drawing while the garden is scrolled out of view.
@@ -210,8 +233,41 @@ export default function Garden3D(props: Garden3DProps) {
     const [x, z] = plotPosition(Math.max(0, state.plots.indexOf(plot)));
     cam.current?.focus(x, z);
   };
+  /** Cast: a bite comes after a short wait; it slips away if not hooked in time. */
+  const cast = () => {
+    if (fishing.phase !== 'idle' || fishingLeft(state, Date.now()) <= 0) return;
+    clearFishTimers();
+    const castAt = Date.now();
+    setFishing({ phase: 'waiting', castAt });
+    later(biteDelay(castAt), () => {
+      setFishing({ phase: 'bite', castAt });
+      later(FISHING.windowMs, () => {
+        setFishing({ phase: 'missed', castAt });
+        later(1600, () => setFishing({ phase: 'idle', castAt: 0 }));
+      });
+    });
+  };
+  /** Pull the rod: hooks the fish during a bite, otherwise just reels in. */
+  const reel = () => {
+    clearFishTimers();
+    if (fishing.phase === 'bite') {
+      props.onCatch(fishing.castAt);
+      burst('collect', BUILDINGS.pond.x - 0.7, BUILDINGS.pond.z);
+      setFishing({ phase: 'caught', castAt: fishing.castAt });
+      later(1800, () => setFishing({ phase: 'idle', castAt: 0 }));
+    } else {
+      setFishing({ phase: 'idle', castAt: 0 });
+    }
+  };
+
   const selectBuilding = (id: BuildingId) => {
     if (arranging) return;
+    // Tapping the pond while something bites hooks it.
+    if (id === 'pond' && fishing.phase === 'bite') {
+      reel();
+      setSel({ kind: 'building', id });
+      return;
+    }
     setSel({ kind: 'building', id });
     cam.current?.focus(BUILDINGS[id].x, BUILDINGS[id].z);
   };
@@ -239,23 +295,19 @@ export default function Garden3D(props: Garden3DProps) {
   function renderCard() {
     if (arranging) {
       return (
-        <div className="g3d-card" role="region" aria-label="Sắp xếp trang trí">
+        <div className="g3d-card" role="region" aria-label={copy.arrange.label}>
           <div className="g3d-card__head">
-            <p className="g3d-card__kicker">Sắp xếp</p>
+            <p className="g3d-card__kicker">{copy.arrange.kicker}</p>
             <h3 className="g3d-card__title">
-              {picked ? DECOR[picked].name : 'Chọn một món trang trí'}
+              {picked ? DECOR[picked].name : copy.arrange.pickTitle}
             </h3>
           </div>
-          <p className="g3d-card__text">
-            {picked
-              ? 'Chạm một ô sáng trên cỏ để dời tới đó.'
-              : 'Chạm vào bù nhìn, đèn lồng hay chum nước trên đảo.'}
-          </p>
+          <p className="g3d-card__text">{picked ? copy.arrange.moveHint : copy.arrange.pickHint}</p>
           {stored.length > 0 && (
             <div className="g3d-card__chips">
               {stored.map((d) => (
                 <button key={d} type="button" className="g3d-chip" onClick={() => putBack(d)}>
-                  Đặt lại {DECOR[d].name.toLowerCase()}
+                  {copy.arrange.putBack(DECOR[d].name)}
                 </button>
               ))}
             </div>
@@ -264,7 +316,7 @@ export default function Garden3D(props: Garden3DProps) {
             {picked && spots[picked] && (
               <>
                 <button type="button" className="g3d-btn" onClick={rotate}>
-                  <ArrowsClockwise size={16} aria-hidden="true" /> Xoay
+                  <ArrowsClockwise size={16} aria-hidden="true" /> {copy.arrange.rotate}
                 </button>
                 <button
                   type="button"
@@ -274,7 +326,7 @@ export default function Garden3D(props: Garden3DProps) {
                     setPicked(null);
                   }}
                 >
-                  Cất vào kho
+                  {copy.arrange.store}
                 </button>
               </>
             )}
@@ -286,7 +338,7 @@ export default function Garden3D(props: Garden3DProps) {
                 setPicked(null);
               }}
             >
-              Xong
+              {copy.arrange.done}
             </button>
           </div>
         </div>
@@ -298,7 +350,7 @@ export default function Garden3D(props: Garden3DProps) {
         type="button"
         className="g3d-card__close"
         onClick={() => setSel(null)}
-        aria-label="Đóng"
+        aria-label={copy.close}
       >
         <X size={16} aria-hidden="true" />
       </button>
@@ -312,18 +364,18 @@ export default function Garden3D(props: Garden3DProps) {
       const left = plot.readyAt !== null ? plot.readyAt - now : 0;
       const block = isGrowing(stage) ? waterBlock(state, plot, now) : null;
       return (
-        <div className="g3d-card" role="region" aria-label={`Ô ${plot.id}`}>
+        <div className="g3d-card" role="region" aria-label={common.plot(plot.id)}>
           <div className="g3d-card__head">
-            <p className="g3d-card__kicker">Ô {plot.id}</p>
-            <h3 className="g3d-card__title">{crop ? crop.name : 'Ô trống'}</h3>
+            <p className="g3d-card__kicker">{common.plot(plot.id)}</p>
+            <h3 className="g3d-card__title">{crop ? crop.name : common.emptyPlot}</h3>
             {close}
           </div>
           {stage === 'empty' ? (
             props.seeds.length === 0 ? (
-              <p className="g3d-card__text">Khay hạt trống. Mỗi món bạn chốt gửi lại một hạt.</p>
+              <p className="g3d-card__text">{copy.plot.seedsEmpty}</p>
             ) : (
               <>
-                <div className="g3d-card__chips" role="radiogroup" aria-label="Chọn hạt">
+                <div className="g3d-card__chips" role="radiogroup" aria-label={common.chooseSeed}>
                   {props.seeds.map((c) => (
                     <button
                       key={c}
@@ -334,7 +386,7 @@ export default function Garden3D(props: Garden3DProps) {
                       onClick={() => props.onPickSeed(c)}
                     >
                       <CropIcon crop={c} />
-                      {CROPS[c].seedName} ×{state.seeds[c]}
+                      {common.seedChip(CROPS[c].seedName, state.seeds[c])}
                     </button>
                   ))}
                 </div>
@@ -348,26 +400,26 @@ export default function Garden3D(props: Garden3DProps) {
                       setSel(null);
                     }}
                   >
-                    Gieo {props.activeSeed ? CROPS[props.activeSeed].seedName.toLowerCase() : ''}
+                    {common.sow(props.activeSeed ? CROPS[props.activeSeed].seedName : null)}
                   </button>
                 </div>
               </>
             )
           ) : stage === 'ready' ? (
             <>
-              <p className="g3d-card__text">Chín rồi! Thu về kho để nấu hoặc giao đơn.</p>
+              <p className="g3d-card__text">{common.ripe}</p>
               <div className="g3d-card__actions">
                 <button type="button" className="g3d-btn g3d-btn--primary" onClick={harvest}>
-                  Thu hoạch{ready.length > 1 ? ` cả ${ready.length} ô` : ''}
+                  {common.harvest(ready.length)}
                 </button>
               </div>
             </>
           ) : (
             <>
               <p className="g3d-card__text">
-                {STAGE_LABEL[stage]} · còn {formatDuration(left)}
-                {block === 'wet' && ' · đất còn ẩm'}
-                {block === 'empty-can' && ' · hết nước hôm nay'}
+                {common.growing(STAGE_LABEL[stage], formatDuration(left))}
+                {block === 'wet' && copy.plot.wet}
+                {block === 'empty-can' && copy.plot.emptyCan}
               </p>
               <div className="g3d-card__actions">
                 <button
@@ -376,7 +428,7 @@ export default function Garden3D(props: Garden3DProps) {
                   disabled={block !== null}
                   onClick={() => water(plot.id)}
                 >
-                  Tưới (−{Math.round(WATERING.cut * 100)}%) · còn {cans}
+                  {common.water(Math.round(WATERING.cut * 100), cans)}
                 </button>
               </div>
             </>
@@ -390,17 +442,17 @@ export default function Garden3D(props: Garden3DProps) {
     if (id === 'kitchen') {
       body = (
         <>
-          <p className="g3d-card__text">Cô Ba nấu từ nguyên liệu trong kho. Đủ thì nấu một chạm.</p>
+          <p className="g3d-card__text">{copy.kitchen.text}</p>
           <div className="g3d-card__actions">
             <button
               type="button"
               className="g3d-btn g3d-btn--primary"
               onClick={() => props.onGo('cong-thuc')}
             >
-              Xem công thức
+              {copy.kitchen.recipes}
             </button>
             <button type="button" className="g3d-btn" onClick={() => props.onGo('don-co-ba')}>
-              Đơn của Cô Ba
+              {copy.kitchen.orders}
             </button>
           </div>
         </>
@@ -411,12 +463,14 @@ export default function Garden3D(props: Garden3DProps) {
         <>
           <p className="g3d-card__text">
             {stock.length === 0
-              ? 'Kho còn trống — thu hoạch để có nguyên liệu.'
-              : stock.map((p) => `${produceName(p)} ×${state.ingredients[p]}`).join(' · ')}
+              ? copy.barn.empty
+              : stock
+                  .map((p) => common.stockItem(produceName(p), state.ingredients[p]))
+                  .join(' · ')}
           </p>
           <div className="g3d-card__actions">
             <button type="button" className="g3d-btn" onClick={() => props.onGo('cho-que')}>
-              Ra chợ quê
+              {common.goMarket}
             </button>
             {placeable && (
               <button
@@ -427,7 +481,7 @@ export default function Garden3D(props: Garden3DProps) {
                   setArranging(true);
                 }}
               >
-                Sắp xếp trang trí
+                {copy.arrange.label}
               </button>
             )}
           </div>
@@ -437,8 +491,7 @@ export default function Garden3D(props: Garden3DProps) {
       body = (
         <>
           <p className="g3d-card__text">
-            Còn {cans}/{WATERING.perDay} lượt tưới hôm nay. Mỗi lần rút ngắn{' '}
-            {Math.round(WATERING.cut * 100)}% thời gian còn lại.
+            {copy.well.text(cans, WATERING.perDay, Math.round(WATERING.cut * 100))}
           </p>
           <div className="g3d-card__actions">
             <button
@@ -450,8 +503,45 @@ export default function Garden3D(props: Garden3DProps) {
                 setSel(null);
               }}
             >
-              {watering ? 'Cất bình tưới' : 'Múc nước tưới cây'}
+              {watering ? copy.well.stop : copy.well.start}
             </button>
+          </div>
+        </>
+      );
+    } else if (id === 'pond') {
+      const left = fishingLeft(state, now);
+      const kind = fishing.castAt ? CATCHES[catchFor(fishing.castAt)].name : '';
+      const pond = copy.pond;
+      const text: Record<FishingPhase, string> = {
+        idle: left > 0 ? pond.idle(left, FISHING.perDay) : pond.done,
+        waiting: pond.waiting,
+        bite: pond.bite,
+        caught: pond.caught(kind),
+        missed: pond.missed,
+      };
+      body = (
+        <>
+          <p className="g3d-card__text">{text[fishing.phase]}</p>
+          <div className="g3d-card__actions">
+            {fishing.phase === 'idle' && (
+              <button
+                type="button"
+                className="g3d-btn g3d-btn--primary"
+                disabled={left <= 0}
+                onClick={cast}
+              >
+                {pond.cast}
+              </button>
+            )}
+            {(fishing.phase === 'waiting' || fishing.phase === 'bite') && (
+              <button
+                type="button"
+                className={`g3d-btn ${fishing.phase === 'bite' ? 'g3d-btn--primary g3d-btn--pulse' : ''}`}
+                onClick={reel}
+              >
+                {fishing.phase === 'bite' ? pond.hook : pond.reelIn}
+              </button>
+            )}
           </div>
         </>
       );
@@ -460,16 +550,17 @@ export default function Garden3D(props: Garden3DProps) {
       const st = animals[id];
       const a = state.animals[id];
       const feedName = produceName(def.feed);
+      const unit = ANIMAL_UNIT[id](def.yield);
       body = (
         <>
           <p className="g3d-card__text">
-            {st === 'locked' && `Mở khi lên cấp ${def.unlockLevel}.`}
+            {st === 'locked' && copy.animal.locked(def.unlockLevel)}
             {st === 'hungry' &&
               (state.ingredients[def.feed] > 0
-                ? `Cho ăn 1 ${feedName.toLowerCase()} → ${def.hours} giờ sau có ${def.yield} ${ANIMAL_UNIT[id]}.`
-                : `Cần 1 ${feedName.toLowerCase()} trong kho để cho ăn.`)}
-            {st === 'busy' && `Đang ăn no · còn ${formatDuration((a.readyAt ?? now) - now)}.`}
-            {st === 'ready' && `Có ${def.yield} ${ANIMAL_UNIT[id]} chờ bạn thu!`}
+                ? copy.animal.feedHint(feedName, def.hours, def.yield, unit)
+                : copy.animal.needFeed(feedName))}
+            {st === 'busy' && copy.animal.busy(formatDuration((a.readyAt ?? now) - now))}
+            {st === 'ready' && copy.animal.ready(def.yield, unit)}
           </p>
           <div className="g3d-card__actions">
             {st === 'hungry' && (
@@ -479,7 +570,7 @@ export default function Garden3D(props: Garden3DProps) {
                 disabled={state.ingredients[def.feed] <= 0}
                 onClick={() => animal(id, 'feed')}
               >
-                Cho ăn
+                {copy.animal.feed}
               </button>
             )}
             {st === 'ready' && (
@@ -488,7 +579,7 @@ export default function Garden3D(props: Garden3DProps) {
                 className="g3d-btn g3d-btn--primary"
                 onClick={() => animal(id, 'collect')}
               >
-                Thu {produceName(def.product).toLowerCase()}
+                {copy.animal.collect(produceName(def.product))}
               </button>
             )}
           </div>
@@ -498,7 +589,7 @@ export default function Garden3D(props: Garden3DProps) {
     return (
       <div className="g3d-card" role="region" aria-label={BUILDING_NAME[id]}>
         <div className="g3d-card__head">
-          <p className="g3d-card__kicker">Công trình</p>
+          <p className="g3d-card__kicker">{common.building}</p>
           <h3 className="g3d-card__title">{BUILDING_NAME[id]}</h3>
           {close}
         </div>
@@ -557,6 +648,7 @@ export default function Garden3D(props: Garden3DProps) {
             animals={animals}
             watering={watering}
             steam={!reduced}
+            fishing={fishing.phase}
             onSelect={selectBuilding}
           />
           {state.decor.includes('fence') && <Fence plotCount={state.plots.length} />}
@@ -569,18 +661,21 @@ export default function Garden3D(props: Garden3DProps) {
             onPick={setPicked}
           />
           {arranging && picked && <CellMarkers cells={cells} onPlace={place} />}
+          <Windmill reduced={reduced} />
           <Chef reduced={reduced} />
           {!reduced && <Effects events={fx} />}
           <CameraRig handle={cam} reduced={reduced} />
         </Canvas>
       </div>
 
+      <GardenHud state={state} />
+
       <div className="g3d__tools">
         <button
           type="button"
           className="g3d-icon"
           onClick={() => cam.current?.zoom(0.8)}
-          aria-label="Phóng to"
+          aria-label={common.zoomIn}
         >
           <Plus size={16} aria-hidden="true" />
         </button>
@@ -588,7 +683,7 @@ export default function Garden3D(props: Garden3DProps) {
           type="button"
           className="g3d-icon"
           onClick={() => cam.current?.zoom(1.25)}
-          aria-label="Thu nhỏ"
+          aria-label={common.zoomOut}
         >
           <Minus size={16} aria-hidden="true" />
         </button>
@@ -596,12 +691,12 @@ export default function Garden3D(props: Garden3DProps) {
           type="button"
           className="g3d-icon"
           onClick={() => cam.current?.reset()}
-          aria-label="Về góc nhìn ban đầu"
+          aria-label={common.resetView}
         >
           <ArrowCounterClockwise size={16} aria-hidden="true" />
         </button>
         <label className="g3d-quality">
-          <span className="sr-only">Chất lượng hình</span>
+          <span className="sr-only">{common.quality}</span>
           <select value={quality} onChange={(e) => setQuality(e.target.value as Quality)}>
             {(Object.keys(QUALITY) as Quality[]).map((k) => (
               <option key={k} value={k}>
@@ -615,18 +710,18 @@ export default function Garden3D(props: Garden3DProps) {
           className="g3d-icon g3d-icon--wide"
           onClick={() => props.onFlat('user')}
         >
-          <Square size={16} aria-hidden="true" /> 2D
+          <MapTrifold size={16} aria-hidden="true" /> {common.flat}
         </button>
       </div>
 
       {watering && !card && (
         <p className="g3d-hint" role="status">
-          Chạm ô có viền xanh để tưới · còn {cans} lượt
+          {copy.wateringHint(cans)}
         </p>
       )}
       {!watering && !card && ready.length > 0 && (
         <button type="button" className="g3d-hint g3d-hint--action" onClick={harvest}>
-          Thu hoạch {ready.length} ô chín
+          {copy.harvestHint(ready.length)}
         </button>
       )}
 
@@ -635,14 +730,13 @@ export default function Garden3D(props: Garden3DProps) {
       </div>
 
       {/* Keyboard and screen-reader route to everything on the island. */}
-      <ul className="g3d__sr" aria-label="Khu vườn 3D">
+      <ul className="g3d__sr" aria-label={copy.srList}>
         {state.plots.map((p) => {
           const stage = plotStage(p, now);
           return (
             <li key={p.id}>
               <button type="button" onClick={() => setSel({ kind: 'plot', id: p.id })}>
-                Ô {p.id}:{' '}
-                {p.crop ? `${CROPS[p.crop].name}, ${STAGE_LABEL[stage].toLowerCase()}` : 'trống'}
+                {common.srPlot(p.id, p.crop ? CROPS[p.crop].name : null, STAGE_LABEL[stage])}
               </button>
             </li>
           );
@@ -657,11 +751,36 @@ export default function Garden3D(props: Garden3DProps) {
         {placeable && (
           <li>
             <button type="button" onClick={() => setArranging(true)}>
-              Sắp xếp trang trí
+              {copy.arrange.label}
             </button>
           </li>
         )}
       </ul>
+    </div>
+  );
+}
+
+/** Game HUD: level badge, XP toward the next level and coins (from the shared progress). */
+function GardenHud({ state }: { state: GuestProgress }) {
+  const lv = level(state.xp);
+  const pct = Math.round((lv.into / lv.span) * 100);
+  return (
+    <div className="g3d-hud" aria-label={copy.hud(lv.level, lv.into, lv.span, state.coins)}>
+      <span className="g3d-hud__level" aria-hidden="true">
+        {lv.level}
+      </span>
+      <span className="g3d-hud__xp" aria-hidden="true">
+        <span className="g3d-hud__label">{copy.hudLevel(lv.level)}</span>
+        <span className="g3d-hud__bar">
+          <span className="g3d-hud__fill" style={{ transform: `scaleX(${pct / 100})` }} />
+        </span>
+        <span className="g3d-hud__label g3d-hud__label--sub">
+          {lv.into}/{lv.span} XP
+        </span>
+      </span>
+      <span className="g3d-hud__coins" aria-hidden="true" key={state.coins}>
+        <Coins size={16} weight="fill" /> {state.coins}
+      </span>
     </div>
   );
 }

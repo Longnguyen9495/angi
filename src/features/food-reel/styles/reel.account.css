@@ -1,4 +1,4 @@
-/* ——— Account: "Lưu hành trình" sheet, profile block, journey offer ——— */
+/* ——— Account: "Lưu nông trại" sheet, profile block, journey offer ——— */
 .account {
   display: grid;
   gap: 16px;
@@ -333,4 +333,13 @@
   .fj-album {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+/* ——— Profile: language row (base look lives with .lang-switch in reel.ui.css) ——— */
+.profile__lang {
+  justify-self: start;
+}
+
+.profile__lang .lang-switch__option {
+  min-height: 44px;
 }

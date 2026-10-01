@@ -2,10 +2,10 @@ import {
   ArrowCounterClockwise,
   Basket,
   Drop,
+  MapTrifold,
   Minus,
   Plant,
   Plus,
-  Square,
   Warehouse,
   X,
 } from '@phosphor-icons/react';
@@ -24,6 +24,7 @@ import {
   waterLeft,
 } from '../../domain/selectors';
 import { currentTime, formatDuration } from '../../domain/time';
+import { t } from '../../i18n';
 import { useFeedback } from '../../state/hooks';
 import { QUALITY, QUALITY_LABEL, deviceQuality, type Quality } from '../garden3d/quality';
 import { BLOCK_TEXT, CommandGate, buildFarmView, planCommand, viewKey } from './bridge';
@@ -42,6 +43,8 @@ import { readSceneConfig } from './engine/sceneLoader';
 /** Same key as the classic 3D garden: one quality choice per device. */
 const QUALITY_KEY = 'bv.garden3d.quality';
 const LOAD_TIMEOUT_MS = 15_000;
+/** Past this the veil lifts anyway; late files simply pop in. */
+const WARM_CAP_MS = 12_000;
 /** If a command somehow did not change progress, let the next one through anyway. */
 const GATE_RELEASE_MS = 1500;
 
@@ -56,13 +59,14 @@ function readQuality(): Quality {
 }
 
 type Status =
-  { kind: 'loading' } | { kind: 'ready' } | { kind: 'error'; reason: 'load' | 'timeout' | 'lost' };
+  /** progress: share of first-load files in (null until the engine exists). */
+  | { kind: 'loading'; progress: number | null }
+  | { kind: 'ready' }
+  | { kind: 'error'; reason: 'load' | 'timeout' | 'lost' };
 
-const ERROR_TEXT: Record<'load' | 'timeout' | 'lost', string> = {
-  load: 'Không tải được cảnh 3D (máy có thể chưa hỗ trợ WebGL 2 hoặc mạng bị gián đoạn).',
-  timeout: 'Cảnh 3D tải quá lâu.',
-  lost: 'Trình duyệt vừa tạm dừng đồ hoạ 3D.',
-};
+const copy = t.farm.pc;
+const common = t.farm.common;
+const ERROR_TEXT: Record<'load' | 'timeout' | 'lost', string> = copy.errors;
 
 export interface FarmPlayCanvasProps {
   state: GuestProgress;
@@ -93,7 +97,7 @@ export interface FarmPlayCanvasProps {
 export default function FarmPlayCanvas(props: FarmPlayCanvasProps) {
   const { state, now, reduced, dayPart, watering } = props;
   const { announce } = useFeedback();
-  const [status, setStatus] = useState<Status>({ kind: 'loading' });
+  const [status, setStatus] = useState<Status>({ kind: 'loading', progress: null });
   const [attempt, setAttempt] = useState(0);
   const [selected, setSelected] = useState<FarmSelection>(null);
   const [quality, setQualityState] = useState<Quality>(readQuality);
@@ -142,26 +146,26 @@ export default function FarmPlayCanvas(props: FarmPlayCanvasProps) {
       tone: 'ok',
       text:
         cmd.kind === 'plant'
-          ? `Đã gieo ${CROPS[cmd.crop].seedName.toLowerCase()} vào ô ${cmd.plotId}.`
+          ? copy.planted(CROPS[cmd.crop].seedName, cmd.plotId)
           : cmd.kind === 'water'
-            ? `Đã tưới ô ${cmd.plotId}.`
-            : `Đã thu hoạch ${plan.effect.plotIds.length} ô về kho.`,
+            ? copy.watered(cmd.plotId)
+            : copy.harvested(plan.effect.plotIds.length),
     });
     if (cmd.kind === 'harvest') setSelected(null);
     return true;
   };
 
   const onIntent = (intent: FarmIntent) => {
-    const t = intent.target;
+    const target = intent.target;
     setNotice(null);
     // Watering mode keeps the classic garden's one-tap watering.
-    if (watering && t?.kind === 'plot') {
-      const plot = state.plots.find((p) => p.id === t.id);
+    if (watering && target?.kind === 'plot') {
+      const plot = state.plots.find((p) => p.id === target.id);
       if (plot && isGrowing(plotStage(plot, now)) && waterBlock(state, plot, now) === null) {
-        run({ kind: 'water', plotId: t.id });
+        run({ kind: 'water', plotId: target.id });
       }
     }
-    setSelected(t);
+    setSelected(target);
   };
 
   // Latest-callback refs so the engine, created once, always calls current handlers.
@@ -184,7 +188,7 @@ export default function FarmPlayCanvas(props: FarmPlayCanvasProps) {
     canvas.className = 'fpc__canvas';
     canvas.setAttribute('aria-hidden', 'true');
     host.appendChild(canvas);
-    setStatus({ kind: 'loading' });
+    setStatus({ kind: 'loading', progress: null });
     const timer = window.setTimeout(() => {
       if (handle || cancelled) return;
       cancelled = true;
@@ -217,6 +221,17 @@ export default function FarmPlayCanvas(props: FarmPlayCanvasProps) {
         engine.current = h;
         lastView.current = '';
         h.setActive(visible.current.onScreen && visible.current.tab);
+        // The veil stays up while textures, props and shaders settle: no pop-in, no first-second stutter.
+        if (h.whenLoaded) {
+          setStatus({ kind: 'loading', progress: 0 });
+          await Promise.race([
+            h.whenLoaded((done, total) => {
+              if (!cancelled) setStatus({ kind: 'loading', progress: total ? done / total : 1 });
+            }),
+            new Promise((r) => window.setTimeout(r, WARM_CAP_MS)),
+          ]);
+          if (cancelled) return;
+        }
         setStatus({ kind: 'ready' });
       } catch {
         if (!cancelled) setStatus({ kind: 'error', reason: 'load' });
@@ -239,7 +254,8 @@ export default function FarmPlayCanvas(props: FarmPlayCanvasProps) {
   // Domain → engine, only when something visible changed.
   useEffect(() => {
     const h = engine.current;
-    if (status.kind !== 'ready' || !h) return;
+    // Runs as soon as the engine exists, so crops build under the loading veil.
+    if (status.kind === 'error' || !h) return;
     const key = viewKey(view);
     if (key === lastView.current) return;
     lastView.current = key;
@@ -247,7 +263,7 @@ export default function FarmPlayCanvas(props: FarmPlayCanvasProps) {
   }, [view, status]);
 
   useEffect(() => {
-    if (status.kind === 'ready') engine.current?.setEnv(env);
+    if (status.kind !== 'error') engine.current?.setEnv(env);
   }, [env, status]);
 
   // Pause when scrolled away or the tab is hidden; resize with the box and DPR.
@@ -314,13 +330,13 @@ export default function FarmPlayCanvas(props: FarmPlayCanvasProps) {
       <div className="fpc__stage" ref={stage} aria-hidden="true" />
 
       <div className="fpc__top">
-        <span className="fpc__badge">PlayCanvas · thử nghiệm</span>
+        <span className="fpc__badge">{copy.badge}</span>
         <div className="fpc__tools">
           <button
             type="button"
             className="fpc-icon"
             onClick={() => engine.current?.zoom(0.85)}
-            aria-label="Phóng to"
+            aria-label={common.zoomIn}
             disabled={status.kind !== 'ready'}
           >
             <Plus size={16} aria-hidden="true" />
@@ -329,7 +345,7 @@ export default function FarmPlayCanvas(props: FarmPlayCanvasProps) {
             type="button"
             className="fpc-icon"
             onClick={() => engine.current?.zoom(1.18)}
-            aria-label="Thu nhỏ"
+            aria-label={common.zoomOut}
             disabled={status.kind !== 'ready'}
           >
             <Minus size={16} aria-hidden="true" />
@@ -338,13 +354,13 @@ export default function FarmPlayCanvas(props: FarmPlayCanvasProps) {
             type="button"
             className="fpc-icon"
             onClick={() => engine.current?.resetCamera()}
-            aria-label="Về góc nhìn ban đầu"
+            aria-label={common.resetView}
             disabled={status.kind !== 'ready'}
           >
             <ArrowCounterClockwise size={16} aria-hidden="true" />
           </button>
           <label className="fpc-quality">
-            <span className="sr-only">Chất lượng hình</span>
+            <span className="sr-only">{common.quality}</span>
             <select value={quality} onChange={(e) => setQuality(e.target.value as Quality)}>
               {(Object.keys(QUALITY) as Quality[]).map((k) => (
                 <option key={k} value={k}>
@@ -354,43 +370,46 @@ export default function FarmPlayCanvas(props: FarmPlayCanvasProps) {
             </select>
           </label>
           <button type="button" className="fpc-icon fpc-icon--wide" onClick={props.onFlat}>
-            <Square size={16} aria-hidden="true" /> 2D
+            <MapTrifold size={16} aria-hidden="true" /> {common.flat}
           </button>
         </div>
       </div>
 
       {loading && (
-        <div className="fpc__veil" role="status">
+        <div className="fpc__veil fpc__veil--loading" role="status">
           <span className="fpc__spinner" aria-hidden="true" />
-          Đang dựng góc vườn…
+          {copy.loading}
+          {status.progress !== null && (
+            <span className="fpc__load" aria-hidden="true">
+              <span style={{ width: `${Math.round(status.progress * 100)}%` }} />
+            </span>
+          )}
         </div>
       )}
 
       {status.kind === 'error' && (
         <div className="fpc__veil fpc__veil--error" role="alert">
           <p className="fpc__veil-title">{ERROR_TEXT[status.reason]}</p>
-          <p className="fpc__veil-text">
-            Tiến độ vườn vẫn an toàn — chọn cách xem khác hoặc thử lại.
-          </p>
+          <p className="fpc__veil-text">{copy.errorText}</p>
           <div className="fpc__veil-actions">
             <button
               type="button"
               className="fpc-btn fpc-btn--primary"
               onClick={() => setAttempt((a) => a + 1)}
             >
-              Thử lại
+              {copy.retry}
             </button>
             <button type="button" className="fpc-btn" onClick={props.onFlat}>
-              Dùng vườn 2D
+              {copy.useFlat}
             </button>
             <button type="button" className="fpc-btn" onClick={props.onClassic}>
-              Dùng 3D cũ
+              {copy.useClassic}
             </button>
           </div>
         </div>
       )}
 
-      <div className="fpc__bar" ref={bar} role="region" aria-label="Thao tác góc vườn">
+      <div className="fpc__bar" ref={bar} role="region" aria-label={copy.barLabel}>
         <ActionBar
           {...props}
           selected={selected}
@@ -404,21 +423,20 @@ export default function FarmPlayCanvas(props: FarmPlayCanvasProps) {
       </div>
 
       {/* Everything on the canvas is reachable from here without pointing. */}
-      <ul className="fpc__sr" aria-label="Góc vườn 3D">
+      <ul className="fpc__sr" aria-label={copy.srList}>
         {state.plots.map((p) => {
           const st = plotStage(p, now);
           return (
             <li key={p.id}>
               <button type="button" onClick={() => selectFromList({ kind: 'plot', id: p.id })}>
-                Ô {p.id}:{' '}
-                {p.crop ? `${CROPS[p.crop].name}, ${STAGE_LABEL[st].toLowerCase()}` : 'trống'}
+                {common.srPlot(p.id, p.crop ? CROPS[p.crop].name : null, STAGE_LABEL[st])}
               </button>
             </li>
           );
         })}
         <li>
           <button type="button" onClick={() => selectFromList({ kind: 'barn' })}>
-            Nhà kho
+            {common.barn}
           </button>
         </li>
       </ul>
@@ -443,7 +461,7 @@ function ActionBar(p: ActionBarProps) {
     <p className={`fpc-notice fpc-notice--${notice.tone}`}>{notice.text}</p>
   );
   const close = (
-    <button type="button" className="fpc-close" onClick={p.onClose} aria-label="Bỏ chọn">
+    <button type="button" className="fpc-close" onClick={p.onClose} aria-label={copy.deselect}>
       <X size={16} aria-hidden="true" />
     </button>
   );
@@ -455,7 +473,7 @@ function ActionBar(p: ActionBarProps) {
       onClick={() => p.run({ kind: 'harvest' })}
     >
       <Basket size={18} aria-hidden="true" />
-      {ready > 1 ? `Thu hoạch cả ${ready} ô` : 'Thu hoạch'}
+      {common.harvest(ready)}
     </button>
   );
 
@@ -464,15 +482,13 @@ function ActionBar(p: ActionBarProps) {
     return (
       <>
         <div className="fpc-bar__head">
-          <p className="fpc-bar__kicker">Góc vườn</p>
-          <h3 className="fpc-bar__title">Chạm vào luống hoặc nhà kho</h3>
+          <p className="fpc-bar__kicker">{copy.kicker}</p>
+          <h3 className="fpc-bar__title">{copy.idleTitle}</h3>
         </div>
         <p className="fpc-bar__stats">
-          <span>{ready} ô chín</span>
-          <span>{empty} ô trống</span>
-          <span>
-            {cans}/{WATERING.perDay} lượt tưới
-          </span>
+          <span>{copy.statReady(ready)}</span>
+          <span>{copy.statEmpty(empty)}</span>
+          <span>{copy.statCans(cans, WATERING.perDay)}</span>
         </p>
         {noticeEl}
         {harvestBtn && <div className="fpc-bar__actions">{harvestBtn}</div>}
@@ -486,21 +502,23 @@ function ActionBar(p: ActionBarProps) {
       <>
         <div className="fpc-bar__head">
           <p className="fpc-bar__kicker">
-            <Warehouse size={14} aria-hidden="true" /> Công trình
+            <Warehouse size={14} aria-hidden="true" /> {common.building}
           </p>
-          <h3 className="fpc-bar__title">Nhà kho</h3>
+          <h3 className="fpc-bar__title">{common.barn}</h3>
           {close}
         </div>
         <p className="fpc-bar__text">
           {stock.length === 0
-            ? 'Kho còn trống — thu hoạch ô chín để có nguyên liệu.'
-            : stock.map((id) => `${produceName(id)} ×${state.ingredients[id]}`).join(' · ')}
+            ? copy.barnEmpty
+            : stock
+                .map((id) => common.stockItem(produceName(id), state.ingredients[id]))
+                .join(' · ')}
         </p>
         {noticeEl}
         {p.onMarket && (
           <div className="fpc-bar__actions">
             <button type="button" className="fpc-btn" onClick={p.onMarket}>
-              Ra chợ quê
+              {common.goMarket}
             </button>
           </div>
         )}
@@ -514,8 +532,8 @@ function ActionBar(p: ActionBarProps) {
   const crop = plot.crop ? CROPS[plot.crop] : null;
   const head = (
     <div className="fpc-bar__head">
-      <p className="fpc-bar__kicker">Ô {plot.id}</p>
-      <h3 className="fpc-bar__title">{crop ? crop.name : 'Ô trống'}</h3>
+      <p className="fpc-bar__kicker">{common.plot(plot.id)}</p>
+      <h3 className="fpc-bar__title">{crop ? crop.name : common.emptyPlot}</h3>
       {close}
     </div>
   );
@@ -525,9 +543,7 @@ function ActionBar(p: ActionBarProps) {
       return (
         <>
           {head}
-          <p className="fpc-bar__text fpc-bar__text--locked">
-            Khay hạt trống. Mỗi món bạn chốt gửi lại một hạt giống.
-          </p>
+          <p className="fpc-bar__text fpc-bar__text--locked">{copy.seedsEmpty}</p>
           {noticeEl}
         </>
       );
@@ -536,7 +552,7 @@ function ActionBar(p: ActionBarProps) {
     return (
       <>
         {head}
-        <div className="fpc-chips" role="radiogroup" aria-label="Chọn hạt">
+        <div className="fpc-chips" role="radiogroup" aria-label={common.chooseSeed}>
           {p.seeds.map((c) => (
             <button
               key={c}
@@ -547,7 +563,7 @@ function ActionBar(p: ActionBarProps) {
               onClick={() => p.onPickSeed(c)}
             >
               <CropIcon crop={c} />
-              {CROPS[c].seedName} ×{state.seeds[c]}
+              {common.seedChip(CROPS[c].seedName, state.seeds[c])}
             </button>
           ))}
         </div>
@@ -560,7 +576,7 @@ function ActionBar(p: ActionBarProps) {
             onClick={() => seed && p.run({ kind: 'plant', plotId: plot.id, crop: seed })}
           >
             <Plant size={18} aria-hidden="true" />
-            Gieo {seed ? CROPS[seed].seedName.toLowerCase() : ''}
+            {common.sow(seed ? CROPS[seed].seedName : null)}
           </button>
         </div>
       </>
@@ -571,7 +587,7 @@ function ActionBar(p: ActionBarProps) {
     return (
       <>
         {head}
-        <p className="fpc-bar__text">Chín rồi! Thu về kho để nấu hoặc giao đơn.</p>
+        <p className="fpc-bar__text">{common.ripe}</p>
         {noticeEl}
         <div className="fpc-bar__actions">{harvestBtn}</div>
       </>
@@ -584,13 +600,11 @@ function ActionBar(p: ActionBarProps) {
   return (
     <>
       {head}
-      <p className="fpc-bar__text">
-        {STAGE_LABEL[stage]} · còn {formatDuration(left)}
-      </p>
+      <p className="fpc-bar__text">{common.growing(STAGE_LABEL[stage], formatDuration(left))}</p>
       <div
         className="fpc-grow"
         role="progressbar"
-        aria-label="Tiến độ lớn"
+        aria-label={copy.growProgress}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={pct}
@@ -599,7 +613,7 @@ function ActionBar(p: ActionBarProps) {
       </div>
       {block && (
         <p className="fpc-bar__text fpc-bar__text--locked">
-          {block === 'wet' ? 'Đất còn ẩm — tưới lại sau 1 giờ.' : 'Hết lượt tưới hôm nay.'}
+          {block === 'wet' ? copy.blocks.wet : copy.blocks['empty-can']}
         </p>
       )}
       {noticeEl}
@@ -611,7 +625,7 @@ function ActionBar(p: ActionBarProps) {
           onClick={() => p.run({ kind: 'water', plotId: plot.id })}
         >
           <Drop size={18} aria-hidden="true" />
-          Tưới (−{Math.round(WATERING.cut * 100)}%) · còn {cans}
+          {common.water(Math.round(WATERING.cut * 100), cans)}
         </button>
       </div>
     </>

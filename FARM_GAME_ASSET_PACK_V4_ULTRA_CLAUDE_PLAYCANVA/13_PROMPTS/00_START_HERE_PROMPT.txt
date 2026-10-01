@@ -1,0 +1,10 @@
+Start by reading:
+- 00_MASTER/MASTER_REFERENCE.png
+- 10_UI_DESIGN_SYSTEM/DESIGN_SYSTEM.md
+- 11_ANIMATION/ANIMATION_SPEC.md
+- 12_GAMEPLAY_SPECS/GAMEPLAY_SPEC.md
+- 13_PROMPTS/CLAUDE_PLAYCANVA_ULTRA_MASTER_PROMPT.txt
+
+Then inspect https://angi.221-121-1-68.sslip.io/ and the available Canva/PlayCanva connection.
+Do not modify the existing website yet. First report the current architecture and the best integration point,
+then create the visual farm prototype in Canva using the asset pack as reference.

@@ -7,6 +7,7 @@ declare(strict_types=1);
  *   Public : GET /api/dishes, GET /api/health
  *   Account: /api/account/* (optional guest account; writes need X-Bepviet: 1)
  *   Admin  : /api/admin/* (session + CSRF header on writes)
+ * Messages follow the request language (X-Locale → ?lang= → Accept-Language → vi), see lib/Lang.php.
  */
 
 require_once __DIR__ . '/../lib/Catalogue.php';
@@ -15,14 +16,41 @@ require_once __DIR__ . '/../lib/Images.php';
 require_once __DIR__ . '/../lib/Auth.php';
 require_once __DIR__ . '/../lib/Account.php';
 require_once __DIR__ . '/../lib/Friends.php';
+require_once __DIR__ . '/../lib/AdminUsers.php';
+
+require_once __DIR__ . '/../lib/ReviewService.php';
 
 header('X-Content-Type-Options: nosniff');
+header('Content-Language: ' . Lang::locale());
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $path = '/' . trim((string) preg_replace('#^/api#', '', $path), '/');
 
 try {
+    if (in_array($path, ['/provinces', '/reviews', '/reverse'], true)) {
+        header('Cache-Control: no-store');
+        if ($path === '/provinces' && $method === 'GET') {
+            $items = []; foreach (ReviewService::PROVINCES as $id => $name) { $items[] = ['id' => $id, 'name' => $name]; }
+            json_response(['count' => count($items), 'items' => $items]);
+        }
+        if (($path === '/reviews' && $method !== 'GET') || ($path === '/reverse' && $method !== 'POST')) {
+            throw new HttpError(405, 'Method not allowed.');
+        }
+        $reviews = new ReviewService(db());
+        $reviews->rate((string) ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+        if ($path === '/reviews') {
+            json_response($reviews->reviews((string) ($_GET['dish'] ?? ''), (string) ($_GET['province'] ?? '')));
+        }
+        if ($_GET || (int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > 1024 || !str_starts_with(strtolower($_SERVER['CONTENT_TYPE'] ?? ''), 'application/json')) {
+            throw new HttpError(400, 'Reverse requires bounded JSON body, no query.');
+        }
+        $raw = file_get_contents('php://input', false, null, 0, 1025);
+        if ($raw === false || strlen($raw) > 1024) { throw new HttpError(413, 'Reverse body too large.'); }
+        $body = json_decode($raw, true);
+        if (!is_array($body)) { throw new HttpError(400, 'Invalid JSON.'); }
+        json_response($reviews->reverse($body));
+    }
     $catalogue = new Catalogue(db());
 
     // ——— Public ———
@@ -56,7 +84,7 @@ try {
                 'GET garden' => json_response($friends->visit($code)),
                 'POST water' => json_response($friends->water($code, read_json_body())),
                 'DELETE ' => json_response($friends->remove($code)),
-                default => throw new HttpError(404, 'Không có API này.'),
+                default => throw new HttpError(404, __t('api.notFound')),
             };
         }
         $route = $method . ' ' . $path;
@@ -83,7 +111,7 @@ try {
                 $account->delete();
                 json_response(['ok' => true]);
             })(),
-            default => throw new HttpError(404, 'Không có API này.'),
+            default => throw new HttpError(404, __t('api.notFound')),
         };
     }
 
@@ -105,6 +133,10 @@ try {
 
         if ($path === '/admin/stats' && $method === 'GET') {
             json_response($catalogue->stats());
+        }
+        // Languages with a server/lang file; the editor shows translation fields for every "extra" one.
+        if ($path === '/admin/locales' && $method === 'GET') {
+            json_response(['base' => Lang::FALLBACK, 'locales' => Lang::describe(), 'extra' => Lang::extra()]);
         }
         if ($path === '/admin/dishes') {
             if ($method === 'GET') {
@@ -150,6 +182,20 @@ try {
                 json_response((new AiEnricher($catalogue))->enrichOne($id, $mode));
             }
         }
+        // Guest accounts: who is online, activity, sign-out everywhere, delete.
+        if ($path === '/admin/users' && $method === 'GET') {
+            json_response((new AdminUsers(db()))->list($_GET));
+        }
+        if (preg_match('#^/admin/users/(\d+)(/(logout))?$#', $path, $m)) {
+            $users = new AdminUsers(db());
+            $uid = (int) $m[1];
+            match ($method . ' ' . ($m[3] ?? '')) {
+                'GET ' => json_response($users->get($uid)),
+                'POST logout' => json_response($users->signOut($uid)),
+                'DELETE ' => json_response($users->delete($uid)),
+                default => throw new HttpError(405, __t('api.notSupported')),
+            };
+        }
         if ($path === '/admin/ingredients' && $method === 'GET') {
             json_response(['items' => $catalogue->listIngredients()]);
         }
@@ -165,13 +211,13 @@ try {
         }
     }
 
-    throw new HttpError(404, 'Không có API này.');
+    throw new HttpError(404, __t('api.notFound'));
 } catch (HttpError $e) {
     json_response(['error' => $e->getMessage()], $e->status);
 } catch (PDOException $e) {
-    error_log('[angi api] ' . $e->getMessage());
-    json_response(['error' => 'Lỗi cơ sở dữ liệu.'], 500);
+    error_log('[angi api] database operation failed');
+    json_response(['error' => __t('api.dbError')], 500);
 } catch (Throwable $e) {
-    error_log('[angi api] ' . $e->getMessage());
-    json_response(['error' => 'Lỗi máy chủ.'], 500);
+    error_log('[angi api] server operation failed');
+    json_response(['error' => __t('api.serverError')], 500);
 }

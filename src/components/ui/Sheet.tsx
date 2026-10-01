@@ -1,6 +1,7 @@
 import { X } from '@phosphor-icons/react';
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { t } from '../../i18n';
 
 interface SheetProps {
   open: boolean;
@@ -105,7 +106,12 @@ export function Sheet({
               </p>
             )}
           </div>
-          <button type="button" className="icon-btn" aria-label="Đóng" onClick={onClose}>
+          <button
+            type="button"
+            className="icon-btn"
+            aria-label={t.account.ui.close}
+            onClick={onClose}
+          >
             <X aria-hidden="true" size={20} />
           </button>
         </header>

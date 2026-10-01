@@ -3,19 +3,16 @@ import { useEffect } from 'react';
 import { REGIONS } from '../../../data/game';
 import type { RegionId } from '../../../data/types';
 import { regionProgress, stampCount } from '../../../domain/selectors';
+import { t } from '../../../i18n';
 import { useGame } from '../../../state/hooks';
 import { reelDishes, REGION_LABEL } from '../data/reelCatalogue';
 import type { ReelDish } from '../foodReel.types';
 
 const ORDER: (RegionId | 'world')[] = ['north', 'central', 'south', 'world'];
 const SHOW = 10;
+const m = t.journey.atlas;
 
-const TAGLINE: Record<RegionId | 'world', string> = {
-  north: 'Nước dùng thanh, vị cân bằng',
-  central: 'Đậm đà, cay nồng, nhiều món nhỏ',
-  south: 'Ngọt thanh, nhiều rau, phóng khoáng',
-  world: 'Món ngoại đã quen trên phố ăn trưa',
-};
+const TAGLINE: Record<RegionId | 'world', string> = m.tagline;
 
 interface AtlasSectionProps {
   onOpenDish: (dish: ReelDish) => void;
@@ -34,8 +31,8 @@ export function AtlasSection({ onOpenDish }: AtlasSectionProps) {
   // The "newly opened" badge is shown once, then acknowledged.
   useEffect(() => {
     if (!fresh) return;
-    const t = setTimeout(() => dispatch({ type: 'ACK_UNLOCK' }), 6000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => dispatch({ type: 'ACK_UNLOCK' }), 6000);
+    return () => clearTimeout(timer);
   }, [fresh, dispatch]);
 
   return (
@@ -61,20 +58,19 @@ export function AtlasSection({ onOpenDish }: AtlasSectionProps) {
                 ) : (
                   <LockKeyOpen aria-hidden="true" size={14} />
                 )}
-                {fresh === id ? 'Mới mở!' : locked ? 'Đang khóa' : 'Đang mở'}
+                {fresh === id ? m.fresh : locked ? m.locked : m.open}
               </span>
             </div>
             <p className="fj-region__tagline">{TAGLINE[id]}</p>
             <p className="fj-region__count">
-              <span className="fj-region__found">{found.length}</span>/{dishes.length} món
+              <span className="fj-region__found">{found.length}</span>/{dishes.length} {m.dishes}
             </p>
             {locked && game && (
               <p className="fj-note">
-                Mở khi có {REGIONS[id as RegionId].stampsToUnlock} dấu hành trình (bạn có {stamps},
-                còn {game.stampsNeeded}). Vẫn chọn và gieo món vùng này được.
+                {m.lockedNote(REGIONS[id as RegionId].stampsToUnlock, stamps, game.stampsNeeded)}
               </p>
             )}
-            <ul className="fj-album" aria-label={`Món ${REGION_LABEL[id]} đã khám phá`}>
+            <ul className="fj-album" aria-label={m.albumLabel(REGION_LABEL[id])}>
               {shown.map((d) => (
                 <li key={d.id}>
                   <button
@@ -91,7 +87,7 @@ export function AtlasSection({ onOpenDish }: AtlasSectionProps) {
                       loading="lazy"
                       decoding="async"
                     />
-                    <span className="sr-only">Xem câu chuyện {d.name}</span>
+                    <span className="sr-only">{m.readStory(d.name)}</span>
                   </button>
                 </li>
               ))}
@@ -99,7 +95,7 @@ export function AtlasSection({ onOpenDish }: AtlasSectionProps) {
                 <li key={`s${i}`} className="fj-album__unknown" aria-hidden="true" />
               ))}
             </ul>
-            {rest > 0 && <p className="fj-region__rest">{rest} món chưa khám phá</p>}
+            {rest > 0 && <p className="fj-region__rest">{m.rest(rest)}</p>}
           </li>
         );
       })}

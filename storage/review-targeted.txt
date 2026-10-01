@@ -1,0 +1,16 @@
+
+> hanh-trinh-bep-viet@0.1.0 test
+> node scripts/run-vitest.mjs run src/features/food-reel/components/FoodVideo.test.tsx
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.2 [39m[90mC:/xampp/htdocs/angi[39m
+
+ [32m✓[39m src/features/food-reel/components/FoodVideo.test.tsx [2m([22m[2m19 tests[22m[2m)[22m[33m 2439[2mms[22m[39m
+   [32m✓[39m review UI [2m(19)[22m
+     [33m[2m✓[22m[39m requires manual choice or explicit GPS; ignores recipe videos and preserves local[33m 907[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m19 passed[39m[22m[90m (19)[39m
+[2m   Start at [22m 17:31:15
+[2m   Duration [22m 13.33s[2m (import 62%, tests 19%, environment 12%, transform 5%, setup 2%)[22m
+

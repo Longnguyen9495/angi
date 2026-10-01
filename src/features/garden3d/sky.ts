@@ -1,6 +1,6 @@
 /*
  * Colours and light by the guest's local time. Day is the "khu vườn trên mây"
- * sky; the evening turns copper; night falls back to Bếp Việt's warm dark.
+ * sky; the evening turns copper; night falls back to Ăn gì?'s warm dark.
  */
 
 export interface SkyLook {

@@ -9,9 +9,11 @@ import {
   recipeProgress,
   regionProgress,
 } from '../../../domain/selectors';
+import { t } from '../../../i18n';
 import { useGame } from '../../../state/hooks';
 
-const STATUS = { have: 'Có', growing: 'Đang lớn', missing: 'Thiếu', locked: 'Chưa mở' } as const;
+const m = t.journey.recipes;
+const STATUS = m.status;
 
 /** Recipes fill from harvested ingredients plus crops still in the ground. */
 export function RecipesSection({ onCook }: { onCook: (recipe: RecipeId) => void }) {
@@ -38,12 +40,12 @@ export function RecipesSection({ onCook }: { onCook: (recipe: RecipeId) => void 
                 </span>
               </div>
               <ProgressBar
-                label={`Tiến độ ${r.name}`}
+                label={m.progress(r.name)}
                 hideLabel
                 value={have}
                 pending={p.secured - have}
                 max={p.total}
-                valueText={`${p.secured}/${p.total} nguyên liệu${p.secured > have ? ` · ${p.secured - have} đang lớn` : ''}`}
+                valueText={m.progressText(p.secured, p.total, Math.max(0, p.secured - have))}
                 size="sm"
                 tone={r.region}
               />
@@ -69,7 +71,7 @@ export function RecipesSection({ onCook }: { onCook: (recipe: RecipeId) => void 
                 {p.canCook ? (
                   <button type="button" className="fr-cta" onClick={() => onCook(r.id)}>
                     <CookingPot aria-hidden="true" size={18} />
-                    Nấu {r.name}
+                    {m.cook(r.name)}
                   </button>
                 ) : (
                   <p className="fj-note">
@@ -78,18 +80,21 @@ export function RecipesSection({ onCook }: { onCook: (recipe: RecipeId) => void 
                         (x) => !produceAvailable(state, x.crop),
                       );
                       if (lockedCrop) {
-                        return `Cần ${produceName(lockedCrop.crop).toLowerCase()} — mở ở cấp ${produceUnlockLevel(lockedCrop.crop)}.`;
+                        return m.needLocked(
+                          produceName(lockedCrop.crop).toLowerCase(),
+                          produceUnlockLevel(lockedCrop.crop),
+                        );
                       }
                       return p.ingredients.some((x) => x.have < x.qty && x.growing === 0)
-                        ? 'Chốt một món có nguyên liệu còn thiếu để nhận hạt.'
-                        : 'Chờ cây lớn rồi thu hoạch là nấu được.';
+                        ? m.pickDish
+                        : m.waitGrow;
                     })()}
                   </p>
                 )}
                 <span className="fj-recipe__xp">+{r.xp} XP</span>
                 {cooked > 0 && (
                   <span className="fj-recipe__cooked">
-                    <SealCheck aria-hidden="true" size={16} weight="fill" /> Đã nấu ×{cooked}
+                    <SealCheck aria-hidden="true" size={16} weight="fill" /> {m.cooked(cooked)}
                   </span>
                 )}
               </div>
@@ -99,7 +104,7 @@ export function RecipesSection({ onCook }: { onCook: (recipe: RecipeId) => void 
       </ol>
       {locked.length > 0 && (
         <div className="fj-locked">
-          <h3 className="fj-h3">Chưa mở · {locked.length} công thức</h3>
+          <h3 className="fj-h3">{m.lockedTitle(locked.length)}</h3>
           <ul className="fj-locked__list">
             {locked.map((r) => {
               const need = regionProgress(state, r.region).stampsNeeded;
@@ -111,8 +116,8 @@ export function RecipesSection({ onCook }: { onCook: (recipe: RecipeId) => void 
                     {REGIONS[r.region].name}
                   </span>
                   <span className="fj-locked__note">
-                    Mở cùng {REGIONS[r.region].name}
-                    {need > 0 ? ` · còn ${need} dấu hành trình` : ''}
+                    {m.opensWith(REGIONS[r.region].name)}
+                    {need > 0 ? m.stampsLeft(need) : ''}
                   </span>
                 </li>
               );

@@ -31,6 +31,7 @@ import { formatClock, currentTime } from '../../domain/time';
 import { burstSoil, flyTo, pulseOnce, type EffectHandle } from '../../motion/effects';
 import { createTimeline, type Timeline } from '../../motion/timeline';
 import { confirmCommand, isAbortError } from '../../services/mockApi';
+import { t } from '../../i18n';
 import { useAccount, useFeedback, useGame, useUi } from '../../state/hooks';
 import { SeedToken } from '../ui/CropVisual';
 import { ProgressBar } from '../ui/ProgressBar';
@@ -52,6 +53,8 @@ interface Snapshot {
  * State is committed *before* the sequence starts; visuals only lag behind,
  * so skip/cancel/unmount always leave the correct final state.
  */
+const m = t.account.reward;
+
 const PLANT_TIMELINE: { at: number; step: PlantStep }[] = [
   { at: 380, step: 'impact' },
   { at: 470, step: 'sprout' },
@@ -71,7 +74,7 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
   const dishRegion = dish?.region ?? 'south';
   // Dishes from abroad earn stamps but have no map region to light up.
   const mapRegion: RegionId | null = dishRegion === 'world' ? null : dishRegion;
-  const regionName = mapRegion ? REGIONS[mapRegion].name : 'Ẩm thực thế giới';
+  const regionName = mapRegion ? REGIONS[mapRegion].name : m.worldCuisine;
 
   const [phase, setPhase] = useState<Phase>(meal.planted ? 'done' : 'ready');
   const [step, setStep] = useState<PlantStep>(meal.planted ? 'settled' : 'waiting');
@@ -146,7 +149,7 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
     } catch (e) {
       if (isAbortError(e)) return;
       setPhase('error');
-      announce('Chưa gieo được. Hạt vẫn nằm trong khay, bạn có thể thử lại.');
+      announce(m.plantFailedAnnounce);
       return;
     }
 
@@ -155,7 +158,13 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
     dispatch(action);
     const rp = recipeProgress(next, recipe.id);
     announce(
-      `Đã gieo ${crop.seedName.toLowerCase()} vào ô ${freePlot.id}. ${recipe.name}: ${rp.secured}/${rp.total} nguyên liệu.`,
+      m.plantedAnnounce(
+        crop.seedName.toLowerCase(),
+        freePlot.id,
+        recipe.name,
+        rp.secured,
+        rp.total,
+      ),
     );
     setJustPlanted(true);
     requestAnimationFrame(() => statusRef.current?.focus({ preventScroll: true }));
@@ -197,29 +206,27 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
 
   const teaser: [string, string] = meal.checkedIn
     ? [
-        `Bữa này đã check-in xong.`,
-        plantedPlot?.crop
-          ? `Cây ở ô ${meal.plotId} đã sẵn sàng thu hoạch.`
-          : `Ghé khu vườn xem nhé.`,
+        m.teaser.checkedIn,
+        plantedPlot?.crop ? m.teaser.plotReady(meal.plotId) : m.teaser.visitGarden,
       ]
     : [
-        `Mầm ${crop.name.toLowerCase()} đã nhú rồi!`,
+        m.teaser.sprouted(crop.name.toLowerCase()),
         nextRegion && nextRp && nextRp.stampsNeeded === 1
-          ? `Check-in sau bữa để cây lớn ngay và đủ dấu mở ${REGIONS[nextRegion].name}.`
-          : `Check-in sau bữa để cây lớn ngay, góp ${crop.produceName.toLowerCase()} cho ${recipe.name}.`,
+          ? m.teaser.unlockRegion(REGIONS[nextRegion].name)
+          : m.teaser.contribute(crop.produceName.toLowerCase(), recipe.name),
       ];
 
   const planted = phase === 'animating' || phase === 'done';
   const seedReceivedLabel = meal.planted
-    ? `Đã gieo ${crop.seedName.toLowerCase()}`
-    : `Bạn nhận được ${crop.seedName.toLowerCase()}`;
+    ? m.planted(crop.seedName.toLowerCase())
+    : m.received(crop.seedName.toLowerCase());
 
   return (
     <section className="reward card" aria-labelledby="reward-title" data-phase={phase}>
       <header className="reward__head">
         <p className="reward__kicker">
           <Plant aria-hidden="true" size={18} />
-          Phần thưởng của bữa này
+          {m.kicker}
         </p>
         <h3 id="reward-title" className="reward__title" ref={statusRef} tabIndex={-1}>
           {seedReceivedLabel}
@@ -239,7 +246,8 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
           <p className="reward__note">{dish.seedNote}</p>
           <span className="tray" ref={trayRef}>
             <Tray aria-hidden="true" size={18} />
-            Khay hạt · {crop.name}: <strong className="tray__count">{trayCount}</strong>
+            {m.tray(crop.name)}
+            <strong className="tray__count">{trayCount}</strong>
           </span>
         </div>
 
@@ -258,7 +266,7 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
           {phase === 'error' && (
             <p className="inline-alert" role="alert">
               <WarningCircle aria-hidden="true" size={18} />
-              Chưa gieo được — hạt vẫn nằm trong khay. Bạn thử lại nhé.
+              {m.plantFailed}
             </p>
           )}
           {freePlot ? (
@@ -274,17 +282,13 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
               ) : (
                 <Plant aria-hidden="true" size={22} />
               )}
-              {phase === 'confirming'
-                ? 'Đang gieo…'
-                : phase === 'error'
-                  ? 'Thử gieo lại'
-                  : 'Gieo ngay'}
+              {phase === 'confirming' ? m.planting : phase === 'error' ? m.retry : m.plantNow}
             </button>
           ) : (
             <div className="inline-alert inline-alert--info">
               <p>
-                <strong>Ô đất đầy.</strong> Hạt được giữ an toàn trong khay — thu hoạch để có chỗ
-                gieo.
+                <strong>{m.full.title}</strong>
+                {m.full.body}
               </p>
               {readyCount > 0 ? (
                 <button
@@ -292,11 +296,11 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
                   className="btn btn--secondary btn--sm"
                   onClick={() => {
                     dispatch({ type: 'HARVEST_ALL', now: currentTime() });
-                    toast({ message: `Đã thu hoạch ${readyCount} ô.`, tone: 'success' });
+                    toast({ message: m.harvested(readyCount), tone: 'reward' });
                   }}
                 >
                   <Basket aria-hidden="true" size={18} />
-                  Thu hoạch {readyCount} ô sẵn sàng
+                  {m.harvestReady(readyCount)}
                 </button>
               ) : (
                 <button
@@ -304,21 +308,19 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
                   className="btn btn--ghost btn--sm"
                   onClick={() => focusSection('khu-vuon')}
                 >
-                  Xem khu vườn
+                  {m.viewGarden}
                 </button>
               )}
             </div>
           )}
-          <p className="reward__hint">
-            Một chạm, vài giây. Bạn có thể bỏ qua — hạt vẫn nằm trong khay.
-          </p>
+          <p className="reward__hint">{m.hint}</p>
         </div>
       )}
 
       {planted && shown && (
         <div className="reward__progress">
           <ProgressBar
-            label={`Công thức ${recipe.name}`}
+            label={m.recipeLabel(recipe.name)}
             value={Math.min(
               shown.recipe.total,
               shown.recipe.ingredients.reduce((s, i) => s + Math.min(i.qty, i.have), 0),
@@ -328,7 +330,7 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
               shown.recipe.ingredients.reduce((s, i) => s + Math.min(i.qty, i.have), 0)
             }
             max={shown.recipe.total}
-            valueText={`${shown.recipe.secured}/${shown.recipe.total} nguyên liệu`}
+            valueText={m.ingredients(shown.recipe.secured, shown.recipe.total)}
             tone="primary"
           />
           {shown.region && mapRegion && (
@@ -339,10 +341,10 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
                 aria-hidden="true"
               />
               <ProgressBar
-                label={`Khám phá ${regionName}`}
+                label={m.exploreLabel(regionName)}
                 value={shown.region.discovered}
                 max={shown.region.total}
-                valueText={`${shown.region.discovered}/${shown.region.total} món`}
+                valueText={m.dishes(shown.region.discovered, shown.region.total)}
                 tone={mapRegion}
                 size="sm"
               />
@@ -354,7 +356,7 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
       {phase === 'animating' && (
         <button type="button" className="btn btn--quiet btn--sm reward__skip" onClick={skip}>
           <FastForward aria-hidden="true" size={16} />
-          Bỏ qua hiệu ứng
+          {m.skip}
         </button>
       )}
 
@@ -362,10 +364,10 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
         <div className="reward__after">
           <NpcTeaser lines={teaser}>
             {!meal.checkedIn && (
-              <ul className="npc__rewards" aria-label="Check-in sau bữa sẽ nhận">
+              <ul className="npc__rewards" aria-label={m.checkinRewards.label}>
                 <li>+20 XP</li>
-                <li>Cây ô {meal.plotId ?? '—'} lớn ngay</li>
-                <li>+1 dấu hành trình</li>
+                <li>{m.checkinRewards.grow(meal.plotId ?? null)}</li>
+                <li>{m.checkinRewards.stamp}</li>
               </ul>
             )}
           </NpcTeaser>
@@ -380,7 +382,7 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
                   const at = currentTime();
                   dispatch({ type: 'SET_REMINDER', now: at });
                   toast({
-                    message: `Đã hẹn: trang sẽ nhắc check-in khi bạn quay lại sau ${formatClock(at + REMINDER_DELAY_MS)}.`,
+                    message: m.reminderSet(formatClock(at + REMINDER_DELAY_MS)),
                     tone: 'success',
                   });
                 }}
@@ -390,7 +392,7 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
                 ) : (
                   <Bell aria-hidden="true" size={18} />
                 )}
-                {reminderSet ? 'Đã hẹn nhắc' : 'Nhắc tôi check-in sau bữa'}
+                {reminderSet ? m.reminded : m.remindMe}
               </button>
             )}
             <button
@@ -407,12 +409,12 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
               ) : (
                 <FloppyDisk aria-hidden="true" size={18} />
               )}
-              {accountSaved ? 'Đã lưu vào tài khoản' : 'Lưu hành trình'}
+              {accountSaved ? m.savedToAccount : m.saveFarm}
             </button>
             {!meal.checkedIn && (
               <button type="button" className="btn btn--link btn--sm" onClick={openCheckIn}>
                 <CalendarCheck aria-hidden="true" size={18} />
-                Đã ăn xong? Check-in (demo)
+                {m.checkInDemo}
               </button>
             )}
           </div>

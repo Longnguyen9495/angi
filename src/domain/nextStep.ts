@@ -1,6 +1,6 @@
 import { reelGameDishes } from '../features/food-reel/data/reelCatalogue';
 import { RECIPE_LIST } from '../data/game';
-import type { AnimalId, CropId, RecipeId } from '../data/types';
+import type { AnimalId, Catch, CropId, RecipeId } from '../data/types';
 import { canFulfill, todaysOrders } from './orders';
 import type { GuestProgress } from './progress';
 import {
@@ -11,8 +11,9 @@ import {
   recipeAvailable,
   recipeProgress,
   animalStage,
+  fishingLeft,
 } from './selectors';
-import { ANIMALS, ANIMAL_LIST, animalOf, isCrop } from '../data/game';
+import { ANIMALS, ANIMAL_LIST, animalOf, isAnimalProduct, isCatch, isCrop } from '../data/game';
 
 /**
  * The one thing worth doing next in the garden loop, so a harvest never ends
@@ -24,6 +25,7 @@ export type NextStep =
   | { kind: 'harvest'; count: number }
   | { kind: 'collect'; animal: AnimalId }
   | { kind: 'feed'; animal: AnimalId }
+  | { kind: 'fish'; catch: Catch; recipe: RecipeId; left: number }
   | { kind: 'plant'; crop: CropId; plotId: number }
   | { kind: 'find'; crop: CropId; recipe: RecipeId }
   | { kind: 'wait'; recipe: RecipeId; readyAt: number }
@@ -63,8 +65,13 @@ export function nextStep(p: GuestProgress, now: number): NextStep {
   const focus = open[0];
   const missing = focus?.prog.ingredients.find((i) => i.have + i.growing < i.qty);
 
+  // Fish or shrimp short: the pond, while today's catches last.
+  if (focus && missing && isCatch(missing.crop) && fishingLeft(p, now) > 0) {
+    return { kind: 'fish', catch: missing.crop, recipe: focus.r.id, left: fishingLeft(p, now) };
+  }
+
   // An egg or milk short: feed the animal if the pantry has its feed.
-  if (missing && !isCrop(missing.crop)) {
+  if (missing && isAnimalProduct(missing.crop)) {
     const animal = ANIMALS[animalOf(missing.crop)];
     if (animalStage(p, animal.id, now) === 'hungry' && p.ingredients[animal.feed] > 0) {
       return { kind: 'feed', animal: animal.id };

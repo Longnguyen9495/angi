@@ -3,6 +3,7 @@ import {
   Basket,
   ChefHat,
   CookingPot,
+  Fish,
   Hourglass,
   Plant,
 } from '@phosphor-icons/react';
@@ -11,7 +12,10 @@ import { ANIMALS, CROPS, RECIPES, produceName } from '../../../data/game';
 import type { AnimalId, CropId, RecipeId } from '../../../data/types';
 import { dishIdsForSeed, type NextStep } from '../../../domain/nextStep';
 import { slotKey, formatDuration } from '../../../domain/time';
+import { t } from '../../../i18n';
 import { useGame } from '../../../state/hooks';
+
+const m = t.journey.next;
 
 interface NextStepCardProps {
   step: NextStep;
@@ -50,30 +54,31 @@ export function NextStepCard({
     case 'cook': {
       const r = RECIPES[step.recipe];
       icon = <CookingPot size={22} aria-hidden="true" />;
-      title = `Đủ nguyên liệu nấu ${r.name}`;
-      body = `Bếp đã sẵn sàng — nấu ngay để nhận +${r.xp} XP và mở trang sổ bếp.`;
-      action = { label: `Nấu ${r.name}`, run: () => onCook(step.recipe) };
+      title = m.cook.title(r.name);
+      body = m.cook.body(r.xp);
+      action = { label: m.cook.action(r.name), run: () => onCook(step.recipe) };
       break;
     }
     case 'order':
       icon = <ChefHat size={22} aria-hidden="true" />;
-      title = 'Kho đủ hàng cho đơn của Cô Ba';
-      body = 'Giao đơn để đổi lấy hạt giống, lượt tưới và XP.';
-      action = { label: 'Xem đơn', run: onOrders };
+      title = m.order.title;
+      body = m.order.body;
+      action = { label: m.order.action, run: onOrders };
       break;
     case 'harvest':
       icon = <Basket size={22} aria-hidden="true" />;
-      title = `${step.count} ô đã chín`;
-      body = 'Thu hoạch để đưa nông sản vào kho và giải phóng ô đất.';
-      action = { label: 'Thu hoạch', run: onHarvest };
+      title = m.harvest.title(step.count);
+      body = m.harvest.body;
+      action = { label: m.harvest.action, run: onHarvest };
       break;
     case 'collect': {
       const a = ANIMALS[step.animal];
+      const product = produceName(a.product).toLowerCase();
       icon = <Basket size={22} aria-hidden="true" />;
-      title = `${a.name} đã có ${produceName(a.product).toLowerCase()}`;
-      body = `Thu ${a.yield} ${produceName(a.product).toLowerCase()} vào kho, rồi cho ăn để có mẻ tiếp theo.`;
+      title = m.collect.title(a.name, product);
+      body = m.collect.body(a.yield, product);
       action = {
-        label: `Thu ${produceName(a.product).toLowerCase()}`,
+        label: m.collect.action(product),
         run: () => onAnimal(a.id, 'collect'),
       };
       break;
@@ -81,34 +86,48 @@ export function NextStepCard({
     case 'feed': {
       const a = ANIMALS[step.animal];
       icon = <Plant size={22} aria-hidden="true" />;
-      title = `Cho ${a.name.toLowerCase()} ăn`;
-      body = `1 ${produceName(a.feed).toLowerCase()} → sau ${a.hours} giờ có ${a.yield} ${produceName(a.product).toLowerCase()} cho công thức.`;
-      action = { label: 'Cho ăn', run: () => onAnimal(a.id, 'feed') };
+      title = m.feed.title(a.name.toLowerCase());
+      body = m.feed.body(
+        produceName(a.feed).toLowerCase(),
+        a.hours,
+        a.yield,
+        produceName(a.product).toLowerCase(),
+      );
+      action = { label: m.feed.action, run: () => onAnimal(a.id, 'feed') };
+      break;
+    }
+    case 'fish': {
+      const r = RECIPES[step.recipe];
+      icon = <Fish size={22} aria-hidden="true" />;
+      title = m.fish.title(r.name, produceName(step.catch).toLowerCase());
+      body = m.fish.body(step.left);
       break;
     }
     case 'plant': {
       const c = CROPS[step.crop];
       icon = <Plant size={22} aria-hidden="true" />;
-      title = `Gieo ${c.seedName.toLowerCase()} vào ô ${step.plotId}`;
-      body = `Khay còn hạt và ô ${step.plotId} đang trống — ${c.name.toLowerCase()} chín sau khoảng ${c.growHours} giờ.`;
-      action = { label: 'Gieo ngay', run: () => onPlant(step.plotId, step.crop) };
+      title = m.plant.title(c.seedName.toLowerCase(), step.plotId);
+      body = m.plant.body(step.plotId, c.name.toLowerCase(), c.growHours);
+      action = { label: m.plant.action, run: () => onPlant(step.plotId, step.crop) };
       break;
     }
     case 'find': {
       const c = CROPS[step.crop];
       const r = RECIPES[step.recipe];
       const n = dishIdsForSeed(step.crop).length;
+      const seed = c.seedName.toLowerCase();
+      const produce = c.produceName.toLowerCase();
       icon = <CropIcon crop={step.crop} size={22} />;
-      title = `${r.name} còn thiếu ${c.produceName.toLowerCase()}`;
+      title = m.find.title(r.name, produce);
       body =
         n < 2
-          ? `${c.name} không đến từ món ăn — nhận ${c.seedName.toLowerCase()} từ đơn của Cô Ba hoặc ở chợ.`
+          ? m.find.notFromDishes(c.name, seed)
           : seedSpent
-            ? `Bữa này đã nhận hạt rồi. Bữa sau, chốt một trong ${n} món cho ${c.seedName.toLowerCase()} để trồng tiếp.`
-            : `Chốt một trong ${n} món cho ${c.seedName.toLowerCase()} — bữa ăn gửi lại hạt, gieo là có ${c.produceName.toLowerCase()}.`;
+            ? m.find.seedSpent(n, seed)
+            : m.find.body(n, seed, produce);
       if (n >= 2) {
         action = {
-          label: `Quay các món cho ${c.seedName.toLowerCase()}`,
+          label: m.find.action(seed),
           run: () => onFind(step.crop),
         };
       }
@@ -117,14 +136,14 @@ export function NextStepCard({
     case 'wait': {
       const r = RECIPES[step.recipe];
       icon = <Hourglass size={22} aria-hidden="true" />;
-      title = `Cây đang lớn cho ${r.name}`;
-      body = `Ô sớm nhất chín sau ${formatDuration(step.readyAt - now)}. Tưới để nhanh hơn, hoặc cứ thong thả.`;
+      title = m.wait.title(r.name);
+      body = m.wait.body(formatDuration(step.readyAt - now));
       break;
     }
     case 'full':
       icon = <ArrowsClockwise size={22} aria-hidden="true" />;
-      title = 'Khu vườn đang nghỉ';
-      body = 'Chốt một món để nhận hạt mới cho khu vườn.';
+      title = m.full.title;
+      body = m.full.body;
       break;
   }
 
@@ -138,7 +157,7 @@ export function NextStepCard({
         {icon}
       </span>
       <div className="fj-next__copy">
-        <p className="fj-next__kicker">Tiếp theo</p>
+        <p className="fj-next__kicker">{m.kicker}</p>
         <h3 id="fj-next-title" className="fj-next__title">
           {title}
         </h3>

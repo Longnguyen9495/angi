@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import type { DishGroup, RecipeDef } from './types';
 
 /** How hard the fire burns during a stage — drives flame, bubbles and pot shake. */
@@ -23,33 +24,33 @@ export interface CookPlan {
 /** Every dish family is cooked in its own order of steps. */
 const STAGES: Record<DishGroup, CookStage[]> = {
   rice: [
-    { label: 'Vo gạo, cho vào nồi', heat: 'low', weight: 2 },
-    { label: 'Nướng than', heat: 'high', weight: 3 },
-    { label: 'Hấp cơm', heat: 'mid', weight: 3 },
-    { label: 'Bày đĩa', heat: 'low', weight: 1 },
+    { label: t.data.cooking.rice[0]!, heat: 'low', weight: 2 },
+    { label: t.data.cooking.rice[1]!, heat: 'high', weight: 3 },
+    { label: t.data.cooking.rice[2]!, heat: 'mid', weight: 3 },
+    { label: t.data.cooking.rice[3]!, heat: 'low', weight: 1 },
   ],
   'noodle-soup': [
-    { label: 'Cho nguyên liệu vào nồi', heat: 'low', weight: 2 },
-    { label: 'Ninh nước dùng', heat: 'high', weight: 5 },
-    { label: 'Nêm nếm', heat: 'mid', weight: 2 },
-    { label: 'Chần bún, chan nước', heat: 'low', weight: 2 },
+    { label: t.data.cooking.noodleSoup[0]!, heat: 'low', weight: 2 },
+    { label: t.data.cooking.noodleSoup[1]!, heat: 'high', weight: 5 },
+    { label: t.data.cooking.noodleSoup[2]!, heat: 'mid', weight: 2 },
+    { label: t.data.cooking.noodleSoup[3]!, heat: 'low', weight: 2 },
   ],
   'bread-roll': [
-    { label: 'Sơ chế rau', heat: 'low', weight: 2 },
-    { label: 'Luộc chín', heat: 'high', weight: 3 },
-    { label: 'Cuốn tay', heat: 'low', weight: 2 },
+    { label: t.data.cooking.breadRoll[0]!, heat: 'low', weight: 2 },
+    { label: t.data.cooking.breadRoll[1]!, heat: 'high', weight: 3 },
+    { label: t.data.cooking.breadRoll[2]!, heat: 'low', weight: 2 },
   ],
   'noodle-dry': [
-    { label: 'Cho nguyên liệu vào nồi', heat: 'low', weight: 2 },
-    { label: 'Xào lửa lớn', heat: 'high', weight: 3 },
-    { label: 'Trụng mì', heat: 'mid', weight: 2 },
-    { label: 'Trộn nước sốt', heat: 'low', weight: 1 },
+    { label: t.data.cooking.noodleDry[0]!, heat: 'low', weight: 2 },
+    { label: t.data.cooking.noodleDry[1]!, heat: 'high', weight: 3 },
+    { label: t.data.cooking.noodleDry[2]!, heat: 'mid', weight: 2 },
+    { label: t.data.cooking.noodleDry[3]!, heat: 'low', weight: 1 },
   ],
   pancake: [
-    { label: 'Pha bột', heat: 'low', weight: 2 },
-    { label: 'Đổ chảo', heat: 'mid', weight: 2 },
-    { label: 'Chiên giòn', heat: 'high', weight: 3 },
-    { label: 'Gấp bánh', heat: 'low', weight: 1 },
+    { label: t.data.cooking.pancake[0]!, heat: 'low', weight: 2 },
+    { label: t.data.cooking.pancake[1]!, heat: 'mid', weight: 2 },
+    { label: t.data.cooking.pancake[2]!, heat: 'high', weight: 3 },
+    { label: t.data.cooking.pancake[3]!, heat: 'low', weight: 1 },
   ],
 };
 

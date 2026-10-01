@@ -1,0 +1,94 @@
+
+> hanh-trinh-bep-viet@0.1.0 build
+> php server/bin/export-snapshot.php && tsc -b && vite build && node scripts/precompress.mjs
+
+Snapshot: 95 dishes → src/features/food-reel/data/catalogue.snapshot.json
+[36mvite v8.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+✓ 5140 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                      4.60 kB │ gzip:   1.39 kB
+dist/assets/be-vietnam-pro-vietnamese-400-normal-BuGn0gnm.woff       6.56 kB
+dist/assets/be-vietnam-pro-vietnamese-600-normal-DkpCIyan.woff       6.88 kB
+dist/assets/be-vietnam-pro-vietnamese-500-normal-CfdwVo8-.woff       6.88 kB
+dist/assets/be-vietnam-pro-vietnamese-700-normal-By_5yT39.woff       6.89 kB
+dist/assets/be-vietnam-pro-latin-ext-400-normal-DYBYyMQr.woff        8.90 kB
+dist/assets/be-vietnam-pro-latin-ext-700-normal-4Hjo2OtD.woff        9.18 kB
+dist/assets/be-vietnam-pro-latin-ext-500-normal-CK0UkkKf.woff        9.20 kB
+dist/assets/be-vietnam-pro-latin-ext-600-normal-BeUwKxhG.woff        9.22 kB
+dist/assets/be-vietnam-pro-vietnamese-400-normal-CRcqvyg1.woff2     11.53 kB
+dist/assets/fraunces-vietnamese-wght-normal-CnvboYUG.woff2          11.57 kB
+dist/assets/be-vietnam-pro-vietnamese-500-normal-DREgrEoJ.woff2     12.17 kB
+dist/assets/be-vietnam-pro-vietnamese-600-normal-nyU-ZL2p.woff2     12.17 kB
+dist/assets/be-vietnam-pro-vietnamese-700-normal-Csr0PCuG.woff2     12.46 kB
+dist/assets/be-vietnam-pro-latin-ext-400-normal-CiZNW1ec.woff2      13.05 kB
+dist/assets/be-vietnam-pro-latin-ext-500-normal-h0Fp6aX0.woff2      13.54 kB
+dist/assets/be-vietnam-pro-latin-ext-600-normal-BNd8euf0.woff2      13.60 kB
+dist/assets/be-vietnam-pro-latin-ext-700-normal-C8_gqRu2.woff2      13.85 kB
+dist/assets/be-vietnam-pro-latin-400-normal-bXgqVju9.woff           16.43 kB
+dist/assets/be-vietnam-pro-latin-700-normal-C2EtzaOi.woff           16.90 kB
+dist/assets/be-vietnam-pro-latin-500-normal-BJkVuMHw.woff           16.99 kB
+dist/assets/be-vietnam-pro-latin-600-normal-5IO4e7bK.woff           17.01 kB
+dist/assets/be-vietnam-pro-latin-400-normal-PpnXBOrz.woff2          21.16 kB
+dist/assets/be-vietnam-pro-latin-500-normal-B6LVzGNe.woff2          21.89 kB
+dist/assets/be-vietnam-pro-latin-600-normal-BZDkUTrt.woff2          22.03 kB
+dist/assets/be-vietnam-pro-latin-700-normal-DlW1Zbsh.woff2          22.15 kB
+dist/assets/fraunces-latin-ext-wght-normal-Ca2vKHc0.woff2           33.58 kB
+dist/assets/fraunces-latin-wght-normal-ukD16Tqj.woff2               36.62 kB
+dist/assets/FarmScene-zUTM7c_N.css                                   2.17 kB │ gzip:   0.91 kB
+dist/assets/FriendIsland-BCQ7GB92.css                                6.25 kB │ gzip:   2.00 kB
+dist/assets/index-HEHUPOYl.css                                     119.13 kB │ gzip:  24.15 kB
+dist/assets/vi-COTJgraM.js                                           0.05 kB │ gzip:   0.07 kB
+dist/assets/FarmScene-CmaDH95K.js                                    0.06 kB │ gzip:   0.08 kB
+dist/assets/FarmAnimationTest-CTu68wE8.js                            0.36 kB │ gzip:   0.27 kB
+dist/assets/rolldown-runtime-hePW80VL.js                             0.71 kB │ gzip:   0.42 kB
+dist/assets/sprites-DzmufnNY.js                                      0.90 kB │ gzip:   0.50 kB
+dist/assets/ProgressBar-BXsIvK_h.js                                  0.90 kB │ gzip:   0.42 kB
+dist/assets/quality-BOigmjFB.js                                      1.30 kB │ gzip:   0.72 kB
+dist/assets/progress-BmsKtrpK.js                                     1.45 kB │ gzip:   0.81 kB
+dist/assets/photoStore-C5sKyMKT.js                                   1.53 kB │ gzip:   0.75 kB
+dist/assets/ArrowLeft.es-BagHGoZE.js                                 1.62 kB │ gzip:   0.65 kB
+dist/assets/account-DIFwuMqG.js                                      1.64 kB │ gzip:   0.86 kB
+dist/assets/orderLinks-BLjOgzg7.js                                   1.71 kB │ gzip:   0.80 kB
+dist/assets/IconBase.es-C1DRsWIe.js                                  2.12 kB │ gzip:   0.93 kB
+dist/assets/ChosenEpilogue-D5ORScyg.js                               2.14 kB │ gzip:   0.95 kB
+dist/assets/CheckCircle.es-CDwyESrY.js                               2.17 kB │ gzip:   0.77 kB
+dist/assets/Compass.es-Cyf-tMt6.js                                   2.49 kB │ gzip:   0.90 kB
+dist/assets/Trash.es-hshO24uI.js                                     2.62 kB │ gzip:   0.83 kB
+dist/assets/CookingPot.es-71H-joh_.js                                3.09 kB │ gzip:   0.98 kB
+dist/assets/CloudArrowUp.es-CCDM1uYo.js                              3.11 kB │ gzip:   1.12 kB
+dist/assets/Camera.es-gAWMbVY0.js                                    3.14 kB │ gzip:   1.05 kB
+dist/assets/scheduler-C784v2VA.js                                    3.56 kB │ gzip:   1.57 kB
+dist/assets/persistence-BDy1CeAs.js                                  3.84 kB │ gzip:   1.59 kB
+dist/assets/react-dom-Sp7ww475.js                                    3.90 kB │ gzip:   1.42 kB
+dist/assets/Sheet-ZOucuyXn.js                                        4.06 kB │ gzip:   1.56 kB
+dist/assets/selectors-C2hIlG59.js                                    4.50 kB │ gzip:   1.83 kB
+dist/assets/WarningCircle.es-ql0x832k.js                             4.76 kB │ gzip:   1.50 kB
+dist/assets/dishes-CZr9V2uW.js                                       7.36 kB │ gzip:   1.45 kB
+dist/assets/OrderLinks-BHLbadGX.js                                   7.50 kB │ gzip:   2.40 kB
+dist/assets/SpeakerSlash.es-IzOBn4uj.js                              9.34 kB │ gzip:   2.37 kB
+dist/assets/i18n-CyKMY3Ay.js                                        11.33 kB │ gzip:   4.47 kB
+dist/assets/reducer-CSNDcAFB.js                                     11.77 kB │ gzip:   4.22 kB
+dist/assets/AccountSheet-D0GQRxc9.js                                12.35 kB │ gzip:   3.82 kB
+dist/assets/ProfileSheet-BKzj8iuF.js                                16.77 kB │ gzip:   4.69 kB
+dist/assets/FoodStory-CLe5q-52.js                                   27.70 kB │ gzip:   9.22 kB
+dist/assets/CheckInSheet-BOd2NfDg.js                                29.29 kB │ gzip:   7.38 kB
+dist/assets/nextStep-CV3h374v.js                                    41.42 kB │ gzip:  15.79 kB
+dist/assets/en-CkXKBukq.js                                          46.04 kB │ gzip:  17.07 kB
+dist/assets/SplitLines-DQAZtRgc.js                                  47.05 kB │ gzip:  16.79 kB
+dist/assets/FarmScene-ljZmjTLm.js                                   48.98 kB │ gzip:  17.94 kB
+dist/assets/vi-C44g5l4F.js                                          49.17 kB │ gzip:  17.25 kB
+dist/assets/RewardPanel-BRyNTmoE.js                                 54.65 kB │ gzip:  16.69 kB
+dist/assets/JourneyScene-POSQYtuT.js                               101.27 kB │ gzip:  28.79 kB
+dist/assets/reelCatalogue-IUV5qJ7u.js                              245.29 kB │ gzip:  41.39 kB
+dist/assets/index-735zHPKL.js                                      276.65 kB │ gzip:  86.47 kB
+dist/assets/FriendIsland-BLlwcete.js                             1,020.31 kB │ gzip: 277.37 kB
+
+[33m[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 2.34s[39m
+Precompressed 56 files (brotli saves 2178 KB).

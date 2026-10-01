@@ -1,5 +1,16 @@
 import { getDish } from '../data/dishes';
-import { ANIMALS, CROPS, DAILY_MISSIONS, DECOR, MARKET, RECIPES, WATERING, XP } from '../data/game';
+import {
+  ANIMALS,
+  CATCHES,
+  CROPS,
+  DAILY_MISSIONS,
+  DECOR,
+  FISHING,
+  MARKET,
+  RECIPES,
+  WATERING,
+  XP,
+} from '../data/game';
 import type { AnimalId, CropId, DecorId, MissionKind, ProduceId, RecipeId } from '../data/types';
 import {
   createInitialProgress,
@@ -14,7 +25,9 @@ import {
 import type { Filters } from './recommend';
 import {
   animalStage,
+  catchFor,
   cropAvailable,
+  fishingLeft,
   firstEmptyPlot,
   newPlotCount,
   newlyUnlockable,
@@ -33,6 +46,8 @@ export type Action =
   | { type: 'PLANT_FROM_TRAY'; crop: CropId; plotId: number; now: number }
   | { type: 'WATER'; plotId: number; now: number }
   | { type: 'HARVEST_ALL'; now: number }
+  /** A bite landed at the pond for the cast made at `castAt` (what bites follows from it). */
+  | { type: 'CATCH'; castAt: number; now: number }
   | { type: 'COOK'; recipeId: RecipeId; now: number }
   | { type: 'FULFILL_ORDER'; orderId: string; now: number }
   | { type: 'ATTACH_PHOTO'; slotKey: string; now: number }
@@ -123,6 +138,7 @@ function ensureDay(s: GuestProgress, now: number) {
   const today = dateKey(now);
   if (s.missions.date !== today) s.missions = { date: today, done: [] };
   if (s.water.date !== today) s.water = { date: today, used: 0, bonus: 0 };
+  if (s.fishing.date !== today) s.fishing = { date: today, used: 0 };
   if (s.orders.date !== today) s.orders = { date: today, done: [] };
 }
 
@@ -320,6 +336,20 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
           : p,
       );
       s.water = { ...s.water, used: s.water.used + 1 };
+      return s;
+    }
+
+    case 'CATCH': {
+      const age = action.now - action.castAt;
+      if (age < 0 || age > FISHING.maxCastMs || fishingLeft(state, action.now) <= 0) return state;
+      const kind = catchFor(action.castAt);
+      const s = structuredClone(state);
+      ensureDay(s, action.now);
+      const key = `catch:${action.castAt}`;
+      if (!post(s, key, `ingredient:${kind}`, 1, `Câu được ${CATCHES[kind].name}`, action.now))
+        return state;
+      post(s, `xp:${key}`, 'xp', XP.catch, 'Câu cá', action.now);
+      s.fishing = { ...s.fishing, used: s.fishing.used + 1 };
       return s;
     }
 

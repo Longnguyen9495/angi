@@ -1,0 +1,21 @@
+[page] [vite] connecting...
+[page] [vite] connected.
+[page] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+localhost-com-tam-1440 PASS
+[page] [vite] connecting...
+[page] [vite] connected.
+[page] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+localhost-pho-bo-1440 PASS
+[page] [vite] connecting...
+[page] [vite] connected.
+[page] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+localhost-com-tam-390 PASS
+[page] [vite] connecting...
+[page] [vite] connected.
+[page] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+localhost-pho-bo-390 PASS
+http-com-tam-1440 PASS
+http-pho-bo-1440 PASS
+http-com-tam-390 PASS
+http-pho-bo-390 PASS
+8 browser scenarios passed; no review/reverse provider requests. GPS mocked only in secure localhost; no security bypass.

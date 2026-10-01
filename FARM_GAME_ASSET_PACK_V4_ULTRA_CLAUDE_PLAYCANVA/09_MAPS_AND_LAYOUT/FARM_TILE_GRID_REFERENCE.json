@@ -1,0 +1,245 @@
+{
+  "note": "Approximate reference positions; use image geometry to refine in implementation.",
+  "tiles": [
+    {
+      "id": "tile_1_1",
+      "center_px": [
+        370,
+        455
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_1_2",
+      "center_px": [
+        462,
+        497
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_1_3",
+      "center_px": [
+        554,
+        539
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_1_4",
+      "center_px": [
+        646,
+        581
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_1_5",
+      "center_px": [
+        738,
+        623
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_1_6",
+      "center_px": [
+        830,
+        665
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_2_1",
+      "center_px": [
+        408,
+        500
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_2_2",
+      "center_px": [
+        500,
+        542
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_2_3",
+      "center_px": [
+        592,
+        584
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_2_4",
+      "center_px": [
+        684,
+        626
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_2_5",
+      "center_px": [
+        776,
+        668
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_2_6",
+      "center_px": [
+        868,
+        710
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_3_1",
+      "center_px": [
+        446,
+        545
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_3_2",
+      "center_px": [
+        538,
+        587
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_3_3",
+      "center_px": [
+        630,
+        629
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_3_4",
+      "center_px": [
+        722,
+        671
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_3_5",
+      "center_px": [
+        814,
+        713
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_3_6",
+      "center_px": [
+        906,
+        755
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_4_1",
+      "center_px": [
+        484,
+        590
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_4_2",
+      "center_px": [
+        576,
+        632
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_4_3",
+      "center_px": [
+        668,
+        674
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_4_4",
+      "center_px": [
+        760,
+        716
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_4_5",
+      "center_px": [
+        852,
+        758
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_4_6",
+      "center_px": [
+        944,
+        800
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_5_1",
+      "center_px": [
+        522,
+        635
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_5_2",
+      "center_px": [
+        614,
+        677
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_5_3",
+      "center_px": [
+        706,
+        719
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_5_4",
+      "center_px": [
+        798,
+        761
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_5_5",
+      "center_px": [
+        890,
+        803
+      ],
+      "state": "EMPTY"
+    },
+    {
+      "id": "tile_5_6",
+      "center_px": [
+        982,
+        845
+      ],
+      "state": "EMPTY"
+    }
+  ]
+}

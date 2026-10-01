@@ -2,6 +2,7 @@ import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { memo, useMemo, useRef, type ReactNode } from 'react';
 import { ConeGeometry, CylinderGeometry, SphereGeometry, type Group, type Mesh } from 'three';
 import { ANIMALS } from '../../../data/game';
+import { t } from '../../../i18n';
 import type { AnimalId } from '../../../data/types';
 import type { AnimalStage } from '../../../domain/selectors';
 import { BUILDINGS, type BuildingId } from '../layout';
@@ -17,6 +18,7 @@ import {
 import { Blobs } from './Instances';
 import { box, kitMaterial, prop } from './kit';
 import { C, labelTexture, mat } from './materials';
+import { Pond, type FishingPhase } from './Pond';
 import { isTap } from './tap';
 
 function Sign({ text, y, bg, fg }: { text: string; y: number; bg?: string; fg?: string }) {
@@ -322,9 +324,9 @@ function Pen({ stage }: { stage: AnimalStage }) {
 
 const ANIMAL_SIGN: Record<AnimalStage, string | null> = {
   locked: null,
-  hungry: 'Chờ cho ăn',
+  hungry: t.farm.garden3d.signs.hungry,
   busy: null,
-  ready: 'Thu hoạch!',
+  ready: t.farm.garden3d.signs.ready,
 };
 
 /** Contact shadows under each building. */
@@ -340,22 +342,26 @@ export const Buildings = memo(function Buildings({
   animals,
   watering,
   steam,
+  fishing = 'idle',
   onSelect,
 }: {
   selected: BuildingId | null;
   animals: Record<AnimalId, AnimalStage>;
   watering: boolean;
   steam: boolean;
+  /** Fishing state at the pond (rod, line and bobber show while fishing). */
+  fishing?: FishingPhase;
   onSelect: (id: BuildingId) => void;
 }) {
   const barn = useMemo(() => barnGeometry(), []);
   const animalSign = (id: AnimalId) => {
     const st = animals[id];
-    if (st === 'locked') return <Sign text={`Mở ở cấp ${ANIMALS[id].unlockLevel}`} y={1.7} />;
-    const t = ANIMAL_SIGN[st];
-    return t ? (
+    if (st === 'locked')
+      return <Sign text={t.farm.garden3d.signs.unlockAt(ANIMALS[id].unlockLevel)} y={1.7} />;
+    const sign = ANIMAL_SIGN[st];
+    return sign ? (
       <Sign
-        text={t}
+        text={sign}
         y={1.75}
         bg={st === 'ready' ? 'rgba(215,168,93,0.95)' : undefined}
         fg={st === 'ready' ? '#1d1a16' : undefined}
@@ -367,11 +373,11 @@ export const Buildings = memo(function Buildings({
       <Blobs items={FOOTPRINTS} />
       <Spot id="kitchen" selected={selected === 'kitchen'} onSelect={onSelect}>
         <Kitchen steam={steam} />
-        <Sign text="Bếp Cô Ba" y={2.55} />
+        <Sign text={t.farm.garden3d.signs.kitchen} y={2.55} />
       </Spot>
       <Spot id="barn" selected={selected === 'barn'} onSelect={onSelect}>
         <mesh geometry={barn} material={kitMaterial()} castShadow receiveShadow />
-        <Sign text="Kho" y={2.75} />
+        <Sign text={t.farm.garden3d.signs.barn} y={2.75} />
       </Spot>
       <Spot id="well" selected={selected === 'well'} onSelect={onSelect}>
         <Well active={watering} still={!steam} />
@@ -383,6 +389,12 @@ export const Buildings = memo(function Buildings({
       <Spot id="cow" selected={selected === 'cow'} onSelect={onSelect}>
         <Pen stage={animals.cow} />
         {animalSign('cow')}
+      </Spot>
+      <Spot id="pond" selected={selected === 'pond'} onSelect={onSelect}>
+        <Pond phase={fishing} reduced={!steam} />
+        {fishing === 'bite' && (
+          <Sign text={t.farm.garden3d.signs.bite} y={1.2} bg="rgba(215,168,93,0.95)" fg="#1d1a16" />
+        )}
       </Spot>
     </group>
   );

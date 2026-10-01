@@ -1,0 +1,83 @@
+{
+  "asset_types": {
+    "building": {
+      "fields": [
+        "id",
+        "name",
+        "position",
+        "scale",
+        "zIndex",
+        "interactive",
+        "animation"
+      ]
+    },
+    "nature": {
+      "fields": [
+        "id",
+        "name",
+        "position",
+        "scale",
+        "zIndex",
+        "idleAnimation"
+      ]
+    },
+    "crop": {
+      "fields": [
+        "id",
+        "cropType",
+        "tileId",
+        "growthStage",
+        "plantedAt",
+        "readyAt"
+      ]
+    },
+    "animal": {
+      "fields": [
+        "id",
+        "type",
+        "position",
+        "zone",
+        "state",
+        "animation"
+      ]
+    },
+    "water": {
+      "fields": [
+        "id",
+        "position",
+        "fish",
+        "ripples",
+        "zIndex"
+      ]
+    },
+    "prop": {
+      "fields": [
+        "id",
+        "name",
+        "position",
+        "zIndex",
+        "interactive"
+      ]
+    }
+  },
+  "recommended_z_order": [
+    "sky",
+    "clouds",
+    "distant_trees",
+    "island_back",
+    "buildings_back",
+    "vegetation_back",
+    "buildings_front",
+    "animals",
+    "props",
+    "farm_tiles",
+    "crops",
+    "player",
+    "fences_front",
+    "dock",
+    "water_surface",
+    "fish",
+    "particles",
+    "ui"
+  ]
+}

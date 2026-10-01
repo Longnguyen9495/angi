@@ -1,6 +1,7 @@
 import type { Ref } from 'react';
 import type { CropId } from '../../data/types';
 import { CropVisual, SeedToken } from '../ui/CropVisual';
+import { t } from '../../i18n';
 import { stepAtLeast, type PlantStep } from './plantSteps';
 
 interface PlantingStageProps {
@@ -22,6 +23,7 @@ export function PlantingStage({
 }: PlantingStageProps) {
   const sprouted = stepAtLeast(step, 'sprout');
   const falling = step === 'drop' || step === 'impact';
+  const m = t.account.planting;
   return (
     <figure className={`plant-stage ${highlighted ? 'is-target' : ''}`} data-step={step}>
       <div className="plant-stage__plot">
@@ -33,8 +35,8 @@ export function PlantingStage({
         <span className="plant-stage__particles" ref={particlesRef} aria-hidden="true" />
       </div>
       <figcaption className="plant-stage__caption">
-        {plotNumber !== null ? `Ô đất ${plotNumber}` : 'Ô đất'} ·{' '}
-        {sprouted ? `${cropName} · Mầm non` : 'Đang chờ gieo'}
+        {plotNumber !== null ? m.plotN(plotNumber) : m.plot} ·{' '}
+        {sprouted ? m.sprouted(cropName) : m.waiting}
       </figcaption>
     </figure>
   );

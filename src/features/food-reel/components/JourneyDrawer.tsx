@@ -1,5 +1,6 @@
 import { ArrowLeft } from '@phosphor-icons/react';
 import { Suspense, lazy, useEffect, useRef } from 'react';
+import { t } from '../../../i18n';
 import type { ReelDish } from '../foodReel.types';
 
 // The journey loads on demand; the reel is what people came for.
@@ -35,20 +36,25 @@ export function JourneyDrawer({ open, onClose, onOpenDish }: JourneyDrawerProps)
 
   if (!open) return null;
   return (
-    <div className="fr fr-journey" role="dialog" aria-modal="true" aria-label="Hành trình của bạn">
+    <div
+      className="fr fr-journey"
+      role="dialog"
+      aria-modal="true"
+      aria-label={t.reel.journey.dialog}
+    >
       <div className="fr-grain" aria-hidden="true" />
       <div className="fr-journey__scroll" ref={panelRef} tabIndex={-1}>
         <div className="fr-journey__bar">
           <button type="button" className="fr-ghost" onClick={onClose}>
             <ArrowLeft aria-hidden="true" size={16} />
-            Về reel
+            {t.reel.journey.back}
           </button>
-          <span className="fr-journey__title">Hành trình</span>
+          <span className="fr-journey__title">{t.reel.journey.title}</span>
         </div>
         <Suspense
           fallback={
             <p className="fr-journey__loading" aria-busy="true">
-              Đang mở Hành trình…
+              {t.reel.journey.loading}
             </p>
           }
         >

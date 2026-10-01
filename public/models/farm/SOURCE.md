@@ -38,6 +38,10 @@ Local motion changes cancel in-flight pop on reduced motion and pool separate pa
 
 Queue request 12 selects the existing game Camera by ID only, without changing its transform. No response-12 was present during repeated checks; request 8 also has no recorded response. The existing MCP session was not restarted, and dependent screenshot/upload/scene mutation/export requests were not dispatched without confirmation. No BEFORE/AFTER images or fresh scene export were produced by this continuation.
 
+## Fix (2026-10-01): path-stone winding
+
+Path stones rendered black in the Editor game camera: their top and side triangles were wound clockwise, so the stored normals pointed down/inwards and the sun never lit them. The generator now winds them counter-clockwise; only `path-stones.glb` (and its optimised copy) changed, same 168 triangles and byte size. A normal audit of all 44 GLBs found winding consistent with normals everywhere; blade crops face up/inwards as expected for outward-leaning leaves. The Editor source of `path-stones.glb` (asset 309298361) was replaced and re-captured through the game camera.
+
 ## Acceptance status / known limitations
 
 Local geometry delivery, **not art sign-off**. Custom silhouette geometry is authored (curved overlapping tile courses, individual boards, braced hinged door, branches, folded leaves, crop blades, pods, fruit and flowers); low-poly helper cross sections are used as modelling tools, not exported bare primitive placeholders.

@@ -66,7 +66,7 @@ final class Mailer
     {
         return [
             self::cfg('MAIL_FROM', 'MAIL_FROM_ADDRESS') ?: 'no-reply@angi.local',
-            self::cfg('MAIL_FROM_NAME') ?: 'Bếp Việt',
+            self::cfg('MAIL_FROM_NAME') ?: 'Ăn gì?',
         ];
     }
 

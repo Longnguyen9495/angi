@@ -154,6 +154,27 @@
   background: rgb(246 239 226 / 96%);
 }
 
+/* Opaque while loading: the corner is assembled and warmed behind it. */
+.fpc__veil--loading {
+  background: linear-gradient(180deg, #d6e4ec 0%, #efe6d6 100%);
+}
+
+.fpc__load {
+  width: min(180px, 60%);
+  height: 6px;
+  border-radius: 999px;
+  background: var(--fpc-cream-2);
+  overflow: hidden;
+}
+
+.fpc__load span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--fpc-leaf);
+  transition: width 240ms ease-out;
+}
+
 .fpc__veil-title {
   margin: 0;
   font: 600 1rem/1.35 var(--fr-body);

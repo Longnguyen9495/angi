@@ -458,12 +458,13 @@ for (const [i, [x, z, r]] of stones.entries()) {
     ];
   });
   for (let j = 0; j < 7; j++) {
-    path.tri([x, 0.115, z], ring[j], ring[(j + 1) % 7], 2);
+    // Counter-clockwise seen from outside, so normals face up / outwards.
+    path.tri([x, 0.115, z], ring[(j + 1) % 7], ring[j], 2);
     path.quad(
       ring[j],
-      [ring[j][0], 0, ring[j][2]],
-      [ring[(j + 1) % 7][0], 0, ring[(j + 1) % 7][2]],
       ring[(j + 1) % 7],
+      [ring[(j + 1) % 7][0], 0, ring[(j + 1) % 7][2]],
+      [ring[j][0], 0, ring[j][2]],
       2,
     );
   }

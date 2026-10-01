@@ -65,7 +65,8 @@ describe('planting the meal seed', () => {
   });
 
   it('raises recipe and region progress', () => {
-    const s1 = chosen('com-tam');
+    // A southern dish from the live catalogue that cooks the com-tam recipe.
+    const s1 = chosen('com-tam-suon-bi-cha-trung');
     const before = recipeProgress(s1, 'com-tam').secured;
     const s2 = gameReducer(s1, { type: 'PLANT_MEAL_SEED', now: NOON + 5000 });
     expect(recipeProgress(s2, 'com-tam').secured).toBe(before + 1);

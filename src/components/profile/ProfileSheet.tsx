@@ -4,24 +4,24 @@ import { getDish } from '../../data/dishes';
 import type { MotionPref } from '../../domain/progress';
 import { exportProgress } from '../../domain/persistence';
 import { level, stampCount } from '../../domain/selectors';
+import { t } from '../../i18n';
 import { clearPhotos } from '../../services/photoStore';
 import { useAccount, useFeedback, useGame } from '../../state/hooks';
 import { AccountBlock } from '../account/AccountBlock';
+import { LanguageSwitcher } from '../ui/LanguageSwitcher';
 import { ProgressBar } from '../ui/ProgressBar';
 import { Sheet } from '../ui/Sheet';
 import { currentTime } from '../../domain/time';
 
+const p = t.account.profile;
+
 const MOTION_OPTIONS: { id: MotionPref; label: string; hint: string }[] = [
-  {
-    id: 'system',
-    label: 'Theo thiết bị',
-    hint: 'Dùng cài đặt “giảm chuyển động” của hệ điều hành',
-  },
-  { id: 'reduce', label: 'Giảm chuyển động', hint: 'Không bay, không nảy, không hạt đất' },
-  { id: 'full', label: 'Đầy đủ', hint: 'Hiệu ứng ngắn, luôn bỏ qua được' },
+  { id: 'system', label: p.motion.system.label, hint: p.motion.system.hint },
+  { id: 'reduce', label: p.motion.reduce.label, hint: p.motion.reduce.hint },
+  { id: 'full', label: p.motion.full.label, hint: p.motion.full.hint },
 ];
 
-const OUTCOME_TEXT = { ate: 'Đã ăn', swapped: 'Đổi món', skipped: 'Bỏ bữa' } as const;
+const OUTCOME_TEXT = p.outcomes;
 
 export function ProfileSheet({
   open,
@@ -43,7 +43,7 @@ export function ProfileSheet({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'hanh-trinh-bep-viet.json';
+    a.download = 'an-gi-nong-trai.json';
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
@@ -56,38 +56,40 @@ export function ProfileSheet({
         setConfirmReset(false);
         onClose();
       }}
-      title="Hồ sơ khách"
-      description={
-        signedIn
-          ? 'Tiến trình được lưu trên máy này và trong tài khoản của bạn.'
-          : 'Tiến trình được lưu trên thiết bị này. Chưa cần tài khoản.'
-      }
+      title={p.title}
+      description={signedIn ? p.descriptionSignedIn : p.descriptionGuest}
     >
       <div className="profile">
         <section className="profile__block" aria-labelledby="pf-level">
           <h3 id="pf-level" className="profile__heading">
-            Cấp {lv.level}
+            {p.level(lv.level)}
           </h3>
           <ProgressBar
-            label="Kinh nghiệm"
+            label={p.xpLabel}
             value={lv.into}
             max={lv.span}
             valueText={`${lv.into}/${lv.span} XP`}
             size="sm"
           />
           <p className="profile__stats">
-            Chuỗi mềm <strong>{state.streak.count} ngày</strong> · {state.streak.restPasses} vé nghỉ
-            tuần này · {stampCount(state)} dấu hành trình
+            {p.stats.streakBefore}
+            <strong>{p.stats.streakDays(state.streak.count)}</strong>
+            {p.stats.after(state.streak.restPasses, stampCount(state))}
           </p>
-          <p className="empty-note">
-            Bỏ một ngày chỉ lùi một mốc (3 · 5 · 7 ngày), không bao giờ về 0.
-          </p>
+          <p className="empty-note">{p.streakNote}</p>
         </section>
 
         <AccountBlock />
 
+        <section className="profile__block" aria-labelledby="pf-language">
+          <h3 id="pf-language" className="profile__heading">
+            {p.language}
+          </h3>
+          <LanguageSwitcher variant="full" className="profile__lang" />
+        </section>
+
         <fieldset className="profile__block option-group">
-          <legend className="profile__heading">Chuyển động</legend>
+          <legend className="profile__heading">{p.motionHeading}</legend>
           {MOTION_OPTIONS.map((m) => (
             <label key={m.id} className="option-card option-card--compact">
               <input
@@ -104,17 +106,15 @@ export function ProfileSheet({
               </span>
             </label>
           ))}
-          <p className="empty-note">
-            Đang áp dụng: {reduced ? 'giảm chuyển động' : 'chuyển động đầy đủ'}.
-          </p>
+          <p className="empty-note">{p.motionApplied(reduced)}</p>
         </fieldset>
 
         <section className="profile__block" aria-labelledby="pf-history">
           <h3 id="pf-history" className="profile__heading">
-            Lịch sử bữa ăn
+            {p.history}
           </h3>
           {state.history.length === 0 ? (
-            <p className="empty-note">Chưa có check-in nào.</p>
+            <p className="empty-note">{p.historyEmpty}</p>
           ) : (
             <ul className="history-list">
               {state.history.slice(0, 5).map((h) => (
@@ -132,10 +132,10 @@ export function ProfileSheet({
 
         <section className="profile__block" aria-labelledby="pf-hidden">
           <h3 id="pf-hidden" className="profile__heading">
-            Món đã ẩn
+            {p.hidden}
           </h3>
           {state.hiddenDishIds.length === 0 ? (
-            <p className="empty-note">Không có món nào bị ẩn.</p>
+            <p className="empty-note">{p.hiddenEmpty}</p>
           ) : (
             <ul className="history-list">
               {state.hiddenDishIds.map((id) => (
@@ -147,7 +147,7 @@ export function ProfileSheet({
                     onClick={() => dispatch({ type: 'UNHIDE_DISH', dishId: id })}
                   >
                     <Eye aria-hidden="true" size={16} />
-                    Hiện lại
+                    {p.unhide}
                   </button>
                 </li>
               ))}
@@ -157,7 +157,7 @@ export function ProfileSheet({
 
         <section className="profile__block" aria-labelledby="pf-demo">
           <h3 id="pf-demo" className="profile__heading">
-            Chế độ demo
+            {p.demo}
           </h3>
           <label className="switch">
             <input
@@ -170,25 +170,23 @@ export function ProfileSheet({
             <span className="switch__track" aria-hidden="true">
               <span className="switch__thumb" />
             </span>
-            <span className="switch__label">Giả lập lỗi mạng (tìm món và gieo hạt)</span>
+            <span className="switch__label">{p.simulateFailure}</span>
           </label>
         </section>
 
         <section className="profile__block" aria-labelledby="pf-data">
           <h3 id="pf-data" className="profile__heading">
-            Dữ liệu của bạn
+            {p.data}
           </h3>
           <div className="profile__actions">
             <button type="button" className="btn btn--ghost btn--sm" onClick={download}>
               <DownloadSimple aria-hidden="true" size={18} />
-              Tải bản sao (.json)
+              {p.download}
             </button>
             {confirmReset ? (
-              <span className="profile__confirm" role="group" aria-label="Xác nhận xóa tiến trình">
+              <span className="profile__confirm" role="group" aria-label={p.confirmResetLabel}>
                 <span className="profile__confirm-note">
-                  {signedIn
-                    ? 'Xoá tiến trình, ảnh trên máy này và bản lưu trong tài khoản?'
-                    : 'Xoá tiến trình và ảnh trên máy này?'}
+                  {signedIn ? p.confirmResetSignedIn : p.confirmResetGuest}
                 </span>
                 <button
                   type="button"
@@ -197,17 +195,17 @@ export function ProfileSheet({
                     dispatch({ type: 'RESET', now: currentTime() });
                     void clearPhotos().catch(() => undefined);
                     setConfirmReset(false);
-                    toast({ message: 'Đã bắt đầu hành trình mới.', tone: 'info' });
+                    toast({ message: p.resetDone, tone: 'info' });
                   }}
                 >
-                  Xóa thật
+                  {p.resetConfirm}
                 </button>
                 <button
                   type="button"
                   className="btn btn--ghost btn--sm"
                   onClick={() => setConfirmReset(false)}
                 >
-                  Giữ lại
+                  {p.keep}
                 </button>
               </span>
             ) : (
@@ -217,7 +215,7 @@ export function ProfileSheet({
                 onClick={() => setConfirmReset(true)}
               >
                 <Trash aria-hidden="true" size={18} />
-                Xóa tiến trình
+                {p.reset}
               </button>
             )}
           </div>

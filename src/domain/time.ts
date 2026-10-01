@@ -1,3 +1,5 @@
+import { t } from '../i18n';
+
 export type MealSlot = 'breakfast' | 'lunch' | 'dinner';
 
 const HOUR = 60 * 60 * 1000;
@@ -27,9 +29,9 @@ export function slotKey(now: number): string {
 }
 
 export const SLOT_LABEL: Record<MealSlot, string> = {
-  breakfast: 'bữa sáng',
-  lunch: 'bữa trưa',
-  dinner: 'bữa tối',
+  breakfast: t.domain.slot.breakfast,
+  lunch: t.domain.slot.lunch,
+  dinner: t.domain.slot.dinner,
 };
 
 /** Whole days between two date keys (b - a). */
@@ -50,8 +52,8 @@ export function formatDuration(ms: number): string {
   const totalMin = Math.max(1, Math.ceil(ms / 60000));
   const h = Math.floor(totalMin / 60);
   const m = totalMin % 60;
-  if (h === 0) return `${m} phút`;
-  return m === 0 ? `${h} giờ` : `${h} giờ ${m} phút`;
+  if (h === 0) return t.domain.duration.minutes(m);
+  return m === 0 ? t.domain.duration.hours(h) : t.domain.duration.hoursMinutes(h, m);
 }
 
 /** Wall-clock read used by event handlers (kept out of render on purpose). */

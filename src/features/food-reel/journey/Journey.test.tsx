@@ -60,8 +60,8 @@ async function chooseDish(user: ReturnType<typeof userEvent.setup>, slug = 'com-
 }
 
 async function openJourney(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getByRole('button', { name: /^hành trình/i }));
-  const layer = await screen.findByRole('dialog', { name: /hành trình của bạn/i });
+  await user.click(screen.getByRole('button', { name: /^nông trại/i }));
+  const layer = await screen.findByRole('dialog', { name: /nông trại của bạn/i });
   await within(layer).findByRole('heading', { name: 'Khu vườn' }, { timeout: 3000 });
   return layer;
 }
@@ -70,11 +70,11 @@ describe('Journey layer', () => {
   it('is always reachable from the reel header and shows the accumulated numbers', async () => {
     const user = userEvent.setup();
     renderApp();
-    const entry = await screen.findByRole('button', { name: /^hành trình/i }, { timeout: 2000 });
+    const entry = await screen.findByRole('button', { name: /^nông trại/i }, { timeout: 2000 });
     expect(entry).toHaveTextContent(/cấp 1 · 2 ngày/i);
     const layer = await openJourney(user);
     expect(window.location.pathname).toBe('/journey');
-    for (const label of ['Cấp độ', 'Chuỗi ngày', 'Dấu hành trình', 'Món đã khám phá']) {
+    for (const label of ['Cấp độ', 'Chuỗi ngày', 'Con dấu', 'Món đã khám phá']) {
       expect(within(layer).getByText(label)).toBeInTheDocument();
     }
     expect(within(layer).getByText(`/${reelCount()}`)).toBeInTheDocument();
@@ -191,7 +191,7 @@ describe('seed reward loop', () => {
     renderApp();
     const layer = await screen.findByRole(
       'dialog',
-      { name: /hành trình của bạn/i },
+      { name: /nông trại của bạn/i },
       { timeout: 2000 },
     );
     await within(layer).findByRole('heading', { name: 'Khu vườn' }, { timeout: 3000 });
@@ -319,7 +319,7 @@ describe('the kitchen', () => {
     await waitFor(() =>
       expect(screen.queryByRole('dialog', { name: 'Cơm tấm sườn' })).not.toBeInTheDocument(),
     );
-    expect(within(layer).getByRole('heading', { name: 'Sổ bếp · 1/13 trang' })).toBeInTheDocument();
+    expect(within(layer).getByRole('heading', { name: 'Sổ bếp · 1/14 trang' })).toBeInTheDocument();
     expect(document.querySelector('.fj-page.is-cooked .fj-page__name')).toHaveTextContent(
       'Cơm tấm sườn',
     );

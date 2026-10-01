@@ -1,0 +1,282 @@
+import type { Messages } from '../../types';
+
+// English strings for the "account" namespace. Must mirror vi/account.ts key for key.
+const account: Messages['account'] = {
+  app: {
+    skipLink: 'Skip to the food reel',
+  },
+  api: {
+    offline: 'No connection.',
+    unreachable: "Couldn't reach the server. Check your connection and try again.",
+    generic: 'Something went wrong — please try again.',
+  },
+  mock: {
+    unreachable: "Couldn't reach the server (simulated).",
+    plantFailed: "Couldn't plant — the server didn't respond (simulated).",
+  },
+  photo: {
+    unsupported: "This browser can't save photos.",
+    openFailed: "Couldn't open the photo store.",
+    storeError: 'Photo store error.',
+    notImage: "This file isn't a photo.",
+    processFailed: "Couldn't process the photo in this browser.",
+    compressFailed: "Couldn't compress the photo.",
+  },
+  friendEvents: {
+    watered: (from: string, plot: number | null) => `${from} watered plot ${plot} for you`,
+    gift: (seed: string) => `Cô Ba sent you 1 ${seed}`,
+    more: (n: number) => ` and ${n} more ${n === 1 ? 'update' : 'updates'}`,
+  },
+  toasts: {
+    signedIn: 'Signed in — your farm is being saved.',
+    linkExpired: 'That sign-in link has expired. Send a new code from your Profile.',
+  },
+  block: {
+    heading: 'Account',
+    guestNote:
+      'Your progress lives only on this device. Save it with an email so you keep it when you switch phones — no password, name or phone number needed.',
+    saveWithEmail: 'Save my farm with email',
+    downloadFailed: "Couldn't download your data — please try again.",
+    marketingFailed: "Couldn't save your choice.",
+    marketing: 'Get offers by email',
+    serverNote:
+      'The server keeps only your email and game progress. Check-in photos are never uploaded.',
+    download: 'Download my server data',
+    loggedOut: 'Signed out. Your progress is still on this device.',
+    logout: 'Sign out',
+    confirmDeleteLabel: 'Confirm account deletion',
+    deleted: 'Your account and all its server data have been deleted.',
+    deleteFailed: "Couldn't delete — please try again.",
+    deleteForever: 'Delete forever',
+    keep: 'Keep it',
+    delete: 'Delete account',
+    sync: {
+      saving: 'Saving…',
+      offline: "Can't connect — will retry on your next change.",
+      syncedAt: (time: string) => `Synced at ${time}`,
+      connected: 'Connected',
+    },
+  },
+  sheet: {
+    title: 'Save my farm',
+    conflictTitle: 'Choose which farm to keep',
+    description: 'No password — just an email to get a code.',
+    conflictDescription: 'This device and your account have two different farms.',
+    consentRequired: 'Please agree to how we store your data to continue.',
+    codeSentAnnounce: (email: string) => `Code sent to ${email}.`,
+    sendFailed: "Couldn't send the code — please try again.",
+    signedInAnnounce: 'Signed in. Your farm is being saved.',
+    verifyFailed: "Couldn't check the code — please try again.",
+    saved: (email: string | null) => `Your farm is saved${email ? ` with ${email}` : ''}.`,
+    savedNote:
+      'Sign in with the same email on another device to keep playing. Check-in photos stay on this device only.',
+    done: 'Done',
+    codeSent: { before: 'We sent a 6-digit code to ', after: '. It expires in 10 minutes.' },
+    devCode: 'Test environment — the code is ',
+    codeLabel: 'Sign-in code',
+    confirm: 'Confirm',
+    resendIn: (s: number) => `Resend in ${s}s`,
+    resend: 'Resend code',
+    changeEmail: 'Change email',
+    perks: {
+      keep: 'Keep your level, seeds and cookbook even if you clear your browser or switch devices.',
+      otherPhone: 'Keep playing on another phone with the same email.',
+    },
+    emailLabel: 'Email',
+    emailPlaceholder: 'you@example.com',
+    emailNote:
+      'Used only to send your sign-in code and save your farm. No name or phone number needed.',
+    consent: {
+      before: (brand: string) =>
+        `I agree that ${brand} may store my email and game progress to sync between devices (`,
+      link: 'how we handle data',
+      after: '). Required.',
+    },
+    marketing: 'Send me offers by email (optional, turn off any time).',
+    sendCode: 'Send code',
+    later: 'Later',
+  },
+  conflict: {
+    keptLocal: "Saved this device's farm to your account.",
+    keptRemote: 'Switched to the farm saved in your account.',
+    summary: (level: number, stamps: number, cooked: number, meals: number) =>
+      `Level ${level} · ${stamps} ${stamps === 1 ? 'stamp' : 'stamps'} · ${cooked} ${cooked === 1 ? 'dish' : 'dishes'} cooked · ${meals} ${meals === 1 ? 'meal' : 'meals'} checked in`,
+    lastMeal: (name: string) => `Latest meal: ${name}`,
+    local: 'On this device',
+    remote: 'Saved in your account',
+    note: "The one you don't choose will be replaced. Check-in photos on this device stay as they are.",
+    keepLocal: "Keep this device's farm",
+    useRemote: 'Use the saved farm',
+  },
+  checkin: {
+    title: 'After-meal check-in',
+    description: (dish: string) => `Your pick: ${dish}. A photo is optional — no review to write.`,
+    outcomes: {
+      ate: { label: 'I ate this dish', hint: 'Earn the “eaten” stamp for this dish' },
+      ateDish: (dish: string) => `I ate ${dish}`,
+      swapped: {
+        label: 'I had something else',
+        hint: 'Still counts as a check-in; your crops keep growing',
+      },
+      skipped: { label: 'I skipped the meal', hint: 'No problem — you lose nothing' },
+    },
+    ratings: ['Not for me', 'So-so', 'Okay', 'Tasty', 'Delicious'],
+    again: {
+      yes: 'Yes, suggest it again',
+      maybe: 'Now and then',
+      no: 'No, hide this dish',
+    },
+    summary: {
+      xp: (xp: number) => `+${xp} XP (daily quests included)`,
+      ready: (crop: string, plot: number) =>
+        `Your ${crop} in plot ${plot} is grown — ready to harvest`,
+      stamp: (dish: string) => `+1 stamp: ate ${dish}`,
+      region: (region: string) => `New region unlocked: ${region}!`,
+      recipe: (recipe: string, secured: number, total: number) =>
+        `${recipe}: ${secured}/${total} ingredients`,
+      hidden: (dish: string) => `${dish} is hidden from suggestions (turn it back on in Profile)`,
+    },
+    doneAnnounce: (lines: string) => `Check-in done. ${lines}.`,
+    noMeal:
+      "You haven't picked a dish yet. Choose one first, then come back to check in after your meal.",
+    skippedLead: 'Skipped meal noted. Your crops keep growing over time — you lose nothing.',
+    thanksLead: "Thank you! Here's what you got:",
+    alreadyCheckedIn:
+      "You've already checked in for this meal. Each meal earns check-in rewards once.",
+    step: (step: number, total: number) => `Step ${step}/${total}`,
+    outcomeQuestion: 'How was your meal?',
+    ratingQuestion: 'How much did you enjoy it?',
+    againQuestion: 'Want to see this dish again?',
+    back: 'Back',
+    finish: 'Finish',
+    next: 'Next',
+    viewGarden: 'See my garden',
+    close: 'Close',
+  },
+  photoCapture: {
+    savedAnnounce: (xp: number | null) =>
+      `Photo saved to your album${xp === null ? '' : `, +${xp} XP`}.`,
+    saveFailed: "Couldn't save the photo — please try again.",
+    previewAlt: 'Photo of the meal you just had',
+    saved: 'Saved to your meal album',
+    saving: 'Saving photo…',
+    replace: 'Replace the meal photo',
+    take: 'Snap your meal',
+    optionalXp: (xp: number) => ` · optional, +${xp} XP`,
+    privacy: 'Photos stay on this device with location data removed. Never uploaded.',
+  },
+  profile: {
+    title: 'Guest profile',
+    descriptionSignedIn: 'Your progress is saved on this device and in your account.',
+    descriptionGuest: 'Your progress is saved on this device. No account needed.',
+    level: (n: number) => `Level ${n}`,
+    xpLabel: 'Experience',
+    stats: {
+      streakBefore: 'Gentle streak ',
+      streakDays: (n: number) => `${n} ${n === 1 ? 'day' : 'days'}`,
+      after: (restPasses: number, stamps: number) =>
+        ` · ${restPasses} ${restPasses === 1 ? 'rest pass' : 'rest passes'} this week · ${stamps} ${stamps === 1 ? 'stamp' : 'stamps'}`,
+    },
+    streakNote: 'Missing a day only steps you back one milestone (3 · 5 · 7 days) — never to 0.',
+    language: 'Language / Ngôn ngữ',
+    motionHeading: 'Motion',
+    motion: {
+      system: {
+        label: 'Match my device',
+        hint: 'Use your system’s “reduce motion” setting',
+      },
+      reduce: { label: 'Reduced motion', hint: 'No flying, no bouncing, no soil crumbs' },
+      full: { label: 'Full', hint: 'Short effects, always skippable' },
+    },
+    motionApplied: (reduced: boolean) =>
+      `Now using: ${reduced ? 'reduced motion' : 'full motion'}.`,
+    outcomes: { ate: 'Ate it', swapped: 'Swapped', skipped: 'Skipped' },
+    history: 'Meal history',
+    historyEmpty: 'No check-ins yet.',
+    hidden: 'Hidden dishes',
+    hiddenEmpty: 'No hidden dishes.',
+    unhide: 'Show again',
+    demo: 'Demo mode',
+    simulateFailure: 'Simulate network errors (dish search and planting)',
+    data: 'Your data',
+    download: 'Download a copy (.json)',
+    confirmResetLabel: 'Confirm progress reset',
+    confirmResetSignedIn:
+      'Delete your progress, the photos on this device and the copy in your account?',
+    confirmResetGuest: 'Delete your progress and the photos on this device?',
+    resetDone: 'A brand-new farm has started.',
+    resetConfirm: 'Yes, delete',
+    keep: 'Keep it',
+    reset: 'Reset progress',
+  },
+  reward: {
+    worldCuisine: 'World cuisine',
+    plantFailedAnnounce: "Couldn't plant. The seed is still in your tray — you can try again.",
+    plantedAnnounce: (seed: string, plot: number, recipe: string, secured: number, total: number) =>
+      `Planted ${seed} in plot ${plot}. ${recipe}: ${secured}/${total} ingredients.`,
+    teaser: {
+      checkedIn: 'This meal is checked in.',
+      plotReady: (plot: number | null) => `The crop in plot ${plot} is ready to harvest.`,
+      visitGarden: 'Pop by your garden.',
+      sprouted: (crop: string) => `Your ${crop} has sprouted!`,
+      unlockRegion: (region: string) =>
+        `Check in after your meal to grow it right away and earn the stamp that unlocks ${region}.`,
+      contribute: (produce: string, recipe: string) =>
+        `Check in after your meal to grow it right away and add ${produce} to ${recipe}.`,
+    },
+    planted: (seed: string) => `Planted: ${seed}`,
+    received: (seed: string) => `You got: ${seed}`,
+    kicker: "This meal's reward",
+    tray: (crop: string) => `Seed tray · ${crop}: `,
+    plantFailed: "Couldn't plant — the seed is still in your tray. Please try again.",
+    planting: 'Planting…',
+    retry: 'Try planting again',
+    plantNow: 'Plant now',
+    full: {
+      title: 'All plots are full.',
+      body: ' Your seed is safe in the tray — harvest to make room.',
+    },
+    harvested: (n: number) => `Harvested ${n} ${n === 1 ? 'plot' : 'plots'}.`,
+    harvestReady: (n: number) => `Harvest ${n} ready ${n === 1 ? 'plot' : 'plots'}`,
+    viewGarden: 'See my garden',
+    hint: 'One tap, a few seconds. You can skip it — the seed stays in your tray.',
+    recipeLabel: (recipe: string) => `Recipe: ${recipe}`,
+    ingredients: (secured: number, total: number) => `${secured}/${total} ingredients`,
+    exploreLabel: (region: string) => `Explore ${region}`,
+    dishes: (found: number, total: number) => `${found}/${total} dishes`,
+    skip: 'Skip animation',
+    checkinRewards: {
+      label: 'Checking in after your meal earns',
+      grow: (plot: number | null) => `Plot ${plot ?? '—'} grows right away`,
+      stamp: '+1 stamp',
+    },
+    reminderSet: (time: string) =>
+      `Reminder set: we'll prompt you to check in when you come back after ${time}.`,
+    reminded: 'Reminder set',
+    remindMe: 'Remind me to check in after my meal',
+    savedToAccount: 'Saved to your account',
+    saveFarm: 'Save my farm',
+    checkInDemo: 'Finished eating? Check in (demo)',
+  },
+  planting: {
+    plotN: (n: number) => `Plot ${n}`,
+    plot: 'Plot',
+    sprouted: (crop: string) => `${crop} · Sprout`,
+    waiting: 'Waiting to be planted',
+  },
+  toast: {
+    kicker: {
+      info: 'Info',
+      success: 'Done',
+      warning: 'Heads up',
+      error: 'Not quite',
+      reward: 'Reward',
+    },
+    dismiss: 'Dismiss notification',
+  },
+  ui: {
+    close: 'Close',
+  },
+};
+
+export default account;

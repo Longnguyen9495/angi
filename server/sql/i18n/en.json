@@ -1,0 +1,1788 @@
+{
+ "dishes": {
+  "com-tam": {
+   "subtitle": "Broken rice, grilled pork chop, skin & egg meatloaf • Vietnam",
+   "story": "Early-morning charcoal smoke on a Sài Gòn street, fluffy broken rice under a pork chop charred at the edges."
+  },
+  "pho-bo": {
+   "subtitle": "Beef noodle soup, rare & well-done beef • Hà Nội",
+   "story": "Fragrant, warming broth wraps around soft rice noodles, slices of beef and an inviting tangle of fresh green herbs."
+  },
+  "banh-mi": {
+   "subtitle": "Baguette sandwich with grilled pork • Vietnam",
+   "story": "That first shattering crunch of the crust — a whole lunch held in the palm of your hand."
+  },
+  "bun-cha": {
+   "subtitle": "Grilled pork patties with rice noodles • Vietnam",
+   "story": "Every lunchtime, smoke from hand-fanned charcoal grills drifts through Hà Nội's narrow alleys."
+  },
+  "sushi-ca-hoi": {
+   "name": "Salmon sushi",
+   "subtitle": "Salmon • Japan",
+   "story": "A cool slice of salmon on a mound of vinegared rice — the pure simplicity of Japanese cooking."
+  },
+  "pizza": {
+   "subtitle": "Cheese • Italy",
+   "story": "A puffed, blistered crust and strings of cheese stretching out the moment it leaves the oven."
+  },
+  "ga-ran": {
+   "name": "Fried chicken",
+   "subtitle": "Crispy coating • Juicy meat",
+   "story": "A golden, crunchy coating hugs tender, juicy chicken, served with crisp lettuce and fresh tomato."
+  },
+  "com-chay": {
+   "subtitle": "Vegetarian rice with tofu & vegetables • Vietnam",
+   "story": "A simple yet generous vegetarian spread that leaves you feeling light at heart."
+  },
+  "bibimbap": {
+   "subtitle": "Mixed rice with beef • Korea",
+   "story": "A glossy egg yolk crowns hot rice, mingling with beef, colourful vegetables and fiery chilli sauce."
+  },
+  "com-ga-hoi-an": {
+   "subtitle": "Turmeric rice with shredded chicken • Hội An",
+   "story": "Golden rice tossed with tender shredded chicken, fragrant Vietnamese coriander and pickles — a sun-drenched noon in old-town Hội An."
+  },
+  "bun-bo-hue": {
+   "subtitle": "Spicy beef & pork-knuckle noodle soup • Huế",
+   "story": "A fiery red bowl scented with lemongrass and chilli, loaded with beef and pork knuckle — the bold flavour of Huế."
+  },
+  "hu-tieu": {
+   "subtitle": "Clear pork & seafood noodle soup • Southern Vietnam",
+   "story": "A crystal-clear, sweet bone broth and chewy hủ tiếu noodles — a familiar breakfast across the Mekong Delta."
+  },
+  "mi-quang": {
+   "subtitle": "Turmeric noodles in a little rich broth • Central Vietnam",
+   "story": "Just a splash of broth but deeply flavoured, with a sesame rice cracker snapped on top — the Quảng region in a single bowl."
+  },
+  "bun-thit-nuong": {
+   "subtitle": "Rice noodles with grilled lemongrass pork • Southern Vietnam",
+   "story": "Lemongrass pork fresh off the charcoal, with sweet-and-sour fish sauce poured over cool rice noodles."
+  },
+  "banh-cuon": {
+   "subtitle": "Steamed rice rolls • Northern Vietnam",
+   "story": "Silk-thin rice sheets steamed over a cloth, scattered with fragrant crispy shallots."
+  },
+  "bun-dau-mam-tom": {
+   "subtitle": "Fried tofu, boiled pork & noodles with shrimp paste • Northern Vietnam",
+   "story": "A rustic tray of rice noodles with crispy golden tofu, tender boiled pork and punchy fermented shrimp paste amid fresh green herbs."
+  },
+  "com-rang-dua-bo": {
+   "subtitle": "Fried rice with pickled mustard greens • Beef",
+   "story": "Firm, golden grains of rice wrap tender beef and tangy pickled mustard greens, sizzling in a hot clay pot."
+  },
+  "bo-luc-lac": {
+   "subtitle": "\"Shaking beef\" — wok-tossed beef cubes with vegetables • Vietnam",
+   "story": "Glossy, browned cubes of beef with vibrant vegetables, alongside golden fries and a fresh green salad."
+  },
+  "banh-xeo": {
+   "subtitle": "Crispy pancake with shrimp & pork • Southern Vietnam",
+   "story": "A crisp golden crêpe folded around shrimp, pork and bean sprouts — wrap it in greens and dip it in sweet-and-sour fish sauce."
+  },
+  "banh-da-cua": {
+   "subtitle": "Brown rice noodles in crab broth • Hải Phòng",
+   "story": "Brown rice noodles in a rich paddy-crab broth, piled high with greens, tomato and fragrant crispy shallots."
+  },
+  "mi-xao-bo": {
+   "name": "Stir-fried beef noodles",
+   "subtitle": "Tender beef • Leafy greens",
+   "story": "Golden noodles tossed with tender beef and greens, smoky with wok heat in every steaming mouthful."
+  },
+  "bun-ca": {
+   "subtitle": "Fish noodle soup • Northern Vietnam",
+   "story": "Bouncy, sweet fish cakes and crispy fried perch in a gently tangy tomato broth."
+  },
+  "goi-cuon": {
+   "subtitle": "Fresh spring rolls with shrimp • Southern Vietnam",
+   "story": "Pink shrimp peeking through translucent rice paper — a cool, refreshing bite for a sunny day."
+  },
+  "chao-suon": {
+   "subtitle": "Rice porridge with pork ribs • Crispy shallots",
+   "story": "A bowl of silky white rice porridge cradling tender pieces of pork rib, fragrant with crispy shallots and fresh coriander."
+  },
+  "ramen": {
+   "subtitle": "Japanese noodle soup • Japan",
+   "story": "A cloudy broth simmered for hours, a jammy soft-boiled egg and slices of chashu that melt in your mouth."
+  },
+  "udon": {
+   "subtitle": "Thick wheat noodle soup • Japan",
+   "story": "Soft, plump udon noodles in a delicate dashi broth — the gentle side of Japanese cooking."
+  },
+  "com-ca-ri-nhat": {
+   "name": "Japanese curry rice",
+   "subtitle": "Mild curry over rice • Japan",
+   "story": "Thick, mildly sweet Japanese curry ladled generously over steaming white rice."
+  },
+  "tteokbokki": {
+   "subtitle": "Spicy rice cakes • Korea",
+   "story": "Chewy rice cakes coated in a fiery red sauce, steaming alongside boiled eggs and savoury fish cakes."
+  },
+  "burger-bo": {
+   "name": "Beef burger",
+   "subtitle": "Grilled beef patty • World",
+   "story": "A beef patty seared on the grill, with cheese melting between two soft buns."
+  },
+  "mi-y-bo-bam": {
+   "name": "Spaghetti Bolognese",
+   "subtitle": "Minced beef & tomato sauce • Italy",
+   "story": "Minced beef slow-simmered with tomatoes — the Italian dish of family dinners."
+  },
+  "pad-thai": {
+   "subtitle": "Shrimp & egg • Thailand",
+   "story": "Glossy, sauce-coated rice noodles with plump shrimp, soft egg and roasted peanuts, brightened by fresh lime."
+  },
+  "mi-tom-yum": {
+   "name": "Tom Yum noodles",
+   "subtitle": "Hot & sour noodle soup • Thailand",
+   "story": "Sour, spicy and fragrant with kaffir lime leaves — a bowl that awakens every sense."
+  },
+  "lau-nam-chay": {
+   "subtitle": "Vegetarian mushroom hotpot • Fresh mushrooms • Tofu",
+   "story": "A fresh green hotpot brimming with mushrooms, vegetables and tofu, with the warm feeling of everyone gathered round."
+  },
+  "mi-nam-chay": {
+   "subtitle": "Vegetarian mushroom noodle soup",
+   "story": "Earthy-sweet shiitake mushrooms in a vegetable broth — light yet satisfying."
+  },
+  "banh-mi-chay": {
+   "subtitle": "Vegetarian baguette sandwich",
+   "story": "A crusty bánh mì with vegetarian 'meat' loaf and pickles — meat-free but still full of life."
+  },
+  "goi-cuon-chay": {
+   "subtitle": "Vegetarian fresh rolls with tofu & herbs • Southern Vietnam",
+   "story": "Translucent rice paper wrapped around fresh greens, soft rice noodles and tofu, dipped in a rich peanut sauce."
+  },
+  "com-binh-dan": {
+   "subtitle": "Everyday rice plate — pick a main, veg & soup",
+   "story": "Pick a main dish, some greens and a soup, just like a home-cooked meal in the middle of the working day."
+  },
+  "com-ga-xoi-mo": {
+   "subtitle": "Crispy fried chicken • Turmeric rice",
+   "story": "A deep-golden chicken leg beside fragrant turmeric rice, with fresh greens and a glistening dish of chilli fish sauce."
+  },
+  "bun-rieu": {
+   "subtitle": "Crab & tomato noodle soup • Northern Vietnam",
+   "story": "Golden crab roe floating on a gently sour broth — the taste of the northern rice-paddy countryside."
+  },
+  "banh-canh-cua": {
+   "subtitle": "Thick noodle soup with whole crab • Southern Vietnam",
+   "story": "Soft, chewy bánh canh noodles in a thick, sweet broth, crowned with bright red crab and fragrant crispy shallots."
+  },
+  "bo-ne": {
+   "subtitle": "Sizzling skillet beef & eggs",
+   "story": "A sizzling skillet of bò né fragrant with garlic butter, with runny-yolk eggs and crispy golden potatoes."
+  },
+  "com-ga-teriyaki": {
+   "name": "Chicken teriyaki rice",
+   "subtitle": "Pan-seared chicken in Japanese sauce",
+   "story": "Chicken glazed in glossy teriyaki sauce beside hot rice, dotted with fresh vegetables like a little garden."
+  },
+  "com-heo-chien-xu": {
+   "name": "Tonkatsu rice",
+   "subtitle": "Breaded pork cutlet • One lunch portion",
+   "story": "A deep-golden tonkatsu that crackles with every bite, served with cool shredded cabbage."
+  },
+  "com-chien-hai-san": {
+   "subtitle": "Shrimp & squid • Fried rice",
+   "story": "Fluffy golden fried rice wrapped around sweet, springy shrimp and squid, with colourful vegetables and fragrant spring onion."
+  },
+  "mi-vit-tiem": {
+   "name": "Herbal braised duck noodles",
+   "subtitle": "Duck leg braised in Chinese herbs",
+   "story": "A tender, fragrant duck leg nestled beside golden noodles, bok choy and a warming dark herbal broth."
+  },
+  "kimbap": {
+   "subtitle": "Korean seaweed rice rolls",
+   "story": "Colourful rounds of rolled rice fragrant with toasted sesame, eaten with mildly spicy kimchi and crisp fresh vegetables."
+  },
+  "mi-tron-han-quoc": {
+   "name": "Korean spicy mixed noodles",
+   "subtitle": "Beef, kimchi and egg",
+   "story": "Glossy red noodles tossed in spicy sauce, nestled beside beef, kimchi and crunchy, colourful vegetables."
+  },
+  "salad-uc-ga": {
+   "name": "Chicken breast salad",
+   "subtitle": "Grilled chicken & greens • One lunch portion",
+   "story": "Tender grilled chicken breast on a bed of crisp greens — a light lunch."
+  },
+  "mi-y-sot-kem-bacon": {
+   "name": "Creamy bacon pasta",
+   "subtitle": "Cream sauce & bacon • One lunch portion",
+   "story": "A rich, silky cream sauce clinging to every strand of pasta, studded with crispy bacon."
+  },
+  "lasagna-bo": {
+   "name": "Beef lasagna",
+   "subtitle": "Baked pasta layers • One lunch portion",
+   "story": "Layer upon layer of pasta, beef sauce and cheese baked golden on top — as warm as an Italian home kitchen."
+  },
+  "burger-bo-pho-mai-va-khoai-tay": {
+   "name": "Cheeseburger & fries",
+   "subtitle": "Double cheeseburger • One lunch portion",
+   "story": "A double-decker cheeseburger with piping-hot fries on the side."
+  },
+  "pizza-pepperoni": {
+   "name": "Pepperoni pizza",
+   "subtitle": "Pepperoni and mozzarella",
+   "story": "A piping-hot pizza with stretchy melted cheese, bold pepperoni and an irresistibly charred crust."
+  },
+  "com-bo-gyudon": {
+   "name": "Gyudon (Japanese beef rice bowl)",
+   "subtitle": "Japanese-style beef • Soft-yolk egg",
+   "story": "Tender beef with sweet, rich onions over hot rice, beneath a silky, glistening egg yolk."
+  },
+  "com-ca-saba-nuong": {
+   "name": "Grilled mackerel rice",
+   "subtitle": "Grilled saba fish • Japanese style",
+   "story": "A fragrant piece of saba mackerel charred at the edges, served with hot rice, kimchi and colourful fresh vegetables."
+  },
+  "mi-soba-nhat": {
+   "name": "Japanese soba",
+   "subtitle": "Cold buckwheat noodles • One lunch portion",
+   "story": "Ice-cold soba noodles dipped in tsuyu sauce — Japan's favourite way to beat the summer heat."
+  },
+  "com-ca-ri-thai": {
+   "name": "Thai curry rice",
+   "subtitle": "Green curry with rice • One lunch portion",
+   "story": "Rich coconut green curry, fiery and fragrant with Thai basil."
+  },
+  "salad-ca-ngu": {
+   "name": "Tuna salad",
+   "subtitle": "Tuna • egg • crunchy greens",
+   "story": "Savoury tuna with crisp, refreshing greens, creamy egg and a riot of fresh colours."
+  },
+  "salad-quinoa-dau-ga": {
+   "name": "Quinoa & chickpea salad",
+   "subtitle": "Chickpeas • Fresh vegetables",
+   "story": "Tiny quinoa grains mixed with chickpeas and vibrant vegetables for a bright, fresh salad."
+  },
+  "bo-bit-tet": {
+   "name": "Beef steak",
+   "subtitle": "Pan-seared steak • One lunch portion",
+   "story": "A pan-seared steak with a charred crust outside and a juicy pink centre."
+  },
+  "ca-hoi-ap-chao": {
+   "name": "Pan-seared salmon",
+   "subtitle": "Crispy-skin salmon • One lunch portion",
+   "story": "Shatteringly crisp salmon skin over glistening orange flesh that's still moist and juicy."
+  },
+  "com-luon-nhat": {
+   "name": "Unagi rice (Japanese grilled eel)",
+   "subtitle": "Eel grilled with tare sauce • Japan",
+   "story": "Grilled eel glazed amber on hot rice, coated in sweet, rich tare sauce with fresh greens."
+  },
+  "com-bo-nuong-han": {
+   "name": "Korean BBQ beef rice",
+   "subtitle": "Bulgogi-style beef • One lunch portion",
+   "story": "Beef marinated with pear and garlic bulgogi-style, grilled until fragrant and served with kimchi."
+  },
+  "com-ca-hoi-teriyaki": {
+   "name": "Salmon teriyaki rice",
+   "subtitle": "Glazed salmon over rice • One lunch portion",
+   "story": "Pan-seared salmon in a glossy teriyaki glaze, rich and tender over white rice."
+  },
+  "poke-ca-hoi": {
+   "name": "Salmon poke",
+   "subtitle": "Salmon • quinoa • avocado",
+   "story": "Glistening orange cubes of salmon with vibrant fruit and vegetables — the fresh taste of the sea in every spoonful."
+  },
+  "suon-nuong-bbq": {
+   "name": "BBQ ribs",
+   "subtitle": "BBQ sauce • Fries",
+   "story": "Ribs charred at the edges and glossy with sauce, with crispy fries and fresh greens for an irresistible lunch plate."
+  },
+  "pizza-hai-san": {
+   "name": "Seafood pizza",
+   "subtitle": "Shrimp & cheese • Italian style",
+   "story": "A golden, fragrant crust under molten cheese, plump shrimp and colourful vegetables, fresh from the oven."
+  },
+  "mi-y-hai-san": {
+   "name": "Seafood pasta",
+   "subtitle": "Garlic & seafood • One lunch portion",
+   "story": "Pasta tossed with garlic and fresh seafood, fragrant with wine and basil."
+  },
+  "lau-bo-ca-nhan": {
+   "subtitle": "Individual beef hotpot • One lunch portion",
+   "story": "A little hotpot all to yourself — dip slices of beef into the bubbling broth until just cooked."
+  },
+  "pho-ga": {
+   "subtitle": "Chicken noodle soup with free-range chicken • Hà Nội",
+   "story": "A crystal-clear broth with soft rice noodles, golden chicken and the warm scent of fresh herbs."
+  },
+  "pho-cuon": {
+   "subtitle": "Rice-sheet rolls with beef, 10 rolls • Vietnam",
+   "story": "Wide phở sheets rolled around stir-fried beef and herbs — a dish born in Ngũ Xã village beside Trúc Bạch Lake."
+  },
+  "bun-moc": {
+   "subtitle": "Noodle soup with pork meatballs • Hà Nội",
+   "story": "A steaming bowl of noodles in a clear, sweet broth with soft, fragrant pork balls (mọc) and inviting fresh greens."
+  },
+  "bun-mang-vit": {
+   "subtitle": "Duck & bamboo shoot noodles • Tender duck • Crunchy bamboo",
+   "story": "A hot bowl of noodles with a clean, sweet broth, tender duck and crunchy bamboo shoots, fragrant with crispy shallots and greens."
+  },
+  "bun-bo-nam-bo": {
+   "subtitle": "Rice noodles with stir-fried beef & herbs • Vietnam",
+   "story": "Soft white rice noodles topped with fragrant stir-fried beef, cool fresh herbs and crunchy roasted peanuts."
+  },
+  "bun-mam": {
+   "subtitle": "Fermented fish noodle soup with seafood • Mekong Delta",
+   "story": "A steaming bowl of bún mắm, rich with the flavours of the river delta, piled high with seafood and fresh greens."
+  },
+  "bun-chay": {
+   "subtitle": "Vegetarian noodles with tofu & vegetables • Vietnam",
+   "story": "Vegetarian noodles with mushrooms and tofu, as light and serene as a full-moon day."
+  },
+  "banh-canh-gio-heo": {
+   "subtitle": "Thick noodle soup with pork knuckle • Southern Vietnam",
+   "story": "Soft bánh canh noodles in a clear broth, with meltingly tender pork knuckle and fragrant crispy shallots."
+  },
+  "mien-ga": {
+   "subtitle": "Glass noodle soup with shredded chicken • Shiitake",
+   "story": "Translucent glass noodles in a sweet, warming broth, with tender chicken and vivid green herbs."
+  },
+  "mien-luon": {
+   "subtitle": "Glass noodles with crispy eel • Vietnam",
+   "story": "A hot, fragrant bowl of glass noodles with crispy golden eel in a rich broth, crispy shallots and fresh greens."
+  },
+  "chao-vit": {
+   "subtitle": "Rice porridge with duck • Ginger & spring onion",
+   "story": "A bowl of silky white rice porridge with slices of tender duck, fragrant with ginger and spring onion and warmed with black pepper."
+  },
+  "chao-long": {
+   "subtitle": "Rice porridge with pork offal • Hot porridge",
+   "story": "A hot, velvety bowl of porridge brimming with rich pork offal, fragrant with crispy shallots and fresh coriander."
+  },
+  "banh-hoi-heo-quay": {
+   "subtitle": "Woven rice vermicelli with crispy roast pork • Vietnam",
+   "story": "Delicate mats of bánh hỏi (woven rice vermicelli) with crackling-skinned roast pork — a dish Central Vietnam serves to honoured guests."
+  },
+  "nem-nuong": {
+   "subtitle": "Grilled pork sausage rolls, a full meal • Vietnam",
+   "story": "Pork sausage grilled over glowing charcoal, rolled with herbs and dipped in a thick sauce — a Nha Trang speciality."
+  },
+  "dimsum": {
+   "name": "Dim sum",
+   "subtitle": "About 3 steamer baskets per person",
+   "story": "Steaming bamboo baskets, and translucent har gow dumplings revealing pink shrimp inside."
+  },
+  "mi-hoanh-thanh": {
+   "subtitle": "Egg noodle & wonton soup",
+   "story": "Springy golden egg noodles and paper-thin wontons — a familiar supper in the Chinese quarter."
+  },
+  "mi-bo-dai-loan": {
+   "name": "Taiwanese beef noodle soup",
+   "subtitle": "Braised beef • Taiwan",
+   "story": "A glossy brown broth with chewy noodles, tender, deeply flavoured beef and fresh greens."
+  },
+  "mi-xao-gion": {
+   "subtitle": "Crispy fried noodles with seafood & vegetables",
+   "story": "A nest of crunchy fried noodles that crackles as the thick seafood sauce is poured over."
+  },
+  "com-nieu-singapore": {
+   "name": "Singapore claypot rice",
+   "subtitle": "One clay pot per person",
+   "story": "A piping-hot clay pot — and the crispy crust of rice at the bottom is the best part."
+  },
+  "com-ga-hai-nam": {
+   "name": "Hainanese chicken rice",
+   "subtitle": "Tender chicken • fragrant rice",
+   "story": "Silky poached chicken beside fragrant rice, fresh greens and three little sauces that awaken every sense."
+  },
+  "com-ga-trung-nhat": {
+   "name": "Oyakodon (Japanese chicken & egg rice)",
+   "subtitle": "Oyakodon • Japan",
+   "story": "Oyakodon — chicken and egg simmered in dashi, the egg still soft and glossy."
+  },
+  "com-tempura": {
+   "name": "Tempura rice bowl",
+   "subtitle": "Tendon • Japan",
+   "story": "Shrimp tempura in a thin, light, crackly batter, drizzled with sweet-savoury tendon sauce."
+  },
+  "mi-cay-han-quoc": {
+   "name": "Korean spicy noodles",
+   "subtitle": "Beef & seafood • Korea",
+   "story": "Curly noodles in a fiery red broth with tender beef, sweet seafood and punchy kimchi."
+  },
+  "mi-tuong-den": {
+   "name": "Jajangmyeon",
+   "subtitle": "Black bean noodles • Korea",
+   "story": "Jajangmyeon in a glossy black bean sauce — the dish Koreans eat on “Black Day”, the singles' day."
+  },
+  "mi-lanh-han-quoc": {
+   "name": "Korean cold noodles",
+   "subtitle": "Naengmyeon • Korea",
+   "story": "Chilled noodles in an icy, refreshing broth — the cure for a sweltering summer lunch."
+  },
+  "canh-kimchi-kem-com": {
+   "name": "Kimchi stew with rice",
+   "subtitle": "Kimchi jjigae • Korea",
+   "story": "Long-fermented kimchi simmered into a sour, spicy stew that arrives bubbling hot."
+  },
+  "canh-dau-hu-non-kem-com": {
+   "name": "Soft tofu stew with rice",
+   "subtitle": "Sundubu jjigae • Korea",
+   "story": "Silken tofu melting into a red stew in a clay pot, with an egg cracked in while it's still boiling."
+  },
+  "ga-pho-mai-han-quoc": {
+   "name": "Korean cheese chicken",
+   "subtitle": "Single portion",
+   "story": "Spicy glazed chicken under a blanket of stretchy melted cheese — Seoul's favourite late-night bite."
+  },
+  "com-chien-kimchi": {
+   "name": "Kimchi fried rice",
+   "subtitle": "Kimchi bokkeumbap • Korea",
+   "story": "Tangy, spicy kimchi fried rice, crowned with a runny-yolk fried egg."
+  },
+  "lau-thai-mot-nguoi": {
+   "name": "Thai hot pot for one",
+   "subtitle": "With rice noodles or egg noodles",
+   "story": "A personal Thai-style hot pot, sour and spicy, fragrant with lemongrass and lime leaves."
+  },
+  "lau-sukiyaki-mot-nguoi": {
+   "name": "Sukiyaki hot pot for one",
+   "subtitle": "Meat, vegetables & noodles • Japan",
+   "story": "A gently sweet sukiyaki pot: swish thin slices of beef, then dip them in raw egg yolk."
+  },
+  "ca-ri-an-do-va-naan": {
+   "name": "Indian curry & naan",
+   "subtitle": "Chicken curry with naan bread",
+   "story": "A thick, richly spiced chicken curry — tear off charred naan and scoop it up."
+  },
+  "com-biryani": {
+   "name": "Biryani",
+   "subtitle": "Spiced rice & chicken • India",
+   "story": "Layers of basmati rice and spice-marinated chicken — its aroma fills the whole Indian kitchen."
+  },
+  "banh-xeo-nhat": {
+   "name": "Okonomiyaki",
+   "subtitle": "Japanese savoury pancake • Japan",
+   "story": "Okonomiyaki — a pan-fried cabbage pancake, criss-crossed with sauce and topped with dancing bonito flakes."
+  },
+  "sandwich": {
+   "subtitle": "A filling sandwich meal",
+   "story": "A sandwich toasted golden on both sides — quick and easy for a busy lunch."
+  },
+  "banh-mi-kebab": {
+   "name": "Doner kebab sandwich",
+   "subtitle": "Doner kebab • Turkey",
+   "story": "Meat shaved thin from a rotating spit and stuffed in bread with crunchy salad — Turkish at heart."
+  },
+  "banh-cuon-ga": {
+   "name": "Chicken wrap",
+   "subtitle": "Chicken wrap",
+   "story": "A soft wrap hugging crispy chicken and fresh greens, easy to eat on the go."
+  },
+  "burrito": {
+   "subtitle": "Rice, beans & meat wrap • Mexico",
+   "story": "A big, hefty roll packed with rice, beans and meat — a proper Mexican-style feed."
+  },
+  "taco": {
+   "subtitle": "Three tacos • Mexico",
+   "story": "Three tacos with meat, onion and fresh coriander — squeeze over some lime and dig in."
+  },
+  "quesadilla": {
+   "subtitle": "Cheese & chicken • Mexico",
+   "story": "A folded tortilla crisped in the pan, with cheese oozing out as you cut it."
+  },
+  "fish-va-chips": {
+   "subtitle": "Fried fish & chips",
+   "story": "Crispy beer-battered fish and chunky chips — the taste of an English seaside harbour."
+  },
+  "ga-nuong-kem-khoai-tay": {
+   "name": "Roast chicken with potatoes",
+   "subtitle": "Single portion",
+   "story": "Herb-roasted chicken with golden skin, and fluffy potatoes soaked in the chicken juices."
+  },
+  "mac-va-cheese": {
+   "subtitle": "Macaroni & cheese • Main",
+   "story": "Macaroni drowned in cheese sauce and baked until browned on top — comfort food for every age."
+  },
+  "mi-y-pesto": {
+   "name": "Pesto pasta",
+   "subtitle": "Basil & chicken • Italy",
+   "story": "Vivid green pesto, fragrant with basil, tossed with pan-seared chicken."
+  },
+  "mi-y-ca-hoi": {
+   "name": "Creamy salmon pasta",
+   "subtitle": "Salmon cream sauce • Italy",
+   "story": "Silky cream sauce and pink salmon — pasta for a light, easy evening."
+  },
+  "com-risotto": {
+   "name": "Risotto",
+   "subtitle": "Italian rice • Main",
+   "story": "Stirred slowly, ladle by ladle of stock, until the rice turns creamy and smooth."
+  },
+  "gnocchi": {
+   "subtitle": "Italian potato dumplings",
+   "story": "Gnocchi soft as little pillows, rolled in tomato sauce and basil."
+  },
+  "falafel-kem-pita": {
+   "name": "Falafel with pita",
+   "subtitle": "Chickpeas, salad & pita bread",
+   "story": "Falafel crisp outside and herb-green inside, tucked into warm pita."
+  },
+  "nui-xao-bo": {
+   "subtitle": "Stir-fried macaroni with beef & vegetables • Vietnam",
+   "story": "Macaroni stir-fried with beef in tomato sauce — a Western-meets-Vietnamese favourite of Saigon's rice eateries."
+  },
+  "chao-ga": {
+   "subtitle": "Chicken rice porridge, shredded chicken, spring onion & pepper • Vietnam",
+   "story": "Steaming rice porridge with shredded chicken and finely sliced lime leaves — the go-to comfort for tired days."
+  },
+  "bo-kho-banh-mi": {
+   "subtitle": "Beef stew with baguette • Vietnam",
+   "story": "Bò kho, a deep-red beef stew with lemongrass and five-spice, for dunking a crackly baguette."
+  },
+  "xoi-man": {
+   "subtitle": "Savoury sticky rice with chicken, pork or pork roll • Vietnam",
+   "story": "A soft mound of sticky rice piled with savoury toppings — the commuter's handheld breakfast."
+  },
+  "banh-mi-chao": {
+   "subtitle": "Sizzling pan with egg, pâté, sausage & baguette • Vietnam",
+   "story": "A hot cast-iron pan of eggs, pâté and sausage — tear off some baguette and mop it all up."
+  },
+  "com-xa-xiu": {
+   "subtitle": "Char siu pork with rice • Chinese-Vietnamese",
+   "story": "Glossy red char siu, sweet and fragrant — the taste of Chợ Lớn, Saigon's Chinatown, on a plate of rice."
+  },
+  "com-vit-quay": {
+   "subtitle": "Roast duck with rice • Chinese-Vietnamese",
+   "story": "Roast duck with crisp, honey-glazed skin and meat steeped in five-spice."
+  },
+  "mi-xa-xiu": {
+   "subtitle": "Egg noodles with char siu pork • Chinese-Vietnamese",
+   "story": "Springy egg noodles with sweet, fragrant char siu — a familiar bowl for Saigon's Chinese community."
+  },
+  "mi-udon-xao": {
+   "name": "Yaki udon",
+   "subtitle": "Seafood & vegetables • Japan",
+   "story": "Yaki udon — thick, chewy noodles tossed in a big pan with seafood and vegetables."
+  },
+  "burger-ga-va-khoai-tay": {
+   "name": "Chicken burger & fries",
+   "subtitle": "Crispy chicken & fries • International",
+   "story": "A crunchy chicken fillet in a soft burger bun, with fries on the side."
+  },
+  "mi-y-sot-ca-chua-va-pho-mai": {
+   "name": "Tomato & mascarpone pasta",
+   "subtitle": "Tomato & mascarpone • Italy",
+   "story": "Tomato sauce enriched with creamy mascarpone — simple, yet wholly Italian."
+  },
+  "mien-xao": {
+   "subtitle": "Stir-fried glass noodles with meat & vegetables • Vietnam",
+   "story": "Glass noodles stir-fried loose and springy with wood ear mushrooms and vegetables — a fixture of the Tết (Lunar New Year) feast."
+  },
+  "com-tam-suon-bi-cha-trung": {
+   "subtitle": "Broken rice, grilled pork chop • Southern Vietnam",
+   "story": "A smoky, char-edged grilled pork chop on hot broken rice, with shredded pork skin, steamed egg meatloaf and a fried egg."
+  },
+  "sushi-ca-hoi-tong-hop": {
+   "name": "Salmon sushi platter",
+   "subtitle": "Nigiri • Maki • Sashimi",
+   "story": "Glistening orange salmon over soft rice, rolled in seaweed and fanned out like petals on a green leaf."
+  },
+  "bun-cha-ha-noi": {
+   "subtitle": "Grilled pork with rice noodles • Hà Nội",
+   "story": "Charcoal smoke wrapped around fragrant grilled pork, with white rice noodles and a bowl of glossy sweet-and-sour dipping sauce."
+  },
+  "banh-mi-thit-nuong": {
+   "subtitle": "Grilled pork baguette • Vietnam",
+   "story": "A crackly golden baguette hugging fragrant grilled pork, coriander and bright pickles — utterly irresistible."
+  },
+  "com-chay-thap-cam": {
+   "subtitle": "Vegetarian rice: tofu, greens & mushrooms",
+   "story": "A warm bowl of white rice with golden tofu, greens and fragrant stir-fried mushrooms."
+  },
+  "hu-tieu-nam-vang": {
+   "subtitle": "Phnom Penh-style noodle soup, shrimp, pork & quail eggs • Southern Vietnam",
+   "story": "A crystal-clear bowl of hủ tiếu loaded with shrimp and pork, inviting with fried shallots and fresh green herbs."
+  },
+  "mi-quang-tom-thit": {
+   "subtitle": "Turmeric noodles with shrimp & pork • Central Vietnam",
+   "story": "Yellow noodles in a rich, shallow broth, bright red shrimp and crunchy rice crackers — a taste of sun-baked central Vietnam."
+  },
+  "banh-cuon-cha-lua": {
+   "subtitle": "Steamed rice rolls with pork roll • Northern Vietnam",
+   "story": "Silky rice rolls filled with savoury minced pork, topped with crisp fried shallots and cool fresh herbs."
+  },
+  "bun-thit-nuong-cha-gio": {
+   "subtitle": "Rice noodles, grilled pork & spring rolls • Southern Vietnam",
+   "story": "Char-edged grilled pork with soft rice noodles, cool herbs and golden crispy spring rolls, brought together by a balanced fish sauce dressing."
+  },
+  "bun-ca-ha-noi": {
+   "subtitle": "Fish noodle soup, fried fish & dill • Hà Nội",
+   "story": "Golden fried fish in a clear broth with red tomatoes and gently fragrant green dill."
+  },
+  "goi-cuon-tom": {
+   "subtitle": "Fresh shrimp rolls with herbs • Southern Vietnam",
+   "story": "Translucent rice paper wrapped around pink shrimp, soft rice noodles and greens, dipped in a rich peanut sauce."
+  },
+  "ramen-tonkotsu": {
+   "subtitle": "Chashu • Soft-boiled egg",
+   "story": "A rich, creamy broth embracing the noodles, with tender chashu pork and a glossy soft-boiled egg — utterly tempting."
+  },
+  "mi-udon-bo-tempura": {
+   "name": "Beef udon with shrimp tempura",
+   "subtitle": "Tender beef • Shrimp tempura",
+   "story": "Plump, springy udon in a warm broth, with savoury beef and golden, crunchy shrimp tempura."
+  },
+  "com-ca-ri-heo-chien-xu": {
+   "name": "Katsu curry rice",
+   "subtitle": "Crispy pork katsu • Japan",
+   "story": "Golden, crunchy katsu on hot rice, smothered in thick curry with soft, sweet vegetables."
+  },
+  "cheeseburger-bo": {
+   "name": "Beef cheeseburger",
+   "subtitle": "Grilled beef & cheese • Fries",
+   "story": "A piping-hot beef burger with melting cheese and fresh salad, served with golden fries."
+  },
+  "mi-y-sot-bo-bam": {
+   "name": "Spaghetti Bolognese",
+   "subtitle": "Minced beef • Tomato sauce",
+   "story": "Golden pasta coated in a rich beef and tomato sauce, finished with cheese and parsley."
+  },
+  "mi-tom-yum-hai-san": {
+   "name": "Seafood tom yum noodles",
+   "subtitle": "Shrimp & squid • Thai broth",
+   "story": "Orange-red tom yum broth around curly noodles and seafood, bursting with zesty lime and chilli heat."
+  },
+  "mi-lau-nam-chay": {
+   "name": "Vegetarian mushroom hot-pot noodles",
+   "subtitle": "Fresh mushrooms & tofu",
+   "story": "A steaming pot of noodles with mushrooms, greens and tofu — pure warmth on a chilly day."
+  },
+  "banh-mi-thit-nuong-2": {
+   "subtitle": "Grilled pork baguette with pickles • Vietnam",
+   "story": "A crackly golden baguette with fragrant grilled pork, crisp fresh pickles and a touch of red chilli — impossible to resist."
+  },
+  "com-chay-thap-cam-2": {
+   "subtitle": "Vegetarian rice, tofu & vegetables • Vietnam",
+   "story": "A colourful spread of greens, savoury tofu and golden egg around a bowl of hot rice."
+  },
+  "bun-rieu-cua": {
+   "subtitle": "Crab & tomato noodle soup, tofu • Northern Vietnam",
+   "story": "A red-hued bowl of noodles, delicate crab paste mingling with tomato, tofu and fresh greens."
+  },
+  "com-tonkatsu": {
+   "name": "Tonkatsu rice",
+   "subtitle": "Breaded pork cutlet • Japan",
+   "story": "A crisp golden crust around juicy, tender pork, served with hot rice and fresh salad."
+  },
+  "salad-ga-nuong": {
+   "name": "Grilled chicken salad",
+   "subtitle": "Grilled chicken • Vegetables",
+   "story": "Peppery grilled chicken on a bed of vibrant greens, with rich egg and crisp, cool vegetables."
+  },
+  "mi-y-carbonara": {
+   "name": "Spaghetti carbonara",
+   "subtitle": "Bacon • Cream sauce",
+   "story": "Silky pasta in a rich, creamy sauce, with crispy bacon and soft, fragrant mushrooms."
+  },
+  "lasagna-bo-bam": {
+   "name": "Beef lasagna",
+   "subtitle": "Minced beef • Italy",
+   "story": "Layer upon layer of soft pasta, minced beef, tomato sauce and molten cheese, fragrant straight from the oven."
+  },
+  "burger-bo-pho-mai": {
+   "name": "Cheeseburger",
+   "subtitle": "Grilled beef • Fries",
+   "story": "A hot burger with a juicy grilled beef patty, melting cheese and fresh salad — hard to resist."
+  },
+  "mi-soba-bo": {
+   "name": "Beef soba",
+   "subtitle": "Tender beef • Soft-boiled egg",
+   "story": "Brown soba noodles in a warm broth with tender beef, a soft-boiled egg and fresh, colourful vegetables."
+  },
+  "ca-ri-do-thai-ga": {
+   "name": "Thai red chicken curry",
+   "subtitle": "Spicy, creamy chicken with rice",
+   "story": "Glossy red curry sauce with coconut milk coats every tender piece of chicken, served beside fragrant white rice."
+  },
+  "salad-ca-ngu-trung": {
+   "name": "Tuna & egg salad",
+   "subtitle": "Tuna • Soft-boiled egg",
+   "story": "Savoury tuna with cool greens, soft egg and juicy tomatoes make for a bright, colourful salad."
+  },
+  "bit-tet-bo": {
+   "name": "Beef steak",
+   "subtitle": "Pan-seared beef • Pepper sauce",
+   "story": "Juicy pink beef in a bold peppercorn sauce, with crispy golden potatoes and colourful vegetables."
+  },
+  "ca-hoi-ap-chao-rau-cu": {
+   "name": "Pan-seared salmon with vegetables",
+   "subtitle": "Salmon • Roasted vegetables",
+   "story": "A golden-edged salmon fillet amid a garden of colourful vegetables, fragrant with herbs and fresh lemon."
+  },
+  "com-bo-bulgogi": {
+   "name": "Beef bulgogi rice",
+   "subtitle": "Grilled beef • Korea",
+   "story": "Caramelised beef over hot rice with a soft-boiled egg and bright vegetables — full of Korean flavour."
+  },
+  "com-ca-hoi-ap-chao": {
+   "name": "Pan-seared salmon rice",
+   "subtitle": "Salmon • Vegetables",
+   "story": "Glazed salmon on hot rice, surrounded by greens and fragrant golden tofu."
+  },
+  "mi-y-hai-san-sot-ca-chua": {
+   "name": "Seafood pasta in tomato sauce",
+   "subtitle": "Shrimp, squid & mussels • Italy",
+   "story": "Pasta in a glossy red sauce loaded with seafood — like lunch by the sea."
+  },
+  "goi-cuon-thit-nuong": {
+   "subtitle": "Fresh rolls with grilled pork • Southern Vietnam",
+   "story": "Soft rice paper wrapped around fragrant grilled pork and cool greens, dipped in sweet-and-sour fish sauce — so moreish."
+  },
+  "nem-nuong-nha-trang": {
+   "subtitle": "Grilled pork sausage wraps with herbs • Central Vietnam",
+   "story": "Char-edged grilled pork sausage, rolled with greens and pickles and dipped in a rich sauce — irresistible."
+  },
+  "mi-lanh-naengmyeon": {
+   "name": "Naengmyeon (Korean cold noodles)",
+   "subtitle": "Beef & kimchi • Korea",
+   "story": "Ice-cold buckwheat noodles in a clean, light broth with tender beef and crunchy, spicy kimchi — wonderfully refreshing."
+  },
+  "pizza-hai-san-2": {
+   "name": "Seafood pizza",
+   "subtitle": "Shrimp, squid & mussels • cheese",
+   "story": "Shrimp, squid and mussels under melting cheese on a crisp golden base, fragrant from the oven."
+  },
+  "lau-nam-chay-2": {
+   "subtitle": "Vegetarian mushroom hot pot with tofu & greens • Vietnam",
+   "story": "A steaming hot pot of fragrant mushrooms, golden tofu and greens in a clean, gently sweet broth."
+  },
+  "bun-heo-quay": {
+   "subtitle": "Rice noodles with crispy roast pork",
+   "story": "White rice noodles with slices of golden, crackling roast pork, fresh herbs and sweet-and-sour fish sauce — so inviting."
+  },
+  "mi-hoanh-thanh-xa-xiu": {
+   "name": "Wonton noodles with char siu",
+   "subtitle": "Char siu • Wontons",
+   "story": "Golden noodles beneath soft wontons and fragrant char siu in a clear, comforting broth."
+  },
+  "com-nieu-quang-dong": {
+   "name": "Cantonese claypot rice",
+   "subtitle": "Chinese sausage • pan-seared chicken",
+   "story": "A piping-hot claypot of rice with char-edged meat, honey-glazed Chinese sausage and a fragrant crispy crust at the bottom."
+  },
+  "tendon": {
+   "subtitle": "Japanese tempura rice bowl",
+   "story": "Golden fried shrimp and vegetables over hot rice — crunchy outside, tender and sweet within."
+  },
+  "mi-tuong-den-jajangmyeon": {
+   "name": "Jajangmyeon",
+   "subtitle": "Black bean sauce • Korea",
+   "story": "Golden noodles in a thick, rich black bean sauce, topped with cool cucumber and a soft-boiled egg."
+  },
+  "bun-bo-hue-2": {
+   "subtitle": "Spicy beef noodle soup, sliced beef & bone broth • Central Vietnam",
+   "story": "A steaming bowl of noodles in deep, rich broth, with tender beef and an inviting slick of red chilli."
+  },
+  "dim-sum-thap-cam": {
+   "name": "Dim sum platter",
+   "subtitle": "Har gow • Siu mai • Bao",
+   "story": "Steaming bamboo baskets bringing together plump har gow, savoury siu mai and golden fried bites."
+  },
+  "mi-xao-gion-hai-san": {
+   "subtitle": "Crispy fried noodles with seafood & vegetables • Southern Vietnam",
+   "story": "Golden crispy noodles under shrimp, squid and glossy sauced vegetables — a fragrant, sizzling feast."
+  },
+  "oyakodon": {
+   "subtitle": "Japanese chicken & egg rice bowl",
+   "story": "Soft egg wrapped around savoury chicken over hot rice — a cosy Japanese home-style meal."
+  },
+  "mi-cay-han-quoc-2": {
+   "name": "Korean spicy noodles",
+   "subtitle": "Seafood • Spicy kimchi",
+   "story": "A fiery red bowl of noodles packed with seafood, beef and kimchi, steaming and irresistible."
+  }
+ },
+ "ingredients": {
+  "gao-tam": {
+   "name": "Broken rice",
+   "description": "Broken rice grains that cook up fluffy and fragrant, and hold sauce well."
+  },
+  "com": {
+   "name": "Steamed white rice",
+   "description": "Medium-sticky steamed rice, a neutral base for savory dishes."
+  },
+  "com-nghe": {
+   "name": "Turmeric rice",
+   "description": "Fluffy golden rice with a gentle aroma of turmeric and chicken stock."
+  },
+  "banh-pho": {
+   "name": "Pho rice noodles",
+   "description": "Soft white flat rice noodles that soak up the broth."
+  },
+  "bun": {
+   "name": "Rice vermicelli",
+   "description": "Round rice noodles, cool and light, that soak up the broth."
+  },
+  "bun-to": {
+   "name": "Thick rice vermicelli",
+   "description": "The thick round noodles typical of Hue, staying chewy for a long time."
+  },
+  "banh-cuon-la": {
+   "name": "Steamed rice sheets",
+   "description": "Rice batter steamed into thin sheets, soft and translucent."
+  },
+  "banh-trang": {
+   "name": "Rice paper",
+   "description": "Soft, translucent rice paper that wraps a fresh filling neatly."
+  },
+  "banh-hoi": {
+   "name": "Bánh hỏi (woven rice vermicelli)",
+   "description": "Fine rice vermicelli woven into thin mats, drizzled with scallion oil."
+  },
+  "soi-mi-quang": {
+   "name": "Mì Quảng noodles",
+   "description": "Thick rice noodles tinted with turmeric, golden and chewy."
+  },
+  "banh-da-do": {
+   "name": "Red rice noodles (bánh đa đỏ)",
+   "description": "Wide brown rice noodles, soft yet chewy, soaking up the crab broth."
+  },
+  "hu-tieu-soi": {
+   "name": "Hủ tiếu noodles",
+   "description": "Clear, chewy rice noodles that don't turn mushy in broth."
+  },
+  "banh-canh": {
+   "name": "Bánh canh noodles",
+   "description": "Thick noodles made from rice or tapioca flour, in a lightly thickened broth."
+  },
+  "xoi-nep": {
+   "name": "Sticky rice",
+   "description": "Steamed glutinous rice, chewy and filling."
+  },
+  "chao-gao": {
+   "name": "Rice porridge",
+   "description": "Simmered until smooth and thick, a warm, comforting base."
+  },
+  "gao-basmati": {
+   "name": "Basmati rice",
+   "description": "Long, fluffy grains with a toasted, nutty aroma."
+  },
+  "gao-arborio": {
+   "name": "Arborio rice",
+   "description": "Starchy short-grain rice, stirred into a creamy risotto."
+  },
+  "rice-cake": {
+   "name": "Korean rice cakes",
+   "description": "Chewy rice cake sticks that soak up a sweet-spicy sauce."
+  },
+  "rong-bien": {
+   "name": "Seaweed",
+   "description": "Crisp dried seaweed sheets with a salty umami taste of the sea."
+  },
+  "mi-trung": {
+   "name": "Egg noodles",
+   "description": "Yellow noodles stir-fried until firm, evenly coated in sauce."
+  },
+  "mien": {
+   "name": "Glass noodles",
+   "description": "Clear, chewy noodles made from arrowroot starch."
+  },
+  "mi-y": {
+   "name": "Spaghetti",
+   "description": "Semolina pasta, boiled just al dente."
+  },
+  "soi-udon": {
+   "name": "Udon noodles",
+   "description": "Thick, soft Japanese wheat noodles."
+  },
+  "soi-ramen": {
+   "name": "Ramen noodles",
+   "description": "Chewy yellow alkaline noodles that hold a rich broth."
+  },
+  "soi-soba": {
+   "name": "Soba noodles",
+   "description": "Grey-brown buckwheat noodles, often eaten cold with tsuyu dipping sauce."
+  },
+  "nui": {
+   "name": "Macaroni",
+   "description": "Short pasta tubes that catch sauce inside."
+  },
+  "gnocchi": {
+   "name": "Gnocchi",
+   "description": "Small dumplings of mashed potato and flour, soft as pillows."
+  },
+  "lasagna": {
+   "name": "Lasagna sheets",
+   "description": "Flat pasta sheets layered with meat sauce and béchamel."
+  },
+  "banh-mi-vo": {
+   "name": "Crusty baguette",
+   "description": "Thin crisp crust and an airy crumb — Vietnamese-style bread."
+  },
+  "banh-burger": {
+   "name": "Burger bun",
+   "description": "Soft round bun, lightly toasted on the cut side."
+  },
+  "banh-sandwich": {
+   "name": "Sandwich bread",
+   "description": "Soft bread slices toasted golden on both sides."
+  },
+  "de-pizza": {
+   "name": "Pizza crust",
+   "description": "Baked golden, with a lightly puffed rim and a slightly crisp outside."
+  },
+  "tortilla": {
+   "name": "Tortilla",
+   "description": "Thin Mexican flatbread made from wheat or corn flour."
+  },
+  "pita": {
+   "name": "Pita bread",
+   "description": "Puffy flatbread with a hollow pocket, torn open for stuffing."
+  },
+  "naan": {
+   "name": "Naan",
+   "description": "Indian bread baked in a tandoor, soft and charred."
+  },
+  "khoai-tay": {
+   "name": "Potato",
+   "description": "Cut into large chunks and simmered soft in curry sauce."
+  },
+  "bot-chien": {
+   "name": "Fried batter",
+   "description": "A crispy fried batter coating on the outside."
+  },
+  "banh-xeo-vo": {
+   "name": "Bánh xèo crêpe",
+   "description": "Rice batter with turmeric and coconut milk, poured into a hot pan with a “sizzle”."
+  },
+  "suon-nuong": {
+   "name": "Grilled pork chop",
+   "description": "Pork marinated with honey and lemongrass, charcoal-grilled until charred at the edges."
+  },
+  "bi-heo": {
+   "name": "Shredded pork skin",
+   "description": "Thinly shredded, tossed with fragrant toasted rice powder, slightly chewy."
+  },
+  "cha-trung": {
+   "name": "Steamed egg meatloaf",
+   "description": "Firm yet tender steamed meatloaf topped with a golden egg layer."
+  },
+  "bo-tai": {
+   "name": "Rare beef",
+   "description": "Thinly sliced beef, blanched in boiling broth until just cooked."
+  },
+  "thit-bo": {
+   "name": "Beef",
+   "description": "Thinly sliced, a mix of tender rare cuts and rich well-done cuts."
+  },
+  "bo-ham": {
+   "name": "Braised beef",
+   "description": "Beef stewed with spices until meltingly tender."
+  },
+  "bo-nuong": {
+   "name": "Grilled beef",
+   "description": "Garlic-marinated beef, quickly grilled for a smoky aroma."
+  },
+  "thit-heo-nuong": {
+   "name": "Grilled pork",
+   "description": "Sliced pork in a sweet-savory marinade, grilled until fragrantly charred."
+  },
+  "cha-nuong": {
+   "name": "Grilled pork patties",
+   "description": "Flat patties of minced pork grilled over charcoal."
+  },
+  "gio-heo": {
+   "name": "Pork knuckle",
+   "description": "Braised slices of pork hock, with rich skin and slightly crunchy tendon."
+  },
+  "cha-lua": {
+   "name": "Chả lụa (Vietnamese pork roll)",
+   "description": "Thick slices of pork roll, springy and tender with a balanced meaty taste."
+  },
+  "moc": {
+   "name": "Mọc (pork balls)",
+   "description": "Pork paste balls with wood ear mushroom, tender, springy and savory."
+  },
+  "long-heo": {
+   "name": "Pork offal",
+   "description": "Boiled just right and cut into thick rings, chewy, tender and rich."
+  },
+  "thit-heo-quay": {
+   "name": "Crispy roast pork",
+   "description": "Roast pork belly with crackling skin."
+  },
+  "xa-xiu": {
+   "name": "Char siu pork",
+   "description": "Tender roast pork with a red edge and a signature sweet-savory taste."
+  },
+  "thit-bam": {
+   "name": "Minced pork",
+   "description": "Minced pork, stir-fried or cooked into a sauce."
+  },
+  "bacon": {
+   "name": "Bacon",
+   "description": "Cured smoked pork belly, pan-fried until crisp."
+  },
+  "pepperoni": {
+   "name": "Pepperoni",
+   "description": "Mildly spicy Italian-style sausage that curls at the edges when baked."
+  },
+  "xuc-xich": {
+   "name": "Sausage",
+   "description": "Pan-seared until browned at the edges, with a bold sweet-savory taste."
+  },
+  "pa-te": {
+   "name": "Pâté",
+   "description": "A rich slab of pâté, served with beef and eggs."
+  },
+  "ga": {
+   "name": "Chicken",
+   "description": "Free-range chicken, boiled or shredded, firm and sweet."
+  },
+  "ga-gion": {
+   "name": "Crispy fried chicken",
+   "description": "Battered chicken fried golden, crispy on the outside."
+  },
+  "ga-nuong": {
+   "name": "Roast chicken",
+   "description": "Herb-marinated chicken roasted in the oven, with golden skin."
+  },
+  "vit": {
+   "name": "Duck",
+   "description": "Boiled or roast duck, with rich-tasting meat."
+  },
+  "trung": {
+   "name": "Egg",
+   "description": "Fried egg with a runny yolk, or soft-cooked egg."
+  },
+  "tom": {
+   "name": "Shrimp",
+   "description": "Peeled shrimp grilled through, plump and sweet."
+  },
+  "muc": {
+   "name": "Squid",
+   "description": "Squid pieces cooked just right to stay crisp and sweet."
+  },
+  "cua-dong": {
+   "name": "Paddy crab",
+   "description": "Crabs pounded and strained for their liquid, the roe rising into a soft crab curd."
+  },
+  "ca-hoi": {
+   "name": "Salmon",
+   "description": "Cut into thick slices for sashimi, nigiri and sushi rolls."
+  },
+  "ca-ngu": {
+   "name": "Tuna",
+   "description": "Flaky, tender, rich-tasting fish spread over the salad."
+  },
+  "ca-saba": {
+   "name": "Mackerel",
+   "description": "Grilled golden and charred at the edges, with lightly crisp skin and rich flesh."
+  },
+  "ca-ro": {
+   "name": "Fish cake & climbing perch",
+   "description": "Crispy fried climbing perch and springy, sweet fish cake."
+  },
+  "ca-chien": {
+   "name": "Fried fish",
+   "description": "Fish pieces fried golden and crisp outside, tender and sweet inside."
+  },
+  "ca-linh": {
+   "name": "Linh fish & snakeskin gourami",
+   "description": "Freshwater fish of the flood season, cooked with fermented fish paste."
+  },
+  "luon": {
+   "name": "Eel",
+   "description": "Paddy eel, crispy fried or grilled with a sweet sauce."
+  },
+  "hai-san": {
+   "name": "Seafood",
+   "description": "Fresh shrimp, squid and clams — the sweetness of the sea."
+  },
+  "hoanh-thanh": {
+   "name": "Wonton",
+   "description": "Soft wrappers around a meat filling, cooked in the broth."
+  },
+  "dimsum": {
+   "name": "Har gow & siu mai",
+   "description": "Shrimp and pork dumplings steamed in bamboo baskets."
+  },
+  "falafel": {
+   "name": "Falafel",
+   "description": "Chickpeas ground with herbs, shaped into balls and fried crisp."
+  },
+  "nem-thit": {
+   "name": "Nem nướng (grilled pork sausage)",
+   "description": "Pounded pork paste grilled into fragrant skewers."
+  },
+  "dau-hu": {
+   "name": "Tofu",
+   "description": "Pan-fried golden at the edges, soft and creamy inside."
+  },
+  "dau-hu-non": {
+   "name": "Silken tofu",
+   "description": "Tofu as soft as pudding, melting into the broth."
+  },
+  "gia-do": {
+   "name": "Bean sprouts",
+   "description": "Blanched just right, lightly crunchy and fresh-tasting."
+  },
+  "dau-phong": {
+   "name": "Peanuts",
+   "description": "Roasted, crushed peanuts, nutty and crunchy."
+  },
+  "dau-ga": {
+   "name": "Chickpeas",
+   "description": "Nutty, tender whole chickpeas scattered over the top."
+  },
+  "dau-den": {
+   "name": "Black beans",
+   "description": "Black beans stewed until soft, Mexican-style."
+  },
+  "tuong-den": {
+   "name": "Hoisin sauce",
+   "description": "A rich fermented soybean sauce, savory and sweet."
+  },
+  "miso": {
+   "name": "Miso",
+   "description": "Japanese fermented soybean paste with deep umami."
+  },
+  "nam": {
+   "name": "Mushrooms",
+   "description": "Shiitake, enoki and straw mushrooms — sweet and earthy."
+  },
+  "cha-chay": {
+   "name": "Vegetarian sausage",
+   "description": "Sliced, adding savory depth and a light chew."
+  },
+  "quinoa": {
+   "name": "Quinoa",
+   "description": "Fluffy, nutty, protein-rich quinoa grains."
+  },
+  "hanh-la": {
+   "name": "Spring onion",
+   "description": "Finely chopped and sprinkled over the bowl for a fresh aroma."
+  },
+  "hanh-phi": {
+   "name": "Fried shallots",
+   "description": "Fried golden and crisp, sprinkled over the chicken."
+  },
+  "mo-hanh": {
+   "name": "Scallion oil",
+   "description": "Spring onions wilted in hot oil, drizzled over rice and cakes."
+  },
+  "hanh-tay": {
+   "name": "Onion",
+   "description": "Thinly sliced, adding mild sweetness and crunch."
+  },
+  "toi": {
+   "name": "Garlic",
+   "description": "Sautéed until fragrant as the aromatic base of the beef-tomato sauce."
+  },
+  "rau-thom": {
+   "name": "Fresh herbs",
+   "description": "Mint and perilla, cool and fragrant, balancing the rich pancake."
+  },
+  "rau-song": {
+   "name": "Fresh greens",
+   "description": "Lettuce, herbs and banana blossom served alongside to refresh."
+  },
+  "rau-ram": {
+   "name": "Vietnamese coriander",
+   "description": "Fresh, pungent leaves that balance the richness of the chicken."
+  },
+  "ngo": {
+   "name": "Coriander",
+   "description": "Cilantro or sawtooth coriander, with its distinctive aroma."
+  },
+  "hung-que": {
+   "name": "Basil",
+   "description": "Sweet, fragrant basil leaves, the soul of pesto."
+  },
+  "xa-lach": {
+   "name": "Lettuce",
+   "description": "Laid under the fried chicken for freshness."
+  },
+  "sa": {
+   "name": "Lemongrass",
+   "description": "Bruised lemongrass for a warm, fragrant broth."
+  },
+  "la-chanh": {
+   "name": "Kaffir lime leaf & galangal",
+   "description": "The signature tangy aroma of Thai cooking."
+  },
+  "dua-leo": {
+   "name": "Cucumber",
+   "description": "Thinly sliced, crisp and cooling on the side."
+  },
+  "ca-rot": {
+   "name": "Carrot",
+   "description": "Shredded, adding sweetness and color."
+  },
+  "do-chua": {
+   "name": "Pickled carrot & daikon",
+   "description": "Carrot and daikon pickled sweet and sour to balance the flavors."
+  },
+  "dua-cai": {
+   "name": "Pickled mustard greens",
+   "description": "Sour pickled mustard greens, stir-fried with beef for crunch."
+  },
+  "mang": {
+   "name": "Fresh bamboo shoots",
+   "description": "Thoroughly boiled bamboo shoots, crunchy and faintly bitter."
+  },
+  "bap-cai": {
+   "name": "Cabbage",
+   "description": "Finely shredded, tossed with carrot and red cabbage."
+  },
+  "rau-cai": {
+   "name": "Bok choy / choy sum",
+   "description": "Bok choy or choy sum, quickly stir-fried."
+  },
+  "bo": {
+   "name": "Avocado",
+   "description": "Ripe avocado, soft and creamy."
+  },
+  "ca-chua": {
+   "name": "Tomato",
+   "description": "Cut into small slices, served on the side for a light tang."
+  },
+  "sot-ca-chua": {
+   "name": "Tomato sauce",
+   "description": "Cooked down until thick, lightly sweet and sour, coating each pasta layer."
+  },
+  "dua": {
+   "name": "Pineapple",
+   "description": "Ripe pineapple adds a tropical sweet-sour note."
+  },
+  "chanh": {
+   "name": "Lime",
+   "description": "Lime wedges for squeezing in a fresh tang."
+  },
+  "bap-chuoi": {
+   "name": "Banana blossom",
+   "description": "Thinly sliced banana flower, crisp and slightly astringent."
+  },
+  "ot": {
+   "name": "Chili",
+   "description": "Sliced red chili for a bright, fresh heat."
+  },
+  "sa-te": {
+   "name": "Sa tế (chili-lemongrass oil)",
+   "description": "Chili, lemongrass and garlic fried in oil — spicy, fragrant and fiery red."
+  },
+  "kimchi": {
+   "name": "Kimchi",
+   "description": "Spicy, sour fermented cabbage that adds depth and crunch."
+  },
+  "gochujang": {
+   "name": "Gochujang chili paste",
+   "description": "Korean fermented chili paste, deeply spicy-sweet."
+  },
+  "nuoc-mam": {
+   "name": "Fish sauce",
+   "description": "Mixed sweet and sour with chili, drizzled over rice and pork chops."
+  },
+  "mam-tom": {
+   "name": "Fermented shrimp paste",
+   "description": "Whisked with kumquat and chili until frothy, pungent and salty."
+  },
+  "mam-ca": {
+   "name": "Fermented linh fish paste",
+   "description": "A rich fermented fish paste from the Mekong Delta."
+  },
+  "nuoc-dung-bo": {
+   "name": "Beef broth",
+   "description": "Clear and hot, fragrant with spices and sweet from the bones."
+  },
+  "nuoc-dung-xuong": {
+   "name": "Bone broth",
+   "description": "Pork bones simmered for hours, light and sweet."
+  },
+  "nuoc-dung-ga": {
+   "name": "Chicken broth",
+   "description": "A clear broth, light, sweet and gently fragrant."
+  },
+  "nuoc-dung-mam-ruoc": {
+   "name": "Lemongrass & shrimp paste broth",
+   "description": "Beef bones, lemongrass and Hue fermented shrimp paste."
+  },
+  "nuoc-dung-tom-yum": {
+   "name": "Tom yum broth",
+   "description": "Lemongrass, galangal, lime leaf and chili — Thai-style hot and sour."
+  },
+  "nuoc-dung-ramen": {
+   "name": "Ramen broth",
+   "description": "Pork or chicken bones simmered for hours into a cloudy broth."
+  },
+  "dashi": {
+   "name": "Dashi stock",
+   "description": "Kombu kelp and katsuobushi bonito flakes, light and full of umami."
+  },
+  "sot-teriyaki": {
+   "name": "Teriyaki sauce",
+   "description": "Soy sauce, mirin and sugar reduced to a glossy glaze."
+  },
+  "ca-ri": {
+   "name": "Curry sauce",
+   "description": "A blend of curry spices simmered until thick."
+  },
+  "nuoc-cot-dua": {
+   "name": "Coconut milk",
+   "description": "Adds a rich creaminess and a gently sweet finish."
+  },
+  "pho-mai": {
+   "name": "Cheese",
+   "description": "Melted, stretchy cheese."
+  },
+  "sot-kem": {
+   "name": "Cream sauce",
+   "description": "Fresh cream, butter and parmesan blended smooth."
+  },
+  "pesto": {
+   "name": "Pesto",
+   "description": "Basil, pine nuts, parmesan and olive oil pounded into a paste."
+  },
+  "sot-bbq": {
+   "name": "BBQ sauce",
+   "description": "A thick, sweet, smoky sauce brushed on in layers while grilling."
+  },
+  "sot-me": {
+   "name": "Tamarind sauce",
+   "description": "Sweet and sour tamarind, the signature of pad thai."
+  },
+  "bot-thinh": {
+   "name": "Toasted rice powder",
+   "description": "Roasted ground rice, fragrant and nutty."
+  },
+  "gia-vi-biryani": {
+   "name": "Biryani spices",
+   "description": "Saffron, cardamom and cinnamon — fragrant Indian aromatics."
+  },
+  "ngu-vi-huong": {
+   "name": "Five-spice powder",
+   "description": "Cinnamon, star anise, clove, Sichuan pepper and fennel."
+  },
+  "tieu": {
+   "name": "Black pepper",
+   "description": "Ground pepper with a warm, fragrant heat."
+  },
+  "gung": {
+   "name": "Ginger",
+   "description": "Finely julienned for a warm spiciness that cuts the gaminess of duck."
+  },
+  "dau-me": {
+   "name": "Sesame oil",
+   "description": "Fragrant, rich toasted sesame oil."
+  },
+  "nuoc-tuong": {
+   "name": "Soy sauce",
+   "description": "Gives the noodles a savory-sweet taste and a glossy brown color."
+  },
+  "banh-trang-me": {
+   "name": "Sesame rice cracker",
+   "description": "Toasted rice cracker with sesame, broken into the bowl."
+  },
+  "banh-bao-xa-xiu": {
+   "name": "Char siu bao",
+   "description": "Fluffy white buns filled with rich reddish-brown char siu."
+  },
+  "banh-cuon": {
+   "name": "Bánh cuốn (steamed rice rolls)",
+   "description": "Thin, silky steamed rice sheets rolled around a meat filling."
+  },
+  "banh-gao-han-quoc": {
+   "name": "Korean rice cakes",
+   "description": "Chewy rice cake sticks evenly coated in a sweet-spicy sauce."
+  },
+  "banh-mi": {
+   "name": "Bánh mì (Vietnamese baguette)",
+   "description": "Golden crisp crust, light airy crumb, generously filled."
+  },
+  "banh-trang-nuong": {
+   "name": "Grilled rice cracker",
+   "description": "Sesame rice cracker grilled crisp, broken off to eat alongside."
+  },
+  "bap-ngot": {
+   "name": "Sweet corn",
+   "description": "Golden corn rounds that lend natural sweetness to the hotpot broth."
+  },
+  "bi-do": {
+   "name": "Pumpkin",
+   "description": "Sweet, nutty pumpkin slices in a thin fried batter."
+  },
+  "bo-bam": {
+   "name": "Ground beef",
+   "description": "Richly seasoned and stir-fried into a hearty meat filling."
+  },
+  "bong-cai-xanh": {
+   "name": "Broccoli",
+   "description": "Stir-fried with bell peppers, keeping its crunch."
+  },
+  "bot-chien-gion": {
+   "name": "Crispy batter",
+   "description": "Forms a shaggy, golden coating that crackles when you bite."
+  },
+  "bun-tuoi": {
+   "name": "Rice vermicelli",
+   "description": "Soft white rice noodles, served with patties and dipping sauce."
+  },
+  "ca": {
+   "name": "Fish",
+   "description": "Rich, tender fish pieces that meld with the fermented fish broth."
+  },
+  "ca-tim": {
+   "name": "Eggplant",
+   "description": "Fried eggplant, soft and spongy with a lightly crisp edge."
+  },
+  "cai-thao": {
+   "name": "Napa cabbage",
+   "description": "Crisp, sweet leaves that soften as they cook in the hot broth."
+  },
+  "cai-thia": {
+   "name": "Bok choy",
+   "description": "Blanched just right, staying green and juicy."
+  },
+  "cha-ca-han-quoc": {
+   "name": "Korean fish cake",
+   "description": "Soft, savory fish cake pieces coated in red sauce."
+  },
+  "cha-com": {
+   "name": "Chả cốm (green rice pork patty)",
+   "description": "Fried golden, springy and tender with a gentle young-rice aroma."
+  },
+  "cha-cua": {
+   "name": "Crab cake",
+   "description": "Golden-brown crab patty, soft, fluffy and savory."
+  },
+  "cha-gio": {
+   "name": "Fried spring rolls",
+   "description": "Meat-filled rolls fried golden with a crackly crisp wrapper."
+  },
+  "cha-vien": {
+   "name": "Pork meatballs",
+   "description": "Minced pork rolled into balls, grilled until charred and savory."
+  },
+  "chan-ga-hap": {
+   "name": "Steamed chicken feet",
+   "description": "Soft, glossy chicken feet soaked in a Chinese-style sweet-spicy sauce."
+  },
+  "com-sushi": {
+   "name": "Sushi rice",
+   "description": "Sticky vinegared rice, shaped under the fish and rolled with fillings."
+  },
+  "com-tam": {
+   "name": "Broken rice",
+   "description": "Soft-cooked broken rice, the base for savory toppings."
+  },
+  "com-trang": {
+   "name": "Steamed white rice",
+   "description": "Soft, slightly sticky rice, a base for vegetables and mushrooms."
+  },
+  "cu-cai-muoi": {
+   "name": "Pickled radish",
+   "description": "Pale radish slices, crunchy and lightly sweet-sour."
+  },
+  "cu-cai-trang": {
+   "name": "Daikon",
+   "description": "Finely shredded, laid beside sashimi for a clean crunch."
+  },
+  "cu-cai-vang-muoi": {
+   "name": "Pickled yellow radish",
+   "description": "Pickled radish cut into sticks, crunchy and sweet-sour."
+  },
+  "dua-cai-chua": {
+   "name": "Pickled mustard greens",
+   "description": "Cut into pieces, adding a bold sour-salty note to fried rice."
+  },
+  "dau-ha-lan": {
+   "name": "Green peas",
+   "description": "Sweet, tender green peas, fried with the rice and vegetables."
+  },
+  "dui-vit": {
+   "name": "Duck leg",
+   "description": "A whole duck leg braised tender, with glossy brown, well-seasoned skin."
+  },
+  "gan-heo": {
+   "name": "Pork liver",
+   "description": "Liver cut into bite-size pieces, with its rich, creamy taste."
+  },
+  "gung-hong": {
+   "name": "Pickled ginger",
+   "description": "Thin slices pickled sweet and sour, eaten between pieces of sushi."
+  },
+  "ha-cao-tom": {
+   "name": "Shrimp har gow",
+   "description": "Soft, translucent wrappers around a plump, sweet shrimp filling."
+  },
+  "hat-quinoa": {
+   "name": "Quinoa",
+   "description": "Boiled until fluffy and tender, a base for salads."
+  },
+  "huyet-heo": {
+   "name": "Pork blood cubes",
+   "description": "Cut into cubes, silky smooth and savory."
+  },
+  "kem-tuoi": {
+   "name": "Fresh cream",
+   "description": "Forms a rich, smooth white sauce that coats the pasta."
+  },
+  "khoai-tay-chien": {
+   "name": "French fries",
+   "description": "Thick-cut fries, fried golden and crisp, lightly seasoned."
+  },
+  "la-mi-lasagna": {
+   "name": "Lasagna sheets",
+   "description": "Stacked in many layers, tender yet firm and soaked in sauce."
+  },
+  "la-oregano": {
+   "name": "Oregano",
+   "description": "Sprinkled over the pizza for a bold herbal aroma."
+  },
+  "lap-xuong": {
+   "name": "Chinese sausage",
+   "description": "Thick slices, sweet, rich and smoky."
+  },
+  "luon-chien": {
+   "name": "Fried eel",
+   "description": "Eel fried golden, lightly crisp outside and savory inside."
+  },
+  "luon-nuong": {
+   "name": "Grilled eel",
+   "description": "Eel grilled soft and rich, glazed with glossy tare sauce."
+  },
+  "mang-tay": {
+   "name": "Asparagus",
+   "description": "Pan-grilled, green, crisp and lightly fragrant."
+  },
+  "mang-tre": {
+   "name": "Bamboo shoots",
+   "description": "Pickled bamboo shoots cut into strips, lightly crunchy and well-seasoned."
+  },
+  "me-rang": {
+   "name": "Toasted sesame",
+   "description": "A light sprinkle of sesame seeds for a nutty aroma."
+  },
+  "mi-an-lien": {
+   "name": "Instant noodles",
+   "description": "Curly noodles that soak up the rich tom yum broth."
+  },
+  "mi-kieu-mach": {
+   "name": "Buckwheat noodles",
+   "description": "Brown, slightly chewy noodles in a cold broth."
+  },
+  "mi-quang": {
+   "name": "Mì Quảng noodles",
+   "description": "Wide, golden noodles that soak up the rich broth."
+  },
+  "mi-ramen": {
+   "name": "Ramen noodles",
+   "description": "Chewy yellow noodles that soak up the rich pork bone broth."
+  },
+  "mi-soba": {
+   "name": "Soba noodles",
+   "description": "Brown buckwheat noodles, slightly chewy and soaking up the broth."
+  },
+  "mi-soi": {
+   "name": "Wheat noodles",
+   "description": "Thick, chewy-soft noodles that blend with the broth."
+  },
+  "mi-spaghetti": {
+   "name": "Spaghetti",
+   "description": "Pasta boiled just right, tender yet firm and evenly coated in sauce."
+  },
+  "mi-udon": {
+   "name": "Udon noodles",
+   "description": "Thick, white, chewy noodles immersed in broth."
+  },
+  "mien-dong": {
+   "name": "Glass noodles",
+   "description": "Clear noodles, soft and chewy, evenly soaking up the broth."
+  },
+  "moc-nhi": {
+   "name": "Wood ear mushroom",
+   "description": "Sliced wood ear, crunchy amid the hot broth."
+  },
+  "nam-hon-hop": {
+   "name": "Mixed mushrooms",
+   "description": "Sautéed with seasoning until firm, fragrant and savory."
+  },
+  "nam-huong": {
+   "name": "Shiitake mushrooms",
+   "description": "Sliced shiitake, tender and juicy, soaking up the broth."
+  },
+  "nam-kim-cham": {
+   "name": "Enoki mushrooms",
+   "description": "Delicate enoki clusters, crisp-tender when dipped in the broth."
+  },
+  "nam-mo": {
+   "name": "Button mushrooms",
+   "description": "Sliced and baked with cheese for a mild aroma."
+  },
+  "ngo-tay": {
+   "name": "Parsley",
+   "description": "Finely chopped and sprinkled on top for a fresh aroma."
+  },
+  "nuoc-dung-ca": {
+   "name": "Fish broth",
+   "description": "A clear broth, lightly sour from tomatoes and rich with fish flavor."
+  },
+  "nuoc-dung-heo": {
+   "name": "Pork broth",
+   "description": "Simmered clear, sweet from the bones and rich with pepper."
+  },
+  "o-liu-den": {
+   "name": "Black olives",
+   "description": "Sliced into rings, adding their signature mild saltiness."
+  },
+  "ot-chuong": {
+   "name": "Bell pepper",
+   "description": "Cut into strips and roasted just right to stay sweet and crisp."
+  },
+  "pho-mai-cheddar": {
+   "name": "Cheddar cheese",
+   "description": "A rich yellow slice of cheese melting over the beef."
+  },
+  "pho-mai-mozzarella": {
+   "name": "Mozzarella cheese",
+   "description": "Spread thickly over the pizza, melting, rich and fragrant."
+  },
+  "pho-mai-parmesan": {
+   "name": "Parmesan cheese",
+   "description": "Finely grated on top, adding its signature salty richness."
+  },
+  "qua-bo": {
+   "name": "Avocado",
+   "description": "Evenly sliced, creamy smooth and fresh green."
+  },
+  "rau-bina": {
+   "name": "Spinach",
+   "description": "Blanched soft then seasoned, keeping its fresh green color."
+  },
+  "rau-mui": {
+   "name": "Coriander",
+   "description": "A fresh green, fragrant touch over the beef and pho noodles."
+  },
+  "rau-muong": {
+   "name": "Morning glory",
+   "description": "Green water spinach blanched just right, fresh and lightly crunchy."
+  },
+  "rong-bien-nori": {
+   "name": "Nori",
+   "description": "Wrapped around maki, adding a light salty aroma."
+  },
+  "rong-bien-tron": {
+   "name": "Seaweed salad",
+   "description": "Green seaweed tossed with seasoning, tender-crisp and refreshing."
+  },
+  "soi-banh-canh": {
+   "name": "Bánh canh noodles",
+   "description": "Thick white noodles, soft and chewy, blending with the thick broth."
+  },
+  "soi-hu-tieu": {
+   "name": "Hủ tiếu noodles",
+   "description": "Soft, chewy white rice noodles that soak up the broth."
+  },
+  "sot-ca-ri-nhat": {
+   "name": "Japanese curry sauce",
+   "description": "Smooth and rich, coating the rice and vegetables."
+  },
+  "sot-tieu-den": {
+   "name": "Black pepper sauce",
+   "description": "Thick, fragrant and mildly spicy, for dipping beef and fries."
+  },
+  "sot-tonkatsu": {
+   "name": "Tonkatsu sauce",
+   "description": "A thick brown sauce, rich and sweet-savory, for dipping meat."
+  },
+  "sui-cao-ap-chao": {
+   "name": "Pan-fried dumplings",
+   "description": "Golden, crispy pan-fried bottoms with soft, chewy tops."
+  },
+  "suon-heo-nuong": {
+   "name": "Grilled pork ribs",
+   "description": "Richly marinated, grilled until charred at the edges and glossy with sauce."
+  },
+  "suon-non": {
+   "name": "Pork spare ribs",
+   "description": "Cut into bite-size pieces, braised tender and well-flavored."
+  },
+  "tao-do": {
+   "name": "Jujube (red dates)",
+   "description": "Red dates stewed soft, leaving a gently sweet finish."
+  },
+  "thi-la": {
+   "name": "Dill",
+   "description": "A signature herb covering the noodles and lifting the aroma of the fish."
+  },
+  "thit-cua": {
+   "name": "Crab meat",
+   "description": "Sweet white crab meat, shredded and piled prominently in the bowl."
+  },
+  "thit-ga": {
+   "name": "Chicken",
+   "description": "Fried golden, crispy outside, tender and juicy inside."
+  },
+  "thit-heo": {
+   "name": "Pork",
+   "description": "Boiled pork in thin slices, tender and flavorful."
+  },
+  "thit-xong-khoi": {
+   "name": "Bacon",
+   "description": "Pan-fried until fragrant, slightly salty and a little crisp."
+  },
+  "trung-ca": {
+   "name": "Fish roe",
+   "description": "Sprinkled on sushi rolls, adding saltiness and a popping texture."
+  },
+  "trung-cut": {
+   "name": "Quail eggs",
+   "description": "Whole boiled quail eggs, soft and rich."
+  },
+  "trung-ga": {
+   "name": "Chicken egg",
+   "description": "Beaten, then fried to coat every grain of rice."
+  },
+  "trung-luoc": {
+   "name": "Boiled egg",
+   "description": "Half a soft-boiled egg with a rich, jammy yolk."
+  },
+  "trung-op-la": {
+   "name": "Fried egg",
+   "description": "Whites set at the edges, yolk still soft and glossy."
+  },
+  "tuong-ca": {
+   "name": "Ketchup",
+   "description": "A sweet-sour red sauce served with fries."
+  },
+  "tuong-dau-den": {
+   "name": "Black bean sauce",
+   "description": "Cooked into a thick sauce, sweet-savory and deeply fragrant."
+  },
+  "tuong-ot-gochujang": {
+   "name": "Gochujang chili paste",
+   "description": "A thick red sauce base, spicy-sweet with a fermented aroma."
+  },
+  "vem-xanh": {
+   "name": "Green mussels",
+   "description": "Mussels steamed open, full of rich sea flavor."
+  },
+  "vo-banh-burger": {
+   "name": "Burger bun",
+   "description": "A soft, glossy bun sprinkled with sesame and toasted golden."
+  },
+  "vo-banh-xeo": {
+   "name": "Bánh xèo crêpe",
+   "description": "Turmeric rice batter, spread thin and cooked until golden and crisp."
+  },
+  "wasabi": {
+   "name": "Wasabi",
+   "description": "Served on the side with its signature pungent heat."
+  },
+  "xiu-mai": {
+   "name": "Siu mai",
+   "description": "Tender steamed meat dumplings topped with fish roe and diced vegetables."
+  },
+  "xuc-xich-pepperoni": {
+   "name": "Pepperoni",
+   "description": "Thin slices baked until crisp at the edges, salty and fragrant."
+  },
+  "xuong-ong-bo": {
+   "name": "Beef marrow bone",
+   "description": "Simmered tender, with rich marrow still inside the bone."
+  }
+ }
+}

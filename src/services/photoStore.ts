@@ -3,6 +3,7 @@
  * never synced. Each photo is re-encoded through a canvas before it is stored,
  * which drops every EXIF field (GPS position included) and shrinks it.
  */
+import { t } from '../i18n';
 
 const DB_NAME = 'hanh-trinh-bep-viet-photos';
 const STORE = 'photos';
@@ -22,13 +23,13 @@ export interface MealPhoto {
 function open(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     if (typeof indexedDB === 'undefined') {
-      reject(new Error('Trình duyệt này không lưu được ảnh.'));
+      reject(new Error(t.account.photo.unsupported));
       return;
     }
     const req = indexedDB.open(DB_NAME, 1);
     req.onupgradeneeded = () => req.result.createObjectStore(STORE, { keyPath: 'slotKey' });
     req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error ?? new Error('Không mở được kho ảnh.'));
+    req.onerror = () => reject(req.error ?? new Error(t.account.photo.openFailed));
   });
 }
 
@@ -41,7 +42,7 @@ async function tx<T>(
     return await new Promise<T>((resolve, reject) => {
       const req = run(db.transaction(STORE, mode).objectStore(STORE));
       req.onsuccess = () => resolve(req.result);
-      req.onerror = () => reject(req.error ?? new Error('Lỗi kho ảnh.'));
+      req.onerror = () => reject(req.error ?? new Error(t.account.photo.storeError));
     });
   } finally {
     db.close();
@@ -61,7 +62,7 @@ export function fitWithin(w: number, h: number, max = PHOTO_MAX_EDGE): { w: numb
 export async function compressPhoto(
   file: Blob,
 ): Promise<{ blob: Blob; width: number; height: number }> {
-  if (!file.type.startsWith('image/')) throw new Error('Tệp này không phải ảnh.');
+  if (!file.type.startsWith('image/')) throw new Error(t.account.photo.notImage);
   const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
   try {
     const { w, h } = fitWithin(bitmap.width, bitmap.height);
@@ -69,10 +70,10 @@ export async function compressPhoto(
     canvas.width = w;
     canvas.height = h;
     const ctx = canvas.getContext('2d');
-    if (!ctx) throw new Error('Không xử lý được ảnh trên trình duyệt này.');
+    if (!ctx) throw new Error(t.account.photo.processFailed);
     ctx.drawImage(bitmap, 0, 0, w, h);
     const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, 'image/jpeg', QUALITY));
-    if (!blob) throw new Error('Không nén được ảnh.');
+    if (!blob) throw new Error(t.account.photo.compressFailed);
     return { blob, width: w, height: h };
   } finally {
     bitmap.close();

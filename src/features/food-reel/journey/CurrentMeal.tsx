@@ -2,10 +2,12 @@ import { ArrowsClockwise, CalendarCheck, SealCheck } from '@phosphor-icons/react
 import { RewardPanel } from '../../../components/reward/RewardPanel';
 import { getDish } from '../../../data/dishes';
 import { SLOT_LABEL, mealSlot, slotKey } from '../../../domain/time';
+import { t } from '../../../i18n';
 import { useGame, useUi } from '../../../state/hooks';
 import { getReelDish } from '../data/reelCatalogue';
 
-const OUTCOME = { ate: 'đã ăn', swapped: 'đổi món', skipped: 'bỏ bữa' } as const;
+const m = t.journey.meal;
+const OUTCOME = m.outcome;
 
 /** "Bữa này": the meal chosen for the current slot, its seed and its check-in. */
 export function CurrentMeal({ onSpin }: { onSpin: () => void }) {
@@ -20,13 +22,10 @@ export function CurrentMeal({ onSpin }: { onSpin: () => void }) {
   if (!meal || !dish) {
     return (
       <div className="fj-meal fj-meal--empty">
-        <p className="fj-lede">
-          Chưa chốt món cho {slot}. Quay reel, chọn một món — món đó gửi lại một hạt giống cho khu
-          vườn.
-        </p>
+        <p className="fj-lede">{m.empty(slot)}</p>
         <button type="button" className="fr-cta" onClick={onSpin}>
           <ArrowsClockwise aria-hidden="true" size={18} />
-          Quay món
+          {m.spin}
         </button>
       </div>
     );
@@ -37,27 +36,26 @@ export function CurrentMeal({ onSpin }: { onSpin: () => void }) {
       <div className="fj-meal__dish">
         {reel && <img className="fj-plate" src={reel.thumbnail} alt="" width={384} height={384} />}
         <div className="fj-meal__copy">
-          <p className="fr-kicker">Đã chốt cho {slot}</p>
+          <p className="fr-kicker">{m.chosenFor(slot)}</p>
           <p className="fj-meal__name">{dish.name}</p>
-          <ul className="fj-tags" aria-label="Trạng thái bữa này">
+          <ul className="fj-tags" aria-label={m.statusLabel}>
             <li className={meal.planted ? 'is-on' : ''}>
-              {meal.planted ? 'Đã gieo hạt' : 'Hạt đang trong khay'}
+              {meal.planted ? m.planted : m.seedInTray}
             </li>
             <li className={meal.checkedIn ? 'is-on' : ''}>
               {meal.checkedIn
-                ? `Đã check-in${last?.slotKey === meal.slotKey ? ` · ${OUTCOME[last.outcome]}` : ''}`
-                : 'Chờ check-in sau bữa'}
+                ? `${m.checkedIn}${last?.slotKey === meal.slotKey ? ` · ${OUTCOME[last.outcome]}` : ''}`
+                : m.awaitingCheckIn}
             </li>
           </ul>
           {meal.checkedIn ? (
             <p className="fj-note">
-              <SealCheck aria-hidden="true" size={16} weight="fill" /> Bữa này đã nhận đủ thưởng.
-              Hẹn bữa sau!
+              <SealCheck aria-hidden="true" size={16} weight="fill" /> {m.allRewards}
             </p>
           ) : (
             <button type="button" className="fr-ghost" onClick={openCheckIn}>
               <CalendarCheck aria-hidden="true" size={16} />
-              Check-in bữa này
+              {m.checkIn}
             </button>
           )}
         </div>

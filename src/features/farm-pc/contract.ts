@@ -85,6 +85,8 @@ export interface FarmEngineHandle {
   resize(): void;
   zoom(factor: number): void;
   resetCamera(): void;
+  /** Settles once first-load files are in and shaders are warm; never rejects. */
+  whenLoaded?(onProgress?: (done: number, total: number) => void): Promise<void>;
   /** Frees GPU resources, listeners and the loop. Safe to call twice. */
   destroy(): void;
 }

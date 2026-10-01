@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowUpRight, X } from '@phosphor-icons/react';
 import { m } from 'motion/react';
 import type { ReactNode, Ref } from 'react';
+import { t } from '../../../i18n';
 import { formatReelPrice, REGION_LABEL } from '../data/reelCatalogue';
 import type { ReelDish } from '../foodReel.types';
 import { splitName } from '../utils';
@@ -42,7 +43,7 @@ export function SelectedDishOverlay({
   return (
     <section className="fr-selected" aria-labelledby="fr-selected-title">
       <m.p className="fr-kicker" {...meta(-3)}>
-        {pooled ? 'Rổ' : 'Reel'} chọn cho bạn · {String(number).padStart(3, '0')}
+        {t.reel.selected.kicker(pooled, String(number).padStart(3, '0'))}
       </m.p>
       <SplitLines
         as="h2"
@@ -53,15 +54,15 @@ export function SelectedDishOverlay({
       />
       <m.dl className="fr-selected__meta" {...meta(0)}>
         <div>
-          <dt>Vùng</dt>
+          <dt>{t.reel.selected.region}</dt>
           <dd>{REGION_LABEL[dish.region]}</dd>
         </div>
         <div>
-          <dt>Tham khảo</dt>
+          <dt>{t.reel.selected.price}</dt>
           <dd>{formatReelPrice(dish.price)}</dd>
         </div>
         <div>
-          <dt>Phần</dt>
+          <dt>{t.reel.selected.portion}</dt>
           <dd>{dish.subtitle}</dd>
         </div>
       </m.dl>
@@ -79,7 +80,7 @@ export function SelectedDishOverlay({
             if (ready) onExplore();
           }}
         >
-          Khám phá món này
+          {t.reel.selected.explore}
           <ArrowUpRight aria-hidden="true" size={18} />
         </button>
         {onEliminate && (
@@ -92,12 +93,12 @@ export function SelectedDishOverlay({
             }}
           >
             <X aria-hidden="true" size={16} />
-            Loại & quay tiếp
+            {t.reel.selected.eliminate}
           </button>
         )}
         <button type="button" className="fr-ghost" onClick={onBack}>
           <ArrowLeft aria-hidden="true" size={16} />
-          Quay lại
+          {t.reel.selected.back}
         </button>
       </m.div>
     </section>
