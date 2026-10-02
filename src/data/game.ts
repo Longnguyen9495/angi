@@ -9,7 +9,6 @@ import type {
   CropId,
   DecorId,
   DishGroup,
-  MissionDef,
   ProduceId,
   MoodId,
   NpcDef,
@@ -515,12 +514,6 @@ export const CHEF: NpcDef = {
   role: t.data.chef.role,
 };
 
-export const DAILY_MISSIONS: MissionDef[] = [
-  { id: 'choose', title: t.data.missions.choose, xp: 10 },
-  { id: 'checkin', title: t.data.missions.checkin, xp: 15 },
-  { id: 'harvest-or-cook', title: t.data.missions.harvestOrCook, xp: 10 },
-];
-
 export const XP = {
   chooseDish: 10,
   checkinAte: 20,
@@ -529,6 +522,8 @@ export const XP = {
   harvestPerPlot: 5,
   collectAnimal: 4,
   friendHelp: 3,
+  /** Picking one from a friend's ripe plot. */
+  steal: 2,
   checkinPhoto: 5,
   catch: 3,
 } as const;

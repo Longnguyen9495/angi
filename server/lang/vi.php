@@ -45,6 +45,13 @@ return [
     'friends.badCode' => 'Mã khu vườn gồm 6 ký tự, ví dụ K7QM2P.',
     'friends.nameTooLong' => 'Tên khu vườn tối đa 40 ký tự.',
     'friends.defaultName' => 'Khu vườn {code}',
+    'friends.notRipe' => 'Ô này chưa chín đủ {minutes} phút để hái trộm.',
+    'friends.alreadyPicked' => 'Ô này vừa bị hái rồi — để phần còn lại cho chủ vườn nhé.',
+    'friends.pickedToday' => 'Hôm nay bạn đã hái ở vườn này rồi — mai ghé lại nhé.',
+    'friends.pickLimit' => 'Hôm nay bạn đã hái trộm {max} lần — để mai nhé!',
+    'friends.badSeed' => 'Hạt giống này không tặng được.',
+    'friends.giftedToday' => 'Hôm nay bạn đã tặng quà cho bạn này rồi.',
+    'friends.giftLimit' => 'Hôm nay bạn đã tặng {max} món quà rồi.',
 
     // ——— Login-code email ———
     'email.subject' => '{code} là mã đăng nhập Ăn gì? của bạn',

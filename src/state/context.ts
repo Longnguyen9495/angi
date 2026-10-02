@@ -69,6 +69,9 @@ export interface AccountContextValue {
   setMarketing: (on: boolean) => Promise<void>;
   /** Fetch and apply friends' help / Cô Ba's gift now (e.g. right after watering a friend). */
   checkInbox: () => Promise<void>;
+  /** The friends list, refreshed with the inbox (null until loaded or signed out). */
+  friends: import('../services/account').FriendsList | null;
+  refreshFriends: () => Promise<void>;
 }
 
 export const AccountContext = createContext<AccountContextValue | null>(null);

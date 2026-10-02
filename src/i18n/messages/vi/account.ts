@@ -24,6 +24,10 @@ const account = {
   friendEvents: {
     watered: (from: string, plot: number | null) => `${from} đã tưới giúp ô ${plot}`,
     gift: (seed: string) => `Cô Ba gửi 1 ${seed}`,
+    stolen: (from: string, crop: string) => `${from} vừa hái trộm ${crop} của bạn`,
+    stole: (crop: string) => `Bạn nhận 1 ${crop} hái trộm được`,
+    present: (from: string, seed: string) => `${from} tặng bạn 1 ${seed}`,
+    thanks: (from: string) => `${from} cảm ơn bạn`,
     more: (n: number) => ` và ${n} tin khác`,
   },
   toasts: {

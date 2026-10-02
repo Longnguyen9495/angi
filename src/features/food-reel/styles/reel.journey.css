@@ -818,27 +818,52 @@
   display: grid;
 }
 
+.fj-quests {
+  display: grid;
+  gap: 28px;
+}
+
+.fj-quests__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+
 .fj-mission {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 14px;
-  min-height: 60px;
+  min-height: 64px;
+  padding: 10px 0;
   border-bottom: 1px solid var(--fr-line);
   color: var(--fr-soft);
+}
+
+.fj-mission__body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
 }
 
 .fj-mission__title {
   color: var(--fr-ivory);
   font-family: var(--fr-display);
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+  line-height: 1.3;
 }
 
-.fj-mission.is-done svg {
+.fj-mission.is-ready svg {
+  color: var(--fr-gold);
+}
+
+.fj-mission.is-claimed svg {
   color: var(--fr-leaf);
 }
 
-.fj-mission.is-done .fj-mission__title {
+.fj-mission.is-claimed .fj-mission__title {
   color: var(--fr-muted);
   text-decoration: line-through;
   text-decoration-color: var(--fr-line-strong);
@@ -848,6 +873,122 @@
   color: var(--fr-gold);
   font-size: 0.78rem;
   font-weight: 600;
+}
+
+.fj-mission__count {
+  color: var(--fr-muted);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.fj-mission__claim {
+  min-height: 40px;
+  padding-inline: 18px;
+}
+
+.fj-meter {
+  display: block;
+  height: 5px;
+  max-width: 220px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--fr-line);
+}
+
+.fj-meter i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--fr-leaf);
+}
+
+.fj-chest {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid rgb(215 168 93 / 55%);
+  border-radius: 20px;
+  background: linear-gradient(140deg, rgb(215 168 93 / 12%), transparent 70%);
+  color: var(--fr-gold);
+}
+
+.fj-chest__title {
+  color: var(--fr-ivory);
+  font-family: var(--fr-display);
+  font-size: 1.15rem;
+}
+
+.fj-chest__reward {
+  margin-top: 4px;
+  color: var(--fr-gold);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.fj-chest__next {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: var(--fr-muted);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.fj-chest__next svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--fr-gold);
+}
+
+.fj-badges {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.fj-badge {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--fr-line);
+  border-radius: 18px;
+  color: var(--fr-soft);
+}
+
+.fj-badge.has-tier {
+  color: var(--fr-gold);
+}
+
+.fj-badge.is-ready {
+  border-color: rgb(215 168 93 / 55%);
+}
+
+.fj-badge__text {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.fj-badge__name {
+  color: var(--fr-ivory);
+  font-family: var(--fr-display);
+  font-size: 1.02rem;
+}
+
+@media (max-width: 520px) {
+  .fj-chest {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .fj-chest .fr-cta {
+    grid-column: 1 / -1;
+  }
 }
 
 .fj-log__row {
@@ -2080,6 +2221,68 @@
   padding: 12px;
   color: var(--fr-muted);
   font: 400 0.9rem/1.4 var(--fr-body);
+}
+
+.fj-gift {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fj-gift .fr-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fj-feed {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.fj-feed__list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fj-feed__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgb(244 237 225 / 5%);
+}
+
+.fj-feed__item.is-stolen {
+  box-shadow: inset 3px 0 0 var(--fr-copper);
+}
+
+.fj-feed__item.is-present,
+.fj-feed__item.is-water,
+.fj-feed__item.is-thanks {
+  box-shadow: inset 3px 0 0 var(--fr-leaf);
+}
+
+.fj-feed__text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  font: 500 0.92rem/1.35 var(--fr-body);
+}
+
+.fj-board__remove:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
 .fj-visit__plots {

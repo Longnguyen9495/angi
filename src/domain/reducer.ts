@@ -3,7 +3,6 @@ import {
   ANIMALS,
   CATCHES,
   CROPS,
-  DAILY_MISSIONS,
   DECOR,
   FISHING,
   MARKET,
@@ -11,7 +10,7 @@ import {
   WATERING,
   XP,
 } from '../data/game';
-import type { AnimalId, CropId, DecorId, MissionKind, ProduceId, RecipeId } from '../data/types';
+import type { AnimalId, CropId, DecorId, ProduceId, RecipeId } from '../data/types';
 import {
   createInitialProgress,
   type AgainAnswer,
@@ -37,6 +36,15 @@ import {
   waterBlock,
 } from './selectors';
 import { canFulfill, todaysOrders } from './orders';
+import {
+  QUEST_DEFS,
+  STREAK_CHESTS,
+  badgeReward,
+  badges,
+  questsFor,
+  type QuestMetric,
+  type QuestReward,
+} from './quests';
 import { HOUR_MS, dateKey, daysBetween, slotKey } from './time';
 
 export type Action =
@@ -61,6 +69,13 @@ export type Action =
   | { type: 'STORE_DECOR'; decor: DecorId }
   /** A friend's help or gift, confirmed by the server; applied once per event id. */
   | { type: 'FRIEND_EVENT'; event: FriendEvent; now: number }
+  /** We sent a friend a seed (the server recorded it as event `id`): it leaves our tray. */
+  | { type: 'GIFT_SENT'; id: string; crop: CropId; now: number }
+  /** Whether the guest has friends: the social quests join the draw once they do. */
+  | { type: 'SET_SOCIAL'; on: boolean }
+  | { type: 'CLAIM_QUEST'; id: string; now: number }
+  | { type: 'CLAIM_BADGE'; id: string; now: number }
+  | { type: 'OPEN_CHEST'; now: number }
   | { type: 'BUY_SEED'; crop: CropId; now: number }
   | { type: 'BUY_DECOR'; decor: DecorId; now: number }
   | {
@@ -136,18 +151,48 @@ function post(
 
 function ensureDay(s: GuestProgress, now: number) {
   const today = dateKey(now);
-  if (s.missions.date !== today) s.missions = { date: today, done: [] };
   if (s.water.date !== today) s.water = { date: today, used: 0, bonus: 0 };
   if (s.fishing.date !== today) s.fishing = { date: today, used: 0 };
   if (s.orders.date !== today) s.orders = { date: today, done: [] };
 }
 
-function completeMission(s: GuestProgress, id: MissionKind, now: number) {
-  ensureDay(s, now);
-  const xp = DAILY_MISSIONS.find((m) => m.id === id)?.xp ?? 0;
-  if (s.missions.done.includes(id)) return;
-  if (post(s, `mission:${s.missions.date}:${id}`, 'xp', xp, `mission:${id}`, now)) {
-    s.missions = { ...s.missions, done: [...s.missions.done, id] };
+/** Counts an action toward today's and this week's quests and the achievements. */
+function track(s: GuestProgress, metric: QuestMetric, now: number, n = 1) {
+  if (n <= 0) return;
+  const qs = questsFor(s, now);
+  const add = (t: Partial<Record<QuestMetric, number>>) => ({
+    ...t,
+    [metric]: (t[metric] ?? 0) + n,
+  });
+  s.quests = { ...qs, day: add(qs.day), weekTally: add(qs.weekTally), total: add(qs.total) };
+}
+
+/**
+ * Pays a quest, badge or chest reward once (`key` is the idempotency key). Seeds are crops
+ * the guest can grow, picked from the key so a replay picks the same ones.
+ */
+function grant(s: GuestProgress, key: string, r: QuestReward, reason: string, now: number) {
+  if (!post(s, key, 'xp', r.xp, reason, now)) return false;
+  if (r.coins > 0) post(s, `${key}:coin`, 'coin', r.coins, reason, now);
+  const crops = (Object.keys(CROPS) as CropId[]).filter((c) => cropAvailable(s, c));
+  let h = 0;
+  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+  for (let i = 0; i < r.seeds && crops.length > 0; i++) {
+    const crop = crops[(h + i * 7) % crops.length]!;
+    post(s, `${key}:seed:${i}`, `seed:${crop}`, 1, reason, now);
+  }
+  if (r.water > 0) {
+    ensureDay(s, now);
+    s.water = { ...s.water, bonus: s.water.bonus + r.water };
+  }
+  return true;
+}
+
+/** A streak that just reached a chest day leaves a chest to open. */
+function streakChest(s: GuestProgress, before: number, now: number) {
+  const n = s.streak.count;
+  if (n !== before && STREAK_CHESTS[n]) {
+    s.quests = { ...questsFor(s, now), chest: { streak: n, date: dateKey(now) } };
   }
 }
 
@@ -260,8 +305,10 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         plotId: null,
         checkedIn: false,
       };
-      completeMission(s, 'choose', action.now);
+      track(s, 'choose', action.now);
+      const before = s.streak.count;
       s.streak = touchStreak(s.streak, action.now);
+      streakChest(s, before, action.now);
       return s;
     }
 
@@ -288,6 +335,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       );
       s.meal = { ...meal, planted: true, plotId: plot.id };
       addStamp(s, 'discovered', meal.dishId, action.now);
+      track(s, 'plant', action.now);
       return s;
     }
 
@@ -317,6 +365,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         s.plots = s.plots.map((p) => (p.id === plot.id ? { ...p, sourceDishId: meal.dishId } : p));
         addStamp(s, 'discovered', meal.dishId, action.now);
       }
+      track(s, 'plant', action.now);
       return s;
     }
 
@@ -336,6 +385,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
           : p,
       );
       s.water = { ...s.water, used: s.water.used + 1 };
+      track(s, 'water', action.now);
       return s;
     }
 
@@ -350,6 +400,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         return state;
       post(s, `xp:${key}`, 'xp', XP.catch, 'Câu cá', action.now);
       s.fishing = { ...s.fishing, used: s.fishing.used + 1 };
+      track(s, 'catch', action.now);
       return s;
     }
 
@@ -361,7 +412,9 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         const crop = CROPS[plot.crop!];
         const tag = `${plot.id}:${plot.plantedAt}`;
         post(s, `harvest:${tag}`, `ingredient:${crop.id}`, crop.yield, 'harvest', action.now);
-        post(s, `xp:harvest:${tag}`, 'xp', XP.harvestPerPlot, 'harvest', action.now);
+        // A plot a friend picked from still gives its crop, but not the harvest XP.
+        if (!plot.stolen)
+          post(s, `xp:harvest:${tag}`, 'xp', XP.harvestPerPlot, 'harvest', action.now);
       }
       const readyIds = new Set(ready.map((p) => p.id));
       s.plots = s.plots.map((p) =>
@@ -373,10 +426,11 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
               readyAt: null,
               sourceDishId: null,
               wateredAt: null,
+              stolen: undefined,
             }
           : p,
       );
-      completeMission(s, 'harvest-or-cook', action.now);
+      track(s, 'harvest', action.now, ready.length);
       return s;
     }
 
@@ -390,7 +444,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       }
       post(s, `${key}:xp`, 'xp', recipe.xp, 'cook', action.now);
       s.cooked = { ...s.cooked, [recipe.id]: (s.cooked[recipe.id] ?? 0) + 1 };
-      completeMission(s, 'harvest-or-cook', action.now);
+      track(s, 'cook', action.now);
       return s;
     }
 
@@ -411,6 +465,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         s.water = { ...s.water, bonus: s.water.bonus + order.reward.water };
       }
       s.orders = { ...s.orders, done: [...s.orders.done, order.id] };
+      track(s, 'order', action.now);
       return s;
     }
 
@@ -423,6 +478,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       const s = structuredClone(state);
       post(s, `photo:${action.slotKey}`, 'xp', XP.checkinPhoto, 'photo', action.now);
       s.photos = [...s.photos, action.slotKey];
+      track(s, 'photo', action.now);
       return s;
     }
 
@@ -444,6 +500,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       const key = `feed:${def.id}:${action.now}`;
       if (!post(s, key, `ingredient:${def.feed}`, -1, 'feed', action.now)) return state;
       s.animals[def.id] = { fedAt: action.now, readyAt: action.now + def.hours * HOUR_MS };
+      track(s, 'feed', action.now);
       return s;
     }
 
@@ -456,7 +513,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       post(s, `collect:${tag}`, `ingredient:${def.product}`, def.yield, 'animal', action.now);
       post(s, `xp:collect:${tag}`, 'xp', XP.collectAnimal, 'animal', action.now);
       s.animals[def.id] = { fedAt: null, readyAt: null };
-      completeMission(s, 'harvest-or-cook', action.now);
+      track(s, 'collect', action.now);
       return s;
     }
 
@@ -506,7 +563,79 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       } else if (ev.type === 'helped') {
         // We watered a friend's plot: our reward for helping.
         post(s, `${key}:xp`, 'xp', XP.friendHelp, 'friend:helped', action.now);
+        track(s, 'help', action.now);
+      } else if (ev.type === 'stole' && ev.crop) {
+        // We picked one from a friend's ripe plot.
+        post(s, `${key}:item`, `ingredient:${ev.crop}`, 1, 'friend:stole', action.now);
+        post(s, `${key}:xp`, 'xp', XP.steal, 'friend:stole', action.now);
+        track(s, 'steal', action.now);
+      } else if (ev.type === 'present' && ev.crop) {
+        post(s, `${key}:seed`, `seed:${ev.crop}`, 1, 'friend:present', action.now);
+      } else {
+        // stolen / thanks: nothing to pay, but mark the event as applied.
+        if (ev.type === 'stolen') {
+          const plot = s.plots.find((p) => p.id === ev.plotId);
+          // Only the same, still unharvested crop: a replanted plot is not touched.
+          if (plot && plot.crop !== null && (!ev.crop || plot.crop === ev.crop)) plot.stolen = true;
+        }
+        post(s, `${key}:seen`, 'xp', 0, `friend:${ev.type}`, action.now);
       }
+      return s;
+    }
+
+    case 'GIFT_SENT': {
+      if (state.seeds[action.crop] <= 0) return state;
+      const s = structuredClone(state);
+      if (!post(s, `present:${action.id}`, `seed:${action.crop}`, -1, 'friend:present', action.now))
+        return state;
+      track(s, 'gift', action.now);
+      return s;
+    }
+
+    case 'SET_SOCIAL':
+      return state.quests.social === action.on
+        ? state
+        : { ...state, quests: { ...state.quests, social: action.on } };
+
+    case 'CLAIM_QUEST': {
+      const qs = questsFor(state, action.now);
+      const def = QUEST_DEFS[action.id];
+      if (!def) return state;
+      const weekly = qs.weekly.includes(def.id);
+      if (!weekly && !qs.daily.includes(def.id)) return state;
+      const tally = weekly ? qs.weekTally : qs.day;
+      const claimed = weekly ? qs.weekClaimed : qs.claimed;
+      if (claimed.includes(def.id) || (tally[def.metric] ?? 0) < def.target) return state;
+      const s = structuredClone(state);
+      s.quests = qs;
+      const key = `quest:${weekly ? qs.week : qs.date}:${def.id}`;
+      if (!grant(s, key, def.reward, `quest:${def.id}`, action.now)) return state;
+      s.quests = weekly
+        ? { ...s.quests, weekClaimed: [...s.quests.weekClaimed, def.id] }
+        : { ...s.quests, claimed: [...s.quests.claimed, def.id] };
+      return s;
+    }
+
+    case 'CLAIM_BADGE': {
+      const b = badges(state).find((x) => x.def.id === action.id);
+      if (!b || !b.ready) return state;
+      const tier = b.claimed + 1;
+      const s = structuredClone(state);
+      if (
+        !grant(s, `badge:${b.def.id}:${tier}`, badgeReward(tier), `badge:${b.def.id}`, action.now)
+      )
+        return state;
+      s.quests = { ...s.quests, badges: { ...s.quests.badges, [b.def.id]: tier } };
+      return s;
+    }
+
+    case 'OPEN_CHEST': {
+      const chest = state.quests.chest;
+      const reward = chest ? STREAK_CHESTS[chest.streak] : undefined;
+      if (!chest || !reward) return state;
+      const s = structuredClone(state);
+      grant(s, `chest:${chest.date}:${chest.streak}`, reward, 'chest', action.now);
+      s.quests = { ...s.quests, chest: null };
       return s;
     }
 
@@ -518,6 +647,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         return state;
       }
       post(s, `${key}:coin`, 'coin', MARKET.sell(action.crop), 'market', action.now);
+      track(s, 'sell', action.now);
       return s;
     }
 
@@ -528,6 +658,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       const key = `buy:${action.crop}:${action.now}`;
       if (!post(s, `${key}:coin`, 'coin', -price, 'market', action.now)) return state;
       post(s, `${key}:seed`, `seed:${action.crop}`, 1, 'market', action.now);
+      track(s, 'buy', action.now);
       return s;
     }
 
@@ -582,8 +713,10 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         ...s.history,
       ].slice(0, 30);
       if (s.reminder?.slotKey === meal.slotKey) s.reminder = null;
-      completeMission(s, 'checkin', action.now);
+      track(s, 'checkin', action.now);
+      const before = s.streak.count;
       s.streak = touchStreak(s.streak, action.now);
+      streakChest(s, before, action.now);
       return s;
     }
 

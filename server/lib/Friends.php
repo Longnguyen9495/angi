@@ -7,7 +7,8 @@ require_once __DIR__ . '/Account.php';
 /*
  * Khu vườn bạn bè. Friends find each other by a 6-character garden code (no
  * emails are ever shown), visit each other's island read-only, water one
- * growing plot per friend per day, and get a small daily gift from Cô Ba.
+ * growing plot per friend per day, pick one from a friend's long-ripe plot,
+ * send each other seeds, say thanks, and get a small daily gift from Cô Ba.
  *
  * The server only records events; each guest's own client applies them to its
  * progress once (ledger key friend:<id>), so progress stays client-owned.
@@ -16,10 +17,18 @@ final class Friends
 {
     public const MAX_FRIENDS = 30;
     public const HELPS_PER_DAY = 5;
+    /** Picks from friends' gardens per day (one per friend), and how long a plot must be ripe first. */
+    public const STEALS_PER_DAY = 3;
+    public const STEAL_GRACE_MS = 30 * 60 * 1000;
+    /** Seeds sent to friends per day (one per friend). */
+    public const GIFTS_PER_DAY = 3;
+    /** How far back the friends' news goes. */
+    private const FEED_DAYS = 14;
+    private const CROPS = ['rice', 'herbs', 'chili', 'scallion', 'bean', 'tomato', 'lemongrass', 'garlic', 'cucumber', 'lime'];
     private const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     /** Seeds Cô Ba may gift: the crops every garden has from day one. */
     private const GIFT_CROPS = ['rice', 'herbs', 'chili', 'scallion', 'bean', 'tomato'];
-    private const EVENT_TYPES = ['water', 'gift', 'helped'];
+    private const EVENT_TYPES = ['water', 'gift', 'helped', 'stolen', 'stole', 'present', 'thanks'];
 
     public function __construct(private PDO $db, private Account $account)
     {
@@ -70,9 +79,13 @@ final class Friends
             "SELECT to_user FROM farm_events WHERE from_user = ? AND type = 'water' AND day = ?",
             [$me, $day],
         ), 'to_user'));
-        $friends = array_map(function (array $r) use ($helped, $nowMs) {
+        $stole = $this->idsTo($me, 'stole', $day);
+        $gifted = $this->idsFrom($me, 'present', $day);
+        $friends = array_map(function (array $r) use ($helped, $nowMs, $stole, $gifted) {
             $data = self::decode($r['data']);
             $plots = self::plots($data);
+            $fid = (int) $r['user_id'];
+            $picked = $this->stolenPlots($fid);
             return [
                 'code' => $r['friend_code'],
                 'name' => self::displayName($r['garden_name'], $r['friend_code']),
@@ -80,7 +93,10 @@ final class Friends
                 'level' => self::level(self::xp($data)),
                 'ready' => count(array_filter($plots, fn ($p) => $p['crop'] !== null && $p['readyAt'] !== null && $p['readyAt'] <= $nowMs)),
                 'growing' => count(array_filter($plots, fn ($p) => self::canWater($p, $nowMs))),
-                'helpedToday' => in_array((int) $r['user_id'], $helped, true),
+                'helpedToday' => in_array($fid, $helped, true),
+                'stealable' => count(array_filter($plots, fn ($p) => self::canSteal($p, $nowMs, $picked))),
+                'stoleToday' => in_array($fid, $stole, true),
+                'giftedToday' => in_array($fid, $gifted, true),
                 'updatedAt' => $r['updated_at'] !== null ? (int) $r['updated_at'] : null,
             ];
         }, $rows);
@@ -89,6 +105,8 @@ final class Friends
             'me' => $this->publicProfile($mine) + ['xp' => self::xp($myData), 'level' => self::level(self::xp($myData))],
             'friends' => $friends,
             'helpsLeft' => max(0, self::HELPS_PER_DAY - count($helped)),
+            'stealsLeft' => max(0, self::STEALS_PER_DAY - count($stole)),
+            'giftsLeft' => max(0, self::GIFTS_PER_DAY - count($gifted)),
             'max' => self::MAX_FRIENDS,
         ];
     }
@@ -151,18 +169,32 @@ final class Friends
             ['water:' . $me . ':' . $f['user_id'] . ':' . $day],
         );
         $helpsUsed = $this->count("SELECT COUNT(*) FROM farm_events WHERE from_user = ? AND type = 'water' AND day = ?", [$me, $day]);
+        $fid = (int) $f['user_id'];
+        $picked = $this->stolenPlots($fid);
+        $nowMs = time() * 1000;
+        $stole = $this->idsTo($me, 'stole', $day);
+        $gifted = $this->idsFrom($me, 'present', $day);
+        $plots = array_map(fn ($p) => $p + [
+            'stolen' => isset($picked[$p['id'] . ':' . $p['plantedAt']]),
+            'stealable' => self::canSteal($p, $nowMs, $picked),
+        ], self::plots($data));
         return [
             'code' => $f['friend_code'],
             'name' => self::displayName($f['garden_name'], $f['friend_code']),
             'xp' => self::xp($data),
             'level' => self::level(self::xp($data)),
-            'plots' => self::plots($data),
+            'plots' => $plots,
             'decor' => array_values(array_filter((array) ($data['decor'] ?? []), 'is_string')),
             'decorLayout' => is_array($data['decorLayout'] ?? null) ? $data['decorLayout'] : new stdClass(),
             'animals' => is_array($data['animals'] ?? null) ? $data['animals'] : new stdClass(),
             'updatedAt' => $f['updated_at'] !== null ? (int) $f['updated_at'] : null,
             'helpedToday' => $helpedToday,
             'helpsLeft' => max(0, self::HELPS_PER_DAY - $helpsUsed),
+            'stoleToday' => in_array($fid, $stole, true),
+            'stealsLeft' => max(0, self::STEALS_PER_DAY - count($stole)),
+            'giftedToday' => in_array($fid, $gifted, true),
+            'giftsLeft' => max(0, self::GIFTS_PER_DAY - count($gifted)),
+            'stealGraceMin' => intdiv(self::STEAL_GRACE_MS, 60000),
         ];
     }
 
@@ -202,6 +234,138 @@ final class Friends
             throw new HttpError(429, __t('friends.alreadyWatered'));
         }
         return ['ok' => true, 'plotId' => $plotId] + $this->visit($code);
+    }
+
+    /**
+     * Pick one from a friend's plot that has been ripe for a while. Each crop can be picked
+     * once (by anyone); a picker gets one pick per friend and three a day. The owner keeps
+     * the crop: their client only drops that plot's harvest XP when it sees the event.
+     */
+    public function steal(string $code, array $body): array
+    {
+        $u = $this->account->requireUser();
+        $me = (int) $u['id'];
+        $f = $this->friendByCode($me, $code);
+        $fid = (int) $f['user_id'];
+        $plotId = (int) ($body['plotId'] ?? 0);
+        $plot = null;
+        foreach (self::plots(self::decode($f['data'])) as $p) {
+            if ($p['id'] === $plotId) {
+                $plot = $p;
+            }
+        }
+        $now = time();
+        $picked = $this->stolenPlots($fid);
+        if (!$plot || !self::canSteal($plot, $now * 1000, [])) {
+            throw new HttpError(422, __t('friends.notRipe', ['minutes' => intdiv(self::STEAL_GRACE_MS, 60000)]));
+        }
+        if (isset($picked[$plot['id'] . ':' . $plot['plantedAt']])) {
+            throw new HttpError(429, __t('friends.alreadyPicked'));
+        }
+        $day = self::day($now);
+        if ($this->one('SELECT 1 AS x FROM farm_events WHERE uniq = ?', ["stole:$me:$fid:$day"])) {
+            throw new HttpError(429, __t('friends.pickedToday'));
+        }
+        if (count($this->idsTo($me, 'stole', $day)) >= self::STEALS_PER_DAY) {
+            throw new HttpError(429, __t('friends.pickLimit', ['max' => self::STEALS_PER_DAY]));
+        }
+        $this->db->beginTransaction();
+        try {
+            $this->insertEvent($fid, $me, 'stolen', $plotId, $plot['crop'], $day, "stolen:$fid:$plotId:{$plot['plantedAt']}", $now);
+            $this->insertEvent($me, $fid, 'stole', $plotId, $plot['crop'], $day, "stole:$me:$fid:$day", $now);
+            $this->db->commit();
+        } catch (PDOException) {
+            $this->db->rollBack();
+            throw new HttpError(429, __t('friends.alreadyPicked'));
+        }
+        return ['ok' => true, 'plotId' => $plotId, 'crop' => $plot['crop']] + $this->visit($code);
+    }
+
+    /**
+     * Send a friend one seed: one gift per friend, three a day. The server records the gift;
+     * the sender's client takes the seed from its tray under the returned event id.
+     */
+    public function gift(string $code, array $body): array
+    {
+        $u = $this->account->requireUser();
+        $me = (int) $u['id'];
+        $f = $this->friendByCode($me, $code);
+        $fid = (int) $f['user_id'];
+        $crop = (string) ($body['crop'] ?? '');
+        if (!in_array($crop, self::CROPS, true)) {
+            throw new HttpError(422, __t('friends.badSeed'));
+        }
+        $now = time();
+        $day = self::day($now);
+        if ($this->one('SELECT 1 AS x FROM farm_events WHERE uniq = ?', ["present:$me:$fid:$day"])) {
+            throw new HttpError(429, __t('friends.giftedToday'));
+        }
+        if (count($this->idsFrom($me, 'present', $day)) >= self::GIFTS_PER_DAY) {
+            throw new HttpError(429, __t('friends.giftLimit', ['max' => self::GIFTS_PER_DAY]));
+        }
+        try {
+            $this->insertEvent($fid, $me, 'present', null, $crop, $day, "present:$me:$fid:$day", $now);
+        } catch (PDOException) {
+            throw new HttpError(429, __t('friends.giftedToday'));
+        }
+        return ['ok' => true, 'id' => 'e' . $this->db->lastInsertId(), 'crop' => $crop] + $this->list();
+    }
+
+    /** A thank-you note (no reward), once per friend per day. */
+    public function thanks(string $code): array
+    {
+        $u = $this->account->requireUser();
+        $me = (int) $u['id'];
+        $fid = (int) $this->friendByCode($me, $code)['user_id'];
+        $now = time();
+        $day = self::day($now);
+        try {
+            $this->insertEvent($fid, $me, 'thanks', null, null, $day, "thanks:$me:$fid:$day", $now);
+        } catch (PDOException) {
+            // Already thanked today: saying it twice is fine.
+        }
+        return ['ok' => true];
+    }
+
+    /**
+     * Friends' news: what friends did for (or to) my garden and what I did in theirs, newest
+     * first, with whether I can still thank them today.
+     */
+    public function feed(): array
+    {
+        $u = $this->account->requireUser();
+        $me = (int) $u['id'];
+        $day = self::day();
+        $since = time() - self::FEED_DAYS * 86400;
+        $rows = $this->all(
+            "SELECT e.id, e.type, e.plot_id, e.crop, e.created_at, e.to_user, e.from_user,
+                    g.friend_code, g.garden_name
+             FROM farm_events e
+             LEFT JOIN garden_profiles g ON g.user_id = CASE WHEN e.to_user = ? THEN e.from_user ELSE e.to_user END
+             WHERE e.created_at >= ? AND (e.to_user = ? OR (e.from_user = ? AND e.type = 'present'))
+             ORDER BY e.id DESC LIMIT 40",
+            [$me, $since, $me, $me],
+        );
+        $thanked = $this->idsFrom($me, 'thanks', $day);
+        $friendIds = array_map('intval', array_column(
+            $this->all('SELECT friend_id FROM friendships WHERE user_id = ?', [$me]),
+            'friend_id',
+        ));
+        return ['items' => array_map(function (array $r) use ($me, $thanked, $friendIds) {
+            $mine = (int) $r['to_user'] !== $me;
+            $other = $mine ? (int) $r['to_user'] : ($r['from_user'] !== null ? (int) $r['from_user'] : null);
+            return [
+                'id' => 'e' . $r['id'],
+                'type' => $mine ? 'sentPresent' : $r['type'],
+                'plotId' => $r['plot_id'] !== null ? (int) $r['plot_id'] : null,
+                'crop' => $r['crop'],
+                'name' => $r['friend_code'] !== null ? self::displayName($r['garden_name'], $r['friend_code']) : 'Cô Ba',
+                // Only current friends can be visited or thanked.
+                'code' => $other !== null && in_array($other, $friendIds, true) ? $r['friend_code'] : null,
+                'thanked' => $other !== null && in_array($other, $thanked, true),
+                'at' => (int) $r['created_at'],
+            ];
+        }, $rows)];
     }
 
     // ——— Events for me ———
@@ -262,6 +426,38 @@ final class Friends
         $this->db->prepare(
             'INSERT INTO farm_events (to_user, from_user, type, plot_id, crop, day, uniq, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
         )->execute([$to, $from, $type, $plotId, $crop, $day, $uniq, $now]);
+    }
+
+    /** Users I received `$type` events from today… */
+    private function idsTo(int $me, string $type, string $day): array
+    {
+        return array_map('intval', array_column($this->all(
+            'SELECT from_user FROM farm_events WHERE to_user = ? AND type = ? AND day = ? AND from_user IS NOT NULL',
+            [$me, $type, $day],
+        ), 'from_user'));
+    }
+
+    /** …and users I sent `$type` events to today. */
+    private function idsFrom(int $me, string $type, string $day): array
+    {
+        return array_map('intval', array_column($this->all(
+            'SELECT to_user FROM farm_events WHERE from_user = ? AND type = ? AND day = ?',
+            [$me, $type, $day],
+        ), 'to_user'));
+    }
+
+    /** "plotId:plantedAt" of a garden's crops already picked by a friend (recent ones). */
+    private function stolenPlots(int $owner): array
+    {
+        $out = [];
+        foreach ($this->all(
+            "SELECT uniq FROM farm_events WHERE to_user = ? AND type = 'stolen' AND created_at >= ?",
+            [$owner, time() - 30 * 86400],
+        ) as $r) {
+            $parts = explode(':', (string) $r['uniq']);
+            $out[($parts[2] ?? '') . ':' . ($parts[3] ?? '')] = true;
+        }
+        return $out;
     }
 
     private function friendByCode(int $me, string $code): array
@@ -372,6 +568,14 @@ final class Friends
     {
         return $p['crop'] !== null && $p['readyAt'] !== null && $p['readyAt'] > $nowMs
             && ($p['wateredAt'] === null || $nowMs - $p['wateredAt'] >= 3600 * 1000);
+    }
+
+    /** Ripe for longer than the grace period and not picked yet this crop. */
+    private static function canSteal(array $p, int $nowMs, array $picked): bool
+    {
+        return $p['crop'] !== null && $p['readyAt'] !== null && $p['plantedAt'] !== null
+            && $p['readyAt'] + self::STEAL_GRACE_MS <= $nowMs
+            && !isset($picked[$p['id'] . ':' . $p['plantedAt']]);
     }
 
     private function one(string $sql, array $args): ?array

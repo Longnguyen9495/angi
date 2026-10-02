@@ -25,6 +25,10 @@ const account: Messages['account'] = {
   friendEvents: {
     watered: (from: string, plot: number | null) => `${from} watered plot ${plot} for you`,
     gift: (seed: string) => `Cô Ba sent you 1 ${seed}`,
+    stolen: (from: string, crop: string) => `${from} just picked your ${crop}`,
+    stole: (crop: string) => `You got 1 ${crop} from a sneaky pick`,
+    present: (from: string, seed: string) => `${from} sent you 1 ${seed}`,
+    thanks: (from: string) => `${from} says thanks`,
     more: (n: number) => ` and ${n} more ${n === 1 ? 'update' : 'updates'}`,
   },
   toasts: {

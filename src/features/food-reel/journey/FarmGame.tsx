@@ -68,7 +68,8 @@ import '../../farm-anim/farm-anim.css';
 import './farm-game.css';
 import { currentTime, formatDuration, slotKey } from '../../../domain/time';
 import { t } from '../../../i18n';
-import { useFeedback, useGame, useUi } from '../../../state/hooks';
+import { claimableCount } from '../../../domain/quests';
+import { useAccount, useFeedback, useGame, useUi } from '../../../state/hooks';
 import { NextStepCard } from './NextStepCard';
 import { Atmosphere } from './Atmosphere';
 import { dayPart, skyOverride, weatherAt } from './sky';
@@ -200,6 +201,13 @@ export function FarmGame({
   ).length;
   const meal = state.meal?.slotKey === slotKey(now) ? state.meal : null;
   const mealPending = !!meal && !meal.checkedIn;
+  const { friends } = useAccount();
+  const claimable = claimableCount(state, now);
+  // Friends whose garden has a long-ripe plot we may still pick from today.
+  const ripeFriends =
+    friends && friends.stealsLeft > 0
+      ? friends.friends.filter((f) => f.stealable > 0 && !f.stoleToday).length
+      : 0;
 
   // Toasts are drawn as in-game banners while the farm is open (see farm-game.css).
   useEffect(() => {
@@ -517,10 +525,10 @@ export function FarmGame({
     { id: 'orders', label: g.dock.orders, icon: <ChefHat size={22} />, badge: deliverable },
     { id: 'market', label: g.dock.market, icon: <Storefront size={22} /> },
   ];
-  const more: { id: PanelId; label: string }[] = [
+  const more: { id: PanelId; label: string; badge?: number }[] = [
     { id: 'map', label: g.dock.map },
-    { id: 'missions', label: g.dock.missions },
-    { id: 'friends', label: g.dock.friends },
+    { id: 'missions', label: g.dock.missions, badge: claimable },
+    { id: 'friends', label: g.dock.friends, badge: ripeFriends },
     { id: 'stats', label: g.dock.stats },
   ];
 
@@ -640,6 +648,7 @@ export function FarmGame({
           onClick={() => setMenuOpen((o) => !o)}
         >
           <DotsThreeOutline size={20} weight="fill" aria-hidden="true" />
+          {claimable + ripeFriends > 0 && <span className="fg-dot" aria-hidden="true" />}
         </button>
         {menuOpen && (
           <ul id="fg-menu" className="fg-menu" data-game-overlay>
@@ -647,6 +656,11 @@ export function FarmGame({
               <li key={it.id}>
                 <button type="button" onClick={() => open(it.id)}>
                   {it.label}
+                  {it.badge ? (
+                    <span className="fg-menu__badge" aria-hidden="true">
+                      {it.badge}
+                    </span>
+                  ) : null}
                 </button>
               </li>
             ))}

@@ -4,7 +4,6 @@ import {
   ANIMALS,
   CATCHES,
   CROPS,
-  DAILY_MISSIONS,
   RECIPES,
   REGIONS,
   REGION_ORDER,
@@ -17,15 +16,7 @@ import {
   isAnimalProduct,
   isCrop,
 } from '../data/game';
-import type {
-  AnimalId,
-  Catch,
-  CropId,
-  MissionKind,
-  ProduceId,
-  RecipeId,
-  RegionId,
-} from '../data/types';
+import type { AnimalId, Catch, CropId, ProduceId, RecipeId, RegionId } from '../data/types';
 import type { GuestProgress, Plot } from './progress';
 import { dateKey } from './time';
 
@@ -272,12 +263,6 @@ export function nextLockedRegion(p: GuestProgress): RegionId | null {
 
 export function level(xp: number): { level: number; into: number; span: number } {
   return { level: Math.floor(xp / XP_PER_LEVEL) + 1, into: xp % XP_PER_LEVEL, span: XP_PER_LEVEL };
-}
-
-export function missionsToday(p: GuestProgress, now: number): { id: MissionKind; done: boolean }[] {
-  const today = dateKey(now);
-  const done = p.missions.date === today ? p.missions.done : [];
-  return DAILY_MISSIONS.map((m) => ({ id: m.id, done: done.includes(m.id) }));
 }
 
 export function cropName(id: CropId): string {

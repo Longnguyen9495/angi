@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { getDish } from '../data/dishes';
 import { reelGameDishes } from '../features/food-reel/data/reelCatalogue';
 import { createInitialProgress } from './progress';
+import { dailyQuests } from './quests';
 import { gameReducer, touchStreak } from './reducer';
 import {
   isWet,
@@ -26,7 +27,7 @@ describe('choosing a dish', () => {
     expect(s.meal?.dishId).toBe('com-tam');
     expect(s.seeds.rice).toBe(1);
     expect(s.xp).toBeGreaterThan(0);
-    expect(s.missions.done).toContain('choose');
+    expect(dailyQuests(s, NOON)[0]).toMatchObject({ def: { id: 'd-choose' }, status: 'ready' });
   });
 
   it('is idempotent for the same dish in the same meal slot', () => {
@@ -109,7 +110,7 @@ describe('check-in', () => {
     expect(plotStage(plot, at)).toBe('ready');
     expect(s.stamps.eaten).toContain('com-tam');
     expect(s.xp).toBeGreaterThan(planted.xp);
-    expect(s.missions.done).toContain('checkin');
+    expect(s.quests.day.checkin).toBe(1);
     expect(s.unlockedRegions).toContain('central');
     expect(s.recentUnlock).toBe('central');
     expect(s.history[0]?.outcome).toBe('ate');

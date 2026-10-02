@@ -9,6 +9,7 @@ import {
   type AnimalState,
   type GuestProgress,
 } from './progress';
+import { emptyQuests, type QuestState, type Tally } from './quests';
 import { DEFAULT_FILTERS } from './recommend';
 
 export const STORAGE_KEY = 'hanh-trinh-bep-viet/guest';
@@ -59,6 +60,48 @@ function parseAnimals(v: unknown): GuestProgress['animals'] {
     out[id] = { fedAt: num(a.fedAt), readyAt: num(a.readyAt) } satisfies AnimalState;
   }
   return out;
+}
+
+function tally(v: unknown): Tally {
+  if (!isObject(v)) return {};
+  const out: Tally = {};
+  for (const [k, n] of Object.entries(v)) {
+    if (typeof n === 'number' && Number.isFinite(n) && n >= 0)
+      out[k as keyof Tally] = Math.floor(n);
+  }
+  return out;
+}
+
+/** Quests were added after v1: older saves (with the old `missions`) start them fresh. */
+function parseQuests(v: unknown, now: number): QuestState {
+  const base = emptyQuests(now);
+  if (!isObject(v)) return base;
+  const str = (x: unknown) => (typeof x === 'string' ? x : '');
+  const list = (x: unknown) => (isStringArray(x) ? x : []);
+  const badges: Record<string, number> = {};
+  if (isObject(v.badges)) {
+    for (const [k, n] of Object.entries(v.badges)) {
+      if (typeof n === 'number' && Number.isFinite(n) && n > 0) badges[k] = Math.floor(n);
+    }
+  }
+  const chest =
+    isObject(v.chest) && typeof v.chest.streak === 'number' && typeof v.chest.date === 'string'
+      ? { streak: v.chest.streak, date: v.chest.date }
+      : null;
+  return {
+    date: str(v.date),
+    week: str(v.week) || base.week,
+    daily: list(v.daily),
+    weekly: list(v.weekly),
+    day: tally(v.day),
+    weekTally: tally(v.weekTally),
+    total: tally(v.total),
+    claimed: list(v.claimed),
+    weekClaimed: list(v.weekClaimed),
+    badges,
+    chest,
+    social: v.social === true,
+  };
 }
 
 function parseLayout(v: Record<string, unknown>): GuestProgress['decorLayout'] {
@@ -115,7 +158,7 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
     hiddenDishIds: isStringArray(raw.hiddenDishIds) ? raw.hiddenDishIds : [],
     history: Array.isArray(raw.history) ? p.history : [],
     settings: isObject(raw.settings) ? { ...base.settings, ...p.settings } : base.settings,
-    missions: isObject(raw.missions) ? p.missions : base.missions,
+    quests: parseQuests(raw.quests, now),
     streak: isObject(raw.streak) ? p.streak : base.streak,
     cooked: isObject(raw.cooked) ? p.cooked : {},
     // Added after v1 shipped: older saves simply start with a full can and dry soil.

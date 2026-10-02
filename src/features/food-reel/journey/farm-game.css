@@ -108,6 +108,7 @@
 }
 
 .fg-round {
+  position: relative;
   width: 44px;
   height: 44px;
   padding: 0;
@@ -246,6 +247,25 @@
   font-weight: 700;
   font-size: 14px;
   text-align: left;
+}
+
+.fg-menu button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.fg-menu__badge {
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 99px;
+  background: #e5533b;
+  color: #fff;
+  font-size: 12px;
 }
 
 .fg-menu button:hover {

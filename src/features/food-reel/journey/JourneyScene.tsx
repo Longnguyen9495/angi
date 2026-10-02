@@ -121,7 +121,12 @@ interface JourneySceneProps {
 export default function JourneyScene({ onBackToReel, onOpenDish }: JourneySceneProps) {
   const { reduced } = useGame();
   const [cooking, setCooking] = useState<RecipeId | null>(null);
-  const [panel, setPanel] = useState<PanelId | null>(null);
+  // An invite link (?ban=CODE) lands on the friends panel, where the friendship is made.
+  const [panel, setPanel] = useState<PanelId | null>(() =>
+    typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('ban')
+      ? 'friends'
+      : null,
+  );
 
   const content: Record<PanelId, () => ReactNode> = {
     meal: () => (
@@ -142,15 +147,10 @@ export default function JourneyScene({ onBackToReel, onOpenDish }: JourneySceneP
     map: () => <AtlasSection onOpenDish={onOpenDish} />,
     missions: () => (
       <>
-        <div className="fj-split">
-          <div>
-            <h3 className="fj-h3">{sec.missions.today}</h3>
-            <MissionsSection />
-          </div>
-          <div>
-            <h3 className="fj-h3">{sec.missions.recent}</h3>
-            <MealLog />
-          </div>
+        <MissionsSection />
+        <div className="fj-album-wrap">
+          <h3 className="fj-h3">{sec.missions.recent}</h3>
+          <MealLog />
         </div>
         <div className="fj-album-wrap">
           <h3 className="fj-h3">{sec.missions.album}</h3>

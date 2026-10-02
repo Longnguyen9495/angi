@@ -43,6 +43,13 @@ return [
     'friends.badCode' => 'A garden code has 6 characters, e.g. K7QM2P.',
     'friends.nameTooLong' => 'A garden name can be at most 40 characters.',
     'friends.defaultName' => 'Garden {code}',
+    'friends.notRipe' => 'This plot has not been ripe for {minutes} minutes yet.',
+    'friends.alreadyPicked' => 'Someone just picked this one — leave the rest for the owner.',
+    'friends.pickedToday' => 'You already picked from this garden today — come back tomorrow.',
+    'friends.pickLimit' => 'You have made {max} sneaky picks today — save some for tomorrow!',
+    'friends.badSeed' => 'That seed cannot be sent.',
+    'friends.giftedToday' => 'You already sent this friend a gift today.',
+    'friends.giftLimit' => 'You have sent {max} gifts today.',
 
     // ——— Login-code email ———
     'email.subject' => '{code} is your Ăn gì? sign-in code',

@@ -62,6 +62,7 @@ try {
             ['id' => 1, 'crop' => 'rice', 'plantedAt' => $nowMs - 1000, 'readyAt' => $nowMs + 3600e3, 'wateredAt' => null],
             ['id' => 2, 'crop' => 'tomato', 'plantedAt' => $nowMs - 9e6, 'readyAt' => $nowMs - 1000, 'wateredAt' => null],
             ['id' => 3, 'crop' => null, 'plantedAt' => null, 'readyAt' => null, 'wateredAt' => null],
+            ['id' => 4, 'crop' => 'chili', 'plantedAt' => $nowMs - 9e6, 'readyAt' => $nowMs - 7200e3, 'wateredAt' => null],
         ],
         'email' => 'should-not-leak@example.vn',
     ], 'baseVersion' => 0]);
@@ -81,14 +82,15 @@ try {
 
     $list = $fr->add(['code' => strtolower($bCode)]);
     $check('adding by code (any case) links the gardens', count($list['friends']) === 1 && $list['friends'][0]['code'] === $bCode);
-    $check('friend summary: level, ready and growing plots', $list['friends'][0]['level'] === 3 && $list['friends'][0]['ready'] === 1 && $list['friends'][0]['growing'] === 1);
+    $check('friend summary: level, ready and growing plots', $list['friends'][0]['level'] === 3 && $list['friends'][0]['ready'] === 2 && $list['friends'][0]['growing'] === 1);
+    $check('friend summary: only the long-ripe plot can be picked', $list['friends'][0]['stealable'] === 1 && $list['stealsLeft'] === Friends::STEALS_PER_DAY);
     $check('adding twice is harmless', count($fr->add(['code' => $bCode])['friends']) === 1);
     $as($b);
     $check('friendship is mutual', count($fr->list()['friends']) === 1);
 
     $as($a);
     $visit = $fr->visit($bCode);
-    $check('visit shows plots and decor', count($visit['plots']) === 3 && $visit['decor'] === ['lantern'] && $visit['name'] === 'Vườn nhà Bình');
+    $check('visit shows plots and decor', count($visit['plots']) === 4 && $visit['decor'] === ['lantern'] && $visit['name'] === 'Vườn nhà Bình');
     $check('visit never includes emails', !str_contains(json_encode($visit), '@'));
 
     $check('watering a ready plot is refused', $status(fn () => $fr->water($bCode, ['plotId' => 2])) === 422);
@@ -97,9 +99,23 @@ try {
     $check('watering a growing plot works', $w['ok'] === true && $w['helpedToday'] === true && $w['helpsLeft'] === Friends::HELPS_PER_DAY - 1);
     $check('only once per friend per day', $status(fn () => $fr->water($bCode, ['plotId' => 1])) === 429);
 
+    $check('picking a just-ripe plot is refused', $status(fn () => $fr->steal($bCode, ['plotId' => 2])) === 422);
+    $check('picking a growing plot is refused', $status(fn () => $fr->steal($bCode, ['plotId' => 1])) === 422);
+    $s = $fr->steal($bCode, ['plotId' => 4]);
+    $picked = array_values(array_filter($s['plots'], fn ($p) => $p['id'] === 4))[0];
+    $check('picking a long-ripe plot works and marks it', $s['ok'] === true && $s['crop'] === 'chili' && $picked['stolen'] === true && $picked['stealable'] === false);
+    $check('one pick per friend per day', $status(fn () => $fr->steal($bCode, ['plotId' => 4])) === 429 && $s['stoleToday'] === true && $s['stealsLeft'] === Friends::STEALS_PER_DAY - 1);
+
+    $check('gifting an unknown seed is refused', $status(fn () => $fr->gift($bCode, ['crop' => 'gold'])) === 422);
+    $g = $fr->gift($bCode, ['crop' => 'rice']);
+    $check('gifting a seed returns its event id', $g['ok'] === true && str_starts_with($g['id'], 'e') && $g['giftsLeft'] === Friends::GIFTS_PER_DAY - 1);
+    $check('one gift per friend per day', $status(fn () => $fr->gift($bCode, ['crop' => 'bean'])) === 429);
+
     $mine = $fr->events()['events'];
     $types = array_column($mine, 'type');
     $check('helper gets a "helped" event and a daily gift', in_array('helped', $types, true) && in_array('gift', $types, true));
+    $stoleEv = array_values(array_filter($mine, fn ($e) => $e['type'] === 'stole'))[0] ?? null;
+    $check('picker gets a "stole" event with the crop', $stoleEv && $stoleEv['crop'] === 'chili');
     $gift = array_values(array_filter($mine, fn ($e) => $e['type'] === 'gift'))[0];
     $check('gift is a starter seed from Cô Ba', $gift['from'] === 'Cô Ba' && in_array($gift['crop'], ['rice', 'herbs', 'chili', 'scallion', 'bean', 'tomato'], true));
     $check('one gift per day', count(array_filter($fr->events()['events'], fn ($e) => $e['type'] === 'gift')) === 1);
@@ -109,11 +125,23 @@ try {
     $water = array_values(array_filter($bEvents, fn ($e) => $e['type'] === 'water'))[0] ?? null;
     $check('owner gets the water event with plot and crop', $water && $water['plotId'] === 1 && $water['crop'] === 'rice');
     $check('event names the helper by garden code, not email', $water && $water['from'] === "Khu vườn $aCode");
+    $stolen = array_values(array_filter($bEvents, fn ($e) => $e['type'] === 'stolen'))[0] ?? null;
+    $present = array_values(array_filter($bEvents, fn ($e) => $e['type'] === 'present'))[0] ?? null;
+    $check('owner hears about the pick (plot and crop)', $stolen && $stolen['plotId'] === 4 && $stolen['crop'] === 'chili');
+    $check('friend receives the seed', $present && $present['crop'] === 'rice');
     $fr->ack(['ids' => array_column($bEvents, 'id')]);
     $check('acked events are not sent again', count($fr->events()['events']) === 0);
+    $feed = $fr->feed()['items'];
+    $pickedNews = array_values(array_filter($feed, fn ($i) => $i['type'] === 'stolen'))[0] ?? null;
+    $check('news keeps acked events, with who to visit back', $pickedNews && $pickedNews['code'] === $aCode && $pickedNews['thanked'] === false);
+    $fr->thanks($aCode);
+    $fr->thanks($aCode);
+    $check('thanks is remembered for today', (array_values(array_filter($fr->feed()['items'], fn ($i) => $i['type'] === 'present'))[0]['thanked'] ?? false) === true);
 
     $as($a);
     $check('helps left counts down', $fr->list()['helpsLeft'] === Friends::HELPS_PER_DAY - 1);
+    $aFeed = $fr->feed()['items'];
+    $check('news shows thanks received and the seed I sent', in_array('thanks', array_column($aFeed, 'type'), true) && in_array('sentPresent', array_column($aFeed, 'type'), true));
     $check('removing a friend unlinks both sides', count($fr->remove($bCode)['friends']) === 0);
     $as($b);
     $check('…for the friend too', count($fr->list()['friends']) === 0);

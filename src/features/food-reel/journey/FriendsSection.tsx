@@ -1,19 +1,30 @@
-import { Copy, Drop, ShareNetwork, Trash, UsersThree } from '@phosphor-icons/react';
+import {
+  Basket,
+  Copy,
+  Drop,
+  Gift,
+  HandHeart,
+  ShareNetwork,
+  Trash,
+  UsersThree,
+} from '@phosphor-icons/react';
 import { Suspense, lazy, useCallback, useEffect, useState, type FormEvent } from 'react';
+import { CropIcon } from '../../../components/ui/CropIcon';
 import { Sheet } from '../../../components/ui/Sheet';
 import { CROPS, XP } from '../../../data/game';
 import type { CropId } from '../../../data/types';
 import { STAGE_LABEL, plotStage } from '../../../domain/selectors';
-import { formatDuration } from '../../../domain/time';
+import { currentTime, formatDuration } from '../../../domain/time';
 import { friendCanWater, friendPlots } from '../../garden3d/friendGarden';
 import { canUseWebGL } from '../../garden3d/quality';
 import {
   AccountError,
   friendsApi,
+  type FeedItem,
   type FriendGarden,
   type FriendsList,
 } from '../../../services/account';
-import { BRAND, t } from '../../../i18n';
+import { BRAND, intlLocale, t } from '../../../i18n';
 import { useAccount, useFeedback, useGame, useUi } from '../../../state/hooks';
 
 const m = t.journey.friends;
@@ -38,7 +49,7 @@ function shareUrl(code: string): string {
  * account; signed out it is a short invitation.
  */
 export function FriendsSection() {
-  const { status, checkInbox } = useAccount();
+  const { status, checkInbox, refreshFriends } = useAccount();
   const { openAccount } = useUi();
   const { toast } = useFeedback();
   const [data, setData] = useState<FriendsList | null>(null);
@@ -47,6 +58,7 @@ export function FriendsSection() {
   const [busy, setBusy] = useState(false);
   const [naming, setNaming] = useState<string | null>(null);
   const [visit, setVisit] = useState<string | null>(null);
+  const [gifting, setGifting] = useState<{ code: string; name: string } | null>(null);
 
   const load = useCallback(() => {
     friendsApi
@@ -78,7 +90,7 @@ export function FriendsSection() {
         <UsersThree size={28} aria-hidden="true" />
         <div>
           <h3 className="fj-h3">{m.title}</h3>
-          <p className="fj-note">{m.invite(XP.friendHelp)}</p>
+          <p className="fj-note">{codeFromUrl() ? m.invitePending : m.invite(XP.friendHelp)}</p>
         </div>
         <button
           type="button"
@@ -100,6 +112,7 @@ export function FriendsSection() {
       const r = await friendsApi.add(code);
       setData(r);
       setCode('');
+      void refreshFriends();
       toast({ message: m.added, tone: 'success' });
     } catch (err) {
       toast({
@@ -172,7 +185,11 @@ export function FriendsSection() {
     <div className="fj-friends">
       <div className="fj-friends__head">
         <h3 className="fj-h3">{m.title}</h3>
-        {data && <p className="fj-note">{m.helpsLeft(data.helpsLeft, XP.friendHelp)}</p>}
+        {data && (
+          <p className="fj-note">
+            {m.helpsLeft(data.helpsLeft, XP.friendHelp)} {m.stealsLeft(data.stealsLeft)}
+          </p>
+        )}
       </div>
 
       {error && !data && <p className="fj-note">{error}</p>}
@@ -259,12 +276,28 @@ export function FriendsSection() {
                   {m.boardMeta(f.level, f.xp)}
                   {!f.isMe && f.growing > 0 && !f.helpedToday && m.needWater(f.growing)}
                   {!f.isMe && f.helpedToday && m.wateredToday}
+                  {!f.isMe &&
+                    f.stealable > 0 &&
+                    !f.stoleToday &&
+                    data.stealsLeft > 0 &&
+                    m.ripe(f.stealable)}
+                  {!f.isMe && f.giftedToday && m.giftedToday}
                 </span>
               </span>
               {!f.isMe && (
                 <span className="fj-board__actions">
                   <button type="button" className="fr-ghost" onClick={() => setVisit(f.code)}>
                     {m.visit}
+                  </button>
+                  <button
+                    type="button"
+                    className="fj-board__remove"
+                    aria-label={m.giftLabel(f.name)}
+                    title={m.gift}
+                    disabled={f.giftedToday || data.giftsLeft <= 0}
+                    onClick={() => setGifting({ code: f.code, name: f.name })}
+                  >
+                    <Gift size={18} aria-hidden="true" />
                   </button>
                   <button
                     type="button"
@@ -282,6 +315,8 @@ export function FriendsSection() {
         </ol>
       )}
 
+      {data && <FriendFeed onVisit={setVisit} />}
+
       {visit && (
         <FriendVisit
           code={visit}
@@ -289,10 +324,178 @@ export function FriendsSection() {
           onHelped={() => {
             load();
             void checkInbox();
+            void refreshFriends();
+          }}
+        />
+      )}
+
+      {gifting && data && (
+        <GiftSheet
+          friend={gifting}
+          left={data.giftsLeft}
+          onClose={() => setGifting(null)}
+          onSent={(r) => {
+            setData(r);
+            setGifting(null);
+            void refreshFriends();
           }}
         />
       )}
     </div>
+  );
+}
+
+/** One seed from our tray to a friend; the server records it, then the seed leaves the tray. */
+function GiftSheet({
+  friend,
+  left,
+  onClose,
+  onSent,
+}: {
+  friend: { code: string; name: string };
+  left: number;
+  onClose: () => void;
+  onSent: (list: FriendsList) => void;
+}) {
+  const { state, dispatch } = useGame();
+  const { toast } = useFeedback();
+  const [busy, setBusy] = useState(false);
+  const seeds = (Object.keys(state.seeds) as CropId[]).filter((c) => state.seeds[c] > 0);
+
+  const send = async (crop: CropId) => {
+    if (busy) return;
+    setBusy(true);
+    try {
+      const r = await friendsApi.gift(friend.code, crop);
+      dispatch({ type: 'GIFT_SENT', id: r.id, crop, now: currentTime() });
+      toast({
+        message: m.giftSent(CROPS[crop].seedName.toLowerCase(), friend.name),
+        tone: 'success',
+      });
+      onSent(r);
+    } catch (e) {
+      toast({ message: e instanceof AccountError ? e.message : m.giftFailed, tone: 'warning' });
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Sheet
+      open
+      onClose={onClose}
+      title={m.giftTitle(friend.name)}
+      description={m.giftNote(left)}
+      variant="dark"
+    >
+      {seeds.length === 0 ? (
+        <p className="fj-note">{m.giftNone}</p>
+      ) : (
+        <ul className="fj-gift">
+          {seeds.map((c) => (
+            <li key={c}>
+              <button type="button" className="fr-ghost" disabled={busy} onClick={() => send(c)}>
+                <CropIcon crop={c} size={20} /> {m.giftSeed(CROPS[c].seedName, state.seeds[c])}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </Sheet>
+  );
+}
+
+function feedText(i: FeedItem): string {
+  const f = m.feed;
+  const crop = i.crop && i.crop in CROPS ? CROPS[i.crop as CropId] : null;
+  switch (i.type) {
+    case 'water':
+      return f.water(i.name, i.plotId);
+    case 'helped':
+      return f.helped(i.name);
+    case 'stolen':
+      return f.stolen(i.name, crop?.name.toLowerCase() ?? '');
+    case 'stole':
+      return f.stole(i.name, crop?.name.toLowerCase() ?? '');
+    case 'present':
+      return f.present(i.name, crop?.seedName.toLowerCase() ?? '');
+    case 'sentPresent':
+      return f.sentPresent(i.name, crop?.seedName.toLowerCase() ?? '');
+    case 'thanks':
+      return f.thanks(i.name);
+    case 'gift':
+      return f.gift(crop?.seedName.toLowerCase() ?? '');
+  }
+}
+
+/** Friends' news: who helped, picked or gave, with a way to visit back or say thanks. */
+function FriendFeed({ onVisit }: { onVisit: (code: string) => void }) {
+  const { toast } = useFeedback();
+  const [items, setItems] = useState<FeedItem[] | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    friendsApi
+      .feed()
+      .then((r) => alive && setItems(r.items))
+      .catch(() => alive && setItems([]));
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const thank = async (code: string) => {
+    try {
+      await friendsApi.thanks(code);
+      setItems((list) => list?.map((x) => (x.code === code ? { ...x, thanked: true } : x)) ?? null);
+    } catch {
+      toast({ message: m.feed.thankFailed, tone: 'warning' });
+    }
+  };
+
+  if (!items) return null;
+  return (
+    <section className="fj-feed" aria-labelledby="fj-feed-title">
+      <h3 className="fj-h3" id="fj-feed-title">
+        {m.feed.title}
+      </h3>
+      {items.length === 0 ? (
+        <p className="fj-note">{m.feed.empty}</p>
+      ) : (
+        <ul className="fj-feed__list">
+          {items.map((i) => (
+            <li key={i.id} className={`fj-feed__item is-${i.type}`}>
+              <span className="fj-feed__text">
+                {feedText(i)}
+                <span className="fj-board__meta">
+                  {new Date(i.at * 1000).toLocaleString(intlLocale, {
+                    day: '2-digit',
+                    month: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </span>
+              </span>
+              {i.code && i.type === 'stolen' && (
+                <button type="button" className="fr-ghost" onClick={() => onVisit(i.code!)}>
+                  <Basket size={16} aria-hidden="true" /> {m.feed.revenge}
+                </button>
+              )}
+              {i.code && (i.type === 'water' || i.type === 'present') && (
+                <button
+                  type="button"
+                  className="fr-ghost"
+                  disabled={i.thanked}
+                  onClick={() => thank(i.code!)}
+                >
+                  <HandHeart size={16} aria-hidden="true" />{' '}
+                  {i.thanked ? m.feed.thanked : m.feed.thank}
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }
 
@@ -328,10 +531,34 @@ function FriendVisit({
   }, [code]);
 
   const canHelp = !!garden && !garden.helpedToday && garden.helpsLeft > 0;
+  const canPick = !!garden && !garden.stoleToday && garden.stealsLeft > 0;
   const plots = garden ? friendPlots(garden) : [];
   const waterable = new Set(
     canHelp ? plots.filter((p) => friendCanWater(p, now)).map((p) => p.id) : [],
   );
+  const pickable = new Set(
+    canPick && garden ? garden.plots.filter((p) => p.stealable).map((p) => p.id) : [],
+  );
+  const stolen = new Set(garden ? garden.plots.filter((p) => p.stolen).map((p) => p.id) : []);
+
+  const pick = async (plotId: number) => {
+    if (!garden || busy) return;
+    setBusy(true);
+    try {
+      const g = await friendsApi.steal(code, plotId);
+      setGarden(g);
+      const crop = g.crop in CROPS ? CROPS[g.crop as CropId].name.toLowerCase() : g.crop;
+      toast({ message: v.stole(crop, g.name, XP.steal), tone: 'reward' });
+      onHelped();
+    } catch (e) {
+      toast({
+        message: e instanceof AccountError ? e.message : v.stealFailed,
+        tone: 'warning',
+      });
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const water = async (plotId: number) => {
     if (!garden || busy) return;
@@ -379,13 +606,17 @@ function FriendVisit({
             now={now}
             reduced={reduced}
             selectedPlot={picked}
-            highlight={waterable}
+            highlight={new Set([...waterable, ...pickable])}
             onPlot={(id) => {
               setPicked(id);
               if (waterable.has(id)) void water(id);
+              else if (pickable.has(id)) void pick(id);
             }}
           />
         </Suspense>
+      )}
+      {garden && canPick && garden.plots.some((p) => p.stealable) && (
+        <p className="fj-note">{v.stealRule(garden.stealsLeft, garden.stealGraceMin)}</p>
       )}
       {garden && (
         <ul className="fj-visit__plots" aria-label={v.plotsLabel}>
@@ -406,6 +637,17 @@ function FriendVisit({
                   )}
                 </span>
                 {helped === p.id && <span className="fj-visit__done">{v.helped}</span>}
+                {stolen.has(p.id) && <span className="fj-visit__done">{v.stolen}</span>}
+                {pickable.has(p.id) && (
+                  <button
+                    type="button"
+                    className="fj-can-btn"
+                    disabled={busy}
+                    onClick={() => pick(p.id)}
+                  >
+                    <Basket size={16} aria-hidden="true" /> {v.steal}
+                  </button>
+                )}
                 {waterable.has(p.id) && (
                   <button
                     type="button"

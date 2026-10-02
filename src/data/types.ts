@@ -105,11 +105,3 @@ export interface NpcDef {
   name: string;
   role: string;
 }
-
-export type MissionKind = 'choose' | 'checkin' | 'harvest-or-cook';
-
-export interface MissionDef {
-  id: MissionKind;
-  title: string;
-  xp: number;
-}

@@ -1,34 +1,201 @@
-import { CheckCircle, Circle } from '@phosphor-icons/react';
+import { CheckCircle, Circle, Gift, Medal, TreasureChest } from '@phosphor-icons/react';
 import { getDish } from '../../../data/dishes';
-import { DAILY_MISSIONS } from '../../../data/game';
-import { missionsToday } from '../../../domain/selectors';
+import {
+  STREAK_CHESTS,
+  badgeReward,
+  badgeTitle,
+  badges,
+  dailyQuests,
+  weeklyQuests,
+  type BadgeView,
+  type QuestReward,
+  type QuestView,
+} from '../../../domain/quests';
+import { currentTime } from '../../../domain/time';
 import { t } from '../../../i18n';
-import { useGame } from '../../../state/hooks';
+import { useFeedback, useGame } from '../../../state/hooks';
 
 const m = t.journey.missions;
 const OUTCOME = m.outcome;
 
+function rewardParts(r: QuestReward): string[] {
+  return [
+    r.xp > 0 ? m.reward.xp(r.xp) : '',
+    r.coins > 0 ? m.reward.coins(r.coins) : '',
+    r.seeds > 0 ? m.reward.seeds(r.seeds) : '',
+    r.water > 0 ? m.reward.water(r.water) : '',
+  ].filter(Boolean);
+}
+
+/** Days left in the Monday-start week, today included. */
+function daysLeftInWeek(now: number): number {
+  return 7 - ((new Date(now).getDay() + 6) % 7);
+}
+
+/**
+ * Quests: the streak chest, today's quests, this week's, and the achievements. A finished
+ * quest waits for a tap on "Nhận" so the reward is seen, not silently added.
+ */
 export function MissionsSection() {
-  const { state, now } = useGame();
-  const list = missionsToday(state, now);
+  const { state, now, dispatch } = useGame();
+  const { toast } = useFeedback();
+
+  const paid = (r: QuestReward) =>
+    toast({ message: m.got(rewardParts(r).join(' · ')), tone: 'reward' });
+
+  const claim = (v: QuestView) => {
+    dispatch({ type: 'CLAIM_QUEST', id: v.def.id, now: currentTime() });
+    paid(v.def.reward);
+  };
+  const claimBadge = (b: BadgeView) => {
+    dispatch({ type: 'CLAIM_BADGE', id: b.def.id, now: currentTime() });
+    paid(badgeReward(b.claimed + 1));
+  };
+
+  const chest = state.quests.chest;
+  const nextChest = Object.keys(STREAK_CHESTS)
+    .map(Number)
+    .find((n) => n > state.streak.count);
+
+  return (
+    <div className="fj-quests">
+      {chest ? (
+        <div className="fj-chest is-ready">
+          <TreasureChest size={34} weight="duotone" aria-hidden="true" />
+          <div>
+            <p className="fj-chest__title">{m.chestTitle(chest.streak)}</p>
+            <p className="fj-note">{m.chestBody}</p>
+            <p className="fj-chest__reward">
+              {rewardParts(STREAK_CHESTS[chest.streak]!).join(' · ')}
+            </p>
+          </div>
+          <button
+            type="button"
+            className="fr-cta"
+            onClick={() => {
+              dispatch({ type: 'OPEN_CHEST', now: currentTime() });
+              paid(STREAK_CHESTS[chest.streak]!);
+            }}
+          >
+            {m.openChest}
+          </button>
+        </div>
+      ) : (
+        nextChest !== undefined && (
+          <p className="fj-chest__next">
+            <TreasureChest size={18} aria-hidden="true" />
+            {m.chestNext(nextChest, nextChest - state.streak.count)}
+          </p>
+        )
+      )}
+
+      <section aria-labelledby="fj-q-daily">
+        <div className="fj-quests__head">
+          <h3 className="fj-h3" id="fj-q-daily">
+            {m.daily}
+          </h3>
+          <p className="fj-note">{m.dailyNote}</p>
+        </div>
+        <QuestList list={dailyQuests(state, now)} onClaim={claim} />
+      </section>
+
+      <section aria-labelledby="fj-q-weekly">
+        <div className="fj-quests__head">
+          <h3 className="fj-h3" id="fj-q-weekly">
+            {m.weekly}
+          </h3>
+          <p className="fj-note">{m.weeklyNote(daysLeftInWeek(now))}</p>
+        </div>
+        <QuestList list={weeklyQuests(state, now)} onClaim={claim} />
+      </section>
+
+      <section aria-labelledby="fj-q-badges">
+        <h3 className="fj-h3" id="fj-q-badges">
+          {m.badges}
+        </h3>
+        <ul className="fj-badges">
+          {badges(state).map((b) => {
+            const title = badgeTitle(b.def.id);
+            const total = b.def.tiers.length;
+            const goal = b.next ?? b.def.tiers[total - 1]!;
+            return (
+              <li
+                key={b.def.id}
+                className={`fj-badge${b.ready ? ' is-ready' : ''}${b.claimed > 0 ? ' has-tier' : ''}`}
+              >
+                <Medal size={26} weight={b.claimed > 0 ? 'fill' : 'regular'} aria-hidden="true" />
+                <div className="fj-badge__text">
+                  <p className="fj-badge__name">{title.name}</p>
+                  <p className="fj-note">
+                    {b.next === null ? m.maxed : title.goal(goal)}
+                    {' · '}
+                    {m.tier(b.claimed, total)}
+                  </p>
+                  {b.next !== null && (
+                    <Meter value={Math.min(b.value, goal)} max={goal} label={title.goal(goal)} />
+                  )}
+                </div>
+                {b.ready && (
+                  <button type="button" className="fr-cta" onClick={() => claimBadge(b)}>
+                    {m.claim}
+                  </button>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    </div>
+  );
+}
+
+function QuestList({ list, onClaim }: { list: QuestView[]; onClaim: (v: QuestView) => void }) {
   return (
     <ul className="fj-missions">
-      {list.map((mission) => {
-        const def = DAILY_MISSIONS.find((d) => d.id === mission.id)!;
-        return (
-          <li key={mission.id} className={`fj-mission ${mission.done ? 'is-done' : ''}`}>
-            {mission.done ? (
-              <CheckCircle aria-hidden="true" size={22} weight="fill" />
-            ) : (
-              <Circle aria-hidden="true" size={22} />
+      {list.map((v) => (
+        <li key={v.def.id} className={`fj-mission is-${v.status}`}>
+          {v.status === 'claimed' ? (
+            <CheckCircle aria-hidden="true" size={22} weight="fill" />
+          ) : v.status === 'ready' ? (
+            <Gift aria-hidden="true" size={22} weight="fill" />
+          ) : (
+            <Circle aria-hidden="true" size={22} />
+          )}
+          <span className="fj-mission__body">
+            <span className="fj-mission__title">{v.title}</span>
+            <span className="fj-mission__xp">{rewardParts(v.def.reward).join(' · ')}</span>
+            {v.status === 'open' && v.def.target > 1 && (
+              <Meter value={v.progress} max={v.def.target} label={v.title} />
             )}
-            <span className="fj-mission__title">{def.title}</span>
-            <span className="fj-mission__xp">+{def.xp} XP</span>
-            <span className="sr-only">{mission.done ? m.done : m.notDone}</span>
-          </li>
-        );
-      })}
+          </span>
+          {v.status === 'ready' ? (
+            <button type="button" className="fr-cta fj-mission__claim" onClick={() => onClaim(v)}>
+              {m.claim}
+            </button>
+          ) : (
+            <span className="fj-mission__count">
+              {v.status === 'claimed' ? m.claimed : m.progress(v.progress, v.def.target)}
+            </span>
+          )}
+          <span className="sr-only">{v.status === 'open' ? m.notDone : m.done}</span>
+        </li>
+      ))}
     </ul>
+  );
+}
+
+function Meter({ value, max, label }: { value: number; max: number; label: string }) {
+  return (
+    <span
+      className="fj-meter"
+      role="progressbar"
+      aria-label={label}
+      aria-valuemin={0}
+      aria-valuemax={max}
+      aria-valuenow={value}
+    >
+      <i style={{ width: `${(value / max) * 100}%` }} />
+    </span>
   );
 }
 

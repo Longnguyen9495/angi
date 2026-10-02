@@ -4,6 +4,7 @@
  * Every request carries X-Locale so server errors and the login email come
  * back in the visitor's language.
  */
+import type { FriendEventType } from '../domain/progress';
 import { locale, t } from '../i18n';
 
 export interface AccountUser {
@@ -96,6 +97,10 @@ export interface FriendSummary {
   ready: number;
   growing: number;
   helpedToday: boolean;
+  /** Plots ripe long enough to pick from, and whether we picked / sent a gift today. */
+  stealable: number;
+  stoleToday: boolean;
+  giftedToday: boolean;
   updatedAt: number | null;
 }
 
@@ -103,6 +108,8 @@ export interface FriendsList {
   me: GardenProfile & { xp: number; level: number };
   friends: FriendSummary[];
   helpsLeft: number;
+  stealsLeft: number;
+  giftsLeft: number;
   max: number;
 }
 
@@ -112,6 +119,9 @@ export interface FriendPlot {
   plantedAt: number | null;
   readyAt: number | null;
   wateredAt: number | null;
+  /** Already picked by a friend this crop / can be picked now. */
+  stolen?: boolean;
+  stealable?: boolean;
 }
 
 export interface FriendGarden {
@@ -126,11 +136,30 @@ export interface FriendGarden {
   updatedAt: number | null;
   helpedToday: boolean;
   helpsLeft: number;
+  stoleToday: boolean;
+  stealsLeft: number;
+  giftedToday: boolean;
+  giftsLeft: number;
+  /** Minutes a plot must be ripe before it can be picked. */
+  stealGraceMin: number;
+}
+
+export interface FeedItem {
+  id: string;
+  type: FriendEventType | 'sentPresent';
+  plotId: number | null;
+  crop: string | null;
+  /** The other garden (or Cô Ba), and its code while it is still a friend. */
+  name: string;
+  code: string | null;
+  thanked: boolean;
+  /** Unix seconds. */
+  at: number;
 }
 
 export interface RemoteFriendEvent {
   id: string;
-  type: 'water' | 'gift' | 'helped';
+  type: FriendEventType;
   plotId: number | null;
   crop: string | null;
   from: string;
@@ -148,6 +177,21 @@ export const friendsApi = {
     call<FriendGarden & { ok: true }>('POST', `/friends/${encodeURIComponent(code)}/water`, {
       plotId,
     }),
+  steal: (code: string, plotId: number) =>
+    call<FriendGarden & { ok: true; crop: string }>(
+      'POST',
+      `/friends/${encodeURIComponent(code)}/steal`,
+      { plotId },
+    ),
+  gift: (code: string, crop: string) =>
+    call<FriendsList & { ok: true; id: string; crop: string }>(
+      'POST',
+      `/friends/${encodeURIComponent(code)}/gift`,
+      { crop },
+    ),
+  thanks: (code: string) =>
+    call<{ ok: true }>('POST', `/friends/${encodeURIComponent(code)}/thanks`),
+  feed: () => call<{ items: FeedItem[] }>('GET', '/feed'),
   events: () => call<{ events: RemoteFriendEvent[] }>('GET', '/events'),
   ack: (ids: string[]) => call<{ ok: true }>('POST', '/events/ack', { ids }),
 };

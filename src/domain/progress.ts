@@ -1,13 +1,6 @@
-import type {
-  AnimalId,
-  CropId,
-  DecorId,
-  MissionKind,
-  ProduceId,
-  RecipeId,
-  RegionId,
-} from '../data/types';
+import type { AnimalId, CropId, DecorId, ProduceId, RecipeId, RegionId } from '../data/types';
 import { FARM_PLOT_COUNT } from '../data/game';
+import { emptyQuests, type QuestState } from './quests';
 import { DEFAULT_FILTERS, type Filters } from './recommend';
 import { HOUR_MS, dateKey } from './time';
 
@@ -24,6 +17,8 @@ export interface Plot {
   sourceDishId: string | null;
   /** Last time the plot was watered (can or post-meal rain); drives the wet-soil look. */
   wateredAt: number | null;
+  /** A friend picked from this crop while it was ripe: its harvest pays no XP. */
+  stolen?: boolean;
 }
 
 export interface MealSession {
@@ -75,7 +70,8 @@ export interface GuestProgress {
   cooked: Partial<Record<RecipeId, number>>;
   meal: MealSession | null;
   history: CheckInRecord[];
-  missions: { date: string; done: MissionKind[] };
+  /** Daily and weekly quests, achievements and the streak chest (see quests.ts). */
+  quests: QuestState;
   streak: { count: number; lastActiveDate: string; restPasses: number };
   reminder: { slotKey: string; at: number } | null;
   /** Watering can: `used` of today's refills, plus `bonus` earned by check-ins today. */
@@ -113,10 +109,18 @@ export interface DecorPlacement {
   rot: number;
 }
 
+/**
+ * water / helped: a friend watered us / we watered a friend. gift: Cô Ba's daily seed.
+ * stolen / stole: a friend picked from our ripe plot / we picked from theirs.
+ * present: a friend sent us a seed. thanks: a friend said thanks.
+ */
+export type FriendEventType =
+  'water' | 'gift' | 'helped' | 'stolen' | 'stole' | 'present' | 'thanks';
+
 /** Something a friend did for this garden, as recorded by the server (see server/lib/Friends.php). */
 export interface FriendEvent {
   id: string;
-  type: 'water' | 'gift' | 'helped';
+  type: FriendEventType;
   plotId?: number;
   crop?: CropId;
   from?: string;
@@ -202,7 +206,7 @@ export function createInitialProgress(now: number): GuestProgress {
     cooked: {},
     meal: null,
     history: [],
-    missions: { date: dateKey(now), done: [] },
+    quests: emptyQuests(now),
     streak: { count: 2, lastActiveDate: dateKey(now - 24 * HOUR_MS), restPasses: 1 },
     reminder: null,
     water: { date: dateKey(now), used: 0, bonus: 0 },

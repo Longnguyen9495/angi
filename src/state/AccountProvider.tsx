@@ -4,7 +4,13 @@ import type { GuestProgress } from '../domain/progress';
 import { reconcile, summarize } from '../domain/sync';
 import { CROPS } from '../data/game';
 import type { CropId } from '../data/types';
-import { AccountError, accountApi, friendsApi, type AccountUser } from '../services/account';
+import {
+  AccountError,
+  accountApi,
+  friendsApi,
+  type AccountUser,
+  type FriendsList,
+} from '../services/account';
 import { AccountContext, type AccountContextValue, type SyncState } from './context';
 import { useFeedback, useGame } from './hooks';
 import { t } from '../i18n';
@@ -13,6 +19,34 @@ import { t } from '../i18n';
 const PUSH_DELAY_MS = 3000;
 /** How often a signed-in garden asks for friends' help and Cô Ba's gift. */
 const EVENTS_EVERY_MS = 5 * 60 * 1000;
+/** A garden code from an invite link (?ban=K7QM2P), kept until the guest is signed in. */
+const INVITE_KEY = 'angi:invite';
+
+function readInvite(): string | null {
+  try {
+    const fromUrl = new URLSearchParams(window.location.search).get('ban') ?? '';
+    if (/^[A-Za-z0-9]{6}$/.test(fromUrl)) {
+      sessionStorage.setItem(INVITE_KEY, fromUrl.toUpperCase());
+      return fromUrl.toUpperCase();
+    }
+    return sessionStorage.getItem(INVITE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function clearInvite() {
+  try {
+    sessionStorage.removeItem(INVITE_KEY);
+  } catch {
+    /* storage blocked */
+  }
+  const params = new URLSearchParams(window.location.search);
+  if (!params.has('ban')) return;
+  params.delete('ban');
+  const q = params.toString();
+  window.history.replaceState(null, '', window.location.pathname + (q ? `?${q}` : ''));
+}
 
 /**
  * Optional guest account. Signed out, nothing happens here beyond one /me call.
@@ -26,6 +60,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AccountUser | null>(null);
   const [sync, setSync] = useState<SyncState>('idle');
   const [lastSyncAt, setLastSyncAt] = useState<number | null>(null);
+  const [friends, setFriends] = useState<FriendsList | null>(null);
   const [conflict, setConflict] = useState<{
     remote: GuestProgress;
     version: number;
@@ -102,6 +137,13 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       if (e.type === 'water') lines.push(t.account.friendEvents.watered(e.from, e.plotId));
       if (e.type === 'gift' && crop)
         lines.push(t.account.friendEvents.gift(CROPS[crop].seedName.toLowerCase()));
+      if (e.type === 'stolen' && crop)
+        lines.push(t.account.friendEvents.stolen(e.from, CROPS[crop].name.toLowerCase()));
+      if (e.type === 'stole' && crop)
+        lines.push(t.account.friendEvents.stole(CROPS[crop].name.toLowerCase()));
+      if (e.type === 'present' && crop)
+        lines.push(t.account.friendEvents.present(e.from, CROPS[crop].seedName.toLowerCase()));
+      if (e.type === 'thanks') lines.push(t.account.friendEvents.thanks(e.from));
     }
     await friendsApi.ack(r.events.map((e) => e.id)).catch(() => undefined);
     if (lines.length > 0) {
@@ -113,6 +155,27 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         tone: 'reward',
       });
     }
+  }, [dispatch, toast]);
+
+  /** Friends list for badges and the social quests; also adds a friend from an invite link. */
+  const refreshFriends = useCallback(async () => {
+    if (!ready.current) return;
+    const invite = readInvite();
+    if (invite) {
+      try {
+        const r = await friendsApi.add(invite);
+        const name = r.friends.find((f) => f.code === invite)?.name;
+        if (name) toast({ message: t.journey.friends.inviteAdded(name), tone: 'success' });
+      } catch (e) {
+        // Own code, unknown code, a full list: say why once and drop the invite.
+        if (e instanceof AccountError) toast({ message: e.message, tone: 'warning' });
+      }
+      clearInvite();
+    }
+    const r = await friendsApi.list().catch(() => null);
+    if (!r) return;
+    setFriends(r);
+    dispatch({ type: 'SET_SOCIAL', on: r.friends.length > 0 });
   }, [dispatch, toast]);
 
   /** First contact after sign-in (or page load): decide push, pull or ask. */
@@ -145,23 +208,28 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         setLastSyncAt(Date.now());
       }
       void pullEvents();
+      void refreshFriends();
     },
-    [dispatch, push, pullEvents],
+    [dispatch, push, pullEvents, refreshFriends],
   );
 
   // While signed in: check for friends' help now and then, and when the tab comes back.
   useEffect(() => {
     if (status !== 'signed-in' || conflict) return;
-    const timer = setInterval(() => void pullEvents(), EVENTS_EVERY_MS);
+    const tick = () => {
+      void pullEvents();
+      void refreshFriends();
+    };
+    const timer = setInterval(tick, EVENTS_EVERY_MS);
     const onVisible = () => {
-      if (document.visibilityState === 'visible') void pullEvents();
+      if (document.visibilityState === 'visible') tick();
     };
     document.addEventListener('visibilitychange', onVisible);
     return () => {
       clearInterval(timer);
       document.removeEventListener('visibilitychange', onVisible);
     };
-  }, [status, conflict, pullEvents]);
+  }, [status, conflict, pullEvents, refreshFriends]);
 
   // Who is this? One quiet request per page load; failure just means "guest".
   useEffect(() => {
@@ -226,6 +294,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
           await push(stateRef.current);
         }
         void pullEvents();
+        void refreshFriends();
       },
       signedIn: attach,
       logout: async () => {
@@ -235,6 +304,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         setStatus('guest');
         setSync('idle');
         setConflict(null);
+        setFriends(null);
       },
       deleteAccount: async () => {
         await accountApi.remove();
@@ -245,11 +315,26 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         setConflict(null);
       },
       checkInbox: pullEvents,
+      friends,
+      refreshFriends,
       setMarketing: async (on) => {
         setUser(await accountApi.setMarketing(on));
       },
     }),
-    [status, user, sync, lastSyncAt, conflict, state, dispatch, push, attach, pullEvents],
+    [
+      status,
+      user,
+      sync,
+      lastSyncAt,
+      conflict,
+      state,
+      dispatch,
+      push,
+      attach,
+      pullEvents,
+      friends,
+      refreshFriends,
+    ],
   );
 
   return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>;

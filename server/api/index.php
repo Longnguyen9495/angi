@@ -78,11 +78,14 @@ try {
         }
         // Khu vườn bạn bè: routes with a garden code in the path.
         $friends = new Friends(db(), $account);
-        if (preg_match('#^/account/friends/([A-Za-z0-9]{6})(/(garden|water))?$#', $path, $fm)) {
+        if (preg_match('#^/account/friends/([A-Za-z0-9]{6})(/(garden|water|steal|gift|thanks))?$#', $path, $fm)) {
             $code = $fm[1];
             match ($method . ' ' . ($fm[3] ?? '')) {
                 'GET garden' => json_response($friends->visit($code)),
                 'POST water' => json_response($friends->water($code, read_json_body())),
+                'POST steal' => json_response($friends->steal($code, read_json_body())),
+                'POST gift' => json_response($friends->gift($code, read_json_body())),
+                'POST thanks' => json_response($friends->thanks($code)),
                 'DELETE ' => json_response($friends->remove($code)),
                 default => throw new HttpError(404, __t('api.notFound')),
             };
@@ -94,6 +97,7 @@ try {
             'GET /account/friends' => json_response($friends->list()),
             'POST /account/friends' => json_response($friends->add(read_json_body())),
             'GET /account/events' => json_response($friends->events()),
+            'GET /account/feed' => json_response($friends->feed()),
             'POST /account/events/ack' => json_response($friends->ack(read_json_body())),
             'POST /account/code' => json_response($account->requestCode(read_json_body(), (string) ($_SERVER['REMOTE_ADDR'] ?? ''))),
             'POST /account/verify' => json_response($account->verifyCode(read_json_body())),
