@@ -3,7 +3,8 @@ import type { FxId, Vec2 } from '../engine/types';
 import { type AnimSystem, type World, clamp } from '../engine/world';
 
 /**
- * Ambient life: a few birds crossing the sky every 10–40 s, butterflies (the sheet's orange and
+ * Ambient life: a few birds (the sheet's white and brown ones, wings beating in bursts between
+ * glides) crossing the sky every 10–40 s, butterflies (the sheet's orange and
  * blue ones) that flutter round the flowers (and sometimes settle on one) before flying off,
  * leaves (sheet leaves) falling from the crowns and tumbling (more in a gust), pollen over the
  * flowers and dust motes in the light. A butterfly close to a flower makes it tremble.
@@ -16,6 +17,10 @@ interface Bird {
   phase: number;
   size: number;
   seed: number;
+  kind: FxId;
+  /** Gliding time left (wings held), then a burst of beats. */
+  glide: number;
+  beats: number;
 }
 
 interface Butterfly {
@@ -52,12 +57,28 @@ const BUTTERFLIES: FxId[] = ['butterflyOrange', 'butterflyBlue'];
 const LEAVES: FxId[] = ['leaf1', 'leaf2', 'leaf3', 'leaf4'];
 /** Drawn size (picture px, longest side) of a butterfly and of a falling leaf. */
 const BUTTERFLY_PX = 15;
+/** Wing line on the sheet birds (fraction of their height): wings fold down towards it. */
+const WING_LINE = 0.66;
 const LEAF_PX = 9;
 
 export function animateBird(b: Bird, w: World) {
   b.x += b.vx * w.dt;
-  b.phase += w.dt * (7 + b.seed * 2);
-  b.y += Math.sin(b.phase * 0.21 + b.seed) * 4 * w.dt;
+  if (b.glide > 0) {
+    // Wings held up, sinking a touch.
+    b.glide -= w.dt;
+    b.y += 3 * w.dt;
+    if (b.glide <= 0) {
+      b.beats = 3 + Math.floor(w.rand() * 4);
+      b.phase = 0;
+    }
+  } else {
+    const before = Math.floor(b.phase / (Math.PI * 2));
+    b.phase += w.dt * (11 + b.seed * 3);
+    b.y -= 2.5 * w.dt;
+    if (Math.floor(b.phase / (Math.PI * 2)) > before && --b.beats <= 0)
+      b.glide = 0.6 + w.rand() * 1.4;
+  }
+  b.y += Math.sin(b.x * 0.01 + b.seed * 6) * 2 * w.dt;
 }
 
 export function animateButterfly(f: Butterfly, w: World) {
@@ -156,6 +177,7 @@ export class AmbientSystem implements AnimSystem {
     if (this.nextBirds <= 0) {
       this.nextBirds = 10 + w.rand() * 30;
       const n = 1 + Math.floor(w.rand() * 3);
+      const kind: FxId = w.rand() < 0.5 ? 'birdWhite' : 'birdBrown';
       const dir = w.rand() < 0.5 ? 1 : -1;
       const y = this.skyBand[0] + w.rand() * (this.skyBand[1] - this.skyBand[0]);
       const v = 55 + w.rand() * 30;
@@ -167,6 +189,10 @@ export class AmbientSystem implements AnimSystem {
           phase: w.rand() * 6,
           size: 5.5 + w.rand() * 2.5,
           seed: w.rand(),
+          // Now and then one of another colour joins the flock.
+          kind: w.rand() < 0.2 ? (kind === 'birdWhite' ? 'birdBrown' : 'birdWhite') : kind,
+          glide: w.rand() * 0.8,
+          beats: 0,
         });
     }
     for (const b of this.birds) animateBird(b, w);
@@ -278,9 +304,40 @@ export class AmbientSystem implements AnimSystem {
       this.sprite(ctx, f.kind, BUTTERFLY_PX);
       ctx.restore();
     }
-    ctx.strokeStyle = 'rgba(42,64,86,0.85)';
-    ctx.lineCap = 'round';
     for (const b of this.birds) {
+      const pic = this.fx[b.kind];
+      if (pic) {
+        // The sheet birds face left with their wings raised. A beat folds the wings down to the
+        // body line: the part above it squashes, the body below stays.
+        const k = (b.size * 3) / Math.max(pic.w, pic.h);
+        const dw = pic.w * k;
+        const dh = pic.h * k;
+        const fold = b.glide > 0 ? 1 : 0.42 + 0.58 * (0.5 + 0.5 * Math.cos(b.phase));
+        const line = pic.h * WING_LINE;
+        const img = pic.img;
+        const sy = img.naturalHeight / pic.h;
+        const sx = img.naturalWidth / pic.w;
+        ctx.save();
+        ctx.translate(b.x, b.y);
+        if (b.vx > 0) ctx.scale(-1, 1);
+        const top = dh * WING_LINE * fold;
+        ctx.drawImage(img, 0, 0, pic.w * sx, line * sy, -dw / 2, -top, dw, top);
+        ctx.drawImage(
+          img,
+          0,
+          line * sy,
+          pic.w * sx,
+          (pic.h - line) * sy,
+          -dw / 2,
+          -0.3,
+          dw,
+          dh - dh * WING_LINE + 0.3,
+        );
+        ctx.restore();
+        continue;
+      }
+      ctx.strokeStyle = 'rgba(42,64,86,0.85)';
+      ctx.lineCap = 'round';
       const flap = Math.sin(b.phase);
       const s = b.size;
       ctx.lineWidth = 1.5;

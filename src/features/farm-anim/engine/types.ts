@@ -51,7 +51,17 @@ export type FxId =
   | 'splash'
   | 'flower';
 
-export type LayerKind = 'tree' | 'pine' | 'bush' | 'grass' | 'flower' | 'reed' | 'hay' | 'dock';
+export type LayerKind =
+  | 'tree'
+  | 'pine'
+  | 'bush'
+  | 'grass'
+  | 'flower'
+  | 'reed'
+  | 'hay'
+  | 'dock'
+  /** Plants behind the greenhouse glass: a slow sway of their own, out of the wind. */
+  | 'indoor';
 
 export interface LayerDef extends Placed {
   id: string;

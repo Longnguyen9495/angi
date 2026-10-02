@@ -231,6 +231,8 @@ const farm: Messages['farm'] = {
           'Short wing flap',
           'Each hen has its own temper and pace',
         ],
+        goose: ['Breathing', 'Little head bob', 'Looks round', 'Pecks at the grass 2–3 times'],
+        indoor: ['Sways gently behind the glass, out of the wind'],
         windmill: [
           'Only the sails turn, the tower stays still',
           'Speed follows the wind with inertia (speeds up, coasts down)',
@@ -238,7 +240,11 @@ const farm: Messages['farm'] = {
         ],
         chimney: ['Smoke rises, swells and fades', 'Smoke leans with the wind'],
         door: ['Opens and closes on click', 'Now and then left ajar on its own'],
-        glass: ['A reflection glides across the glass', 'The greenhouse never shakes or bends'],
+        glass: [
+          'A reflection glides across the glass',
+          'The greenhouse never shakes or bends',
+          'The plants inside sway gently',
+        ],
         plot: [
           'Sowing: soil clods, seeds falling',
           'Watering: drops, darker soil',

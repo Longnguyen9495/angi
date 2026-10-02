@@ -237,6 +237,8 @@ const farm = {
           'Vỗ cánh ngắn',
           'Mỗi con một tính cách và nhịp riêng',
         ],
+        goose: ['Thở nhẹ', 'Gật gù đầu', 'Ngó quanh', 'Cúi mổ cỏ 2–3 lần'],
+        indoor: ['Cây sau kính khẽ đung đưa, không theo gió'],
         windmill: [
           'Chỉ cánh quạt quay, thân đứng yên',
           'Tốc độ theo gió, có quán tính (tăng tốc, giảm tốc)',
@@ -244,7 +246,11 @@ const farm = {
         ],
         chimney: ['Khói bay lên, phồng to, mờ dần', 'Khói nghiêng theo hướng gió'],
         door: ['Cửa mở/đóng khi bấm', 'Thỉnh thoảng tự hé mở'],
-        glass: ['Vệt sáng phản chiếu trượt trên kính', 'Không làm rung hay méo nhà kính'],
+        glass: [
+          'Vệt sáng phản chiếu trượt trên kính',
+          'Không làm rung hay méo nhà kính',
+          'Cây bên trong nhà kính khẽ đung đưa',
+        ],
         plot: [
           'Gieo hạt: đất văng, hạt rơi',
           'Tưới: giọt nước, đất sẫm màu',

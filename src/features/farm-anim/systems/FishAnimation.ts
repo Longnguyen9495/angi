@@ -1,24 +1,34 @@
 import type { Assets } from '../engine/assets';
 import { type AnimSystem, type World, clamp } from '../engine/world';
-import { KOI_LOOKS, type KoiLook, drawKoi } from './koiPainter';
 import type { WaterAnimation } from './WaterAnimation';
 
 /**
  * Koi: each picks a spot in open water, turns towards it at a limited rate, speeds up and slows
  * down, sometimes idles near the surface (a small ring) and now and then jumps: out of the water
- * on an arc, splash on take-off and a bigger one on landing. Drawn by koiPainter (a bending
- * body seen from above), squashed onto the water plane of the 3/4 view.
+ * on an arc, splash on take-off and a bigger one on landing.
+ *
+ * The fish are the asset sheet's koi (koi-N.webp, laid flat with the nose to the right by
+ * prepare.mjs). Each is drawn in thin strips across its body, shifted sideways by a wave that grows
+ * towards the tail, so it swims with its whole body and curls into turns. It faces left or right by
+ * mirroring (squeezed through edge-on while it turns round) and tilts towards its heading within a
+ * limit, so a side-view sprite never stands on its nose.
  */
 
 /** Vertical squash of the water plane in the painting's 3/4 view. */
 const PLANE = 0.6;
-/** The fish has body depth, so it is squashed less than the water it swims in. */
-const BODY_PLANE = 0.76;
+/** Strips the body is cut into for the swim wave. */
+const STRIPS = 9;
+/** Most the sprite tilts towards a heading that runs up or down the picture (radians). */
+const MAX_TILT = 0.62;
 
 type FishState = 'swim' | 'pause' | 'jump';
 
 interface Fish {
-  look: KoiLook;
+  id: string;
+  img: HTMLImageElement;
+  /** Drawn length and height (picture px). */
+  len: number;
+  tall: number;
   x: number;
   y: number;
   heading: number;
@@ -31,6 +41,9 @@ interface Fish {
   wag: number;
   /** Smoothed turn rate −1..1 (the body curls into turns). */
   turn: number;
+  /** Facing −1..1 (left..right; near 0 = edge-on, mid-turn) and drawn tilt. */
+  face: number;
+  tilt: number;
   /** Jump progress. */
   jump: { u: number; x0: number; y0: number; dx: number; dy: number; h: number } | null;
 }
@@ -93,6 +106,21 @@ export function animateFish(f: Fish, w: World, water: WaterAnimation) {
     pickTarget(f, w, water);
   }
   f.wag += dt * (3.5 + f.speed * 0.3);
+  // Face the way it swims (with some slack round straight up/down, so it doesn't flicker), and
+  // tilt towards the heading as seen on screen.
+  const cx = Math.cos(f.heading);
+  const want2 = Math.abs(cx) > 0.2 ? Math.sign(cx) : f.face >= 0 ? 1 : -1;
+  f.face += clamp(want2 - f.face, -3.2 * dt, 3.2 * dt);
+  f.tilt += (tiltFor(f.heading, f.face) - f.tilt) * Math.min(1, dt * 4);
+}
+
+/** Screen tilt of a sprite facing `face` that swims along `heading` (on the water plane). */
+function tiltFor(heading: number, face: number) {
+  const a = Math.atan2(Math.sin(heading) * PLANE, Math.cos(heading));
+  let r = face >= 0 ? a : a - Math.PI;
+  while (r > Math.PI) r -= Math.PI * 2;
+  while (r < -Math.PI) r += Math.PI * 2;
+  return clamp(r, -MAX_TILT, MAX_TILT);
 }
 
 function pickTarget(f: Fish, w: World, water: WaterAnimation) {
@@ -155,14 +183,16 @@ export class FishAnimation implements AnimSystem {
     private water: WaterAnimation,
   ) {
     const { layout } = assets;
-    const homes = [1, 2, 3, 4].map((i) => layout.sprites[`koi-${i}`]).filter((k) => !!k);
-    KOI_LOOKS.forEach((look, i) => {
-      const k = homes[i % homes.length];
-      const x = k ? k.x + k.w / 2 + (i >= homes.length ? 60 : 0) : 1000;
-      const y = k ? k.y + k.h / 2 : 760;
+    for (let i = 1; layout.sprites[`koi-${i}`]; i++) {
+      const k = layout.sprites[`koi-${i}`]!;
+      const x = k.x + k.w / 2;
+      const y = k.y + k.h / 2;
       const heading = i * 1.3;
       this.fish.push({
-        look,
+        id: `koi-${i}`,
+        img: assets.img(k.file),
+        len: k.w,
+        tall: k.h,
         x,
         y,
         heading,
@@ -174,9 +204,13 @@ export class FishAnimation implements AnimSystem {
         timer: 0.4 + i * 0.5,
         wag: i * 1.7,
         turn: 0,
+        face: Math.cos(heading) >= 0 ? 1 : -1,
+        tilt: 0,
         jump: null,
       });
-    });
+      const f = this.fish[this.fish.length - 1]!;
+      f.tilt = tiltFor(heading, f.face);
+    }
   }
 
   update(w: World) {
@@ -200,42 +234,65 @@ export class FishAnimation implements AnimSystem {
   }
 
   private drawFish(ctx: CanvasRenderingContext2D, f: Fish) {
-    const L = f.look.length;
+    const L = f.len;
     let x = f.x;
     let y = f.y;
     let lift = 0;
-    let pitch = 0;
+    let tilt = f.tilt;
     if (f.jump) {
       const j = f.jump;
       const u = j.u;
       x = j.x0 + j.dx * u;
       y = j.y0 + j.dy * u;
       lift = Math.sin(u * Math.PI) * j.h;
-      pitch = 0.7 - u * 1.4;
+      // Nose up on the way out, down on the way back in.
+      const pitch = 0.75 - u * 1.5;
+      tilt = clamp(tilt * 0.4 - pitch * Math.sign(f.face || 1), -1.1, 1.1);
     }
+    const face = Math.abs(f.face) < 0.06 ? 0.06 * Math.sign(f.face || 1) : f.face;
     // Shadow on the pond bed, a little behind and below the fish.
     ctx.globalAlpha = f.jump ? 0.12 : 0.18;
     ctx.fillStyle = '#0a4f6b';
     ctx.save();
-    ctx.translate(x + 4, y + 6);
-    ctx.scale(1, PLANE);
-    ctx.rotate(f.heading);
+    ctx.translate(x + 4, y + 7);
+    ctx.rotate(f.tilt);
     ctx.beginPath();
-    ctx.ellipse(-L * 0.05, 0, L * 0.45, L * 0.12, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 0, L * 0.44 * Math.max(0.35, Math.abs(face)), L * 0.11, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
     const speedK = clamp(f.speed / 26, 0, 1);
-    ctx.globalAlpha = f.jump ? 1 : 0.9;
+    const amp = f.jump ? 1.2 : 0.35 + speedK * 0.9;
+    // In the air the body arches; in the water it curls into turns.
+    const curl = f.jump ? Math.sin(f.jump.u * Math.PI) * 0.5 : -f.turn * Math.sign(face);
+    ctx.globalAlpha = f.jump ? 1 : 0.92;
     ctx.save();
     ctx.translate(x, y - lift);
-    if (f.jump) {
-      // In the air the fish shows more of its side: less squash, nose up then down.
-      ctx.rotate(Math.cos(f.heading) >= 0 ? -pitch * 0.8 : pitch * 0.8);
-      ctx.scale(1.08, 0.8);
-    } else ctx.scale(1, BODY_PLANE);
-    ctx.rotate(f.heading);
-    drawKoi(ctx, f.look, f.wag, f.jump ? 1.4 : 0.35 + speedK * 0.9, -f.turn);
+    ctx.rotate(tilt);
+    ctx.scale(face, 1);
+    const img = f.img;
+    const sw = img.naturalWidth / STRIPS;
+    const dw = L / STRIPS;
+    const H = f.tall;
+    for (let i = 0; i < STRIPS; i++) {
+      // s: 0 at the nose (right end), 1 at the tail.
+      const s = 1 - (i + 0.5) / STRIPS;
+      const wave = Math.sin(f.wag - s * 4.4) * 0.07 * amp * s * L;
+      const bend = curl * s * s * L * 0.16;
+      // Strips overlap by a hair so no seam shows between them.
+      const last = i === STRIPS - 1;
+      ctx.drawImage(
+        img,
+        i * sw,
+        0,
+        last ? sw : sw + 1,
+        img.naturalHeight,
+        -L / 2 + i * dw,
+        -H / 2 + wave + bend,
+        last ? dw : dw + 0.6,
+        H,
+      );
+    }
     ctx.restore();
     ctx.globalAlpha = 1;
   }
@@ -257,5 +314,15 @@ export class FishAnimation implements AnimSystem {
 
   count() {
     return this.fish.length;
+  }
+
+  /** Where each fish is now (sprite inspector). */
+  pieces() {
+    return this.fish.map((f) => ({
+      id: f.id,
+      file: `${f.id}.webp`,
+      at: [f.x, f.y - (f.jump ? Math.sin(f.jump.u * Math.PI) * f.jump.h : 0)] as [number, number],
+      r: f.len / 2,
+    }));
   }
 }

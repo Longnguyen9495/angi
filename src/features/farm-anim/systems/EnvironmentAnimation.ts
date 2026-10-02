@@ -30,6 +30,7 @@ const TUNING: Record<LayerKind | 'crop', Tuning> = {
   crop: { amp: 0.05, omega: 4, zeta: 0.3, flutter: 0.02, flutterSpeed: 2 },
   hay: { amp: 0.004, omega: 2, zeta: 0.5, flutter: 0.001, flutterSpeed: 1 },
   dock: { amp: 0, omega: 1, zeta: 1, flutter: 0, flutterSpeed: 1 },
+  indoor: { amp: 0, omega: 1, zeta: 1, flutter: 0, flutterSpeed: 1 },
 };
 
 interface Plant {
@@ -81,6 +82,12 @@ export function animateGrass(p: Plant, w: World) {
   const wind = w.wind.at(p.def.pivot[0]);
   const t = p.tune;
   const flutter = w.wind.flutter(p.seed, t.flutterSpeed) * t.flutter * (0.3 + wind);
+  if (p.def.kind === 'indoor') {
+    // Behind glass: no wind, just a slow lean of its own (air from the vents), two tempos.
+    p.bend = 0.045 * Math.sin(w.t * 0.55 + p.seed * 6) + 0.02 * Math.sin(w.t * 1.7 + p.seed * 11);
+    p.lift = 0;
+    return;
+  }
   if (p.def.under) {
     // Underwater weed: slow wobble of its own, barely any wind.
     p.bend = 0.03 * Math.sin(w.t * 0.9 + p.seed * 5) + wind * 0.008;

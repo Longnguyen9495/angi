@@ -63,21 +63,28 @@ Ghi chú:
 - `src/features/farm-anim/systems/*`: mây, cây cỏ, nước, cá, thú, công trình, môi trường, ruộng, trời.
 - Chữ của showcase: `src/i18n/messages/{vi,en}/farm.ts` → `anim.showcase`.
 
+## Đã làm thêm (2026-10-02)
+
+- **Cá**: dùng ảnh cá koi trong sheet (5 màu, `koi-1…5.webp`), thân uốn theo nhịp bơi, quay đầu, nhảy; đã xoá `koiPainter.ts`.
+- **Chim xa**: dùng `fx-bird-1/2` của sheet, vỗ cánh từng đợt rồi lượn.
+- **Ngỗng** cạnh giếng (`goose-body/head.webp`): thở, gật đầu, nhìn quanh, mổ. **Cây trong nhà kính** (`glass-plant-1…6.webp`, loại `indoor`): lắc nhẹ, không theo gió.
+- **Chỗ vá**: `patchFill()` trong `prepare.mjs` lấy nguyên mảng tranh gần đó thay vì tô từng điểm: mặt ao chỗ cá cũ, cạnh cửa chuồng gà, tháp dưới cánh cối xay (vẽ lại thành tháp đá khi cánh quay).
+- Mây dưới đảo đã bỏ hẳn (không còn "bank" trong `layers.json`).
+
 ## Việc còn lại / ý tưởng làm tiếp
 
-- **Bò** vẫn là bản sao mép mềm của chính con bò trong tranh (thở, cúi ăn, đuôi). Muốn bò đi lại được thì cần tách đầu, thân, đuôi thành lớp riêng, hoặc dùng bò trong sheet (số 89–93 trên `_contact.png`).
-- **Cá** vẽ bằng code (`koiPainter`); ảnh cá trong sheet chưa dùng.
-- Con ngỗng trắng cạnh giếng và cây trong nhà kính đang đứng yên, chưa có lớp riêng.
-- Chỗ vá sau khi xoá vật còn vệt: dưới cánh cối xay (lộ khi cánh quay), cạnh cửa chuồng gà, mặt nước chỗ cá cũ.
-- Gợn nước và nước trong mờ trong sheet còn dính caro (màu nước đã trộn với nền), nên vẫn vẽ bằng code.
-- Chim xa vẫn là nét vẽ đơn giản; chim trong sheet (`fx-bird-*`) đã chép sang nhưng chưa dùng.
+- **Bò đi lại**: chưa làm. Bò ở chuồng đứng trước nền tối của chuồng, bò ở nhà bị mái chợ che một nửa; muốn bò đi được cần tranh chuồng không có bò (hoặc lớp bò riêng từ hoạ sĩ). /journey cũng gắn bong bóng và vùng bấm của bò vào chỗ cố định.
+- **Gợn nước**: vẫn vẽ bằng code, vì gợn nước trong sheet còn dính caro.
+- Còn 2 vệt nhỏ: mảng vàng nhỏ giữa cầu thang chuồng gà và cột, mảng cỏ tối nhỏ ở đầu cánh cối xay trên-trái.
+- Đáy đảo bị cắt thẳng (lộ ra sau khi bỏ mây): chưa chọn cách xử lý (làm mờ dần hoặc vẽ thêm chóp đá).
+- Ghé vườn bạn vẫn hiện đảo 3D cũ (`garden3d/FriendIsland`), chưa dùng cảnh 2D.
 
 ## Kiểm tra đã làm (2026-10-01)
 
 - Chrome headless có GPU, chạy 70 giây: 60 fps, khoảng 2–3 ms mỗi khung hình. Không có lỗi console, không tải hỏng ảnh nào, bộ nhớ khoảng 66–78 MB.
 - Đã chụp từng chế độ, bản điện thoại 390×844, và chế độ giảm chuyển động.
 - `npm run typecheck` và eslint sạch.
-- 4 test trong `Journey.test.tsx` hỏng **từ trước** đợt này ("Unable to find role=dialog" ở luồng gieo hạt và tìm quán), chưa sửa.
+- 4 test trong `Journey.test.tsx` hỏng **từ trước** đợt này ("Unable to find role=dialog" ở luồng gieo hạt và tìm quán). Đã sửa ngày 2026-10-02: `npm run verify` chạy qua hết (227/227 test).
 
 Mẹo headless trên Windows:
 - Chạy trong Git Bash thì thêm `MSYS_NO_PATHCONV=1`, nếu không thì `/farm-animation-test` bị đổi thành đường dẫn Windows.

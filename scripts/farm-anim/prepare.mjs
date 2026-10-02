@@ -327,6 +327,21 @@ async function sprite(id, buf, [x0, y0, x1, y1], alphaAt) {
   return { file: `${id}.webp`, x: x0, y: y0, w, h };
 }
 
+/** The pond's outline (measured on the first painting). */
+const POND = [
+  [790, 640],
+  [870, 610],
+  [960, 590],
+  [1250, 590],
+  [1390, 610],
+  [1420, 680],
+  [1300, 790],
+  [1090, 905],
+  [930, 880],
+  [800, 845],
+  [770, 760],
+].map(wPt);
+
 // ——— 5. Objects that move a lot: cut from the painting, then painted out of the island ———
 const removed = new Uint8Array(N);
 const sprites = {};
@@ -351,11 +366,9 @@ const KOI = [
   [974, 769, 1030, 801],
   [1054, 753, 1133, 807],
 ].map(wBox);
-for (const [k, box] of KOI.entries()) {
+for (const box of KOI) {
   const fish = (r, g, b) => !(r < 40 && g > 145 && b > 170);
-  sprites[`koi-${k + 1}`] = await sprite(`koi-${k + 1}`, M, box, (x, y, r, g, b) =>
-    fish(r, g, b) && b - r < 40 ? 1 : 0,
-  );
+  // The painted koi are painted out; the swimming ones are the sheet's (below).
   // The repaint's koi are a little larger than their boxes and carry a pale halo of lit water.
   const PAD = 7;
   for (let y = box[1] - 12; y <= box[3] + 12; y++)
@@ -374,6 +387,169 @@ for (let y = 730; y <= 758; y++)
     const [r, g, b] = px(y * W + x);
     if (!(r < 40 && g > 145 && b > 170)) removed[y * W + x] = 1;
   }
+/**
+ * A koi from the asset sheet, made ready to swim: the water puddle baked under it is cut away
+ * (only the fish's own blob is kept, holes in it filled from their rim), then it is turned so its
+ * body lies flat with the nose to the right; the runtime bends it in strips along that axis and
+ * turns it to its heading. `len` is the drawn length in picture px; `nose` is where the head is
+ * on the sheet; `modulate` recolours a copy into another variety.
+ */
+async function sheetKoi(id, at, { nose, len, modulate, start }) {
+  const s = sheetItem(at[0], at[1], id);
+  const { data: d, info: si } = await sharp(join(SHEET, s.file))
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const w = si.width;
+  const h = si.height;
+  const n = w * h;
+  for (let p = 0; p < n; p++) if (d[p * 4 + 2] - d[p * 4] > 45 && d[p * 4] < 170) d[p * 4 + 3] = 0;
+  // Largest blob of solid pixels (the puddle's foam rim is a ring of loose dots).
+  const comp = new Int32Array(n).fill(-1);
+  let best = -1;
+  let bestSize = 0;
+  for (let p0 = 0, c = 0; p0 < n; p0++) {
+    if (comp[p0] >= 0 || d[p0 * 4 + 3] < 100) continue;
+    const stack = [p0];
+    comp[p0] = c;
+    let size = 0;
+    while (stack.length) {
+      const p = stack.pop();
+      size++;
+      const x = p % w;
+      for (const dy of [-1, 0, 1])
+        for (const dx of [-1, 0, 1]) {
+          const qx = x + dx;
+          const q = p + dy * w + dx;
+          if (qx < 0 || qx >= w || q < 0 || q >= n || comp[q] >= 0 || d[q * 4 + 3] < 100) continue;
+          comp[q] = c;
+          stack.push(q);
+        }
+    }
+    if (size > bestSize) ((bestSize = size), (best = c));
+    c++;
+  }
+  // Transparent pixels the outside cannot reach are holes in the fish (water showing through).
+  const outside = new Uint8Array(n);
+  const stack = [];
+  for (let p = 0; p < n; p++) {
+    const x = p % w;
+    const y = (p / w) | 0;
+    if ((x === 0 || y === 0 || x === w - 1 || y === h - 1) && comp[p] !== best)
+      ((outside[p] = 1), stack.push(p));
+  }
+  while (stack.length) {
+    const p = stack.pop();
+    const x = p % w;
+    for (const q of [x > 0 ? p - 1 : -1, x < w - 1 ? p + 1 : -1, p - w, p + w])
+      if (q >= 0 && q < n && !outside[q] && comp[q] !== best) ((outside[q] = 1), stack.push(q));
+  }
+  let hole = [];
+  for (let p = 0; p < n; p++) {
+    if (outside[p]) {
+      if (comp[p] !== best) d[p * 4 + 3] = 0;
+    } else if (comp[p] !== best) hole.push(p);
+    else d[p * 4 + 3] = Math.max(d[p * 4 + 3], 200);
+  }
+  const known = new Uint8Array(n);
+  for (let p = 0; p < n; p++) known[p] = comp[p] === best ? 1 : 0;
+  while (hole.length) {
+    const next = [];
+    const fill = [];
+    for (const p of hole) {
+      const x = p % w;
+      const acc = [0, 0, 0, 0];
+      for (const q of [x > 0 ? p - 1 : -1, x < w - 1 ? p + 1 : -1, p - w, p + w])
+        if (q >= 0 && q < n && known[q]) {
+          for (let c = 0; c < 3; c++) acc[c] += d[q * 4 + c];
+          acc[3]++;
+        }
+      if (acc[3]) fill.push([p, acc]);
+      else next.push(p);
+    }
+    if (!fill.length) break;
+    for (const [p, acc] of fill) {
+      for (let c = 0; c < 3; c++) d[p * 4 + c] = acc[c] / acc[3];
+      d[p * 4 + 3] = 255;
+      known[p] = 1;
+    }
+    hole = next;
+  }
+  // Body axis (principal axis of the blob).
+  let sx = 0;
+  let sy = 0;
+  let sn = 0;
+  for (let p = 0; p < n; p++) if (d[p * 4 + 3] > 128) ((sx += p % w), (sy += (p / w) | 0), sn++);
+  const mx = sx / sn;
+  const my = sy / sn;
+  let cxx = 0;
+  let cyy = 0;
+  let cxy = 0;
+  for (let p = 0; p < n; p++)
+    if (d[p * 4 + 3] > 128) {
+      const x = (p % w) - mx;
+      const y = ((p / w) | 0) - my;
+      cxx += x * x;
+      cyy += y * y;
+      cxy += x * y;
+    }
+  let axis = (0.5 * Math.atan2(2 * cxy, cxx - cyy) * 180) / Math.PI;
+  let img = sharp(d, { raw: { width: w, height: h, channels: 4 } });
+  if (nose === 'left') {
+    img = sharp(await img.flop().raw().toBuffer(), { raw: { width: w, height: h, channels: 4 } });
+    axis = -axis;
+  }
+  const { data: r, info: ri } = await img
+    .rotate(-axis, { background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  // Trim to the fish.
+  let [x0, y0, x1, y1] = [ri.width, ri.height, 0, 0];
+  for (let y = 0; y < ri.height; y++)
+    for (let x = 0; x < ri.width; x++)
+      if (r[(y * ri.width + x) * 4 + 3] > 24) {
+        x0 = Math.min(x0, x);
+        y0 = Math.min(y0, y);
+        x1 = Math.max(x1, x);
+        y1 = Math.max(y1, y);
+      }
+  let out = sharp(r, { raw: { width: ri.width, height: ri.height, channels: 4 } }).extract({
+    left: x0,
+    top: y0,
+    width: x1 - x0 + 1,
+    height: y1 - y0 + 1,
+  });
+  if (modulate) out = sharp(await out.png().toBuffer()).modulate(modulate);
+  const file = `${id}.webp`;
+  await out.webp({ quality: 92, alphaQuality: 95 }).toFile(join(OUT, file));
+  const fw = x1 - x0 + 1;
+  const fh = y1 - y0 + 1;
+  const dh = Math.round((len * fh) / fw);
+  return {
+    file,
+    x: Math.round(start[0] - len / 2),
+    y: Math.round(start[1] - dh / 2),
+    w: len,
+    h: dh,
+  };
+}
+{
+  // Sheet koi (picked by where it sits on the sheet): the white-and-red one lying flat, in five
+  // colourings (the sheet's other koi are arched or turned, and one has water through its body).
+  const centre = (b) => [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2];
+  const LONG = [1380, 700];
+  const KOI_FISH = [
+    { len: 66, start: centre(KOI[0]) },
+    { len: 60, start: centre(KOI[1]), modulate: { hue: 12, brightness: 1.08 } },
+    { len: 58, start: centre(KOI[2]), modulate: { hue: 30, brightness: 1.1 } },
+    { len: 56, start: centre(KOI[3]), modulate: { hue: -10, saturation: 1.15 } },
+    { len: 44, start: [1072, 744], modulate: { hue: 10 } },
+  ];
+  for (const [k, f] of KOI_FISH.entries()) {
+    const id = `koi-${k + 1}`;
+    sprites[id] = await sheetKoi(id, LONG, { ...f, nose: 'left' });
+  }
+}
 // Chickens: the two painted hens are painted out; the yard gets four hens from the asset sheet
 // instead (different breeds and poses, so each can keep its own pace and habits). Measured on the
 // repaint: hen left of the coop x 1240..1270, y 446..492; hen at its right x 1373..1400,
@@ -487,8 +663,9 @@ const armPoly = ([tx, ty], half) => {
   const l = Math.hypot(dx, dy);
   const nx = (-dy / l) * half;
   const ny = (dx / l) * half;
-  const ex = tx + (dx / l) * 3;
-  const ey = ty + (dy / l) * 3;
+  // Past the measured tip: the repaint's sail ends reach a little further.
+  const ex = tx + (dx / l) * 9;
+  const ey = ty + (dy / l) * 9;
   return [
     [HUB[0] + nx, HUB[1] + ny],
     [ex + nx, ey + ny],
@@ -500,7 +677,7 @@ const armPoly = ([tx, ty], half) => {
 // it is painted out with a generous mask (a narrow one lets the fill copy the sail back from its
 // own edge). The turning sails are the asset sheet's separate windmill blades, sized to span the
 // painted ones, their hub on the painted hub.
-const ARMS = TIPS.map((t) => armPoly(t, 11));
+const ARMS = TIPS.map((t) => armPoly(t, 13));
 const inBlades = (x, y) =>
   ARMS.some((a) => inPoly(a, x, y)) ||
   Math.hypot(x - HUB[0], y - HUB[1]) < 13 ||
@@ -509,6 +686,18 @@ const inBlades = (x, y) =>
   const [x0, y0, x1, y1] = wBox([810, 210, 926, 346]);
   for (let y = y0; y <= y1; y++)
     for (let x = x0; x <= x1; x++) if (inBlades(x, y)) removed[y * W + x] = 1;
+  // The ends of the two upper sails reach past the measured tips (repaint): their wood, not the
+  // grass and path round it.
+  for (const e of [
+    [835, 239, 13, 12],
+    [894, 240, 13, 12],
+  ])
+    for (let y = e[1] - e[3]; y <= e[1] + e[3]; y++)
+      for (let x = e[0] - e[2]; x <= e[0] + e[2]; x++) {
+        const [r, g, b] = px(y * W + x);
+        const ground = isLeaf(r, g, b) || (r > 200 && g > 175 && b > 130);
+        if (inEllipse(e, x, y) < 1 && !ground) removed[y * W + x] = 1;
+      }
   // Sheet blades (sprite on the sheet at 1260,238, 111×122): hub and arm ends in its own pixels.
   const s = sheetItem(1315, 300, 'blades');
   const HUB_AT = [53, 60];
@@ -600,15 +789,323 @@ for (const s of SPROUTS) {
   dilate(m, 2);
   for (let p = 0; p < N; p++) if (m[p]) removed[p] = 1;
 }
+// The white goose by the well (measured on the repaint, x 446..479, y 313..352): cut along its
+// outline (everything in its ellipse that is not grass), painted out, and drawn as two pieces so
+// it can bob and peck: the head and neck turn about the neck root, the body breathes.
+{
+  const E = [463, 333, 19, 22];
+  const grass = (r, g, b) => hue(r, g, b) > 58 && hue(r, g, b) < 170 && sat(r, g, b) > 0.3;
+  const m = new Uint8Array(N);
+  const box = [E[0] - E[2], E[1] - E[3], E[0] + E[2], E[1] + E[3]];
+  for (let y = box[1]; y <= box[3]; y++)
+    for (let x = box[0]; x <= box[2]; x++) {
+      const [r, g, b] = px(y * W + x);
+      if (inEllipse(E, x, y) < 1 && !grass(r, g, b)) m[y * W + x] = 1;
+    }
+  // Its dark outline reads as olive green: take the darker rim round the cut too.
+  {
+    const rim = Uint8Array.from(m);
+    dilate(rim, 1);
+    for (let p = 0; p < N; p++) if (rim[p] && !m[p] && Math.max(...px(p)) < 150) m[p] = 1;
+  }
+  // Head and neck: the upper-left lobe, down to just past the neck root (overlaps the body).
+  const NECK = [458, 330];
+  const inHead = (x, y) => x <= 469 && y <= 333 && !(x > 463 && y > 326);
+  const soft = (p) => (m[p] ? 1 : 0);
+  sprites['goose-body'] = {
+    ...(await sprite('goose-body', M, box, (x, y, r, g, b, p) =>
+      inHead(x, y) && y < 328 ? 0 : soft(p),
+    )),
+    feet: [463, 351],
+  };
+  sprites['goose-head'] = {
+    ...(await sprite('goose-head', M, [446, 310, 470, 334], (x, y, r, g, b, p) =>
+      inHead(x, y) ? soft(p) : 0,
+    )),
+    base: NECK,
+  };
+  // Paint out the goose and its shadow (everything in the ellipse but sunlit grass); the runtime
+  // draws a soft shadow under it.
+  for (let y = box[1]; y <= box[3]; y++)
+    for (let x = box[0]; x <= box[2]; x++) {
+      const p = y * W + x;
+      const [r, g, b] = px(p);
+      if (inEllipse(E, x, y) < 1.1 && !(grass(r, g, b) && Math.max(r, g, b) > 150)) m[p] = 1;
+    }
+  dilate(m, 1);
+  for (let p = 0; p < N; p++) if (m[p]) removed[p] = 1;
+}
 dilate(removed, 1);
 for (let p = 0; p < N; p++) if (removed[p]) island[p * 4 + 3] = 255;
 inpaintGuided(island, removed);
+
+/**
+ * Patch fill: each hole in `zone` (a connected piece of `mask`) takes a whole piece of the
+ * painting from somewhere nearby, the offset chosen where the pixels round the hole match best,
+ * and the copy is blended into a 3 px band round the hole. Brush strokes, glints and grain carry
+ * on unbroken instead of the smears and streaks a pixel-by-pixel fill leaves on large holes.
+ * `srcOk(x, y)` limits where a copy may come from (e.g. open water only), failing for at most a
+ * `budget` fraction of the piece (glints, specks); `keep(x, y)` leaves
+ * hole pixels out (filled some other way).
+ */
+function patchFill(
+  buf,
+  mask,
+  zone,
+  { srcOk = () => true, keep = () => false, R = 90, budget = 0 } = {},
+) {
+  const [zx0, zy0, zx1, zy1] = zone;
+  const seen = new Uint8Array(N);
+  let filled = 0;
+  for (let y = zy0; y <= zy1; y++)
+    for (let x = zx0; x <= zx1; x++) {
+      const p0 = y * W + x;
+      if (!mask[p0] || seen[p0] || keep(x, y)) continue;
+      // One hole.
+      const comp = [];
+      const stack = [p0];
+      seen[p0] = 1;
+      while (stack.length) {
+        const p = stack.pop();
+        comp.push(p);
+        const px0 = p % W;
+        for (const dy of [-1, 0, 1])
+          for (const dx of [-1, 0, 1]) {
+            const qx = px0 + dx;
+            const q = p + dy * W + dx;
+            const qy = (q / W) | 0;
+            if (qx < zx0 || qx > zx1 || qy < zy0 || qy > zy1) continue;
+            if (seen[q] || !mask[q] || keep(qx, qy)) continue;
+            seen[q] = 1;
+            stack.push(q);
+          }
+      }
+      // Band round it: distance 1..3.
+      const dist = new Map();
+      for (const p of comp) dist.set(p, 0);
+      let front = comp;
+      for (let d = 1; d <= 3; d++) {
+        const next = [];
+        for (const p of front) {
+          const px0 = p % W;
+          for (const q of [px0 > 0 ? p - 1 : -1, px0 < W - 1 ? p + 1 : -1, p - W, p + W])
+            if (q >= 0 && q < N && !dist.has(q) && !mask[q] && buf[q * 4 + 3]) {
+              dist.set(q, d);
+              next.push(q);
+            }
+        }
+        front = next;
+      }
+      const all = [...dist.keys()];
+      const band = all.filter((p) => dist.get(p) > 0);
+      let best = null;
+      let bestCost = Infinity;
+      for (let dy = -R; dy <= R; dy += 2)
+        for (let dx = -R; dx <= R; dx += 2) {
+          if (Math.abs(dx) < 4 && Math.abs(dy) < 4) continue;
+          const off = dy * W + dx;
+          let ok = true;
+          let misses = Math.floor(all.length * budget);
+          for (const p of all) {
+            const q = p + off;
+            const qx = (p % W) + dx;
+            if (q < 0 || q >= N || qx < 0 || qx >= W || mask[q] || !buf[q * 4 + 3]) {
+              ok = false;
+              break;
+            }
+            if (!srcOk(qx, (q / W) | 0) && --misses < 0) {
+              ok = false;
+              break;
+            }
+          }
+          if (!ok) continue;
+          let cost = 0;
+          for (const p of band) {
+            const q = p + off;
+            for (let c = 0; c < 3; c++) cost += (buf[p * 4 + c] - buf[q * 4 + c]) ** 2;
+            if (cost >= bestCost) break;
+          }
+          // Prefer nearby pieces (same light, same depth).
+          cost += Math.hypot(dx, dy) * band.length * 2;
+          if (cost < bestCost) ((bestCost = cost), (best = off));
+        }
+      if (best === null) continue;
+      const src = Buffer.from(buf);
+      const mix = [1, 0.6, 0.35, 0.15];
+      for (const p of all) {
+        const k = mix[dist.get(p)];
+        for (let c = 0; c < 3; c++)
+          buf[p * 4 + c] = Math.round(src[p * 4 + c] * (1 - k) + src[(p + best) * 4 + c] * k);
+      }
+      filled++;
+    }
+  return filled;
+}
+
+// The pond where the koi were painted: whole pieces of open water (glints and all).
+{
+  const waterish = (x, y) => {
+    const p = y * W + x;
+    return inPoly(POND, x, y) && island[p * 4 + 2] - island[p * 4] > 40;
+  };
+  const n = patchFill(island, removed, wBox([880, 690, 1150, 820]), { srcOk: waterish });
+  console.log(`farm-anim: pond patches ${n}`);
+}
+// Round the coop (the painted hens) and the goose by the well.
+// Left of the coop door: sand and its own shadow only (never a piece of the coop). The hen by
+// the ramp: right of the coop's corner post, sand and grass from the yard to its right.
+patchFill(island, removed, [1215, 430, 1300, 512], {
+  R: 190,
+  budget: 0.12,
+  srcOk: (x, y) => {
+    const [r, g, b] = px(y * W + x);
+    return (
+      y < 490 &&
+      isSand(r, g, b) &&
+      sat(r, g, b) < 0.42 &&
+      !(x > 1255 && x < 1392 && y > 395 && y < 532)
+    );
+  },
+});
+patchFill(island, removed, [1389, 440, 1420, 512], {
+  R: 120,
+  budget: 0.1,
+  srcOk: (x, y) => {
+    const [r, g, b] = px(y * W + x);
+    return x > 1400 && (isSand(r, g, b) || isLeaf(r, g, b));
+  },
+});
+patchFill(island, removed, [436, 300, 490, 362], { R: 50 });
+
+// Windmill: the tower under the sails is rebuilt from its own visible stone (see towerFill), the
+// path and grass round it take patches of path and grass.
+const TOWER = {
+  cx: 872,
+  // [y, half width] down the silhouette: dome cap, its rim, the cone, the base ring.
+  rows: [
+    [247, 3],
+    [249, 8],
+    [253, 13],
+    [258, 16],
+    [263, 18],
+    [266, 20],
+    [268, 19],
+    [280, 24],
+    [300, 30],
+    [324, 34],
+  ],
+};
+const towerHalf = (y) => {
+  const r = TOWER.rows;
+  if (y < r[0][0] || y > r[r.length - 1][0]) return -1;
+  for (let i = 1; i < r.length; i++)
+    if (y <= r[i][0])
+      return r[i - 1][1] + ((r[i][1] - r[i - 1][1]) * (y - r[i - 1][0])) / (r[i][0] - r[i - 1][0]);
+  return -1;
+};
+const inTower = (x, y, pad = 0) => {
+  const h = towerHalf(y);
+  return h >= 0 && Math.abs(x - TOWER.cx) <= h + pad;
+};
+{
+  const zone = wBox([800, 200, 940, 350]);
+  patchFill(island, removed, zone, {
+    keep: (x, y) => inTower(x, y, 1),
+    // Only grass and path may be copied in (not crates, sails or the tower).
+    srcOk: (x, y) => {
+      if (inTower(x, y, 3)) return false;
+      const [r, g, b] = px(y * W + x);
+      return isLeaf(r, g, b) || isSand(r, g, b) || (r > 200 && g > 180 && b > 140);
+    },
+    R: 70,
+  });
+  // Tower and cap, painted in: the stone colour sampled from the tower's visible flank, shaded
+  // round the cone (light from the left), curved stone courses, a dark outline; the cap a brown
+  // dome with ribs and a wooden rim. Only the hole pixels are painted; the tower's own visible
+  // pixels stay as painted.
+  const CAP_END = 266;
+  let [sr, sg, sb, sn] = [0, 0, 0, 0];
+  for (let y = 285; y <= 318; y++)
+    for (let x = TOWER.cx - 34; x <= TOWER.cx + 34; x++) {
+      const p = y * W + x;
+      if (removed[p] || !inTower(x, y, -4)) continue;
+      const [r, g, bb] = px(p);
+      if (r + g + bb < 480) continue;
+      ((sr += r), (sg += g), (sb += bb), sn++);
+    }
+  const stone = sn ? [sr / sn, sg / sn, sb / sn] : [205, 190, 175];
+  // Shading across the cone, as painted: mean colour of the visible stone in bins of u.
+  const BINS = 16;
+  const prof = Array.from({ length: BINS }, () => [0, 0, 0, 0]);
+  for (let y = 272; y <= 320; y++)
+    for (let x = TOWER.cx - 34; x <= TOWER.cx + 34; x++) {
+      const p = y * W + x;
+      if (removed[p] || !inTower(x, y, -2)) continue;
+      const [r, g, bb] = px(p);
+      if (r + g + bb < 300) continue; // outline and course lines
+      const i = Math.min(BINS - 1, Math.floor((((x - TOWER.cx) / towerHalf(y) + 1) / 2) * BINS));
+      prof[i][0] += r;
+      prof[i][1] += g;
+      prof[i][2] += bb;
+      prof[i][3]++;
+    }
+  const shadeAt = (u) => {
+    const f = ((u + 1) / 2) * BINS - 0.5;
+    const pick = (i) => {
+      const b = prof[Math.max(0, Math.min(BINS - 1, i))];
+      return b[3] > 6 ? b.slice(0, 3).map((c) => c / b[3]) : null;
+    };
+    const i0 = Math.floor(f);
+    const a = pick(i0);
+    const b = pick(i0 + 1);
+    if (a && b) return a.map((c, k) => c + (b[k] - c) * (f - i0));
+    return a ?? b ?? null;
+  };
+  const OUTLINE = [84, 58, 44];
+  let seed = 11;
+  const grain = () => ((seed = (seed * 16807) % 2147483647) / 2147483647 - 0.5) * 8;
+  const [x0, y0, x1, y1] = zone;
+  for (let y = y0; y <= y1; y++)
+    for (let x = x0; x <= x1; x++) {
+      const p = y * W + x;
+      if (!removed[p] || !inTower(x, y, 1)) continue;
+      const hw = Math.max(1, towerHalf(y));
+      const u = Math.max(-1, Math.min(1, (x - TOWER.cx) / hw));
+      let col;
+      if (y < CAP_END) {
+        const rimBand = y >= CAP_END - 3;
+        const base = rimBand ? [176, 124, 78] : [126, 84, 60];
+        let k = 1.18 - 0.42 * ((u + 1) / 2);
+        // Ribs down the dome.
+        if (!rimBand && Math.abs((((u + 1) * 3) % 1) - 0.5) > 0.42) k *= 0.82;
+        col = base.map((c) => c * k);
+      } else {
+        const painted = shadeAt(u);
+        let k = painted ? 1 : 1.0 - 0.32 * Math.max(0, u) ** 1.3 - 0.07 * Math.max(0, -u) ** 2;
+        // Stone courses, bowed down at the middle like the painted ones.
+        const yc = (y - CAP_END - 3 * (1 - u * u) + 90) % 9;
+        if (yc < 1) k *= 0.8;
+        col = (painted ?? stone).map((c) => c * k);
+      }
+      // Outline along the silhouette.
+      const edge = Math.abs(u) > 0.93 || y < 249;
+      if (edge) col = OUTLINE;
+      const j = edge ? 0 : grain();
+      for (let c = 0; c < 3; c++)
+        island[p * 4 + c] = Math.max(0, Math.min(255, Math.round(col[c] + j)));
+    }
+}
 
 // ——— 6. Soft overlay layers (bend in the wind over the painting) ———
 // kind: tree crown parts, bush, grass, flower, reed, crop field fringe, hay, dock.
 // e = ellipse [cx, cy, rx, ry] in picture px, pivot = the point that stays put (stem base).
 // sky: the crown also replaces the island's edge pixels against the sky (no ghost edge there).
 const L = (id, kind, e, pivot, opts = {}) => ({ id, kind, e: wEll(e), pivot: wPt(pivot), ...opts });
+/** A layer measured on the repaint itself (no warp). */
+const P = (id, kind, e, pivot, opts = {}) => ({ id, kind, e, pivot, ...opts });
+/** Leaf pixels behind the glass: not the orange frame, its dark rim, or white glints. */
+const glassPlant = (r, g, b) =>
+  !(r > 150 && g > 70 && b < 110 && r - b > 80) && r + g + b > 200 && Math.max(r, g, b) < 236;
 const LAYERS = [
   // Mango trees: three crown parts each so they don't move as one block; fruit hangs separately.
   L('mango1-top', 'tree', [405, 170, 72, 42], [410, 330], {
@@ -671,9 +1168,33 @@ const LAYERS = [
   L('reed-7', 'reed', [1200, 753, 14, 29], [1200, 783], { under: true }),
   L('hay', 'hay', [1205, 405, 58, 38], [1205, 443]),
   L('dock', 'dock', [1062, 605, 88, 50], [1062, 650]),
+  // Plants behind the greenhouse glass (measured on the repaint): only the leaves move, the glass
+  // frame and its highlights are left out of the cut (see glassPlant).
+  P('glass-plant-1', 'indoor', [1048, 128, 20, 13], [1048, 140]),
+  P('glass-plant-2', 'indoor', [1104, 136, 22, 15], [1104, 150]),
+  P('glass-plant-3', 'indoor', [1146, 162, 22, 14], [1146, 175]),
+  P('glass-plant-4', 'indoor', [1190, 190, 20, 14], [1190, 203]),
+  P('glass-plant-5', 'indoor', [1236, 226, 20, 14], [1236, 239]),
+  P('glass-plant-6', 'indoor', [1286, 240, 18, 16], [1286, 255]),
 ];
 const fruitPx = (r, g, b) => r > 190 && g > 120 && b < 90 && r - g < 110;
 const islandNow = Buffer.from(island);
+// Greenhouse plants: leaf pixels, shrunk a pixel away from the frame so the bars never move.
+const indoorMask = new Float32Array(N);
+{
+  const off = new Uint8Array(N);
+  for (const l of LAYERS.filter((x) => x.kind === 'indoor')) {
+    const [cx, cy, rx, ry] = l.e;
+    for (let y = cy - ry - 2; y <= cy + ry + 2; y++)
+      for (let x = cx - rx - 2; x <= cx + rx + 2; x++) {
+        const p = y * W + x;
+        if (!glassPlant(...px(p))) off[p] = 1;
+        indoorMask[p] = 1;
+      }
+  }
+  dilate(off, 1);
+  for (let p = 0; p < N; p++) if (off[p]) indoorMask[p] = 0;
+}
 const layers = [];
 for (const l of LAYERS) {
   const [cx, cy, rx, ry] = l.e;
@@ -690,7 +1211,9 @@ for (const l of LAYERS) {
     islandNow,
     box,
     (x, y, r, g, b, p) =>
-      (islandNow[p * 4 + 3] ? w(x, y) : 0) * (l.fruit && fruitPx(r, g, b) ? 0 : 1),
+      (islandNow[p * 4 + 3] ? w(x, y) : 0) *
+      (l.fruit && fruitPx(r, g, b) ? 0 : 1) *
+      (l.kind === 'indoor' ? indoorMask[p] : 1),
   );
   if (l.fruit) {
     let n = 0;
@@ -749,19 +1272,6 @@ async function maskFile(file, box, test) {
     .toFile(join(OUT, file));
   return { file, x: x0, y: y0, w, h };
 }
-const POND = [
-  [790, 640],
-  [870, 610],
-  [960, 590],
-  [1250, 590],
-  [1390, 610],
-  [1420, 680],
-  [1300, 790],
-  [1090, 905],
-  [930, 880],
-  [800, 845],
-  [770, 760],
-].map(wPt);
 const water = await maskFile(
   'water-mask.png',
   wBox([760, 560, 1440, 930]).map((v, i) => Math.max(0, Math.min(i % 2 ? H - 1 : W - 1, v))),

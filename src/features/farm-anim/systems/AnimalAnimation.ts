@@ -10,6 +10,8 @@ import { type AnimSystem, type World, clamp } from '../engine/world';
  *    underneath fills in and no cut edge shows.
  *  - hens (the painted hen, cut along its outline) walk with little hops, peck 1–3 times, flap,
  *    turn round; each on its own timing, inside its own patch behind the fence.
+ *  - the white goose by the well (cut from the painting in two pieces) breathes, bobs its head,
+ *    looks round and pecks at the grass now and then.
  */
 
 type CowState = 'idle' | 'graze' | 'look' | 'shift';
@@ -51,6 +53,48 @@ interface Hen {
 }
 
 const PECK = 0.42;
+
+type GooseState = 'idle' | 'peck' | 'look';
+
+interface Goose {
+  body: SpriteDef & { feet: Vec2 };
+  head: SpriteDef & { base: Vec2 };
+  imgs: { body: HTMLImageElement; head: HTMLImageElement };
+  state: GooseState;
+  timer: number;
+  pecks: number;
+  /** Head turn eased towards its target (radians, − = forward and down). */
+  rot: number;
+  dip: number;
+}
+
+const GOOSE_PECK = 0.5;
+
+export function animateGoose(g: Goose, w: World) {
+  const dt = w.dt;
+  g.timer -= dt;
+  if (g.timer <= 0) {
+    if (g.state === 'peck' && g.pecks > 1) {
+      g.pecks--;
+      g.timer = GOOSE_PECK;
+    } else {
+      const r = w.rand();
+      g.state = r < 0.4 ? 'peck' : r < 0.65 ? 'look' : 'idle';
+      g.pecks = 2 + Math.floor(w.rand() * 2);
+      g.timer = g.state === 'peck' ? GOOSE_PECK : 1.5 + w.rand() * 2.5;
+    }
+  }
+  let rot = Math.sin(w.t * 1.3) * 0.04;
+  let dip = 0;
+  if (g.state === 'peck') {
+    const u = clamp(1 - g.timer / GOOSE_PECK, 0, 1);
+    const d = u < 0.4 ? u / 0.4 : u < 0.55 ? 1 : 1 - (u - 0.55) / 0.45;
+    rot = -0.55 * d;
+    dip = d;
+  } else if (g.state === 'look') rot = g.timer > 1 ? 0.14 : -0.1;
+  g.rot = g.state === 'peck' ? rot : ease(g.rot, rot, 5, dt);
+  g.dip = dip;
+}
 const ease = (cur: number, target: number, rate: number, dt: number) =>
   cur + (target - cur) * Math.min(1, dt * rate);
 
@@ -146,6 +190,7 @@ const TEMPERS: Temper[] = [
 export class AnimalAnimation implements AnimSystem {
   private cows: Cow[] = [];
   private flock: Hen[] = [];
+  private goose: Goose | null = null;
 
   constructor(assets: Assets) {
     const { sprites } = assets.layout;
@@ -171,6 +216,19 @@ export class AnimalAnimation implements AnimSystem {
         seed: i * 2.3,
       });
     }
+    const gb = sprites['goose-body'] as (SpriteDef & { feet: Vec2 }) | undefined;
+    const gh = sprites['goose-head'] as (SpriteDef & { base: Vec2 }) | undefined;
+    if (gb?.feet && gh?.base)
+      this.goose = {
+        body: gb,
+        head: gh,
+        imgs: { body: img(gb.file), head: img(gh.file) },
+        state: 'idle',
+        timer: 1.2,
+        pecks: 0,
+        rot: 0,
+        dip: 0,
+      };
     const { zones, fence, coop } = assets.layout.places.hens;
     const [[fx0, fy0], [fx1, fy1]] = fence;
     const slope = (fy1 - fy0) / (fx1 - fx0);
@@ -227,6 +285,11 @@ export class AnimalAnimation implements AnimSystem {
       h.timer = act === 'flap' ? 0.6 : 0.42;
       h.pecks = 3;
     });
+    if (this.goose) {
+      this.goose.state = 'peck';
+      this.goose.pecks = 3;
+      this.goose.timer = GOOSE_PECK;
+    }
   }
 
   /** Cows and hens for the sprite inspector: id, file and where they stand. */
@@ -244,6 +307,16 @@ export class AnimalAnimation implements AnimSystem {
         at: [h.x, h.y - 20] as Vec2,
         r: 22,
       })),
+      ...(this.goose
+        ? [
+            {
+              id: 'goose',
+              file: this.goose.body.file,
+              at: [this.goose.body.feet[0], this.goose.body.feet[1] - 18] as Vec2,
+              r: 20,
+            },
+          ]
+        : []),
     ];
   }
 
@@ -255,9 +328,11 @@ export class AnimalAnimation implements AnimSystem {
   update(w: World) {
     for (const c of this.cows) animateCow(c, w);
     for (const h of this.flock) animateChicken(h, w);
+    if (this.goose) animateGoose(this.goose, w);
   }
 
   draw(ctx: CanvasRenderingContext2D, w: World) {
+    if (this.goose) this.drawGoose(ctx, w, this.goose);
     for (const c of this.cows) this.drawCow(ctx, w, c);
     for (const h of [...this.flock].sort((a, b) => a.y - b.y)) this.drawHen(ctx, w, h);
   }
@@ -289,6 +364,27 @@ export class AnimalAnimation implements AnimSystem {
     const rot = -0.15 * c.graze + 0.06 * c.look + chew + flick + nod;
     ctx.translate(head.base[0], head.base[1] + c.graze * 1.5);
     ctx.rotate(rot);
+    ctx.drawImage(imgs.head, head.x - head.base[0], head.y - head.base[1]);
+    ctx.restore();
+  }
+
+  private drawGoose(ctx: CanvasRenderingContext2D, w: World, g: Goose) {
+    const { body, head, imgs } = g;
+    const [fx, fy] = body.feet;
+    ctx.fillStyle = 'rgba(40,70,10,0.25)';
+    ctx.beginPath();
+    ctx.ellipse(fx, fy - 1, 16, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+    const breathe = Math.sin(w.t * 1.9 + 0.7);
+    ctx.save();
+    // Body breathes from the feet and leans a touch into a peck.
+    ctx.translate(fx, fy);
+    ctx.transform(1, 0, g.dip * 0.04, 1 + 0.012 * breathe - g.dip * 0.015, 0, 0);
+    ctx.translate(-fx, -fy);
+    ctx.drawImage(imgs.body, body.x, body.y);
+    // Head about the neck root: forward and down to peck, a small bob, turns to look.
+    ctx.translate(head.base[0] - g.dip * 1.5, head.base[1] + g.dip * 2.5 - breathe * 0.25);
+    ctx.rotate(g.rot);
     ctx.drawImage(imgs.head, head.x - head.base[0], head.y - head.base[1]);
     ctx.restore();
   }
@@ -335,6 +431,6 @@ export class AnimalAnimation implements AnimSystem {
   }
 
   count() {
-    return this.cows.length + this.flock.length;
+    return this.cows.length + this.flock.length + (this.goose ? 1 : 0);
   }
 }

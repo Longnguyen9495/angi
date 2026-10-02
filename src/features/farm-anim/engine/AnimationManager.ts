@@ -962,7 +962,7 @@ export class AnimationManager {
             id: a.id,
             file: a.file,
             group: 'animals',
-            kind: a.id.startsWith('cow') ? 'cow' : 'chicken',
+            kind: a.id.startsWith('cow') ? 'cow' : a.id === 'goose' ? 'goose' : 'chicken',
             ring: [a.at[0], a.at[1], a.r, a.r * 0.9],
           };
       const b = L.sprites.blades;
@@ -1012,14 +1012,14 @@ export class AnimationManager {
           ring: [d.centre[0], d.centre[1], 70, 40],
         };
       }
-      for (const [i, k] of (L.koi ?? []).entries())
-        if (p.x >= k[0] && p.x <= k[2] && p.y >= k[1] && p.y <= k[3])
+      for (const k of this.fish.pieces())
+        if (Math.hypot(p.x - k.at[0], (p.y - k.at[1]) * 1.6) < k.r)
           return {
-            id: `koi-${i + 1}`,
-            file: `koi-${i + 1}.webp`,
+            id: k.id,
+            file: k.file,
             group: 'water',
             kind: 'koi',
-            ring: [(k[0] + k[2]) / 2, (k[1] + k[3]) / 2, (k[2] - k[0]) / 2, (k[3] - k[1]) / 2],
+            ring: [k.at[0], k.at[1], k.r, k.r * 0.5],
           };
       for (const l of L.lilies) {
         const s = L.sprites[l.id];
