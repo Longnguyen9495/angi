@@ -127,7 +127,7 @@ async function fromSheet(id, x, y) {
 }
 
 // Clouds: the four big puffs along the bottom of the sheet, reused at several sizes (flipped
-// copies look like new clouds). Banks sit low, over the cliff bottoms cut by the picture edge.
+// copies look like new clouds). No banks below the island: the cliff bottoms stay visible.
 const CLOUD_SRC = [
   await fromSheet('cloud-1', 110, 950),
   await fromSheet('cloud-2', 300, 960),
@@ -149,14 +149,6 @@ const clouds = [
   C(1, -80, 200, 1.15, false, true),
   C(3, 1540, 320, 1.1),
   C(2, -90, 440, 1.2),
-  // Banks in front of the cliffs: the island is cut flat at the bottom of the painting.
-  C(0, -60, 760, 1.5, true),
-  C(1, 230, 820, 1.45, true, true),
-  C(2, 520, 850, 1.35, true),
-  C(1, 800, 860, 1.4, true),
-  C(0, 1060, 845, 1.45, true, true),
-  C(2, 1330, 800, 1.4, true, true),
-  C(3, 1560, 700, 1.4, true),
 ];
 
 // Loose pieces the runtime animates on their own (falling leaves, butterflies, birds, sparkle,
