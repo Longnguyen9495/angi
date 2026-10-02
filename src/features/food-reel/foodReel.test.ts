@@ -95,11 +95,11 @@ describe('reel catalogue', () => {
     applyCatalogue({
       version: 'old-ids',
       count: 1,
-      items: [{ ...item(d.id), id: 'com-tam-suon-bi-cha' }],
+      items: [{ ...item(d.id), id: 'com-tam-suon-bi-cha-trung' }],
     });
-    expect(getRecipe('com-tam').dishId).toBe('com-tam-suon-bi-cha');
+    expect(getRecipe('com-tam').dishId).toBe('com-tam-suon-bi-cha-trung');
     expect(
-      RECIPE_LIST.some((r) => !isBuiltinRecipe(r.id) && r.dishId === 'com-tam-suon-bi-cha'),
+      RECIPE_LIST.some((r) => !isBuiltinRecipe(r.id) && r.dishId === 'com-tam-suon-bi-cha-trung'),
     ).toBe(false);
     applyCatalogue(snapshot as CataloguePayload);
     expect(getRecipe('com-tam').dishId).toBe(d.id);

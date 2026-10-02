@@ -1,247 +1,7 @@
 {
-    "version": "2345d2797a9d",
+    "version": "398c9b58a658",
     "count": 95,
     "items": [
-        {
-            "id": "com-tam-suon-bi-cha-trung",
-            "position": 0,
-            "sourceImageId": null,
-            "name": "Cơm tấm sườn bì chả trứng",
-            "subtitle": "Sườn nướng • Nam Bộ",
-            "price": 75,
-            "vegetarian": false,
-            "region": "south",
-            "tone": "copper",
-            "story": "Sườn nướng cháy cạnh thơm lừng, ôm đĩa cơm tấm nóng cùng bì, chả và trứng ốp la.",
-            "translations": {
-                "en": {
-                    "subtitle": "Broken rice, grilled pork chop • Southern Vietnam",
-                    "story": "A smoky, char-edged grilled pork chop on hot broken rice, with shredded pork skin, steamed egg meatloaf and a fried egg."
-                }
-            },
-            "flavor": {
-                "spicy": 1,
-                "sweet": 3,
-                "rich": 4,
-                "fresh": 2,
-                "crunchy": 2
-            },
-            "image": "/uploads/dishes/moi-c828d2-20260929173635-89aba5-768.webp",
-            "thumbnail": "/uploads/dishes/moi-c828d2-20260929173635-89aba5-384.webp",
-            "credit": "",
-            "video": null,
-            "youtubeVideos": [
-                {
-                    "videoId": "h__kLq8NG2I",
-                    "title": "Trọn bộ bí kíp làm Cơm Tấm Sườn Nướng bất bại chi tiết nhất | Grilled pork chop rice",
-                    "channelId": "UC-c0PPbJKW-KUliEZPosVvg",
-                    "channelTitle": "Cô Ba Bình Dương",
-                    "publishedAt": "2023-09-13T07:00:18Z",
-                    "duration": "PT22M10S",
-                    "thumbnail": "https://i.ytimg.com/vi/h__kLq8NG2I/hqdefault.jpg"
-                },
-                {
-                    "videoId": "7e1-KXJg0bY",
-                    "title": "CƠM TẤM - Cách tự làm cơm tấm - Nước Chấm đơn giản - Cơm sườn bì chả thật ngon | Bếp Nhà Diễm |",
-                    "channelId": "UCZMc6al8vPxv1pTck9wECXg",
-                    "channelTitle": "Diễm Nauy",
-                    "publishedAt": "2021-06-02T19:00:02Z",
-                    "duration": "PT11M49S",
-                    "thumbnail": "https://i.ytimg.com/vi/7e1-KXJg0bY/hqdefault.jpg"
-                },
-                {
-                    "videoId": "GMfkCit8LNM",
-                    "title": "TRỌN BỘ cách nấu cơm tấm sườn bì chả đầy đủ ngon chuẩn quán | Cook béo",
-                    "channelId": "UCiSiKvaHGHr9k7lZvEl1hRA",
-                    "channelTitle": "Cook béo",
-                    "publishedAt": "2025-10-21T03:20:35Z",
-                    "duration": "PT28M22S",
-                    "thumbnail": "https://i.ytimg.com/vi/GMfkCit8LNM/hqdefault.jpg"
-                },
-                {
-                    "videoId": "zT-NqLP9pHE",
-                    "title": "CÁCH LÀM CƠM TẤM SÀI GÒN | MẸO ƯỚP SƯỜN MỀM | BÌ CHAY ĐỘC LẠ | MẮM CHƯNG MIỀN TÂY",
-                    "channelId": "UCHZ_UB-Nh7L4Fmxz27MFJDQ",
-                    "channelTitle": "Esheep Kitchen",
-                    "publishedAt": "2023-04-13T13:00:53Z",
-                    "duration": "PT5M34S",
-                    "thumbnail": "https://i.ytimg.com/vi/zT-NqLP9pHE/hqdefault.jpg"
-                },
-                {
-                    "videoId": "rRtcZxAAOhQ",
-                    "title": "Cách nấu cơm tấm bì chả đồ chua tóp mỡ nước chan (học nấu cơm tấm P3 – tập cuối)",
-                    "channelId": "UCcIfP3ugD4zFIpXub8x8HTQ",
-                    "channelTitle": "SỨC KHỎE TÂM SINH",
-                    "publishedAt": "2018-12-19T12:38:50Z",
-                    "duration": "PT24M42S",
-                    "thumbnail": "https://i.ytimg.com/vi/rRtcZxAAOhQ/hqdefault.jpg"
-                }
-            ],
-            "ingredients": [
-                {
-                    "id": "suon-heo-nuong",
-                    "name": "Sườn heo nướng",
-                    "description": "Tẩm ướp đậm vị, nướng xém cạnh và bóng sốt.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Grilled pork ribs",
-                            "description": "Richly marinated, grilled until charred at the edges and glossy with sauce."
-                        }
-                    }
-                },
-                {
-                    "id": "com-tam",
-                    "name": "Cơm tấm",
-                    "description": "Hạt gạo tấm nấu mềm, làm nền cho các món mặn.",
-                    "crop": "rice",
-                    "translations": {
-                        "en": {
-                            "name": "Broken rice",
-                            "description": "Soft-cooked broken rice, the base for savory toppings."
-                        }
-                    }
-                },
-                {
-                    "id": "trung-op-la",
-                    "name": "Trứng ốp la",
-                    "description": "Lòng trắng chín viền, lòng đỏ còn mềm óng.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Fried egg",
-                            "description": "Whites set at the edges, yolk still soft and glossy."
-                        }
-                    }
-                },
-                {
-                    "id": "bi-heo",
-                    "name": "Bì heo",
-                    "description": "Thái sợi mảnh, trộn thính thơm và dai nhẹ.",
-                    "crop": "rice",
-                    "translations": {
-                        "en": {
-                            "name": "Shredded pork skin",
-                            "description": "Thinly shredded, tossed with fragrant toasted rice powder, slightly chewy."
-                        }
-                    }
-                },
-                {
-                    "id": "cha-trung",
-                    "name": "Chả trứng",
-                    "description": "Chả hấp chắc mềm, điểm lớp trứng vàng phía trên.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Steamed egg meatloaf",
-                            "description": "Firm yet tender steamed meatloaf topped with a golden egg layer."
-                        }
-                    }
-                },
-                {
-                    "id": "do-chua",
-                    "name": "Đồ chua",
-                    "description": "Cà rốt và củ cải ngâm chua ngọt, giúp cân vị.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Pickled carrot & daikon",
-                            "description": "Carrot and daikon pickled sweet and sour to balance the flavors."
-                        }
-                    }
-                },
-                {
-                    "id": "dua-leo",
-                    "name": "Dưa leo",
-                    "description": "Thái lát mỏng, giòn mát ăn kèm.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Cucumber",
-                            "description": "Thinly sliced, crisp and cooling on the side."
-                        }
-                    }
-                },
-                {
-                    "id": "nuoc-mam",
-                    "name": "Nước mắm",
-                    "description": "Pha chua ngọt cùng ớt, dùng rưới cơm và sườn.",
-                    "crop": "chili",
-                    "translations": {
-                        "en": {
-                            "name": "Fish sauce",
-                            "description": "Mixed sweet and sour with chili, drizzled over rice and pork chops."
-                        }
-                    }
-                }
-            ],
-            "cook": {
-                "steps": [
-                    {
-                        "label": "Nấu cơm tấm",
-                        "heat": "high",
-                        "weight": 4,
-                        "translations": {
-                            "en": "Cook broken rice"
-                        }
-                    },
-                    {
-                        "label": "Nướng sườn cháy cạnh",
-                        "heat": "high",
-                        "weight": 5,
-                        "translations": {
-                            "en": "Grill caramelized pork"
-                        }
-                    },
-                    {
-                        "label": "Hấp chả trứng",
-                        "heat": "mid",
-                        "weight": 4,
-                        "translations": {
-                            "en": "Steam egg loaf"
-                        }
-                    },
-                    {
-                        "label": "Trộn bì và đồ chua",
-                        "heat": "low",
-                        "weight": 2,
-                        "translations": {
-                            "en": "Mix pork skin and pickles"
-                        }
-                    },
-                    {
-                        "label": "Chiên trứng ốp la",
-                        "heat": "high",
-                        "weight": 2,
-                        "translations": {
-                            "en": "Fry sunny-side egg"
-                        }
-                    }
-                ],
-                "produce": [
-                    {
-                        "id": "rice",
-                        "qty": 2
-                    },
-                    {
-                        "id": "egg",
-                        "qty": 2
-                    },
-                    {
-                        "id": "cucumber",
-                        "qty": 1
-                    },
-                    {
-                        "id": "carrot",
-                        "qty": 1
-                    },
-                    {
-                        "id": "radish",
-                        "qty": 1
-                    }
-                ]
-            }
-        },
         {
             "id": "pho-bo",
             "position": 1,
@@ -11949,23 +11709,17 @@
             }
         },
         {
-            "id": "mi-y-hai-san-sot-ca-chua",
+            "id": "spaghetti-hai-san",
             "position": 65,
             "sourceImageId": null,
-            "name": "Mì Ý hải sản sốt cà chua",
-            "subtitle": "Tôm mực vẹm • Ý",
-            "price": 145,
+            "name": "Spaghetti hải sản",
+            "subtitle": "Hải sản sốt cà chua",
+            "price": 180,
             "vegetarian": false,
             "region": "world",
             "tone": "ocean",
-            "story": "Sợi mì óng sốt đỏ quyện hải sản đầy đặn, gợi cảm giác như một bữa trưa bên biển.",
-            "translations": {
-                "en": {
-                    "name": "Seafood pasta in tomato sauce",
-                    "subtitle": "Shrimp, squid & mussels • Italy",
-                    "story": "Pasta in a glossy red sauce loaded with seafood — like lunch by the sea."
-                }
-            },
+            "story": "Sợi mì óng sốt đỏ ôm trọn tôm, mực và vẹm, gợi cảm giác nồng ấm bên bờ biển.",
+            "translations": {},
             "flavor": {
                 "spicy": 1,
                 "sweet": 2,
@@ -11973,8 +11727,8 @@
                 "fresh": 3,
                 "crunchy": 1
             },
-            "image": "/uploads/dishes/moi-8ba8c8-20261001095245-f12e4a-768.webp",
-            "thumbnail": "/uploads/dishes/moi-8ba8c8-20261001095245-f12e4a-384.webp",
+            "image": "/uploads/dishes/moi-6954b4-20261001025204-132714-768.webp",
+            "thumbnail": "/uploads/dishes/moi-6954b4-20261001025204-132714-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -12040,18 +11794,6 @@
                     }
                 },
                 {
-                    "id": "pho-mai-parmesan",
-                    "name": "Phô mai Parmesan",
-                    "description": "Bào mịn phủ mặt, thêm vị mặn béo đặc trưng.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Parmesan cheese",
-                            "description": "Finely grated on top, adding its signature salty richness."
-                        }
-                    }
-                },
-                {
                     "id": "ngo-tay",
                     "name": "Ngò tây",
                     "description": "Băm nhỏ rắc trên cùng, tạo hương thơm tươi.",
@@ -12062,24 +11804,36 @@
                             "description": "Finely chopped and sprinkled on top for a fresh aroma."
                         }
                     }
+                },
+                {
+                    "id": "pho-mai-parmesan",
+                    "name": "Phô mai Parmesan",
+                    "description": "Bào mịn phủ mặt, thêm vị mặn béo đặc trưng.",
+                    "crop": null,
+                    "translations": {
+                        "en": {
+                            "name": "Parmesan cheese",
+                            "description": "Finely grated on top, adding its signature salty richness."
+                        }
+                    }
                 }
             ],
             "cook": {
                 "steps": [
                     {
-                        "label": "Luộc mì Ý",
+                        "label": "Luộc mì spaghetti",
                         "heat": "high",
                         "weight": 3,
                         "translations": {
-                            "en": "Boil spaghetti"
+                            "en": "Boil the spaghetti"
                         }
                     },
                     {
-                        "label": "Phi tỏi xào hải sản",
+                        "label": "Xào tôm mực vẹm",
                         "heat": "high",
                         "weight": 2,
                         "translations": {
-                            "en": "Sauté garlic and seafood"
+                            "en": "Sauté the seafood"
                         }
                     },
                     {
@@ -12087,27 +11841,31 @@
                         "heat": "mid",
                         "weight": 3,
                         "translations": {
-                            "en": "Cook tomato sauce"
+                            "en": "Simmer tomato sauce"
                         }
                     },
                     {
-                        "label": "Đảo mì cùng sốt",
-                        "heat": "high",
+                        "label": "Trộn mì cùng sốt",
+                        "heat": "mid",
                         "weight": 2,
                         "translations": {
-                            "en": "Toss pasta in sauce"
+                            "en": "Toss pasta with sauce"
                         }
                     },
                     {
-                        "label": "Rắc phô mai ngò tây",
+                        "label": "Rắc ngò và phô mai",
                         "heat": "low",
                         "weight": 1,
                         "translations": {
-                            "en": "Top with cheese and parsley"
+                            "en": "Add parsley and cheese"
                         }
                     }
                 ],
                 "produce": [
+                    {
+                        "id": "tomato",
+                        "qty": 2
+                    },
                     {
                         "id": "shrimp",
                         "qty": 2
@@ -12117,12 +11875,8 @@
                         "qty": 2
                     },
                     {
-                        "id": "tomato",
+                        "id": "clam",
                         "qty": 2
-                    },
-                    {
-                        "id": "garlic",
-                        "qty": 1
                     },
                     {
                         "id": "herbs",
@@ -12136,12 +11890,12 @@
             "position": 66,
             "sourceImageId": null,
             "name": "Gỏi cuốn thịt nướng",
-            "subtitle": "Thịt nướng • Miền Nam",
+            "subtitle": "Thịt nướng • Rau thơm",
             "price": 55,
             "vegetarian": false,
             "region": "south",
             "tone": "herb",
-            "story": "Bánh tráng mềm ôm thịt nướng thơm, rau xanh mát, chấm nước mắm chua ngọt đầy cuốn hút.",
+            "story": "Lớp bánh tráng trong mềm ôm thịt nướng đậm đà, rau xanh mát và chén nước mắm chua ngọt.",
             "translations": {
                 "en": {
                     "subtitle": "Fresh rolls with grilled pork • Southern Vietnam",
@@ -12155,8 +11909,8 @@
                 "fresh": 5,
                 "crunchy": 2
             },
-            "image": "/uploads/dishes/moi-c60f95-20261001095259-a93793-768.webp",
-            "thumbnail": "/uploads/dishes/moi-c60f95-20261001095259-a93793-384.webp",
+            "image": "/uploads/dishes/moi-13a659-20261001025216-3a3489-768.webp",
+            "thumbnail": "/uploads/dishes/moi-13a659-20261001025216-3a3489-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -12319,11 +12073,11 @@
             "sourceImageId": null,
             "name": "Bún bò Nam Bộ",
             "subtitle": "Bò xào rau thơm • Việt Nam",
-            "price": 55,
+            "price": 65,
             "vegetarian": false,
             "region": "south",
             "tone": "copper",
-            "story": "Bún trắng mềm ôm thịt bò xào thơm, rau xanh mát và đậu phộng rang giòn đầy quyến rũ.",
+            "story": "Bún trắng mềm ôm bò xào thơm nức, điểm rau xanh, đậu phộng giòn và nước mắm chua ngọt.",
             "translations": {
                 "en": {
                     "subtitle": "Rice noodles with stir-fried beef & herbs • Vietnam",
@@ -12337,24 +12091,12 @@
                 "fresh": 4,
                 "crunchy": 3
             },
-            "image": "/uploads/dishes/moi-adad05-20261001095314-3c1f13-768.webp",
-            "thumbnail": "/uploads/dishes/moi-adad05-20261001095314-3c1f13-384.webp",
+            "image": "/uploads/dishes/moi-ad0479-20261001025230-c92605-768.webp",
+            "thumbnail": "/uploads/dishes/moi-ad0479-20261001025230-c92605-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
             "ingredients": [
-                {
-                    "id": "bun-tuoi",
-                    "name": "Bún tươi",
-                    "description": "Sợi bún trắng mềm, ăn kèm chả và nước chấm.",
-                    "crop": "rice",
-                    "translations": {
-                        "en": {
-                            "name": "Rice vermicelli",
-                            "description": "Soft white rice noodles, served with patties and dipping sauce."
-                        }
-                    }
-                },
                 {
                     "id": "thit-bo",
                     "name": "Thịt bò",
@@ -12364,6 +12106,18 @@
                         "en": {
                             "name": "Beef",
                             "description": "Thinly sliced, a mix of tender rare cuts and rich well-done cuts."
+                        }
+                    }
+                },
+                {
+                    "id": "bun-tuoi",
+                    "name": "Bún tươi",
+                    "description": "Sợi bún trắng mềm, ăn kèm chả và nước chấm.",
+                    "crop": "rice",
+                    "translations": {
+                        "en": {
+                            "name": "Rice vermicelli",
+                            "description": "Soft white rice noodles, served with patties and dipping sauce."
                         }
                     }
                 },
@@ -12380,14 +12134,14 @@
                     }
                 },
                 {
-                    "id": "dau-phong",
-                    "name": "Đậu phộng",
-                    "description": "Đậu phộng rang giã dập, thơm bùi và giòn.",
-                    "crop": "bean",
+                    "id": "dua-leo",
+                    "name": "Dưa leo",
+                    "description": "Thái lát mỏng, giòn mát ăn kèm.",
+                    "crop": null,
                     "translations": {
                         "en": {
-                            "name": "Peanuts",
-                            "description": "Roasted, crushed peanuts, nutty and crunchy."
+                            "name": "Cucumber",
+                            "description": "Thinly sliced, crisp and cooling on the side."
                         }
                     }
                 },
@@ -12404,26 +12158,26 @@
                     }
                 },
                 {
-                    "id": "dua-leo",
-                    "name": "Dưa leo",
-                    "description": "Thái lát mỏng, giòn mát ăn kèm.",
+                    "id": "ca-rot",
+                    "name": "Cà rốt",
+                    "description": "Bào sợi, tạo vị ngọt và màu sắc.",
                     "crop": null,
                     "translations": {
                         "en": {
-                            "name": "Cucumber",
-                            "description": "Thinly sliced, crisp and cooling on the side."
+                            "name": "Carrot",
+                            "description": "Shredded, adding sweetness and color."
                         }
                     }
                 },
                 {
-                    "id": "do-chua",
-                    "name": "Đồ chua",
-                    "description": "Cà rốt và củ cải ngâm chua ngọt, giúp cân vị.",
-                    "crop": null,
+                    "id": "dau-phong",
+                    "name": "Đậu phộng",
+                    "description": "Đậu phộng rang giã dập, thơm bùi và giòn.",
+                    "crop": "bean",
                     "translations": {
                         "en": {
-                            "name": "Pickled carrot & daikon",
-                            "description": "Carrot and daikon pickled sweet and sour to balance the flavors."
+                            "name": "Peanuts",
+                            "description": "Roasted, crushed peanuts, nutty and crunchy."
                         }
                     }
                 },
@@ -12517,7 +12271,7 @@
             "vegetarian": false,
             "region": "south",
             "tone": "amber",
-            "story": "Sợi bánh canh mềm ôm nước dùng trong, bên chân giò béo mềm và hành phi thơm nức.",
+            "story": "Sợi bánh canh mềm quyện nước dùng trong ngọt, ôm trọn khoanh giò heo béo mềm và hành phi thơm.",
             "translations": {
                 "en": {
                     "subtitle": "Thick noodle soup with pork knuckle • Southern Vietnam",
@@ -12526,13 +12280,13 @@
             },
             "flavor": {
                 "spicy": 1,
-                "sweet": 1,
+                "sweet": 2,
                 "rich": 4,
                 "fresh": 2,
                 "crunchy": 1
             },
-            "image": "/uploads/dishes/moi-96a0c2-20261001095325-afe24b-768.webp",
-            "thumbnail": "/uploads/dishes/moi-96a0c2-20261001095325-afe24b-384.webp",
+            "image": "/uploads/dishes/moi-e4cbb2-20261001025242-292712-768.webp",
+            "thumbnail": "/uploads/dishes/moi-e4cbb2-20261001025242-292712-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -12558,18 +12312,6 @@
                         "en": {
                             "name": "Bánh canh noodles",
                             "description": "Thick white noodles, soft and chewy, blending with the thick broth."
-                        }
-                    }
-                },
-                {
-                    "id": "nuoc-dung-heo",
-                    "name": "Nước dùng heo",
-                    "description": "Ninh trong, ngọt xương và đậm vị tiêu.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Pork broth",
-                            "description": "Simmered clear, sweet from the bones and rich with pepper."
                         }
                     }
                 },
@@ -12620,6 +12362,13 @@
                             "description": "A fresh green, fragrant touch over the beef and pho noodles."
                         }
                     }
+                },
+                {
+                    "id": "tieu-den",
+                    "name": "Tiêu đen",
+                    "description": "Xay thô trên giò heo, tăng vị cay thơm.",
+                    "crop": null,
+                    "translations": {}
                 }
             ],
             "cook": {
@@ -12686,12 +12435,12 @@
             "position": 69,
             "sourceImageId": null,
             "name": "Cháo vịt",
-            "subtitle": "Vịt mềm • Gừng hành",
-            "price": 55,
+            "subtitle": "Vịt mềm • Việt Nam",
+            "price": 60,
             "vegetarian": false,
             "region": "south",
             "tone": "ivory",
-            "story": "Bát cháo trắng sánh mịn ôm từng lát vịt mềm, thơm gừng hành và ấm nồng vị tiêu.",
+            "story": "Cháo nóng ôm từng lát vịt mềm, thơm gừng, hành phi và rau mùi trong làn khói dịu dàng.",
             "translations": {
                 "en": {
                     "subtitle": "Rice porridge with duck • Ginger & spring onion",
@@ -12703,10 +12452,10 @@
                 "sweet": 1,
                 "rich": 3,
                 "fresh": 3,
-                "crunchy": 2
+                "crunchy": 1
             },
-            "image": "/uploads/dishes/moi-7dae5f-20261001095340-5be118-768.webp",
-            "thumbnail": "/uploads/dishes/moi-7dae5f-20261001095340-5be118-384.webp",
+            "image": "/uploads/dishes/moi-fa58d8-20261001025258-62c1a5-768.webp",
+            "thumbnail": "/uploads/dishes/moi-fa58d8-20261001025258-62c1a5-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -12736,18 +12485,6 @@
                     }
                 },
                 {
-                    "id": "gung",
-                    "name": "Gừng",
-                    "description": "Thái sợi mảnh, tạo hương cay ấm và át mùi vịt.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Ginger",
-                            "description": "Finely julienned for a warm spiciness that cuts the gaminess of duck."
-                        }
-                    }
-                },
-                {
                     "id": "rau-mui",
                     "name": "Rau mùi",
                     "description": "Điểm xanh thơm mát trên thịt bò và bánh phở.",
@@ -12760,14 +12497,14 @@
                     }
                 },
                 {
-                    "id": "hanh-la",
-                    "name": "Hành lá",
-                    "description": "Cắt nhỏ, rắc phủ mặt tô cho hương thơm tươi.",
-                    "crop": "scallion",
+                    "id": "gung",
+                    "name": "Gừng",
+                    "description": "Thái sợi, tăng vị cay ấm và khử mùi vịt.",
+                    "crop": null,
                     "translations": {
                         "en": {
-                            "name": "Spring onion",
-                            "description": "Finely chopped and sprinkled over the bowl for a fresh aroma."
+                            "name": "Ginger",
+                            "description": "Finely julienned for a warm spiciness that cuts the gaminess of duck."
                         }
                     }
                 },
@@ -12780,6 +12517,18 @@
                         "en": {
                             "name": "Fried shallots",
                             "description": "Fried golden and crisp, sprinkled over the chicken."
+                        }
+                    }
+                },
+                {
+                    "id": "hanh-la",
+                    "name": "Hành lá",
+                    "description": "Cắt nhỏ, rắc phủ mặt tô cho hương thơm tươi.",
+                    "crop": "scallion",
+                    "translations": {
+                        "en": {
+                            "name": "Spring onion",
+                            "description": "Finely chopped and sprinkled over the bowl for a fresh aroma."
                         }
                     }
                 },
@@ -12868,12 +12617,12 @@
             "position": 70,
             "sourceImageId": null,
             "name": "Nem nướng Nha Trang",
-            "subtitle": "Thịt nướng cuốn rau • Miền Trung",
+            "subtitle": "Nem nướng • Nha Trang",
             "price": 65,
             "vegetarian": false,
             "region": "central",
             "tone": "copper",
-            "story": "Nem nướng cháy cạnh thơm lừng, cuốn cùng rau xanh và đồ chua, chấm sốt đậm đà đầy cuốn hút.",
+            "story": "Nem nướng xém cạnh cuốn cùng rau xanh, bún mềm và bánh tráng giòn, chấm sốt đậm đà.",
             "translations": {
                 "en": {
                     "subtitle": "Grilled pork sausage wraps with herbs • Central Vietnam",
@@ -12885,25 +12634,20 @@
                 "sweet": 3,
                 "rich": 4,
                 "fresh": 4,
-                "crunchy": 3
+                "crunchy": 4
             },
-            "image": "/uploads/dishes/moi-c85e6f-20261001095353-97c444-768.webp",
-            "thumbnail": "/uploads/dishes/moi-c85e6f-20261001095353-97c444-384.webp",
+            "image": "/uploads/dishes/moi-22ea11-20261001025312-2e237c-768.webp",
+            "thumbnail": "/uploads/dishes/moi-22ea11-20261001025312-2e237c-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
             "ingredients": [
                 {
-                    "id": "thit-heo-nuong",
-                    "name": "Thịt heo nướng",
-                    "description": "Thịt thái miếng ướp mặn ngọt, nướng xém thơm.",
+                    "id": "nem-nuong",
+                    "name": "Nem nướng",
+                    "description": "Thịt heo quết dẻo, nướng xém cạnh thơm lừng.",
                     "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Grilled pork",
-                            "description": "Sliced pork in a sweet-savory marinade, grilled until fragrantly charred."
-                        }
-                    }
+                    "translations": {}
                 },
                 {
                     "id": "bun-tuoi",
@@ -12942,6 +12686,18 @@
                     }
                 },
                 {
+                    "id": "banh-trang",
+                    "name": "Bánh tráng",
+                    "description": "Bánh tráng gạo mềm trong, cuốn gọn phần nhân tươi mát.",
+                    "crop": "rice",
+                    "translations": {
+                        "en": {
+                            "name": "Rice paper",
+                            "description": "Soft, translucent rice paper that wraps a fresh filling neatly."
+                        }
+                    }
+                },
+                {
                     "id": "dua-leo",
                     "name": "Dưa leo",
                     "description": "Thái lát mỏng, giòn mát ăn kèm.",
@@ -12966,26 +12722,14 @@
                     }
                 },
                 {
-                    "id": "banh-trang",
-                    "name": "Bánh tráng",
-                    "description": "Bánh tráng gạo mềm trong, cuốn gọn phần nhân tươi mát.",
-                    "crop": "rice",
+                    "id": "dau-phong",
+                    "name": "Đậu phộng",
+                    "description": "Đậu phộng rang giã dập, thơm bùi và giòn.",
+                    "crop": "bean",
                     "translations": {
                         "en": {
-                            "name": "Rice paper",
-                            "description": "Soft, translucent rice paper that wraps a fresh filling neatly."
-                        }
-                    }
-                },
-                {
-                    "id": "nuoc-mam",
-                    "name": "Nước mắm",
-                    "description": "Pha chua ngọt cùng ớt, dùng rưới cơm và sườn.",
-                    "crop": "chili",
-                    "translations": {
-                        "en": {
-                            "name": "Fish sauce",
-                            "description": "Mixed sweet and sour with chili, drizzled over rice and pork chops."
+                            "name": "Peanuts",
+                            "description": "Roasted, crushed peanuts, nutty and crunchy."
                         }
                     }
                 }
@@ -13059,7 +12803,7 @@
             "vegetarian": false,
             "region": "world",
             "tone": "amber",
-            "story": "Nước dùng nâu óng ôm sợi mì dai, thịt bò mềm đậm vị và rau xanh tươi mát.",
+            "story": "Bát mì nóng hổi ôm trọn bò hầm mềm, rau xanh và nước dùng nâu đỏ thơm nồng.",
             "translations": {
                 "en": {
                     "name": "Taiwanese beef noodle soup",
@@ -13071,11 +12815,11 @@
                 "spicy": 2,
                 "sweet": 2,
                 "rich": 4,
-                "fresh": 3,
+                "fresh": 2,
                 "crunchy": 1
             },
-            "image": "/uploads/dishes/moi-72b69e-20261001095410-d1603d-768.webp",
-            "thumbnail": "/uploads/dishes/moi-72b69e-20261001095410-d1603d-384.webp",
+            "image": "/uploads/dishes/moi-0ec5dc-20261001025330-4f847e-768.webp",
+            "thumbnail": "/uploads/dishes/moi-0ec5dc-20261001025330-4f847e-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -13095,7 +12839,7 @@
                 {
                     "id": "mi-soi",
                     "name": "Mì sợi",
-                    "description": "Sợi mì dày, dai mềm và quyện nước dùng.",
+                    "description": "Sợi mì lúa mì dày, dai mềm trong nước dùng nóng.",
                     "crop": null,
                     "translations": {
                         "en": {
@@ -13129,18 +12873,6 @@
                     }
                 },
                 {
-                    "id": "ca-rot",
-                    "name": "Cà rốt",
-                    "description": "Bào sợi, tạo vị ngọt và màu sắc.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Carrot",
-                            "description": "Shredded, adding sweetness and color."
-                        }
-                    }
-                },
-                {
                     "id": "dua-cai-chua",
                     "name": "Dưa cải chua",
                     "description": "Cắt khúc, tạo vị chua mặn nổi bật cho món cơm rang.",
@@ -13149,6 +12881,18 @@
                         "en": {
                             "name": "Pickled mustard greens",
                             "description": "Cut into pieces, adding a bold sour-salty note to fried rice."
+                        }
+                    }
+                },
+                {
+                    "id": "ca-rot",
+                    "name": "Cà rốt",
+                    "description": "Bào sợi, tạo vị ngọt và màu sắc.",
+                    "crop": null,
+                    "translations": {
+                        "en": {
+                            "name": "Carrot",
+                            "description": "Shredded, adding sweetness and color."
                         }
                     }
                 },
@@ -13245,12 +12989,12 @@
             "position": 72,
             "sourceImageId": null,
             "name": "Cơm gà Hải Nam",
-            "subtitle": "Gà mềm • cơm thơm",
+            "subtitle": "Gà luộc mềm • cơm thơm",
             "price": 75,
             "vegetarian": false,
             "region": "world",
             "tone": "ivory",
-            "story": "Gà luộc óng mềm bên cơm thơm, rau xanh và ba chén sốt nhỏ đánh thức mọi giác quan.",
+            "story": "Gà mềm óng nhẹ bên cơm thơm, rau xanh và những chén sốt gừng ớt đầy quyến rũ.",
             "translations": {
                 "en": {
                     "name": "Hainanese chicken rice",
@@ -13259,14 +13003,14 @@
                 }
             },
             "flavor": {
-                "spicy": 1,
+                "spicy": 2,
                 "sweet": 1,
                 "rich": 3,
                 "fresh": 3,
                 "crunchy": 1
             },
-            "image": "/uploads/dishes/moi-45b6a5-20261001095425-0b975d-768.webp",
-            "thumbnail": "/uploads/dishes/moi-45b6a5-20261001095425-0b975d-384.webp",
+            "image": "/uploads/dishes/moi-75036d-20261001025343-321b93-768.webp",
+            "thumbnail": "/uploads/dishes/moi-75036d-20261001025343-321b93-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -13308,18 +13052,6 @@
                     }
                 },
                 {
-                    "id": "xa-lach",
-                    "name": "Xà lách",
-                    "description": "Lót dưới gà rán, tạo vị tươi mát.",
-                    "crop": "herbs",
-                    "translations": {
-                        "en": {
-                            "name": "Lettuce",
-                            "description": "Laid under the fried chicken for freshness."
-                        }
-                    }
-                },
-                {
                     "id": "ca-chua",
                     "name": "Cà chua",
                     "description": "Thái lát nhỏ, ăn kèm cho vị chua thanh.",
@@ -13328,6 +13060,18 @@
                         "en": {
                             "name": "Tomato",
                             "description": "Cut into small slices, served on the side for a light tang."
+                        }
+                    }
+                },
+                {
+                    "id": "xa-lach",
+                    "name": "Xà lách",
+                    "description": "Lót dưới gà rán, tạo vị tươi mát.",
+                    "crop": "herbs",
+                    "translations": {
+                        "en": {
+                            "name": "Lettuce",
+                            "description": "Laid under the fried chicken for freshness."
                         }
                     }
                 },
@@ -13346,7 +13090,7 @@
                 {
                     "id": "gung",
                     "name": "Gừng",
-                    "description": "Thái sợi mảnh, tạo hương cay ấm và át mùi vịt.",
+                    "description": "Thái sợi, tăng vị cay ấm và khử mùi vịt.",
                     "crop": null,
                     "translations": {
                         "en": {
@@ -13428,32 +13172,32 @@
             }
         },
         {
-            "id": "mi-lanh-naengmyeon",
+            "id": "mi-lanh-han-quoc",
             "position": 73,
             "sourceImageId": null,
-            "name": "Mì lạnh Naengmyeon",
-            "subtitle": "Bò, kimchi • Hàn Quốc",
-            "price": 120,
+            "name": "Mì lạnh Hàn Quốc",
+            "subtitle": "Bò • kimchi • nước dùng đá",
+            "price": 150,
             "vegetarian": false,
             "region": "world",
             "tone": "amber",
-            "story": "Sợi mì kiều mạch mát lạnh quyện nước dùng thanh, thịt bò mềm và kimchi cay giòn đầy sảng khoái.",
+            "story": "Sợi mì kiều mạch mát lạnh hòa trong nước dùng đá, nổi bật vị bò mềm và kimchi cay giòn.",
             "translations": {
                 "en": {
-                    "name": "Naengmyeon (Korean cold noodles)",
-                    "subtitle": "Beef & kimchi • Korea",
-                    "story": "Ice-cold buckwheat noodles in a clean, light broth with tender beef and crunchy, spicy kimchi — wonderfully refreshing."
+                    "name": "Korean cold noodles",
+                    "subtitle": "Naengmyeon • Korea",
+                    "story": "Chilled noodles in an icy, refreshing broth — the cure for a sweltering summer lunch."
                 }
             },
             "flavor": {
                 "spicy": 2,
-                "sweet": 1,
+                "sweet": 2,
                 "rich": 2,
                 "fresh": 5,
                 "crunchy": 3
             },
-            "image": "/uploads/dishes/moi-47ec77-20261001095439-abe14d-768.webp",
-            "thumbnail": "/uploads/dishes/moi-47ec77-20261001095439-abe14d-384.webp",
+            "image": "/uploads/dishes/moi-2a55bc-20261001025359-764398-768.webp",
+            "thumbnail": "/uploads/dishes/moi-2a55bc-20261001025359-764398-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -13461,7 +13205,7 @@
                 {
                     "id": "mi-kieu-mach",
                     "name": "Mì kiều mạch",
-                    "description": "Sợi mì nâu dai nhẹ, ngâm trong nước dùng lạnh.",
+                    "description": "Sợi mì nâu dai mềm, ngâm trong nước dùng lạnh.",
                     "crop": null,
                     "translations": {
                         "en": {
@@ -13531,14 +13275,14 @@
                     }
                 },
                 {
-                    "id": "cu-cai-muoi",
-                    "name": "Củ cải muối",
-                    "description": "Lát củ cải nhạt màu, giòn và chua ngọt nhẹ.",
+                    "id": "cu-cai-trang",
+                    "name": "Củ cải trắng",
+                    "description": "Bào sợi mảnh, lót cạnh sashimi tạo độ thanh giòn.",
                     "crop": null,
                     "translations": {
                         "en": {
-                            "name": "Pickled radish",
-                            "description": "Pale radish slices, crunchy and lightly sweet-sour."
+                            "name": "Daikon",
+                            "description": "Finely shredded, laid beside sashimi for a clean crunch."
                         }
                     }
                 },
@@ -13566,35 +13310,35 @@
                         }
                     },
                     {
-                        "label": "Luộc mì và trứng",
-                        "heat": "high",
+                        "label": "Làm lạnh nước dùng",
+                        "heat": "low",
                         "weight": 3,
                         "translations": {
-                            "en": "Boil noodles and egg"
+                            "en": "Chill broth until icy"
                         }
                     },
                     {
-                        "label": "Xả mì thật lạnh",
-                        "heat": "low",
+                        "label": "Luộc mì kiều mạch",
+                        "heat": "high",
                         "weight": 2,
                         "translations": {
-                            "en": "Chill the noodles"
+                            "en": "Boil buckwheat noodles"
                         }
                     },
                     {
-                        "label": "Xếp kimchi rau củ",
+                        "label": "Thái trứng và rau",
                         "heat": "low",
                         "weight": 1,
                         "translations": {
-                            "en": "Arrange kimchi and vegetables"
+                            "en": "Slice egg and vegetables"
                         }
                     },
                     {
-                        "label": "Chan nước dùng lạnh",
+                        "label": "Xếp mì cùng kimchi",
                         "heat": "low",
                         "weight": 1,
                         "translations": {
-                            "en": "Pour in chilled broth"
+                            "en": "Assemble noodles and kimchi"
                         }
                     }
                 ],
@@ -13602,10 +13346,6 @@
                     {
                         "id": "napa",
                         "qty": 2
-                    },
-                    {
-                        "id": "chili",
-                        "qty": 1
                     },
                     {
                         "id": "egg",
@@ -13618,6 +13358,10 @@
                     {
                         "id": "radish",
                         "qty": 1
+                    },
+                    {
+                        "id": "scallion",
+                        "qty": 1
                     }
                 ]
             }
@@ -13627,12 +13371,12 @@
             "position": 74,
             "sourceImageId": null,
             "name": "Pizza hải sản",
-            "subtitle": "Tôm mực vẹm • phô mai",
-            "price": 185,
+            "subtitle": "Tôm mực vẹm • Ý",
+            "price": 195,
             "vegetarian": false,
             "region": "world",
-            "tone": "copper",
-            "story": "Tôm, mực và vẹm phủ phô mai tan chảy, thơm nức trên đế bánh vàng giòn vừa ra lò.",
+            "tone": "ocean",
+            "story": "Đế bánh vàng thơm ôm trọn hải sản mọng ngọt, phô mai kéo sợi và rau củ rực rỡ.",
             "translations": {
                 "en": {
                     "name": "Seafood pizza",
@@ -13647,8 +13391,8 @@
                 "fresh": 2,
                 "crunchy": 3
             },
-            "image": "/uploads/dishes/moi-fadc42-20261001095454-80f3e2-768.webp",
-            "thumbnail": "/uploads/dishes/moi-fadc42-20261001095454-80f3e2-384.webp",
+            "image": "/uploads/dishes/moi-564741-20261001025415-fdd98e-768.webp",
+            "thumbnail": "/uploads/dishes/moi-564741-20261001025415-fdd98e-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -13702,14 +13446,14 @@
                     }
                 },
                 {
-                    "id": "de-pizza",
-                    "name": "Đế pizza",
-                    "description": "Nướng vàng, viền phồng nhẹ và bên ngoài hơi giòn.",
-                    "crop": null,
+                    "id": "ot-chuong",
+                    "name": "Ớt chuông",
+                    "description": "Thái sợi, nướng vừa chín để giữ vị ngọt và giòn.",
+                    "crop": "chili",
                     "translations": {
                         "en": {
-                            "name": "Pizza crust",
-                            "description": "Baked golden, with a lightly puffed rim and a slightly crisp outside."
+                            "name": "Bell pepper",
+                            "description": "Cut into strips and roasted just right to stay sweet and crisp."
                         }
                     }
                 },
@@ -13726,26 +13470,14 @@
                     }
                 },
                 {
-                    "id": "ot-chuong",
-                    "name": "Ớt chuông",
-                    "description": "Thái sợi, nướng vừa chín để giữ vị ngọt và giòn.",
-                    "crop": "chili",
+                    "id": "de-pizza",
+                    "name": "Đế pizza",
+                    "description": "Nướng vàng, viền phồng nhẹ và bên ngoài hơi giòn.",
+                    "crop": null,
                     "translations": {
                         "en": {
-                            "name": "Bell pepper",
-                            "description": "Cut into strips and roasted just right to stay sweet and crisp."
-                        }
-                    }
-                },
-                {
-                    "id": "la-oregano",
-                    "name": "Lá oregano",
-                    "description": "Rắc trên mặt bánh, mang hương thảo mộc thơm nồng.",
-                    "crop": "herbs",
-                    "translations": {
-                        "en": {
-                            "name": "Oregano",
-                            "description": "Sprinkled over the pizza for a bold herbal aroma."
+                            "name": "Pizza crust",
+                            "description": "Baked golden, with a lightly puffed rim and a slightly crisp outside."
                         }
                     }
                 }
@@ -13814,12 +13546,12 @@
             "position": 75,
             "sourceImageId": null,
             "name": "Phở gà",
-            "subtitle": "Gà ta • Hà Nội",
+            "subtitle": "Gà xé • Hà Nội",
             "price": 55,
             "vegetarian": false,
             "region": "north",
             "tone": "amber",
-            "story": "Nước dùng trong veo ôm sợi phở mềm, thịt gà vàng óng và hương rau thơm ấm áp.",
+            "story": "Nước dùng trong veo ôm bánh phở mềm, thịt gà vàng óng và hương rau thơm dịu dàng.",
             "translations": {
                 "en": {
                     "subtitle": "Chicken noodle soup with free-range chicken • Hà Nội",
@@ -13831,26 +13563,14 @@
                 "sweet": 1,
                 "rich": 3,
                 "fresh": 4,
-                "crunchy": 1
+                "crunchy": 0
             },
-            "image": "/uploads/dishes/moi-da8cc5-20261001095510-848485-768.webp",
-            "thumbnail": "/uploads/dishes/moi-da8cc5-20261001095510-848485-384.webp",
+            "image": "/uploads/dishes/moi-5d1e6f-20261001025427-0ae334-768.webp",
+            "thumbnail": "/uploads/dishes/moi-5d1e6f-20261001025427-0ae334-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
             "ingredients": [
-                {
-                    "id": "banh-pho",
-                    "name": "Bánh phở",
-                    "description": "Sợi bánh trắng mềm, thấm vị nước dùng.",
-                    "crop": "rice",
-                    "translations": {
-                        "en": {
-                            "name": "Pho rice noodles",
-                            "description": "Soft white flat rice noodles that soak up the broth."
-                        }
-                    }
-                },
                 {
                     "id": "thit-ga",
                     "name": "Thịt gà",
@@ -13864,14 +13584,26 @@
                     }
                 },
                 {
-                    "id": "nuoc-dung-heo",
-                    "name": "Nước dùng heo",
-                    "description": "Ninh trong, ngọt xương và đậm vị tiêu.",
+                    "id": "banh-pho",
+                    "name": "Bánh phở",
+                    "description": "Sợi bánh trắng mềm, thấm vị nước dùng.",
+                    "crop": "rice",
+                    "translations": {
+                        "en": {
+                            "name": "Pho rice noodles",
+                            "description": "Soft white flat rice noodles that soak up the broth."
+                        }
+                    }
+                },
+                {
+                    "id": "nuoc-dung-ga",
+                    "name": "Nước dùng gà",
+                    "description": "Ninh trong, vị ngọt thanh và thơm nhẹ.",
                     "crop": null,
                     "translations": {
                         "en": {
-                            "name": "Pork broth",
-                            "description": "Simmered clear, sweet from the bones and rich with pepper."
+                            "name": "Chicken broth",
+                            "description": "A clear broth, light, sweet and gently fragrant."
                         }
                     }
                 },
@@ -13985,11 +13717,11 @@
             "sourceImageId": null,
             "name": "Bún măng vịt",
             "subtitle": "Vịt mềm • Măng giòn",
-            "price": 65,
+            "price": 60,
             "vegetarian": false,
             "region": "south",
             "tone": "amber",
-            "story": "Tô bún nóng quyện vị ngọt thanh, thịt vịt mềm và măng giòn, thơm hành phi cùng rau xanh.",
+            "story": "Nước dùng trong veo ôm lấy bún mềm, thịt vịt ngọt đậm và măng tre giòn thơm đầy quyến rũ.",
             "translations": {
                 "en": {
                     "subtitle": "Duck & bamboo shoot noodles • Tender duck • Crunchy bamboo",
@@ -13997,14 +13729,14 @@
                 }
             },
             "flavor": {
-                "spicy": 2,
+                "spicy": 1,
                 "sweet": 2,
                 "rich": 3,
-                "fresh": 4,
+                "fresh": 3,
                 "crunchy": 2
             },
-            "image": "/uploads/dishes/moi-3cb304-20261001095521-6c56be-768.webp",
-            "thumbnail": "/uploads/dishes/moi-3cb304-20261001095521-6c56be-384.webp",
+            "image": "/uploads/dishes/moi-0b3618-20261001025444-f0cfff-768.webp",
+            "thumbnail": "/uploads/dishes/moi-0b3618-20261001025444-f0cfff-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -14046,18 +13778,6 @@
                     }
                 },
                 {
-                    "id": "nuoc-dung-heo",
-                    "name": "Nước dùng heo",
-                    "description": "Ninh trong, ngọt xương và đậm vị tiêu.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Pork broth",
-                            "description": "Simmered clear, sweet from the bones and rich with pepper."
-                        }
-                    }
-                },
-                {
                     "id": "rau-mui",
                     "name": "Rau mùi",
                     "description": "Điểm xanh thơm mát trên thịt bò và bánh phở.",
@@ -14082,18 +13802,6 @@
                     }
                 },
                 {
-                    "id": "ot",
-                    "name": "Ớt",
-                    "description": "Thái lát đỏ, thêm vị cay tươi nổi bật.",
-                    "crop": "chili",
-                    "translations": {
-                        "en": {
-                            "name": "Chili",
-                            "description": "Sliced red chili for a bright, fresh heat."
-                        }
-                    }
-                },
-                {
                     "id": "hanh-la",
                     "name": "Hành lá",
                     "description": "Cắt nhỏ, rắc phủ mặt tô cho hương thơm tươi.",
@@ -14102,6 +13810,18 @@
                         "en": {
                             "name": "Spring onion",
                             "description": "Finely chopped and sprinkled over the bowl for a fresh aroma."
+                        }
+                    }
+                },
+                {
+                    "id": "ot",
+                    "name": "Ớt",
+                    "description": "Thái lát đỏ, thêm vị cay tươi nổi bật.",
+                    "crop": "chili",
+                    "translations": {
+                        "en": {
+                            "name": "Chili",
+                            "description": "Sliced red chili for a bright, fresh heat."
                         }
                     }
                 }
@@ -14178,12 +13898,12 @@
             "position": 77,
             "sourceImageId": null,
             "name": "Lẩu nấm chay",
-            "subtitle": "Đậu hũ nấm rau • Việt Nam",
+            "subtitle": "Đậu hũ • nấm thanh ngọt",
             "price": 95,
             "vegetarian": true,
             "region": "south",
             "tone": "amber",
-            "story": "Nồi lẩu nghi ngút khói, quyện nấm thơm, đậu hũ vàng và rau xanh trong vị nước dùng thanh ngọt.",
+            "story": "Nồi lẩu nghi ngút khói, đầy nấm, đậu hũ vàng và rau thơm, gợi một bữa quây quần ấm áp.",
             "translations": {
                 "en": {
                     "subtitle": "Vegetarian mushroom hot pot with tofu & greens • Vietnam",
@@ -14197,8 +13917,8 @@
                 "fresh": 4,
                 "crunchy": 2
             },
-            "image": "/uploads/dishes/moi-59b98e-20261001095533-7a77de-768.webp",
-            "thumbnail": "/uploads/dishes/moi-59b98e-20261001095533-7a77de-384.webp",
+            "image": "/uploads/dishes/moi-d3ac41-20261001025456-c1bb0f-768.webp",
+            "thumbnail": "/uploads/dishes/moi-d3ac41-20261001025456-c1bb0f-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -14216,14 +13936,14 @@
                     }
                 },
                 {
-                    "id": "nam-huong",
-                    "name": "Nấm hương",
-                    "description": "Nấm thái lát, mềm mọng và thấm nước dùng.",
+                    "id": "nam-hon-hop",
+                    "name": "Nấm hỗn hợp",
+                    "description": "Xào săn với gia vị, thơm và đậm vị.",
                     "crop": null,
                     "translations": {
                         "en": {
-                            "name": "Shiitake mushrooms",
-                            "description": "Sliced shiitake, tender and juicy, soaking up the broth."
+                            "name": "Mixed mushrooms",
+                            "description": "Sautéed with seasoning until firm, fragrant and savory."
                         }
                     }
                 },
@@ -14236,18 +13956,6 @@
                         "en": {
                             "name": "Rice vermicelli",
                             "description": "Soft white rice noodles, served with patties and dipping sauce."
-                        }
-                    }
-                },
-                {
-                    "id": "cha-chay",
-                    "name": "Chả chay",
-                    "description": "Cắt lát, tạo vị đậm và độ dai nhẹ.",
-                    "crop": "bean",
-                    "translations": {
-                        "en": {
-                            "name": "Vegetarian sausage",
-                            "description": "Sliced, adding savory depth and a light chew."
                         }
                     }
                 },
@@ -14272,6 +13980,18 @@
                         "en": {
                             "name": "Fresh herbs",
                             "description": "Mint and perilla, cool and fragrant, balancing the rich pancake."
+                        }
+                    }
+                },
+                {
+                    "id": "ca-rot",
+                    "name": "Cà rốt",
+                    "description": "Bào sợi, tạo vị ngọt và màu sắc.",
+                    "crop": null,
+                    "translations": {
+                        "en": {
+                            "name": "Carrot",
+                            "description": "Shredded, adding sweetness and color."
                         }
                     }
                 },
@@ -14368,68 +14088,46 @@
             }
         },
         {
-            "id": "mien-luon",
+            "id": "mien-luon-nuoc",
             "position": 78,
             "sourceImageId": null,
-            "name": "Miến lươn",
-            "subtitle": "Lươn giòn • Việt Nam",
+            "name": "Miến lươn nước",
+            "subtitle": "Lươn giòn • Nghệ An",
             "price": 60,
             "vegetarian": false,
-            "region": "north",
+            "region": "central",
             "tone": "amber",
-            "story": "Bát miến nóng thơm, lươn vàng giòn quyện nước dùng đậm đà, hành phi và rau xanh đầy cuốn hút.",
-            "translations": {
-                "en": {
-                    "subtitle": "Glass noodles with crispy eel • Vietnam",
-                    "story": "A hot, fragrant bowl of glass noodles with crispy golden eel in a rich broth, crispy shallots and fresh greens."
-                }
-            },
+            "story": "Sợi miến trong veo quyện nước dùng đậm đà, ôm trọn lươn giòn và hương rau răm ấm áp.",
+            "translations": {},
             "flavor": {
                 "spicy": 2,
                 "sweet": 1,
                 "rich": 3,
                 "fresh": 3,
-                "crunchy": 3
+                "crunchy": 4
             },
-            "image": "/uploads/dishes/moi-29f3dc-20261001095548-1b0d02-768.webp",
-            "thumbnail": "/uploads/dishes/moi-29f3dc-20261001095548-1b0d02-384.webp",
+            "image": "/uploads/dishes/moi-6418a5-20261001025511-9d1439-768.webp",
+            "thumbnail": "/uploads/dishes/moi-6418a5-20261001025511-9d1439-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
             "ingredients": [
                 {
-                    "id": "luon-chien",
-                    "name": "Lươn chiên",
-                    "description": "Lươn chiên vàng, lớp ngoài giòn nhẹ, thịt bên trong đậm vị.",
+                    "id": "luon-chien-gion",
+                    "name": "Lươn chiên giòn",
+                    "description": "Lươn thái miếng, chiên vàng giòn, vị đậm và thơm.",
                     "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Fried eel",
-                            "description": "Eel fried golden, lightly crisp outside and savory inside."
-                        }
-                    }
+                    "translations": {}
                 },
                 {
                     "id": "mien-dong",
                     "name": "Miến dong",
-                    "description": "Sợi miến trong, mềm dai và thấm đều nước dùng.",
+                    "description": "Sợi miến trong, mềm dai, thấm nước dùng.",
                     "crop": null,
                     "translations": {
                         "en": {
                             "name": "Glass noodles",
                             "description": "Clear noodles, soft and chewy, evenly soaking up the broth."
-                        }
-                    }
-                },
-                {
-                    "id": "hanh-la",
-                    "name": "Hành lá",
-                    "description": "Cắt nhỏ, rắc phủ mặt tô cho hương thơm tươi.",
-                    "crop": "scallion",
-                    "translations": {
-                        "en": {
-                            "name": "Spring onion",
-                            "description": "Finely chopped and sprinkled over the bowl for a fresh aroma."
                         }
                     }
                 },
@@ -14446,26 +14144,26 @@
                     }
                 },
                 {
-                    "id": "gia-do",
-                    "name": "Giá đỗ",
-                    "description": "Chần vừa chín, giòn nhẹ và thanh vị.",
-                    "crop": "bean",
+                    "id": "hanh-la",
+                    "name": "Hành lá",
+                    "description": "Cắt nhỏ, rắc phủ mặt tô cho hương thơm tươi.",
+                    "crop": "scallion",
                     "translations": {
                         "en": {
-                            "name": "Bean sprouts",
-                            "description": "Blanched just right, lightly crunchy and fresh-tasting."
+                            "name": "Spring onion",
+                            "description": "Finely chopped and sprinkled over the bowl for a fresh aroma."
                         }
                     }
                 },
                 {
-                    "id": "rau-mui",
-                    "name": "Rau mùi",
-                    "description": "Điểm xanh thơm mát trên thịt bò và bánh phở.",
+                    "id": "rau-ram",
+                    "name": "Rau răm",
+                    "description": "Lá rau tươi thơm nồng, cân bằng vị đậm của gà.",
                     "crop": "herbs",
                     "translations": {
                         "en": {
-                            "name": "Coriander",
-                            "description": "A fresh green, fragrant touch over the beef and pho noodles."
+                            "name": "Vietnamese coriander",
+                            "description": "Fresh, pungent leaves that balance the richness of the chicken."
                         }
                     }
                 },
@@ -14480,20 +14178,32 @@
                             "description": "Sliced red chili for a bright, fresh heat."
                         }
                     }
+                },
+                {
+                    "id": "gia-do",
+                    "name": "Giá đỗ",
+                    "description": "Chần vừa chín, giòn nhẹ và thanh vị.",
+                    "crop": "bean",
+                    "translations": {
+                        "en": {
+                            "name": "Bean sprouts",
+                            "description": "Blanched just right, lightly crunchy and fresh-tasting."
+                        }
+                    }
                 }
             ],
             "cook": {
                 "steps": [
                     {
-                        "label": "Ninh nước dùng",
+                        "label": "Ninh nước dùng đậm",
                         "heat": "high",
                         "weight": 4,
                         "translations": {
-                            "en": "Simmer the broth"
+                            "en": "Simmer the savory broth"
                         }
                     },
                     {
-                        "label": "Chiên lươn vàng giòn",
+                        "label": "Chiên lươn thật giòn",
                         "heat": "high",
                         "weight": 3,
                         "translations": {
@@ -14513,7 +14223,7 @@
                         "heat": "mid",
                         "weight": 1,
                         "translations": {
-                            "en": "Pour in hot broth"
+                            "en": "Ladle over hot broth"
                         }
                     },
                     {
@@ -14531,7 +14241,11 @@
                         "qty": 1
                     },
                     {
-                        "id": "shallot",
+                        "id": "herbs",
+                        "qty": 1
+                    },
+                    {
+                        "id": "chili",
                         "qty": 1
                     },
                     {
@@ -14539,11 +14253,7 @@
                         "qty": 1
                     },
                     {
-                        "id": "herbs",
-                        "qty": 1
-                    },
-                    {
-                        "id": "chili",
+                        "id": "shallot",
                         "qty": 1
                     }
                 ]
@@ -14554,12 +14264,12 @@
             "position": 79,
             "sourceImageId": null,
             "name": "Bún heo quay",
-            "subtitle": "Heo quay da giòn",
+            "subtitle": "Heo quay da giòn • Việt Nam",
             "price": 65,
             "vegetarian": false,
             "region": "central",
             "tone": "gold",
-            "story": "Bún trắng ôm từng lát heo quay vàng giòn, điểm rau thơm và nước mắm chua ngọt đầy mời gọi.",
+            "story": "Lớp da heo vàng giòn ôm thịt mềm, hòa cùng bún mát và rau thơm xanh nõn.",
             "translations": {
                 "en": {
                     "subtitle": "Rice noodles with crispy roast pork",
@@ -14567,14 +14277,14 @@
                 }
             },
             "flavor": {
-                "spicy": 2,
+                "spicy": 1,
                 "sweet": 2,
                 "rich": 4,
                 "fresh": 4,
-                "crunchy": 4
+                "crunchy": 5
             },
-            "image": "/uploads/dishes/moi-7de526-20261001095605-5e8f73-768.webp",
-            "thumbnail": "/uploads/dishes/moi-7de526-20261001095605-5e8f73-384.webp",
+            "image": "/uploads/dishes/moi-a6ec1f-20261001025525-926372-768.webp",
+            "thumbnail": "/uploads/dishes/moi-a6ec1f-20261001025525-926372-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -14628,18 +14338,6 @@
                     }
                 },
                 {
-                    "id": "do-chua",
-                    "name": "Đồ chua",
-                    "description": "Cà rốt và củ cải ngâm chua ngọt, giúp cân vị.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Pickled carrot & daikon",
-                            "description": "Carrot and daikon pickled sweet and sour to balance the flavors."
-                        }
-                    }
-                },
-                {
                     "id": "dua-leo",
                     "name": "Dưa leo",
                     "description": "Thái lát mỏng, giòn mát ăn kèm.",
@@ -14652,14 +14350,14 @@
                     }
                 },
                 {
-                    "id": "nuoc-mam",
-                    "name": "Nước mắm",
-                    "description": "Pha chua ngọt cùng ớt, dùng rưới cơm và sườn.",
-                    "crop": "chili",
+                    "id": "do-chua",
+                    "name": "Đồ chua",
+                    "description": "Cà rốt và củ cải ngâm chua ngọt, giúp cân vị.",
+                    "crop": null,
                     "translations": {
                         "en": {
-                            "name": "Fish sauce",
-                            "description": "Mixed sweet and sour with chili, drizzled over rice and pork chops."
+                            "name": "Pickled carrot & daikon",
+                            "description": "Carrot and daikon pickled sweet and sour to balance the flavors."
                         }
                     }
                 },
@@ -14672,6 +14370,18 @@
                         "en": {
                             "name": "Spring onion",
                             "description": "Finely chopped and sprinkled over the bowl for a fresh aroma."
+                        }
+                    }
+                },
+                {
+                    "id": "nuoc-mam",
+                    "name": "Nước mắm",
+                    "description": "Pha chua ngọt cùng ớt, dùng rưới cơm và sườn.",
+                    "crop": "chili",
+                    "translations": {
+                        "en": {
+                            "name": "Fish sauce",
+                            "description": "Mixed sweet and sour with chili, drizzled over rice and pork chops."
                         }
                     }
                 }
@@ -14751,9 +14461,9 @@
             "subtitle": "Xá xíu • Hoành thánh",
             "price": 65,
             "vegetarian": false,
-            "region": "world",
+            "region": "south",
             "tone": "amber",
-            "story": "Sợi mì vàng nép dưới hoành thánh mềm, xá xíu thơm và nước dùng trong veo, ấm áp.",
+            "story": "Tô mì nóng hổi ôm trọn hoành thánh mềm, xá xíu thơm và rau xanh trong nước dùng trong veo.",
             "translations": {
                 "en": {
                     "name": "Wonton noodles with char siu",
@@ -14768,8 +14478,8 @@
                 "fresh": 3,
                 "crunchy": 1
             },
-            "image": "/uploads/dishes/moi-47ac5d-20261001095628-7a8b3d-768.webp",
-            "thumbnail": "/uploads/dishes/moi-47ac5d-20261001095628-7a8b3d-384.webp",
+            "image": "/uploads/dishes/moi-0664c7-20261001025539-10fd30-768.webp",
+            "thumbnail": "/uploads/dishes/moi-0664c7-20261001025539-10fd30-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -14777,8 +14487,8 @@
                 {
                     "id": "hoanh-thanh",
                     "name": "Hoành thánh",
-                    "description": "Vỏ bột mềm ôm nhân thịt, luộc chín trong nước dùng.",
-                    "crop": null,
+                    "description": "Vỏ mềm gói nhân thịt, chín mọng trong nước dùng.",
+                    "crop": "rice",
                     "translations": {
                         "en": {
                             "name": "Wonton",
@@ -14787,16 +14497,11 @@
                     }
                 },
                 {
-                    "id": "xa-xiu",
-                    "name": "Xá xíu",
-                    "description": "Thịt heo quay mềm, viền đỏ và vị ngọt mặn đặc trưng.",
+                    "id": "thit-xa-xiu",
+                    "name": "Thịt xá xíu",
+                    "description": "Thịt heo thái lát, nướng thơm với lớp sốt đỏ ngọt mặn.",
                     "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Char siu pork",
-                            "description": "Tender roast pork with a red edge and a signature sweet-savory taste."
-                        }
-                    }
+                    "translations": {}
                 },
                 {
                     "id": "mi-trung",
@@ -14823,26 +14528,14 @@
                     }
                 },
                 {
-                    "id": "nuoc-dung-heo",
-                    "name": "Nước dùng heo",
-                    "description": "Ninh trong, ngọt xương và đậm vị tiêu.",
+                    "id": "nuoc-dung-ga",
+                    "name": "Nước dùng gà",
+                    "description": "Ninh trong, vị ngọt thanh và thơm nhẹ.",
                     "crop": null,
                     "translations": {
                         "en": {
-                            "name": "Pork broth",
-                            "description": "Simmered clear, sweet from the bones and rich with pepper."
-                        }
-                    }
-                },
-                {
-                    "id": "hanh-phi",
-                    "name": "Hành phi",
-                    "description": "Phi vàng giòn, rắc phủ trên thịt gà.",
-                    "crop": "scallion",
-                    "translations": {
-                        "en": {
-                            "name": "Fried shallots",
-                            "description": "Fried golden and crisp, sprinkled over the chicken."
+                            "name": "Chicken broth",
+                            "description": "A clear broth, light, sweet and gently fragrant."
                         }
                     }
                 },
@@ -14859,14 +14552,14 @@
                     }
                 },
                 {
-                    "id": "rau-mui",
-                    "name": "Rau mùi",
-                    "description": "Điểm xanh thơm mát trên thịt bò và bánh phở.",
-                    "crop": "herbs",
+                    "id": "hanh-phi",
+                    "name": "Hành phi",
+                    "description": "Phi vàng giòn, rắc phủ trên thịt gà.",
+                    "crop": "scallion",
                     "translations": {
                         "en": {
-                            "name": "Coriander",
-                            "description": "A fresh green, fragrant touch over the beef and pho noodles."
+                            "name": "Fried shallots",
+                            "description": "Fried golden and crisp, sprinkled over the chicken."
                         }
                     }
                 }
@@ -14939,12 +14632,12 @@
             "position": 81,
             "sourceImageId": null,
             "name": "Cơm niêu Quảng Đông",
-            "subtitle": "Lạp xưởng • gà áp chảo",
+            "subtitle": "Gà nướng • Lạp xưởng",
             "price": 95,
             "vegetarian": false,
             "region": "world",
             "tone": "copper",
-            "story": "Niêu cơm nóng hổi quyện thịt cháy cạnh, lạp xưởng bóng mật và lớp cơm giòn thơm đáy nồi.",
+            "story": "Niêu cơm nóng hổi dậy mùi thịt nướng, lạp xưởng và lớp cháy cạnh giòn thơm đầy quyến rũ.",
             "translations": {
                 "en": {
                     "name": "Cantonese claypot rice",
@@ -14954,13 +14647,13 @@
             },
             "flavor": {
                 "spicy": 1,
-                "sweet": 3,
+                "sweet": 2,
                 "rich": 4,
                 "fresh": 2,
                 "crunchy": 3
             },
-            "image": "/uploads/dishes/moi-04a2e8-20261001095644-4fff81-768.webp",
-            "thumbnail": "/uploads/dishes/moi-04a2e8-20261001095644-4fff81-384.webp",
+            "image": "/uploads/dishes/moi-943416-20261001025555-505480-768.webp",
+            "thumbnail": "/uploads/dishes/moi-943416-20261001025555-505480-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -14992,7 +14685,7 @@
                 {
                     "id": "lap-xuong",
                     "name": "Lạp xưởng",
-                    "description": "Thái lát dày, vị ngọt béo và thơm khói.",
+                    "description": "Thái miếng dày, vị ngọt béo và thơm đặc trưng.",
                     "crop": null,
                     "translations": {
                         "en": {
@@ -15034,18 +14727,6 @@
                         "en": {
                             "name": "Soy sauce",
                             "description": "Gives the noodles a savory-sweet taste and a glossy brown color."
-                        }
-                    }
-                },
-                {
-                    "id": "ot",
-                    "name": "Ớt",
-                    "description": "Thái lát đỏ, thêm vị cay tươi nổi bật.",
-                    "crop": "chili",
-                    "translations": {
-                        "en": {
-                            "name": "Chili",
-                            "description": "Sliced red chili for a bright, fresh heat."
                         }
                     }
                 }
@@ -15110,31 +14791,32 @@
             }
         },
         {
-            "id": "tendon",
+            "id": "com-tempura",
             "position": 82,
             "sourceImageId": null,
-            "name": "Tendon",
-            "subtitle": "Cơm tempura kiểu Nhật",
+            "name": "Cơm tempura",
+            "subtitle": "Tôm rau củ chiên giòn",
             "price": 145,
             "vegetarian": false,
             "region": "world",
             "tone": "gold",
-            "story": "Tôm và rau củ chiên vàng phủ trên cơm nóng, giòn rụm bên ngoài mà mềm ngọt bên trong.",
+            "story": "Tôm vàng ruộm cùng rau củ giòn xốp phủ trên cơm nóng, bên cạnh là salad tươi và sốt chấm đậm đà.",
             "translations": {
                 "en": {
-                    "subtitle": "Japanese tempura rice bowl",
-                    "story": "Golden fried shrimp and vegetables over hot rice — crunchy outside, tender and sweet within."
+                    "name": "Tempura rice bowl",
+                    "subtitle": "Tendon • Japan",
+                    "story": "Shrimp tempura in a thin, light, crackly batter, drizzled with sweet-savoury tendon sauce."
                 }
             },
             "flavor": {
                 "spicy": 0,
-                "sweet": 2,
+                "sweet": 1,
                 "rich": 3,
                 "fresh": 2,
                 "crunchy": 5
             },
-            "image": "/uploads/dishes/moi-a344ec-20261001095659-69cacd-768.webp",
-            "thumbnail": "/uploads/dishes/moi-a344ec-20261001095659-69cacd-384.webp",
+            "image": "/uploads/dishes/moi-37e3bb-20261001025609-578c48-768.webp",
+            "thumbnail": "/uploads/dishes/moi-37e3bb-20261001025609-578c48-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -15164,6 +14846,25 @@
                     }
                 },
                 {
+                    "id": "bot-chien-gion",
+                    "name": "Bột chiên giòn",
+                    "description": "Tạo lớp áo xù vàng óng, giòn rôm rốp.",
+                    "crop": "rice",
+                    "translations": {
+                        "en": {
+                            "name": "Crispy batter",
+                            "description": "Forms a shaggy, golden coating that crackles when you bite."
+                        }
+                    }
+                },
+                {
+                    "id": "bi-ngoi",
+                    "name": "Bí ngòi",
+                    "description": "Thái lát dài, áo bột và chiên giòn.",
+                    "crop": null,
+                    "translations": {}
+                },
+                {
                     "id": "nam-huong",
                     "name": "Nấm hương",
                     "description": "Nấm thái lát, mềm mọng và thấm nước dùng.",
@@ -15172,30 +14873,6 @@
                         "en": {
                             "name": "Shiitake mushrooms",
                             "description": "Sliced shiitake, tender and juicy, soaking up the broth."
-                        }
-                    }
-                },
-                {
-                    "id": "bi-do",
-                    "name": "Bí đỏ",
-                    "description": "Lát bí ngọt bùi, phủ lớp bột chiên mỏng.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Pumpkin",
-                            "description": "Sweet, nutty pumpkin slices in a thin fried batter."
-                        }
-                    }
-                },
-                {
-                    "id": "ca-tim",
-                    "name": "Cà tím",
-                    "description": "Cà tím chiên xốp mềm, viền ngoài giòn nhẹ.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Eggplant",
-                            "description": "Fried eggplant, soft and spongy with a lightly crisp edge."
                         }
                     }
                 },
@@ -15239,53 +14916,53 @@
             "cook": {
                 "steps": [
                     {
-                        "label": "Cắt rau củ",
-                        "heat": "low",
-                        "weight": 1,
+                        "label": "Nấu cơm trắng",
+                        "heat": "mid",
+                        "weight": 4,
                         "translations": {
-                            "en": "Slice the vegetables"
+                            "en": "Cook steamed rice"
                         }
                     },
                     {
-                        "label": "Nhúng bột tempura",
+                        "label": "Sơ chế tôm rau củ",
                         "heat": "low",
                         "weight": 2,
                         "translations": {
-                            "en": "Dip in tempura batter"
+                            "en": "Prep shrimp and vegetables"
+                        }
+                    },
+                    {
+                        "label": "Pha bột chiên giòn",
+                        "heat": "low",
+                        "weight": 1,
+                        "translations": {
+                            "en": "Mix tempura batter"
                         }
                     },
                     {
                         "label": "Chiên tôm rau củ",
                         "heat": "high",
-                        "weight": 4,
+                        "weight": 3,
                         "translations": {
                             "en": "Fry shrimp and vegetables"
                         }
                     },
                     {
-                        "label": "Nấu sốt tendon",
-                        "heat": "mid",
-                        "weight": 2,
-                        "translations": {
-                            "en": "Simmer the tendon sauce"
-                        }
-                    },
-                    {
-                        "label": "Xếp lên cơm nóng",
+                        "label": "Xếp tempura lên cơm",
                         "heat": "low",
                         "weight": 1,
                         "translations": {
-                            "en": "Serve over hot rice"
+                            "en": "Arrange tempura over rice"
                         }
                     }
                 ],
                 "produce": [
                     {
-                        "id": "shrimp",
+                        "id": "rice",
                         "qty": 2
                     },
                     {
-                        "id": "rice",
+                        "id": "shrimp",
                         "qty": 2
                     },
                     {
@@ -15293,43 +14970,33 @@
                         "qty": 1
                     },
                     {
-                        "id": "pumpkin",
-                        "qty": 1
-                    },
-                    {
-                        "id": "eggplant",
+                        "id": "carrot",
                         "qty": 1
                     }
                 ]
             }
         },
         {
-            "id": "mi-tuong-den-jajangmyeon",
+            "id": "mi-tuong-den-han-quoc",
             "position": 83,
             "sourceImageId": null,
-            "name": "Mì tương đen Jajangmyeon",
-            "subtitle": "Sốt đậu đen • Hàn Quốc",
-            "price": 120,
+            "name": "Mì tương đen Hàn Quốc",
+            "subtitle": "Jajangmyeon thịt heo • Hàn Quốc",
+            "price": 95,
             "vegetarian": false,
             "region": "world",
             "tone": "copper",
-            "story": "Sợi mì vàng óng quyện sốt đậu đen sánh đậm, điểm dưa leo mát và trứng lòng đào.",
-            "translations": {
-                "en": {
-                    "name": "Jajangmyeon",
-                    "subtitle": "Black bean sauce • Korea",
-                    "story": "Golden noodles in a thick, rich black bean sauce, topped with cool cucumber and a soft-boiled egg."
-                }
-            },
+            "story": "Sợi mì dai quyện sốt đậu đen óng sánh, điểm dưa leo mát và trứng lòng đào hấp dẫn.",
+            "translations": {},
             "flavor": {
                 "spicy": 0,
-                "sweet": 2,
+                "sweet": 3,
                 "rich": 4,
                 "fresh": 2,
                 "crunchy": 1
             },
-            "image": "/uploads/dishes/moi-fca549-20261001095712-0f5c95-768.webp",
-            "thumbnail": "/uploads/dishes/moi-fca549-20261001095712-0f5c95-384.webp",
+            "image": "/uploads/dishes/moi-792245-20261001025624-30f769-768.webp",
+            "thumbnail": "/uploads/dishes/moi-792245-20261001025624-30f769-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -15337,7 +15004,7 @@
                 {
                     "id": "mi-soi",
                     "name": "Mì sợi",
-                    "description": "Sợi mì dày, dai mềm và quyện nước dùng.",
+                    "description": "Sợi mì lúa mì dày, dai mềm trong nước dùng nóng.",
                     "crop": null,
                     "translations": {
                         "en": {
@@ -15349,7 +15016,7 @@
                 {
                     "id": "tuong-dau-den",
                     "name": "Tương đậu đen",
-                    "description": "Nấu thành sốt đặc, mặn ngọt và thơm đậm.",
+                    "description": "Nấu thành sốt đậm màu, mặn ngọt và thơm bùi.",
                     "crop": "bean",
                     "translations": {
                         "en": {
@@ -15383,18 +15050,6 @@
                     }
                 },
                 {
-                    "id": "dua-leo",
-                    "name": "Dưa leo",
-                    "description": "Thái lát mỏng, giòn mát ăn kèm.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Cucumber",
-                            "description": "Thinly sliced, crisp and cooling on the side."
-                        }
-                    }
-                },
-                {
                     "id": "trung-luoc",
                     "name": "Trứng luộc",
                     "description": "Nửa quả trứng lòng đào béo mềm.",
@@ -15403,6 +15058,18 @@
                         "en": {
                             "name": "Boiled egg",
                             "description": "Half a soft-boiled egg with a rich, jammy yolk."
+                        }
+                    }
+                },
+                {
+                    "id": "dua-leo",
+                    "name": "Dưa leo",
+                    "description": "Thái lát mỏng, giòn mát ăn kèm.",
+                    "crop": null,
+                    "translations": {
+                        "en": {
+                            "name": "Cucumber",
+                            "description": "Thinly sliced, crisp and cooling on the side."
                         }
                     }
                 },
@@ -15422,19 +15089,11 @@
             "cook": {
                 "steps": [
                     {
-                        "label": "Luộc mì sợi",
-                        "heat": "high",
-                        "weight": 2,
+                        "label": "Thái thịt và hành tây",
+                        "heat": "low",
+                        "weight": 1,
                         "translations": {
-                            "en": "Boil the noodles"
-                        }
-                    },
-                    {
-                        "label": "Xào thịt và hành",
-                        "heat": "high",
-                        "weight": 2,
-                        "translations": {
-                            "en": "Stir-fry pork and onion"
+                            "en": "Dice pork and onion"
                         }
                     },
                     {
@@ -15442,23 +15101,31 @@
                         "heat": "high",
                         "weight": 2,
                         "translations": {
-                            "en": "Fry the black bean paste"
+                            "en": "Fry black bean paste"
                         }
                     },
                     {
-                        "label": "Nấu sốt sánh đậm",
-                        "heat": "mid",
+                        "label": "Xào thịt với hành tây",
+                        "heat": "high",
                         "weight": 3,
+                        "translations": {
+                            "en": "Stir-fry pork and onion"
+                        }
+                    },
+                    {
+                        "label": "Nấu sốt tương sánh",
+                        "heat": "mid",
+                        "weight": 4,
                         "translations": {
                             "en": "Simmer until thick"
                         }
                     },
                     {
-                        "label": "Thêm dưa leo trứng",
-                        "heat": "low",
-                        "weight": 1,
+                        "label": "Luộc mì, thêm dưa trứng",
+                        "heat": "high",
+                        "weight": 3,
                         "translations": {
-                            "en": "Top with cucumber and egg"
+                            "en": "Boil noodles and garnish"
                         }
                     }
                 ],
@@ -15468,15 +15135,11 @@
                         "qty": 2
                     },
                     {
-                        "id": "scallion",
+                        "id": "egg",
                         "qty": 1
                     },
                     {
                         "id": "cucumber",
-                        "qty": 1
-                    },
-                    {
-                        "id": "egg",
                         "qty": 1
                     }
                 ]
@@ -15487,12 +15150,12 @@
             "position": 84,
             "sourceImageId": null,
             "name": "Sườn nướng BBQ",
-            "subtitle": "Sốt BBQ • Khoai chiên",
-            "price": 150,
+            "subtitle": "Sườn sốt khói • Khoai chiên",
+            "price": 165,
             "vegetarian": false,
             "region": "world",
             "tone": "copper",
-            "story": "Sườn nướng cháy cạnh óng sốt, ăn cùng khoai giòn và rau tươi tạo nên đĩa trưa đầy cuốn hút.",
+            "story": "Sườn cháy cạnh óng sốt, thơm mùi khói, ăn cùng khoai giòn và salad tươi đầy hấp dẫn.",
             "translations": {
                 "en": {
                     "name": "BBQ ribs",
@@ -15507,8 +15170,8 @@
                 "fresh": 2,
                 "crunchy": 3
             },
-            "image": "/uploads/dishes/moi-0d3cca-20261001095726-227218-768.webp",
-            "thumbnail": "/uploads/dishes/moi-0d3cca-20261001095726-227218-384.webp",
+            "image": "/uploads/dishes/moi-fbb49e-20261001025644-f7d6a8-768.webp",
+            "thumbnail": "/uploads/dishes/moi-fbb49e-20261001025644-f7d6a8-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -15550,14 +15213,14 @@
                     }
                 },
                 {
-                    "id": "tuong-ca",
-                    "name": "Tương cà",
-                    "description": "Sốt đỏ chua ngọt dùng kèm khoai chiên.",
+                    "id": "sot-bbq",
+                    "name": "Sốt BBQ",
+                    "description": "Sốt đỏ sánh, vị ngọt đậm pha chút chua và khói.",
                     "crop": "tomato",
                     "translations": {
                         "en": {
-                            "name": "Ketchup",
-                            "description": "A sweet-sour red sauce served with fries."
+                            "name": "BBQ sauce",
+                            "description": "A thick, sweet, smoky sauce brushed on in layers while grilling."
                         }
                     }
                 },
@@ -15642,12 +15305,12 @@
             "position": 85,
             "sourceImageId": null,
             "name": "Bún bò Huế",
-            "subtitle": "Bò lát • Xương ống",
-            "price": 65,
+            "subtitle": "Bò giò heo • Miền Trung",
+            "price": 60,
             "vegetarian": false,
             "region": "central",
             "tone": "amber",
-            "story": "Tô bún nóng hổi quyện nước dùng đậm đà, bò mềm và sắc ớt đỏ gọi mời.",
+            "story": "Nước dùng cay thơm ôm lấy thịt bò mềm, giò heo béo và rau xanh mướt đầy mời gọi.",
             "translations": {
                 "en": {
                     "subtitle": "Spicy beef noodle soup, sliced beef & bone broth • Central Vietnam",
@@ -15661,8 +15324,8 @@
                 "fresh": 3,
                 "crunchy": 1
             },
-            "image": "/uploads/dishes/moi-346969-20261001095739-e669ab-768.webp",
-            "thumbnail": "/uploads/dishes/moi-346969-20261001095739-e669ab-384.webp",
+            "image": "/uploads/dishes/moi-aa8c9b-20261001025658-6a0e58-768.webp",
+            "thumbnail": "/uploads/dishes/moi-aa8c9b-20261001025658-6a0e58-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -15680,14 +15343,14 @@
                     }
                 },
                 {
-                    "id": "xuong-ong-bo",
-                    "name": "Xương ống bò",
-                    "description": "Hầm mềm, còn tủy béo ngậy giữa lòng xương.",
+                    "id": "gio-heo",
+                    "name": "Giò heo",
+                    "description": "Khoanh giò hầm mềm, da béo và gân giòn nhẹ.",
                     "crop": null,
                     "translations": {
                         "en": {
-                            "name": "Beef marrow bone",
-                            "description": "Simmered tender, with rich marrow still inside the bone."
+                            "name": "Pork knuckle",
+                            "description": "Braised slices of pork hock, with rich skin and slightly crunchy tendon."
                         }
                     }
                 },
@@ -15700,18 +15363,6 @@
                         "en": {
                             "name": "Rice vermicelli",
                             "description": "Soft white rice noodles, served with patties and dipping sauce."
-                        }
-                    }
-                },
-                {
-                    "id": "nuoc-dung-bo",
-                    "name": "Nước dùng bò",
-                    "description": "Trong, nóng, thơm gia vị và vị ngọt từ xương.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Beef broth",
-                            "description": "Clear and hot, fragrant with spices and sweet from the bones."
                         }
                     }
                 },
@@ -15748,6 +15399,18 @@
                         "en": {
                             "name": "Lettuce",
                             "description": "Laid under the fried chicken for freshness."
+                        }
+                    }
+                },
+                {
+                    "id": "hanh-la",
+                    "name": "Hành lá",
+                    "description": "Cắt nhỏ, rắc phủ mặt tô cho hương thơm tươi.",
+                    "crop": "scallion",
+                    "translations": {
+                        "en": {
+                            "name": "Spring onion",
+                            "description": "Finely chopped and sprinkled over the bowl for a fresh aroma."
                         }
                     }
                 },
@@ -15832,12 +15495,12 @@
             "position": 86,
             "sourceImageId": null,
             "name": "Bún mọc",
-            "subtitle": "Mọc thịt • Hà Nội",
+            "subtitle": "Mọc nấm • Miền Bắc",
             "price": 55,
             "vegetarian": false,
             "region": "north",
             "tone": "amber",
-            "story": "Bát bún nóng hổi quyện nước dùng thanh ngọt, mọc mềm thơm và sắc rau xanh đầy mời gọi.",
+            "story": "Bát bún nóng hổi quyện mọc nấm dai thơm, đậu vàng và hành phi, gợi cảm giác ấm áp thân quen.",
             "translations": {
                 "en": {
                     "subtitle": "Noodle soup with pork meatballs • Hà Nội",
@@ -15848,11 +15511,11 @@
                 "spicy": 0,
                 "sweet": 2,
                 "rich": 3,
-                "fresh": 4,
+                "fresh": 3,
                 "crunchy": 1
             },
-            "image": "/uploads/dishes/moi-5855ca-20261001095752-f66ac2-768.webp",
-            "thumbnail": "/uploads/dishes/moi-5855ca-20261001095752-f66ac2-384.webp",
+            "image": "/uploads/dishes/moi-e80c9c-20261001025716-381cf8-768.webp",
+            "thumbnail": "/uploads/dishes/moi-e80c9c-20261001025716-381cf8-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -15872,7 +15535,7 @@
                 {
                     "id": "moc",
                     "name": "Mọc",
-                    "description": "Viên thịt heo quết cùng mộc nhĩ, mềm dai và đậm vị.",
+                    "description": "Viên giò sống trộn mộc nhĩ, dai mềm và đậm vị.",
                     "crop": null,
                     "translations": {
                         "en": {
@@ -15930,18 +15593,6 @@
                     }
                 },
                 {
-                    "id": "hanh-la",
-                    "name": "Hành lá",
-                    "description": "Cắt nhỏ, rắc phủ mặt tô cho hương thơm tươi.",
-                    "crop": "scallion",
-                    "translations": {
-                        "en": {
-                            "name": "Spring onion",
-                            "description": "Finely chopped and sprinkled over the bowl for a fresh aroma."
-                        }
-                    }
-                },
-                {
                     "id": "hanh-phi",
                     "name": "Hành phi",
                     "description": "Phi vàng giòn, rắc phủ trên thịt gà.",
@@ -15950,6 +15601,18 @@
                         "en": {
                             "name": "Fried shallots",
                             "description": "Fried golden and crisp, sprinkled over the chicken."
+                        }
+                    }
+                },
+                {
+                    "id": "rau-mui",
+                    "name": "Rau mùi",
+                    "description": "Điểm xanh thơm mát trên thịt bò và bánh phở.",
+                    "crop": "herbs",
+                    "translations": {
+                        "en": {
+                            "name": "Coriander",
+                            "description": "A fresh green, fragrant touch over the beef and pho noodles."
                         }
                     }
                 }
@@ -16026,12 +15689,12 @@
             "position": 87,
             "sourceImageId": null,
             "name": "Bún mắm",
-            "subtitle": "Hải sản • Miền Tây",
+            "subtitle": "Hải sản • Mắm miền Tây",
             "price": 65,
             "vegetarian": false,
             "region": "south",
-            "tone": "ocean",
-            "story": "Tô bún mắm nghi ngút khói, đậm hương miền sông nước, đầy ắp hải sản và rau xanh mát.",
+            "tone": "amber",
+            "story": "Tô bún nghi ngút khói, đậm hương mắm miền Tây, đầy ắp hải sản và rau xanh mơn mởn.",
             "translations": {
                 "en": {
                     "subtitle": "Fermented fish noodle soup with seafood • Mekong Delta",
@@ -16042,11 +15705,11 @@
                 "spicy": 3,
                 "sweet": 2,
                 "rich": 4,
-                "fresh": 4,
-                "crunchy": 2
+                "fresh": 3,
+                "crunchy": 1
             },
-            "image": "/uploads/dishes/moi-b423e6-20261001095807-03bf8d-768.webp",
-            "thumbnail": "/uploads/dishes/moi-b423e6-20261001095807-03bf8d-384.webp",
+            "image": "/uploads/dishes/moi-2bff5d-20261001025732-4ff1dd-768.webp",
+            "thumbnail": "/uploads/dishes/moi-2bff5d-20261001025732-4ff1dd-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -16088,14 +15751,26 @@
                     }
                 },
                 {
-                    "id": "ca",
-                    "name": "Cá",
-                    "description": "Miếng cá béo mềm, hòa vị nước dùng mắm.",
+                    "id": "nuoc-dung-ca",
+                    "name": "Nước dùng cá",
+                    "description": "Nước dùng trong, vị chua thanh từ cà chua và đậm đà hương cá.",
                     "crop": null,
                     "translations": {
                         "en": {
-                            "name": "Fish",
-                            "description": "Rich, tender fish pieces that meld with the fermented fish broth."
+                            "name": "Fish broth",
+                            "description": "A clear broth, lightly sour from tomatoes and rich with fish flavor."
+                        }
+                    }
+                },
+                {
+                    "id": "ca-tim",
+                    "name": "Cà tím",
+                    "description": "Cà tím mềm béo, hút trọn vị nước dùng.",
+                    "crop": null,
+                    "translations": {
+                        "en": {
+                            "name": "Eggplant",
+                            "description": "Fried eggplant, soft and spongy with a lightly crisp edge."
                         }
                     }
                 },
@@ -16112,14 +15787,14 @@
                     }
                 },
                 {
-                    "id": "ca-tim",
-                    "name": "Cà tím",
-                    "description": "Cà tím chiên xốp mềm, viền ngoài giòn nhẹ.",
-                    "crop": null,
+                    "id": "rau-thom",
+                    "name": "Rau thơm",
+                    "description": "Húng và tía tô thơm mát, cân bằng vị bánh đậm.",
+                    "crop": "herbs",
                     "translations": {
                         "en": {
-                            "name": "Eggplant",
-                            "description": "Fried eggplant, soft and spongy with a lightly crisp edge."
+                            "name": "Fresh herbs",
+                            "description": "Mint and perilla, cool and fragrant, balancing the rich pancake."
                         }
                     }
                 },
@@ -16132,18 +15807,6 @@
                         "en": {
                             "name": "Bean sprouts",
                             "description": "Blanched just right, lightly crunchy and fresh-tasting."
-                        }
-                    }
-                },
-                {
-                    "id": "rau-thom",
-                    "name": "Rau thơm",
-                    "description": "Húng và tía tô thơm mát, cân bằng vị bánh đậm.",
-                    "crop": "herbs",
-                    "translations": {
-                        "en": {
-                            "name": "Fresh herbs",
-                            "description": "Mint and perilla, cool and fragrant, balancing the rich pancake."
                         }
                     }
                 }
@@ -16221,11 +15884,11 @@
             "sourceImageId": null,
             "name": "Miến gà",
             "subtitle": "Gà xé • Nấm hương",
-            "price": 55,
+            "price": 50,
             "vegetarian": false,
             "region": "north",
             "tone": "amber",
-            "story": "Sợi miến trong veo ôm nước dùng ngọt ấm, điểm thịt gà mềm và rau thơm xanh mướt.",
+            "story": "Sợi miến trong veo ôm nước dùng nóng ngọt, điểm thịt gà mềm và hành phi thơm nức.",
             "translations": {
                 "en": {
                     "subtitle": "Glass noodle soup with shredded chicken • Shiitake",
@@ -16234,13 +15897,13 @@
             },
             "flavor": {
                 "spicy": 0,
-                "sweet": 2,
+                "sweet": 1,
                 "rich": 2,
                 "fresh": 4,
                 "crunchy": 1
             },
-            "image": "/uploads/dishes/moi-8493d2-20261001095819-58ac61-768.webp",
-            "thumbnail": "/uploads/dishes/moi-8493d2-20261001095819-58ac61-384.webp",
+            "image": "/uploads/dishes/moi-d73f19-20261001025749-f14040-768.webp",
+            "thumbnail": "/uploads/dishes/moi-d73f19-20261001025749-f14040-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -16248,7 +15911,7 @@
                 {
                     "id": "mien-dong",
                     "name": "Miến dong",
-                    "description": "Sợi miến trong, mềm dai và thấm đều nước dùng.",
+                    "description": "Sợi miến trong, mềm dai, thấm nước dùng.",
                     "crop": null,
                     "translations": {
                         "en": {
@@ -16272,7 +15935,7 @@
                 {
                     "id": "nuoc-dung-ga",
                     "name": "Nước dùng gà",
-                    "description": "Nước dùng trong, thanh ngọt và thơm dịu.",
+                    "description": "Ninh trong, vị ngọt thanh và thơm nhẹ.",
                     "crop": null,
                     "translations": {
                         "en": {
@@ -16306,6 +15969,18 @@
                     }
                 },
                 {
+                    "id": "rau-mui",
+                    "name": "Rau mùi",
+                    "description": "Điểm xanh thơm mát trên thịt bò và bánh phở.",
+                    "crop": "herbs",
+                    "translations": {
+                        "en": {
+                            "name": "Coriander",
+                            "description": "A fresh green, fragrant touch over the beef and pho noodles."
+                        }
+                    }
+                },
+                {
                     "id": "hanh-la",
                     "name": "Hành lá",
                     "description": "Cắt nhỏ, rắc phủ mặt tô cho hương thơm tươi.",
@@ -16318,14 +15993,14 @@
                     }
                 },
                 {
-                    "id": "rau-mui",
-                    "name": "Rau mùi",
-                    "description": "Điểm xanh thơm mát trên thịt bò và bánh phở.",
-                    "crop": "herbs",
+                    "id": "hanh-phi",
+                    "name": "Hành phi",
+                    "description": "Phi vàng giòn, rắc phủ trên thịt gà.",
+                    "crop": "scallion",
                     "translations": {
                         "en": {
-                            "name": "Coriander",
-                            "description": "A fresh green, fragrant touch over the beef and pho noodles."
+                            "name": "Fried shallots",
+                            "description": "Fried golden and crisp, sprinkled over the chicken."
                         }
                     }
                 }
@@ -16390,12 +16065,12 @@
             "position": 89,
             "sourceImageId": null,
             "name": "Cháo lòng",
-            "subtitle": "Lòng heo • Cháo nóng",
+            "subtitle": "Lòng heo • Bắc Bộ",
             "price": 45,
             "vegetarian": false,
             "region": "north",
             "tone": "ivory",
-            "story": "Bát cháo nóng sánh mềm ôm trọn lòng heo béo đậm, thơm hành phi và rau mùi tươi.",
+            "story": "Bát cháo nóng sánh mềm, đầy đặn lòng heo, dậy hương hành phi và rau thơm tươi.",
             "translations": {
                 "en": {
                     "subtitle": "Rice porridge with pork offal • Hot porridge",
@@ -16409,8 +16084,8 @@
                 "fresh": 2,
                 "crunchy": 1
             },
-            "image": "/uploads/dishes/moi-f5788f-20261001095831-cf4b2e-768.webp",
-            "thumbnail": "/uploads/dishes/moi-f5788f-20261001095831-cf4b2e-384.webp",
+            "image": "/uploads/dishes/moi-5f4cbe-20261001025802-cec96a-768.webp",
+            "thumbnail": "/uploads/dishes/moi-5f4cbe-20261001025802-cec96a-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -16430,7 +16105,7 @@
                 {
                     "id": "long-heo",
                     "name": "Lòng heo",
-                    "description": "Luộc chín vừa, thái khoanh dày, dai mềm và béo.",
+                    "description": "Luộc chín mềm, thái khoanh dày, giữ độ dai nhẹ.",
                     "crop": null,
                     "translations": {
                         "en": {
@@ -16438,6 +16113,13 @@
                             "description": "Boiled just right and cut into thick rings, chewy, tender and rich."
                         }
                     }
+                },
+                {
+                    "id": "doi-heo",
+                    "name": "Dồi heo",
+                    "description": "Nhồi tiết và thịt băm, luộc chín rồi cắt khoanh.",
+                    "crop": null,
+                    "translations": {}
                 },
                 {
                     "id": "gan-heo",
@@ -16448,18 +16130,6 @@
                         "en": {
                             "name": "Pork liver",
                             "description": "Liver cut into bite-size pieces, with its rich, creamy taste."
-                        }
-                    }
-                },
-                {
-                    "id": "thit-heo",
-                    "name": "Thịt heo",
-                    "description": "Thịt heo luộc thái lát mỏng, mềm và đậm vị.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Pork",
-                            "description": "Boiled pork in thin slices, tender and flavorful."
                         }
                     }
                 },
@@ -16576,12 +16246,12 @@
             "position": 90,
             "sourceImageId": null,
             "name": "Dim sum thập cẩm",
-            "subtitle": "Há cảo • Xíu mại • Bánh bao",
+            "subtitle": "Há cảo • Xíu mại • Chiên",
             "price": 180,
             "vegetarian": false,
             "region": "world",
             "tone": "gold",
-            "story": "Những xửng tre nóng hổi quy tụ há cảo căng mọng, xíu mại đậm đà và món chiên vàng giòn.",
+            "story": "Xửng dim sum nóng hổi quy tụ bánh hấp mềm, món chiên vàng và chân gà đậm sốt.",
             "translations": {
                 "en": {
                     "name": "Dim sum platter",
@@ -16590,14 +16260,14 @@
                 }
             },
             "flavor": {
-                "spicy": 2,
+                "spicy": 1,
                 "sweet": 2,
                 "rich": 4,
-                "fresh": 1,
+                "fresh": 2,
                 "crunchy": 3
             },
-            "image": "/uploads/dishes/moi-f5923c-20261001095846-47a2ce-768.webp",
-            "thumbnail": "/uploads/dishes/moi-f5923c-20261001095846-47a2ce-384.webp",
+            "image": "/uploads/dishes/moi-637285-20261001025826-5ae586-768.webp",
+            "thumbnail": "/uploads/dishes/moi-637285-20261001025826-5ae586-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -16605,7 +16275,7 @@
                 {
                     "id": "xiu-mai",
                     "name": "Xíu mại",
-                    "description": "Viên thịt hấp mềm, phủ trứng cá và rau củ thái nhỏ.",
+                    "description": "Viên thịt hấp mọng, điểm cà rốt và đậu xanh.",
                     "crop": null,
                     "translations": {
                         "en": {
@@ -16617,7 +16287,7 @@
                 {
                     "id": "ha-cao-tom",
                     "name": "Há cảo tôm",
-                    "description": "Vỏ bột trong mềm, ôm nhân tôm mọng ngọt.",
+                    "description": "Vỏ trong mềm dai, ôm nhân tôm ngọt.",
                     "crop": "rice",
                     "translations": {
                         "en": {
@@ -16629,24 +16299,12 @@
                 {
                     "id": "banh-bao-xa-xiu",
                     "name": "Bánh bao xá xíu",
-                    "description": "Bánh trắng xốp, nhân xá xíu đỏ nâu đậm vị.",
+                    "description": "Bánh trắng xốp, nhân xá xíu đỏ đậm vị.",
                     "crop": "rice",
                     "translations": {
                         "en": {
                             "name": "Char siu bao",
                             "description": "Fluffy white buns filled with rich reddish-brown char siu."
-                        }
-                    }
-                },
-                {
-                    "id": "chan-ga-hap",
-                    "name": "Chân gà hấp",
-                    "description": "Chân gà mềm bóng, thấm sốt cay ngọt kiểu Hoa.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Steamed chicken feet",
-                            "description": "Soft, glossy chicken feet soaked in a Chinese-style sweet-spicy sauce."
                         }
                     }
                 },
@@ -16665,14 +16323,21 @@
                 {
                     "id": "sui-cao-ap-chao",
                     "name": "Sủi cảo áp chảo",
-                    "description": "Đáy áp chảo vàng giòn, phần vỏ trên mềm dai.",
-                    "crop": "rice",
+                    "description": "Đáy vàng giòn, vỏ mềm và nhân thịt thơm.",
+                    "crop": null,
                     "translations": {
                         "en": {
                             "name": "Pan-fried dumplings",
                             "description": "Golden, crispy pan-fried bottoms with soft, chewy tops."
                         }
                     }
+                },
+                {
+                    "id": "chan-ga",
+                    "name": "Chân gà",
+                    "description": "Hầm mềm trong sốt đỏ cay ngọt.",
+                    "crop": null,
+                    "translations": {}
                 },
                 {
                     "id": "ot",
@@ -16683,6 +16348,18 @@
                         "en": {
                             "name": "Chili",
                             "description": "Sliced red chili for a bright, fresh heat."
+                        }
+                    }
+                },
+                {
+                    "id": "rau-mui",
+                    "name": "Rau mùi",
+                    "description": "Điểm xanh thơm mát trên thịt bò và bánh phở.",
+                    "crop": "herbs",
+                    "translations": {
+                        "en": {
+                            "name": "Coriander",
+                            "description": "A fresh green, fragrant touch over the beef and pho noodles."
                         }
                     }
                 }
@@ -16751,12 +16428,12 @@
             "position": 91,
             "sourceImageId": null,
             "name": "Mì xào giòn hải sản",
-            "subtitle": "Hải sản • rau củ",
-            "price": 85,
+            "subtitle": "Tôm mực • Mì vàng giòn",
+            "price": 75,
             "vegetarian": false,
-            "region": "south",
-            "tone": "gold",
-            "story": "Sợi mì vàng giòn ôm trọn tôm mực và rau củ bóng sốt, thơm lừng như một bữa tiệc nóng hổi.",
+            "region": "world",
+            "tone": "ocean",
+            "story": "Sợi mì vàng giòn ôm lấy hải sản mọng ngọt và rau xanh, dậy hương nóng hổi đầy hấp dẫn.",
             "translations": {
                 "en": {
                     "subtitle": "Crispy fried noodles with seafood & vegetables • Southern Vietnam",
@@ -16766,12 +16443,12 @@
             "flavor": {
                 "spicy": 1,
                 "sweet": 2,
-                "rich": 4,
+                "rich": 3,
                 "fresh": 3,
                 "crunchy": 5
             },
-            "image": "/uploads/dishes/moi-312375-20261001095903-316c11-768.webp",
-            "thumbnail": "/uploads/dishes/moi-312375-20261001095903-316c11-384.webp",
+            "image": "/uploads/dishes/moi-cc1407-20261001025839-e27ba1-768.webp",
+            "thumbnail": "/uploads/dishes/moi-cc1407-20261001025839-e27ba1-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -16945,12 +16622,12 @@
             "position": 92,
             "sourceImageId": null,
             "name": "Oyakodon",
-            "subtitle": "Cơm gà trứng kiểu Nhật",
+            "subtitle": "Gà trứng phủ cơm Nhật",
             "price": 85,
             "vegetarian": false,
             "region": "world",
-            "tone": "ivory",
-            "story": "Trứng mềm ôm lấy thịt gà đậm vị, phủ trên cơm nóng như một bữa nhà Nhật ấm áp.",
+            "tone": "amber",
+            "story": "Thịt gà mềm ôm lớp trứng sánh, quyện cơm nóng trong hương nước tương dịu ngọt.",
             "translations": {
                 "en": {
                     "subtitle": "Japanese chicken & egg rice bowl",
@@ -16962,10 +16639,10 @@
                 "sweet": 2,
                 "rich": 4,
                 "fresh": 2,
-                "crunchy": 0
+                "crunchy": 1
             },
-            "image": "/uploads/dishes/moi-821234-20261001095918-53239b-768.webp",
-            "thumbnail": "/uploads/dishes/moi-821234-20261001095918-53239b-384.webp",
+            "image": "/uploads/dishes/moi-e70f67-20261001025854-23b75d-768.webp",
+            "thumbnail": "/uploads/dishes/moi-e70f67-20261001025854-23b75d-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
@@ -17107,45 +16784,39 @@
             }
         },
         {
-            "id": "mi-cay-han-quoc",
+            "id": "mi-ramen-cay-han-quoc",
             "position": 93,
             "sourceImageId": null,
-            "name": "Mì cay Hàn Quốc",
-            "subtitle": "Bò hải sản • Hàn Quốc",
-            "price": 75,
+            "name": "Mì ramen cay Hàn Quốc",
+            "subtitle": "Hải sản • Kimchi cay",
+            "price": 95,
             "vegetarian": false,
             "region": "world",
             "tone": "crimson",
-            "story": "Sợi mì xoăn ôm nước súp đỏ rực, quyện bò mềm, hải sản ngọt và kimchi cay nồng.",
-            "translations": {
-                "en": {
-                    "name": "Korean spicy noodles",
-                    "subtitle": "Beef & seafood • Korea",
-                    "story": "Curly noodles in a fiery red broth with tender beef, sweet seafood and punchy kimchi."
-                }
-            },
+            "story": "Tô mì đỏ rực quyện kimchi, hải sản và trứng lòng đào, tỏa hơi ấm đầy cuốn hút.",
+            "translations": {},
             "flavor": {
-                "spicy": 4,
+                "spicy": 5,
                 "sweet": 2,
                 "rich": 4,
                 "fresh": 2,
                 "crunchy": 2
             },
-            "image": "/uploads/dishes/moi-6b176f-20261001095929-7b774b-768.webp",
-            "thumbnail": "/uploads/dishes/moi-6b176f-20261001095929-7b774b-384.webp",
+            "image": "/uploads/dishes/moi-7e3b05-20261001025909-0561ce-768.webp",
+            "thumbnail": "/uploads/dishes/moi-7e3b05-20261001025909-0561ce-384.webp",
             "credit": "",
             "video": null,
             "youtubeVideos": [],
             "ingredients": [
                 {
-                    "id": "mi-an-lien",
-                    "name": "Mì ăn liền",
-                    "description": "Sợi mì xoăn hút trọn nước Tom Yum đậm vị.",
+                    "id": "mi-ramen",
+                    "name": "Mì ramen",
+                    "description": "Sợi mì vàng dai, thấm nước dùng xương heo đậm vị.",
                     "crop": null,
                     "translations": {
                         "en": {
-                            "name": "Instant noodles",
-                            "description": "Curly noodles that soak up the rich tom yum broth."
+                            "name": "Ramen noodles",
+                            "description": "Chewy yellow noodles that soak up the rich pork bone broth."
                         }
                     }
                 },
@@ -17174,6 +16845,30 @@
                     }
                 },
                 {
+                    "id": "muc",
+                    "name": "Mực",
+                    "description": "Mực cắt miếng, chín vừa để giữ độ giòn ngọt.",
+                    "crop": null,
+                    "translations": {
+                        "en": {
+                            "name": "Squid",
+                            "description": "Squid pieces cooked just right to stay crisp and sweet."
+                        }
+                    }
+                },
+                {
+                    "id": "trung-luoc",
+                    "name": "Trứng luộc",
+                    "description": "Nửa quả trứng lòng đào béo mềm.",
+                    "crop": null,
+                    "translations": {
+                        "en": {
+                            "name": "Boiled egg",
+                            "description": "Half a soft-boiled egg with a rich, jammy yolk."
+                        }
+                    }
+                },
+                {
                     "id": "kimchi",
                     "name": "Kimchi",
                     "description": "Cải muối cay chua, tăng vị đậm và giòn.",
@@ -17182,6 +16877,165 @@
                         "en": {
                             "name": "Kimchi",
                             "description": "Spicy, sour fermented cabbage that adds depth and crunch."
+                        }
+                    }
+                },
+                {
+                    "id": "nam-kim-cham",
+                    "name": "Nấm kim châm",
+                    "description": "Chùm nấm thanh nhẹ, giòn mềm khi nhúng nước dùng.",
+                    "crop": null,
+                    "translations": {
+                        "en": {
+                            "name": "Enoki mushrooms",
+                            "description": "Delicate enoki clusters, crisp-tender when dipped in the broth."
+                        }
+                    }
+                },
+                {
+                    "id": "hanh-la",
+                    "name": "Hành lá",
+                    "description": "Cắt nhỏ, rắc phủ mặt tô cho hương thơm tươi.",
+                    "crop": "scallion",
+                    "translations": {
+                        "en": {
+                            "name": "Spring onion",
+                            "description": "Finely chopped and sprinkled over the bowl for a fresh aroma."
+                        }
+                    }
+                }
+            ],
+            "cook": {
+                "steps": [
+                    {
+                        "label": "Luộc trứng lòng đào",
+                        "heat": "high",
+                        "weight": 2,
+                        "translations": {
+                            "en": "Soft-boil the egg"
+                        }
+                    },
+                    {
+                        "label": "Nấu nước dùng kimchi",
+                        "heat": "mid",
+                        "weight": 3,
+                        "translations": {
+                            "en": "Cook the kimchi broth"
+                        }
+                    },
+                    {
+                        "label": "Luộc mì cùng hải sản",
+                        "heat": "high",
+                        "weight": 3,
+                        "translations": {
+                            "en": "Boil noodles with seafood"
+                        }
+                    },
+                    {
+                        "label": "Thêm nấm kim châm",
+                        "heat": "mid",
+                        "weight": 1,
+                        "translations": {
+                            "en": "Add enoki mushrooms"
+                        }
+                    },
+                    {
+                        "label": "Xếp trứng và hành",
+                        "heat": "low",
+                        "weight": 1,
+                        "translations": {
+                            "en": "Top with egg and scallions"
+                        }
+                    }
+                ],
+                "produce": [
+                    {
+                        "id": "shrimp",
+                        "qty": 2
+                    },
+                    {
+                        "id": "squid",
+                        "qty": 2
+                    },
+                    {
+                        "id": "napa",
+                        "qty": 2
+                    },
+                    {
+                        "id": "enoki",
+                        "qty": 1
+                    },
+                    {
+                        "id": "egg",
+                        "qty": 1
+                    }
+                ]
+            }
+        },
+        {
+            "id": "mi-cay-han-quoc",
+            "position": 94,
+            "sourceImageId": null,
+            "name": "Mì cay Hàn Quốc",
+            "subtitle": "Hải sản • Kimchi cay",
+            "price": 95,
+            "vegetarian": false,
+            "region": "world",
+            "tone": "crimson",
+            "story": "Tô mì đỏ rực quyện hải sản, thịt bò và kimchi, lan tỏa hơi cay ấm áp đầy cuốn hút.",
+            "translations": {
+                "en": {
+                    "name": "Korean spicy noodles",
+                    "subtitle": "Beef & seafood • Korea",
+                    "story": "Curly noodles in a fiery red broth with tender beef, sweet seafood and punchy kimchi."
+                }
+            },
+            "flavor": {
+                "spicy": 5,
+                "sweet": 2,
+                "rich": 4,
+                "fresh": 2,
+                "crunchy": 2
+            },
+            "image": "/uploads/dishes/moi-572100-20261001025922-df69ab-768.webp",
+            "thumbnail": "/uploads/dishes/moi-572100-20261001025922-df69ab-384.webp",
+            "credit": "",
+            "video": null,
+            "youtubeVideos": [],
+            "ingredients": [
+                {
+                    "id": "mi-ramen",
+                    "name": "Mì ramen",
+                    "description": "Sợi mì vàng dai, thấm nước dùng xương heo đậm vị.",
+                    "crop": null,
+                    "translations": {
+                        "en": {
+                            "name": "Ramen noodles",
+                            "description": "Chewy yellow noodles that soak up the rich pork bone broth."
+                        }
+                    }
+                },
+                {
+                    "id": "thit-bo",
+                    "name": "Thịt bò",
+                    "description": "Thái mỏng, gồm phần tái mềm và chín đậm vị.",
+                    "crop": null,
+                    "translations": {
+                        "en": {
+                            "name": "Beef",
+                            "description": "Thinly sliced, a mix of tender rare cuts and rich well-done cuts."
+                        }
+                    }
+                },
+                {
+                    "id": "tom",
+                    "name": "Tôm",
+                    "description": "Tôm bóc vỏ nướng chín, thịt mọng và ngọt.",
+                    "crop": null,
+                    "translations": {
+                        "en": {
+                            "name": "Shrimp",
+                            "description": "Peeled shrimp grilled through, plump and sweet."
                         }
                     }
                 },
@@ -17218,6 +17072,18 @@
                         "en": {
                             "name": "Boiled egg",
                             "description": "Half a soft-boiled egg with a rich, jammy yolk."
+                        }
+                    }
+                },
+                {
+                    "id": "kimchi",
+                    "name": "Kimchi",
+                    "description": "Cải muối cay chua, tăng vị đậm và giòn.",
+                    "crop": "chili",
+                    "translations": {
+                        "en": {
+                            "name": "Kimchi",
+                            "description": "Spicy, sour fermented cabbage that adds depth and crunch."
                         }
                     }
                 },
@@ -17294,129 +17160,169 @@
             }
         },
         {
-            "id": "mi-cay-han-quoc-2",
-            "position": 94,
+            "id": "com-tam-suon-bi-cha",
+            "position": 95,
             "sourceImageId": null,
-            "name": "Mì cay Hàn Quốc",
-            "subtitle": "Hải sản • Kimchi cay",
-            "price": 85,
+            "name": "Cơm tấm sườn bì chả",
+            "subtitle": "Sườn bì chả trứng • Sài Gòn",
+            "price": 75,
             "vegetarian": false,
-            "region": "world",
-            "tone": "crimson",
-            "story": "Tô mì đỏ rực ôm trọn hải sản, thịt bò và kimchi, tỏa hơi nóng đầy cuốn hút.",
-            "translations": {
-                "en": {
-                    "name": "Korean spicy noodles",
-                    "subtitle": "Seafood • Spicy kimchi",
-                    "story": "A fiery red bowl of noodles packed with seafood, beef and kimchi, steaming and irresistible."
-                }
-            },
+            "region": "south",
+            "tone": "copper",
+            "story": "Sườn nướng cháy cạnh thơm lừng hòa cùng cơm tấm, bì mềm và trứng vàng óng đầy hấp dẫn.",
+            "translations": {},
             "flavor": {
-                "spicy": 5,
-                "sweet": 2,
+                "spicy": 1,
+                "sweet": 3,
                 "rich": 4,
                 "fresh": 2,
                 "crunchy": 2
             },
-            "image": "/uploads/dishes/moi-48407f-20261001095945-412b9d-768.webp",
-            "thumbnail": "/uploads/dishes/moi-48407f-20261001095945-412b9d-384.webp",
+            "image": "/uploads/dishes/moi-dc38a0-20261001025938-6abde6-768.webp",
+            "thumbnail": "/uploads/dishes/moi-dc38a0-20261001025938-6abde6-384.webp",
             "credit": "",
             "video": null,
-            "youtubeVideos": [],
+            "youtubeVideos": [
+                {
+                    "videoId": "h__kLq8NG2I",
+                    "title": "Trọn bộ bí kíp làm Cơm Tấm Sườn Nướng bất bại chi tiết nhất | Grilled pork chop rice",
+                    "channelId": "UC-c0PPbJKW-KUliEZPosVvg",
+                    "channelTitle": "Cô Ba Bình Dương",
+                    "publishedAt": "2023-09-13T07:00:18Z",
+                    "duration": "PT22M10S",
+                    "thumbnail": "https://i.ytimg.com/vi/h__kLq8NG2I/hqdefault.jpg"
+                },
+                {
+                    "videoId": "7e1-KXJg0bY",
+                    "title": "CƠM TẤM - Cách tự làm cơm tấm - Nước Chấm đơn giản - Cơm sườn bì chả thật ngon | Bếp Nhà Diễm |",
+                    "channelId": "UCZMc6al8vPxv1pTck9wECXg",
+                    "channelTitle": "Diễm Nauy",
+                    "publishedAt": "2021-06-02T19:00:02Z",
+                    "duration": "PT11M49S",
+                    "thumbnail": "https://i.ytimg.com/vi/7e1-KXJg0bY/hqdefault.jpg"
+                },
+                {
+                    "videoId": "GMfkCit8LNM",
+                    "title": "TRỌN BỘ cách nấu cơm tấm sườn bì chả đầy đủ ngon chuẩn quán | Cook béo",
+                    "channelId": "UCiSiKvaHGHr9k7lZvEl1hRA",
+                    "channelTitle": "Cook béo",
+                    "publishedAt": "2025-10-21T03:20:35Z",
+                    "duration": "PT28M22S",
+                    "thumbnail": "https://i.ytimg.com/vi/GMfkCit8LNM/hqdefault.jpg"
+                },
+                {
+                    "videoId": "zT-NqLP9pHE",
+                    "title": "CÁCH LÀM CƠM TẤM SÀI GÒN | MẸO ƯỚP SƯỜN MỀM | BÌ CHAY ĐỘC LẠ | MẮM CHƯNG MIỀN TÂY",
+                    "channelId": "UCHZ_UB-Nh7L4Fmxz27MFJDQ",
+                    "channelTitle": "Esheep Kitchen",
+                    "publishedAt": "2023-04-13T13:00:53Z",
+                    "duration": "PT5M34S",
+                    "thumbnail": "https://i.ytimg.com/vi/zT-NqLP9pHE/hqdefault.jpg"
+                },
+                {
+                    "videoId": "rRtcZxAAOhQ",
+                    "title": "Cách nấu cơm tấm bì chả đồ chua tóp mỡ nước chan (học nấu cơm tấm P3 – tập cuối)",
+                    "channelId": "UCcIfP3ugD4zFIpXub8x8HTQ",
+                    "channelTitle": "SỨC KHỎE TÂM SINH",
+                    "publishedAt": "2018-12-19T12:38:50Z",
+                    "duration": "PT24M42S",
+                    "thumbnail": "https://i.ytimg.com/vi/rRtcZxAAOhQ/hqdefault.jpg"
+                }
+            ],
             "ingredients": [
                 {
-                    "id": "mi-an-lien",
-                    "name": "Mì ăn liền",
-                    "description": "Sợi mì xoăn hút trọn nước Tom Yum đậm vị.",
-                    "crop": null,
+                    "id": "com-tam",
+                    "name": "Cơm tấm",
+                    "description": "Hạt gạo tấm nấu mềm, làm nền cho các món mặn.",
+                    "crop": "rice",
                     "translations": {
                         "en": {
-                            "name": "Instant noodles",
-                            "description": "Curly noodles that soak up the rich tom yum broth."
+                            "name": "Broken rice",
+                            "description": "Soft-cooked broken rice, the base for savory toppings."
                         }
                     }
                 },
                 {
-                    "id": "thit-bo",
-                    "name": "Thịt bò",
-                    "description": "Thái mỏng, gồm phần tái mềm và chín đậm vị.",
+                    "id": "suon-heo-nuong",
+                    "name": "Sườn heo nướng",
+                    "description": "Tẩm ướp đậm vị, nướng xém cạnh và bóng sốt.",
                     "crop": null,
                     "translations": {
                         "en": {
-                            "name": "Beef",
-                            "description": "Thinly sliced, a mix of tender rare cuts and rich well-done cuts."
+                            "name": "Grilled pork ribs",
+                            "description": "Richly marinated, grilled until charred at the edges and glossy with sauce."
                         }
                     }
                 },
                 {
-                    "id": "tom",
-                    "name": "Tôm",
-                    "description": "Tôm bóc vỏ nướng chín, thịt mọng và ngọt.",
-                    "crop": null,
+                    "id": "bi-heo",
+                    "name": "Bì heo",
+                    "description": "Thái sợi mảnh, trộn thính thơm và dai nhẹ.",
+                    "crop": "rice",
                     "translations": {
                         "en": {
-                            "name": "Shrimp",
-                            "description": "Peeled shrimp grilled through, plump and sweet."
+                            "name": "Shredded pork skin",
+                            "description": "Thinly shredded, tossed with fragrant toasted rice powder, slightly chewy."
                         }
                     }
                 },
                 {
-                    "id": "muc",
-                    "name": "Mực",
-                    "description": "Mực cắt miếng, chín vừa để giữ độ giòn ngọt.",
+                    "id": "trung-op-la",
+                    "name": "Trứng ốp la",
+                    "description": "Lòng trắng chín viền, lòng đỏ còn mềm óng.",
                     "crop": null,
                     "translations": {
                         "en": {
-                            "name": "Squid",
-                            "description": "Squid pieces cooked just right to stay crisp and sweet."
+                            "name": "Fried egg",
+                            "description": "Whites set at the edges, yolk still soft and glossy."
                         }
                     }
                 },
                 {
-                    "id": "kimchi",
-                    "name": "Kimchi",
-                    "description": "Cải muối cay chua, tăng vị đậm và giòn.",
+                    "id": "cha-trung",
+                    "name": "Chả trứng",
+                    "description": "Chả hấp chắc mềm, điểm lớp trứng vàng phía trên.",
+                    "crop": null,
+                    "translations": {
+                        "en": {
+                            "name": "Steamed egg meatloaf",
+                            "description": "Firm yet tender steamed meatloaf topped with a golden egg layer."
+                        }
+                    }
+                },
+                {
+                    "id": "do-chua",
+                    "name": "Đồ chua",
+                    "description": "Cà rốt và củ cải ngâm chua ngọt, giúp cân vị.",
+                    "crop": null,
+                    "translations": {
+                        "en": {
+                            "name": "Pickled carrot & daikon",
+                            "description": "Carrot and daikon pickled sweet and sour to balance the flavors."
+                        }
+                    }
+                },
+                {
+                    "id": "dua-leo",
+                    "name": "Dưa leo",
+                    "description": "Thái lát mỏng, giòn mát ăn kèm.",
+                    "crop": null,
+                    "translations": {
+                        "en": {
+                            "name": "Cucumber",
+                            "description": "Thinly sliced, crisp and cooling on the side."
+                        }
+                    }
+                },
+                {
+                    "id": "nuoc-mam",
+                    "name": "Nước mắm",
+                    "description": "Pha chua ngọt cùng ớt, dùng rưới cơm và sườn.",
                     "crop": "chili",
                     "translations": {
                         "en": {
-                            "name": "Kimchi",
-                            "description": "Spicy, sour fermented cabbage that adds depth and crunch."
-                        }
-                    }
-                },
-                {
-                    "id": "trung-luoc",
-                    "name": "Trứng luộc",
-                    "description": "Nửa quả trứng lòng đào béo mềm.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Boiled egg",
-                            "description": "Half a soft-boiled egg with a rich, jammy yolk."
-                        }
-                    }
-                },
-                {
-                    "id": "xuc-xich",
-                    "name": "Xúc xích",
-                    "description": "Áp chảo xém cạnh, vị mặn ngọt nổi bật.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Sausage",
-                            "description": "Pan-seared until browned at the edges, with a bold sweet-savory taste."
-                        }
-                    }
-                },
-                {
-                    "id": "nam-kim-cham",
-                    "name": "Nấm kim châm",
-                    "description": "Chùm nấm thanh nhẹ, giòn mềm khi nhúng nước dùng.",
-                    "crop": null,
-                    "translations": {
-                        "en": {
-                            "name": "Enoki mushrooms",
-                            "description": "Delicate enoki clusters, crisp-tender when dipped in the broth."
+                            "name": "Fish sauce",
+                            "description": "Mixed sweet and sour with chili, drizzled over rice and pork chops."
                         }
                     }
                 }
@@ -17424,65 +17330,65 @@
             "cook": {
                 "steps": [
                     {
-                        "label": "Xào kimchi cay",
+                        "label": "Nấu cơm tấm",
+                        "heat": "mid",
+                        "weight": 3,
+                        "translations": {
+                            "en": "Cook broken rice"
+                        }
+                    },
+                    {
+                        "label": "Ướp và nướng sườn",
+                        "heat": "high",
+                        "weight": 5,
+                        "translations": {
+                            "en": "Marinate and grill pork"
+                        }
+                    },
+                    {
+                        "label": "Trộn bì với thính",
+                        "heat": "low",
+                        "weight": 2,
+                        "translations": {
+                            "en": "Toss pork skin with rice powder"
+                        }
+                    },
+                    {
+                        "label": "Hấp chả trứng",
+                        "heat": "mid",
+                        "weight": 4,
+                        "translations": {
+                            "en": "Steam egg loaf"
+                        }
+                    },
+                    {
+                        "label": "Chiên trứng và bày",
                         "heat": "high",
                         "weight": 2,
                         "translations": {
-                            "en": "Stir-fry spicy kimchi"
-                        }
-                    },
-                    {
-                        "label": "Nấu nước dùng kimchi",
-                        "heat": "mid",
-                        "weight": 3,
-                        "translations": {
-                            "en": "Simmer kimchi broth"
-                        }
-                    },
-                    {
-                        "label": "Luộc mì cùng hải sản",
-                        "heat": "high",
-                        "weight": 3,
-                        "translations": {
-                            "en": "Boil noodles with seafood"
-                        }
-                    },
-                    {
-                        "label": "Thêm nấm kim châm",
-                        "heat": "mid",
-                        "weight": 1,
-                        "translations": {
-                            "en": "Add enoki mushrooms"
-                        }
-                    },
-                    {
-                        "label": "Xếp trứng luộc lên",
-                        "heat": "low",
-                        "weight": 1,
-                        "translations": {
-                            "en": "Top with boiled egg"
+                            "en": "Fry egg and plate"
                         }
                     }
                 ],
                 "produce": [
                     {
-                        "id": "shrimp",
+                        "id": "rice",
                         "qty": 2
                     },
                     {
-                        "id": "squid",
+                        "id": "egg",
                         "qty": 2
                     },
                     {
-                        "id": "napa",
-                        "qty": 2
-                    },
-                    {
-                        "id": "chili",
+                        "id": "cucumber",
                         "qty": 1
                     },
                     {
-                        "id": "enoki",
+                        "id": "carrot",
+                        "qty": 1
+                    },
+                    {
+                        "id": "radish",
                         "qty": 1
                     }
                 ]

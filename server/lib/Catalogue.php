@@ -335,15 +335,19 @@ final class Catalogue
             $query = $this->pdo->prepare('SELECT id FROM dishes WHERE id = ?' . ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : ''));
             $query->execute([$dishId]);
             if (!$query->fetchColumn()) {
-                // Legacy local catalogue ID for the same pilot dish, not a third dish.
+                // The pilot's cơm tấm under its catalogue ids (current, then an older local one).
                 if ($dishId !== 'com-tam') {
                     throw new HttpError(404, 'Không tìm thấy món.');
                 }
-                $dishId = 'com-tam-suon-bi-cha-trung';
-                $query->execute([$dishId]);
-                if (!$query->fetchColumn()) {
-                    throw new HttpError(404, 'Không tìm thấy món.');
+                $found = null;
+                foreach (['com-tam-suon-bi-cha', 'com-tam-suon-bi-cha-trung'] as $candidate) {
+                    $query->execute([$candidate]);
+                    if ($query->fetchColumn()) {
+                        $found = $candidate;
+                        break;
+                    }
                 }
+                $dishId = $found ?? throw new HttpError(404, 'Không tìm thấy món.');
             }
             $this->pdo->prepare('DELETE FROM dish_youtube_videos WHERE dish_id = ?')->execute([$dishId]);
             $insert = $this->pdo->prepare('INSERT INTO dish_youtube_videos (dish_id, video_id, position, metadata) VALUES (?, ?, ?, ?)');

@@ -251,8 +251,8 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
   'com-tam': {
     id: 'com-tam',
     name: 'Cơm tấm sườn',
-    dishId: 'com-tam-suon-bi-cha-trung',
-    dishAliases: ['com-tam-suon-bi-cha', 'com-tam'],
+    dishId: 'com-tam-suon-bi-cha',
+    dishAliases: ['com-tam-suon-bi-cha-trung', 'com-tam'],
     region: 'south',
     group: 'rice',
     ingredients: [

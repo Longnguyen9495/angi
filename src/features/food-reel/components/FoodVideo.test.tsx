@@ -106,6 +106,7 @@ describe('review UI', () => {
     expect(normalizeProvince('Hà Nội')).toBe('HN');
     expect(normalizeProvince('Đà Nẵng')).toBeNull();
     expect(reviewDish('com-tam-suon-bi-cha-trung')).toBe('com-tam');
+    expect(reviewDish('com-tam-suon-bi-cha')).toBe('com-tam');
     const list = Array.from({ length: 8 }, (_, i) => ({ ...videos[0], videoId: `abcdefghij${i}` }));
     expect(
       reviewItems(

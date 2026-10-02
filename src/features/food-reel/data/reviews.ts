@@ -14,7 +14,7 @@ export function normalizeProvince(value: unknown): ProvinceId | null {
   return null;
 }
 export function reviewDish(id: string): string | null {
-  if (id === 'com-tam-suon-bi-cha-trung' || id === 'com-tam') return 'com-tam';
+  if (['com-tam-suon-bi-cha', 'com-tam-suon-bi-cha-trung', 'com-tam'].includes(id)) return 'com-tam';
   return id === 'pho-bo' ? id : null;
 }
 export function readProvince(): ProvinceId | null {
