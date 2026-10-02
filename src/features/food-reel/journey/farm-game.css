@@ -214,8 +214,34 @@
   color: #cfe3f5;
 }
 
+/* Phones: the HUD packs a little tighter so the menu button never runs off the right edge. */
+@media (max-width: 520px) {
+  .fg-hud {
+    gap: 6px;
+  }
+
+  .fg-chip {
+    gap: 5px;
+    height: 38px;
+    padding: 0 10px 0 8px;
+  }
+
+  .fg-chip--level {
+    padding-left: 3px;
+  }
+
+  .fg-chip__xp {
+    width: clamp(32px, 9vw, 56px);
+  }
+
+  .fg-hud .fg-round {
+    width: 40px;
+    height: 40px;
+  }
+}
+
 /* Narrow phones: the HUD keeps level, coins, water and the menu. */
-@media (max-width: 420px) {
+@media (max-width: 480px) {
   .fg-chip--sky {
     display: none;
   }
@@ -416,10 +442,12 @@
   z-index: 4;
   bottom: calc(var(--fg-dock) + var(--fg-bottom) + 142px);
   left: 50%;
-  max-width: calc(100% - 32px);
+  width: max-content;
+  max-width: min(340px, calc(100% - 32px));
   margin: 0;
   padding: 8px 14px;
-  border-radius: 999px;
+  border-radius: 16px;
+  line-height: 1.35;
   background: var(--fg-glass-strong);
   font-weight: 700;
   font-size: 12px;
@@ -715,6 +743,31 @@
   background: linear-gradient(180deg, rgb(255 211 107 / 95%), rgb(232 165 42 / 95%));
   color: #3a2410;
   animation: fg-glow 1.8s ease-in-out infinite;
+}
+
+/* Phones: seeds and both tools fit side by side, so the right-hand tool is never cut off,
+   and the watering note sits just above the tray instead of over the beds being watered. */
+@media (max-width: 520px) {
+  .fg-tray,
+  .fg-tools {
+    gap: 6px;
+  }
+
+  .fg-tool {
+    width: 56px;
+    height: 56px;
+  }
+
+  .fg-hint {
+    bottom: calc(var(--fg-dock) + var(--fg-bottom) + 84px);
+  }
+}
+
+/* Very narrow phones: just the chosen seed; the rest are one tap away in the grid. */
+@media (max-width: 370px) {
+  .fg-seeds .fg-seed--quick {
+    display: none;
+  }
 }
 
 .fg-badge {
