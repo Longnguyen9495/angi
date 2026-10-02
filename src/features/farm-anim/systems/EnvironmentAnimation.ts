@@ -279,9 +279,11 @@ export class EnvironmentAnimation implements AnimSystem {
     ctx.stroke();
   }
 
-  drawPlants(ctx: CanvasRenderingContext2D) {
+  /** `hide`: plants rooted where this returns true are left out (grass under an opened plot). */
+  drawPlants(ctx: CanvasRenderingContext2D, hide?: (pivot: Vec2) => boolean) {
     for (const p of this.plants) {
       const { def } = p;
+      if (hide?.(def.pivot)) continue;
       drawBent(ctx, p.img, def.x, def.y, def.pivot, p.bend, p.lift);
       if (p.fruit)
         drawBent(

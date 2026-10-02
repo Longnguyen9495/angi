@@ -317,6 +317,15 @@ export class FarmGameLayer {
     return null;
   }
 
+  /** True when picture point [x, y] is on an unlocked plot (painted grass there gives way). */
+  onOpenPlot([x, y]: Vec2): boolean {
+    if (!this.view) return false;
+    for (const d of this.field.plots)
+      if (inQuad(d.quad, x, y) && this.view.plots.some((v) => v.id === d.id && v.unlocked))
+        return true;
+    return false;
+  }
+
   /** Picture point at the top corner of a plot (for anchoring a card). */
   plotTop(id: number): Vec2 | null {
     const d = this.field.plots.find((p) => p.id === id);
