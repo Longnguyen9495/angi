@@ -33,6 +33,7 @@ export async function loadAssets(): Promise<Assets> {
     layout.glass.file,
     layout.field.soil.file,
   ]);
+  if (layout.field.sign) files.add(layout.field.sign.file);
   for (const c of layout.clouds) files.add(c.file);
   for (const f of Object.values(layout.fx ?? {})) files.add(f.file);
   for (const s of Object.values(layout.sprites)) files.add(s.file);

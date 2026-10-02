@@ -1295,8 +1295,8 @@ const glass = await maskFile(
 
 // ——— 7b. Field plots: the game's 9 plots on the painted lattice, and an empty-soil tile ———
 // Lattice measured on the seams (i along R, j along L). Plots 1–6 are the painted tilled tiles,
-// 7–9 (unlocked later) the grass column beside them, back to front, closing a 3×3 field; the
-// runtime stamps soil on unlocked ones.
+// 7–9 (unlocked later) the grass column beside them, front to back, closing a 3×3 field (the
+// last one is the tile with the signpost); the runtime stamps soil on unlocked ones.
 const FIELD = { v0: wPt([620, 342]), R: wVec([88, 51]), L: wVec([-92.5, 43.5]) };
 const corner = (i, j) => [
   FIELD.v0[0] + FIELD.R[0] * i + FIELD.L[0] * j,
@@ -1310,9 +1310,9 @@ const PLOT_TILES = [
   [1, 1],
   [0, 2],
   [1, 2],
-  [2, 0],
-  [2, 1],
   [2, 2],
+  [2, 1],
+  [2, 0],
 ];
 const plots = PLOT_TILES.map(([i, j], k) => ({
   id: k + 1,
@@ -1351,6 +1351,34 @@ let soilTile;
     anchor: corner(1, 2),
   };
 }
+// The signpost on the last plot's back corner (measured on the repaint): cut out so it stands on
+// stamped soil too, and the runtime writes the plot's unlock level on its board. Wood only, not
+// the grass round the post, the fence or the path behind; the grass tuft hides the post's foot,
+// so the clear stretch above it runs on down to where the post meets the ground.
+const SIGN_BOARD = [798, 409, 852, 440];
+const SIGN_POST = [816, 441, 831, 476];
+const SIGN_CLEAR = 458;
+const signPix = Buffer.from(island);
+for (let y = SIGN_CLEAR + 1; y <= SIGN_POST[3]; y++)
+  for (let x = SIGN_POST[0]; x <= SIGN_POST[2]; x++)
+    for (let c = 0; c < 4; c++) signPix[(y * W + x) * 4 + c] = island[(SIGN_CLEAR * W + x) * 4 + c];
+const wood = (r, g, b) => g <= r + 4 && r + g + b < 600;
+const sign = {
+  ...(await sprite(
+    'sign',
+    signPix,
+    [SIGN_BOARD[0], SIGN_BOARD[1], SIGN_BOARD[2], SIGN_POST[3]],
+    (x, y, r, g, b) =>
+      x >= SIGN_BOARD[0] && x <= SIGN_BOARD[2] && y <= SIGN_BOARD[3] && !(x > 848 && y > 428)
+        ? wood(r, g, b)
+          ? 1
+          : 0
+        : x >= SIGN_POST[0] && x <= SIGN_POST[2] && wood(r, g, b)
+          ? Math.min(1, (SIGN_POST[3] + 1 - y) / 3)
+          : 0,
+  )),
+  board: SIGN_BOARD,
+};
 
 // ——— 8. Places for things drawn by the runtime ———
 const chimneyTop = wPt([770, 30]);
@@ -1416,7 +1444,7 @@ const places = {
 };
 const layout = {
   size: [W, H],
-  field: { ...FIELD, plots, soil: soilTile },
+  field: { ...FIELD, plots, soil: soilTile, sign },
   clouds,
   sprites,
   layers,

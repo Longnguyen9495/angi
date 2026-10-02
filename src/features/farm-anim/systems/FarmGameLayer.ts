@@ -174,6 +174,9 @@ export class FarmGameLayer {
   onHarvest: HarvestFlight | null = null;
   private field: FieldDef;
   private soil: HTMLImageElement;
+  private sign: HTMLImageElement | null = null;
+  /** Plot the signpost stands on; while it is locked its board carries the unlock level. */
+  private signPlot: number | null = null;
   private fx = new Map<number, PlotFx>();
   private events: Event[] = [];
   private images = new Map<string, HTMLImageElement>();
@@ -186,6 +189,17 @@ export class FarmGameLayer {
     this.field = assets.layout.field;
     this.bubbles = assets.layout.places.bubbles;
     this.soil = assets.img(this.field.soil.file);
+    const sign = this.field.sign;
+    if (sign) {
+      this.sign = assets.img(sign.file);
+      // The plot the post stands on: the one whose centre is nearest the post's foot.
+      const foot: Vec2 = [(sign.board[0] + sign.board[2]) / 2, sign.y + sign.h];
+      let best = Infinity;
+      for (const p of this.field.plots) {
+        const dd = Math.hypot(p.centre[0] - foot[0], p.centre[1] - foot[1]);
+        if (dd < best) [best, this.signPlot] = [dd, p.id];
+      }
+    }
     for (const p of this.field.plots)
       this.fx.set(p.id, {
         prev: null,
@@ -613,7 +627,9 @@ export class FarmGameLayer {
         ctx.stroke();
       }
     }
-    if (nextLock) {
+    const signView = view.plots.find((p) => p.id === this.signPlot);
+    if (this.sign && signView) this.drawSign(ctx, signView);
+    if (nextLock && nextLock.id !== this.signPlot) {
       const d = this.field.plots.find((p) => p.id === nextLock.id);
       if (d)
         this.drawLock(
@@ -647,6 +663,25 @@ export class FarmGameLayer {
       ctx.ellipse(cx + ox, cy + oy, 4 + 18 * easeOut(u), 1.5 + 6 * easeOut(u), 0, 0, Math.PI * 2);
       ctx.stroke();
     }
+  }
+
+  /** The signpost over the soil stamp, its locked plot's level written on the board. */
+  private drawSign(ctx: CanvasRenderingContext2D, v: PlotView) {
+    const s = this.field.sign!;
+    ctx.drawImage(this.sign!, s.x, s.y);
+    if (v.unlocked) return;
+    const [x0, y0, x1, y1] = s.board;
+    const cx = (x0 + x1) / 2;
+    const cy = (y0 + y1) / 2;
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#4a2a10';
+    ctx.font = '700 8px "Be Vietnam Pro", system-ui, sans-serif';
+    ctx.fillText(t.farm.anim.signUnlock, cx, cy - 5, x1 - x0 - 6);
+    ctx.font = '800 11px "Be Vietnam Pro", system-ui, sans-serif';
+    ctx.fillText(t.farm.anim.lockLevel(v.unlockLevel ?? '?'), cx, cy + 5, x1 - x0 - 6);
+    ctx.restore();
   }
 
   private drawLock(ctx: CanvasRenderingContext2D, x: number, y: number, text: string) {

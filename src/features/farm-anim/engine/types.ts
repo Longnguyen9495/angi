@@ -113,6 +113,8 @@ export interface FieldDef {
   plots: { id: number; quad: [Vec2, Vec2, Vec2, Vec2]; centre: Vec2 }[];
   /** Empty soil tile, cut at the lattice corner `anchor`. */
   soil: Placed & { anchor: Vec2 };
+  /** The signpost on the last plot, cut out to stand on stamped soil; `board` [x0, y0, x1, y1]. */
+  sign?: Placed & { board: [number, number, number, number] };
 }
 
 export interface FarmLayout {
