@@ -543,9 +543,13 @@ export class AnimationManager {
     if (this.camGoal) this.camGoal = { x: this.camGoal.x * k, y: this.camGoal.y * k };
     this.fit = { s, ox: 0, oy: 0, cw, ch, dpr };
     const game = this.mode === 'game';
+    // The painting ends in a flat cut under the cliffs. When the whole picture is shorter than
+    // the screen, sit it on the bottom edge with that cut just out of view (behind the dock on
+    // the farm), and let the spare height be sky on top instead of an empty band below.
+    const sh = H * s;
     this.base = {
       ox: (cw - W * s) / 2,
-      oy: (ch - H * s) / 2,
+      oy: sh < ch ? ch - sh * 0.97 : (ch - sh) / 2,
       mx: game ? Math.max(0, (W * s - cw) / 2) : 0,
       my: game ? Math.max(0, (H * s - ch) / 2) : 0,
     };
