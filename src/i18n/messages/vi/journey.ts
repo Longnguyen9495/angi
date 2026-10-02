@@ -74,6 +74,13 @@ const journey = {
       stats: 'Thống kê nông trại',
     },
     close: 'Đóng',
+    tray: {
+      all: (n: number) => `Tất cả hạt (${n})`,
+      seedLabel: (seed: string, n: number) => `${seed}, còn ${n}`,
+      pickerTitle: 'Chọn hạt giống',
+      pickerHint: 'Chạm để chọn, hoặc kéo thả vào ô đất.',
+      kinds: { veg: 'Rau, củ & gia vị', tree: 'Cây ăn trái', mushroom: 'Nấm' },
+    },
     toField: 'Ruộng',
     toBarn: 'Chuồng & ao',
     toFieldLabel: 'Đưa khung nhìn về ruộng',

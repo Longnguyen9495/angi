@@ -453,32 +453,218 @@
   pointer-events: auto;
 }
 
-.fg-seeds {
-  display: flex;
+/* Seed tray: the chosen seed (large, named), a few quick picks, "all seeds" opens a grid. */
+.fg-seedtray {
+  position: relative;
   flex: 0 1 auto;
-  gap: 6px;
   min-width: 0;
   margin-right: auto;
+}
+
+.fg-seeds {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
   padding: 6px;
-  overflow-x: auto;
   border: 1.5px solid var(--fg-edge);
-  border-radius: 18px;
+  border-radius: 20px;
   background: var(--fg-glass);
+  box-shadow: 0 6px 16px rgb(0 0 0 / 25%);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  scrollbar-width: none;
 }
 
-.fg-seeds .fj-farm-seed {
-  min-height: 44px;
+.fg-seed {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  min-height: 52px;
   padding: 4px 10px 4px 6px;
-  font-size: 13px;
+  border: 1.5px solid transparent;
+  border-radius: 14px;
+  background: rgb(255 255 255 / 10%);
+  color: #fff4d6;
+  font:
+    700 13px/1.15 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  cursor: grab;
+  touch-action: none;
 }
 
-.fg-seeds .fj-farm-seed svg,
-.fg-seeds .fj-farm-seed img {
-  width: 30px;
-  height: 30px;
+.fg-seed:hover {
+  background: rgb(255 255 255 / 16%);
+}
+
+.fg-seed.is-on {
+  border-color: #ffd36b;
+  background: rgb(255 211 107 / 22%);
+}
+
+.fg-seed:focus-visible {
+  outline: 2px solid #ffd36b;
+  outline-offset: 2px;
+}
+
+.fg-seed img {
+  flex: none;
+  object-fit: contain;
+}
+
+.fg-seed__name {
+  max-width: 8.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fg-seed__count {
+  color: rgb(255 244 214 / 75%);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Quick picks: just the picture with its count as a badge. */
+.fg-seed--quick {
+  justify-content: center;
+  width: 52px;
+  padding: 4px;
+}
+
+.fg-seed--quick .fg-seed__count {
+  position: absolute;
+  right: 3px;
+  bottom: 2px;
+  padding: 0 4px;
+  border-radius: 99px;
+  background: rgb(0 0 0 / 45%);
+  color: #fff4d6;
+  font-size: 11px;
+}
+
+.fg-seed--all {
+  gap: 4px;
+  padding: 4px 12px;
+  color: #ffd36b;
+  cursor: pointer;
+  touch-action: auto;
+}
+
+.fg-seed--all[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+
+/* The grid of every seed, above the tray. */
+.fg-seedgrid {
+  position: absolute;
+  z-index: 6;
+  bottom: calc(100% + 10px);
+  left: 0;
+  width: min(560px, calc(100vw - 2 * var(--fg-side)));
+  max-height: min(58vh, 460px);
+  padding: 12px 14px 14px;
+  overflow-y: auto;
+  border: 1.5px solid var(--fg-edge);
+  border-radius: 20px;
+  background: var(--fg-glass-strong);
+  box-shadow: 0 14px 36px rgb(0 0 0 / 40%);
+  color: #fff4d6;
+  overscroll-behavior: contain;
+}
+
+.fg-seedgrid__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px 10px;
+  margin-bottom: 8px;
+}
+
+.fg-seedgrid__title {
+  margin: 0;
+  font:
+    800 15px/1.2 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+}
+
+.fg-seedgrid__hint {
+  grid-column: 1;
+  margin: 0;
+  color: rgb(255 244 214 / 70%);
+  font-size: 12px;
+}
+
+.fg-seedgrid__close {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  width: 36px;
+  height: 36px;
+}
+
+.fg-seedgrid__kind {
+  margin: 12px 0 6px;
+  color: #ffd36b;
+  font:
+    800 11px/1 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.fg-seedgrid__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 8px;
+}
+
+.fg-seed--grid {
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  min-height: 98px;
+  padding: 8px 6px;
+  text-align: center;
+}
+
+.fg-seed--grid .fg-seed__name {
+  max-width: 100%;
+  font-size: 12px;
+  white-space: normal;
+}
+
+@media (max-width: 520px) {
+  /* Phones: the chosen seed and one quick pick; the rest are one tap away in the grid. */
+  .fg-seeds .fg-seed--quick:nth-child(n + 3) {
+    display: none;
+  }
+
+  .fg-seed {
+    min-height: 48px;
+  }
+
+  .fg-seed--chosen .fg-seed__name {
+    max-width: 5.5em;
+  }
+
+  .fg-seed--quick {
+    width: 46px;
+  }
+
+  .fg-seed--all span {
+    display: none;
+  }
+
+  .fg-seedgrid {
+    max-height: 52vh;
+  }
+
+  .fg-seedgrid__list {
+    grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+  }
 }
 
 .fg-tools {

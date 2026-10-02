@@ -76,6 +76,13 @@ const journey: Messages['journey'] = {
       stats: 'Farm stats',
     },
     close: 'Close',
+    tray: {
+      all: (n) => `All seeds (${n})`,
+      seedLabel: (seed, n) => `${seed}, ${n} left`,
+      pickerTitle: 'Choose a seed',
+      pickerHint: 'Tap to choose, or drag it onto a plot.',
+      kinds: { veg: 'Vegetables & spices', tree: 'Fruit trees', mushroom: 'Mushrooms' },
+    },
     toField: 'Field',
     toBarn: 'Barn & pond',
     toFieldLabel: 'Move the view to the field',

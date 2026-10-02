@@ -20,7 +20,6 @@ import {
   X,
 } from '@phosphor-icons/react';
 import { Component, Suspense, lazy, useEffect, useRef, useState, type ReactNode } from 'react';
-import { CropIcon } from '../../../components/ui/CropIcon';
 import {
   ANIMALS,
   CROPS,
@@ -63,6 +62,7 @@ import {
   recipeProgress,
 } from '../../../domain/selectors';
 import { FarmPlotCard, type CookIdea, type PlotCardMode, type PlotExtra } from './FarmPlotCard';
+import { SeedTray } from './SeedTray';
 import { useSeedDrag } from './seedDrag';
 // Scene overlay styles (plot card, seed strip) load with the game, not with the lazy scene.
 import '../../farm-anim/farm-anim.css';
@@ -783,27 +783,13 @@ export function FarmGame({
       )}
 
       <div className="fg-tray">
-        {seeds.length > 0 && (
-          <div className="fg-seeds" role="radiogroup" aria-label={m.farmSeedsLabel}>
-            {seeds.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                role="radio"
-                aria-checked={activeSeed === c.id}
-                className={`fj-farm-seed${activeSeed === c.id ? ' is-on' : ''}`}
-                onPointerDown={seedDrag.start(c.id)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') setPicked(c.id);
-                }}
-                title={c.seedName}
-              >
-                <CropIcon crop={c.id} />
-                <span>×{state.seeds[c.id]}</span>
-              </button>
-            ))}
-          </div>
-        )}
+        <SeedTray
+          seeds={seeds}
+          counts={state.seeds}
+          active={activeSeed}
+          onDragStart={seedDrag.start}
+          onPick={setPicked}
+        />
         <div className="fg-tools">
           <button
             type="button"
