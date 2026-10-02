@@ -35,3 +35,7 @@ Nguồn: [kiem-toan-gian-lan-game.md](kiem-toan-gian-lan-game.md) (F01–F17), l
 ## 4. Đang tạm dừng
 
 - Cốt truyện bếp chung ba miền: chỉ có tài liệu, chưa viết đủ lời thoại, chưa đưa vào game. Không tự làm tiếp khi chưa có yêu cầu ([ghi-chu-tam-dung-cot-truyen.md](ghi-chu-tam-dung-cot-truyen.md)).
+
+## 5. Nhiệm vụ và thành tựu
+
+- Thêm nhiệm vụ ngày (4 → 5, pool 15 → 26), tuần (3 → 4, pool 10 → 22) và thành tựu (9 → 29, chia nhóm trên màn hình). Kèm việc toast che thẻ ô đất trên điện thoại: [nhiem-vu-va-thanh-tuu-mo-rong.md](nhiem-vu-va-thanh-tuu-mo-rong.md).
