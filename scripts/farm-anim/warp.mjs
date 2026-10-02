@@ -4,7 +4,8 @@ import { fileURLToPath } from 'node:url';
 
 /*
  * Carries points measured on the first painting (V4 MASTER_REFERENCE.png) onto the colourful
- * repaint (MASTER_REFERENCE_COLORFUL_FLOATING_FARM.png = nongtraivuive.png). Both are 1678×937 and
+ * repaint (assets/farm/pack-v4/15_NEW_REFERENCE_AND_SPRITE_SHEET/
+ * MASTER_REFERENCE_COLORFUL_FLOATING_FARM.png). Both are 1678×937 and
  * show the same farm; the repaint sits ~12 px left and ~10 px up, 1.2 % wider, with small local
  * drifts where objects were redrawn.
  *

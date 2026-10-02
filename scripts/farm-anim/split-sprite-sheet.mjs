@@ -21,7 +21,7 @@ import sharp from 'sharp';
  * Run: node scripts/farm-anim/split-sprite-sheet.mjs
  */
 
-const PACK = resolve('FARM_GAME_ASSET_PACK_V4_ULTRA_CLAUDE_PLAYCANVA_UPDATED');
+const PACK = resolve('assets/farm/pack-v4');
 const SRC = join(PACK, '15_NEW_REFERENCE_AND_SPRITE_SHEET/GENERATED_FARM_ASSET_SPRITE_SHEET.png');
 const OUT = join(PACK, '16_EXTRACTED_SPRITES');
 

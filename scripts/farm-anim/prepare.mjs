@@ -5,8 +5,8 @@ import { box as wBox, ell as wEll, pt as wPt, SCALE, vec as wVec } from './warp.
 
 /*
  * Layers for the living farm (/farm-animation-test and the /journey game), cut from the owner's
- * colourful painting (…_UPDATED/15_NEW_REFERENCE_AND_SPRITE_SHEET/
- * MASTER_REFERENCE_COLORFUL_FLOATING_FARM.png = nongtraivuive.png, 1678×937, island on true alpha),
+ * colourful painting (assets/farm/pack-v4/15_NEW_REFERENCE_AND_SPRITE_SHEET/
+ * MASTER_REFERENCE_COLORFUL_FLOATING_FARM.png, 1678×937, island on true alpha),
  * plus loose pieces from the generated asset sheet (16_EXTRACTED_SPRITES, written by
  * split-sprite-sheet.mjs): clouds, smoke, leaves, butterflies, birds, sparkles, splashes.
  *
@@ -29,7 +29,7 @@ import { box as wBox, ell as wEll, pt as wPt, SCALE, vec as wVec } from './warp.
  * Run: node scripts/farm-anim/split-sprite-sheet.mjs (once), then node scripts/farm-anim/prepare.mjs
  */
 
-const PACK = resolve('FARM_GAME_ASSET_PACK_V4_ULTRA_CLAUDE_PLAYCANVA_UPDATED');
+const PACK = resolve('assets/farm/pack-v4');
 const SRC = join(
   PACK,
   '15_NEW_REFERENCE_AND_SPRITE_SHEET/MASTER_REFERENCE_COLORFUL_FLOATING_FARM.png',

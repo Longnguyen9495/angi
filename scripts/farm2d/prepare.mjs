@@ -3,7 +3,7 @@ import { join, resolve } from 'node:path';
 import sharp from 'sharp';
 
 /*
- * 2D farm layers from the owner's own illustration (FARM_GAME_ASSET_PACK_V4…/
+ * 2D farm layers from the owner's own illustration (assets/farm/pack-v4/
  * 00_MASTER/MASTER_REFERENCE.png, 1678×937): a clean base plate (koi painted
  * out so they can swim), koi sprites, field-tile state sprites cut along the
  * tile lattice, drifting cloud sprites and a water glint. Writes PNGs and
@@ -12,7 +12,7 @@ import sharp from 'sharp';
  * Run: node scripts/farm2d/prepare.mjs
  */
 
-const PACK = resolve('FARM_GAME_ASSET_PACK_V4_ULTRA_CLAUDE_PLAYCANVA_UPDATED');
+const PACK = resolve('assets/farm/pack-v4');
 const OUT = resolve('public/farm2d');
 mkdirSync(OUT, { recursive: true });
 

@@ -4,7 +4,7 @@ Ngày: 2026-10-01. Nhánh: `farm-v5-colourful-showcase`.
 
 ## Trạng thái
 
-- Cảnh nông trại 2D (dùng chung cho `/farm-animation-test` và game ở `/journey`) đã chuyển sang **tranh màu mới** `nongtraivuive.png`, đảo có nền trong suốt thật: hết viền trời/mây quanh vách đá.
+- Cảnh nông trại 2D (dùng chung cho `/farm-animation-test` và game ở `/journey`) đã chuyển sang **tranh màu mới** `assets/farm/pack-v4/15_NEW_REFERENCE_AND_SPRITE_SHEET/MASTER_REFERENCE_COLORFUL_FLOATING_FARM.png`, đảo có nền trong suốt thật: hết viền trời/mây quanh vách đá.
 - `/farm-animation-test` là **trang showcase** theo spec "ANIMATION EFFECTS PACK":
   - 7 chế độ (Full Farm, Environment, Buildings, Animals, Crops, Water, Particles), mỗi chế độ có Bật/Tắt, Phát lại, tốc độ riêng.
   - 4 thanh trượt: Animation Speed, Wind, Particle Density, Parallax.
@@ -42,7 +42,7 @@ npm run build          # angi.local (XAMPP) phục vụ dist/, phải build mớ
 
 ## Quy trình tạo ảnh cảnh (public/farm-anim)
 
-1. `node scripts/farm-anim/split-sprite-sheet.mjs`: tách sheet `…_UPDATED/15_NEW_REFERENCE_AND_SPRITE_SHEET/GENERATED_FARM_ASSET_SPRITE_SHEET.png` thành `…_UPDATED/16_EXTRACTED_SPRITES/` (PNG trong suốt, `index.json`, `_contact.png` có đánh số).
+1. `node scripts/farm-anim/split-sprite-sheet.mjs`: tách sheet `assets/farm/pack-v4/15_NEW_REFERENCE_AND_SPRITE_SHEET/GENERATED_FARM_ASSET_SPRITE_SHEET.png` thành `assets/farm/pack-v4/16_EXTRACTED_SPRITES/` (PNG trong suốt, `index.json`, `_contact.png` có đánh số).
 2. `node scripts/farm-anim/prepare.mjs`: dựng `public/farm-anim/` từ tranh màu và các món lấy từ sheet:
    - nền trời, mây, đảo;
    - layer cây, cỏ, hoa, lau sậy;
@@ -52,7 +52,7 @@ npm run build          # angi.local (XAMPP) phục vụ dist/, phải build mớ
 4. Món trong sheet được chọn **theo vị trí trên sheet** (không theo số thứ tự), nên tách lại sheet vẫn khớp.
 
 Ghi chú:
-- Không dùng bộ `FARM_GAME_ASSET_PACK_V4_INDIVIDUAL_SPRITES_V2`: bộ đó tách tự động nên thủng lõi trắng của mây và gà.
+- Không dùng bộ `assets/farm/pack-v4-sprites`: bộ đó tách tự động nên thủng lõi trắng của mây và gà.
 - Đã xoá `clean-edges.mjs` vì không còn cần, và nó sẽ làm hỏng bóng xanh của mây mới.
 
 ## File chính
