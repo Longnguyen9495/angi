@@ -571,11 +571,13 @@ export class FarmGameLayer {
     if (!view) return;
     const soil = this.field.soil;
     let nextLock: PlotView | null = null;
+    const locked: { d: FieldDef['plots'][number]; v: PlotView }[] = [];
     for (const d of this.field.plots) {
       const v = view.plots.find((p) => p.id === d.id);
       if (!v) continue;
       if (!v.unlocked) {
         if (!nextLock || (v.unlockLevel ?? 99) < (nextLock.unlockLevel ?? 99)) nextLock = v;
+        locked.push({ d, v });
         continue;
       }
       const f = this.fx.get(d.id)!;
@@ -627,18 +629,27 @@ export class FarmGameLayer {
         ctx.stroke();
       }
     }
-    const signView = view.plots.find((p) => p.id === this.signPlot);
-    if (this.sign && signView) this.drawSign(ctx, signView);
-    if (nextLock && nextLock.id !== this.signPlot) {
-      const d = this.field.plots.find((p) => p.id === nextLock.id);
-      if (d)
+    // Every locked plot shows it is part of the field: a faint dashed rim and its own level (on
+    // the board for the signpost plot), the next one to open stronger than the rest.
+    for (const { d, v } of locked) {
+      const next = v === nextLock;
+      quadPath(ctx, d.quad, 0.08, d.centre);
+      ctx.strokeStyle = `rgba(255,248,210,${next ? 0.55 : 0.3})`;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 6]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      if (d.id !== this.signPlot)
         this.drawLock(
           ctx,
           d.centre[0],
           d.centre[1] - 6,
-          t.farm.anim.lockLevel(nextLock.unlockLevel ?? '?'),
+          t.farm.anim.lockLevel(v.unlockLevel ?? '?'),
+          next ? 0.92 : 0.6,
         );
     }
+    const signView = view.plots.find((p) => p.id === this.signPlot);
+    if (this.sign && signView) this.drawSign(ctx, signView);
   }
 
   /** On the soil: the dust puff where seeds landed, the ripples where the watering drops land. */
@@ -682,9 +693,15 @@ export class FarmGameLayer {
     ctx.restore();
   }
 
-  private drawLock(ctx: CanvasRenderingContext2D, x: number, y: number, text: string) {
+  private drawLock(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    text: string,
+    alpha = 0.92,
+  ) {
     ctx.save();
-    ctx.globalAlpha = 0.92;
+    ctx.globalAlpha = alpha;
     ctx.fillStyle = 'rgba(40,30,20,0.55)';
     ctx.beginPath();
     ctx.roundRect(x - 34, y - 14, 68, 28, 14);
