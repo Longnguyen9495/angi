@@ -110,6 +110,7 @@ export interface ReferralMilestone {
   metric: 'harvest' | 'cook' | 'level';
   target: number;
   coins: number;
+  xp: number;
 }
 
 export interface ReferralPerson {
@@ -181,8 +182,9 @@ export interface FeedItem {
   thanked: boolean;
   /** Unix seconds. */
   at: number;
-  /** referral: coins paid to us. */
+  /** referral: coins and XP paid to us. */
   coins?: number;
+  xp?: number;
 }
 
 export interface RemoteFriendEvent {
@@ -193,6 +195,7 @@ export interface RemoteFriendEvent {
   from: string;
   at: number;
   coins?: number;
+  xp?: number;
 }
 
 export const friendsApi = {

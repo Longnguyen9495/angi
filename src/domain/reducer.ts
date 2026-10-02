@@ -610,8 +610,11 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         track(s, 'steal', action.now);
       } else if (ev.type === 'present' && ev.crop) {
         post(s, `${key}:seed`, `seed:${ev.crop}`, 1, 'friend:present', action.now);
-      } else if (ev.type === 'referral' && ev.coins && ev.coins > 0) {
-        post(s, `${key}:coin`, 'coin', Math.floor(ev.coins), 'friend:referral', action.now);
+      } else if (ev.type === 'referral' && ((ev.coins ?? 0) > 0 || (ev.xp ?? 0) > 0)) {
+        if ((ev.coins ?? 0) > 0)
+          post(s, `${key}:coin`, 'coin', Math.floor(ev.coins!), 'friend:referral', action.now);
+        if ((ev.xp ?? 0) > 0)
+          post(s, `${key}:xp`, 'xp', Math.floor(ev.xp!), 'friend:referral', action.now);
       } else {
         // stolen / thanks: nothing to pay, but mark the event as applied.
         if (ev.type === 'stolen') {

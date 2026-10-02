@@ -179,6 +179,8 @@ try {
     $want = Friends::MILESTONES[1]['coins'] + Friends::MILESTONES[3]['coins'];
     $check('the newcomer is paid for each milestone reached', $refCoins($fr->events()['events']) === $want);
     $check('…once', $refCoins($fr->events()['events']) === $want);
+    $refXp = array_sum(array_column(array_filter($fr->events()['events'], fn ($x) => $x['type'] === 'referral'), 'xp'));
+    $check('…with XP too', $refXp === Friends::MILESTONES[1]['xp'] + Friends::MILESTONES[3]['xp']);
     $check('…and sees them as done', $fr->list()['referrals']['invitedBy']['done'] === [1, 3]);
     $as($c);
     $cEvents = $fr->events()['events'];

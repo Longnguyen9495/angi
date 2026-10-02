@@ -143,8 +143,9 @@ export interface FriendEvent {
   plotId?: number;
   crop?: CropId;
   from?: string;
-  /** referral: coins paid to each side. */
+  /** referral: coins and XP paid to each side. */
   coins?: number;
+  xp?: number;
 }
 
 export interface AnimalState {

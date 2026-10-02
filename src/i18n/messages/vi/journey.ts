@@ -332,17 +332,17 @@ const journey = {
     invitePending: 'Lưu nông trại bằng email để kết bạn với người đã mời bạn.',
     referral: {
       title: 'Mời bạn mới',
-      intro: (coins: number) =>
-        `Gửi link mời cho người chưa chơi. Mỗi khi bạn mới đạt một mốc, cả hai cùng nhận xu — tổng ${coins} xu mỗi người.`,
+      intro: (coins: number, xp: number) =>
+        `Gửi link mời cho người chưa chơi. Mỗi khi bạn mới đạt một mốc, cả hai cùng nhận xu và XP — tổng ${coins} xu, ${xp} XP mỗi người.`,
       milestone: {
         harvest: (n: number) => `Thu hoạch ${n} lần`,
         cook: (n: number) => (n === 1 ? 'Nấu món đầu tiên' : `Nấu ${n} món`),
         level: (n: number) => `Đạt cấp ${n}`,
       },
-      coins: (n: number) => `+${n} xu`,
+      reward: (coins: number, xp: number) => `+${coins} xu · +${xp} XP`,
       done: 'đã nhận',
       invitedBy: (name: string) =>
-        `${name} đã mời bạn — làm các mốc dưới đây để cả hai cùng nhận xu.`,
+        `${name} đã mời bạn — làm các mốc dưới đây để cả hai cùng nhận xu và XP.`,
       invitedTitle: (n: number, max: number) => `Bạn đã mời ${n}/${max}`,
       invitedMeta: (level: number, done: number, total: number) =>
         `Cấp ${level} · ${done}/${total} mốc`,
@@ -362,7 +362,8 @@ const journey = {
       sentPresent: (to: string, seed: string) => `Bạn đã tặng ${to} 1 ${seed}`,
       thanks: (from: string) => `${from} cảm ơn bạn`,
       gift: (seed: string) => `Cô Ba gửi 1 ${seed}`,
-      referral: (name: string, coins: number) => `Thưởng mời bạn cùng ${name}: +${coins} xu`,
+      referral: (name: string, coins: number, xp: number) =>
+        `Thưởng mời bạn cùng ${name}: +${coins} xu, +${xp} XP`,
       revenge: 'Trả đũa',
       thank: 'Cảm ơn',
       thanked: 'Đã cảm ơn',

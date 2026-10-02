@@ -333,16 +333,17 @@ const journey: Messages['journey'] = {
     invitePending: 'Save your farm with your email to become friends with whoever invited you.',
     referral: {
       title: 'Invite someone new',
-      intro: (coins) =>
-        `Send your invite link to someone who hasn’t played yet. Each milestone they reach pays you both — ${coins} coins each in total.`,
+      intro: (coins, xp) =>
+        `Send your invite link to someone who hasn’t played yet. Each milestone they reach pays you both — ${coins} coins and ${xp} XP each in total.`,
       milestone: {
         harvest: (n) => `Harvest ${n} times`,
         cook: (n) => (n === 1 ? 'Cook a first dish' : `Cook ${n} dishes`),
         level: (n) => `Reach level ${n}`,
       },
-      coins: (n) => `+${n} coins`,
+      reward: (coins, xp) => `+${coins} coins · +${xp} XP`,
       done: 'paid',
-      invitedBy: (name) => `${name} invited you — reach these milestones and you both get coins.`,
+      invitedBy: (name) =>
+        `${name} invited you — reach these milestones and you both get coins and XP.`,
       invitedTitle: (n, max) => `You invited ${n}/${max}`,
       invitedMeta: (level, done, total) => `Level ${level} · ${done}/${total} milestones`,
       none: 'Nobody has joined through your invite yet.',
@@ -361,7 +362,7 @@ const journey: Messages['journey'] = {
       sentPresent: (to, seed) => `You sent ${to} 1 ${seed}`,
       thanks: (from) => `${from} says thanks`,
       gift: (seed) => `Cô Ba sent you 1 ${seed}`,
-      referral: (name, coins) => `Invite reward with ${name}: +${coins} coins`,
+      referral: (name, coins, xp) => `Invite reward with ${name}: +${coins} coins, +${xp} XP`,
       revenge: 'Pay a visit',
       thank: 'Say thanks',
       thanked: 'Thanked',

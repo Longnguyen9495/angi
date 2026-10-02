@@ -137,6 +137,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
           crop,
           from: e.from,
           coins: e.coins,
+          xp: e.xp,
         },
         now,
       });
@@ -150,8 +151,8 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       if (e.type === 'present' && crop)
         lines.push(t.account.friendEvents.present(e.from, CROPS[crop].seedName.toLowerCase()));
       if (e.type === 'thanks') lines.push(t.account.friendEvents.thanks(e.from));
-      if (e.type === 'referral' && e.coins)
-        lines.push(t.account.friendEvents.referral(e.from, e.coins));
+      if (e.type === 'referral')
+        lines.push(t.account.friendEvents.referral(e.from, e.coins ?? 0, e.xp ?? 0));
     }
     await friendsApi.ack(r.events.map((e) => e.id)).catch(() => undefined);
     if (lines.length > 0) {

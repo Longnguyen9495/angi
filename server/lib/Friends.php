@@ -83,13 +83,14 @@ final class Friends
     public const MAX_REFERRALS = 10;
     /**
      * What the newcomer has to reach, read from their saved progress; each pays both gardens
-     * `coins` once. Numbers are stored in farm_events.plot_id — never renumber, only append.
+     * `coins` and `xp` once (about a quest's worth each, under one level in all). Numbers are
+     * stored in farm_events.plot_id — never renumber, only append.
      */
     public const MILESTONES = [
-        1 => ['metric' => 'harvest', 'target' => 5, 'coins' => 20],
-        2 => ['metric' => 'cook', 'target' => 1, 'coins' => 30],
-        3 => ['metric' => 'level', 'target' => 3, 'coins' => 50],
-        4 => ['metric' => 'level', 'target' => 5, 'coins' => 100],
+        1 => ['metric' => 'harvest', 'target' => 5, 'coins' => 20, 'xp' => 10],
+        2 => ['metric' => 'cook', 'target' => 1, 'coins' => 30, 'xp' => 15],
+        3 => ['metric' => 'level', 'target' => 3, 'coins' => 50, 'xp' => 25],
+        4 => ['metric' => 'level', 'target' => 5, 'coins' => 100, 'xp' => 40],
     ];
 
     public function __construct(private PDO $db, private Account $account)
@@ -319,9 +320,11 @@ final class Friends
         return max(0, (int) ($total[$metric] ?? 0));
     }
 
-    private static function referralCoins(?int $milestone): int
+    /** What one paid milestone gave each side. */
+    private static function referralReward(int $milestone): array
     {
-        return self::MILESTONES[$milestone ?? 0]['coins'] ?? 0;
+        $ms = self::MILESTONES[$milestone] ?? null;
+        return ['coins' => $ms['coins'] ?? 0, 'xp' => $ms['xp'] ?? 0];
     }
 
     public function remove(string $code): array
@@ -545,7 +548,7 @@ final class Friends
                 'code' => $other !== null && in_array($other, $friendIds, true) ? $r['friend_code'] : null,
                 'thanked' => $other !== null && in_array($other, $thanked, true),
                 'at' => (int) $r['created_at'],
-            ] + ($r['type'] === 'referral' ? ['coins' => self::referralCoins((int) $r['plot_id'])] : []);
+            ] + ($r['type'] === 'referral' ? self::referralReward((int) $r['plot_id']) : []);
         }, $rows)];
     }
 
@@ -579,7 +582,7 @@ final class Friends
             'crop' => $r['crop'],
             'from' => $r['friend_code'] !== null ? self::displayName($r['garden_name'], $r['friend_code']) : 'Cô Ba',
             'at' => (int) $r['created_at'],
-        ] + ($r['type'] === 'referral' ? ['coins' => self::referralCoins((int) $r['plot_id'])] : []), $rows)];
+        ] + ($r['type'] === 'referral' ? self::referralReward((int) $r['plot_id']) : []), $rows)];
     }
 
     /** The client applied these (idempotently); stop sending them. */
