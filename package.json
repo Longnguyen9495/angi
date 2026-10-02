@@ -20,7 +20,10 @@
     "catalogue:export": "php server/bin/export-snapshot.php",
     "ai:enrich": "php server/bin/ai-enrich.php",
     "test:server": "php server/bin/selftest.php",
-    "test:account": "php server/bin/selftest-account.php && php server/bin/selftest-friends.php"
+    "test:account": "php server/bin/selftest-account.php && php server/bin/selftest-friends.php",
+    "test:audit": "node scripts/run-vitest.mjs run src/domain/security-audit.test.ts",
+    "test:audit:server": "php server/bin/selftest-security.php",
+    "test:audit:security": "php server/bin/selftest-security.php --security"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",
