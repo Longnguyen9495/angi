@@ -1,8 +1,10 @@
 import { getDish } from '../data/dishes';
 import {
   ANIMALS,
+  BOAT,
   CATCHES,
   CROPS,
+  HIVE,
   DECOR,
   FISHING,
   MARKET,
@@ -24,7 +26,11 @@ import {
 import type { Filters } from './recommend';
 import {
   animalStage,
+  boatCatch,
+  boatStage,
   catchFor,
+  hiveStage,
+  level,
   cropAvailable,
   fishingLeft,
   firstEmptyPlot,
@@ -76,6 +82,14 @@ export type Action =
   | { type: 'CLAIM_QUEST'; id: string; now: number }
   | { type: 'CLAIM_BADGE'; id: string; now: number }
   | { type: 'OPEN_CHEST'; now: number }
+  /** Empties a plot on purpose: takes out a tree or a spent mushroom block (nothing is paid). */
+  | { type: 'CLEAR_PLOT'; plotId: number }
+  /** The beehive: start it once it opens, then empty it for honey and comb (it refills). */
+  | { type: 'START_HIVE'; now: number }
+  | { type: 'COLLECT_HIVE'; now: number }
+  /** The fishing boat: send it out, then unload what it brought back. */
+  | { type: 'SEND_BOAT'; now: number }
+  | { type: 'COLLECT_BOAT'; now: number }
   | { type: 'BUY_SEED'; crop: CropId; now: number }
   | { type: 'BUY_DECOR'; decor: DecorId; now: number }
   | {
@@ -392,7 +406,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
     case 'CATCH': {
       const age = action.now - action.castAt;
       if (age < 0 || age > FISHING.maxCastMs || fishingLeft(state, action.now) <= 0) return state;
-      const kind = catchFor(action.castAt);
+      const kind = catchFor(action.castAt, level(state.xp).level);
       const s = structuredClone(state);
       ensureDay(s, action.now);
       const key = `catch:${action.castAt}`;
@@ -410,6 +424,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       const s = structuredClone(state);
       for (const plot of ready) {
         const crop = CROPS[plot.crop!];
+        // Each cycle starts at its own plantedAt, so a tree's next harvest has a new key.
         const tag = `${plot.id}:${plot.plantedAt}`;
         // A friend's pick took one of the plot's crops; the rest (and the XP) are ours.
         const got = Math.max(1, crop.yield - (plot.stolen ? 1 : 0));
@@ -417,19 +432,35 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         post(s, `xp:harvest:${tag}`, 'xp', XP.harvestPerPlot, 'harvest', action.now);
       }
       const readyIds = new Set(ready.map((p) => p.id));
-      s.plots = s.plots.map((p) =>
-        readyIds.has(p.id)
-          ? {
-              ...p,
-              crop: null,
-              plantedAt: null,
-              readyAt: null,
-              sourceDishId: null,
-              wateredAt: null,
-              stolen: undefined,
-            }
-          : p,
-      );
+      s.plots = s.plots.map((p) => {
+        if (!readyIds.has(p.id)) return p;
+        const def = CROPS[p.crop!];
+        const harvests = (p.harvests ?? 0) + 1;
+        // Trees stay and fruit again; a mushroom block gives its flushes, then is spent.
+        const stays =
+          def.kind === 'tree' || (def.kind === 'mushroom' && harvests < (def.flushes ?? 1));
+        if (stays) {
+          const again = (def.regrowHours ?? def.growHours) * HOUR_MS;
+          return {
+            ...p,
+            plantedAt: action.now,
+            readyAt: action.now + again,
+            wateredAt: null,
+            stolen: undefined,
+            harvests,
+          };
+        }
+        return {
+          ...p,
+          crop: null,
+          plantedAt: null,
+          readyAt: null,
+          sourceDishId: null,
+          wateredAt: null,
+          stolen: undefined,
+          harvests: undefined,
+        };
+      });
       track(s, 'harvest', action.now, ready.length);
       return s;
     }
@@ -636,6 +667,73 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       const s = structuredClone(state);
       grant(s, `chest:${chest.date}:${chest.streak}`, reward, 'chest', action.now);
       s.quests = { ...s.quests, chest: null };
+      return s;
+    }
+
+    case 'CLEAR_PLOT': {
+      const plot = state.plots.find((p) => p.id === action.plotId);
+      if (!plot || plot.crop === null) return state;
+      return {
+        ...state,
+        plots: state.plots.map((p) =>
+          p.id === plot.id
+            ? {
+                ...p,
+                crop: null,
+                plantedAt: null,
+                readyAt: null,
+                sourceDishId: null,
+                wateredAt: null,
+                stolen: undefined,
+                harvests: undefined,
+              }
+            : p,
+        ),
+      };
+    }
+
+    case 'START_HIVE': {
+      if (hiveStage(state, action.now) !== 'idle') return state;
+      return {
+        ...state,
+        hive: { startedAt: action.now, readyAt: action.now + HIVE.hours * HOUR_MS },
+      };
+    }
+
+    case 'COLLECT_HIVE': {
+      const h = state.hive;
+      if (hiveStage(state, action.now) !== 'ready' || h.startedAt === null) return state;
+      const s = structuredClone(state);
+      const key = `hive:${h.startedAt}`;
+      if (!post(s, `${key}:honey`, 'ingredient:honey', HIVE.yield.honey, 'hive', action.now))
+        return state;
+      post(s, `${key}:comb`, 'ingredient:honeycomb', HIVE.yield.honeycomb, 'hive', action.now);
+      post(s, `xp:${key}`, 'xp', XP.collectAnimal, 'hive', action.now);
+      // The bees start filling it again straight away.
+      s.hive = { startedAt: action.now, readyAt: action.now + HIVE.hours * HOUR_MS };
+      track(s, 'collect', action.now);
+      return s;
+    }
+
+    case 'SEND_BOAT': {
+      if (boatStage(state, action.now) !== 'docked') return state;
+      return {
+        ...state,
+        boat: { sentAt: action.now, returnAt: action.now + BOAT.hours * HOUR_MS },
+      };
+    }
+
+    case 'COLLECT_BOAT': {
+      const b = state.boat;
+      if (boatStage(state, action.now) !== 'back' || b.sentAt === null) return state;
+      const s = structuredClone(state);
+      const items = boatCatch(b.sentAt, level(state.xp).level);
+      items.forEach((kind, i) => {
+        post(s, `boat:${b.sentAt}:${i}`, `ingredient:${kind}`, 1, 'boat', action.now);
+      });
+      post(s, `xp:boat:${b.sentAt}`, 'xp', XP.catch * items.length, 'boat', action.now);
+      s.boat = { sentAt: null, returnAt: null };
+      track(s, 'catch', action.now, items.length);
       return s;
     }
 

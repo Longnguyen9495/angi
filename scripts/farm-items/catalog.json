@@ -1,0 +1,1000 @@
+{
+  "note": "Item → image map (published to public/images/farm-items by cut.mjs --publish). Confidence: how sure the species reading is from the 60–80 px source drawings.",
+  "images": {
+    "napa-sprout": "veg-r01-c1",
+    "napa-young": "veg-r01-c2",
+    "napa-flowering": "veg-r01-c3",
+    "napa-ready": "veg-r01-c4",
+    "napa-produce": "veg-r01-c4",
+    "cauliflower-sprout": "veg-r03-c1",
+    "cauliflower-young": "veg-r03-c2",
+    "cauliflower-flowering": "veg-r03-c3",
+    "cauliflower-ready": "veg-r03-c4",
+    "cauliflower-produce": "veg-r03-c4",
+    "cabbage-sprout": "veg-r04-c1",
+    "cabbage-young": "veg-r04-c2",
+    "cabbage-flowering": "veg-r04-c3",
+    "cabbage-ready": "veg-r04-c4",
+    "cabbage-produce": "veg-r04-c4",
+    "radish-sprout": "veg-r06-c1",
+    "radish-young": "veg-r06-c2",
+    "radish-flowering": "veg-r06-c3",
+    "radish-ready": "veg-r06-c4",
+    "radish-produce": "veg-r06-c4",
+    "beet-sprout": "veg-r07-c1",
+    "beet-young": "veg-r07-c2",
+    "beet-flowering": "veg-r07-c3",
+    "beet-ready": "veg-r07-c4",
+    "beet-produce": "veg-r07-c4",
+    "potato-sprout": "veg-r08-c1",
+    "potato-young": "veg-r08-c2",
+    "potato-flowering": "veg-r08-c3",
+    "potato-ready": "veg-r08-c4",
+    "potato-produce": "veg-r08-c4",
+    "lemongrass-sprout": "veg-r10-c1",
+    "lemongrass-young": "veg-r10-c2",
+    "lemongrass-flowering": "veg-r10-c3",
+    "lemongrass-ready": "veg-r10-c4",
+    "lemongrass-produce": "veg-r10-c4",
+    "garlic-sprout": "veg-r12-c1",
+    "garlic-young": "veg-r12-c2",
+    "garlic-flowering": "veg-r12-c3",
+    "garlic-ready": "veg-r12-c4",
+    "garlic-produce": "veg-r12-c4",
+    "shallot-sprout": "veg-r13-c1",
+    "shallot-young": "veg-r13-c2",
+    "shallot-flowering": "veg-r13-c3",
+    "shallot-ready": "veg-r13-c4",
+    "shallot-produce": "veg-r13-c4",
+    "scallion-sprout": "veg-r14-c1",
+    "scallion-young": "veg-r14-c2",
+    "scallion-flowering": "veg-r14-c3",
+    "scallion-ready": "veg-r14-c4",
+    "scallion-produce": "veg-r14-c4",
+    "tomato-sprout": "veg-r01-c5",
+    "tomato-young": "veg-r01-c6",
+    "tomato-flowering": "veg-r01-c7",
+    "tomato-ready": "veg-r01-c9",
+    "tomato-produce": "veg-r01-c9",
+    "eggplant-sprout": "veg-r02-c5",
+    "eggplant-young": "veg-r02-c6",
+    "eggplant-flowering": "veg-r02-c7",
+    "eggplant-ready": "veg-r02-c9",
+    "eggplant-produce": "veg-r02-c9",
+    "cucumber-sprout": "veg-r03-c5",
+    "cucumber-young": "veg-r03-c6",
+    "cucumber-flowering": "veg-r03-c7",
+    "cucumber-ready": "veg-r03-c9",
+    "cucumber-produce": "veg-r03-c9",
+    "pumpkin-sprout": "veg-r04-c5",
+    "pumpkin-young": "veg-r04-c6",
+    "pumpkin-flowering": "veg-r04-c7",
+    "pumpkin-ready": "veg-r04-c9",
+    "pumpkin-produce": "veg-r04-c9",
+    "wintermelon-sprout": "veg-r05-c5",
+    "wintermelon-young": "veg-r05-c6",
+    "wintermelon-flowering": "veg-r05-c7",
+    "wintermelon-ready": "veg-r05-c9",
+    "wintermelon-produce": "veg-r05-c9",
+    "bittermelon-sprout": "veg-r06-c5",
+    "bittermelon-young": "veg-r06-c6",
+    "bittermelon-flowering": "veg-r06-c7",
+    "bittermelon-ready": "veg-r06-c9",
+    "bittermelon-produce": "veg-r06-c9",
+    "bean-sprout": "veg-r07-c5",
+    "bean-young": "veg-r07-c6",
+    "bean-flowering": "veg-r07-c7",
+    "bean-ready": "veg-r07-c9",
+    "bean-produce": "veg-r07-c9",
+    "peanut-sprout": "veg-r08-c5",
+    "peanut-young": "veg-r08-c6",
+    "peanut-flowering": "veg-r08-c7",
+    "peanut-ready": "veg-r08-c9",
+    "peanut-produce": "veg-r08-c9",
+    "corn-sprout": "veg-r10-c5",
+    "corn-young": "veg-r10-c6",
+    "corn-flowering": "veg-r10-c7",
+    "corn-ready": "veg-r10-c9",
+    "corn-produce": "veg-r10-c9",
+    "rice-sprout": "veg-r11-c5",
+    "rice-young": "veg-r11-c6",
+    "rice-flowering": "veg-r11-c7",
+    "rice-ready": "veg-r11-c9",
+    "rice-produce": "veg-r11-c9",
+    "ginger-sprout": "veg-r12-c5",
+    "ginger-young": "veg-r12-c6",
+    "ginger-flowering": "veg-r12-c7",
+    "ginger-ready": "veg-r12-c9",
+    "ginger-produce": "veg-r12-c9",
+    "chili-sprout": "veg-r13-c5",
+    "chili-young": "veg-r13-c6",
+    "chili-flowering": "veg-r13-c7",
+    "chili-ready": "veg-r13-c9",
+    "chili-produce": "veg-r13-c9",
+    "herbs-sprout": "veg-r14-c5",
+    "herbs-young": "veg-r14-c6",
+    "herbs-flowering": "veg-r14-c7",
+    "herbs-ready": "veg-r14-c9",
+    "herbs-produce": "veg-r14-c9",
+    "sweetpotato-sprout": "veg-r09-c1",
+    "sweetpotato-produce": "veg-r09-c2",
+    "carrot-sprout": "veg-r09-c1",
+    "carrot-produce": "veg-r09-c3",
+    "taro-sprout": "veg-r09-c1",
+    "taro-produce": "veg-r09-c4",
+    "banana-sprout": "treeA-r01-c1",
+    "banana-young": "treeA-r01-c2",
+    "banana-flowering": "treeA-r01-c3",
+    "banana-ready": "treeA-r01-c4",
+    "banana-produce": "treeA-r01-c4",
+    "pineapple-sprout": "treeA-r02-c1",
+    "pineapple-young": "treeA-r02-c2",
+    "pineapple-flowering": "treeA-r02-c3",
+    "pineapple-ready": "treeA-r02-c4",
+    "pineapple-produce": "treeA-r02-c4",
+    "strawberry-sprout": "treeA-r03-c1",
+    "strawberry-young": "treeA-r03-c2",
+    "strawberry-flowering": "treeA-r03-c3",
+    "strawberry-ready": "treeA-r03-c4",
+    "strawberry-produce": "treeA-r03-c4",
+    "dragonfruit-sprout": "treeA-r04-c1",
+    "dragonfruit-young": "treeA-r04-c2",
+    "dragonfruit-flowering": "treeA-r04-c3",
+    "dragonfruit-ready": "treeA-r04-c4",
+    "dragonfruit-produce": "treeA-r04-c4",
+    "mango-sprout": "treeA-r05-c1",
+    "mango-young": "treeA-r05-c2",
+    "mango-flowering": "treeA-r05-c3",
+    "mango-ready": "treeA-r05-c4",
+    "mango-produce": "treeA-r05-c4",
+    "orange-sprout": "treeA-r06-c1",
+    "orange-young": "treeA-r06-c2",
+    "orange-flowering": "treeA-r06-c3",
+    "orange-ready": "treeA-r06-c4",
+    "orange-produce": "treeA-r06-c4",
+    "mandarin-sprout": "treeA-r07-c1",
+    "mandarin-young": "treeA-r07-c2",
+    "mandarin-flowering": "treeA-r07-c3",
+    "mandarin-ready": "treeA-r07-c4",
+    "mandarin-produce": "treeA-r07-c4",
+    "guava-sprout": "treeA-r08-c1",
+    "guava-young": "treeA-r08-c2",
+    "guava-flowering": "treeA-r08-c3",
+    "guava-ready": "treeA-r08-c4",
+    "guava-produce": "treeA-r08-c4",
+    "coconut-sprout": "treeB-r01-c1",
+    "coconut-young": "treeB-r01-c1",
+    "coconut-flowering": "treeB-r01-c2",
+    "coconut-ready": "treeB-r01-c3",
+    "coconut-produce": "treeB-r01-c3",
+    "papaya-sprout": "treeB-r02-c1",
+    "papaya-young": "treeB-r02-c1",
+    "papaya-flowering": "treeB-r02-c2",
+    "papaya-ready": "treeB-r02-c3",
+    "papaya-produce": "treeB-r02-c3",
+    "lime-sprout": "treeB-r03-c1",
+    "lime-young": "treeB-r03-c1",
+    "lime-flowering": "treeB-r03-c2",
+    "lime-ready": "treeB-r03-c3",
+    "lime-produce": "treeB-r03-c3",
+    "jackfruit-sprout": "treeB-r05-c1",
+    "jackfruit-young": "treeB-r05-c1",
+    "jackfruit-flowering": "treeB-r05-c2",
+    "jackfruit-ready": "treeB-r05-c3",
+    "jackfruit-produce": "treeB-r05-c3",
+    "durian-sprout": "treeB-r06-c1",
+    "durian-young": "treeB-r06-c1",
+    "durian-flowering": "treeB-r06-c2",
+    "durian-ready": "treeB-r06-c3",
+    "durian-produce": "treeB-r06-c3",
+    "rambutan-sprout": "treeB-r07-c1",
+    "rambutan-young": "treeB-r07-c1",
+    "rambutan-flowering": "treeB-r07-c2",
+    "rambutan-ready": "treeB-r07-c3",
+    "rambutan-produce": "treeB-r07-c3",
+    "lychee-sprout": "treeB-r08-c1",
+    "lychee-young": "treeB-r08-c1",
+    "lychee-flowering": "treeB-r08-c2",
+    "lychee-ready": "treeB-r08-c3",
+    "lychee-produce": "treeB-r08-c3",
+    "shiitake-sprout": "mush-r01-c1",
+    "shiitake-young": "mush-r01-c2",
+    "shiitake-flowering": "mush-r01-c3",
+    "shiitake-ready": "mush-r01-c5",
+    "shiitake-produce": "mush-r01-c5",
+    "oyster-sprout": "mush-r03-c1",
+    "oyster-young": "mush-r03-c2",
+    "oyster-flowering": "mush-r03-c3",
+    "oyster-ready": "mush-r03-c5",
+    "oyster-produce": "mush-r03-c5",
+    "enoki-sprout": "mush-r04-c1",
+    "enoki-young": "mush-r04-c2",
+    "enoki-flowering": "mush-r04-c3",
+    "enoki-ready": "mush-r04-c5",
+    "enoki-produce": "mush-r04-c5",
+    "woodear-sprout": "mush-r05-c1",
+    "woodear-young": "mush-r05-c2",
+    "woodear-flowering": "mush-r05-c3",
+    "woodear-ready": "mush-r05-c5",
+    "woodear-produce": "mush-r05-c5",
+    "button-sprout": "mush-r06-c1",
+    "button-young": "mush-r06-c2",
+    "button-flowering": "mush-r06-c3",
+    "button-ready": "mush-r06-c5",
+    "button-produce": "mush-r06-c5",
+    "animal-chicken-young": "anim-r01-c1",
+    "animal-chicken": "anim-r01-c2",
+    "animal-duck-young": "anim-r02-c1",
+    "animal-duck": "anim-r02-c3",
+    "animal-quail-young": "anim-r03-c1",
+    "animal-quail": "anim-r03-c3",
+    "animal-goose-young": "anim-r04-c1",
+    "animal-goose": "anim-r04-c3",
+    "animal-cow-young": "anim-r05-c1",
+    "animal-cow": "anim-r05-c3",
+    "animal-goat-young": "anim-r06-c1",
+    "animal-goat": "anim-r06-c3",
+    "animal-sheep-young": "anim-r08-c1",
+    "animal-sheep": "anim-r08-c3",
+    "animal-rabbit-young": "anim-r09-c1",
+    "animal-rabbit": "anim-r09-c3",
+    "egg-produce": "prod-r01-c1",
+    "duckegg-produce": "prod-r02-c1",
+    "quailegg-produce": "prod-r03-a",
+    "gooseegg-produce": "prod-r04-c1",
+    "milk-produce": "prod-r05-c1",
+    "goatmilk-produce": "prod-r06-c1",
+    "wool-produce": "prod-r08-c1",
+    "rabbitwool-produce": "prod-r09-c1",
+    "honey-produce": "bee-honey",
+    "honeycomb-produce": "bee-comb-bare",
+    "fish-produce": "fish-r03-c2",
+    "shrimp-produce": "fish-r01-c5",
+    "carp-produce": "fish-r02-c2",
+    "crab-produce": "fish-r02-c6",
+    "scad-produce": "fish-r03-c5",
+    "mackerel-produce": "sea-longfish",
+    "squid-produce": "sea-squid",
+    "octopus-produce": "sea-octopus",
+    "clam-produce": "sea-clam",
+    "bloodcockle-produce": "sea-redclam",
+    "scallop-produce": "sea-scallop",
+    "hive-1": "bee-hive1",
+    "hive-2": "bee-hive2",
+    "hive-3": "bee-hive3",
+    "bee": "bee-one",
+    "boat-scene": "sea-boatscene"
+  },
+  "items": {
+    "napa": {
+      "stages": {
+        "sprout": "napa-sprout",
+        "young": "napa-young",
+        "flowering": "napa-flowering",
+        "ready": "napa-ready"
+      },
+      "produce": "napa-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "veg row 1"
+    },
+    "cauliflower": {
+      "stages": {
+        "sprout": "cauliflower-sprout",
+        "young": "cauliflower-young",
+        "flowering": "cauliflower-flowering",
+        "ready": "cauliflower-ready"
+      },
+      "produce": "cauliflower-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "veg row 3"
+    },
+    "cabbage": {
+      "stages": {
+        "sprout": "cabbage-sprout",
+        "young": "cabbage-young",
+        "flowering": "cabbage-flowering",
+        "ready": "cabbage-ready"
+      },
+      "produce": "cabbage-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "veg row 4"
+    },
+    "radish": {
+      "stages": {
+        "sprout": "radish-sprout",
+        "young": "radish-young",
+        "flowering": "radish-flowering",
+        "ready": "radish-ready"
+      },
+      "produce": "radish-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "veg row 6"
+    },
+    "beet": {
+      "stages": {
+        "sprout": "beet-sprout",
+        "young": "beet-young",
+        "flowering": "beet-flowering",
+        "ready": "beet-ready"
+      },
+      "produce": "beet-produce",
+      "produceIsStage": true,
+      "confidence": "medium",
+      "source": "veg row 7"
+    },
+    "potato": {
+      "stages": {
+        "sprout": "potato-sprout",
+        "young": "potato-young",
+        "flowering": "potato-flowering",
+        "ready": "potato-ready"
+      },
+      "produce": "potato-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "veg row 8"
+    },
+    "lemongrass": {
+      "stages": {
+        "sprout": "lemongrass-sprout",
+        "young": "lemongrass-young",
+        "flowering": "lemongrass-flowering",
+        "ready": "lemongrass-ready"
+      },
+      "produce": "lemongrass-produce",
+      "produceIsStage": true,
+      "confidence": "medium",
+      "source": "veg row 10"
+    },
+    "garlic": {
+      "stages": {
+        "sprout": "garlic-sprout",
+        "young": "garlic-young",
+        "flowering": "garlic-flowering",
+        "ready": "garlic-ready"
+      },
+      "produce": "garlic-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "veg row 12"
+    },
+    "shallot": {
+      "stages": {
+        "sprout": "shallot-sprout",
+        "young": "shallot-young",
+        "flowering": "shallot-flowering",
+        "ready": "shallot-ready"
+      },
+      "produce": "shallot-produce",
+      "produceIsStage": true,
+      "confidence": "medium",
+      "source": "veg row 13"
+    },
+    "scallion": {
+      "stages": {
+        "sprout": "scallion-sprout",
+        "young": "scallion-young",
+        "flowering": "scallion-flowering",
+        "ready": "scallion-ready"
+      },
+      "produce": "scallion-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "veg row 14"
+    },
+    "tomato": {
+      "stages": {
+        "sprout": "tomato-sprout",
+        "young": "tomato-young",
+        "flowering": "tomato-flowering",
+        "ready": "tomato-ready"
+      },
+      "produce": "tomato-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "veg row 1"
+    },
+    "eggplant": {
+      "stages": {
+        "sprout": "eggplant-sprout",
+        "young": "eggplant-young",
+        "flowering": "eggplant-flowering",
+        "ready": "eggplant-ready"
+      },
+      "produce": "eggplant-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "veg row 2"
+    },
+    "cucumber": {
+      "stages": {
+        "sprout": "cucumber-sprout",
+        "young": "cucumber-young",
+        "flowering": "cucumber-flowering",
+        "ready": "cucumber-ready"
+      },
+      "produce": "cucumber-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "veg row 3"
+    },
+    "pumpkin": {
+      "stages": {
+        "sprout": "pumpkin-sprout",
+        "young": "pumpkin-young",
+        "flowering": "pumpkin-flowering",
+        "ready": "pumpkin-ready"
+      },
+      "produce": "pumpkin-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "veg row 4"
+    },
+    "wintermelon": {
+      "stages": {
+        "sprout": "wintermelon-sprout",
+        "young": "wintermelon-young",
+        "flowering": "wintermelon-flowering",
+        "ready": "wintermelon-ready"
+      },
+      "produce": "wintermelon-produce",
+      "produceIsStage": true,
+      "confidence": "medium",
+      "source": "veg row 5"
+    },
+    "bittermelon": {
+      "stages": {
+        "sprout": "bittermelon-sprout",
+        "young": "bittermelon-young",
+        "flowering": "bittermelon-flowering",
+        "ready": "bittermelon-ready"
+      },
+      "produce": "bittermelon-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "veg row 6"
+    },
+    "bean": {
+      "stages": {
+        "sprout": "bean-sprout",
+        "young": "bean-young",
+        "flowering": "bean-flowering",
+        "ready": "bean-ready"
+      },
+      "produce": "bean-produce",
+      "produceIsStage": true,
+      "confidence": "medium",
+      "source": "veg row 7"
+    },
+    "peanut": {
+      "stages": {
+        "sprout": "peanut-sprout",
+        "young": "peanut-young",
+        "flowering": "peanut-flowering",
+        "ready": "peanut-ready"
+      },
+      "produce": "peanut-produce",
+      "produceIsStage": true,
+      "confidence": "medium",
+      "source": "veg row 8"
+    },
+    "corn": {
+      "stages": {
+        "sprout": "corn-sprout",
+        "young": "corn-young",
+        "flowering": "corn-flowering",
+        "ready": "corn-ready"
+      },
+      "produce": "corn-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "veg row 10"
+    },
+    "rice": {
+      "stages": {
+        "sprout": "rice-sprout",
+        "young": "rice-young",
+        "flowering": "rice-flowering",
+        "ready": "rice-ready"
+      },
+      "produce": "rice-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "veg row 11"
+    },
+    "ginger": {
+      "stages": {
+        "sprout": "ginger-sprout",
+        "young": "ginger-young",
+        "flowering": "ginger-flowering",
+        "ready": "ginger-ready"
+      },
+      "produce": "ginger-produce",
+      "produceIsStage": true,
+      "confidence": "medium",
+      "source": "veg row 12"
+    },
+    "chili": {
+      "stages": {
+        "sprout": "chili-sprout",
+        "young": "chili-young",
+        "flowering": "chili-flowering",
+        "ready": "chili-ready"
+      },
+      "produce": "chili-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "veg row 13"
+    },
+    "herbs": {
+      "stages": {
+        "sprout": "herbs-sprout",
+        "young": "herbs-young",
+        "flowering": "herbs-flowering",
+        "ready": "herbs-ready"
+      },
+      "produce": "herbs-produce",
+      "produceIsStage": true,
+      "confidence": "medium",
+      "source": "veg row 14"
+    },
+    "sweetpotato": {
+      "stages": {
+        "sprout": "sweetpotato-sprout",
+        "young": "sweetpotato-sprout",
+        "flowering": "sweetpotato-sprout",
+        "ready": "sweetpotato-produce"
+      },
+      "produce": "sweetpotato-produce",
+      "produceIsStage": false,
+      "stagesMissing": ["young", "flowering", "ready (in soil)"],
+      "confidence": "high",
+      "source": "veg row 9 (produce only)"
+    },
+    "carrot": {
+      "stages": {
+        "sprout": "carrot-sprout",
+        "young": "carrot-sprout",
+        "flowering": "carrot-sprout",
+        "ready": "carrot-produce"
+      },
+      "produce": "carrot-produce",
+      "produceIsStage": false,
+      "stagesMissing": ["young", "flowering", "ready (in soil)"],
+      "confidence": "high",
+      "source": "veg row 9 (produce only)"
+    },
+    "taro": {
+      "stages": {
+        "sprout": "taro-sprout",
+        "young": "taro-sprout",
+        "flowering": "taro-sprout",
+        "ready": "taro-produce"
+      },
+      "produce": "taro-produce",
+      "produceIsStage": false,
+      "stagesMissing": ["young", "flowering", "ready (in soil)"],
+      "confidence": "medium",
+      "source": "veg row 9 (produce only)"
+    },
+    "banana": {
+      "stages": {
+        "sprout": "banana-sprout",
+        "young": "banana-young",
+        "flowering": "banana-flowering",
+        "ready": "banana-ready"
+      },
+      "produce": "banana-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "treeA row 1"
+    },
+    "pineapple": {
+      "stages": {
+        "sprout": "pineapple-sprout",
+        "young": "pineapple-young",
+        "flowering": "pineapple-flowering",
+        "ready": "pineapple-ready"
+      },
+      "produce": "pineapple-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "treeA row 2"
+    },
+    "strawberry": {
+      "stages": {
+        "sprout": "strawberry-sprout",
+        "young": "strawberry-young",
+        "flowering": "strawberry-flowering",
+        "ready": "strawberry-ready"
+      },
+      "produce": "strawberry-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "treeA row 3"
+    },
+    "dragonfruit": {
+      "stages": {
+        "sprout": "dragonfruit-sprout",
+        "young": "dragonfruit-young",
+        "flowering": "dragonfruit-flowering",
+        "ready": "dragonfruit-ready"
+      },
+      "produce": "dragonfruit-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "treeA row 4"
+    },
+    "mango": {
+      "stages": {
+        "sprout": "mango-sprout",
+        "young": "mango-young",
+        "flowering": "mango-flowering",
+        "ready": "mango-ready"
+      },
+      "produce": "mango-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "treeA row 5"
+    },
+    "orange": {
+      "stages": {
+        "sprout": "orange-sprout",
+        "young": "orange-young",
+        "flowering": "orange-flowering",
+        "ready": "orange-ready"
+      },
+      "produce": "orange-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "treeA row 6"
+    },
+    "mandarin": {
+      "stages": {
+        "sprout": "mandarin-sprout",
+        "young": "mandarin-young",
+        "flowering": "mandarin-flowering",
+        "ready": "mandarin-ready"
+      },
+      "produce": "mandarin-produce",
+      "produceIsStage": true,
+      "confidence": "medium",
+      "source": "treeA row 7"
+    },
+    "guava": {
+      "stages": {
+        "sprout": "guava-sprout",
+        "young": "guava-young",
+        "flowering": "guava-flowering",
+        "ready": "guava-ready"
+      },
+      "produce": "guava-produce",
+      "produceIsStage": true,
+      "confidence": "medium",
+      "source": "treeA row 8"
+    },
+    "coconut": {
+      "stages": {
+        "sprout": "coconut-sprout",
+        "young": "coconut-young",
+        "flowering": "coconut-flowering",
+        "ready": "coconut-ready"
+      },
+      "produce": "coconut-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "treeB row 1",
+      "stagesMissing": ["sprout (uses young)"]
+    },
+    "papaya": {
+      "stages": {
+        "sprout": "papaya-sprout",
+        "young": "papaya-young",
+        "flowering": "papaya-flowering",
+        "ready": "papaya-ready"
+      },
+      "produce": "papaya-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "treeB row 2",
+      "stagesMissing": ["sprout (uses young)"]
+    },
+    "lime": {
+      "stages": {
+        "sprout": "lime-sprout",
+        "young": "lime-young",
+        "flowering": "lime-flowering",
+        "ready": "lime-ready"
+      },
+      "produce": "lime-produce",
+      "produceIsStage": true,
+      "confidence": "medium",
+      "source": "treeB row 3",
+      "stagesMissing": ["sprout (uses young)"]
+    },
+    "jackfruit": {
+      "stages": {
+        "sprout": "jackfruit-sprout",
+        "young": "jackfruit-young",
+        "flowering": "jackfruit-flowering",
+        "ready": "jackfruit-ready"
+      },
+      "produce": "jackfruit-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "treeB row 5",
+      "stagesMissing": ["sprout (uses young)"]
+    },
+    "durian": {
+      "stages": {
+        "sprout": "durian-sprout",
+        "young": "durian-young",
+        "flowering": "durian-flowering",
+        "ready": "durian-ready"
+      },
+      "produce": "durian-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "treeB row 6",
+      "stagesMissing": ["sprout (uses young)"]
+    },
+    "rambutan": {
+      "stages": {
+        "sprout": "rambutan-sprout",
+        "young": "rambutan-young",
+        "flowering": "rambutan-flowering",
+        "ready": "rambutan-ready"
+      },
+      "produce": "rambutan-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "treeB row 7",
+      "stagesMissing": ["sprout (uses young)"]
+    },
+    "lychee": {
+      "stages": {
+        "sprout": "lychee-sprout",
+        "young": "lychee-young",
+        "flowering": "lychee-flowering",
+        "ready": "lychee-ready"
+      },
+      "produce": "lychee-produce",
+      "produceIsStage": true,
+      "confidence": "medium",
+      "source": "treeB row 8",
+      "stagesMissing": ["sprout (uses young)"]
+    },
+    "shiitake": {
+      "stages": {
+        "sprout": "shiitake-sprout",
+        "young": "shiitake-young",
+        "flowering": "shiitake-flowering",
+        "ready": "shiitake-ready"
+      },
+      "produce": "shiitake-produce",
+      "produceIsStage": true,
+      "confidence": "medium",
+      "source": "mush row 1"
+    },
+    "oyster": {
+      "stages": {
+        "sprout": "oyster-sprout",
+        "young": "oyster-young",
+        "flowering": "oyster-flowering",
+        "ready": "oyster-ready"
+      },
+      "produce": "oyster-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "mush row 3"
+    },
+    "enoki": {
+      "stages": {
+        "sprout": "enoki-sprout",
+        "young": "enoki-young",
+        "flowering": "enoki-flowering",
+        "ready": "enoki-ready"
+      },
+      "produce": "enoki-produce",
+      "produceIsStage": true,
+      "confidence": "medium",
+      "source": "mush row 4"
+    },
+    "woodear": {
+      "stages": {
+        "sprout": "woodear-sprout",
+        "young": "woodear-young",
+        "flowering": "woodear-flowering",
+        "ready": "woodear-ready"
+      },
+      "produce": "woodear-produce",
+      "produceIsStage": true,
+      "confidence": "medium",
+      "source": "mush row 5"
+    },
+    "button": {
+      "stages": {
+        "sprout": "button-sprout",
+        "young": "button-young",
+        "flowering": "button-flowering",
+        "ready": "button-ready"
+      },
+      "produce": "button-produce",
+      "produceIsStage": true,
+      "confidence": "high",
+      "source": "mush row 6"
+    },
+    "animal:chicken": {
+      "young": "animal-chicken-young",
+      "adult": "animal-chicken",
+      "confidence": "high",
+      "source": "anim row 1"
+    },
+    "animal:duck": {
+      "young": "animal-duck-young",
+      "adult": "animal-duck",
+      "confidence": "high",
+      "source": "anim row 2"
+    },
+    "animal:quail": {
+      "young": "animal-quail-young",
+      "adult": "animal-quail",
+      "confidence": "high",
+      "source": "anim row 3"
+    },
+    "animal:goose": {
+      "young": "animal-goose-young",
+      "adult": "animal-goose",
+      "confidence": "medium",
+      "source": "anim row 4"
+    },
+    "animal:cow": {
+      "young": "animal-cow-young",
+      "adult": "animal-cow",
+      "confidence": "high",
+      "source": "anim row 5"
+    },
+    "animal:goat": {
+      "young": "animal-goat-young",
+      "adult": "animal-goat",
+      "confidence": "medium",
+      "source": "anim row 6"
+    },
+    "animal:sheep": {
+      "young": "animal-sheep-young",
+      "adult": "animal-sheep",
+      "confidence": "high",
+      "source": "anim row 8"
+    },
+    "animal:rabbit": {
+      "young": "animal-rabbit-young",
+      "adult": "animal-rabbit",
+      "confidence": "high",
+      "source": "anim row 9"
+    },
+    "egg": {
+      "produce": "egg-produce",
+      "confidence": "high",
+      "source": "prod-r01-c1"
+    },
+    "duckegg": {
+      "produce": "duckegg-produce",
+      "confidence": "high",
+      "source": "prod-r02-c1"
+    },
+    "quailegg": {
+      "produce": "quailegg-produce",
+      "confidence": "high",
+      "source": "prod-r03-a"
+    },
+    "gooseegg": {
+      "produce": "gooseegg-produce",
+      "confidence": "medium",
+      "source": "prod-r04-c1"
+    },
+    "milk": {
+      "produce": "milk-produce",
+      "confidence": "high",
+      "source": "prod-r05-c1"
+    },
+    "goatmilk": {
+      "produce": "goatmilk-produce",
+      "confidence": "medium",
+      "source": "prod-r06-c1"
+    },
+    "wool": {
+      "produce": "wool-produce",
+      "confidence": "high",
+      "source": "prod-r08-c1"
+    },
+    "rabbitwool": {
+      "produce": "rabbitwool-produce",
+      "confidence": "medium",
+      "source": "prod-r09-c1"
+    },
+    "honey": {
+      "produce": "honey-produce",
+      "confidence": "high",
+      "source": "bee-honey"
+    },
+    "honeycomb": {
+      "produce": "honeycomb-produce",
+      "confidence": "high",
+      "source": "bee-comb-bare"
+    },
+    "fish": {
+      "produce": "fish-produce",
+      "confidence": "medium",
+      "source": "fish-r03-c2"
+    },
+    "shrimp": {
+      "produce": "shrimp-produce",
+      "confidence": "high",
+      "source": "fish-r01-c5"
+    },
+    "carp": {
+      "produce": "carp-produce",
+      "confidence": "medium",
+      "source": "fish-r02-c2"
+    },
+    "crab": {
+      "produce": "crab-produce",
+      "confidence": "high",
+      "source": "fish-r02-c6"
+    },
+    "scad": {
+      "produce": "scad-produce",
+      "confidence": "low",
+      "source": "fish-r03-c5"
+    },
+    "mackerel": {
+      "produce": "mackerel-produce",
+      "confidence": "medium",
+      "source": "sea-longfish"
+    },
+    "squid": {
+      "produce": "squid-produce",
+      "confidence": "high",
+      "source": "sea-squid"
+    },
+    "octopus": {
+      "produce": "octopus-produce",
+      "confidence": "high",
+      "source": "sea-octopus"
+    },
+    "clam": {
+      "produce": "clam-produce",
+      "confidence": "high",
+      "source": "sea-clam"
+    },
+    "bloodcockle": {
+      "produce": "bloodcockle-produce",
+      "confidence": "medium",
+      "source": "sea-redclam"
+    },
+    "scallop": {
+      "produce": "scallop-produce",
+      "confidence": "medium",
+      "source": "sea-scallop"
+    }
+  },
+  "unconfirmed": {
+    "veg-r02 (cols 1-4)": "second leafy head, near-identical to napa cabbage (lettuce?)",
+    "veg-r05 (cols 1-4)": "orange round root on soil — not identified",
+    "veg-r11 (cols 1-4)": "green grass tuft — chives/rice seedling? not identified",
+    "veg-r09 (cols 5-9)": "pale tubers (cassava? jicama?) — not identified",
+    "treeB-r04": "tree with small red fruit (apple? jujube?) — not identified",
+    "mush-r02": "second brown capped mushroom, close to shiitake — not identified",
+    "anim-r05-c2": "brown adult cow (beef?) — the dairy cow (c3) is used",
+    "anim-r07 (pig)": "pig: no product drawn on the sheet, so no production source",
+    "prod-r03-b": "brown spotted bowl/shell — not identified",
+    "prod-r07-c1": "fleece shaped like a lying sheep — wool uses prod-r08",
+    "fish-* variants": "about 18 fish differ only in colour; only distinct, nameable ones are used",
+    "sea-squidflat": "second squid drawing (flat) — squid uses sea-squid",
+    "sea-cockle": "round tiled shell — not identified"
+  }
+}

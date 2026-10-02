@@ -34,7 +34,9 @@ export function plotBounds(count: number): {
   return { minX: -PLOT_STEP - half, maxX: PLOT_STEP + half, minZ: z0 - half, maxZ: z1 + half };
 }
 
-export type BuildingId = 'barn' | 'well' | 'kitchen' | 'pond' | AnimalId;
+/** The 3D island (friends' visits) only has pens for the hen and the cow. */
+export type BuildingId =
+  'barn' | 'well' | 'kitchen' | 'pond' | Extract<AnimalId, 'chicken' | 'cow'>;
 
 export interface Placement {
   x: number;

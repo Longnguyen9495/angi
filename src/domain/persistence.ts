@@ -13,7 +13,23 @@ import { emptyQuests, type QuestState, type Tally } from './quests';
 import { DEFAULT_FILTERS } from './recommend';
 
 export const STORAGE_KEY = 'hanh-trinh-bep-viet/guest';
-export const SCHEMA_VERSION = 1;
+/**
+ * Save format version. Each step up is a migration in `migrate` below; a save is never
+ * thrown away because it is older.
+ *  1 → 2 (farm item pack): more crops, animals and catches (new pantry and seed counts start
+ *        at 0), trees and mushrooms remember their harvests, the beehive and the boat.
+ *        Nothing is renamed or removed, so the data itself carries over as is.
+ */
+export const SCHEMA_VERSION = 2;
+
+/** Brings a stored snapshot of `from` up to the current version (before validation). */
+function migrate(raw: unknown, from: number): unknown {
+  if (from < 2 && isObject(raw)) {
+    // New fields default in parseProgress; old plots simply have no harvest count yet.
+    return { ...raw, hive: raw.hive ?? null, boat: raw.boat ?? null };
+  }
+  return raw;
+}
 
 interface Envelope {
   version: number;
@@ -104,6 +120,20 @@ function parseQuests(v: unknown, now: number): QuestState {
   };
 }
 
+/** Two nullable timestamps (hive, boat); anything else falls back to "not started". */
+function timePair<A extends string, B extends string, T extends Record<A | B, number | null>>(
+  v: unknown,
+  a: A,
+  b: B,
+  fallback: T,
+): T {
+  if (!isObject(v)) return fallback;
+  const num = (x: unknown) => (typeof x === 'number' && Number.isFinite(x) ? x : null);
+  const first = num(v[a]);
+  const second = num(v[b]);
+  return first !== null && second !== null ? ({ [a]: first, [b]: second } as T) : fallback;
+}
+
 function parseLayout(v: Record<string, unknown>): GuestProgress['decorLayout'] {
   const out: GuestProgress['decorLayout'] = {};
   for (const [id, pos] of Object.entries(v)) {
@@ -164,8 +194,18 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
     // Added after v1 shipped: older saves simply start with a full can and dry soil.
     plots: p.plots.map((pl) => ({
       ...pl,
+      // A crop id this version does not know (a newer save on an older app) leaves the plot empty.
+      ...(pl.crop !== null && !(pl.crop in EMPTY_CROPS)
+        ? { crop: null, plantedAt: null, readyAt: null }
+        : {}),
       wateredAt: typeof pl.wateredAt === 'number' ? pl.wateredAt : null,
+      harvests:
+        typeof pl.harvests === 'number' && Number.isFinite(pl.harvests) && pl.harvests > 0
+          ? Math.floor(pl.harvests)
+          : undefined,
     })),
+    hive: timePair(raw.hive, 'startedAt', 'readyAt', base.hive),
+    boat: timePair(raw.boat, 'sentAt', 'returnAt', base.boat),
     water:
       isObject(raw.water) &&
       typeof p.water.date === 'string' &&
@@ -222,14 +262,16 @@ export function loadProgress(now: number): LoadResult {
   if (!text) return { status: 'fresh', progress: createInitialProgress(now) };
   try {
     const env = JSON.parse(text) as Partial<Envelope>;
-    if (env.version !== SCHEMA_VERSION) {
+    const version = typeof env.version === 'number' ? env.version : 0;
+    // Older saves are migrated; only a save from a newer app (unknown format) is set aside.
+    if (version < 1 || version > SCHEMA_VERSION) {
       return {
         status: 'recovered',
         progress: createInitialProgress(now),
         reason: t.domain.recovery.oldVersion,
       };
     }
-    const progress = parseProgress(env.data, now);
+    const progress = parseProgress(migrate(env.data, version), now);
     if (!progress) {
       return {
         status: 'recovered',

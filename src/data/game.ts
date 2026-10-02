@@ -5,8 +5,14 @@ import type {
   AnimalId,
   AnimalProduct,
   Catch,
+  BeeProduct,
   CropDef,
   CropId,
+  CropKind,
+  ItemCategory,
+  MushroomId,
+  TreeId,
+  VegId,
   DecorId,
   DishGroup,
   ProduceId,
@@ -18,111 +24,151 @@ import type {
   RegionId,
 } from './types';
 
+const CROP_TEXT = t.data.crops;
+const ALL_REGIONS: RegionId[] = ['north', 'central', 'south'];
+
+/** The first ten crops: their numbers are kept as they were (saves and recipes rely on them). */
+function classic(
+  id: CropId,
+  kind: CropKind,
+  category: ItemCategory,
+  growHours: number,
+  regions: RegionId[],
+  color: string,
+  unlockLevel?: number,
+): CropDef {
+  return {
+    id,
+    kind,
+    category,
+    ...CROP_TEXT[id],
+    growHours,
+    // A tree stays after its harvest and fruits again after the same time.
+    ...(kind === 'tree' ? { regrowHours: growHours } : {}),
+    yield: 3,
+    regions,
+    color,
+    ...(unlockLevel ? { unlock: { level: unlockLevel } } : {}),
+  };
+}
+
+/**
+ * Balance rules for the crops added with the farm item pack (no hand-picked numbers):
+ * - vegetables: grow hours = base of the group + level/2; yield 3; sell 2 + level/4 xu, and a
+ *   seed costs what its harvest sells for (growing pays in XP, recipes and orders);
+ * - fruit trees: first fruit after 2 + 1.5 × level hours, then again after 60 % of that;
+ *   2 fruit a harvest; a sapling costs 10 + 5 × level, fruit sells for 3 + level/3;
+ * - mushrooms: first flush after 1 + 0.75 × level hours, then every 3 hours, 3 flushes of 2;
+ *   a spawn block costs 8 + 3 × level, mushrooms sell for 3 + level/4.
+ */
+const VEG_BASE_HOURS: Partial<Record<ItemCategory, number>> = {
+  leafy: 2,
+  fruitveg: 3,
+  root: 3,
+  grain: 4,
+  spice: 3,
+};
+
+function veg(id: VegId, category: ItemCategory, level: number, color: string): CropDef {
+  const sell = 2 + Math.floor(level / 4);
+  return {
+    id,
+    kind: 'veg',
+    category,
+    ...CROP_TEXT[id],
+    growHours: (VEG_BASE_HOURS[category] ?? 3) + Math.round(level / 2),
+    yield: 3,
+    regions: ALL_REGIONS,
+    color,
+    unlock: { level },
+    price: { seed: sell * 3, sell },
+  };
+}
+
+function tree(id: TreeId, level: number, color: string): CropDef {
+  const growHours = Math.round(2 + 1.5 * level);
+  return {
+    id,
+    kind: 'tree',
+    category: 'fruit',
+    ...CROP_TEXT[id],
+    growHours,
+    regrowHours: Math.round(growHours * 0.6),
+    yield: 2,
+    regions: ALL_REGIONS,
+    color,
+    unlock: { level },
+    price: { seed: 10 + 5 * level, sell: 3 + Math.floor(level / 3) },
+  };
+}
+
+function mushroom(id: MushroomId, level: number, color: string): CropDef {
+  return {
+    id,
+    kind: 'mushroom',
+    category: 'mushroom',
+    ...CROP_TEXT[id],
+    growHours: Math.round(1 + 0.75 * level),
+    regrowHours: 3,
+    flushes: 3,
+    yield: 2,
+    regions: ALL_REGIONS,
+    color,
+    unlock: { level },
+    price: { seed: 8 + 3 * level, sell: 3 + Math.floor(level / 4) },
+  };
+}
+
 export const CROPS: Record<CropId, CropDef> = {
-  rice: {
-    id: 'rice',
-    name: t.data.crops.rice.name,
-    seedName: t.data.crops.rice.seedName,
-    produceName: t.data.crops.rice.produceName,
-    growHours: 5,
-    yield: 3,
-    regions: ['north', 'central', 'south'],
-    color: '#d9b44a',
-  },
-  herbs: {
-    id: 'herbs',
-    name: t.data.crops.herbs.name,
-    seedName: t.data.crops.herbs.seedName,
-    produceName: t.data.crops.herbs.produceName,
-    growHours: 3,
-    yield: 3,
-    regions: ['north', 'central', 'south'],
-    color: '#4f9a4a',
-  },
-  chili: {
-    id: 'chili',
-    name: t.data.crops.chili.name,
-    seedName: t.data.crops.chili.seedName,
-    produceName: t.data.crops.chili.produceName,
-    growHours: 4,
-    yield: 3,
-    regions: ['central', 'south'],
-    color: '#c8412b',
-  },
-  scallion: {
-    id: 'scallion',
-    name: t.data.crops.scallion.name,
-    seedName: t.data.crops.scallion.seedName,
-    produceName: t.data.crops.scallion.produceName,
-    growHours: 3,
-    yield: 3,
-    regions: ['north', 'south'],
-    color: '#7cb35a',
-  },
-  bean: {
-    id: 'bean',
-    name: t.data.crops.bean.name,
-    seedName: t.data.crops.bean.seedName,
-    produceName: t.data.crops.bean.produceName,
-    growHours: 4,
-    yield: 3,
-    regions: ['north', 'central'],
-    color: '#8f9a3c',
-  },
-  tomato: {
-    id: 'tomato',
-    name: t.data.crops.tomato.name,
-    seedName: t.data.crops.tomato.seedName,
-    produceName: t.data.crops.tomato.produceName,
-    growHours: 5,
-    yield: 3,
-    regions: ['north', 'south'],
-    color: '#d6452f',
-  },
-  lemongrass: {
-    id: 'lemongrass',
-    name: t.data.crops.lemongrass.name,
-    seedName: t.data.crops.lemongrass.seedName,
-    produceName: t.data.crops.lemongrass.produceName,
-    growHours: 4,
-    yield: 3,
-    regions: ['central', 'south'],
-    color: '#b9c96a',
-    unlock: { level: 2 },
-  },
-  garlic: {
-    id: 'garlic',
-    name: t.data.crops.garlic.name,
-    seedName: t.data.crops.garlic.seedName,
-    produceName: t.data.crops.garlic.produceName,
-    growHours: 5,
-    yield: 3,
-    regions: ['north', 'central'],
-    color: '#efe6d2',
-    unlock: { level: 3 },
-  },
-  cucumber: {
-    id: 'cucumber',
-    name: t.data.crops.cucumber.name,
-    seedName: t.data.crops.cucumber.seedName,
-    produceName: t.data.crops.cucumber.produceName,
-    growHours: 4,
-    yield: 3,
-    regions: ['north', 'south'],
-    color: '#5f9a3a',
-    unlock: { level: 4 },
-  },
-  lime: {
-    id: 'lime',
-    name: t.data.crops.lime.name,
-    seedName: t.data.crops.lime.seedName,
-    produceName: t.data.crops.lime.produceName,
-    growHours: 6,
-    yield: 3,
-    regions: ['north', 'central', 'south'],
-    color: '#8cc43f',
-    unlock: { level: 5 },
-  },
+  rice: classic('rice', 'veg', 'grain', 5, ALL_REGIONS, '#d9b44a'),
+  herbs: classic('herbs', 'veg', 'spice', 3, ALL_REGIONS, '#4f9a4a'),
+  chili: classic('chili', 'veg', 'spice', 4, ['central', 'south'], '#c8412b'),
+  scallion: classic('scallion', 'veg', 'spice', 3, ['north', 'south'], '#7cb35a'),
+  bean: classic('bean', 'veg', 'grain', 4, ['north', 'central'], '#8f9a3c'),
+  tomato: classic('tomato', 'veg', 'fruitveg', 5, ['north', 'south'], '#d6452f'),
+  lemongrass: classic('lemongrass', 'veg', 'spice', 4, ['central', 'south'], '#b9c96a', 2),
+  garlic: classic('garlic', 'veg', 'spice', 5, ['north', 'central'], '#efe6d2', 3),
+  cucumber: classic('cucumber', 'veg', 'fruitveg', 4, ['north', 'south'], '#5f9a3a', 4),
+  lime: classic('lime', 'tree', 'fruit', 6, ALL_REGIONS, '#8cc43f', 5),
+
+  napa: veg('napa', 'leafy', 2, '#b7d77a'),
+  radish: veg('radish', 'root', 2, '#f1efe6'),
+  cabbage: veg('cabbage', 'leafy', 3, '#9cc76a'),
+  eggplant: veg('eggplant', 'fruitveg', 3, '#6b2f7a'),
+  carrot: veg('carrot', 'root', 3, '#e8762d'),
+  bittermelon: veg('bittermelon', 'fruitveg', 4, '#6fa53a'),
+  potato: veg('potato', 'root', 4, '#d9b26a'),
+  shallot: veg('shallot', 'spice', 4, '#b65d7a'),
+  cauliflower: veg('cauliflower', 'leafy', 5, '#f2ecd6'),
+  sweetpotato: veg('sweetpotato', 'root', 5, '#b4466a'),
+  peanut: veg('peanut', 'grain', 5, '#d8b07a'),
+  pumpkin: veg('pumpkin', 'fruitveg', 6, '#e7832b'),
+  beet: veg('beet', 'root', 6, '#a3243f'),
+  corn: veg('corn', 'grain', 6, '#f0c23a'),
+  wintermelon: veg('wintermelon', 'fruitveg', 7, '#a9c98a'),
+  ginger: veg('ginger', 'spice', 7, '#d6a65a'),
+  taro: veg('taro', 'root', 8, '#9b7a8f'),
+
+  strawberry: tree('strawberry', 5, '#d8323a'),
+  pineapple: tree('pineapple', 6, '#e2b13a'),
+  banana: tree('banana', 7, '#f1d046'),
+  papaya: tree('papaya', 7, '#ef8f32'),
+  guava: tree('guava', 8, '#a9d16a'),
+  orange: tree('orange', 9, '#f08a24'),
+  mandarin: tree('mandarin', 9, '#f39a2e'),
+  mango: tree('mango', 10, '#f3c33b'),
+  dragonfruit: tree('dragonfruit', 10, '#d8336f'),
+  coconut: tree('coconut', 11, '#8a6b3d'),
+  lychee: tree('lychee', 12, '#d0404a'),
+  rambutan: tree('rambutan', 12, '#d8282e'),
+  jackfruit: tree('jackfruit', 13, '#c9b04a'),
+  durian: tree('durian', 14, '#d6c34a'),
+
+  button: mushroom('button', 3, '#efe3cf'),
+  oyster: mushroom('oyster', 4, '#d9cbb6'),
+  shiitake: mushroom('shiitake', 6, '#8a5a3a'),
+  enoki: mushroom('enoki', 8, '#f4ead2'),
+  woodear: mushroom('woodear', 9, '#5a3a2e'),
 };
 
 /** The six crops every guest starts with; the rest open by level. */
@@ -357,7 +403,7 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
   },
 };
 
-// ——— Animals: fed with garden produce, they give egg and milk. Never sick, never lost. ———
+// ——— Animals: fed with garden produce, they give eggs, milk or wool. Never sick, never lost. ———
 
 export interface AnimalDef {
   id: AnimalId;
@@ -371,47 +417,121 @@ export interface AnimalDef {
   unlockLevel: number;
 }
 
+const animal = (
+  id: AnimalId,
+  feed: CropId,
+  product: AnimalProduct,
+  yieldN: number,
+  hours: number,
+  unlockLevel: number,
+): AnimalDef => ({
+  id,
+  name: t.data.animals[id],
+  feed,
+  product,
+  yield: yieldN,
+  hours,
+  unlockLevel,
+});
+
+/**
+ * Hen and cow keep their numbers. The others follow one rule: the later an animal opens, the
+ * longer its cycle and the more its product sells for; each eats a crop open before it.
+ */
 export const ANIMALS: Record<AnimalId, AnimalDef> = {
-  chicken: {
-    id: 'chicken',
-    name: t.data.animals.chicken,
-    feed: 'rice',
-    product: 'egg',
-    yield: 2,
-    hours: 3,
-    unlockLevel: 2,
-  },
-  cow: {
-    id: 'cow',
-    name: t.data.animals.cow,
-    feed: 'herbs',
-    product: 'milk',
-    yield: 1,
-    hours: 5,
-    unlockLevel: 4,
-  },
+  chicken: animal('chicken', 'rice', 'egg', 2, 3, 2),
+  duck: animal('duck', 'rice', 'duckegg', 2, 4, 3),
+  cow: animal('cow', 'herbs', 'milk', 1, 5, 4),
+  quail: animal('quail', 'rice', 'quailegg', 3, 3, 5),
+  goat: animal('goat', 'napa', 'goatmilk', 1, 5, 6),
+  goose: animal('goose', 'herbs', 'gooseegg', 1, 6, 7),
+  sheep: animal('sheep', 'cabbage', 'wool', 1, 8, 8),
+  rabbit: animal('rabbit', 'carrot', 'rabbitwool', 1, 8, 9),
 };
 
 export const ANIMAL_LIST: AnimalDef[] = Object.values(ANIMALS);
 
-const ANIMAL_PRODUCE: Record<AnimalProduct, { name: string; animal: AnimalId }> = {
-  egg: { name: t.data.animalProduce.egg, animal: 'chicken' },
-  milk: { name: t.data.animalProduce.milk, animal: 'cow' },
+const ANIMAL_PRODUCE: Record<
+  AnimalProduct,
+  { name: string; animal: AnimalId; category: ItemCategory; sell: number }
+> = {
+  egg: { name: t.data.animalProduce.egg, animal: 'chicken', category: 'egg', sell: 7 },
+  duckegg: { name: t.data.animalProduce.duckegg, animal: 'duck', category: 'egg', sell: 7 },
+  quailegg: { name: t.data.animalProduce.quailegg, animal: 'quail', category: 'egg', sell: 6 },
+  gooseegg: { name: t.data.animalProduce.gooseegg, animal: 'goose', category: 'egg', sell: 10 },
+  milk: { name: t.data.animalProduce.milk, animal: 'cow', category: 'dairy', sell: 7 },
+  goatmilk: { name: t.data.animalProduce.goatmilk, animal: 'goat', category: 'dairy', sell: 8 },
+  wool: { name: t.data.animalProduce.wool, animal: 'sheep', category: 'fiber', sell: 10 },
+  rabbitwool: {
+    name: t.data.animalProduce.rabbitwool,
+    animal: 'rabbit',
+    category: 'fiber',
+    sell: 12,
+  },
 };
 
-// ——— The pond: a few casts a day; what bites is fish or shrimp. Nothing is ever lost. ———
+// ——— The beehive: no feeding; it fills on its own and is emptied for honey and comb. ———
+
+export const HIVE = {
+  unlockLevel: 6,
+  hours: 8,
+  yield: { honey: 2, honeycomb: 1 } as Record<BeeProduct, number>,
+} as const;
+
+const BEE_PRODUCE: Record<BeeProduct, { name: string; sell: number }> = {
+  honey: { name: t.data.beeProduce.honey, sell: 12 },
+  honeycomb: { name: t.data.beeProduce.honeycomb, sell: 9 },
+};
+
+// ——— The pond (casts in the garden) and the fishing boat (sent out, comes back later). ———
 
 export interface CatchDef {
   id: Catch;
   name: string;
-  /** Share of bites that are this catch (weights sum to 1). */
+  /** Relative weight among the catches open at the guest's level. */
   chance: number;
+  source: 'pond' | 'boat';
+  category: ItemCategory;
+  unlockLevel: number;
+  sell: number;
 }
 
+const catchDef = (
+  id: Catch,
+  source: CatchDef['source'],
+  chance: number,
+  unlockLevel: number,
+  sell: number,
+): CatchDef => ({
+  id,
+  name: t.data.catches[id],
+  chance,
+  source,
+  category: source === 'pond' ? 'freshwater' : 'seafood',
+  unlockLevel,
+  sell,
+});
+
 export const CATCHES: Record<Catch, CatchDef> = {
-  fish: { id: 'fish', name: t.data.catches.fish, chance: 0.65 },
-  shrimp: { id: 'shrimp', name: t.data.catches.shrimp, chance: 0.35 },
+  fish: catchDef('fish', 'pond', 0.65, 1, 7),
+  shrimp: catchDef('shrimp', 'pond', 0.35, 1, 9),
+  carp: catchDef('carp', 'pond', 0.25, 3, 8),
+  crab: catchDef('crab', 'pond', 0.15, 5, 10),
+  mackerel: catchDef('mackerel', 'boat', 1, 5, 10),
+  scad: catchDef('scad', 'boat', 1, 5, 8),
+  clam: catchDef('clam', 'boat', 1, 5, 8),
+  squid: catchDef('squid', 'boat', 0.8, 6, 10),
+  bloodcockle: catchDef('bloodcockle', 'boat', 0.7, 7, 9),
+  scallop: catchDef('scallop', 'boat', 0.6, 8, 11),
+  octopus: catchDef('octopus', 'boat', 0.5, 9, 12),
 };
+
+/** The boat: one trip at a time; it brings back a few of the sea catches open at the guest's level. */
+export const BOAT = {
+  unlockLevel: 5,
+  hours: 4,
+  catches: 2,
+} as const;
 
 /**
  * Fishing is a bonus like watering: a limited number of catches per local day
@@ -430,10 +550,9 @@ export const FISHING = {
 
 export const PRODUCE_IDS: ProduceId[] = [
   ...(Object.keys(CROPS) as CropId[]),
-  'egg',
-  'milk',
-  'fish',
-  'shrimp',
+  ...(Object.keys(ANIMAL_PRODUCE) as AnimalProduct[]),
+  ...(Object.keys(BEE_PRODUCE) as BeeProduct[]),
+  ...(Object.keys(CATCHES) as Catch[]),
 ];
 
 export function isCrop(id: ProduceId): id is CropId {
@@ -448,16 +567,36 @@ export function isAnimalProduct(id: ProduceId): id is AnimalProduct {
   return id in ANIMAL_PRODUCE;
 }
 
+export function isBeeProduct(id: ProduceId): id is BeeProduct {
+  return id in BEE_PRODUCE;
+}
+
 /** Display name of anything in the pantry. */
 export function produceName(id: ProduceId): string {
   if (isCrop(id)) return CROPS[id].produceName;
-  return isCatch(id) ? CATCHES[id].name : ANIMAL_PRODUCE[id].name;
+  if (isCatch(id)) return CATCHES[id].name;
+  return isBeeProduct(id) ? BEE_PRODUCE[id].name : ANIMAL_PRODUCE[id].name;
 }
 
-/** Level at which a pantry item can first be obtained (crops by unlock, products by their animal). */
+/** Group of anything in the pantry (filters in the pantry and the market). */
+export function produceCategory(id: ProduceId): ItemCategory {
+  if (isCrop(id)) return CROPS[id].category;
+  if (isCatch(id)) return CATCHES[id].category;
+  return isBeeProduct(id) ? 'bee' : ANIMAL_PRODUCE[id].category;
+}
+
+/** Level at which a pantry item can first be obtained (crops by unlock, products by their source). */
 export function produceUnlockLevel(id: ProduceId): number {
   if (isCrop(id)) return CROPS[id].unlock?.level ?? 1;
-  return isCatch(id) ? 1 : ANIMALS[ANIMAL_PRODUCE[id].animal].unlockLevel;
+  if (isCatch(id)) return CATCHES[id].unlockLevel;
+  return isBeeProduct(id) ? HIVE.unlockLevel : ANIMALS[ANIMAL_PRODUCE[id].animal].unlockLevel;
+}
+
+/** Market price of one of anything in the pantry (crops keep the first ten's old formula). */
+export function sellPrice(id: ProduceId): number {
+  if (isCrop(id)) return CROPS[id].price?.sell ?? (CROPS[id].unlock ? 3 : 2);
+  if (isCatch(id)) return CATCHES[id].sell;
+  return isBeeProduct(id) ? BEE_PRODUCE[id].sell : ANIMAL_PRODUCE[id].sell;
 }
 
 export function animalOf(id: AnimalProduct): AnimalId {
@@ -547,11 +686,10 @@ export const WATERING = {
  */
 export const MARKET = {
   /** What the market pays for one produce. */
-  sell: (item: ProduceId): number =>
-    // A plot gives three of a crop, so one crop sells for less than an egg or a fish.
-    isCrop(item) ? (CROPS[item].unlock ? 3 : 2) : item === 'shrimp' ? 9 : 7,
-  /** What one seed costs. */
-  seed: (crop: CropId): number => (CROPS[crop].unlock ? 10 : 6),
+  // A plot gives three of a crop, so one crop sells for less than an egg or a fish.
+  sell: (item: ProduceId): number => sellPrice(item),
+  /** What one seed (sapling, spawn block) costs; the first ten keep their old prices. */
+  seed: (crop: CropId): number => CROPS[crop].price?.seed ?? (CROPS[crop].unlock ? 10 : 6),
 } as const;
 
 export interface DecorDef {

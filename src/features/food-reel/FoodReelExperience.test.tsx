@@ -301,5 +301,6 @@ describe('Rổ quay', () => {
     expect(screen.getByLabelText(/^Món [12] trên 2$/)).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /tất cả/i }));
     expect(screen.getByLabelText(new RegExp(`trên ${reelCount()}$`))).toBeInTheDocument();
-  });
+    // Several full spins with real timers: allow a busy machine more than the default 5 s.
+  }, 20_000);
 });

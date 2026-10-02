@@ -2,7 +2,9 @@ import { t } from '../i18n';
 import { reelGameDishes } from '../features/food-reel/data/reelCatalogue';
 import {
   ANIMALS,
+  BOAT,
   CATCHES,
+  HIVE,
   CROPS,
   RECIPES,
   REGIONS,
@@ -14,6 +16,8 @@ import {
   XP_PER_LEVEL,
   animalOf,
   isAnimalProduct,
+  isBeeProduct,
+  isCatch,
   isCrop,
 } from '../data/game';
 import type { AnimalId, Catch, CropId, ProduceId, RecipeId, RegionId } from '../data/types';
@@ -38,10 +42,21 @@ export function isGrowing(stage: PlotStage): boolean {
 export function plotStage(plot: Plot, now: number): PlotStage {
   if (!plot.crop || plot.plantedAt === null || plot.readyAt === null) return 'empty';
   if (now >= plot.readyAt) return 'ready';
+  // After a harvest a tree stays grown and flowers again; a mushroom block fruits again.
+  if ((plot.harvests ?? 0) > 0) return CROPS[plot.crop].kind === 'tree' ? 'flowering' : 'young';
   const total = Math.max(1, plot.readyAt - plot.plantedAt);
   const t = (now - plot.plantedAt) / total;
   if (t < 0.3) return 'sprout';
   return t < 0.65 ? 'young' : 'flowering';
+}
+
+/** Harvests left in a planting (Infinity for trees and one-off crops' single harvest is 1). */
+export function harvestsLeft(plot: Plot): number {
+  if (!plot.crop) return 0;
+  const def = CROPS[plot.crop];
+  if (def.kind === 'tree') return Infinity;
+  if (def.kind === 'mushroom') return Math.max(0, (def.flushes ?? 1) - (plot.harvests ?? 0));
+  return 1;
 }
 
 /** Share of the grow time already done, 0 → 1 (1 for ready or empty plots). */
@@ -68,17 +83,69 @@ export function fishingLeft(p: GuestProgress, now: number): number {
   return Math.max(0, FISHING.perDay - p.fishing.used);
 }
 
+/** Integer hash of a time → [0, 1). */
+function unit(at: number, salt = 0): number {
+  let h = (Math.floor(at) + salt * 0x9e3779b1) | 0;
+  h = Math.imul(h ^ (h >>> 16), 0x45d9f3b);
+  h = Math.imul(h ^ (h >>> 16), 0x45d9f3b);
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+}
+
+/** Weighted pick among the catches of a source open at `lv`. */
+function pickCatch(source: 'pond' | 'boat', lv: number, t: number): Catch {
+  const open = (Object.keys(CATCHES) as Catch[]).filter(
+    (c) => CATCHES[c].source === source && CATCHES[c].unlockLevel <= lv,
+  );
+  const total = open.reduce((s, c) => s + CATCHES[c].chance, 0);
+  let acc = 0;
+  for (const c of open) {
+    acc += CATCHES[c].chance / total;
+    if (t < acc) return c;
+  }
+  return open[open.length - 1] ?? 'fish';
+}
+
 /**
- * What bites on a cast: decided by the cast time alone (deterministic, so the
- * garden can show it and the reducer grants the same thing).
+ * What bites on a cast: decided by the cast time (and the guest's level, which opens more
+ * species) alone — deterministic, so the garden can show it and the reducer grants the same.
+ * At level 1–2 it is fish or shrimp exactly as before.
  */
-export function catchFor(castAt: number): Catch {
-  // Integer hash of the cast time → [0, 1).
-  let h = Math.floor(castAt) | 0;
-  h = Math.imul(h ^ (h >>> 16), 0x45d9f3b);
-  h = Math.imul(h ^ (h >>> 16), 0x45d9f3b);
-  const t = ((h ^ (h >>> 16)) >>> 0) / 4294967296;
-  return t < CATCHES.fish.chance ? 'fish' : 'shrimp';
+export function catchFor(castAt: number, lv = 1): Catch {
+  return pickCatch('pond', lv, unit(castAt));
+}
+
+/** What the boat brings back from the trip sent at `sentAt` (same answer every time). */
+export function boatCatch(sentAt: number, lv: number): Catch[] {
+  return Array.from({ length: BOAT.catches }, (_, i) => pickCatch('boat', lv, unit(sentAt, i + 1)));
+}
+
+export type HiveStage = 'locked' | 'idle' | 'filling-1' | 'filling-2' | 'ready';
+
+export function hiveUnlocked(p: GuestProgress): boolean {
+  return level(p.xp).level >= HIVE.unlockLevel;
+}
+
+/** The hive's look: it fills in two steps, then can be emptied. */
+export function hiveStage(p: GuestProgress, now: number): HiveStage {
+  if (!hiveUnlocked(p)) return 'locked';
+  const h = p.hive;
+  if (h.readyAt === null || h.startedAt === null) return 'idle';
+  if (now >= h.readyAt) return 'ready';
+  return (now - h.startedAt) / Math.max(1, h.readyAt - h.startedAt) < 0.5
+    ? 'filling-1'
+    : 'filling-2';
+}
+
+export type BoatStage = 'locked' | 'docked' | 'away' | 'back';
+
+export function boatUnlocked(p: GuestProgress): boolean {
+  return level(p.xp).level >= BOAT.unlockLevel;
+}
+
+export function boatStage(p: GuestProgress, now: number): BoatStage {
+  if (!boatUnlocked(p)) return 'locked';
+  if (p.boat.returnAt === null) return 'docked';
+  return now >= p.boat.returnAt ? 'back' : 'away';
 }
 
 /** Wait before the bite for a cast, between FISHING.biteMinMs and biteMaxMs. */
@@ -166,10 +233,12 @@ export function cropAvailable(p: GuestProgress, crop: CropId): boolean {
   return !CROPS[crop].unlock || p.unlockedCrops.includes(crop);
 }
 
-/** A pantry item can be obtained: its crop is open, or its animal is unlocked. */
+/** A pantry item can be obtained: its crop is open, or its source is unlocked. */
 export function produceAvailable(p: GuestProgress, id: ProduceId): boolean {
   if (isCrop(id)) return cropAvailable(p, id);
-  return isAnimalProduct(id) ? animalUnlocked(p, animalOf(id)) : true;
+  if (isAnimalProduct(id)) return animalUnlocked(p, animalOf(id));
+  if (isBeeProduct(id)) return hiveUnlocked(p);
+  return isCatch(id) ? level(p.xp).level >= CATCHES[id].unlockLevel : true;
 }
 
 export function animalUnlocked(p: GuestProgress, id: AnimalId): boolean {

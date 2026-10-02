@@ -121,7 +121,8 @@ const GREENS: string[] = [C.leaf, C.leafDark, C.leafLight];
 
 type Builder = (k: Kit, s: Exclude<Stage, 'sprout'>, r: () => number) => void;
 
-const PLANTS: Record<CropId, Builder> = {
+/** Modelled plants: the first ten crops. Others are drawn from their 2D sprite (see Crop below). */
+const PLANTS: Partial<Record<CropId, Builder>> = {
   rice: (k, s, r) => {
     const n = s === 'young' ? 9 : 13;
     const len = s === 'young' ? 0.5 : 0.78;
@@ -462,7 +463,7 @@ function seedling(k: Kit) {
 function cropGeometry(crop: CropId, stage: Stage): BufferGeometry {
   return prop(`crop-${stage === 'sprout' ? 'sprout' : `${crop}-${stage}`}`, (k) => {
     if (stage === 'sprout') seedling(k);
-    else PLANTS[crop](k, stage, rng(crop.length * 31 + stage.length));
+    else PLANTS[crop]?.(k, stage, rng(crop.length * 31 + stage.length));
   });
 }
 

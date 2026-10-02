@@ -79,7 +79,7 @@ function readQuality(): Quality {
 
 const BUILDING_NAME: Record<BuildingId, string> = t.farm.garden3d.buildings;
 
-const ANIMAL_UNIT: Record<AnimalId, (n: number) => string> = t.farm.garden3d.animal.units;
+const ANIMAL_UNIT: Partial<Record<AnimalId, (n: number) => string>> = t.farm.garden3d.animal.units;
 
 const copy = t.farm.garden3d;
 const common = t.farm.common;
@@ -215,7 +215,8 @@ export default function Garden3D(props: Garden3DProps) {
   };
   const animal = (id: AnimalId, act: 'feed' | 'collect') => {
     props.onAnimal(id, act);
-    burst(act === 'collect' ? 'collect' : 'plant', BUILDINGS[id].x, BUILDINGS[id].z);
+    const at = BUILDINGS[id as 'chicken' | 'cow'];
+    if (at) burst(act === 'collect' ? 'collect' : 'plant', at.x, at.z);
   };
 
   const selectPlot = (plotId: number) => {
@@ -550,7 +551,7 @@ export default function Garden3D(props: Garden3DProps) {
       const st = animals[id];
       const a = state.animals[id];
       const feedName = produceName(def.feed);
-      const unit = ANIMAL_UNIT[id](def.yield);
+      const unit = ANIMAL_UNIT[id]?.(def.yield) ?? '';
       body = (
         <>
           <p className="g3d-card__text">

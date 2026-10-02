@@ -14,6 +14,7 @@
     "test": "node scripts/run-vitest.mjs run",
     "assets:food-reel": "node scripts/extract-food-atlas.mjs",
     "assets:garden": "node scripts/generate-crop-sprites.mjs",
+    "assets:farm-items": "node scripts/farm-items/cut.mjs && node scripts/farm-items/cut.mjs --publish",
     "check:motion": "node scripts/check-no-svg-animation.mjs",
     "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run check:motion && npm run build",
     "catalogue:export": "php server/bin/export-snapshot.php",

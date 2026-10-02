@@ -272,19 +272,26 @@ describe('watering', () => {
 
 describe('levelling up', () => {
   it('opens a new crop with a gift seed, and more plots, exactly once', () => {
-    // 95 XP + a 10 XP choice crosses into level 2 → lemongrass opens.
+    // Crops open at their level: lemongrass and the level-2 crops of the item pack.
+    const openAt = (lv: number) =>
+      (Object.keys(CROPS) as (keyof typeof CROPS)[]).filter(
+        (c) => CROPS[c].unlock && CROPS[c].unlock!.level <= lv,
+      );
+    // 95 XP + a 10 XP choice crosses into level 2.
     const s0 = { ...createInitialProgress(NOON), xp: 95 };
     const s1 = gameReducer(s0, { type: 'CHOOSE_DISH', dishId: 'com-tam', now: NOON });
-    expect(s1.unlockedCrops).toEqual(['lemongrass']);
+    expect(s1.unlockedCrops).toEqual(openAt(2));
+    expect(s1.unlockedCrops).toContain('lemongrass');
     expect(s1.seeds.lemongrass).toBe(1);
-    expect(s1.recentCropUnlock).toBe('lemongrass');
+    expect(s1.recentCropUnlock).toBe(openAt(2).at(-1));
     expect(s1.plots).toHaveLength(6);
     const s2 = gameReducer(s1, { type: 'PLANT_MEAL_SEED', now: NOON + 1 });
     expect(s2.seeds.lemongrass).toBe(1);
 
-    // Level 3 adds garlic and plot 7.
+    // Level 3 adds garlic (and the other level-3 crops) and plot 7.
     const s3 = gameReducer({ ...s2, xp: 200 }, { type: 'WATER', plotId: 2, now: NOON + 2 });
-    expect(s3.unlockedCrops).toEqual(['lemongrass', 'garlic']);
+    expect([...s3.unlockedCrops].sort()).toEqual(openAt(3).sort());
+    expect(s3.unlockedCrops).toContain('garlic');
     expect(s3.plots).toHaveLength(7);
     expect(s3.plots[6]).toMatchObject({ id: 7, crop: null });
   });

@@ -297,7 +297,7 @@ export function FarmGame({
   };
 
   const catchAt = (castAt: number) => {
-    const kind = catchFor(castAt);
+    const kind = catchFor(castAt, lv.level);
     dispatch({ type: 'CATCH', castAt, now: currentTime() });
     const message = m.caught(produceName(kind).toLowerCase(), XP.catch);
     announce(message);

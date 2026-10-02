@@ -1,5 +1,6 @@
 import { t } from '../i18n';
-import { ANIMAL_LIST, BASE_CROPS, CROP_LIST, isCrop } from '../data/game';
+import { BASE_CROPS, PRODUCE_IDS, isCrop } from '../data/game';
+import { produceAvailable } from './selectors';
 import type { CropId, ProduceId } from '../data/types';
 import type { GuestProgress } from './progress';
 import { dateKey } from './time';
@@ -85,13 +86,9 @@ export function todaysOrders(p: GuestProgress, now: number): ChefOrder[] {
   return dailyOrders(dateKey(now), orderCrops(p));
 }
 
-/** Produce that can show up in orders: open crops, plus egg/milk once their animal is unlocked. */
+/** Produce that can show up in orders: everything the guest can already make or catch. */
 export function orderCrops(p: GuestProgress): ProduceId[] {
-  const crops: ProduceId[] = CROP_LIST.filter(
-    (c) => !c.unlock || p.unlockedCrops.includes(c.id),
-  ).map((c) => c.id);
-  const lv = Math.floor(p.xp / 100) + 1;
-  return [...crops, ...ANIMAL_LIST.filter((a) => lv >= a.unlockLevel).map((a) => a.product)];
+  return PRODUCE_IDS.filter((id) => produceAvailable(p, id));
 }
 
 export function orderDone(p: GuestProgress, order: ChefOrder): boolean {

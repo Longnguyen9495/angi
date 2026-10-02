@@ -1,0 +1,1843 @@
+{
+ "napa-sprout": {
+  "cell": "veg-r01-c1",
+  "left": 14,
+  "top": 19,
+  "width": 66,
+  "height": 56
+ },
+ "napa-young": {
+  "cell": "veg-r01-c2",
+  "left": 85,
+  "top": 23,
+  "width": 68,
+  "height": 51
+ },
+ "napa-flowering": {
+  "cell": "veg-r01-c3",
+  "left": 161,
+  "top": 19,
+  "width": 74,
+  "height": 53
+ },
+ "napa-ready": {
+  "cell": "veg-r01-c4",
+  "left": 246,
+  "top": 19,
+  "width": 70,
+  "height": 50
+ },
+ "napa-produce": {
+  "cell": "veg-r01-c4",
+  "left": 246,
+  "top": 19,
+  "width": 70,
+  "height": 50
+ },
+ "cauliflower-sprout": {
+  "cell": "veg-r03-c1",
+  "left": 13,
+  "top": 127,
+  "width": 67,
+  "height": 49
+ },
+ "cauliflower-young": {
+  "cell": "veg-r03-c2",
+  "left": 85,
+  "top": 122,
+  "width": 68,
+  "height": 50
+ },
+ "cauliflower-flowering": {
+  "cell": "veg-r03-c3",
+  "left": 161,
+  "top": 120,
+  "width": 73,
+  "height": 49
+ },
+ "cauliflower-ready": {
+  "cell": "veg-r03-c4",
+  "left": 244,
+  "top": 120,
+  "width": 73,
+  "height": 50
+ },
+ "cauliflower-produce": {
+  "cell": "veg-r03-c4",
+  "left": 244,
+  "top": 120,
+  "width": 73,
+  "height": 50
+ },
+ "cabbage-sprout": {
+  "cell": "veg-r04-c1",
+  "left": 13,
+  "top": 177,
+  "width": 67,
+  "height": 49
+ },
+ "cabbage-young": {
+  "cell": "veg-r04-c2",
+  "left": 86,
+  "top": 172,
+  "width": 67,
+  "height": 54
+ },
+ "cabbage-flowering": {
+  "cell": "veg-r04-c3",
+  "left": 161,
+  "top": 169,
+  "width": 72,
+  "height": 51
+ },
+ "cabbage-ready": {
+  "cell": "veg-r04-c4",
+  "left": 244,
+  "top": 170,
+  "width": 73,
+  "height": 47
+ },
+ "cabbage-produce": {
+  "cell": "veg-r04-c4",
+  "left": 244,
+  "top": 170,
+  "width": 73,
+  "height": 47
+ },
+ "radish-sprout": {
+  "cell": "veg-r06-c1",
+  "left": 13,
+  "top": 281,
+  "width": 67,
+  "height": 48
+ },
+ "radish-young": {
+  "cell": "veg-r06-c2",
+  "left": 85,
+  "top": 274,
+  "width": 68,
+  "height": 56
+ },
+ "radish-flowering": {
+  "cell": "veg-r06-c3",
+  "left": 161,
+  "top": 272,
+  "width": 72,
+  "height": 52
+ },
+ "radish-ready": {
+  "cell": "veg-r06-c4",
+  "left": 242,
+  "top": 270,
+  "width": 78,
+  "height": 54
+ },
+ "radish-produce": {
+  "cell": "veg-r06-c4",
+  "left": 242,
+  "top": 270,
+  "width": 78,
+  "height": 54
+ },
+ "beet-sprout": {
+  "cell": "veg-r07-c1",
+  "left": 13,
+  "top": 332,
+  "width": 66,
+  "height": 48
+ },
+ "beet-young": {
+  "cell": "veg-r07-c2",
+  "left": 83,
+  "top": 330,
+  "width": 68,
+  "height": 50
+ },
+ "beet-flowering": {
+  "cell": "veg-r07-c3",
+  "left": 160,
+  "top": 324,
+  "width": 75,
+  "height": 55
+ },
+ "beet-ready": {
+  "cell": "veg-r07-c4",
+  "left": 244,
+  "top": 324,
+  "width": 75,
+  "height": 51
+ },
+ "beet-produce": {
+  "cell": "veg-r07-c4",
+  "left": 244,
+  "top": 324,
+  "width": 75,
+  "height": 51
+ },
+ "potato-sprout": {
+  "cell": "veg-r08-c1",
+  "left": 13,
+  "top": 380,
+  "width": 66,
+  "height": 52
+ },
+ "potato-young": {
+  "cell": "veg-r08-c2",
+  "left": 83,
+  "top": 380,
+  "width": 68,
+  "height": 52
+ },
+ "potato-flowering": {
+  "cell": "veg-r08-c3",
+  "left": 157,
+  "top": 379,
+  "width": 78,
+  "height": 48
+ },
+ "potato-ready": {
+  "cell": "veg-r08-c4",
+  "left": 244,
+  "top": 375,
+  "width": 75,
+  "height": 50
+ },
+ "potato-produce": {
+  "cell": "veg-r08-c4",
+  "left": 244,
+  "top": 375,
+  "width": 75,
+  "height": 50
+ },
+ "lemongrass-sprout": {
+  "cell": "veg-r10-c1",
+  "left": 13,
+  "top": 483,
+  "width": 65,
+  "height": 52
+ },
+ "lemongrass-young": {
+  "cell": "veg-r10-c2",
+  "left": 82,
+  "top": 483,
+  "width": 69,
+  "height": 48
+ },
+ "lemongrass-flowering": {
+  "cell": "veg-r10-c3",
+  "left": 162,
+  "top": 483,
+  "width": 71,
+  "height": 48
+ },
+ "lemongrass-ready": {
+  "cell": "veg-r10-c4",
+  "left": 250,
+  "top": 481,
+  "width": 70,
+  "height": 49
+ },
+ "lemongrass-produce": {
+  "cell": "veg-r10-c4",
+  "left": 250,
+  "top": 481,
+  "width": 70,
+  "height": 49
+ },
+ "garlic-sprout": {
+  "cell": "veg-r12-c1",
+  "left": 13,
+  "top": 585,
+  "width": 65,
+  "height": 50
+ },
+ "garlic-young": {
+  "cell": "veg-r12-c2",
+  "left": 81,
+  "top": 581,
+  "width": 69,
+  "height": 53
+ },
+ "garlic-flowering": {
+  "cell": "veg-r12-c3",
+  "left": 157,
+  "top": 582,
+  "width": 75,
+  "height": 51
+ },
+ "garlic-ready": {
+  "cell": "veg-r12-c4",
+  "left": 246,
+  "top": 581,
+  "width": 73,
+  "height": 53
+ },
+ "garlic-produce": {
+  "cell": "veg-r12-c4",
+  "left": 246,
+  "top": 581,
+  "width": 73,
+  "height": 53
+ },
+ "shallot-sprout": {
+  "cell": "veg-r13-c1",
+  "left": 13,
+  "top": 635,
+  "width": 65,
+  "height": 50
+ },
+ "shallot-young": {
+  "cell": "veg-r13-c2",
+  "left": 82,
+  "top": 634,
+  "width": 68,
+  "height": 51
+ },
+ "shallot-flowering": {
+  "cell": "veg-r13-c3",
+  "left": 160,
+  "top": 633,
+  "width": 72,
+  "height": 52
+ },
+ "shallot-ready": {
+  "cell": "veg-r13-c4",
+  "left": 242,
+  "top": 634,
+  "width": 74,
+  "height": 49
+ },
+ "shallot-produce": {
+  "cell": "veg-r13-c4",
+  "left": 242,
+  "top": 634,
+  "width": 74,
+  "height": 49
+ },
+ "scallion-sprout": {
+  "cell": "veg-r14-c1",
+  "left": 13,
+  "top": 685,
+  "width": 66,
+  "height": 57
+ },
+ "scallion-young": {
+  "cell": "veg-r14-c2",
+  "left": 82,
+  "top": 685,
+  "width": 69,
+  "height": 57
+ },
+ "scallion-flowering": {
+  "cell": "veg-r14-c3",
+  "left": 161,
+  "top": 685,
+  "width": 72,
+  "height": 57
+ },
+ "scallion-ready": {
+  "cell": "veg-r14-c4",
+  "left": 242,
+  "top": 683,
+  "width": 73,
+  "height": 59
+ },
+ "scallion-produce": {
+  "cell": "veg-r14-c4",
+  "left": 242,
+  "top": 683,
+  "width": 73,
+  "height": 59
+ },
+ "tomato-sprout": {
+  "cell": "veg-r01-c5",
+  "left": 326,
+  "top": 19,
+  "width": 69,
+  "height": 54
+ },
+ "tomato-young": {
+  "cell": "veg-r01-c6",
+  "left": 408,
+  "top": 19,
+  "width": 71,
+  "height": 50
+ },
+ "tomato-flowering": {
+  "cell": "veg-r01-c7",
+  "left": 487,
+  "top": 19,
+  "width": 70,
+  "height": 47
+ },
+ "tomato-ready": {
+  "cell": "veg-r01-c9",
+  "left": 648,
+  "top": 19,
+  "width": 74,
+  "height": 48
+ },
+ "tomato-produce": {
+  "cell": "veg-r01-c9",
+  "left": 648,
+  "top": 19,
+  "width": 74,
+  "height": 48
+ },
+ "eggplant-sprout": {
+  "cell": "veg-r02-c5",
+  "left": 327,
+  "top": 75,
+  "width": 68,
+  "height": 46
+ },
+ "eggplant-young": {
+  "cell": "veg-r02-c6",
+  "left": 407,
+  "top": 69,
+  "width": 70,
+  "height": 53
+ },
+ "eggplant-flowering": {
+  "cell": "veg-r02-c7",
+  "left": 487,
+  "top": 66,
+  "width": 70,
+  "height": 52
+ },
+ "eggplant-ready": {
+  "cell": "veg-r02-c9",
+  "left": 648,
+  "top": 67,
+  "width": 81,
+  "height": 50
+ },
+ "eggplant-produce": {
+  "cell": "veg-r02-c9",
+  "left": 648,
+  "top": 67,
+  "width": 81,
+  "height": 50
+ },
+ "cucumber-sprout": {
+  "cell": "veg-r03-c5",
+  "left": 325,
+  "top": 121,
+  "width": 70,
+  "height": 49
+ },
+ "cucumber-young": {
+  "cell": "veg-r03-c6",
+  "left": 404,
+  "top": 122,
+  "width": 72,
+  "height": 48
+ },
+ "cucumber-flowering": {
+  "cell": "veg-r03-c7",
+  "left": 483,
+  "top": 118,
+  "width": 77,
+  "height": 52
+ },
+ "cucumber-ready": {
+  "cell": "veg-r03-c9",
+  "left": 648,
+  "top": 117,
+  "width": 84,
+  "height": 53
+ },
+ "cucumber-produce": {
+  "cell": "veg-r03-c9",
+  "left": 648,
+  "top": 117,
+  "width": 84,
+  "height": 53
+ },
+ "pumpkin-sprout": {
+  "cell": "veg-r04-c5",
+  "left": 326,
+  "top": 170,
+  "width": 70,
+  "height": 54
+ },
+ "pumpkin-young": {
+  "cell": "veg-r04-c6",
+  "left": 405,
+  "top": 170,
+  "width": 72,
+  "height": 53
+ },
+ "pumpkin-flowering": {
+  "cell": "veg-r04-c7",
+  "left": 484,
+  "top": 170,
+  "width": 79,
+  "height": 52
+ },
+ "pumpkin-ready": {
+  "cell": "veg-r04-c9",
+  "left": 649,
+  "top": 170,
+  "width": 84,
+  "height": 47
+ },
+ "pumpkin-produce": {
+  "cell": "veg-r04-c9",
+  "left": 649,
+  "top": 170,
+  "width": 84,
+  "height": 47
+ },
+ "wintermelon-sprout": {
+  "cell": "veg-r05-c5",
+  "left": 326,
+  "top": 224,
+  "width": 70,
+  "height": 51
+ },
+ "wintermelon-young": {
+  "cell": "veg-r05-c6",
+  "left": 405,
+  "top": 223,
+  "width": 71,
+  "height": 48
+ },
+ "wintermelon-flowering": {
+  "cell": "veg-r05-c7",
+  "left": 485,
+  "top": 222,
+  "width": 79,
+  "height": 49
+ },
+ "wintermelon-ready": {
+  "cell": "veg-r05-c9",
+  "left": 650,
+  "top": 217,
+  "width": 83,
+  "height": 52
+ },
+ "wintermelon-produce": {
+  "cell": "veg-r05-c9",
+  "left": 650,
+  "top": 217,
+  "width": 83,
+  "height": 52
+ },
+ "bittermelon-sprout": {
+  "cell": "veg-r06-c5",
+  "left": 326,
+  "top": 275,
+  "width": 70,
+  "height": 52
+ },
+ "bittermelon-young": {
+  "cell": "veg-r06-c6",
+  "left": 405,
+  "top": 271,
+  "width": 71,
+  "height": 53
+ },
+ "bittermelon-flowering": {
+  "cell": "veg-r06-c7",
+  "left": 484,
+  "top": 271,
+  "width": 76,
+  "height": 53
+ },
+ "bittermelon-ready": {
+  "cell": "veg-r06-c9",
+  "left": 650,
+  "top": 269,
+  "width": 80,
+  "height": 52
+ },
+ "bittermelon-produce": {
+  "cell": "veg-r06-c9",
+  "left": 650,
+  "top": 269,
+  "width": 80,
+  "height": 52
+ },
+ "bean-sprout": {
+  "cell": "veg-r07-c5",
+  "left": 326,
+  "top": 329,
+  "width": 70,
+  "height": 51
+ },
+ "bean-young": {
+  "cell": "veg-r07-c6",
+  "left": 405,
+  "top": 324,
+  "width": 72,
+  "height": 53
+ },
+ "bean-flowering": {
+  "cell": "veg-r07-c7",
+  "left": 486,
+  "top": 324,
+  "width": 76,
+  "height": 51
+ },
+ "bean-ready": {
+  "cell": "veg-r07-c9",
+  "left": 650,
+  "top": 321,
+  "width": 83,
+  "height": 54
+ },
+ "bean-produce": {
+  "cell": "veg-r07-c9",
+  "left": 650,
+  "top": 321,
+  "width": 83,
+  "height": 54
+ },
+ "peanut-sprout": {
+  "cell": "veg-r08-c5",
+  "left": 327,
+  "top": 380,
+  "width": 69,
+  "height": 50
+ },
+ "peanut-young": {
+  "cell": "veg-r08-c6",
+  "left": 404,
+  "top": 377,
+  "width": 73,
+  "height": 48
+ },
+ "peanut-flowering": {
+  "cell": "veg-r08-c7",
+  "left": 485,
+  "top": 375,
+  "width": 74,
+  "height": 51
+ },
+ "peanut-ready": {
+  "cell": "veg-r08-c9",
+  "left": 650,
+  "top": 375,
+  "width": 83,
+  "height": 51
+ },
+ "peanut-produce": {
+  "cell": "veg-r08-c9",
+  "left": 650,
+  "top": 375,
+  "width": 83,
+  "height": 51
+ },
+ "corn-sprout": {
+  "cell": "veg-r10-c5",
+  "left": 327,
+  "top": 480,
+  "width": 71,
+  "height": 53
+ },
+ "corn-young": {
+  "cell": "veg-r10-c6",
+  "left": 406,
+  "top": 476,
+  "width": 73,
+  "height": 55
+ },
+ "corn-flowering": {
+  "cell": "veg-r10-c7",
+  "left": 486,
+  "top": 477,
+  "width": 75,
+  "height": 56
+ },
+ "corn-ready": {
+  "cell": "veg-r10-c9",
+  "left": 650,
+  "top": 477,
+  "width": 82,
+  "height": 54
+ },
+ "corn-produce": {
+  "cell": "veg-r10-c9",
+  "left": 650,
+  "top": 477,
+  "width": 82,
+  "height": 54
+ },
+ "rice-sprout": {
+  "cell": "veg-r11-c5",
+  "left": 327,
+  "top": 533,
+  "width": 69,
+  "height": 53
+ },
+ "rice-young": {
+  "cell": "veg-r11-c6",
+  "left": 406,
+  "top": 531,
+  "width": 71,
+  "height": 54
+ },
+ "rice-flowering": {
+  "cell": "veg-r11-c7",
+  "left": 485,
+  "top": 533,
+  "width": 76,
+  "height": 51
+ },
+ "rice-ready": {
+  "cell": "veg-r11-c9",
+  "left": 651,
+  "top": 531,
+  "width": 76,
+  "height": 53
+ },
+ "rice-produce": {
+  "cell": "veg-r11-c9",
+  "left": 651,
+  "top": 531,
+  "width": 76,
+  "height": 53
+ },
+ "ginger-sprout": {
+  "cell": "veg-r12-c5",
+  "left": 327,
+  "top": 586,
+  "width": 70,
+  "height": 49
+ },
+ "ginger-young": {
+  "cell": "veg-r12-c6",
+  "left": 404,
+  "top": 585,
+  "width": 75,
+  "height": 50
+ },
+ "ginger-flowering": {
+  "cell": "veg-r12-c7",
+  "left": 485,
+  "top": 584,
+  "width": 76,
+  "height": 51
+ },
+ "ginger-ready": {
+  "cell": "veg-r12-c9",
+  "left": 650,
+  "top": 584,
+  "width": 79,
+  "height": 52
+ },
+ "ginger-produce": {
+  "cell": "veg-r12-c9",
+  "left": 650,
+  "top": 584,
+  "width": 79,
+  "height": 52
+ },
+ "chili-sprout": {
+  "cell": "veg-r13-c5",
+  "left": 326,
+  "top": 637,
+  "width": 69,
+  "height": 46
+ },
+ "chili-young": {
+  "cell": "veg-r13-c6",
+  "left": 405,
+  "top": 635,
+  "width": 72,
+  "height": 50
+ },
+ "chili-flowering": {
+  "cell": "veg-r13-c7",
+  "left": 485,
+  "top": 635,
+  "width": 75,
+  "height": 50
+ },
+ "chili-ready": {
+  "cell": "veg-r13-c9",
+  "left": 650,
+  "top": 636,
+  "width": 77,
+  "height": 49
+ },
+ "chili-produce": {
+  "cell": "veg-r13-c9",
+  "left": 650,
+  "top": 636,
+  "width": 77,
+  "height": 49
+ },
+ "herbs-sprout": {
+  "cell": "veg-r14-c5",
+  "left": 326,
+  "top": 683,
+  "width": 74,
+  "height": 59
+ },
+ "herbs-young": {
+  "cell": "veg-r14-c6",
+  "left": 406,
+  "top": 685,
+  "width": 75,
+  "height": 57
+ },
+ "herbs-flowering": {
+  "cell": "veg-r14-c7",
+  "left": 487,
+  "top": 685,
+  "width": 76,
+  "height": 55
+ },
+ "herbs-ready": {
+  "cell": "veg-r14-c9",
+  "left": 649,
+  "top": 685,
+  "width": 78,
+  "height": 57
+ },
+ "herbs-produce": {
+  "cell": "veg-r14-c9",
+  "left": 649,
+  "top": 685,
+  "width": 78,
+  "height": 57
+ },
+ "sweetpotato-sprout": {
+  "cell": "veg-r09-c1",
+  "left": 13,
+  "top": 433,
+  "width": 66,
+  "height": 50
+ },
+ "sweetpotato-produce": {
+  "cell": "veg-r09-c2",
+  "left": 83,
+  "top": 432,
+  "width": 70,
+  "height": 50
+ },
+ "carrot-sprout": {
+  "cell": "veg-r09-c1",
+  "left": 13,
+  "top": 433,
+  "width": 66,
+  "height": 50
+ },
+ "carrot-produce": {
+  "cell": "veg-r09-c3",
+  "left": 156,
+  "top": 427,
+  "width": 79,
+  "height": 54
+ },
+ "taro-sprout": {
+  "cell": "veg-r09-c1",
+  "left": 13,
+  "top": 433,
+  "width": 66,
+  "height": 50
+ },
+ "taro-produce": {
+  "cell": "veg-r09-c4",
+  "left": 242,
+  "top": 425,
+  "width": 80,
+  "height": 56
+ },
+ "banana-sprout": {
+  "cell": "treeA-r01-c1",
+  "left": 733,
+  "top": 11,
+  "width": 79,
+  "height": 83
+ },
+ "banana-young": {
+  "cell": "treeA-r01-c2",
+  "left": 812,
+  "top": 11,
+  "width": 83,
+  "height": 83
+ },
+ "banana-flowering": {
+  "cell": "treeA-r01-c3",
+  "left": 895,
+  "top": 11,
+  "width": 72,
+  "height": 83
+ },
+ "banana-ready": {
+  "cell": "treeA-r01-c4",
+  "left": 973,
+  "top": 13,
+  "width": 73,
+  "height": 81
+ },
+ "banana-produce": {
+  "cell": "treeA-r01-c4",
+  "left": 973,
+  "top": 13,
+  "width": 73,
+  "height": 81
+ },
+ "pineapple-sprout": {
+  "cell": "treeA-r02-c1",
+  "left": 736,
+  "top": 95,
+  "width": 70,
+  "height": 80
+ },
+ "pineapple-young": {
+  "cell": "treeA-r02-c2",
+  "left": 818,
+  "top": 94,
+  "width": 72,
+  "height": 81
+ },
+ "pineapple-flowering": {
+  "cell": "treeA-r02-c3",
+  "left": 900,
+  "top": 94,
+  "width": 70,
+  "height": 81
+ },
+ "pineapple-ready": {
+  "cell": "treeA-r02-c4",
+  "left": 979,
+  "top": 94,
+  "width": 67,
+  "height": 81
+ },
+ "pineapple-produce": {
+  "cell": "treeA-r02-c4",
+  "left": 979,
+  "top": 94,
+  "width": 67,
+  "height": 81
+ },
+ "strawberry-sprout": {
+  "cell": "treeA-r03-c1",
+  "left": 737,
+  "top": 175,
+  "width": 74,
+  "height": 69
+ },
+ "strawberry-young": {
+  "cell": "treeA-r03-c2",
+  "left": 819,
+  "top": 175,
+  "width": 72,
+  "height": 69
+ },
+ "strawberry-flowering": {
+  "cell": "treeA-r03-c3",
+  "left": 895,
+  "top": 177,
+  "width": 79,
+  "height": 66
+ },
+ "strawberry-ready": {
+  "cell": "treeA-r03-c4",
+  "left": 980,
+  "top": 181,
+  "width": 68,
+  "height": 62
+ },
+ "strawberry-produce": {
+  "cell": "treeA-r03-c4",
+  "left": 980,
+  "top": 181,
+  "width": 68,
+  "height": 62
+ },
+ "dragonfruit-sprout": {
+  "cell": "treeA-r04-c1",
+  "left": 737,
+  "top": 244,
+  "width": 76,
+  "height": 86
+ },
+ "dragonfruit-young": {
+  "cell": "treeA-r04-c2",
+  "left": 817,
+  "top": 244,
+  "width": 75,
+  "height": 85
+ },
+ "dragonfruit-flowering": {
+  "cell": "treeA-r04-c3",
+  "left": 896,
+  "top": 243,
+  "width": 77,
+  "height": 86
+ },
+ "dragonfruit-ready": {
+  "cell": "treeA-r04-c4",
+  "left": 978,
+  "top": 243,
+  "width": 72,
+  "height": 86
+ },
+ "dragonfruit-produce": {
+  "cell": "treeA-r04-c4",
+  "left": 978,
+  "top": 243,
+  "width": 72,
+  "height": 86
+ },
+ "mango-sprout": {
+  "cell": "treeA-r05-c1",
+  "left": 738,
+  "top": 330,
+  "width": 73,
+  "height": 78
+ },
+ "mango-young": {
+  "cell": "treeA-r05-c2",
+  "left": 816,
+  "top": 329,
+  "width": 76,
+  "height": 77
+ },
+ "mango-flowering": {
+  "cell": "treeA-r05-c3",
+  "left": 896,
+  "top": 329,
+  "width": 76,
+  "height": 77
+ },
+ "mango-ready": {
+  "cell": "treeA-r05-c4",
+  "left": 977,
+  "top": 329,
+  "width": 71,
+  "height": 78
+ },
+ "mango-produce": {
+  "cell": "treeA-r05-c4",
+  "left": 977,
+  "top": 329,
+  "width": 71,
+  "height": 78
+ },
+ "orange-sprout": {
+  "cell": "treeA-r06-c1",
+  "left": 740,
+  "top": 408,
+  "width": 70,
+  "height": 80
+ },
+ "orange-young": {
+  "cell": "treeA-r06-c2",
+  "left": 816,
+  "top": 406,
+  "width": 77,
+  "height": 82
+ },
+ "orange-flowering": {
+  "cell": "treeA-r06-c3",
+  "left": 896,
+  "top": 406,
+  "width": 77,
+  "height": 82
+ },
+ "orange-ready": {
+  "cell": "treeA-r06-c4",
+  "left": 976,
+  "top": 407,
+  "width": 74,
+  "height": 81
+ },
+ "orange-produce": {
+  "cell": "treeA-r06-c4",
+  "left": 976,
+  "top": 407,
+  "width": 74,
+  "height": 81
+ },
+ "mandarin-sprout": {
+  "cell": "treeA-r07-c1",
+  "left": 737,
+  "top": 488,
+  "width": 75,
+  "height": 84
+ },
+ "mandarin-young": {
+  "cell": "treeA-r07-c2",
+  "left": 816,
+  "top": 489,
+  "width": 76,
+  "height": 83
+ },
+ "mandarin-flowering": {
+  "cell": "treeA-r07-c3",
+  "left": 895,
+  "top": 488,
+  "width": 76,
+  "height": 84
+ },
+ "mandarin-ready": {
+  "cell": "treeA-r07-c4",
+  "left": 977,
+  "top": 488,
+  "width": 73,
+  "height": 84
+ },
+ "mandarin-produce": {
+  "cell": "treeA-r07-c4",
+  "left": 977,
+  "top": 488,
+  "width": 73,
+  "height": 84
+ },
+ "guava-sprout": {
+  "cell": "treeA-r08-c1",
+  "left": 738,
+  "top": 572,
+  "width": 70,
+  "height": 88
+ },
+ "guava-young": {
+  "cell": "treeA-r08-c2",
+  "left": 812,
+  "top": 572,
+  "width": 79,
+  "height": 89
+ },
+ "guava-flowering": {
+  "cell": "treeA-r08-c3",
+  "left": 894,
+  "top": 572,
+  "width": 79,
+  "height": 89
+ },
+ "guava-ready": {
+  "cell": "treeA-r08-c4",
+  "left": 976,
+  "top": 572,
+  "width": 74,
+  "height": 88
+ },
+ "guava-produce": {
+  "cell": "treeA-r08-c4",
+  "left": 976,
+  "top": 572,
+  "width": 74,
+  "height": 88
+ },
+ "coconut-sprout": {
+  "cell": "treeB-r01-c1",
+  "left": 1053,
+  "top": 9,
+  "width": 78,
+  "height": 86
+ },
+ "coconut-young": {
+  "cell": "treeB-r01-c1",
+  "left": 1053,
+  "top": 9,
+  "width": 78,
+  "height": 86
+ },
+ "coconut-flowering": {
+  "cell": "treeB-r01-c2",
+  "left": 1139,
+  "top": 9,
+  "width": 78,
+  "height": 86
+ },
+ "coconut-ready": {
+  "cell": "treeB-r01-c3",
+  "left": 1222,
+  "top": 10,
+  "width": 82,
+  "height": 86
+ },
+ "coconut-produce": {
+  "cell": "treeB-r01-c3",
+  "left": 1222,
+  "top": 10,
+  "width": 82,
+  "height": 86
+ },
+ "papaya-sprout": {
+  "cell": "treeB-r02-c1",
+  "left": 1053,
+  "top": 95,
+  "width": 77,
+  "height": 85
+ },
+ "papaya-young": {
+  "cell": "treeB-r02-c1",
+  "left": 1053,
+  "top": 95,
+  "width": 77,
+  "height": 85
+ },
+ "papaya-flowering": {
+  "cell": "treeB-r02-c2",
+  "left": 1137,
+  "top": 95,
+  "width": 81,
+  "height": 87
+ },
+ "papaya-ready": {
+  "cell": "treeB-r02-c3",
+  "left": 1221,
+  "top": 96,
+  "width": 81,
+  "height": 85
+ },
+ "papaya-produce": {
+  "cell": "treeB-r02-c3",
+  "left": 1221,
+  "top": 96,
+  "width": 81,
+  "height": 85
+ },
+ "lime-sprout": {
+  "cell": "treeB-r03-c1",
+  "left": 1054,
+  "top": 180,
+  "width": 78,
+  "height": 78
+ },
+ "lime-young": {
+  "cell": "treeB-r03-c1",
+  "left": 1054,
+  "top": 180,
+  "width": 78,
+  "height": 78
+ },
+ "lime-flowering": {
+  "cell": "treeB-r03-c2",
+  "left": 1137,
+  "top": 182,
+  "width": 80,
+  "height": 77
+ },
+ "lime-ready": {
+  "cell": "treeB-r03-c3",
+  "left": 1220,
+  "top": 181,
+  "width": 82,
+  "height": 78
+ },
+ "lime-produce": {
+  "cell": "treeB-r03-c3",
+  "left": 1220,
+  "top": 181,
+  "width": 82,
+  "height": 78
+ },
+ "jackfruit-sprout": {
+  "cell": "treeB-r05-c1",
+  "left": 1054,
+  "top": 335,
+  "width": 79,
+  "height": 83
+ },
+ "jackfruit-young": {
+  "cell": "treeB-r05-c1",
+  "left": 1054,
+  "top": 335,
+  "width": 79,
+  "height": 83
+ },
+ "jackfruit-flowering": {
+  "cell": "treeB-r05-c2",
+  "left": 1136,
+  "top": 337,
+  "width": 81,
+  "height": 82
+ },
+ "jackfruit-ready": {
+  "cell": "treeB-r05-c3",
+  "left": 1220,
+  "top": 337,
+  "width": 84,
+  "height": 81
+ },
+ "jackfruit-produce": {
+  "cell": "treeB-r05-c3",
+  "left": 1220,
+  "top": 337,
+  "width": 84,
+  "height": 81
+ },
+ "durian-sprout": {
+  "cell": "treeB-r06-c1",
+  "left": 1055,
+  "top": 418,
+  "width": 80,
+  "height": 83
+ },
+ "durian-young": {
+  "cell": "treeB-r06-c1",
+  "left": 1055,
+  "top": 418,
+  "width": 80,
+  "height": 83
+ },
+ "durian-flowering": {
+  "cell": "treeB-r06-c2",
+  "left": 1136,
+  "top": 419,
+  "width": 82,
+  "height": 82
+ },
+ "durian-ready": {
+  "cell": "treeB-r06-c3",
+  "left": 1221,
+  "top": 418,
+  "width": 83,
+  "height": 81
+ },
+ "durian-produce": {
+  "cell": "treeB-r06-c3",
+  "left": 1221,
+  "top": 418,
+  "width": 83,
+  "height": 81
+ },
+ "rambutan-sprout": {
+  "cell": "treeB-r07-c1",
+  "left": 1055,
+  "top": 501,
+  "width": 80,
+  "height": 79
+ },
+ "rambutan-young": {
+  "cell": "treeB-r07-c1",
+  "left": 1055,
+  "top": 501,
+  "width": 80,
+  "height": 79
+ },
+ "rambutan-flowering": {
+  "cell": "treeB-r07-c2",
+  "left": 1136,
+  "top": 501,
+  "width": 82,
+  "height": 79
+ },
+ "rambutan-ready": {
+  "cell": "treeB-r07-c3",
+  "left": 1220,
+  "top": 499,
+  "width": 84,
+  "height": 82
+ },
+ "rambutan-produce": {
+  "cell": "treeB-r07-c3",
+  "left": 1220,
+  "top": 499,
+  "width": 84,
+  "height": 82
+ },
+ "lychee-sprout": {
+  "cell": "treeB-r08-c1",
+  "left": 1055,
+  "top": 580,
+  "width": 81,
+  "height": 86
+ },
+ "lychee-young": {
+  "cell": "treeB-r08-c1",
+  "left": 1055,
+  "top": 580,
+  "width": 81,
+  "height": 86
+ },
+ "lychee-flowering": {
+  "cell": "treeB-r08-c2",
+  "left": 1136,
+  "top": 580,
+  "width": 82,
+  "height": 86
+ },
+ "lychee-ready": {
+  "cell": "treeB-r08-c3",
+  "left": 1219,
+  "top": 581,
+  "width": 82,
+  "height": 85
+ },
+ "lychee-produce": {
+  "cell": "treeB-r08-c3",
+  "left": 1219,
+  "top": 581,
+  "width": 82,
+  "height": 85
+ },
+ "shiitake-sprout": {
+  "cell": "mush-r01-c1",
+  "left": 9,
+  "top": 746,
+  "width": 66,
+  "height": 62
+ },
+ "shiitake-young": {
+  "cell": "mush-r01-c2",
+  "left": 77,
+  "top": 748,
+  "width": 68,
+  "height": 58
+ },
+ "shiitake-flowering": {
+  "cell": "mush-r01-c3",
+  "left": 147,
+  "top": 747,
+  "width": 71,
+  "height": 58
+ },
+ "shiitake-ready": {
+  "cell": "mush-r01-c5",
+  "left": 296,
+  "top": 747,
+  "width": 73,
+  "height": 59
+ },
+ "shiitake-produce": {
+  "cell": "mush-r01-c5",
+  "left": 296,
+  "top": 747,
+  "width": 73,
+  "height": 59
+ },
+ "oyster-sprout": {
+  "cell": "mush-r03-c1",
+  "left": 10,
+  "top": 867,
+  "width": 64,
+  "height": 60
+ },
+ "oyster-young": {
+  "cell": "mush-r03-c2",
+  "left": 78,
+  "top": 867,
+  "width": 67,
+  "height": 59
+ },
+ "oyster-flowering": {
+  "cell": "mush-r03-c3",
+  "left": 151,
+  "top": 867,
+  "width": 65,
+  "height": 58
+ },
+ "oyster-ready": {
+  "cell": "mush-r03-c5",
+  "left": 295,
+  "top": 867,
+  "width": 68,
+  "height": 59
+ },
+ "oyster-produce": {
+  "cell": "mush-r03-c5",
+  "left": 295,
+  "top": 867,
+  "width": 68,
+  "height": 59
+ },
+ "enoki-sprout": {
+  "cell": "mush-r04-c1",
+  "left": 10,
+  "top": 927,
+  "width": 64,
+  "height": 60
+ },
+ "enoki-young": {
+  "cell": "mush-r04-c2",
+  "left": 78,
+  "top": 927,
+  "width": 67,
+  "height": 60
+ },
+ "enoki-flowering": {
+  "cell": "mush-r04-c3",
+  "left": 148,
+  "top": 927,
+  "width": 67,
+  "height": 58
+ },
+ "enoki-ready": {
+  "cell": "mush-r04-c5",
+  "left": 290,
+  "top": 926,
+  "width": 69,
+  "height": 62
+ },
+ "enoki-produce": {
+  "cell": "mush-r04-c5",
+  "left": 290,
+  "top": 926,
+  "width": 69,
+  "height": 62
+ },
+ "woodear-sprout": {
+  "cell": "mush-r05-c1",
+  "left": 9,
+  "top": 987,
+  "width": 65,
+  "height": 65
+ },
+ "woodear-young": {
+  "cell": "mush-r05-c2",
+  "left": 77,
+  "top": 987,
+  "width": 68,
+  "height": 63
+ },
+ "woodear-flowering": {
+  "cell": "mush-r05-c3",
+  "left": 147,
+  "top": 985,
+  "width": 67,
+  "height": 66
+ },
+ "woodear-ready": {
+  "cell": "mush-r05-c5",
+  "left": 290,
+  "top": 988,
+  "width": 69,
+  "height": 65
+ },
+ "woodear-produce": {
+  "cell": "mush-r05-c5",
+  "left": 290,
+  "top": 988,
+  "width": 69,
+  "height": 65
+ },
+ "button-sprout": {
+  "cell": "mush-r06-c1",
+  "left": 9,
+  "top": 1054,
+  "width": 65,
+  "height": 72
+ },
+ "button-young": {
+  "cell": "mush-r06-c2",
+  "left": 74,
+  "top": 1053,
+  "width": 70,
+  "height": 73
+ },
+ "button-flowering": {
+  "cell": "mush-r06-c3",
+  "left": 144,
+  "top": 1053,
+  "width": 71,
+  "height": 73
+ },
+ "button-ready": {
+  "cell": "mush-r06-c5",
+  "left": 290,
+  "top": 1056,
+  "width": 70,
+  "height": 70
+ },
+ "button-produce": {
+  "cell": "mush-r06-c5",
+  "left": 290,
+  "top": 1056,
+  "width": 70,
+  "height": 70
+ },
+ "animal-chicken-young": {
+  "cell": "anim-r01-c1",
+  "left": 378,
+  "top": 739,
+  "width": 61,
+  "height": 49
+ },
+ "animal-chicken": {
+  "cell": "anim-r01-c2",
+  "left": 452,
+  "top": 742,
+  "width": 68,
+  "height": 51
+ },
+ "animal-duck-young": {
+  "cell": "anim-r02-c1",
+  "left": 379,
+  "top": 788,
+  "width": 60,
+  "height": 47
+ },
+ "animal-duck": {
+  "cell": "anim-r02-c3",
+  "left": 537,
+  "top": 794,
+  "width": 80,
+  "height": 36
+ },
+ "animal-quail-young": {
+  "cell": "anim-r03-c1",
+  "left": 367,
+  "top": 835,
+  "width": 69,
+  "height": 44
+ },
+ "animal-quail": {
+  "cell": "anim-r03-c3",
+  "left": 533,
+  "top": 830,
+  "width": 76,
+  "height": 50
+ },
+ "animal-goose-young": {
+  "cell": "anim-r04-c1",
+  "left": 367,
+  "top": 879,
+  "width": 77,
+  "height": 46
+ },
+ "animal-goose": {
+  "cell": "anim-r04-c3",
+  "left": 534,
+  "top": 880,
+  "width": 85,
+  "height": 42
+ },
+ "animal-cow-young": {
+  "cell": "anim-r05-c1",
+  "left": 367,
+  "top": 925,
+  "width": 71,
+  "height": 49
+ },
+ "animal-cow": {
+  "cell": "anim-r05-c3",
+  "left": 526,
+  "top": 922,
+  "width": 93,
+  "height": 53
+ },
+ "animal-goat-young": {
+  "cell": "anim-r06-c1",
+  "left": 367,
+  "top": 974,
+  "width": 69,
+  "height": 51
+ },
+ "animal-goat": {
+  "cell": "anim-r06-c3",
+  "left": 535,
+  "top": 975,
+  "width": 83,
+  "height": 52
+ },
+ "animal-sheep-young": {
+  "cell": "anim-r08-c1",
+  "left": 367,
+  "top": 1073,
+  "width": 70,
+  "height": 46
+ },
+ "animal-sheep": {
+  "cell": "anim-r08-c3",
+  "left": 537,
+  "top": 1074,
+  "width": 75,
+  "height": 47
+ },
+ "animal-rabbit-young": {
+  "cell": "anim-r09-c1",
+  "left": 367,
+  "top": 1119,
+  "width": 69,
+  "height": 60
+ },
+ "animal-rabbit": {
+  "cell": "anim-r09-c3",
+  "left": 534,
+  "top": 1121,
+  "width": 85,
+  "height": 58
+ },
+ "egg-produce": {
+  "cell": "prod-r01-c1",
+  "left": 626,
+  "top": 742,
+  "width": 101,
+  "height": 49
+ },
+ "duckegg-produce": {
+  "cell": "prod-r02-c1",
+  "left": 628,
+  "top": 791,
+  "width": 99,
+  "height": 41
+ },
+ "quailegg-produce": {
+  "cell": "prod-r03-a",
+  "left": 628,
+  "top": 833,
+  "width": 49,
+  "height": 47
+ },
+ "gooseegg-produce": {
+  "cell": "prod-r04-c1",
+  "left": 626,
+  "top": 878,
+  "width": 102,
+  "height": 46
+ },
+ "milk-produce": {
+  "cell": "prod-r05-c1",
+  "left": 631,
+  "top": 924,
+  "width": 88,
+  "height": 51
+ },
+ "goatmilk-produce": {
+  "cell": "prod-r06-c1",
+  "left": 631,
+  "top": 975,
+  "width": 88,
+  "height": 52
+ },
+ "wool-produce": {
+  "cell": "prod-r08-c1",
+  "left": 628,
+  "top": 1075,
+  "width": 94,
+  "height": 49
+ },
+ "rabbitwool-produce": {
+  "cell": "prod-r09-c1",
+  "left": 629,
+  "top": 1124,
+  "width": 88,
+  "height": 54
+ },
+ "honey-produce": {
+  "cell": "bee-honey",
+  "left": 1181,
+  "top": 671,
+  "width": 129,
+  "height": 100
+ },
+ "honeycomb-produce": {
+  "cell": "bee-comb-bare",
+  "left": 1086,
+  "top": 668,
+  "width": 94,
+  "height": 109
+ },
+ "fish-produce": {
+  "cell": "fish-r03-c2",
+  "left": 811,
+  "top": 881,
+  "width": 73,
+  "height": 47
+ },
+ "shrimp-produce": {
+  "cell": "fish-r01-c5",
+  "left": 1045,
+  "top": 774,
+  "width": 84,
+  "height": 51
+ },
+ "carp-produce": {
+  "cell": "fish-r02-c2",
+  "left": 811,
+  "top": 827,
+  "width": 78,
+  "height": 50
+ },
+ "crab-produce": {
+  "cell": "fish-r02-c6",
+  "left": 1135,
+  "top": 824,
+  "width": 84,
+  "height": 53
+ },
+ "scad-produce": {
+  "cell": "fish-r03-c5",
+  "left": 1045,
+  "top": 879,
+  "width": 88,
+  "height": 52
+ },
+ "mackerel-produce": {
+  "cell": "sea-longfish",
+  "left": 1084,
+  "top": 991,
+  "width": 116,
+  "height": 46
+ },
+ "squid-produce": {
+  "cell": "sea-squid",
+  "left": 1085,
+  "top": 1036,
+  "width": 106,
+  "height": 57
+ },
+ "octopus-produce": {
+  "cell": "sea-octopus",
+  "left": 1200,
+  "top": 1036,
+  "width": 109,
+  "height": 63
+ },
+ "clam-produce": {
+  "cell": "sea-clam",
+  "left": 1087,
+  "top": 1092,
+  "width": 56,
+  "height": 51
+ },
+ "bloodcockle-produce": {
+  "cell": "sea-redclam",
+  "left": 1142,
+  "top": 1092,
+  "width": 59,
+  "height": 51
+ },
+ "scallop-produce": {
+  "cell": "sea-scallop",
+  "left": 1255,
+  "top": 1098,
+  "width": 54,
+  "height": 45
+ },
+ "hive-1": {
+  "cell": "bee-hive1",
+  "left": 735,
+  "top": 680,
+  "width": 115,
+  "height": 97
+ },
+ "hive-2": {
+  "cell": "bee-hive2",
+  "left": 856,
+  "top": 671,
+  "width": 125,
+  "height": 101
+ },
+ "hive-3": {
+  "cell": "bee-hive3",
+  "left": 981,
+  "top": 670,
+  "width": 104,
+  "height": 105
+ },
+ "bee": {
+  "cell": "bee-one",
+  "left": 750,
+  "top": 680,
+  "width": 29,
+  "height": 30
+ },
+ "boat-scene": {
+  "cell": "sea-boatscene",
+  "left": 720,
+  "top": 1015,
+  "width": 363,
+  "height": 151
+ }
+}

@@ -1,5 +1,5 @@
 import type { AnimalId, CropId, DecorId, ProduceId, RecipeId, RegionId } from '../data/types';
-import { FARM_PLOT_COUNT } from '../data/game';
+import { ANIMALS, CROPS, FARM_PLOT_COUNT, PRODUCE_IDS } from '../data/game';
 import { emptyQuests, type QuestState } from './quests';
 import { DEFAULT_FILTERS, type Filters } from './recommend';
 import { HOUR_MS, dateKey } from './time';
@@ -19,6 +19,20 @@ export interface Plot {
   wateredAt: number | null;
   /** A friend picked one of this crop while it was ripe: the harvest gives one less. */
   stolen?: boolean;
+  /** Trees and mushrooms: harvests taken from this planting (they stay in the plot). */
+  harvests?: number;
+}
+
+/** The beehive fills on its own; `readyAt` is when it can be emptied (null: not started). */
+export interface HiveState {
+  startedAt: number | null;
+  readyAt: number | null;
+}
+
+/** The fishing boat: out at sea between `sentAt` and `returnAt` (null: at the jetty). */
+export interface BoatState {
+  sentAt: number | null;
+  returnAt: number | null;
 }
 
 export interface MealSession {
@@ -92,6 +106,8 @@ export interface GuestProgress {
   decorLayout: Partial<Record<DecorId, DecorPlacement | null>>;
   /** Animals: fed → producing until readyAt → collect. Never sick, never lost. */
   animals: Record<AnimalId, AnimalState>;
+  hive: HiveState;
+  boat: BoatState;
   /**
    * Meal slots that have a check-in photo. The images themselves stay on this
    * device (IndexedDB, see services/photoStore.ts) and never sync.
@@ -131,31 +147,18 @@ export interface AnimalState {
   readyAt: number | null;
 }
 
-export const EMPTY_ANIMALS: Record<AnimalId, AnimalState> = {
-  chicken: { fedAt: null, readyAt: null },
-  cow: { fedAt: null, readyAt: null },
-};
+/** Zero of everything listed: new items start at zero in new and in older saves alike. */
+function zeros<K extends string>(keys: readonly K[]): Record<K, number> {
+  return Object.fromEntries(keys.map((k) => [k, 0])) as Record<K, number>;
+}
 
-export const EMPTY_CROPS: Record<CropId, number> = {
-  rice: 0,
-  herbs: 0,
-  chili: 0,
-  scallion: 0,
-  bean: 0,
-  tomato: 0,
-  lemongrass: 0,
-  garlic: 0,
-  cucumber: 0,
-  lime: 0,
-};
+export const EMPTY_ANIMALS: Record<AnimalId, AnimalState> = Object.fromEntries(
+  (Object.keys(ANIMALS) as AnimalId[]).map((id) => [id, { fedAt: null, readyAt: null }]),
+) as Record<AnimalId, AnimalState>;
 
-export const EMPTY_PRODUCE: Record<ProduceId, number> = {
-  ...EMPTY_CROPS,
-  egg: 0,
-  milk: 0,
-  fish: 0,
-  shrimp: 0,
-};
+export const EMPTY_CROPS: Record<CropId, number> = zeros(Object.keys(CROPS) as CropId[]);
+
+export const EMPTY_PRODUCE: Record<ProduceId, number> = zeros(PRODUCE_IDS);
 
 function randomId(): string {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) return crypto.randomUUID();
@@ -218,6 +221,8 @@ export function createInitialProgress(now: number): GuestProgress {
     decor: [],
     decorLayout: {},
     animals: structuredClone(EMPTY_ANIMALS),
+    hive: { startedAt: null, readyAt: null },
+    boat: { sentAt: null, returnAt: null },
     photos: [],
     journeySaved: false,
     settings: { motion: 'system', simulateFailure: false },

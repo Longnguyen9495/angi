@@ -17,8 +17,10 @@ npm run build          # build production vào dist/ + nén sẵn .br/.gz (Apach
 npm run reel:manifest  # tạo lại manifest gọn từ public/images/food-reel/manifest.json
 ```
 
-Sprite khu vườn (10 loại cây × 4 giai đoạn, nông sản, đồ trang trí — WebP trong suốt ở `public/images/garden/`)
-được vẽ lại bằng `npm run assets:garden`; prompt để thay bằng ảnh AI nằm ở `prompts/garden-sprite-prompts.md`.
+Hình vật phẩm nông trại (cây trồng theo giai đoạn, cây ăn trái, nấm, vật nuôi, trứng/sữa/lông, mật ong, thuỷ sản)
+ở `public/images/farm-items/`, cắt theo lưới từ `storage/item-pdf-v2-check/source.png` bằng `npm run assets:farm-items`
+(`scripts/farm-items/`: `grid.json` = lưới, `catalog.json` = vật phẩm → hình, kèm độ chắc chắn và hình còn thiếu).
+Đồ trang trí vẫn ở `public/images/garden/` (`npm run assets:garden`).
 
 Logo & ảnh xem trước khi gửi link: `node scripts/generate-brand.mjs` tạo favicon/apple-touch-icon/icon 192–512;
 `public/og-image.jpg` (1200×630) chụp từ `scripts/brand/og-image.html` (mở ở 1200×630, DPR 1). Link tuyệt đối

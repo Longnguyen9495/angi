@@ -1,3 +1,5 @@
+import { cropSprite } from '../../../data/sprites';
+import type { CropId } from '../../../data/types';
 import { AmbientSystem } from '../systems/AmbientSystem';
 import { AnimalAnimation } from '../systems/AnimalAnimation';
 import { BuildingAnimation } from '../systems/BuildingAnimation';
@@ -896,7 +898,7 @@ export class AnimationManager {
     if (!d) return;
     d.t += dt;
     const CYCLE = 13;
-    const crops = ['chili', 'bean', 'cucumber', 'garlic', 'herbs', 'lemongrass'];
+    const crops: CropId[] = ['chili', 'bean', 'cucumber', 'garlic', 'herbs', 'lemongrass'];
     const stageAt = (u: number): PlotStageView =>
       u < 1.4
         ? 'empty'
@@ -931,7 +933,7 @@ export class AnimationManager {
         unlockLevel: null,
         crop,
         stage,
-        image: crop ? `/images/garden/${crop}-${stage}.webp` : null,
+        image: crop && stage !== 'empty' ? cropSprite(crop, stage) : null,
         // Watered while young: the soil darkens and drops fall.
         wet: stage === 'young' && u < 5.4,
         thirsty: false,
