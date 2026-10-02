@@ -8,13 +8,40 @@ require_once __DIR__ . '/Images.php';
 /**
  * Reads a dish photo with a vision model (OpenAI-compatible chat API) and
  * rewrites the dish's descriptive content: region, tone, story, flavour
- * profile and visible ingredients. Name, price and images are never changed.
+ * profile and visible ingredients — and how the farm game cooks it (steps and
+ * pantry items, see Catalogue::cleanCook). Name, price and images are never changed.
  */
 final class AiEnricher
 {
     private string $baseUrl;
     private string $apiKey;
     private string $model;
+
+    private const COOK_SHAPE = '{"steps":[{"label":"...","label_en":"...","heat":"low|mid|high","weight":1}],"produce":[{"id":"...","qty":1}]}';
+
+    /** Rules for the "cook" part: the same in the photo prompt and the text-only one. */
+    private static function cookRules(): string
+    {
+        $pantry = implode('; ', array_map(fn ($id, $name) => "$id=$name", array_keys(Catalogue::PRODUCE), Catalogue::PRODUCE));
+        return <<<RULES
+- cook: cách nấu món này trong game nông trại.
+  - steps: 3 đến 5 bước nấu THẬT của chính món này, theo đúng thứ tự (ví dụ canh chua cá: nấu nước me chua → thả cá → thêm cà chua, nêm nếm → rắc rau thơm). Không dùng bước chung chung kiểu "chế biến", "hoàn thành".
+    label: tiếng Việt, 2–6 từ, tối đa 40 ký tự, viết hoa chữ đầu. label_en: bản tiếng Anh tự nhiên, tối đa 40 ký tự.
+    heat: lửa của bước đó (high = ninh, luộc, chiên, nướng, xào lửa lớn; mid = nấu, hấp, đun liu riu; low = sơ chế, trộn, cuốn, bày). weight 1–5: bước càng lâu càng lớn.
+  - produce: 1 đến 5 nông sản trong kho game mà món cần, chỉ dùng id trong danh sách dưới, mỗi id một lần, qty 1–3 (thành phần chính 2, phụ 1). Game không có thịt: món có thịt thì chỉ chọn rau, củ, gia vị, trứng, sữa, cá, hải sản đi kèm. Ưu tiên thứ món thật sự dùng, không thêm cho đủ. Bún, phở, bánh phở, bánh tráng, bánh cuốn, cơm, xôi, bột gạo đều tính là rice; đậu hũ, giá là bean.
+  Kho game (id=tên): $pantry
+RULES;
+    }
+
+    /** "cook" from a model answer (label_en → translations.en), validated; null when unusable. */
+    private static function cookFrom(mixed $raw): ?array
+    {
+        if (!is_array($raw) || !is_array($raw['steps'] ?? null)) {
+            return null;
+        }
+        $raw['steps'] = array_map(fn ($s) => is_array($s) ? $s + ['translations' => ['en' => (string) ($s['label_en'] ?? '')]] : $s, $raw['steps']);
+        return Catalogue::cleanCook($raw);
+    }
 
     public function __construct(private readonly Catalogue $catalogue)
     {
@@ -45,6 +72,8 @@ final class AiEnricher
         };
         $dataUri = "data:$mime;base64," . base64_encode((string) file_get_contents($imagePath));
         $lib = implode('; ', array_map(fn ($i) => "{$i['id']}={$i['name']}", $library));
+        $cookShape = self::COOK_SHAPE;
+        $cookRules = self::cookRules();
         // Identify mode: the photo is all we have, so the model also names and prices the dish.
         $identifyKeys = $identify ? '"name":"...","subtitle":"...","price":0,"vegetarian":false,' : '';
         $identifyRules = $identify ? <<<RULES
@@ -57,7 +86,7 @@ RULES : '';
         $system = <<<TXT
 Bạn là biên tập viên ẩm thực cho một ứng dụng chọn món ở Việt Nam. Bạn nhìn ảnh món ăn và viết nội dung ngắn, chính xác, bằng tiếng Việt.
 Chỉ trả về MỘT đối tượng JSON, không kèm giải thích, theo đúng cấu trúc:
-{{$identifyKeys}"region":"north|central|south|world","tone":"amber|copper|herb|crimson|ivory|ocean|gold","story":"...","flavor":{"spicy":0,"sweet":0,"rich":0,"fresh":0,"crunchy":0},"ingredients":[{"id":"...","name":"...","description":"...","crop":"rice|herbs|chili|scallion|bean|tomato|null"}]}
+{{$identifyKeys}"region":"north|central|south|world","tone":"amber|copper|herb|crimson|ivory|ocean|gold","story":"...","flavor":{"spicy":0,"sweet":0,"rich":0,"fresh":0,"crunchy":0},"ingredients":[{"id":"...","name":"...","description":"...","crop":"rice|herbs|chili|scallion|bean|tomato|null"}],"cook":$cookShape}
 Quy tắc:
 - ingredients: 4 đến 8 thành phần NHÌN THẤY trong ảnh hoặc chắc chắn là cốt lõi của món, xếp từ nổi bật nhất. Tên thường gọi tiếng Việt.
 - Nếu thành phần đã có trong thư viện dưới đây thì dùng đúng "id" và "name" của thư viện; nếu chưa có thì để "id" rỗng.
@@ -68,6 +97,7 @@ Quy tắc:
 - region: north/central/south cho món Việt theo vùng gắn bó nhất; món có nguồn gốc nước ngoài là world.
 - tone (màu nền trang): amber = món nước dùng; copper = nướng, xào đậm; herb = rau, món chay, thanh mát; crimson = cay hoặc sốt đỏ; ivory = cháo, sốt kem, món sáng màu nhẹ; ocean = hải sản, cá; gold = chiên giòn, vàng óng.
 $identifyRules
+$cookRules
 Thư viện thành phần (id=tên): $lib
 TXT;
 
@@ -164,8 +194,54 @@ TXT;
             'story' => mb_substr($story, 0, 400),
             'flavor' => $flavor,
             'ingredients' => $ingredients,
+            'cook' => self::cookFrom($data['cook'] ?? null),
             'raw' => $content,
         ];
+    }
+
+    /**
+     * Text only (no photo): just how the game cooks an existing dish, from its name, story and
+     * ingredients. Used to fill `cook` for the whole catalogue (server/bin/ai-cook.php).
+     */
+    public function buildCookRequest(array $dish): array
+    {
+        $cookShape = self::COOK_SHAPE;
+        $system = "Bạn là đầu bếp người Việt viết công thức ngắn cho một game nông trại nấu ăn. Chỉ trả về MỘT đối tượng JSON, không kèm giải thích: {\"cook\":$cookShape}
+Quy tắc:
+" . self::cookRules();
+        $ings = implode(', ', array_map(fn ($i) => $i['name'], $dish['ingredients'] ?? []));
+        $user = "Món: {$dish['name']}" . (($dish['subtitle'] ?? '') !== '' ? " — {$dish['subtitle']}" : '')
+            . (!empty($dish['vegetarian']) ? ' (món chay)' : '')
+            . "
+Thành phần: $ings
+Giới thiệu: " . ($dish['story'] ?? '');
+        return [
+            'model' => $this->model,
+            'temperature' => 0.3,
+            'response_format' => ['type' => 'json_object'],
+            'messages' => [
+                ['role' => 'system', 'content' => $system],
+                ['role' => 'user', 'content' => $user],
+            ],
+        ];
+    }
+
+    /** Parses a buildCookRequest() answer into validated cook data. */
+    public function parseCook(string $httpBody, int $status): array
+    {
+        if ($status !== 200) {
+            throw new RuntimeException("AI trả về HTTP $status: " . mb_substr($httpBody, 0, 200));
+        }
+        $content = json_decode($httpBody, true)['choices'][0]['message']['content'] ?? null;
+        if (!is_string($content)) {
+            throw new RuntimeException('AI không trả nội dung.');
+        }
+        if (preg_match('/{.*}/s', $content, $m)) {
+            $content = $m[0];
+        }
+        $data = json_decode($content, true);
+        return self::cookFrom(is_array($data) ? ($data['cook'] ?? $data) : null)
+            ?? throw new RuntimeException('AI trả cách nấu không hợp lệ.');
     }
 
     /** Maps the model's ingredients onto the shared library (reusing entries, never duplicating). */
@@ -220,6 +296,10 @@ TXT;
         }
         if (!$fill || empty($dish['tone'])) {
             $out['tone'] = $ai['tone'] ?? ($dish['tone'] ?? 'amber');
+        }
+        // A bad or missing answer never wipes a recipe that is already there.
+        if (($ai['cook'] ?? null) !== null && (!$fill || empty($dish['cook']))) {
+            $out['cook'] = $ai['cook'];
         }
         return $out;
     }

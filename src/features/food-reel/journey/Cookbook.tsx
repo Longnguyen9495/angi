@@ -1,6 +1,6 @@
 import { CookingPot, LockSimple, SealCheck } from '@phosphor-icons/react';
 import { useState } from 'react';
-import { RECIPE_LIST, REGIONS } from '../../../data/game';
+import { RECIPE_LIST, recipeRegionName } from '../../../data/game';
 import { t } from '../../../i18n';
 import { useGame } from '../../../state/hooks';
 import { getReelDish, snapshotThumbnail } from '../data/reelCatalogue';
@@ -62,7 +62,7 @@ export function Cookbook() {
               </span>
               <span className="fj-page__name">{r.name}</span>
               <span className="fj-page__meta">
-                {REGIONS[r.region].name}
+                {recipeRegionName(r)}
                 {n > 0 ? (
                   <>
                     {' · '}

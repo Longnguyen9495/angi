@@ -97,6 +97,23 @@ try {
     $orphans->execute([$newIng]);
     $check('ingredient translations cascade on delete', (int) $orphans->fetchColumn() === 0);
     $check('used ingredient cannot be deleted (409)', $expectError(fn () => $cat->deleteIngredient($libId), 409));
+
+    // How the game cooks it.
+    $cook = [
+        'steps' => [
+            ['label' => 'Nấu nước me', 'heat' => 'high', 'weight' => 3, 'translations' => ['en' => 'Boil tamarind water']],
+            ['label' => 'Thả cá', 'heat' => 'nope', 'weight' => 9],
+            ['label' => 'Rắc rau thơm', 'heat' => 'low', 'weight' => 1],
+        ],
+        'produce' => [['id' => 'fish', 'qty' => 1], ['id' => 'pork', 'qty' => 2], ['id' => 'fish', 'qty' => 2], ['id' => 'tomato', 'qty' => 7]],
+    ];
+    $k = $cat->saveDish(['cook' => $cook] + $u, $id, 'manual')['cook'];
+    $check('cook keeps known pantry items once, clamps qty', $k['produce'] === [['id' => 'fish', 'qty' => 1], ['id' => 'tomato', 'qty' => 3]]);
+    $check('cook cleans heat and weight, keeps translations', $k['steps'][1]['heat'] === 'mid' && $k['steps'][1]['weight'] === 5 && ((array) $k['steps'][0]['translations'])['en'] === 'Boil tamarind water');
+    $check('saving without a cook key keeps it', $cat->saveDish(array_diff_key($u, ['cook' => 1]), $id, 'manual')['cook'] !== null);
+    $check('too few steps is not a recipe', Catalogue::cleanCook(['steps' => array_slice($cook['steps'], 0, 2), 'produce' => $cook['produce']]) === null);
+    $check('cook: null removes it', $cat->saveDish(['cook' => null] + $u, $id, 'manual')['cook'] === null);
+    $cat->saveCook($id, Catalogue::cleanCook($cook));
 } finally {
     try {
         $cat->deleteDish($id);
@@ -108,6 +125,9 @@ try {
     }
 }
 $check('dish deleted', $cat->getDish($id) === null);
+$orphans = db()->prepare('SELECT COUNT(*) FROM dish_cook WHERE dish_id = ?');
+$orphans->execute([$id]);
+$check('dish cook goes with the dish', (int) $orphans->fetchColumn() === 0);
 $orphans = db()->prepare('SELECT COUNT(*) FROM dish_translations WHERE dish_id = ?');
 $orphans->execute([$id]);
 $check('dish translations cascade on delete', (int) $orphans->fetchColumn() === 0);

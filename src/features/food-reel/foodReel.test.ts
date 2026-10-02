@@ -1,9 +1,16 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
-import { CROPS, RECIPES } from '../../data/game';
+import { CROPS, RECIPES, RECIPE_LIST, getRecipe, isBuiltinRecipe } from '../../data/game';
 import { getDish } from '../../data/dishes';
-import { dishAt, getReelDish, reelCount, reelDishes, toGameDish } from './data/reelCatalogue';
+import {
+  dishAt,
+  getReelDish,
+  recipeFromCook,
+  reelCount,
+  reelDishes,
+  toGameDish,
+} from './data/reelCatalogue';
 import { ReelEngine } from './engine/ReelEngine';
 import { itemVisual, layoutFor, overshoot } from './engine/layout';
 import {
@@ -57,9 +64,48 @@ describe('reel catalogue', () => {
     for (const d of reelDishes()) {
       const g = toGameDish(d);
       expect(CROPS[g.seed]).toBeDefined();
-      expect(RECIPES[g.recipe].ingredients.some((i) => i.crop === g.seed)).toBe(true);
+      expect(getRecipe(g.recipe).ingredients.some((i) => i.crop === g.seed)).toBe(true);
       expect(getDish(d.id)).toBeDefined();
     }
+  });
+
+  it('turns a dish with a cook into its own recipe, built-in recipes keep their dishes', () => {
+    const own = RECIPE_LIST.filter((r) => !isBuiltinRecipe(r.id));
+    expect(own.length).toBeGreaterThan(0);
+    for (const r of own) {
+      expect(getReelDish(r.dishId)).toBeDefined();
+      expect(r.steps!.length).toBeGreaterThanOrEqual(3);
+      expect(r.ingredients.length).toBeGreaterThan(0);
+      expect(toGameDish(getReelDish(r.dishId)!).recipe).toBe(r.id);
+    }
+    // A dish a built-in recipe already cooks never gets a second recipe.
+    const builtinDishes = new Set(
+      RECIPE_LIST.filter((r) => isBuiltinRecipe(r.id)).map((r) => r.dishId),
+    );
+    expect(own.some((r) => builtinDishes.has(r.dishId))).toBe(false);
+    expect(RECIPES['pho-bo']?.steps).toBeUndefined();
+  });
+
+  it('only keeps pantry items the game knows and needs three steps', () => {
+    const d = reelDishes()[0]!;
+    const steps = [
+      { label: 'Một', heat: 'high', weight: 2 },
+      { label: 'Hai', heat: 'nope', weight: 9 },
+      { label: 'Ba', heat: 'low', weight: 1, translations: { en: 'Three' } },
+    ];
+    const r = recipeFromCook(d, {
+      steps,
+      produce: [
+        { id: 'rice', qty: 7 },
+        { id: 'pork', qty: 1 },
+      ],
+    });
+    expect(r?.ingredients).toEqual([{ crop: 'rice', qty: 3 }]);
+    expect(r?.steps?.[1]).toEqual({ label: 'Hai', heat: 'mid', weight: 5 });
+    expect(
+      recipeFromCook(d, { steps: steps.slice(0, 2), produce: [{ id: 'rice', qty: 1 }] }),
+    ).toBeNull();
+    expect(recipeFromCook(d, { steps, produce: [{ id: 'pork', qty: 1 }] })).toBeNull();
   });
 
   it('wraps virtual indices in both directions', () => {

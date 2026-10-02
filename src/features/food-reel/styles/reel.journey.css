@@ -606,6 +606,9 @@
 .fj-region-tag--south {
   color: var(--fr-south);
 }
+.fj-region-tag--world {
+  color: var(--fr-gold);
+}
 
 .fj-ingredients {
   display: flex;

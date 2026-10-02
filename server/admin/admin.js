@@ -318,6 +318,41 @@ php server/bin/ai-enrich.php --only=pho-bo,bun-moc</pre>
   }
 
   // ——— Dish editor ———
+
+  // How the farm game cooks a dish, as two text fields: one step per line
+  // "Tên bước | lửa | độ dài | English", and pantry items "rice×2, shrimp×1".
+  const cookStepsText = (cook) =>
+    (cook?.steps ?? [])
+      .map((s) => [s.label, s.heat, s.weight, s.translations?.en ?? ''].join(' | '))
+      .join('\n');
+  const cookProduceText = (cook) =>
+    (cook?.produce ?? []).map((p) => `${p.id}×${p.qty}`).join(', ');
+  /** { cook } (null = remove: both fields empty) or { error } — the server re-checks every id. */
+  const readCook = (stepsText, produceText) => {
+    const lines = stepsText.split('\n').map((l) => l.trim()).filter(Boolean);
+    const items = produceText.split(',').map((p) => p.trim()).filter(Boolean);
+    if (!lines.length && !items.length) return { cook: null };
+    const steps = lines.map((l) => {
+      const [label = '', heat = 'mid', weight = '2', en = ''] = l.split('|').map((x) => x.trim());
+      return { label, heat, weight: Number(weight) || 2, translations: en ? { en } : {} };
+    });
+    if (steps.length < 3 || steps.length > 5 || steps.some((st) => !st.label))
+      return { error: 'Cách nấu cần 3–5 bước, mỗi dòng một bước có tên.' };
+    if (steps.some((st) => !['low', 'mid', 'high'].includes(st.heat)))
+      return { error: 'Lửa của mỗi bước là low, mid hoặc high.' };
+    const produce = items.map((p) => {
+      const [id, qty = '1'] = p.split(/\s*[×x*]\s*/);
+      return { id: id.trim(), qty: Number(qty) || 1 };
+    });
+    if (!produce.length) return { error: 'Cách nấu cần ít nhất một nông sản.' };
+    return { cook: { steps, produce } };
+  };
+  const cookFields = () =>
+    readCook(
+      document.getElementById('d-cook-steps').value,
+      document.getElementById('d-cook-produce').value,
+    );
+
   const blankDish = () => ({
     id: '',
     name: '',
@@ -430,6 +465,13 @@ ${locales.extra
               <datalist id="ing-lib">${datalist}</datalist>
               <button type="button" class="btn btn--sm" id="ing-add-btn">Thêm</button>
             </div>
+          </div>
+
+          <div class="panel stack">
+            <h2>Cách nấu trong game</h2>
+            <p class="hint">Món có cách nấu sẽ thành công thức trong Sổ bếp của nông trại. Mỗi dòng một bước: <code>Tên bước | lửa (low/mid/high) | độ dài 1–5 | tên tiếng Anh</code>. Nông sản là id trong kho game kèm số lượng, ví dụ <code>rice×2, shrimp×1, herbs×1</code> (game không có thịt). Để trống cả hai ô thì món không nấu được. AI tự viết phần này khi tạo món hoặc khi “Đọc lại bằng AI”.</p>
+            <label class="field">Các bước (3–5)<textarea id="d-cook-steps" rows="5" placeholder="Nấu nước me chua | high | 3 | Boil water with tamarind">${esc(cookStepsText(dish.cook))}</textarea></label>
+            <label class="field">Nông sản cần<input id="d-cook-produce" type="text" value="${esc(cookProduceText(dish.cook))}" placeholder="fish×1, tomato×2, herbs×2" /></label>
           </div>
 
           <div class="panel stack">
@@ -588,6 +630,8 @@ ${locales.extra
           'subtitle',
           'story',
         ]),
+        // Unreadable fields send no `cook` key, so the saved recipe stays as it was.
+        ...(cookFields().error ? {} : { cook: cookFields().cook }),
       };
     };
 
@@ -614,6 +658,11 @@ ${locales.extra
           r.value = p.flavor?.[r.dataset.flavor] ?? 0;
           r.nextElementSibling.textContent = r.value;
         });
+      }
+      const stepsEl = document.getElementById('d-cook-steps');
+      if (p.cook && !stepsEl.value.trim()) {
+        stepsEl.value = cookStepsText(p.cook);
+        document.getElementById('d-cook-produce').value = cookProduceText(p.cook);
       }
       if (!rows.length) {
         rows = p.ingredients.map((i) =>
@@ -698,6 +747,8 @@ ${locales.extra
       if (uploaded) Object.assign(payload, uploaded);
       if (payload.ingredients.some((i) => i.name !== undefined && !i.name))
         return toast('Nguyên liệu mới cần có tên.', true);
+      const cookCheck = cookFields();
+      if (cookCheck.error) return toast(cookCheck.error, true);
       btn.disabled = true;
       try {
         let saved = creating

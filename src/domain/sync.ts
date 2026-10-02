@@ -17,7 +17,7 @@ export function summarize(p: GuestProgress): ProgressSummary {
   return {
     level: level(p.xp).level,
     stamps: stampCount(p),
-    cooked: Object.values(p.cooked).reduce((a, b) => a + (b ?? 0), 0),
+    cooked: Object.values(p.cooked).reduce<number>((a, b) => a + (b ?? 0), 0),
     meals: p.history.length,
     lastDishId: p.meal?.dishId ?? p.history[0]?.dishId ?? null,
   };

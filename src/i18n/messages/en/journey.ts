@@ -406,6 +406,7 @@ const journey: Messages['journey'] = {
     waitGrow: 'Wait for the crops to grow, harvest, and you can cook.',
     cooked: (n) => `Cooked ×${n}`,
     lockedTitle: (n) => `Locked · ${n} ${s(n, 'recipe', 'recipes')}`,
+    opensAbroad: 'Opens once you open a second region on the map',
     opensWith: (region) => `Unlocks with ${region}`,
     stampsLeft: (n) => ` · ${n} more ${s(n, 'stamp', 'stamps')}`,
   },

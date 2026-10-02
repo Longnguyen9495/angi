@@ -60,6 +60,12 @@ CREATE TABLE IF NOT EXISTS dish_youtube_videos (
   UNIQUE (dish_id, position)
 );
 
+CREATE TABLE IF NOT EXISTS dish_cook (
+  dish_id TEXT NOT NULL PRIMARY KEY REFERENCES dishes(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  data TEXT NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
 -- Stand-in for MySQL's ON UPDATE CURRENT_TIMESTAMP (Catalogue::version() relies on it).
 CREATE TRIGGER IF NOT EXISTS trg_dishes_touch AFTER UPDATE ON dishes
 WHEN NEW.updated_at = OLD.updated_at

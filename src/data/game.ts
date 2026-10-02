@@ -19,6 +19,7 @@ import type {
   MoodId,
   NpcDef,
   RecipeDef,
+  BuiltinRecipeId,
   RecipeId,
   RegionDef,
   RegionId,
@@ -246,11 +247,11 @@ export const BASE_CROPS: CropId[] = ['rice', 'herbs', 'chili', 'scallion', 'bean
 export const CROP_LIST: CropDef[] = Object.values(CROPS);
 
 /** Recipes grow in size on purpose: 2 → 3 → 4 ingredients. */
-export const RECIPES: Record<RecipeId, RecipeDef> = {
+const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
   'com-tam': {
     id: 'com-tam',
     name: 'Cơm tấm sườn',
-    dishId: 'com-tam',
+    dishId: 'com-tam-suon-bi-cha-trung',
     region: 'south',
     group: 'rice',
     ingredients: [
@@ -265,7 +266,7 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
   'bun-rieu': {
     id: 'bun-rieu',
     name: 'Bún riêu cua',
-    dishId: 'bun-rieu',
+    dishId: 'bun-rieu-cua',
     region: 'north',
     group: 'noodle-soup',
     ingredients: [
@@ -299,7 +300,7 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
   'goi-cuon': {
     id: 'goi-cuon',
     name: 'Gỏi cuốn tôm thịt',
-    dishId: 'goi-cuon',
+    dishId: 'goi-cuon-tom',
     region: 'south',
     group: 'bread-roll',
     ingredients: [
@@ -347,7 +348,7 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
   'mi-quang': {
     id: 'mi-quang',
     name: 'Mì Quảng',
-    dishId: 'mi-quang',
+    dishId: 'mi-quang-tom-thit',
     region: 'central',
     group: 'noodle-dry',
     ingredients: [
@@ -378,7 +379,7 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
   'nem-nuong': {
     id: 'nem-nuong',
     name: 'Nem nướng Ninh Hòa',
-    dishId: 'nem-nuong',
+    dishId: 'nem-nuong-nha-trang',
     region: 'central',
     group: 'bread-roll',
     ingredients: [
@@ -411,7 +412,7 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
   'bun-cha': {
     id: 'bun-cha',
     name: 'Bún chả Hà Nội',
-    dishId: 'bun-cha',
+    dishId: 'bun-cha-ha-noi',
     region: 'north',
     group: 'noodle-dry',
     ingredients: [
@@ -427,7 +428,7 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
   'banh-cuon': {
     id: 'banh-cuon',
     name: 'Bánh cuốn Thanh Trì',
-    dishId: 'banh-cuon',
+    dishId: 'banh-cuon-cha-lua',
     region: 'north',
     group: 'bread-roll',
     ingredients: [
@@ -443,7 +444,7 @@ export const RECIPES: Record<RecipeId, RecipeDef> = {
   'banh-mi-chao': {
     id: 'banh-mi-chao',
     name: 'Bánh mì chảo',
-    dishId: 'banh-mi-chao',
+    dishId: 'bo-ne',
     region: 'south',
     group: 'pancake',
     ingredients: [
@@ -673,7 +674,43 @@ export function animalOf(id: AnimalProduct): AnimalId {
   return ANIMAL_PRODUCE[id].animal;
 }
 
-export const RECIPE_LIST: RecipeDef[] = Object.values(RECIPES);
+/**
+ * Every recipe by id: the hand-written ones, plus one per catalogue dish that has a `cook`
+ * (added by registerRecipes when the catalogue loads). Look one up with getRecipe().
+ */
+export const RECIPES: Record<RecipeId, RecipeDef> = { ...BUILTIN };
+/** The same recipes as a list, built-in first. Always the same array, refilled in place. */
+export const RECIPE_LIST: RecipeDef[] = Object.values(BUILTIN);
+
+export function isBuiltinRecipe(id: RecipeId): id is BuiltinRecipeId {
+  return id in BUILTIN;
+}
+
+export function hasRecipe(id: RecipeId): boolean {
+  return id in RECIPES;
+}
+
+/** A recipe by id; an unknown id (a dish gone from the catalogue) falls back to cơm tấm. */
+export function getRecipe(id: RecipeId): RecipeDef {
+  return RECIPES[id] ?? BUILTIN['com-tam'];
+}
+
+/**
+ * Replaces the recipes made from catalogue dishes. A built-in recipe wins over a dish that
+ * shares its id or is the dish it already cooks.
+ */
+export function registerRecipes(made: RecipeDef[]): void {
+  for (const id of Object.keys(RECIPES)) if (!isBuiltinRecipe(id)) delete RECIPES[id];
+  const taken = new Set(Object.values(BUILTIN).flatMap((r) => [r.id, r.dishId]));
+  const extra = made.filter((r) => !taken.has(r.id) && !taken.has(r.dishId));
+  for (const r of extra) RECIPES[r.id] = r;
+  RECIPE_LIST.splice(0, RECIPE_LIST.length, ...Object.values(BUILTIN), ...extra);
+}
+
+/** Region label for a recipe (dishes from abroad have no map region). */
+export function recipeRegionName(r: RecipeDef): string {
+  return r.region === 'world' ? t.data.reel.regionLabel.world : REGIONS[r.region].name;
+}
 
 export const REGIONS: Record<RegionId, RegionDef> = {
   north: {

@@ -85,7 +85,8 @@ export type ItemCategory =
   | 'bee'
   | 'freshwater'
   | 'seafood';
-export type RecipeId =
+/** The hand-written recipes (src/data/game.ts); each has its own copy in t.data.recipes. */
+export type BuiltinRecipeId =
   | 'com-tam'
   | 'bun-rieu'
   | 'bun-bo-hue'
@@ -100,6 +101,13 @@ export type RecipeId =
   | 'banh-cuon'
   | 'banh-mi-chao'
   | 'canh-chua-ca';
+/**
+ * A built-in recipe, or one made from a catalogue dish that has a `cook` (its id is the
+ * dish id, see registerRecipes in src/data/game.ts).
+ */
+export type RecipeId = BuiltinRecipeId | (string & {});
+/** How hot the fire burns during a cooking step — drives flame, bubbles and pot shake. */
+export type Heat = 'low' | 'mid' | 'high';
 export type DecorId = 'scarecrow' | 'lantern' | 'jar' | 'fence';
 export type BudgetId = 'low' | 'mid' | 'high';
 export type MoodId = 'quick' | 'filling' | 'light' | 'novel';
@@ -159,7 +167,8 @@ export interface RecipeDef {
   name: string;
   /** The reel dish this recipe cooks (photo for the cookbook and the result card). */
   dishId: string;
-  region: RegionId;
+  /** Dishes from abroad ('world') open once a second region of the map is open. */
+  region: RegionId | 'world';
   group: DishGroup;
   ingredients: { crop: ProduceId; qty: number }[];
   xp: number;
@@ -167,6 +176,8 @@ export interface RecipeDef {
   fact: string;
   /** Starter recipes are open from day one; the rest open with their region on the map. */
   starter?: boolean;
+  /** Steps from the catalogue (made from a dish); built-in recipes keep theirs in src/data/cooking.ts. */
+  steps?: { label: string; heat: Heat; weight: number }[];
 }
 
 export interface RegionDef {

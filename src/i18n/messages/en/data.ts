@@ -472,6 +472,8 @@ const data: Messages['data'] = {
   },
   reel: {
     price: (thousands: number) => `${(thousands * 1000).toLocaleString('en-US')} ₫`,
+    recipeNote: (region) => `A recipe from the dish reel — opens with ${region}.`,
+    recipeNoteWorld: 'A dish from abroad — opens once you open a second region on the map.',
     regionLabel: {
       north: 'Northern Vietnam',
       central: 'Central Vietnam',

@@ -12,7 +12,7 @@ import {
 } from '@phosphor-icons/react';
 import { useEffect, useRef, useState } from 'react';
 import { getDish } from '../../data/dishes';
-import { CROPS, RECIPES, REGIONS } from '../../data/game';
+import { CROPS, getRecipe, REGIONS } from '../../data/game';
 import type { AgainAnswer, CheckInOutcome, GuestProgress } from '../../domain/progress';
 import { gameReducer } from '../../domain/reducer';
 import { plotStage, recipeProgress } from '../../domain/selectors';
@@ -75,7 +75,7 @@ function buildSummary(
   }
   if (dish) {
     const rp = recipeProgress(after, dish.recipe);
-    lines.push(m.summary.recipe(RECIPES[dish.recipe].name, rp.secured, rp.total));
+    lines.push(m.summary.recipe(getRecipe(dish.recipe).name, rp.secured, rp.total));
   }
   if (after.hiddenDishIds.length > before.hiddenDishIds.length && dish) {
     lines.push(m.summary.hidden(dish.name));

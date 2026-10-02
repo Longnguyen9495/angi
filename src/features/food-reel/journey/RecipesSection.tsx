@@ -1,7 +1,7 @@
 import { CookingPot, LockSimple, SealCheck } from '@phosphor-icons/react';
 import { CropIcon } from '../../../components/ui/CropIcon';
 import { ProgressBar } from '../../../components/ui/ProgressBar';
-import { RECIPE_LIST, REGIONS, produceName, produceUnlockLevel } from '../../../data/game';
+import { RECIPE_LIST, produceName, produceUnlockLevel, recipeRegionName } from '../../../data/game';
 import type { RecipeId } from '../../../data/types';
 import {
   produceAvailable,
@@ -18,7 +18,16 @@ const STATUS = m.status;
 /** Recipes fill from harvested ingredients plus crops still in the ground. */
 export function RecipesSection({ onCook }: { onCook: (recipe: RecipeId) => void }) {
   const { state } = useGame();
-  const open = RECIPE_LIST.filter((r) => recipeAvailable(state, r.id));
+  // Ready to cook first, then the closest to ready: with a recipe per catalogue dish the
+  // list is long, and what can be cooked soon belongs at the top.
+  const open = RECIPE_LIST.filter((r) => recipeAvailable(state, r.id))
+    .map((r) => ({ r, p: recipeProgress(state, r.id) }))
+    .sort(
+      (a, b) =>
+        Number(b.p.canCook) - Number(a.p.canCook) ||
+        b.p.secured / b.p.total - a.p.secured / a.p.total,
+    )
+    .map(({ r }) => r);
   const locked = RECIPE_LIST.filter((r) => !recipeAvailable(state, r.id));
 
   return (
@@ -36,7 +45,7 @@ export function RecipesSection({ onCook }: { onCook: (recipe: RecipeId) => void 
                 </span>
                 <h3 className="fj-recipe__name">{r.name}</h3>
                 <span className={`fj-region-tag fj-region-tag--${r.region}`}>
-                  {REGIONS[r.region].name}
+                  {recipeRegionName(r)}
                 </span>
               </div>
               <ProgressBar
@@ -47,7 +56,7 @@ export function RecipesSection({ onCook }: { onCook: (recipe: RecipeId) => void 
                 max={p.total}
                 valueText={m.progressText(p.secured, p.total, Math.max(0, p.secured - have))}
                 size="sm"
-                tone={r.region}
+                tone={r.region === 'world' ? 'accent' : r.region}
               />
               <ul className="fj-ingredients">
                 {p.ingredients.map((x) => {
@@ -107,16 +116,16 @@ export function RecipesSection({ onCook }: { onCook: (recipe: RecipeId) => void 
           <h3 className="fj-h3">{m.lockedTitle(locked.length)}</h3>
           <ul className="fj-locked__list">
             {locked.map((r) => {
-              const need = regionProgress(state, r.region).stampsNeeded;
+              const need = r.region === 'world' ? 0 : regionProgress(state, r.region).stampsNeeded;
               return (
                 <li key={r.id} className="fj-locked__item">
                   <LockSimple aria-hidden="true" size={14} />
                   <span className="fj-locked__name">{r.name}</span>
                   <span className={`fj-region-tag fj-region-tag--${r.region}`}>
-                    {REGIONS[r.region].name}
+                    {recipeRegionName(r)}
                   </span>
                   <span className="fj-locked__note">
-                    {m.opensWith(REGIONS[r.region].name)}
+                    {r.region === 'world' ? m.opensAbroad : m.opensWith(recipeRegionName(r))}
                     {need > 0 ? m.stampsLeft(need) : ''}
                   </span>
                 </li>

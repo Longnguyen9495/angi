@@ -45,6 +45,18 @@ export interface CatalogueItem {
   youtubeVideos?: YoutubeVideo[];
   ingredients: CatalogueIngredient[];
   translations?: DishTranslations;
+  /** How the farm game cooks it (server/lib/Catalogue.php cleanCook); null when not written yet. */
+  cook?: CatalogueCook | null;
+}
+
+export interface CatalogueCook {
+  steps: {
+    label: string;
+    heat: string;
+    weight: number;
+    translations?: Partial<Record<string, string>>;
+  }[];
+  produce: { id: string; qty: number }[];
 }
 
 export interface CataloguePayload {

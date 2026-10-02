@@ -67,6 +67,15 @@ CREATE TABLE IF NOT EXISTS dish_youtube_videos (
   CONSTRAINT fk_youtube_dish FOREIGN KEY (dish_id) REFERENCES dishes(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- How the farm game cooks a dish: steps (label, heat, weight, translations) and the pantry
+-- items it takes. JSON, validated by Catalogue::cleanCook(); written by AI or the admin.
+CREATE TABLE IF NOT EXISTS dish_cook (
+  dish_id VARCHAR(80) NOT NULL PRIMARY KEY,
+  data TEXT NOT NULL,
+  updated_at INT UNSIGNED NOT NULL,
+  CONSTRAINT fk_cook_dish FOREIGN KEY (dish_id) REFERENCES dishes(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- ——— Content translations (Vietnamese stays in dishes/ingredients; one row per extra locale) ———
 -- Empty strings mean "not translated": clients fall back to the Vietnamese field.
 

@@ -14,7 +14,7 @@ import {
 } from '@phosphor-icons/react';
 import { useEffect, useRef, useState } from 'react';
 import { getDish } from '../../data/dishes';
-import { CROPS, RECIPES, REGIONS } from '../../data/game';
+import { CROPS, getRecipe, REGIONS } from '../../data/game';
 import type { RegionId } from '../../data/types';
 import type { MealSession } from '../../domain/progress';
 import { REMINDER_DELAY_MS, gameReducer } from '../../domain/reducer';
@@ -70,7 +70,7 @@ export function RewardPanel({ meal, justChosen }: { meal: MealSession; justChose
 
   const dish = getDish(meal.rewardDishId) ?? getDish(meal.dishId);
   const crop = CROPS[meal.seedCrop];
-  const recipe = RECIPES[dish?.recipe ?? 'com-tam'];
+  const recipe = getRecipe(dish?.recipe ?? 'com-tam');
   const dishRegion = dish?.region ?? 'south';
   // Dishes from abroad earn stamps but have no map region to light up.
   const mapRegion: RegionId | null = dishRegion === 'world' ? null : dishRegion;

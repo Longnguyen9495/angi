@@ -1,7 +1,18 @@
-import { CROPS, RECIPES } from '../../../data/game';
-import { localized, t } from '../../../i18n';
-import type { AvoidId, BudgetId, CropId, Dish, DishGroup, RecipeId } from '../../../data/types';
+import { CROPS, PRODUCE_IDS, RECIPES, RECIPE_LIST, registerRecipes } from '../../../data/game';
+import { locale, localized, t } from '../../../i18n';
 import type {
+  AvoidId,
+  BudgetId,
+  CropId,
+  Dish,
+  DishGroup,
+  Heat,
+  ProduceId,
+  RecipeDef,
+  RecipeId,
+} from '../../../data/types';
+import type {
+  CatalogueCook,
   CatalogueItem,
   CataloguePayload,
   Ingredient,
@@ -35,6 +46,8 @@ export const REGION_LABEL: Record<ReelRegion, string> = { ...t.data.reel.regionL
 const REGIONS = new Set<string>(Object.keys(REGION_LABEL));
 const TONES = new Set<string>(Object.keys(TONE_PALETTE));
 const CROP_IDS = new Set<string>(Object.keys(CROPS));
+const PRODUCE = new Set<string>(PRODUCE_IDS);
+const HEATS = new Set<string>(['low', 'mid', 'high']);
 const GOLDEN = Math.PI * (3 - Math.sqrt(5));
 
 /** Deterministic spots spread over the plate area of a square dish photo. */
@@ -114,6 +127,14 @@ export function applyCatalogue(payload: CataloguePayload): boolean {
   if (items.length === 0) return false;
   dishes = items.map(toReelDish);
   byId = new Map(dishes.map((d) => [d.id, d]));
+  // Recipes first: a dish's seed and recipe link point at its own recipe when it has one.
+  registerRecipes(
+    items.flatMap((item) => {
+      const dish = byId.get(item.id);
+      const r = dish && item.cook ? recipeFromCook(dish, item.cook) : null;
+      return r ? [r] : [];
+    }),
+  );
   gameDishes = dishes.map(toGameDish);
   gameById = new Map(gameDishes.map((d) => [d.id, d]));
   version = String(payload.version ?? '');
@@ -253,11 +274,54 @@ function groupOf(name: string): DishGroup {
   return 'rice';
 }
 
-function recipeFor(crop: CropId, region: ReelRegion): RecipeId {
+/** About 7–8 XP per item, like the hand-written recipes (4 items 30, 8 items 60). */
+function recipeXp(pieces: number): number {
+  return Math.min(75, Math.max(15, Math.round((pieces * 7.5) / 5) * 5));
+}
+
+/**
+ * A game recipe from a catalogue dish's `cook` (written by AI or the admin): its own steps
+ * in the visitor's language, and only pantry items the game knows. Unusable → null.
+ */
+export function recipeFromCook(d: ReelDish, cook: CatalogueCook): RecipeDef | null {
+  const seen = new Set<string>();
+  const ingredients = (Array.isArray(cook.produce) ? cook.produce : []).flatMap((p) => {
+    if (!PRODUCE.has(p.id) || seen.has(p.id)) return [];
+    seen.add(p.id);
+    return [{ crop: p.id as ProduceId, qty: Math.min(3, Math.max(1, Math.round(p.qty) || 1)) }];
+  });
+  const steps = (Array.isArray(cook.steps) ? cook.steps : []).flatMap((s) => {
+    const label = (s.translations?.[locale] ?? '').trim() || s.label.trim();
+    if (!label) return [];
+    const heat = (HEATS.has(s.heat) ? s.heat : 'mid') as Heat;
+    return [{ label, heat, weight: Math.min(5, Math.max(1, Math.round(s.weight) || 2)) }];
+  });
+  if (ingredients.length === 0 || steps.length < 3) return null;
+  return {
+    id: d.id,
+    name: d.name,
+    dishId: d.id,
+    region: d.region,
+    group: groupOf(d.nameVi ?? d.name),
+    ingredients,
+    xp: recipeXp(ingredients.reduce((n, i) => n + i.qty, 0)),
+    unlockNote:
+      d.region === 'world'
+        ? t.data.reel.recipeNoteWorld
+        : t.data.reel.recipeNote(REGION_LABEL[d.region]),
+    fact: d.story,
+    steps,
+  };
+}
+
+/** The dish's own recipe when it has one; otherwise a recipe that uses its seed crop. */
+function recipeFor(dishId: string, crop: CropId, region: ReelRegion): RecipeId {
+  const own = RECIPE_LIST.find((r) => r.dishId === dishId);
+  if (own) return own.id;
   const candidates = (Object.keys(RECIPES) as RecipeId[]).filter((id) =>
-    RECIPES[id].ingredients.some((i) => i.crop === crop),
+    RECIPES[id]?.ingredients.some((i) => i.crop === crop),
   );
-  return candidates.find((id) => RECIPES[id].region === region) ?? candidates[0] ?? 'com-tam';
+  return candidates.find((id) => RECIPES[id]?.region === region) ?? candidates[0] ?? 'com-tam';
 }
 
 function tagsOf(d: ReelDish): string[] {
@@ -277,9 +341,18 @@ function tagsOf(d: ReelDish): string[] {
  * related seed through the same idempotent reducer as the classic flow.
  */
 export function toGameDish(d: ReelDish): Dish {
-  const seeded = d.ingredients.find((i) => i.crop);
-  const seed: CropId = seeded?.crop ?? 'herbs';
-  const seedFrom = seeded?.name ?? t.data.reel.seedFallback;
+  // A dish with its own recipe gives a seed that recipe needs (a starting crop when it can).
+  const own = RECIPE_LIST.find((r) => r.dishId === d.id);
+  const ownCrops = (own?.ingredients ?? [])
+    .map((i) => i.crop)
+    .filter((c): c is CropId => CROP_IDS.has(c));
+  const ownSeed = ownCrops.find((c) => !CROPS[c].unlock) ?? ownCrops[0];
+  const seeded = ownSeed
+    ? d.ingredients.find((i) => i.crop === ownSeed)
+    : d.ingredients.find((i) => i.crop);
+  const seed: CropId = ownSeed ?? seeded?.crop ?? 'herbs';
+  const seedFrom =
+    seeded?.name ?? (ownSeed ? CROPS[ownSeed].produceName : t.data.reel.seedFallback);
   const crop = CROPS[seed];
   const ids = d.ingredients.map((i) => i.id);
   const contains: AvoidId[] = [];
@@ -305,7 +378,7 @@ export function toGameDish(d: ReelDish): Dish {
     reason: d.story,
     seed,
     seedNote: t.data.reel.seedNote(seedFrom, d.name, crop.name, crop.seedName),
-    recipe: recipeFor(seed, d.region),
+    recipe: recipeFor(d.id, seed, d.region),
   };
 }
 

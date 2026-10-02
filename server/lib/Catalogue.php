@@ -15,6 +15,78 @@ final class Catalogue
     /** Translatable text fields and their length limits (same as the Vietnamese columns). */
     public const DISH_TRANSLATABLE = ['name' => 160, 'subtitle' => 200, 'story' => 400];
     public const INGREDIENT_TRANSLATABLE = ['name' => 120, 'description' => 400];
+    /**
+     * What the farm game can put in a pot (id => Vietnamese name), for dish_cook. Keep in sync
+     * with PRODUCE_IDS in src/data/game.ts (wool is left out: nobody cooks it).
+     */
+    public const PRODUCE = [
+        'rice' => 'Gạo',
+        'herbs' => 'Rau thơm',
+        'chili' => 'Ớt',
+        'scallion' => 'Hành',
+        'bean' => 'Đậu',
+        'tomato' => 'Cà chua',
+        'lemongrass' => 'Sả',
+        'garlic' => 'Tỏi',
+        'cucumber' => 'Dưa leo',
+        'lime' => 'Chanh',
+        'napa' => 'Cải thảo',
+        'radish' => 'Củ cải trắng',
+        'cabbage' => 'Bắp cải',
+        'eggplant' => 'Cà tím',
+        'carrot' => 'Cà rốt',
+        'bittermelon' => 'Khổ qua',
+        'potato' => 'Khoai tây',
+        'shallot' => 'Hành tím',
+        'cauliflower' => 'Súp lơ',
+        'sweetpotato' => 'Khoai lang',
+        'peanut' => 'Đậu phộng',
+        'pumpkin' => 'Bí đỏ',
+        'beet' => 'Củ dền',
+        'corn' => 'Ngô',
+        'wintermelon' => 'Bí xanh',
+        'ginger' => 'Gừng',
+        'taro' => 'Khoai môn',
+        'strawberry' => 'Dâu tây',
+        'pineapple' => 'Dứa',
+        'banana' => 'Chuối',
+        'papaya' => 'Đu đủ',
+        'guava' => 'Ổi',
+        'orange' => 'Cam',
+        'mandarin' => 'Quýt',
+        'mango' => 'Xoài',
+        'dragonfruit' => 'Thanh long',
+        'coconut' => 'Dừa',
+        'lychee' => 'Vải',
+        'rambutan' => 'Chôm chôm',
+        'jackfruit' => 'Mít',
+        'durian' => 'Sầu riêng',
+        'button' => 'Nấm mỡ',
+        'oyster' => 'Nấm sò',
+        'shiitake' => 'Nấm hương',
+        'enoki' => 'Nấm kim châm',
+        'woodear' => 'Mộc nhĩ',
+        'egg' => 'Trứng gà',
+        'duckegg' => 'Trứng vịt',
+        'quailegg' => 'Trứng cút',
+        'gooseegg' => 'Trứng ngỗng',
+        'milk' => 'Sữa bò',
+        'goatmilk' => 'Sữa dê',
+        'honey' => 'Mật ong',
+        'honeycomb' => 'Bánh sáp ong',
+        'fish' => 'Cá rô đồng',
+        'shrimp' => 'Tôm càng',
+        'carp' => 'Cá chép',
+        'crab' => 'Cua đồng',
+        'mackerel' => 'Cá thu',
+        'scad' => 'Cá nục',
+        'clam' => 'Nghêu',
+        'squid' => 'Mực ống',
+        'bloodcockle' => 'Sò huyết',
+        'scallop' => 'Sò điệp',
+        'octopus' => 'Bạch tuộc',
+    ];
+    public const HEATS = ['low', 'mid', 'high'];
 
     public function __construct(private readonly PDO $pdo)
     {
@@ -38,7 +110,8 @@ final class Catalogue
         // One query per translation table, whatever the catalogue size.
         $dishT = $this->dishTranslations();
         $ingT = $this->ingredientTranslations();
-        return array_map(fn ($d) => $this->shape($d, $byDish[$d['id']] ?? [], $dishT[$d['id']] ?? [], $ingT), $dishes);
+        $cook = $this->cooks();
+        return array_map(fn ($d) => $this->shape($d, $byDish[$d['id']] ?? [], $dishT[$d['id']] ?? [], $ingT, $cook[$d['id']] ?? null), $dishes);
     }
 
     public function getDish(string $id): ?array
@@ -56,11 +129,17 @@ final class Catalogue
         );
         $stmt->execute([$id]);
         $ingredients = $stmt->fetchAll();
-        return $this->shape($row, $ingredients, $this->dishTranslations($id)[$id] ?? [], $this->ingredientTranslations(array_column($ingredients, 'id')));
+        return $this->shape(
+            $row,
+            $ingredients,
+            $this->dishTranslations($id)[$id] ?? [],
+            $this->ingredientTranslations(array_column($ingredients, 'id')),
+            $this->cooks($id)[$id] ?? null,
+        );
     }
 
     /** Public/admin JSON shape — mirrors the frontend ReelDish (minus computed fields). */
-    private function shape(array $d, array $ingredients, array $translations, array $ingredientTranslations): array
+    private function shape(array $d, array $ingredients, array $translations, array $ingredientTranslations, ?array $cook): array
     {
         return [
             'id' => $d['id'],
@@ -96,6 +175,8 @@ final class Catalogue
                 'crop' => $i['crop'] ?: null,
                 'translations' => (object) ($ingredientTranslations[$i['id']] ?? []),
             ], $ingredients),
+            // How the farm game cooks it (null: not written yet; the game then has no recipe for it).
+            'cook' => $cook,
             'contentSource' => $d['content_source'],
             'aiModel' => $d['ai_model'],
             'aiAt' => $d['ai_at'],
@@ -116,7 +197,10 @@ final class Catalogue
                     (SELECT SUM(LENGTH(name) + LENGTH(subtitle) + LENGTH(story)) FROM dish_translations) tl,
                     (SELECT COUNT(*) FROM ingredient_translations) ic,
                     (SELECT MAX(updated_at) FROM ingredient_translations) iu,
-                    (SELECT SUM(LENGTH(name) + LENGTH(description)) FROM ingredient_translations) il',
+                    (SELECT SUM(LENGTH(name) + LENGTH(description)) FROM ingredient_translations) il,
+                    (SELECT COUNT(*) FROM dish_cook) kc,
+                    (SELECT MAX(updated_at) FROM dish_cook) ku,
+                    (SELECT SUM(LENGTH(data)) FROM dish_cook) kl',
         )->fetch();
         $videos = $this->pdo->query('SELECT dish_id, video_id, position, metadata FROM dish_youtube_videos ORDER BY dish_id, position, video_id')->fetchAll();
         return substr(hash('sha256', json_encode([$row, $videos], JSON_THROW_ON_ERROR)), 0, 12);
@@ -137,6 +221,74 @@ final class Catalogue
             )->fetchColumn(),
             'version' => $this->version(),
         ];
+    }
+
+    /** dish id => cook data (one query; one dish when $dishId is given). */
+    private function cooks(?string $dishId = null): array
+    {
+        $sql = 'SELECT dish_id, data FROM dish_cook';
+        $stmt = $this->pdo->prepare($dishId === null ? $sql : "$sql WHERE dish_id = ?");
+        $stmt->execute($dishId === null ? [] : [$dishId]);
+        $out = [];
+        foreach ($stmt->fetchAll() as $r) {
+            $data = self::cleanCook(json_decode((string) $r['data'], true));
+            if ($data !== null) {
+                $out[$r['dish_id']] = $data;
+            }
+        }
+        return $out;
+    }
+
+    /** Replaces (or with null removes) how the game cooks a dish. */
+    public function saveCook(string $dishId, ?array $cook): void
+    {
+        $this->pdo->prepare('DELETE FROM dish_cook WHERE dish_id = ?')->execute([$dishId]);
+        if ($cook !== null) {
+            $this->pdo->prepare('INSERT INTO dish_cook (dish_id, data, updated_at) VALUES (?, ?, ?)')
+                ->execute([$dishId, json_encode($cook, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR), time()]);
+        }
+    }
+
+    /**
+     * Validates cook data: 3–5 steps {label ≤ 40, heat, weight 1–5, translations?} and 1–5
+     * pantry items {id from PRODUCE, qty 1–3}, no repeats. Anything unusable → null.
+     */
+    public static function cleanCook(mixed $in): ?array
+    {
+        if (!is_array($in) || !is_array($in['steps'] ?? null) || !is_array($in['produce'] ?? null)) {
+            return null;
+        }
+        $steps = [];
+        foreach (array_slice($in['steps'], 0, 5) as $s) {
+            $label = is_array($s) ? mb_substr(trim((string) ($s['label'] ?? '')), 0, 40) : '';
+            if ($label === '') {
+                continue;
+            }
+            $tr = [];
+            foreach ((array) ($s['translations'] ?? []) as $locale => $text) {
+                $text = mb_substr(trim((string) (is_scalar($text) ? $text : '')), 0, 48);
+                if (preg_match('/^[a-z]{2}(-[A-Z]{2})?$/', (string) $locale) && $locale !== 'vi' && $text !== '') {
+                    $tr[$locale] = $text;
+                }
+            }
+            $steps[] = [
+                'label' => $label,
+                'heat' => in_array($s['heat'] ?? null, self::HEATS, true) ? $s['heat'] : 'mid',
+                'weight' => max(1, min(5, (int) ($s['weight'] ?? 2))),
+                'translations' => (object) $tr,
+            ];
+        }
+        $produce = [];
+        foreach ($in['produce'] as $p) {
+            $id = is_array($p) ? (string) ($p['id'] ?? '') : '';
+            if (isset(self::PRODUCE[$id]) && !isset($produce[$id]) && count($produce) < 5) {
+                $produce[$id] = ['id' => $id, 'qty' => max(1, min(3, (int) ($p['qty'] ?? 1)))];
+            }
+        }
+        if (count($steps) < 3 || !$produce) {
+            return null;
+        }
+        return ['steps' => $steps, 'produce' => array_values($produce)];
     }
 
     private function youtubeVideos(string $id): array
@@ -267,6 +419,9 @@ final class Catalogue
             $this->replaceIngredients($id, $d['ingredients']);
             if ($d['translations'] !== null) {
                 $this->writeTranslations('dish', $id, $d['translations']);
+            }
+            if ($d['cookSet']) {
+                $this->saveCook($id, $d['cook']);
             }
             $this->pdo->commit();
         } catch (Throwable $e) {
@@ -608,6 +763,9 @@ final class Catalogue
             'video' => $video,
             'ingredients' => $ingredients,
             'translations' => array_key_exists('translations', $in) ? self::cleanTranslations($in['translations'], self::DISH_TRANSLATABLE) : null,
+            // A `cook` key replaces the game's recipe (null or invalid removes it); no key keeps it.
+            'cookSet' => array_key_exists('cook', $in),
+            'cook' => array_key_exists('cook', $in) ? self::cleanCook($in['cook']) : null,
             'image' => isset($in['image']) ? (string) $in['image'] : null,
             'thumbnail' => isset($in['thumbnail']) ? (string) $in['thumbnail'] : null,
             'position' => isset($in['position']) ? (int) $in['position'] : null,

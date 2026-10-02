@@ -409,6 +409,7 @@ const journey = {
     waitGrow: 'Chờ cây lớn rồi thu hoạch là nấu được.',
     cooked: (n: number) => `Đã nấu ×${n}`,
     lockedTitle: (n: number) => `Chưa mở · ${n} công thức`,
+    opensAbroad: 'Mở khi bạn mở thêm một vùng trên bản đồ',
     opensWith: (region: string) => `Mở cùng ${region}`,
     stampsLeft: (n: number) => ` · còn ${n} con dấu`,
   },

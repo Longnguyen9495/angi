@@ -85,6 +85,10 @@ Tiếng Việt là ngôn ngữ gốc và là bản dự phòng ở mọi lớp; 
   cd /var/www/angi && git pull && npm ci && npm run build
   php server/bin/migrate.php   # chỉ khi schema đổi
   ```
+- Cách nấu trong game (bảng `dish_cook`): món nào có `cook` thì thành công thức trong Sổ bếp. AI tự viết khi
+  tạo/đọc lại món; điền cho các món còn thiếu: `php server/bin/ai-cook.php` (`--all` để viết lại hết, `--only=…`).
+  Mang sang server không cần gọi AI lại: `npm run build` ở local, commit snapshot, rồi trên server
+  `php server/bin/ai-cook.php --import=src/features/food-reel/data/catalogue.snapshot.json`.
 - Chép catalogue local lên server: `npm run build` ở local (xuất snapshot), commit, rồi trên server
   `php server/bin/seed.php --force --from=src/features/food-reel/data/catalogue.snapshot.json`
   và `scp` các ảnh trong `storage/uploads/` mà món mới tham chiếu.

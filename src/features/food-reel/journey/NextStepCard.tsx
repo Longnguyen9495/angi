@@ -8,7 +8,7 @@ import {
   Plant,
 } from '@phosphor-icons/react';
 import { CropIcon } from '../../../components/ui/CropIcon';
-import { ANIMALS, CROPS, RECIPES, produceName } from '../../../data/game';
+import { ANIMALS, CROPS, getRecipe, produceName } from '../../../data/game';
 import type { AnimalId, CropId, RecipeId } from '../../../data/types';
 import { dishIdsForSeed, type NextStep } from '../../../domain/nextStep';
 import { HOUR_MS, formatDuration, slotKey } from '../../../domain/time';
@@ -52,7 +52,7 @@ export function NextStepCard({
 
   switch (step.kind) {
     case 'cook': {
-      const r = RECIPES[step.recipe];
+      const r = getRecipe(step.recipe);
       icon = <CookingPot size={22} aria-hidden="true" />;
       title = m.cook.title(r.name);
       body = m.cook.body(r.xp);
@@ -97,7 +97,7 @@ export function NextStepCard({
       break;
     }
     case 'fish': {
-      const r = RECIPES[step.recipe];
+      const r = getRecipe(step.recipe);
       icon = <Fish size={22} aria-hidden="true" />;
       title = m.fish.title(r.name, produceName(step.catch).toLowerCase());
       body = m.fish.body(step.left);
@@ -113,7 +113,7 @@ export function NextStepCard({
     }
     case 'find': {
       const c = CROPS[step.crop];
-      const r = RECIPES[step.recipe];
+      const r = getRecipe(step.recipe);
       const n = dishIdsForSeed(step.crop).length;
       const seed = c.seedName.toLowerCase();
       const produce = c.produceName.toLowerCase();
@@ -134,7 +134,7 @@ export function NextStepCard({
       break;
     }
     case 'wait': {
-      const r = RECIPES[step.recipe];
+      const r = getRecipe(step.recipe);
       icon = <Hourglass size={22} aria-hidden="true" />;
       title = m.wait.title(r.name);
       body = m.wait.body(formatDuration(step.readyAt - now));

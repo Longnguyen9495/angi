@@ -8,7 +8,8 @@ import {
   DECOR,
   FISHING,
   MARKET,
-  RECIPES,
+  getRecipe,
+  hasRecipe,
   WATERING,
   XP,
   harvestXp,
@@ -474,8 +475,9 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
     }
 
     case 'COOK': {
-      if (!recipeProgress(state, action.recipeId).canCook) return state;
-      const recipe = RECIPES[action.recipeId];
+      if (!hasRecipe(action.recipeId) || !recipeProgress(state, action.recipeId).canCook)
+        return state;
+      const recipe = getRecipe(action.recipeId);
       const s = structuredClone(state);
       const key = `cook:${recipe.id}:${action.now}`;
       for (const ing of recipe.ingredients) {

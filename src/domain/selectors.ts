@@ -6,7 +6,7 @@ import {
   CATCHES,
   HIVE,
   CROPS,
-  RECIPES,
+  getRecipe,
   REGIONS,
   REGION_ORDER,
   FARM_PLOT_COUNT,
@@ -200,7 +200,7 @@ export interface RecipeProgress {
  * so planting a seed moves the bar immediately — transparently labelled "đang lớn".
  */
 export function recipeProgress(p: GuestProgress, id: RecipeId): RecipeProgress {
-  const recipe = RECIPES[id];
+  const recipe = getRecipe(id);
   const ingredients = recipe.ingredients.map(({ crop, qty }) => ({
     crop,
     qty,
@@ -227,8 +227,12 @@ export function recipeProgress(p: GuestProgress, id: RecipeId): RecipeProgress {
 
 /** Starter recipes are always open; the others open with their region on the map. */
 export function recipeAvailable(p: GuestProgress, id: RecipeId): boolean {
-  const r = RECIPES[id];
-  return !!r.starter || p.unlockedRegions.includes(r.region);
+  const r = getRecipe(id);
+  if (r.starter) return true;
+  // Dishes from abroad open with a second region: the guest has started to travel.
+  return r.region === 'world'
+    ? p.unlockedRegions.length >= 2
+    : p.unlockedRegions.includes(r.region);
 }
 
 /** The base crops are always open; the others open by level. */

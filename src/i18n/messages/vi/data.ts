@@ -399,6 +399,8 @@ const data = {
   reel: {
     /** Dish price, given in thousand VND. */
     price: (thousands: number) => `${thousands}k`,
+    recipeNote: (region: string) => `Công thức của món trong rổ — mở cùng vùng ${region}.`,
+    recipeNoteWorld: 'Món thế giới — mở khi bạn mở thêm một vùng trên bản đồ.',
     regionLabel: {
       north: 'Bắc Bộ',
       central: 'Trung Bộ',

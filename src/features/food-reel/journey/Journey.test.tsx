@@ -2,6 +2,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../../../App';
+import { RECIPE_LIST } from '../../../data/game';
 import { STORAGE_KEY, saveProgress } from '../../../domain/persistence';
 import { EMPTY_PRODUCE, createInitialProgress } from '../../../domain/progress';
 import { mockConfig } from '../../../services/mockApi';
@@ -365,7 +366,9 @@ describe('the kitchen', () => {
     await waitFor(() =>
       expect(screen.queryByRole('dialog', { name: 'Cơm tấm sườn' })).not.toBeInTheDocument(),
     );
-    expect(within(layer).getByRole('heading', { name: 'Sổ bếp · 1/14 trang' })).toBeInTheDocument();
+    expect(
+      within(layer).getByRole('heading', { name: `Sổ bếp · 1/${RECIPE_LIST.length} trang` }),
+    ).toBeInTheDocument();
     expect(document.querySelector('.fj-page.is-cooked .fj-page__name')).toHaveTextContent(
       'Cơm tấm sườn',
     );

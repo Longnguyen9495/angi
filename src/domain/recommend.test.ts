@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DISHES } from '../data/dishes';
-import { CROPS, RECIPES, REGIONS } from '../data/game';
+import { CROPS, getRecipe, REGIONS } from '../data/game';
 import type { RegionId } from '../data/types';
 import {
   DEFAULT_FILTERS,
@@ -26,7 +26,7 @@ describe('catalogue data', () => {
   it('links every dish seed to an ingredient of its recipe and to a known region', () => {
     for (const d of DISHES) {
       expect(CROPS[d.seed]).toBeDefined();
-      expect(RECIPES[d.recipe].ingredients.some((i) => i.crop === d.seed)).toBe(true);
+      expect(getRecipe(d.recipe).ingredients.some((i) => i.crop === d.seed)).toBe(true);
       expect(d.region).not.toBe('world');
       expect(REGIONS[d.region as RegionId].featuredDishIds).toContain(d.id);
     }

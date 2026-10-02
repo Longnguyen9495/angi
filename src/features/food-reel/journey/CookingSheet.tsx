@@ -1,9 +1,9 @@
 import { BookOpenText, CookingPot, SealCheck } from '@phosphor-icons/react';
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { ProduceImage } from '../../../components/ui/CropVisual';
 import { Sheet } from '../../../components/ui/Sheet';
 import { cookPlan } from '../../../data/cooking';
-import { RECIPES, produceName } from '../../../data/game';
+import { getRecipe, produceName } from '../../../data/game';
 import type { RecipeId } from '../../../data/types';
 import { recipeProgress } from '../../../domain/selectors';
 import { currentTime } from '../../../domain/time';
@@ -40,7 +40,7 @@ export function CookingSheet({ recipeId, onClose, onOpenCookbook }: CookingSheet
     <Sheet
       open={recipeId !== null}
       onClose={onClose}
-      title={recipeId ? RECIPES[recipeId].name : ''}
+      title={recipeId ? getRecipe(recipeId).name : ''}
       description={m.description}
       variant="dark"
     >
@@ -61,14 +61,14 @@ function CookingScene({
   const { state, dispatch } = useGame();
   const { announce } = useFeedback();
   const [step, setStep] = useState<Step>('prep');
-  const recipe = RECIPES[recipeId];
+  const recipe = getRecipe(recipeId);
   const dish = getReelDish(recipe.dishId);
   const canCook = recipeProgress(state, recipeId).canCook;
   const cooked = state.cooked[recipeId] ?? 0;
   const drops = recipe.ingredients.flatMap((i) =>
     Array.from({ length: i.qty }, (_, k) => ({ crop: i.crop, key: `${i.crop}-${k}` })),
   );
-  const plan = useMemo(() => cookPlan(recipe), [recipe]);
+  const plan = cookPlan(recipe);
   const startedAt = useRef(0);
   const [elapsed, setElapsed] = useState(0);
 
@@ -86,7 +86,7 @@ function CookingScene({
     if (!canCook || step !== 'prep') return;
     dispatch({ type: 'COOK', recipeId, now: currentTime() });
     announce(m.started(recipe.name));
-    startedAt.current = Date.now();
+    startedAt.current = currentTime();
     setElapsed(0);
     setStep('cooking');
   };

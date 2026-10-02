@@ -1,8 +1,8 @@
 import { t } from '../i18n';
-import type { DishGroup, RecipeDef, RecipeId } from './types';
+import { isBuiltinRecipe } from './game';
+import type { BuiltinRecipeId, DishGroup, Heat, RecipeDef } from './types';
 
-/** How hard the fire burns during a stage — drives flame, bubbles and pot shake. */
-export type Heat = 'low' | 'mid' | 'high';
+export type { Heat };
 
 export interface CookStage {
   label: string;
@@ -25,7 +25,7 @@ export interface CookPlan {
  * Every dish is cooked in its own order of steps: how hot the fire burns in each one and
  * what share of the time it takes. The step names are in t.data.cooking[recipe].
  */
-const STEPS: Record<RecipeId, [Heat, number][]> = {
+const STEPS: Record<BuiltinRecipeId, [Heat, number][]> = {
   'com-tam': [
     ['mid', 3],
     ['high', 3],
@@ -111,7 +111,10 @@ const STEPS: Record<RecipeId, [Heat, number][]> = {
   ],
 };
 
-function stagesFor(id: RecipeId): CookStage[] {
+/** A recipe made from a catalogue dish brings its own steps; built-in ones use STEPS. */
+function stagesFor(recipe: RecipeDef): CookStage[] {
+  if (recipe.steps && recipe.steps.length > 0) return recipe.steps;
+  const id: BuiltinRecipeId = isBuiltinRecipe(recipe.id) ? recipe.id : 'com-tam';
   const labels = t.data.cooking[id];
   return STEPS[id].map(([heat, weight], i) => ({ label: labels[i] ?? '', heat, weight }));
 }
@@ -131,7 +134,7 @@ const PER_INGREDIENT_MS = 700;
 export function cookPlan(recipe: RecipeDef): CookPlan {
   const pieces = recipe.ingredients.reduce((n, i) => n + i.qty, 0);
   const totalMs = BASE_MS[recipe.group] + pieces * PER_INGREDIENT_MS;
-  const stages = stagesFor(recipe.id);
+  const stages = stagesFor(recipe);
   const weights = stages.reduce((n, s) => n + s.weight, 0);
   let startMs = 0;
   return {
