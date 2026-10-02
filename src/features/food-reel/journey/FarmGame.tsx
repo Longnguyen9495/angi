@@ -42,6 +42,8 @@ import type {
 } from '../../farm-anim/FarmScene';
 import { nextStep } from '../../../domain/nextStep';
 import { canFulfill, orderDone, todaysOrders } from '../../../domain/orders';
+import { gameReducer, type Action } from '../../../domain/reducer';
+import type { GuestProgress } from '../../../domain/progress';
 import { cropSprite, produceSprite } from '../../../data/sprites';
 import {
   STAGE_LABEL,
@@ -296,8 +298,28 @@ export function FarmGame({
     return () => document.removeEventListener('keydown', onKey);
   }, []);
 
-  /** Pick every ripe plot, or just `plotId` (a tap on it). */
-  const harvestAll = (plotId?: number) => {
+  /** Recipes this crop goes into (cookable first, at most three), in state `s`. */
+  const cookIdeasFor = (crop: CropId, s: GuestProgress = state): CookIdea[] =>
+    RECIPE_LIST.filter(
+      (r) => recipeAvailable(s, r.id) && r.ingredients.some((i) => i.crop === crop),
+    )
+      .map((r) => {
+        const pr = recipeProgress(s, r.id);
+        const missing = pr.ingredients
+          .filter((i) => i.have < i.qty)
+          .map((i) => produceName(i.crop).toLowerCase())
+          .join(', ');
+        return { id: r.id, name: r.name, canCook: pr.canCook, missing };
+      })
+      .sort((x, y) => Number(y.canCook) - Number(x.canCook))
+      .slice(0, 3);
+
+  /**
+   * Pick every ripe plot, or just `plotId`. A single plot picked with a tap (`suggestCook`)
+   * also names a dish to cook with it, worked out on the pantry as it will be after the
+   * harvest: a Cook button when it can be cooked now, otherwise what is still missing.
+   */
+  const harvestAll = (plotId?: number, suggestCook = false) => {
     const picked = plotId === undefined ? ready : ready.filter((p) => p.id === plotId);
     if (picked.length === 0) return;
     const counts = new Map<string, number>();
@@ -307,16 +329,29 @@ export function FarmGame({
       const got = Math.max(1, def.yield - (p.stolen ? 1 : 0));
       counts.set(def.produceName, (counts.get(def.produceName) ?? 0) + got);
     });
-    dispatch(
+    const action: Action =
       plotId === undefined
         ? { type: 'HARVEST_ALL', now: currentTime() }
-        : { type: 'HARVEST_PLOT', plotId, now: currentTime() },
-    );
+        : { type: 'HARVEST_PLOT', plotId, now: currentTime() };
+    const best =
+      suggestCook && picked.length === 1
+        ? cookIdeasFor(picked[0]!.crop!, gameReducer(state, action))[0]
+        : undefined;
+    dispatch(action);
     setJustHarvested((n) => n + 1);
-    toast({
-      message: m.harvested([...counts].map(([n, q]) => `${n} ×${q}`).join(', ')),
-      tone: 'reward',
-    });
+    const message = m.harvested([...counts].map(([n, q]) => `${n} ×${q}`).join(', '));
+    if (best?.canCook)
+      toast({
+        message: `${message} ${m.cookReady(best.name)}`,
+        tone: 'reward',
+        action: { label: m.cardCook, onClick: () => onCook(best.id) },
+        duration: 7000,
+      });
+    else
+      toast({
+        message: best ? `${message} ${m.cookMissing(best.name, best.missing)}` : message,
+        tone: 'reward',
+      });
   };
 
   const plantAt = (plotId: number, seed: CropId | null = activeSeed) => {
@@ -442,30 +477,26 @@ export function FarmGame({
   }
 
   /**
-   * A tap on a plot does what its bubble asks: a ripe plot is picked, a dry growing one is
-   * watered, both straight away. Anything else opens its card (seeds, time left, a lock).
+   * A tap on a plot: a ripe one is picked straight away (on the plot or its bubble); a tap on
+   * the water-drop bubble, or on the plot with the can out, waters it. Anything else opens
+   * its card (seeds, time left, a lock).
    */
-  const onPlot = (id: number) => {
+  const onPlot = (id: number, mark?: PlaceInfo['mark']) => {
     const plot = state.plots.find((p) => p.id === id);
     const at = currentTime();
     const stage = plot ? plotStage(plot, at) : null;
     if (plot && stage === 'ready') {
       setPlotCard(null);
-      harvestAll(id);
+      harvestAll(id, true);
       return;
     }
-    if (plot && stage && isGrowing(stage)) {
+    if (plot && stage && isGrowing(stage) && (mark === 'water' || watering)) {
       const block = waterBlock(state, plot, at);
       if (block === null) {
         setPlotCard(null);
         waterAt(id);
-        return;
-      }
-      // With the can out, say why this one cannot be watered instead of opening the card.
-      if (watering) {
-        toast({ message: BLOCK_NOTE[block] || m.cantWater });
-        return;
-      }
+      } else toast({ message: BLOCK_NOTE[block] || m.cantWater });
+      return;
     }
     setPlotCard(plotCard?.id === id ? null : { id });
   };
@@ -507,19 +538,7 @@ export function FarmGame({
     if (plotCard.harvested) {
       const crop = plotCard.harvested;
       cardMode = { kind: 'harvested', crop, produce: produceName(crop).toLowerCase() };
-      cookIdeas = RECIPE_LIST.filter(
-        (r) => recipeAvailable(state, r.id) && r.ingredients.some((i) => i.crop === crop),
-      )
-        .map((r) => {
-          const pr = recipeProgress(state, r.id);
-          const missing = pr.ingredients
-            .filter((i) => i.have < i.qty)
-            .map((i) => produceName(i.crop).toLowerCase())
-            .join(', ');
-          return { id: r.id, name: r.name, canCook: pr.canCook, missing };
-        })
-        .sort((x, y) => Number(y.canCook) - Number(x.canCook))
-        .slice(0, 3);
+      cookIdeas = cookIdeasFor(crop);
     } else if (!plot) {
       cardMode = {
         kind: 'locked',
@@ -559,7 +578,7 @@ export function FarmGame({
   const onPlace = (place: FarmPlace, info: PlaceInfo) => {
     const at = currentTime();
     if (place === 'plot' && info.plotId !== undefined) {
-      onPlot(info.plotId);
+      onPlot(info.plotId, info.mark);
       return;
     }
     setPlotCard(null);

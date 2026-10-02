@@ -9,6 +9,7 @@ import { EnvironmentAnimation } from '../systems/EnvironmentAnimation';
 import {
   FarmGameLayer,
   type FarmView,
+  type Mark,
   type PlotKindView,
   type PlotStageView,
   type PlotView,
@@ -45,6 +46,8 @@ export interface PlaceInfo {
   x: number;
   y: number;
   plotId?: number;
+  /** The tap landed on the plot's bubble (ripe: pick it, water: water it). */
+  mark?: Mark;
 }
 
 /**
@@ -257,9 +260,15 @@ export class AnimationManager {
         }
       }
       const p = this.toPicture(this.pointerCss);
-      this.game.hover = this.game.hit(p);
+      // Over a bubble the plot behind it is not the one meant: no hover label there.
+      const onMark = this.game.markAt(p) !== null;
+      this.game.hover = onMark ? null : this.game.hit(p);
       canvas.style.cursor =
-        this.buildings.hover(p) || this.hit(p) ? 'pointer' : this.camView.canPan ? 'grab' : '';
+        onMark || this.buildings.hover(p) || this.hit(p)
+          ? 'pointer'
+          : this.camView.canPan
+            ? 'grab'
+            : '';
     };
     const leave = () => {
       this.pointerCss = null;
@@ -293,6 +302,12 @@ export class AnimationManager {
       const r = canvas.getBoundingClientRect();
       const p = this.toPicture({ x: e.clientX - r.left, y: e.clientY - r.top });
       // The door swings open and counts as the farmhouse.
+      // A bubble first: it floats over the plots behind its own.
+      const mark = this.game.markAt(p);
+      if (mark) {
+        this.game.tap(mark.plotId);
+        return this.onPlace('plot', { ...p, plotId: mark.plotId, mark: mark.mark });
+      }
       const plotId = this.game.hit(p);
       if (plotId !== null) {
         this.game.tap(plotId);

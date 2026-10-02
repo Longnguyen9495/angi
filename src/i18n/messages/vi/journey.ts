@@ -165,7 +165,7 @@ const journey = {
     farmPlotHarvest: (plot: number, crop: string) => `Ô ${plot} · ${crop} · chạm để thu hoạch`,
     farmPlotGrowing: (plot: number, crop: string, left: string) =>
       `Ô ${plot} · ${crop} · còn ${left}`,
-    farmTapToWater: ' · chạm để tưới',
+    farmTapToWater: ' · chạm giọt nước để tưới',
     animalLockedBubble: (animal: string, level: number) => `${animal} · cấp ${level}`,
     collectBubble: (product: string) => `Thu ${product}`,
     feedBubble: (feed: string) => `Cho ăn ${feed}`,
@@ -192,6 +192,8 @@ const journey = {
     cardCook: 'Nấu',
     cardMissing: (list: string) => `còn thiếu ${list}`,
     cardNoRecipe: 'Chưa có công thức nào dùng nguyên liệu này.',
+    cookReady: (dish: string) => `Nấu được ${dish} rồi!`,
+    cookMissing: (dish: string, list: string) => `${dish} còn thiếu ${list}.`,
     cardLocked: (level: string) => `Ô này mở khi lên cấp ${level}.`,
     plotsLabel: 'Các ô đất',
     tapToPlant: 'Chạm để gieo',

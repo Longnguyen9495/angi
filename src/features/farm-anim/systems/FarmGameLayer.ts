@@ -72,7 +72,7 @@ export interface FarmView {
 export type HarvestFlight = (at: Vec2, icon: string, count: number) => boolean;
 
 /** What a plot's bubble says: ripe (its produce) or thirsty (a drop). */
-type Mark = 'ready' | 'water';
+export type Mark = 'ready' | 'water';
 
 interface PlotFx {
   prev: PlotView | null;
@@ -1045,21 +1045,45 @@ export class FarmGameLayer {
    * pulses out of it), a water drop on a blue rim when it can be watered. Bubbles pop in when
    * they appear and bob gently; the hovered and the open plot skip theirs (label / card).
    */
+  /** Where a plot's bubble rests (picture px, before the bob), or null when it shows none. */
+  private markSpot(d: FieldDef['plots'][number]): { x: number; y: number; r: number } | null {
+    const f = this.fx.get(d.id);
+    if (!f?.mark || d.id === this.selected || d.id === this.hover) return null;
+    const r = f.mark === 'ready' ? 21 : 18;
+    const [cx, cy] = d.centre;
+    // Just over the plant's top (never far up a tall tree), and never below the plot's top.
+    const top = Math.max(cy + 8 - this.plantHeight(d.id) * 0.86, cy - 150);
+    return { x: cx, y: Math.min(top, d.quad[0][1]) - r - 8, r };
+  }
+
+  /**
+   * The bubble at picture point p (with room round it for a finger): its plot and what it
+   * asks for. Nearer plots win, as they are drawn over farther ones.
+   */
+  markAt(p: { x: number; y: number }): { plotId: number; mark: Mark } | null {
+    let best: { plotId: number; mark: Mark } | null = null;
+    let bestY = -Infinity;
+    for (const d of this.field.plots) {
+      const s = this.markSpot(d);
+      if (!s || Math.hypot(p.x - s.x, p.y - s.y) > s.r + 14 || d.centre[1] < bestY) continue;
+      best = { plotId: d.id, mark: this.fx.get(d.id)!.mark! };
+      bestY = d.centre[1];
+    }
+    return best;
+  }
+
   private drawMarks(ctx: CanvasRenderingContext2D, w: World) {
     const still = w.reduced;
     for (const d of this.field.plots) {
       const f = this.fx.get(d.id)!;
-      if (!f.mark || d.id === this.selected || d.id === this.hover) continue;
+      const s = this.markSpot(d);
       const v = this.view?.plots.find((p) => p.id === d.id);
-      if (!v) continue;
+      if (!s || !v) continue;
       const ready = f.mark === 'ready';
-      const r = ready ? 21 : 18;
-      const [cx, cy] = d.centre;
-      // Just over the plant's top (never far up a tall tree), and never below the plot's top.
-      const top = Math.max(cy + 8 - this.plantHeight(d.id) * 0.86, cy - 150);
+      const r = s.r;
       const bob = still ? 0 : Math.sin(w.t * 2.4 + d.id * 0.9) * 3;
-      const x = cx;
-      const y = Math.min(top, d.quad[0][1]) - r - 8 + bob;
+      const x = s.x;
+      const y = s.y + bob;
       // Pop in: overshoot a little, settle.
       const k = still ? 1 : clamp(f.markT / 0.35, 0, 1);
       const pop = k >= 1 ? 1 : 1 + 2.2 * (k - 1) ** 3 + 1.2 * (k - 1) ** 2;
