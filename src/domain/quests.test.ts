@@ -103,6 +103,15 @@ describe('streak chest and achievements', () => {
   });
 });
 
+describe('friends: invite reward', () => {
+  it('a referral milestone pays its coins once', () => {
+    const ev = { id: 'e9', type: 'referral' as const, plotId: 1, coins: 20, from: 'Vườn Chi' };
+    const s = gameReducer(fresh(), { type: 'FRIEND_EVENT', event: ev, now: NOON });
+    expect(s.coins).toBe(fresh().coins + 20);
+    expect(gameReducer(s, { type: 'FRIEND_EVENT', event: ev, now: NOON + 1 })).toBe(s);
+  });
+});
+
 describe('friends: picking and gifts', () => {
   it('a pick from a friend gives us one crop; the owner harvests one less', () => {
     let thief = gameReducer(fresh(), {

@@ -28,6 +28,7 @@ const account: Messages['account'] = {
     stolen: (from: string, crop: string) => `${from} just picked your ${crop}`,
     present: (from: string, seed: string) => `${from} sent you 1 ${seed}`,
     thanks: (from: string) => `${from} says thanks`,
+    referral: (from: string, coins: number) => `Invite reward with ${from}: +${coins} coins`,
     more: (n: number) => ` and ${n} more ${n === 1 ? 'update' : 'updates'}`,
   },
   toasts: {

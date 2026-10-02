@@ -178,3 +178,15 @@ CREATE TABLE IF NOT EXISTS farm_events (
   KEY idx_events_from (from_user, day),
   CONSTRAINT fk_events_to FOREIGN KEY (to_user) REFERENCES users (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Mời bạn mới: who brought a new garden in (one inviter per guest, set the first time a fresh
+-- account makes a friend). Each milestone the newcomer reaches pays both gardens once, as
+-- farm_events of type 'referral' (plot_id = milestone number, uniq ref:<n>:<invitee>:<to>).
+CREATE TABLE IF NOT EXISTS referrals (
+  invitee_id INT UNSIGNED NOT NULL PRIMARY KEY,
+  inviter_id INT UNSIGNED NOT NULL,
+  created_at INT UNSIGNED NOT NULL,
+  KEY idx_referrals_inviter (inviter_id),
+  CONSTRAINT fk_referrals_invitee FOREIGN KEY (invitee_id) REFERENCES users (id) ON DELETE CASCADE,
+  CONSTRAINT fk_referrals_inviter FOREIGN KEY (inviter_id) REFERENCES users (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

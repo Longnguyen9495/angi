@@ -330,6 +330,27 @@ const journey = {
     giftedToday: ' · đã tặng hôm nay',
     inviteAdded: (name: string) => `Đã kết bạn vườn với ${name} qua link mời!`,
     invitePending: 'Lưu nông trại bằng email để kết bạn với người đã mời bạn.',
+    referral: {
+      title: 'Mời bạn mới',
+      intro: (coins: number) =>
+        `Gửi link mời cho người chưa chơi. Mỗi khi bạn mới đạt một mốc, cả hai cùng nhận xu — tổng ${coins} xu mỗi người.`,
+      milestone: {
+        harvest: (n: number) => `Thu hoạch ${n} lần`,
+        cook: (n: number) => (n === 1 ? 'Nấu món đầu tiên' : `Nấu ${n} món`),
+        level: (n: number) => `Đạt cấp ${n}`,
+      },
+      coins: (n: number) => `+${n} xu`,
+      done: 'đã nhận',
+      invitedBy: (name: string) =>
+        `${name} đã mời bạn — làm các mốc dưới đây để cả hai cùng nhận xu.`,
+      invitedTitle: (n: number, max: number) => `Bạn đã mời ${n}/${max}`,
+      invitedMeta: (level: number, done: number, total: number) =>
+        `Cấp ${level} · ${done}/${total} mốc`,
+      none: 'Chưa có ai vào qua lời mời của bạn.',
+      full: (max: number) =>
+        `Đã đủ ${max} người — bạn mới vẫn kết bạn được nhưng không còn thưởng mời.`,
+      rule: 'Tính khi tài khoản mới (dưới 7 ngày) kết bạn lần đầu với bạn.',
+    },
     feed: {
       title: 'Tin bạn vườn',
       empty: 'Chưa có tin nào. Khi bạn bè tưới giúp, hái trộm hay tặng quà, tin sẽ hiện ở đây.',
@@ -341,6 +362,7 @@ const journey = {
       sentPresent: (to: string, seed: string) => `Bạn đã tặng ${to} 1 ${seed}`,
       thanks: (from: string) => `${from} cảm ơn bạn`,
       gift: (seed: string) => `Cô Ba gửi 1 ${seed}`,
+      referral: (name: string, coins: number) => `Thưởng mời bạn cùng ${name}: +${coins} xu`,
       revenge: 'Trả đũa',
       thank: 'Cảm ơn',
       thanked: 'Đã cảm ơn',

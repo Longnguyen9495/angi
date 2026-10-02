@@ -131,9 +131,10 @@ export interface DecorPlacement {
  * water / helped: a friend watered us / we watered a friend. gift: Cô Ba's daily seed.
  * stolen / stole: a friend picked from our ripe plot / we picked from theirs.
  * present: a friend sent us a seed. thanks: a friend said thanks.
+ * referral: a garden we brought in (or the one that brought us in) reached a milestone.
  */
 export type FriendEventType =
-  'water' | 'gift' | 'helped' | 'stolen' | 'stole' | 'present' | 'thanks';
+  'water' | 'gift' | 'helped' | 'stolen' | 'stole' | 'present' | 'thanks' | 'referral';
 
 /** Something a friend did for this garden, as recorded by the server (see server/lib/Friends.php). */
 export interface FriendEvent {
@@ -142,6 +143,8 @@ export interface FriendEvent {
   plotId?: number;
   crop?: CropId;
   from?: string;
+  /** referral: coins paid to each side. */
+  coins?: number;
 }
 
 export interface AnimalState {

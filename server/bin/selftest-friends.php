@@ -154,6 +154,44 @@ try {
     $aId = (int) (db()->query("SELECT COUNT(*) FROM users WHERE email = 'an@example.vn'")->fetchColumn());
     $leftRows = (int) db()->query('SELECT COUNT(*) FROM garden_profiles')->fetchColumn();
     $check('…and its garden profile', $aId === 0 && $leftRows === 1);
+
+    // ——— Mời bạn mới ———
+    $c = $guest('chi@example.vn');
+    $d = $guest('dung@example.vn');
+    $e = $guest('em@example.vn');
+    $as($c);
+    $cCode = $fr->profile()['code'];
+    $as($d);
+    $dCode = $fr->profile()['code'];
+    $ref = $fr->add(['code' => $cCode])['referrals'];
+    $check('a new account\'s first friend becomes its inviter', $ref['invitedBy'] !== null && $ref['invitedBy']['name'] === "Khu vườn $cCode" && $ref['invitedBy']['done'] === []);
+    $check('referral lists the milestones', count($ref['milestones']) === count(Friends::MILESTONES) && $ref['max'] === Friends::MAX_REFERRALS);
+    $as($c);
+    $cRef = $fr->list()['referrals'];
+    $check('the inviter sees the newcomer', count($cRef['invited']) === 1 && $cRef['invited'][0]['name'] === "Khu vườn $dCode" && $cRef['invitedBy'] === null);
+    $fr->add(['code' => $dCode]);
+    $check('never both ways round', $fr->list()['referrals']['invitedBy'] === null);
+    $check('no reward before a milestone', !in_array('referral', array_column($fr->events()['events'], 'type'), true));
+
+    $as($d);
+    $acc->putProgress(['data' => ['guestId' => 'gd', 'xp' => 250, 'quests' => ['total' => ['harvest' => 6, 'cook' => 0]]], 'baseVersion' => 0]);
+    $refCoins = fn (array $events) => array_sum(array_column(array_filter($events, fn ($x) => $x['type'] === 'referral'), 'coins'));
+    $want = Friends::MILESTONES[1]['coins'] + Friends::MILESTONES[3]['coins'];
+    $check('the newcomer is paid for each milestone reached', $refCoins($fr->events()['events']) === $want);
+    $check('…once', $refCoins($fr->events()['events']) === $want);
+    $check('…and sees them as done', $fr->list()['referrals']['invitedBy']['done'] === [1, 3]);
+    $as($c);
+    $cEvents = $fr->events()['events'];
+    $check('the inviter is paid the same', $refCoins($cEvents) === $want);
+    $check('the inviter sees the newcomer\'s progress', $fr->list()['referrals']['invited'][0]['done'] === [1, 3] && $fr->list()['referrals']['invited'][0]['level'] === 3);
+    $check('referral news shows the coins', in_array($want, [array_sum(array_column(array_filter($fr->feed()['items'], fn ($x) => $x['type'] === 'referral'), 'coins'))], true));
+
+    db()->prepare('UPDATE users SET created_at = ? WHERE email = ?')->execute([time() - 30 * 86400, 'em@example.vn']);
+    $as($e);
+    $check('an old account is not anyone\'s newcomer', $fr->add(['code' => $cCode])['referrals']['invitedBy'] === null);
+    $as($d);
+    $acc->delete();
+    $check('deleting an account removes its referral', (int) db()->query('SELECT COUNT(*) FROM referrals')->fetchColumn() === 0);
 } catch (Throwable $e) {
     $check('unexpected error: ' . $e->getMessage() . ' @' . $e->getLine(), false);
 }

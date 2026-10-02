@@ -237,6 +237,14 @@ final class Account
                 'SELECT g.friend_code FROM friendships f JOIN garden_profiles g ON g.user_id = f.friend_id WHERE f.user_id = ?',
                 [$u['id']],
             ), 'friend_code'),
+            'invitedBy' => $this->one(
+                'SELECT g.friend_code FROM referrals r JOIN garden_profiles g ON g.user_id = r.inviter_id WHERE r.invitee_id = ?',
+                [$u['id']],
+            )['friend_code'] ?? null,
+            'invited' => array_column($this->all(
+                'SELECT g.friend_code FROM referrals r JOIN garden_profiles g ON g.user_id = r.invitee_id WHERE r.inviter_id = ?',
+                [$u['id']],
+            ), 'friend_code'),
             'sessions' => array_map(fn ($s) => array_map('intval', $s), $sessions),
             'exportedAt' => time(),
         ];
@@ -248,6 +256,7 @@ final class Account
         // Explicit deletes as well as ON DELETE CASCADE, so nothing is left behind on either driver.
         $this->db->prepare('DELETE FROM farm_events WHERE to_user = ? OR from_user = ?')->execute([$u['id'], $u['id']]);
         $this->db->prepare('DELETE FROM friendships WHERE user_id = ? OR friend_id = ?')->execute([$u['id'], $u['id']]);
+        $this->db->prepare('DELETE FROM referrals WHERE invitee_id = ? OR inviter_id = ?')->execute([$u['id'], $u['id']]);
         $this->db->prepare('DELETE FROM garden_profiles WHERE user_id = ?')->execute([$u['id']]);
         $this->db->prepare('DELETE FROM user_progress WHERE user_id = ?')->execute([$u['id']]);
         $this->db->prepare('DELETE FROM user_sessions WHERE user_id = ?')->execute([$u['id']]);

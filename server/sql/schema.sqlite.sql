@@ -169,3 +169,10 @@ CREATE TABLE IF NOT EXISTS farm_events (
 );
 CREATE INDEX IF NOT EXISTS idx_events_to ON farm_events (to_user, delivered_at);
 CREATE INDEX IF NOT EXISTS idx_events_from ON farm_events (from_user, day);
+
+CREATE TABLE IF NOT EXISTS referrals (
+  invitee_id INTEGER NOT NULL PRIMARY KEY REFERENCES users (id) ON DELETE CASCADE,
+  inviter_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_referrals_inviter ON referrals (inviter_id);

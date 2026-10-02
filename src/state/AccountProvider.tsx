@@ -130,7 +130,14 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       const crop = e.crop && e.crop in CROPS ? (e.crop as CropId) : undefined;
       dispatch({
         type: 'FRIEND_EVENT',
-        event: { id: e.id, type: e.type, plotId: e.plotId ?? undefined, crop, from: e.from },
+        event: {
+          id: e.id,
+          type: e.type,
+          plotId: e.plotId ?? undefined,
+          crop,
+          from: e.from,
+          coins: e.coins,
+        },
         now,
       });
       if (seen) continue;
@@ -143,6 +150,8 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       if (e.type === 'present' && crop)
         lines.push(t.account.friendEvents.present(e.from, CROPS[crop].seedName.toLowerCase()));
       if (e.type === 'thanks') lines.push(t.account.friendEvents.thanks(e.from));
+      if (e.type === 'referral' && e.coins)
+        lines.push(t.account.friendEvents.referral(e.from, e.coins));
     }
     await friendsApi.ack(r.events.map((e) => e.id)).catch(() => undefined);
     if (lines.length > 0) {

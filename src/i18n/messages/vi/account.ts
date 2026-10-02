@@ -27,6 +27,7 @@ const account = {
     stolen: (from: string, crop: string) => `${from} vừa hái trộm ${crop} của bạn`,
     present: (from: string, seed: string) => `${from} tặng bạn 1 ${seed}`,
     thanks: (from: string) => `${from} cảm ơn bạn`,
+    referral: (from: string, coins: number) => `Thưởng mời bạn cùng ${from}: +${coins} xu`,
     more: (n: number) => ` và ${n} tin khác`,
   },
   toasts: {

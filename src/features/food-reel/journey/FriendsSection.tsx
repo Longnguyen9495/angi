@@ -1,5 +1,6 @@
 import {
   Basket,
+  Coins,
   Copy,
   Drop,
   Gift,
@@ -23,6 +24,7 @@ import {
   type FeedItem,
   type FriendGarden,
   type FriendsList,
+  type Referrals,
 } from '../../../services/account';
 import { BRAND, intlLocale, t } from '../../../i18n';
 import { useAccount, useFeedback, useGame, useUi } from '../../../state/hooks';
@@ -323,6 +325,8 @@ export function FriendsSection() {
         </ol>
       )}
 
+      {data?.referrals && <ReferralPanel r={data.referrals} />}
+
       {data && <FriendFeed onVisit={setVisit} />}
 
       {visit && (
@@ -432,7 +436,55 @@ function feedText(i: FeedItem): string {
       return f.thanks(i.name);
     case 'gift':
       return f.gift(crop?.seedName.toLowerCase() ?? '');
+    case 'referral':
+      return f.referral(i.name, i.coins ?? 0);
   }
+}
+
+/**
+ * Mời bạn mới: the milestones a newcomer reaches to pay both gardens, who brought me in,
+ * and how far the gardens I brought in have got. The server pays; this only shows it.
+ */
+function ReferralPanel({ r }: { r: Referrals }) {
+  const p = m.referral;
+  const total = r.milestones.reduce((n, ms) => n + ms.coins, 0);
+  const paid = r.invitedBy?.done ?? [];
+  return (
+    <section className="fj-referral" aria-labelledby="fj-referral-title">
+      <h3 className="fj-h3" id="fj-referral-title">
+        <Coins size={20} aria-hidden="true" /> {p.title}
+      </h3>
+      <p className="fj-note">{r.invitedBy ? p.invitedBy(r.invitedBy.name) : p.intro(total)}</p>
+      <ol className="fj-referral__steps">
+        {r.milestones.map((ms) => {
+          const done = paid.includes(ms.id);
+          return (
+            <li key={ms.id} className={done ? 'is-done' : undefined}>
+              <span>{p.milestone[ms.metric](ms.target)}</span>
+              <span className="fj-referral__coins">{done ? p.done : p.coins(ms.coins)}</span>
+            </li>
+          );
+        })}
+      </ol>
+      {r.invitedBy && <p className="fj-note">{p.intro(total)}</p>}
+      <p className="fj-friends__label">{p.invitedTitle(r.invited.length, r.max)}</p>
+      {r.invited.length === 0 ? (
+        <p className="fj-note">{p.none}</p>
+      ) : (
+        <ul className="fj-referral__list">
+          {r.invited.map((f, i) => (
+            <li key={i}>
+              <span>{f.name}</span>
+              <span className="fj-board__meta">
+                {p.invitedMeta(f.level, f.done.length, r.milestones.length)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <p className="fj-note">{r.invited.length >= r.max ? p.full(r.max) : p.rule}</p>
+    </section>
+  );
 }
 
 /** Friends' news: who helped, picked or gave, with a way to visit back or say thanks. */

@@ -331,6 +331,25 @@ const journey: Messages['journey'] = {
     giftedToday: ' · gift sent today',
     inviteAdded: (name) => `You and ${name} are garden friends now!`,
     invitePending: 'Save your farm with your email to become friends with whoever invited you.',
+    referral: {
+      title: 'Invite someone new',
+      intro: (coins) =>
+        `Send your invite link to someone who hasn’t played yet. Each milestone they reach pays you both — ${coins} coins each in total.`,
+      milestone: {
+        harvest: (n) => `Harvest ${n} times`,
+        cook: (n) => (n === 1 ? 'Cook a first dish' : `Cook ${n} dishes`),
+        level: (n) => `Reach level ${n}`,
+      },
+      coins: (n) => `+${n} coins`,
+      done: 'paid',
+      invitedBy: (name) => `${name} invited you — reach these milestones and you both get coins.`,
+      invitedTitle: (n, max) => `You invited ${n}/${max}`,
+      invitedMeta: (level, done, total) => `Level ${level} · ${done}/${total} milestones`,
+      none: 'Nobody has joined through your invite yet.',
+      full: (max) =>
+        `You’ve reached ${max} — new players can still be your friends, without the invite reward.`,
+      rule: 'Counts when a new account (under 7 days old) makes you its first friend.',
+    },
     feed: {
       title: 'Friends’ news',
       empty: 'No news yet. When friends water, pick from or send you gifts, it shows up here.',
@@ -342,6 +361,7 @@ const journey: Messages['journey'] = {
       sentPresent: (to, seed) => `You sent ${to} 1 ${seed}`,
       thanks: (from) => `${from} says thanks`,
       gift: (seed) => `Cô Ba sent you 1 ${seed}`,
+      referral: (name, coins) => `Invite reward with ${name}: +${coins} coins`,
       revenge: 'Pay a visit',
       thank: 'Say thanks',
       thanked: 'Thanked',

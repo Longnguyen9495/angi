@@ -76,7 +76,21 @@ final class Friends
     private const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     /** Seeds Cô Ba may gift: the crops every garden has from day one. */
     private const GIFT_CROPS = ['rice', 'herbs', 'chili', 'scallion', 'bean', 'tomato'];
-    private const EVENT_TYPES = ['water', 'gift', 'helped', 'stolen', 'stole', 'present', 'thanks'];
+    private const EVENT_TYPES = ['water', 'gift', 'helped', 'stolen', 'stole', 'present', 'thanks', 'referral'];
+    /** Mời bạn mới: an account this young that makes its first friend counts as invited by them. */
+    private const REFERRAL_WINDOW = 7 * 86400;
+    /** Newcomers one garden can be paid for (keeps throwaway accounts from minting coins). */
+    public const MAX_REFERRALS = 10;
+    /**
+     * What the newcomer has to reach, read from their saved progress; each pays both gardens
+     * `coins` once. Numbers are stored in farm_events.plot_id — never renumber, only append.
+     */
+    public const MILESTONES = [
+        1 => ['metric' => 'harvest', 'target' => 5, 'coins' => 20],
+        2 => ['metric' => 'cook', 'target' => 1, 'coins' => 30],
+        3 => ['metric' => 'level', 'target' => 3, 'coins' => 50],
+        4 => ['metric' => 'level', 'target' => 5, 'coins' => 100],
+    ];
 
     public function __construct(private PDO $db, private Account $account)
     {
@@ -152,6 +166,7 @@ final class Friends
         return [
             'me' => $this->publicProfile($mine) + ['xp' => self::xp($myData), 'level' => self::level(self::xp($myData))],
             'friends' => $friends,
+            'referrals' => $this->referrals($me),
             'helpsLeft' => max(0, self::HELPS_PER_DAY - count($helped)),
             'stealsLeft' => max(0, self::STEALS_PER_DAY - count($stole)),
             'giftsLeft' => max(0, self::GIFTS_PER_DAY - count($gifted)),
@@ -175,6 +190,7 @@ final class Friends
             throw new HttpError(422, __t('friends.ownCode'));
         }
         if ($this->one('SELECT 1 AS x FROM friendships WHERE user_id = ? AND friend_id = ?', [$me, $fid])) {
+            $this->recordReferral($u, $fid);
             return $this->list();
         }
         foreach ([$me, $fid] as $who) {
@@ -188,7 +204,124 @@ final class Friends
         $ins = $this->db->prepare('INSERT INTO friendships (user_id, friend_id, created_at) VALUES (?, ?, ?)');
         $ins->execute([$me, $fid, $now]);
         $ins->execute([$fid, $me, $now]);
+        $this->recordReferral($u, $fid);
         return $this->list();
+    }
+
+    // ——— Mời bạn mới ———
+
+    /**
+     * A fresh account's first friend is the garden that brought it in: recorded once, never
+     * moved. Not when that garden already brought in the maximum, and never both ways round.
+     */
+    private function recordReferral(array $user, int $inviter): void
+    {
+        $me = (int) $user['id'];
+        if ((int) $user['created_at'] < time() - self::REFERRAL_WINDOW
+            || $this->one('SELECT 1 AS x FROM referrals WHERE invitee_id = ?', [$me])
+            || $this->one('SELECT 1 AS x FROM referrals WHERE invitee_id = ? AND inviter_id = ?', [$inviter, $me])
+            || $this->count('SELECT COUNT(*) FROM referrals WHERE inviter_id = ?', [$inviter]) >= self::MAX_REFERRALS) {
+            return;
+        }
+        try {
+            $this->db->prepare('INSERT INTO referrals (invitee_id, inviter_id, created_at) VALUES (?, ?, ?)')
+                ->execute([$me, $inviter, time()]);
+        } catch (PDOException) {
+            // A parallel request recorded it first.
+        }
+    }
+
+    /**
+     * Pays every milestone reached by the newcomers I brought in and by me (if I was brought
+     * in): one 'referral' event to each side. The unique key makes this safe to run on every ask.
+     */
+    private function payReferrals(int $me): void
+    {
+        $rows = $this->all(
+            'SELECT r.invitee_id, r.inviter_id, p.data
+             FROM referrals r LEFT JOIN user_progress p ON p.user_id = r.invitee_id
+             WHERE r.invitee_id = ? OR r.inviter_id = ?',
+            [$me, $me],
+        );
+        $now = time();
+        $day = self::day($now);
+        foreach ($rows as $r) {
+            $invitee = (int) $r['invitee_id'];
+            $inviter = (int) $r['inviter_id'];
+            $data = self::decode($r['data']);
+            foreach (self::MILESTONES as $n => $ms) {
+                if (self::milestoneValue($data, $ms['metric']) < $ms['target']) {
+                    continue;
+                }
+                foreach ([[$invitee, $inviter], [$inviter, $invitee]] as [$to, $from]) {
+                    try {
+                        $this->insertEvent($to, $from, 'referral', $n, null, $day, "ref:$n:$invitee:$to", $now);
+                    } catch (PDOException) {
+                        // Already paid.
+                    }
+                }
+            }
+        }
+    }
+
+    /** Who brought me in and whom I brought in, with the milestones already paid. */
+    private function referrals(int $me): array
+    {
+        $this->payReferrals($me);
+        $paid = [];
+        foreach ($this->all("SELECT from_user, plot_id FROM farm_events WHERE to_user = ? AND type = 'referral'", [$me]) as $e) {
+            $paid[(int) $e['from_user']][] = (int) $e['plot_id'];
+        }
+        $person = function (array $r) use ($paid): array {
+            $id = (int) $r['user_id'];
+            $done = $paid[$id] ?? [];
+            sort($done);
+            return [
+                'name' => self::displayName((string) $r['garden_name'], (string) $r['friend_code']),
+                'level' => self::level(self::xp(self::decode($r['data']))),
+                'done' => $done,
+            ];
+        };
+        $by = $this->one(
+            'SELECT g.user_id, g.friend_code, g.garden_name, p.data
+             FROM referrals r JOIN garden_profiles g ON g.user_id = r.inviter_id
+             LEFT JOIN user_progress p ON p.user_id = r.invitee_id
+             WHERE r.invitee_id = ?',
+            [$me],
+        );
+        $invited = $this->all(
+            'SELECT g.user_id, g.friend_code, g.garden_name, p.data
+             FROM referrals r JOIN garden_profiles g ON g.user_id = r.invitee_id
+             LEFT JOIN user_progress p ON p.user_id = r.invitee_id
+             WHERE r.inviter_id = ?
+             ORDER BY r.created_at',
+            [$me],
+        );
+        return [
+            // The level shown for my inviter is mine: it is my progress that pays us both.
+            'invitedBy' => $by ? $person($by) : null,
+            'invited' => array_map($person, $invited),
+            'max' => self::MAX_REFERRALS,
+            'milestones' => array_map(
+                fn ($n, $ms) => ['id' => $n] + $ms,
+                array_keys(self::MILESTONES),
+                array_values(self::MILESTONES),
+            ),
+        ];
+    }
+
+    private static function milestoneValue(array $data, string $metric): int
+    {
+        if ($metric === 'level') {
+            return self::level(self::xp($data));
+        }
+        $total = is_array($data['quests']['total'] ?? null) ? $data['quests']['total'] : [];
+        return max(0, (int) ($total[$metric] ?? 0));
+    }
+
+    private static function referralCoins(?int $milestone): int
+    {
+        return self::MILESTONES[$milestone ?? 0]['coins'] ?? 0;
     }
 
     public function remove(string $code): array
@@ -412,7 +545,7 @@ final class Friends
                 'code' => $other !== null && in_array($other, $friendIds, true) ? $r['friend_code'] : null,
                 'thanked' => $other !== null && in_array($other, $thanked, true),
                 'at' => (int) $r['created_at'],
-            ];
+            ] + ($r['type'] === 'referral' ? ['coins' => self::referralCoins((int) $r['plot_id'])] : []);
         }, $rows)];
     }
 
@@ -431,6 +564,7 @@ final class Friends
         } catch (PDOException) {
             // Already gifted today.
         }
+        $this->payReferrals($me);
         $rows = $this->all(
             'SELECT e.id, e.type, e.plot_id, e.crop, e.created_at, g.friend_code, g.garden_name
              FROM farm_events e LEFT JOIN garden_profiles g ON g.user_id = e.from_user
@@ -445,7 +579,7 @@ final class Friends
             'crop' => $r['crop'],
             'from' => $r['friend_code'] !== null ? self::displayName($r['garden_name'], $r['friend_code']) : 'Cô Ba',
             'at' => (int) $r['created_at'],
-        ], $rows)];
+        ] + ($r['type'] === 'referral' ? ['coins' => self::referralCoins((int) $r['plot_id'])] : []), $rows)];
     }
 
     /** The client applied these (idempotently); stop sending them. */

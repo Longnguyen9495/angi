@@ -104,9 +104,33 @@ export interface FriendSummary {
   updatedAt: number | null;
 }
 
+/** Mời bạn mới: what the newcomer has to reach; each pays both gardens `coins` once. */
+export interface ReferralMilestone {
+  id: number;
+  metric: 'harvest' | 'cook' | 'level';
+  target: number;
+  coins: number;
+}
+
+export interface ReferralPerson {
+  name: string;
+  /** The newcomer's level (for my inviter: mine, since my progress pays us both). */
+  level: number;
+  /** Milestone ids already paid. */
+  done: number[];
+}
+
+export interface Referrals {
+  invitedBy: ReferralPerson | null;
+  invited: ReferralPerson[];
+  max: number;
+  milestones: ReferralMilestone[];
+}
+
 export interface FriendsList {
   me: GardenProfile & { xp: number; level: number };
   friends: FriendSummary[];
+  referrals: Referrals;
   helpsLeft: number;
   stealsLeft: number;
   giftsLeft: number;
@@ -157,6 +181,8 @@ export interface FeedItem {
   thanked: boolean;
   /** Unix seconds. */
   at: number;
+  /** referral: coins paid to us. */
+  coins?: number;
 }
 
 export interface RemoteFriendEvent {
@@ -166,6 +192,7 @@ export interface RemoteFriendEvent {
   crop: string | null;
   from: string;
   at: number;
+  coins?: number;
 }
 
 export const friendsApi = {
