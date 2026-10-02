@@ -17,9 +17,13 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
-/** Loads layers.json and every image it names (all are small except island and sky). */
+/**
+ * Loads layers.json and every image it names (all are small except island and sky).
+ * The files keep their names across repaints, so layers.json is always revalidated and its
+ * ETag versions the image URLs: a browser never pairs a new layout with stale pictures.
+ */
 export async function loadAssets(): Promise<Assets> {
-  const res = await fetch(`${ASSET_BASE}layers.json`);
+  const res = await fetch(`${ASSET_BASE}layers.json`, { cache: 'no-cache' });
   if (!res.ok) throw new Error(`layers.json: ${res.status}`);
   const layout = (await res.json()) as FarmLayout;
   const files = new Set<string>([
@@ -36,8 +40,12 @@ export async function loadAssets(): Promise<Assets> {
     files.add(l.file);
     if (typeof l.fruit === 'string') files.add(l.fruit);
   }
+  const etag = res.headers.get('etag')?.replace(/\W/g, '');
+  const version = etag ? `?v=${etag}` : '';
   const images = new Map<string, HTMLImageElement>();
-  await Promise.all([...files].map(async (f) => images.set(f, await loadImage(ASSET_BASE + f))));
+  await Promise.all(
+    [...files].map(async (f) => images.set(f, await loadImage(ASSET_BASE + f + version))),
+  );
   return {
     layout,
     img: (file) => {
