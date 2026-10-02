@@ -5,8 +5,9 @@ import data from './data';
 import domain from './domain';
 import farm from './farm';
 import journey from './journey';
+import ranch from './ranch';
 import reel from './reel';
 
-const messages: Messages = { common, reel, journey, account, data, domain, farm };
+const messages: Messages = { common, reel, journey, account, data, domain, farm, ranch };
 
 export default messages;

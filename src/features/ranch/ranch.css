@@ -1,0 +1,252 @@
+/* ——— Chuồng trại (ranch panel): pens, beehive, pond, boat ——— */
+.rn {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+
+.rn-sec {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.rn-sec__title {
+  margin: 0;
+  color: var(--fr-gold, #d7a85d);
+  font-family: var(--fr-display, serif);
+  font-weight: 520;
+  font-size: 1.08rem;
+}
+
+/* A painted scene; the canvas fills it and is decoration (state is in the text below). */
+.rn-stage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--fr-line, rgb(244 237 225 / 13%));
+  border-radius: 18px;
+  background: #6f9e4c;
+}
+
+.rn-stage--yard {
+  height: 200px;
+}
+
+.rn-stage--hive {
+  height: 168px;
+}
+
+.rn-stage--pond {
+  height: 176px;
+  background: #7fae55;
+}
+
+.rn-stage--boat {
+  height: 170px;
+  background: #4fb0cf;
+}
+
+.rn-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.rn-stage__note {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgb(20 16 10 / 72%);
+  color: var(--fr-ivory, #f4ede1);
+  font-size: 0.86rem;
+  text-align: center;
+}
+
+.rn-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ——— Animal cards ——— */
+.rn-pens {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rn-card {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 10px;
+  row-gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--fr-line, rgb(244 237 225 / 13%));
+  border-radius: 16px;
+  background: rgb(255 255 255 / 4%);
+}
+
+.rn-card[data-state='ready'] {
+  border-color: color-mix(in srgb, var(--fr-gold, #d7a85d) 60%, transparent);
+  background: color-mix(in srgb, var(--fr-gold, #d7a85d) 10%, transparent);
+}
+
+.rn-card[data-state='locked'] {
+  opacity: 0.55;
+}
+
+.rn-card[data-state='locked'] .rn-card__pic {
+  filter: grayscale(0.6);
+}
+
+.rn-card__pic {
+  width: 52px;
+  height: 40px;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.rn-card__text {
+  min-width: 0;
+}
+
+.rn-card__name {
+  margin: 0;
+  font-weight: 650;
+  font-size: 0.95rem;
+}
+
+.rn-card__state,
+.rn-card__why {
+  margin: 2px 0 0;
+  color: var(--fr-muted, #a9a095);
+  font-size: 0.8rem;
+}
+
+.rn-card[data-state='ready'] .rn-card__state {
+  color: var(--fr-gold, #d7a85d);
+  font-weight: 600;
+}
+
+.rn-card__why {
+  color: var(--fr-danger, #e0876c);
+}
+
+.rn-card .rn-btn {
+  grid-column: 1 / -1;
+  justify-content: center;
+}
+
+/* ——— Buttons and status rows ——— */
+.rn-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.rn-status {
+  flex: 1 1 180px;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.rn-status[data-state='ready'],
+.rn-status[data-state='back'] {
+  color: var(--fr-gold, #d7a85d);
+  font-weight: 600;
+}
+
+.rn-hint {
+  margin: -4px 0 0;
+  color: var(--fr-muted, #a9a095);
+  font-size: 0.8rem;
+}
+
+.rn-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 6px 14px;
+  border: 1px solid var(--fr-line-strong, rgb(244 237 225 / 26%));
+  border-radius: 14px;
+  background: rgb(255 255 255 / 8%);
+  color: inherit;
+  font: inherit;
+  font-weight: 650;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    background 160ms ease;
+}
+
+.rn-btn:hover:not(:disabled) {
+  background: rgb(255 255 255 / 14%);
+}
+
+.rn-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.rn-btn:focus-visible {
+  outline: 2px solid var(--fr-gold, #d7a85d);
+  outline-offset: 2px;
+}
+
+.rn-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.rn-btn--gold {
+  border-color: transparent;
+  background: var(--fr-gold, #d7a85d);
+  color: #21180c;
+}
+
+.rn-btn--gold:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--fr-gold, #d7a85d) 85%, white);
+}
+
+.rn-btn__icon {
+  width: 26px;
+  height: 22px;
+  object-fit: contain;
+}
+
+@media (max-width: 420px) {
+  .rn-stage--yard {
+    height: 190px;
+  }
+
+  .rn-stage--boat {
+    height: 150px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rn-btn {
+    transition: none;
+  }
+
+  .rn-btn:active:not(:disabled) {
+    transform: none;
+  }
+}
