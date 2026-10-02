@@ -11,7 +11,7 @@ import { CropIcon } from '../../../components/ui/CropIcon';
 import { ANIMALS, CROPS, RECIPES, produceName } from '../../../data/game';
 import type { AnimalId, CropId, RecipeId } from '../../../data/types';
 import { dishIdsForSeed, type NextStep } from '../../../domain/nextStep';
-import { slotKey, formatDuration } from '../../../domain/time';
+import { HOUR_MS, formatDuration, slotKey } from '../../../domain/time';
 import { t } from '../../../i18n';
 import { useGame } from '../../../state/hooks';
 
@@ -89,7 +89,7 @@ export function NextStepCard({
       title = m.feed.title(a.name.toLowerCase());
       body = m.feed.body(
         produceName(a.feed).toLowerCase(),
-        a.hours,
+        formatDuration(a.hours * HOUR_MS),
         a.yield,
         produceName(a.product).toLowerCase(),
       );
@@ -107,7 +107,7 @@ export function NextStepCard({
       const c = CROPS[step.crop];
       icon = <Plant size={22} aria-hidden="true" />;
       title = m.plant.title(c.seedName.toLowerCase(), step.plotId);
-      body = m.plant.body(step.plotId, c.name.toLowerCase(), c.growHours);
+      body = m.plant.body(step.plotId, c.name.toLowerCase(), formatDuration(c.growHours * HOUR_MS));
       action = { label: m.plant.action, run: () => onPlant(step.plotId, step.crop) };
       break;
     }

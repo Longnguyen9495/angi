@@ -11,6 +11,7 @@ import {
   RECIPES,
   WATERING,
   XP,
+  harvestXp,
 } from '../data/game';
 import type { AnimalId, CropId, DecorId, ProduceId, RecipeId } from '../data/types';
 import {
@@ -433,7 +434,10 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         // A friend's pick took one of the plot's crops; the rest (and the XP) are ours.
         const got = Math.max(1, crop.yield - (plot.stolen ? 1 : 0));
         post(s, `harvest:${tag}`, `ingredient:${crop.id}`, got, 'harvest', action.now);
-        post(s, `xp:harvest:${tag}`, 'xp', XP.harvestPerPlot, 'harvest', action.now);
+        // XP grows with the wait of this cycle (first fruit, or a regrow for trees/mushrooms).
+        const hours =
+          (plot.harvests ?? 0) > 0 ? (crop.regrowHours ?? crop.growHours) : crop.growHours;
+        post(s, `xp:harvest:${tag}`, 'xp', harvestXp(hours), 'harvest', action.now);
       }
       const readyIds = new Set(ready.map((p) => p.id));
       s.plots = s.plots.map((p) => {
@@ -546,7 +550,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       const s = structuredClone(state);
       const tag = `${def.id}:${a.fedAt}`;
       post(s, `collect:${tag}`, `ingredient:${def.product}`, def.yield, 'animal', action.now);
-      post(s, `xp:collect:${tag}`, 'xp', XP.collectAnimal, 'animal', action.now);
+      post(s, `xp:collect:${tag}`, 'xp', harvestXp(def.hours), 'animal', action.now);
       s.animals[def.id] = { fedAt: null, readyAt: null };
       track(s, 'collect', action.now);
       return s;
@@ -712,7 +716,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       if (!post(s, `${key}:honey`, 'ingredient:honey', HIVE.yield.honey, 'hive', action.now))
         return state;
       post(s, `${key}:comb`, 'ingredient:honeycomb', HIVE.yield.honeycomb, 'hive', action.now);
-      post(s, `xp:${key}`, 'xp', XP.collectAnimal, 'hive', action.now);
+      post(s, `xp:${key}`, 'xp', harvestXp(HIVE.hours), 'hive', action.now);
       // The bees start filling it again straight away.
       s.hive = { startedAt: action.now, readyAt: action.now + HIVE.hours * HOUR_MS };
       track(s, 'collect', action.now);

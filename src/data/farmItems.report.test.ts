@@ -22,6 +22,7 @@ import {
   sellPrice,
 } from './game';
 import type { ProduceId } from './types';
+import { HOUR_MS, formatDuration } from '../domain/time';
 
 const ROOT = process.cwd();
 const CATALOG = JSON.parse(readFileSync(join(ROOT, 'scripts/farm-items/catalog.json'), 'utf8')) as {
@@ -69,19 +70,23 @@ function sourceOf(id: ProduceId): string {
   return CATCHES[id as keyof typeof CATCHES]?.source === 'boat' ? 'Thuyền đánh cá' : 'Ao (câu cá)';
 }
 
+const dur = (hours: number) => formatDuration(hours * HOUR_MS);
+
 function cycle(id: ProduceId): string {
   if (isCrop(id)) {
     const c = CROPS[id];
-    if (c.kind === 'tree') return `${c.growHours} h đầu, rồi ${c.regrowHours} h/lần`;
+    const germ = `nảy mầm ${dur(c.sproutHours)}`;
+    if (c.kind === 'tree')
+      return `${germ}; trái đầu ${dur(c.growHours)}, rồi ${dur(c.regrowHours!)}/lần`;
     if (c.kind === 'mushroom')
-      return `${c.growHours} h đầu, rồi ${c.regrowHours} h × ${c.flushes} đợt`;
-    return `${c.growHours} h`;
+      return `${germ}; đợt đầu ${dur(c.growHours)}, rồi ${dur(c.regrowHours!)} × ${c.flushes} đợt`;
+    return `${germ}; chín ${dur(c.growHours)}`;
   }
   const animal = Object.values(ANIMALS).find((a) => a.product === id);
-  if (animal) return `${animal.hours} h (ăn 1 ${CROPS[animal.feed].produceName.toLowerCase()})`;
-  if (id === 'honey' || id === 'honeycomb') return `${HIVE.hours} h`;
+  if (animal) return `${dur(animal.hours)} (ăn 1 ${CROPS[animal.feed].produceName.toLowerCase()})`;
+  if (id === 'honey' || id === 'honeycomb') return dur(HIVE.hours);
   return CATCHES[id as keyof typeof CATCHES]?.source === 'boat'
-    ? `${BOAT.hours} h/chuyến`
+    ? `${dur(BOAT.hours)}/chuyến`
     : 'câu tại ao';
 }
 

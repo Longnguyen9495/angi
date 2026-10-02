@@ -13,7 +13,7 @@ import {
 import type { CropDef } from '../../../data/types';
 import { decorSprite } from '../../../data/sprites';
 import { cropAvailable, level } from '../../../domain/selectors';
-import { currentTime } from '../../../domain/time';
+import { HOUR_MS, currentTime, formatDuration } from '../../../domain/time';
 import { t } from '../../../i18n';
 import { useFeedback, useGame } from '../../../state/hooks';
 import { ItemFilter, NoMatch } from './ItemFilter';
@@ -21,9 +21,11 @@ import { presentCategories, useItemFilter } from './filterItems';
 
 /** How a seed grows: once, a tree that keeps fruiting, or a mushroom block. */
 function seedMeta(c: CropDef, tray: number): string {
-  if (c.kind === 'tree') return m.treeMeta(c.growHours, c.regrowHours ?? c.growHours, tray);
-  if (c.kind === 'mushroom') return m.mushroomMeta(c.growHours, c.flushes ?? 1, tray);
-  return m.seedMeta(c.growHours, tray);
+  const d = (hours: number) => formatDuration(hours * HOUR_MS);
+  const again = d(c.regrowHours ?? c.growHours);
+  if (c.kind === 'tree') return m.treeMeta(d(c.growHours), again, tray);
+  if (c.kind === 'mushroom') return m.mushroomMeta(d(c.growHours), again, c.flushes ?? 1, tray);
+  return m.seedMeta(d(c.sproutHours), d(c.growHours), tray);
 }
 
 type Tab = 'sell' | 'seeds' | 'decor';

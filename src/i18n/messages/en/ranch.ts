@@ -32,7 +32,7 @@ const ranch: Messages['ranch'] = {
     start: 'Call the bees home',
     collect: 'Take the honey',
     collectLabel: (list) => `Take ${list} into the pantry`,
-    started: (hours) => `The bees are home. Honey in ${hours} hours.`,
+    started: (when) => `The bees are home. Honey in ${when}.`,
     collected: (list) => `Took ${list} into the pantry. The bees start a new batch.`,
   },
   pond: {
@@ -49,7 +49,7 @@ const ranch: Messages['ranch'] = {
     back: 'The boat is back with a full hold!',
     send: 'Send the boat out',
     unload: 'Unload into the pantry',
-    sent: (hours) => `The boat has set out. Back in ${hours} hours.`,
+    sent: (when) => `The boat has set out. Back in ${when}.`,
     unloaded: (list) => `The boat brought back: ${list}. Stored in the pantry.`,
   },
   qty: (n, name) => `${n} ${name}`,

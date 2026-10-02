@@ -10,7 +10,7 @@ import {
   level,
   type AnimalStage,
 } from '../../domain/selectors';
-import { currentTime, formatDuration } from '../../domain/time';
+import { HOUR_MS, currentTime, formatDuration } from '../../domain/time';
 import { t } from '../../i18n';
 import { useFeedback, useGame } from '../../state/hooks';
 import { BoatStage } from './boat';
@@ -200,7 +200,7 @@ export default function RanchPanel() {
     once(`feed:${id}`, () => {
       dispatch({ type: 'FEED_ANIMAL', animal: id, now: currentTime() });
       engine.current?.yard.hop(id, 'feed');
-      say(garden.fed(x.def.name.toLowerCase(), x.def.hours), 'success');
+      say(garden.fed(x.def.name.toLowerCase(), formatDuration(x.def.hours * HOUR_MS)), 'success');
     });
   };
 
@@ -230,7 +230,7 @@ export default function RanchPanel() {
     once('hive-start', () => {
       dispatch({ type: 'START_HIVE', now: currentTime() });
       engine.current?.hive.start();
-      say(r.hive.started(HIVE.hours), 'success');
+      say(r.hive.started(formatDuration(HIVE.hours * HOUR_MS)), 'success');
     });
   };
 
@@ -250,7 +250,7 @@ export default function RanchPanel() {
     if (boatSt !== 'docked') return;
     once('boat-send', () => {
       dispatch({ type: 'SEND_BOAT', now: currentTime() });
-      say(r.boat.sent(BOAT.hours), 'success');
+      say(r.boat.sent(formatDuration(BOAT.hours * HOUR_MS)), 'success');
     });
   };
 

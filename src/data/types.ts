@@ -137,6 +137,8 @@ export interface CropDef {
   produceName: string;
   /** Hours from planting to the first harvest. */
   growHours: number;
+  /** Hours from planting until it has germinated (the sprout stage ends). */
+  sproutHours: number;
   /** Trees and mushrooms: hours from one harvest to the next. */
   regrowHours?: number;
   /** Mushrooms: harvests before the spawn block is spent (trees: unlimited). */

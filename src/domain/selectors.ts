@@ -46,8 +46,11 @@ export function plotStage(plot: Plot, now: number): PlotStage {
   if ((plot.harvests ?? 0) > 0) return CROPS[plot.crop].kind === 'tree' ? 'flowering' : 'young';
   const total = Math.max(1, plot.readyAt - plot.plantedAt);
   const t = (now - plot.plantedAt) / total;
-  if (t < 0.3) return 'sprout';
-  return t < 0.65 ? 'young' : 'flowering';
+  // Each crop germinates in its own time (share of its grow time; watering shortens both).
+  const def = CROPS[plot.crop];
+  const sprout = Math.min(0.6, def.sproutHours / def.growHours);
+  if (t < sprout) return 'sprout';
+  return t < sprout + (1 - sprout) * 0.5 ? 'young' : 'flowering';
 }
 
 /** Harvests left in a planting (Infinity for trees and one-off crops' single harvest is 1). */

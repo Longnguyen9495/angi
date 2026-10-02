@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { ANIMALS } from '../data/game';
 import { EMPTY_PRODUCE, createInitialProgress, type GuestProgress } from './progress';
 import { gameReducer } from './reducer';
 import { animalStage } from './selectors';
@@ -24,11 +25,10 @@ describe('animals', () => {
     const s0 = level(2);
     const fed = gameReducer(s0, { type: 'FEED_ANIMAL', animal: 'chicken', now: NOON });
     expect(fed.ingredients.rice).toBe(1);
-    expect(animalStage(fed, 'chicken', NOON + HOUR_MS)).toBe('busy');
-    expect(
-      gameReducer(fed, { type: 'COLLECT_ANIMAL', animal: 'chicken', now: NOON + HOUR_MS }),
-    ).toBe(fed);
-    const later = NOON + 3 * HOUR_MS;
+    const half = NOON + (ANIMALS.chicken.hours / 2) * HOUR_MS;
+    expect(animalStage(fed, 'chicken', half)).toBe('busy');
+    expect(gameReducer(fed, { type: 'COLLECT_ANIMAL', animal: 'chicken', now: half })).toBe(fed);
+    const later = NOON + ANIMALS.chicken.hours * HOUR_MS;
     expect(animalStage(fed, 'chicken', later)).toBe('ready');
     const got = gameReducer(fed, { type: 'COLLECT_ANIMAL', animal: 'chicken', now: later });
     expect(got.ingredients.egg).toBe(2);

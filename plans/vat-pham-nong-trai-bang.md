@@ -30,73 +30,73 @@
 
 | Mã | Tên | Nhóm | Nguồn | Chu kỳ | Sản lượng | Giá hạt/giống | Giá bán | Mở ở cấp | Trạng thái | Hình nông sản | Nhận dạng |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| `rice` | Gạo | Ngũ cốc & đậu | Ô trồng · Rau (thu 1 lần) | 5 h | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | high |
-| `herbs` | Rau thơm | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | 3 h | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | medium |
-| `chili` | Ớt | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | 4 h | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | medium |
-| `scallion` | Hành | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | 3 h | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | high |
-| `bean` | Đậu | Ngũ cốc & đậu | Ô trồng · Rau (thu 1 lần) | 4 h | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | medium |
-| `tomato` | Cà chua | Rau ăn quả | Ô trồng · Rau (thu 1 lần) | 5 h | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | high |
-| `lemongrass` | Sả | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | 4 h | 3 | 10 | 3 | 2 | thay hình | tạm: hình giai đoạn chín | medium |
-| `garlic` | Tỏi | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | 5 h | 3 | 10 | 3 | 3 | thay hình | tạm: hình giai đoạn chín | high |
-| `cucumber` | Dưa leo | Rau ăn quả | Ô trồng · Rau (thu 1 lần) | 4 h | 3 | 10 | 3 | 4 | thay hình | tạm: hình giai đoạn chín | high |
-| `lime` | Chanh | Trái cây | Ô trồng · Cây lâu năm | 6 h đầu, rồi 6 h/lần | 3 | 10 | 3 | 5 | thay hình | tạm: hình giai đoạn chín | medium |
-| `napa` | Cải thảo | Rau ăn lá | Ô trồng · Rau (thu 1 lần) | 3 h | 3 | 6 | 2 | 2 | mới | tạm: hình giai đoạn chín | high |
-| `radish` | Củ cải trắng | Củ | Ô trồng · Rau (thu 1 lần) | 4 h | 3 | 6 | 2 | 2 | mới | tạm: hình giai đoạn chín | high |
-| `cabbage` | Bắp cải | Rau ăn lá | Ô trồng · Rau (thu 1 lần) | 4 h | 3 | 6 | 2 | 3 | mới | tạm: hình giai đoạn chín | high |
-| `eggplant` | Cà tím | Rau ăn quả | Ô trồng · Rau (thu 1 lần) | 5 h | 3 | 6 | 2 | 3 | mới | tạm: hình giai đoạn chín | high |
-| `carrot` | Cà rốt | Củ | Ô trồng · Rau (thu 1 lần) | 5 h | 3 | 6 | 2 | 3 | mới | riêng | high |
-| `bittermelon` | Khổ qua | Rau ăn quả | Ô trồng · Rau (thu 1 lần) | 5 h | 3 | 9 | 3 | 4 | mới | tạm: hình giai đoạn chín | high |
-| `potato` | Khoai tây | Củ | Ô trồng · Rau (thu 1 lần) | 5 h | 3 | 9 | 3 | 4 | mới | tạm: hình giai đoạn chín | high |
-| `shallot` | Hành tím | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | 5 h | 3 | 9 | 3 | 4 | mới | tạm: hình giai đoạn chín | medium |
-| `cauliflower` | Súp lơ | Rau ăn lá | Ô trồng · Rau (thu 1 lần) | 5 h | 3 | 9 | 3 | 5 | mới | tạm: hình giai đoạn chín | high |
-| `sweetpotato` | Khoai lang | Củ | Ô trồng · Rau (thu 1 lần) | 6 h | 3 | 9 | 3 | 5 | mới | riêng | high |
-| `peanut` | Đậu phộng | Ngũ cốc & đậu | Ô trồng · Rau (thu 1 lần) | 7 h | 3 | 9 | 3 | 5 | mới | tạm: hình giai đoạn chín | medium |
-| `pumpkin` | Bí đỏ | Rau ăn quả | Ô trồng · Rau (thu 1 lần) | 6 h | 3 | 9 | 3 | 6 | mới | tạm: hình giai đoạn chín | high |
-| `beet` | Củ dền | Củ | Ô trồng · Rau (thu 1 lần) | 6 h | 3 | 9 | 3 | 6 | mới | tạm: hình giai đoạn chín | medium |
-| `corn` | Ngô | Ngũ cốc & đậu | Ô trồng · Rau (thu 1 lần) | 7 h | 3 | 9 | 3 | 6 | mới | tạm: hình giai đoạn chín | high |
-| `wintermelon` | Bí xanh | Rau ăn quả | Ô trồng · Rau (thu 1 lần) | 7 h | 3 | 9 | 3 | 7 | mới | tạm: hình giai đoạn chín | medium |
-| `ginger` | Gừng | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | 7 h | 3 | 9 | 3 | 7 | mới | tạm: hình giai đoạn chín | medium |
-| `taro` | Khoai môn | Củ | Ô trồng · Rau (thu 1 lần) | 7 h | 3 | 12 | 4 | 8 | mới | riêng | medium |
-| `strawberry` | Dâu tây | Trái cây | Ô trồng · Cây lâu năm | 10 h đầu, rồi 6 h/lần | 2 | 35 | 4 | 5 | mới | tạm: hình giai đoạn chín | high |
-| `pineapple` | Dứa | Trái cây | Ô trồng · Cây lâu năm | 11 h đầu, rồi 7 h/lần | 2 | 40 | 5 | 6 | mới | tạm: hình giai đoạn chín | high |
-| `banana` | Chuối | Trái cây | Ô trồng · Cây lâu năm | 13 h đầu, rồi 8 h/lần | 2 | 45 | 5 | 7 | mới | tạm: hình giai đoạn chín | high |
-| `papaya` | Đu đủ | Trái cây | Ô trồng · Cây lâu năm | 13 h đầu, rồi 8 h/lần | 2 | 45 | 5 | 7 | mới | tạm: hình giai đoạn chín | high |
-| `guava` | Ổi | Trái cây | Ô trồng · Cây lâu năm | 14 h đầu, rồi 8 h/lần | 2 | 50 | 5 | 8 | mới | tạm: hình giai đoạn chín | medium |
-| `orange` | Cam | Trái cây | Ô trồng · Cây lâu năm | 16 h đầu, rồi 10 h/lần | 2 | 55 | 6 | 9 | mới | tạm: hình giai đoạn chín | high |
-| `mandarin` | Quýt | Trái cây | Ô trồng · Cây lâu năm | 16 h đầu, rồi 10 h/lần | 2 | 55 | 6 | 9 | mới | tạm: hình giai đoạn chín | medium |
-| `mango` | Xoài | Trái cây | Ô trồng · Cây lâu năm | 17 h đầu, rồi 10 h/lần | 2 | 60 | 6 | 10 | mới | tạm: hình giai đoạn chín | high |
-| `dragonfruit` | Thanh long | Trái cây | Ô trồng · Cây lâu năm | 17 h đầu, rồi 10 h/lần | 2 | 60 | 6 | 10 | mới | tạm: hình giai đoạn chín | high |
-| `coconut` | Dừa | Trái cây | Ô trồng · Cây lâu năm | 19 h đầu, rồi 11 h/lần | 2 | 65 | 6 | 11 | mới | tạm: hình giai đoạn chín | high |
-| `lychee` | Vải | Trái cây | Ô trồng · Cây lâu năm | 20 h đầu, rồi 12 h/lần | 2 | 70 | 7 | 12 | mới | tạm: hình giai đoạn chín | medium |
-| `rambutan` | Chôm chôm | Trái cây | Ô trồng · Cây lâu năm | 20 h đầu, rồi 12 h/lần | 2 | 70 | 7 | 12 | mới | tạm: hình giai đoạn chín | high |
-| `jackfruit` | Mít | Trái cây | Ô trồng · Cây lâu năm | 22 h đầu, rồi 13 h/lần | 2 | 75 | 7 | 13 | mới | tạm: hình giai đoạn chín | high |
-| `durian` | Sầu riêng | Trái cây | Ô trồng · Cây lâu năm | 23 h đầu, rồi 14 h/lần | 2 | 80 | 7 | 14 | mới | tạm: hình giai đoạn chín | high |
-| `button` | Nấm mỡ | Nấm | Ô trồng · Nấm (3 đợt) | 3 h đầu, rồi 3 h × 3 đợt | 2 | 17 | 3 | 3 | mới | tạm: hình giai đoạn chín | high |
-| `oyster` | Nấm sò | Nấm | Ô trồng · Nấm (3 đợt) | 4 h đầu, rồi 3 h × 3 đợt | 2 | 20 | 4 | 4 | mới | tạm: hình giai đoạn chín | high |
-| `shiitake` | Nấm hương | Nấm | Ô trồng · Nấm (3 đợt) | 6 h đầu, rồi 3 h × 3 đợt | 2 | 26 | 4 | 6 | mới | tạm: hình giai đoạn chín | medium |
-| `enoki` | Nấm kim châm | Nấm | Ô trồng · Nấm (3 đợt) | 7 h đầu, rồi 3 h × 3 đợt | 2 | 32 | 5 | 8 | mới | tạm: hình giai đoạn chín | medium |
-| `woodear` | Mộc nhĩ | Nấm | Ô trồng · Nấm (3 đợt) | 8 h đầu, rồi 3 h × 3 đợt | 2 | 35 | 5 | 9 | mới | tạm: hình giai đoạn chín | medium |
-| `egg` | Trứng gà | Trứng | Chuồng · Gà mái | 3 h (ăn 1 gạo) | 2 | — | 7 | 2 | thay hình | riêng | high |
-| `duckegg` | Trứng vịt | Trứng | Chuồng · Vịt | 4 h (ăn 1 gạo) | 2 | — | 7 | 3 | mới | riêng | high |
-| `quailegg` | Trứng cút | Trứng | Chuồng · Chim cút | 3 h (ăn 1 gạo) | 3 | — | 6 | 5 | mới | riêng | high |
-| `gooseegg` | Trứng ngỗng | Trứng | Chuồng · Ngỗng | 6 h (ăn 1 rau thơm) | 1 | — | 10 | 7 | mới | riêng | medium |
-| `milk` | Sữa bò | Sữa | Chuồng · Bò sữa | 5 h (ăn 1 rau thơm) | 1 | — | 7 | 4 | thay hình | riêng | high |
-| `goatmilk` | Sữa dê | Sữa | Chuồng · Dê | 5 h (ăn 1 cải thảo) | 1 | — | 8 | 6 | mới | riêng | medium |
-| `wool` | Lông cừu | Lông | Chuồng · Cừu | 8 h (ăn 1 bắp cải) | 1 | — | 10 | 8 | mới | riêng | high |
-| `rabbitwool` | Lông thỏ | Lông | Chuồng · Thỏ | 8 h (ăn 1 cà rốt) | 1 | — | 12 | 9 | mới | riêng | medium |
-| `honey` | Mật ong | Mật ong | Trại ong | 8 h | 2 | — | 12 | 6 | mới | riêng | high |
-| `honeycomb` | Bánh sáp ong | Mật ong | Trại ong | 8 h | 1 | — | 9 | 6 | mới | riêng | high |
+| `rice` | Gạo | Ngũ cốc & đậu | Ô trồng · Rau (thu 1 lần) | nảy mầm 40 phút; chín 4 giờ | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | high |
+| `herbs` | Rau thơm | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | nảy mầm 5 phút; chín 20 phút | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | medium |
+| `chili` | Ớt | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | nảy mầm 25 phút; chín 2 giờ | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | medium |
+| `scallion` | Hành | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | nảy mầm 8 phút; chín 30 phút | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | high |
+| `bean` | Đậu | Ngũ cốc & đậu | Ô trồng · Rau (thu 1 lần) | nảy mầm 20 phút; chín 1 giờ 30 phút | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | medium |
+| `tomato` | Cà chua | Rau ăn quả | Ô trồng · Rau (thu 1 lần) | nảy mầm 30 phút; chín 3 giờ | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | high |
+| `lemongrass` | Sả | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | nảy mầm 20 phút; chín 1 giờ 15 phút | 3 | 10 | 3 | 2 | thay hình | tạm: hình giai đoạn chín | medium |
+| `garlic` | Tỏi | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | nảy mầm 1 giờ 30 phút; chín 5 giờ | 3 | 10 | 3 | 3 | thay hình | tạm: hình giai đoạn chín | high |
+| `cucumber` | Dưa leo | Rau ăn quả | Ô trồng · Rau (thu 1 lần) | nảy mầm 20 phút; chín 2 giờ | 3 | 10 | 3 | 4 | thay hình | tạm: hình giai đoạn chín | high |
+| `lime` | Chanh | Trái cây | Ô trồng · Cây lâu năm | nảy mầm 45 phút; trái đầu 6 giờ, rồi 3 giờ/lần | 3 | 10 | 3 | 5 | thay hình | tạm: hình giai đoạn chín | medium |
+| `napa` | Cải thảo | Rau ăn lá | Ô trồng · Rau (thu 1 lần) | nảy mầm 10 phút; chín 45 phút | 3 | 6 | 2 | 2 | mới | tạm: hình giai đoạn chín | high |
+| `radish` | Củ cải trắng | Củ | Ô trồng · Rau (thu 1 lần) | nảy mầm 15 phút; chín 1 giờ | 3 | 6 | 2 | 2 | mới | tạm: hình giai đoạn chín | high |
+| `cabbage` | Bắp cải | Rau ăn lá | Ô trồng · Rau (thu 1 lần) | nảy mầm 30 phút; chín 2 giờ 30 phút | 3 | 6 | 2 | 3 | mới | tạm: hình giai đoạn chín | high |
+| `eggplant` | Cà tím | Rau ăn quả | Ô trồng · Rau (thu 1 lần) | nảy mầm 40 phút; chín 3 giờ 30 phút | 3 | 6 | 2 | 3 | mới | tạm: hình giai đoạn chín | high |
+| `carrot` | Cà rốt | Củ | Ô trồng · Rau (thu 1 lần) | nảy mầm 1 giờ; chín 3 giờ | 3 | 6 | 2 | 3 | mới | riêng | high |
+| `bittermelon` | Khổ qua | Rau ăn quả | Ô trồng · Rau (thu 1 lần) | nảy mầm 30 phút; chín 2 giờ 30 phút | 3 | 9 | 3 | 4 | mới | tạm: hình giai đoạn chín | high |
+| `potato` | Khoai tây | Củ | Ô trồng · Rau (thu 1 lần) | nảy mầm 1 giờ; chín 4 giờ | 3 | 9 | 3 | 4 | mới | tạm: hình giai đoạn chín | high |
+| `shallot` | Hành tím | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | nảy mầm 15 phút; chín 1 giờ | 3 | 9 | 3 | 4 | mới | tạm: hình giai đoạn chín | medium |
+| `cauliflower` | Súp lơ | Rau ăn lá | Ô trồng · Rau (thu 1 lần) | nảy mầm 45 phút; chín 5 giờ | 3 | 9 | 3 | 5 | mới | tạm: hình giai đoạn chín | high |
+| `sweetpotato` | Khoai lang | Củ | Ô trồng · Rau (thu 1 lần) | nảy mầm 1 giờ; chín 6 giờ | 3 | 9 | 3 | 5 | mới | riêng | high |
+| `peanut` | Đậu phộng | Ngũ cốc & đậu | Ô trồng · Rau (thu 1 lần) | nảy mầm 1 giờ; chín 5 giờ | 3 | 9 | 3 | 5 | mới | tạm: hình giai đoạn chín | medium |
+| `pumpkin` | Bí đỏ | Rau ăn quả | Ô trồng · Rau (thu 1 lần) | nảy mầm 1 giờ 30 phút; chín 8 giờ | 3 | 9 | 3 | 6 | mới | tạm: hình giai đoạn chín | high |
+| `beet` | Củ dền | Củ | Ô trồng · Rau (thu 1 lần) | nảy mầm 30 phút; chín 2 giờ | 3 | 9 | 3 | 6 | mới | tạm: hình giai đoạn chín | medium |
+| `corn` | Ngô | Ngũ cốc & đậu | Ô trồng · Rau (thu 1 lần) | nảy mầm 45 phút; chín 6 giờ | 3 | 9 | 3 | 6 | mới | tạm: hình giai đoạn chín | high |
+| `wintermelon` | Bí xanh | Rau ăn quả | Ô trồng · Rau (thu 1 lần) | nảy mầm 1 giờ 30 phút; chín 10 giờ | 3 | 9 | 3 | 7 | mới | tạm: hình giai đoạn chín | medium |
+| `ginger` | Gừng | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | nảy mầm 3 giờ; chín 12 giờ | 3 | 9 | 3 | 7 | mới | tạm: hình giai đoạn chín | medium |
+| `taro` | Khoai môn | Củ | Ô trồng · Rau (thu 1 lần) | nảy mầm 3 giờ; chín 16 giờ | 3 | 12 | 4 | 8 | mới | riêng | medium |
+| `strawberry` | Dâu tây | Trái cây | Ô trồng · Cây lâu năm | nảy mầm 30 phút; trái đầu 3 giờ, rồi 1 giờ 30 phút/lần | 2 | 35 | 4 | 5 | mới | tạm: hình giai đoạn chín | high |
+| `pineapple` | Dứa | Trái cây | Ô trồng · Cây lâu năm | nảy mầm 1 giờ 30 phút; trái đầu 12 giờ, rồi 8 giờ/lần | 2 | 40 | 5 | 6 | mới | tạm: hình giai đoạn chín | high |
+| `banana` | Chuối | Trái cây | Ô trồng · Cây lâu năm | nảy mầm 1 giờ; trái đầu 10 giờ, rồi 6 giờ/lần | 2 | 45 | 5 | 7 | mới | tạm: hình giai đoạn chín | high |
+| `papaya` | Đu đủ | Trái cây | Ô trồng · Cây lâu năm | nảy mầm 1 giờ; trái đầu 8 giờ, rồi 4 giờ/lần | 2 | 45 | 5 | 7 | mới | tạm: hình giai đoạn chín | high |
+| `guava` | Ổi | Trái cây | Ô trồng · Cây lâu năm | nảy mầm 1 giờ 30 phút; trái đầu 10 giờ, rồi 5 giờ/lần | 2 | 50 | 5 | 8 | mới | tạm: hình giai đoạn chín | medium |
+| `orange` | Cam | Trái cây | Ô trồng · Cây lâu năm | nảy mầm 2 giờ; trái đầu 14 giờ, rồi 6 giờ/lần | 2 | 55 | 6 | 9 | mới | tạm: hình giai đoạn chín | high |
+| `mandarin` | Quýt | Trái cây | Ô trồng · Cây lâu năm | nảy mầm 1 giờ 30 phút; trái đầu 12 giờ, rồi 6 giờ/lần | 2 | 55 | 6 | 9 | mới | tạm: hình giai đoạn chín | medium |
+| `mango` | Xoài | Trái cây | Ô trồng · Cây lâu năm | nảy mầm 2 giờ; trái đầu 18 giờ, rồi 8 giờ/lần | 2 | 60 | 6 | 10 | mới | tạm: hình giai đoạn chín | high |
+| `dragonfruit` | Thanh long | Trái cây | Ô trồng · Cây lâu năm | nảy mầm 1 giờ; trái đầu 8 giờ, rồi 4 giờ/lần | 2 | 60 | 6 | 10 | mới | tạm: hình giai đoạn chín | high |
+| `coconut` | Dừa | Trái cây | Ô trồng · Cây lâu năm | nảy mầm 3 giờ; trái đầu 24 giờ, rồi 12 giờ/lần | 2 | 65 | 6 | 11 | mới | tạm: hình giai đoạn chín | high |
+| `lychee` | Vải | Trái cây | Ô trồng · Cây lâu năm | nảy mầm 2 giờ 30 phút; trái đầu 20 giờ, rồi 10 giờ/lần | 2 | 70 | 7 | 12 | mới | tạm: hình giai đoạn chín | medium |
+| `rambutan` | Chôm chôm | Trái cây | Ô trồng · Cây lâu năm | nảy mầm 2 giờ 30 phút; trái đầu 20 giờ, rồi 10 giờ/lần | 2 | 70 | 7 | 12 | mới | tạm: hình giai đoạn chín | high |
+| `jackfruit` | Mít | Trái cây | Ô trồng · Cây lâu năm | nảy mầm 3 giờ; trái đầu 30 giờ, rồi 16 giờ/lần | 2 | 75 | 7 | 13 | mới | tạm: hình giai đoạn chín | high |
+| `durian` | Sầu riêng | Trái cây | Ô trồng · Cây lâu năm | nảy mầm 4 giờ; trái đầu 36 giờ, rồi 20 giờ/lần | 2 | 80 | 7 | 14 | mới | tạm: hình giai đoạn chín | high |
+| `button` | Nấm mỡ | Nấm | Ô trồng · Nấm (3 đợt) | nảy mầm 30 phút; đợt đầu 2 giờ, rồi 1 giờ × 3 đợt | 2 | 17 | 3 | 3 | mới | tạm: hình giai đoạn chín | high |
+| `oyster` | Nấm sò | Nấm | Ô trồng · Nấm (3 đợt) | nảy mầm 15 phút; đợt đầu 1 giờ, rồi 45 phút × 3 đợt | 2 | 20 | 4 | 4 | mới | tạm: hình giai đoạn chín | high |
+| `shiitake` | Nấm hương | Nấm | Ô trồng · Nấm (3 đợt) | nảy mầm 1 giờ 30 phút; đợt đầu 6 giờ, rồi 3 giờ × 3 đợt | 2 | 26 | 4 | 6 | mới | tạm: hình giai đoạn chín | medium |
+| `enoki` | Nấm kim châm | Nấm | Ô trồng · Nấm (3 đợt) | nảy mầm 45 phút; đợt đầu 3 giờ, rồi 1 giờ 30 phút × 3 đợt | 2 | 32 | 5 | 8 | mới | tạm: hình giai đoạn chín | medium |
+| `woodear` | Mộc nhĩ | Nấm | Ô trồng · Nấm (3 đợt) | nảy mầm 2 giờ; đợt đầu 8 giờ, rồi 4 giờ × 3 đợt | 2 | 35 | 5 | 9 | mới | tạm: hình giai đoạn chín | medium |
+| `egg` | Trứng gà | Trứng | Chuồng · Gà mái | 1 giờ (ăn 1 gạo) | 2 | — | 7 | 2 | thay hình | riêng | high |
+| `duckegg` | Trứng vịt | Trứng | Chuồng · Vịt | 1 giờ 30 phút (ăn 1 gạo) | 2 | — | 7 | 3 | mới | riêng | high |
+| `quailegg` | Trứng cút | Trứng | Chuồng · Chim cút | 30 phút (ăn 1 gạo) | 3 | — | 6 | 5 | mới | riêng | high |
+| `gooseegg` | Trứng ngỗng | Trứng | Chuồng · Ngỗng | 6 giờ (ăn 1 rau thơm) | 1 | — | 10 | 7 | mới | riêng | medium |
+| `milk` | Sữa bò | Sữa | Chuồng · Bò sữa | 4 giờ (ăn 1 rau thơm) | 1 | — | 7 | 4 | thay hình | riêng | high |
+| `goatmilk` | Sữa dê | Sữa | Chuồng · Dê | 3 giờ (ăn 1 cải thảo) | 1 | — | 8 | 6 | mới | riêng | medium |
+| `wool` | Lông cừu | Lông | Chuồng · Cừu | 10 giờ (ăn 1 bắp cải) | 1 | — | 10 | 8 | mới | riêng | high |
+| `rabbitwool` | Lông thỏ | Lông | Chuồng · Thỏ | 6 giờ (ăn 1 cà rốt) | 1 | — | 12 | 9 | mới | riêng | medium |
+| `honey` | Mật ong | Mật ong | Trại ong | 5 giờ | 2 | — | 12 | 6 | mới | riêng | high |
+| `honeycomb` | Bánh sáp ong | Mật ong | Trại ong | 5 giờ | 1 | — | 9 | 6 | mới | riêng | high |
 | `fish` | Cá rô đồng | Cá & tôm đồng | Ao (câu cá) | câu tại ao | 1/lần câu | — | 7 | 1 | thay hình | riêng | medium |
 | `shrimp` | Tôm càng | Cá & tôm đồng | Ao (câu cá) | câu tại ao | 1/lần câu | — | 9 | 1 | thay hình | riêng | high |
 | `carp` | Cá chép | Cá & tôm đồng | Ao (câu cá) | câu tại ao | 1/lần câu | — | 8 | 3 | mới | riêng | medium |
 | `crab` | Cua đồng | Cá & tôm đồng | Ao (câu cá) | câu tại ao | 1/lần câu | — | 10 | 5 | mới | riêng | high |
-| `mackerel` | Cá thu | Hải sản | Thuyền đánh cá | 4 h/chuyến | 2/chuyến (ngẫu nhiên) | — | 10 | 5 | mới | riêng | medium |
-| `scad` | Cá nục | Hải sản | Thuyền đánh cá | 4 h/chuyến | 2/chuyến (ngẫu nhiên) | — | 8 | 5 | mới | riêng | low |
-| `clam` | Nghêu | Hải sản | Thuyền đánh cá | 4 h/chuyến | 2/chuyến (ngẫu nhiên) | — | 8 | 5 | mới | riêng | high |
-| `squid` | Mực ống | Hải sản | Thuyền đánh cá | 4 h/chuyến | 2/chuyến (ngẫu nhiên) | — | 10 | 6 | mới | riêng | high |
-| `bloodcockle` | Sò huyết | Hải sản | Thuyền đánh cá | 4 h/chuyến | 2/chuyến (ngẫu nhiên) | — | 9 | 7 | mới | riêng | medium |
-| `scallop` | Sò điệp | Hải sản | Thuyền đánh cá | 4 h/chuyến | 2/chuyến (ngẫu nhiên) | — | 11 | 8 | mới | riêng | medium |
-| `octopus` | Bạch tuộc | Hải sản | Thuyền đánh cá | 4 h/chuyến | 2/chuyến (ngẫu nhiên) | — | 12 | 9 | mới | riêng | high |
+| `mackerel` | Cá thu | Hải sản | Thuyền đánh cá | 2 giờ 30 phút/chuyến | 2/chuyến (ngẫu nhiên) | — | 10 | 5 | mới | riêng | medium |
+| `scad` | Cá nục | Hải sản | Thuyền đánh cá | 2 giờ 30 phút/chuyến | 2/chuyến (ngẫu nhiên) | — | 8 | 5 | mới | riêng | low |
+| `clam` | Nghêu | Hải sản | Thuyền đánh cá | 2 giờ 30 phút/chuyến | 2/chuyến (ngẫu nhiên) | — | 8 | 5 | mới | riêng | high |
+| `squid` | Mực ống | Hải sản | Thuyền đánh cá | 2 giờ 30 phút/chuyến | 2/chuyến (ngẫu nhiên) | — | 10 | 6 | mới | riêng | high |
+| `bloodcockle` | Sò huyết | Hải sản | Thuyền đánh cá | 2 giờ 30 phút/chuyến | 2/chuyến (ngẫu nhiên) | — | 9 | 7 | mới | riêng | medium |
+| `scallop` | Sò điệp | Hải sản | Thuyền đánh cá | 2 giờ 30 phút/chuyến | 2/chuyến (ngẫu nhiên) | — | 11 | 8 | mới | riêng | medium |
+| `octopus` | Bạch tuộc | Hải sản | Thuyền đánh cá | 2 giờ 30 phút/chuyến | 2/chuyến (ngẫu nhiên) | — | 12 | 9 | mới | riêng | high |
 
 ## Nguồn sản xuất, trạng thái và hình
 
@@ -155,14 +155,14 @@
 
 | Mã | Tên | Ăn | Sản phẩm | Hình non | Hình trưởng thành |
 |---|---|---|---|---|---|
+| `quail` | Chim cút | Gạo | Trứng cút | `animal-quail-young` (69×44) | `animal-quail` (76×50) |
 | `chicken` | Gà mái | Gạo | Trứng gà | `animal-chicken-young` (61×49) | `animal-chicken` (68×51) |
 | `duck` | Vịt | Gạo | Trứng vịt | `animal-duck-young` (60×47) | `animal-duck` (80×36) |
-| `cow` | Bò sữa | Rau thơm | Sữa bò | `animal-cow-young` (71×49) | `animal-cow` (93×53) |
-| `quail` | Chim cút | Gạo | Trứng cút | `animal-quail-young` (69×44) | `animal-quail` (76×50) |
 | `goat` | Dê | Cải thảo | Sữa dê | `animal-goat-young` (69×51) | `animal-goat` (83×52) |
+| `cow` | Bò sữa | Rau thơm | Sữa bò | `animal-cow-young` (71×49) | `animal-cow` (93×53) |
 | `goose` | Ngỗng | Rau thơm | Trứng ngỗng | `animal-goose-young` (77×46) | `animal-goose` (85×42) |
-| `sheep` | Cừu | Bắp cải | Lông cừu | `animal-sheep-young` (70×46) | `animal-sheep` (75×47) |
 | `rabbit` | Thỏ | Cà rốt | Lông thỏ | `animal-rabbit-young` (69×60) | `animal-rabbit` (85×58) |
+| `sheep` | Cừu | Bắp cải | Lông cừu | `animal-sheep-young` (70×46) | `animal-sheep` (75×47) |
 
 ### Trại ong, ao, thuyền
 

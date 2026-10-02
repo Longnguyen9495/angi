@@ -34,7 +34,7 @@ const ranch = {
     start: 'Gọi ong về làm mật',
     collect: 'Lấy mật',
     collectLabel: (list: string) => `Lấy ${list} vào kho`,
-    started: (hours: number) => `Đàn ong đã về tổ. ${hours} giờ nữa có mật.`,
+    started: (when: string) => `Đàn ong đã về tổ. ${when} nữa có mật.`,
     collected: (list: string) => `Đã lấy ${list} vào kho. Ong lại làm mẻ mới.`,
   },
   pond: {
@@ -51,7 +51,7 @@ const ranch = {
     back: 'Thuyền đã về bến, khoang đầy hải sản!',
     send: 'Cho thuyền ra khơi',
     unload: 'Dỡ hàng vào kho',
-    sent: (hours: number) => `Thuyền đã ra khơi. ${hours} giờ nữa quay về.`,
+    sent: (when: string) => `Thuyền đã ra khơi. ${when} nữa quay về.`,
     unloaded: (list: string) => `Thuyền mang về: ${list}. Đã cất vào kho.`,
   },
   qty: (n: number, name: string) => `${n} ${name}`,

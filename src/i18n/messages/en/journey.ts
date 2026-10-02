@@ -135,8 +135,7 @@ const journey: Messages['journey'] = {
     planted: (seed, plot) => `Planted ${seed} in plot ${plot}.`,
     watered: (plot, crop, left) =>
       `Watered plot ${plot}. The ${crop} grows faster. ${left} ${s(left, 'watering', 'waterings')} left today.`,
-    fed: (animal, hours) =>
-      `Fed the ${animal}. Come back in ${hours} ${s(hours, 'hour', 'hours')} to collect.`,
+    fed: (animal, when) => `Fed the ${animal}. Come back in ${when} to collect.`,
     collected: (qty, product) => `Collected ${qty} ${product} into the pantry.`,
     caught: (fish, xp) => `You caught a ${fish}! Added to the pantry · +${xp} XP.`,
     noFishingLeft: 'No fishing left today — come back tomorrow.',
@@ -236,8 +235,8 @@ const journey: Messages['journey'] = {
     },
     feed: {
       title: (animal) => `Feed the ${animal}`,
-      body: (feed, hours, qty, product) =>
-        `1 ${feed} → ${qty} ${product} for your recipes after ${hours} ${s(hours, 'hour', 'hours')}.`,
+      body: (feed, when, qty, product) =>
+        `1 ${feed} → ${qty} ${product} for your recipes after ${when}.`,
       action: 'Feed',
     },
     fish: {
@@ -247,8 +246,8 @@ const journey: Messages['journey'] = {
     },
     plant: {
       title: (seed, plot) => `Plant ${seed} in plot ${plot}`,
-      body: (plot, crop, hours) =>
-        `You have seeds and plot ${plot} is empty — ${crop} ripens in about ${hours} ${s(hours, 'hour', 'hours')}.`,
+      body: (plot, crop, when) =>
+        `You have seeds and plot ${plot} is empty — ${crop} ripens in about ${when}.`,
       action: 'Plant now',
     },
     find: {
@@ -439,11 +438,11 @@ const journey: Messages['journey'] = {
     inPantry: (n) => `In pantry ×${n}`,
     sold: (produce, coins) => `Sold 1 ${produce}, +${coins} ${s(coins, 'coin', 'coins')}.`,
     sell: (coins) => `Sell 1 · +${coins} ${s(coins, 'coin', 'coins')}`,
-    seedMeta: (hours, tray) => `Ripens in ${hours} ${s(hours, 'hour', 'hours')} · tray ×${tray}`,
+    seedMeta: (sprout, ripe, tray) => `Sprouts in ${sprout} · ripe in ${ripe} · tray ×${tray}`,
     treeMeta: (first, again, tray) =>
-      `Perennial · first fruit in ${first} h, then every ${again} h · tray ×${tray}`,
-    mushroomMeta: (first, flushes, tray) =>
-      `Spawn block · first flush in ${first} h, ${flushes} flushes · tray ×${tray}`,
+      `Perennial · first fruit in ${first}, then every ${again} · tray ×${tray}`,
+    mushroomMeta: (first, again, flushes, tray) =>
+      `Spawn block · first flush in ${first}, then every ${again}, ${flushes} flushes · tray ×${tray}`,
     soon: 'Coming up',
     opensAt: (level) => `Opens at level ${level}`,
     boughtSeed: (seed) => `Bought 1 ${seed}.`,

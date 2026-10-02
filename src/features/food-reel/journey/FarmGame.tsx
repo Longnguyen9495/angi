@@ -67,7 +67,7 @@ import { useSeedDrag } from './seedDrag';
 // Scene overlay styles (plot card, seed strip) load with the game, not with the lazy scene.
 import '../../farm-anim/farm-anim.css';
 import './farm-game.css';
-import { currentTime, formatDuration, slotKey } from '../../../domain/time';
+import { HOUR_MS, currentTime, formatDuration, slotKey } from '../../../domain/time';
 import { t } from '../../../i18n';
 import { claimableCount } from '../../../domain/quests';
 import { ranchBadge } from '../../ranch/badge';
@@ -304,7 +304,7 @@ export function FarmGame({
     });
     const message =
       act === 'feed'
-        ? m.fed(def.name.toLowerCase(), def.hours)
+        ? m.fed(def.name.toLowerCase(), formatDuration(def.hours * HOUR_MS))
         : m.collected(def.yield, produceName(def.product).toLowerCase());
     announce(message);
     toast({ message, tone: act === 'collect' ? 'reward' : 'success' });

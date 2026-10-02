@@ -54,16 +54,17 @@ Hình cây trồng và nông sản cũ trong `public/images/garden/` đã bị x
 
 - **Rau, ngũ cốc, gia vị:** trồng một lần, thu một lần, ô trống lại.
 - **Cây lâu năm** (15 loại, gồm chanh trước đây là rau):
-  - Lần đầu ra trái sau 2 + 1,5 × cấp (giờ); các lần sau bằng 60% thời gian đó.
+  - Trái đầu sau 3 giờ (dâu tây) đến 36 giờ (sầu riêng); các lần sau khoảng một nửa.
   - Sau thu hoạch cây **ở lại** và quay về giai đoạn ra hoa.
   - Có nút "Nhổ cây" để giải phóng ô.
-- **Nấm:** đặt phôi vào ô, thu 3 đợt cách nhau 3 giờ, rồi phôi hết.
+- **Nấm:** đặt phôi vào ô, thu 3 đợt (đợt đầu 1–8 giờ tuỳ loại, các đợt sau nhanh hơn), rồi phôi hết.
 - **Vật nuôi:** gà, vịt, bò, chim cút, dê, ngỗng, cừu, thỏ. Cho ăn một loại cây đã mở trước đó, chờ, rồi nhận trứng, sữa hoặc lông.
-- **Trại ong:** tự đầy sau 8 giờ, cho mật ong và bánh sáp, rồi tự bắt đầu lại.
+- **Trại ong:** tự đầy sau 5 giờ, cho mật ong và bánh sáp, rồi tự bắt đầu lại.
 - **Ao:** câu được cá rô đồng và tôm như cũ; cá chép mở ở cấp 3, cua ở cấp 5.
-- **Thuyền đánh cá** (mở ở cấp 5): đi 4 giờ, mang về 2 loại hải sản tuỳ cấp.
+- **Thuyền đánh cá** (mở ở cấp 5): đi 2 giờ 30 phút, mang về 2 loại hải sản tuỳ cấp.
 - **Mở khoá dần theo cấp**, từ cấp 2 đến cấp 14. Lúc đầu chỉ có 6 cây cơ bản như trước.
-- **Cân bằng theo công thức** (ghi chú ngay trong code):
+- **Thời gian riêng cho từng loại** (bảng `TIMES` trong `src/data/game.ts`, tính bằng phút): mỗi cây có thời gian nảy mầm và thời gian chín riêng, trải từ 20 phút (rau thơm) đến 16 giờ (khoai môn), cây ăn trái tới 36 giờ. Vật nuôi từ 30 phút (chim cút) tới 10 giờ (cừu). XP mỗi lần thu tăng theo thời gian chờ (`harvestXp`: 2 XP cho loại 20 phút, khoảng 26 XP cho loại 16 giờ).
+- **Cân bằng giá theo công thức** (ghi chú ngay trong code):
   - Rau: giá hạt = 3 × giá bán, vì mỗi ô cho 3 phần.
   - Cây lâu năm hoàn vốn trong vòng 10 lần thu.
   - 10 cây cũ giữ nguyên chỉ số.

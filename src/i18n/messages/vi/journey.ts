@@ -133,7 +133,7 @@ const journey = {
     planted: (seed: string, plot: number) => `Đã gieo ${seed} vào ô ${plot}.`,
     watered: (plot: number, crop: string, left: number) =>
       `Đã tưới ô ${plot}. ${crop} lớn nhanh hơn. Còn ${left} lượt tưới hôm nay.`,
-    fed: (animal: string, hours: number) => `Đã cho ${animal} ăn. ${hours} giờ nữa quay lại thu.`,
+    fed: (animal: string, when: string) => `Đã cho ${animal} ăn. ${when} nữa quay lại thu.`,
     collected: (qty: number, product: string) => `Đã thu ${qty} ${product} vào kho.`,
     caught: (fish: string, xp: number) => `Câu được ${fish}! Đã cho vào kho · +${xp} XP.`,
     noFishingLeft: 'Hết lượt câu hôm nay — mai quay lại nhé.',
@@ -234,8 +234,8 @@ const journey = {
     },
     feed: {
       title: (animal: string) => `Cho ${animal} ăn`,
-      body: (feed: string, hours: number, qty: number, product: string) =>
-        `1 ${feed} → sau ${hours} giờ có ${qty} ${product} cho công thức.`,
+      body: (feed: string, when: string, qty: number, product: string) =>
+        `1 ${feed} → sau ${when} có ${qty} ${product} cho công thức.`,
       action: 'Cho ăn',
     },
     fish: {
@@ -244,8 +244,8 @@ const journey = {
     },
     plant: {
       title: (seed: string, plot: number) => `Gieo ${seed} vào ô ${plot}`,
-      body: (plot: number, crop: string, hours: number) =>
-        `Khay còn hạt và ô ${plot} đang trống — ${crop} chín sau khoảng ${hours} giờ.`,
+      body: (plot: number, crop: string, when: string) =>
+        `Khay còn hạt và ô ${plot} đang trống — ${crop} chín sau khoảng ${when}.`,
       action: 'Gieo ngay',
     },
     find: {
@@ -437,11 +437,12 @@ const journey = {
     inPantry: (n: number) => `Trong kho ×${n}`,
     sold: (produce: string, coins: number) => `Đã bán 1 ${produce}, +${coins} xu.`,
     sell: (coins: number) => `Bán 1 · +${coins} xu`,
-    seedMeta: (hours: number, tray: number) => `Chín sau ${hours} giờ · khay ×${tray}`,
-    treeMeta: (first: number, again: number, tray: number) =>
-      `Cây lâu năm · trái đầu sau ${first} giờ, rồi ${again} giờ/lần · khay ×${tray}`,
-    mushroomMeta: (first: number, flushes: number, tray: number) =>
-      `Phôi nấm · đợt đầu sau ${first} giờ, thu ${flushes} đợt · khay ×${tray}`,
+    seedMeta: (sprout: string, ripe: string, tray: number) =>
+      `Nảy mầm sau ${sprout} · chín sau ${ripe} · khay ×${tray}`,
+    treeMeta: (first: string, again: string, tray: number) =>
+      `Cây lâu năm · trái đầu sau ${first}, rồi ${again}/lần · khay ×${tray}`,
+    mushroomMeta: (first: string, again: string, flushes: number, tray: number) =>
+      `Phôi nấm · đợt đầu sau ${first}, rồi ${again}/đợt, ${flushes} đợt · khay ×${tray}`,
     soon: 'Sắp mở',
     opensAt: (level: number) => `Mở ở cấp ${level}`,
     boughtSeed: (seed: string) => `Đã mua 1 ${seed}.`,

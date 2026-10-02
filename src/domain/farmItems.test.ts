@@ -6,6 +6,7 @@ import {
   HIVE,
   MARKET,
   PRODUCE_IDS,
+  harvestXp,
   produceName,
   sellPrice,
 } from '../data/game';
@@ -42,8 +43,24 @@ describe('the item catalogue', () => {
     expect(MARKET.seed('rice')).toBe(6);
     expect(MARKET.seed('lemongrass')).toBe(10);
     expect(MARKET.sell('rice')).toBe(2);
-    expect(CROPS.rice.growHours).toBe(5);
-    expect(CROPS.tomato.growHours).toBe(5);
+    expect(CROPS.rice.yield).toBe(3);
+  });
+
+  it('gives every crop its own clock, from minutes to more than a day', () => {
+    const defs = Object.values(CROPS);
+    for (const c of defs) {
+      expect(c.sproutHours).toBeGreaterThan(0);
+      expect(c.sproutHours).toBeLessThan(c.growHours);
+      if (c.kind !== 'veg') expect(c.regrowHours).toBeLessThan(c.growHours);
+    }
+    const hours = defs.map((c) => c.growHours);
+    expect(Math.min(...hours)).toBeLessThan(0.5);
+    expect(Math.max(...hours)).toBeGreaterThan(24);
+    // Not one shared number: many different times, and germination differs too.
+    expect(new Set(hours).size).toBeGreaterThan(20);
+    expect(new Set(defs.map((c) => c.sproutHours)).size).toBeGreaterThan(8);
+    // Long waits pay more XP per harvest.
+    expect(harvestXp(CROPS.taro.growHours)).toBeGreaterThan(harvestXp(CROPS.herbs.growHours));
   });
 
   it('opens new crops by level, never all at once', () => {

@@ -32,7 +32,8 @@ describe('farm view (domain → engine)', () => {
   it('describes every plot from real progress, nothing else', () => {
     const s = withSeeds();
     const { next } = apply(s, T0, { kind: 'plant', plotId: 2, crop: 'herbs' });
-    const view = buildFarmView(next, T0 + HOUR_MS / 2, { kind: 'plot', id: 2 }, false);
+    // One minute in: herbs germinate in a few minutes, so still a sprout.
+    const view = buildFarmView(next, T0 + 60_000, { kind: 'plot', id: 2 }, false);
     expect(view.plots).toHaveLength(next.plots.length);
     expect(view.plots[1]).toMatchObject({ id: 2, crop: 'herbs', stage: 'sprout', thirsty: false });
     expect(view.plots[0]).toMatchObject({ id: 1, crop: null, stage: 'empty' });

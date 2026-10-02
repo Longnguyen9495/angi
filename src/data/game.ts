@@ -27,24 +27,23 @@ import type {
 const CROP_TEXT = t.data.crops;
 const ALL_REGIONS: RegionId[] = ['north', 'central', 'south'];
 
-/** The first ten crops: their numbers are kept as they were (saves and recipes rely on them). */
+/** A crop before its times are set (they all come from TIMES below). */
+type CropBase = Omit<CropDef, 'growHours' | 'sproutHours' | 'regrowHours'>;
+
+/** The first ten crops: yield, prices and regions are kept as they were. */
 function classic(
   id: CropId,
   kind: CropKind,
   category: ItemCategory,
-  growHours: number,
   regions: RegionId[],
   color: string,
   unlockLevel?: number,
-): CropDef {
+): CropBase {
   return {
     id,
     kind,
     category,
     ...CROP_TEXT[id],
-    growHours,
-    // A tree stays after its harvest and fruits again after the same time.
-    ...(kind === 'tree' ? { regrowHours: growHours } : {}),
     yield: 3,
     regions,
     color,
@@ -53,30 +52,19 @@ function classic(
 }
 
 /**
- * Balance rules for the crops added with the farm item pack (no hand-picked numbers):
- * - vegetables: grow hours = base of the group + level/2; yield 3; sell 2 + level/4 xu, and a
- *   seed costs what its harvest sells for (growing pays in XP, recipes and orders);
- * - fruit trees: first fruit after 2 + 1.5 × level hours, then again after 60 % of that;
- *   2 fruit a harvest; a sapling costs 10 + 5 × level, fruit sells for 3 + level/3;
- * - mushrooms: first flush after 1 + 0.75 × level hours, then every 3 hours, 3 flushes of 2;
- *   a spawn block costs 8 + 3 × level, mushrooms sell for 3 + level/4.
+ * Prices for the crops added with the farm item pack:
+ * - vegetables: yield 3; sell 2 + level/4 xu, and a seed costs what its harvest sells for
+ *   (growing pays in XP, recipes and orders);
+ * - fruit trees: 2 fruit a harvest; a sapling costs 10 + 5 × level, fruit sells for 3 + level/3;
+ * - mushrooms: 3 flushes of 2; a spawn block costs 8 + 3 × level, they sell for 3 + level/4.
  */
-const VEG_BASE_HOURS: Partial<Record<ItemCategory, number>> = {
-  leafy: 2,
-  fruitveg: 3,
-  root: 3,
-  grain: 4,
-  spice: 3,
-};
-
-function veg(id: VegId, category: ItemCategory, level: number, color: string): CropDef {
+function veg(id: VegId, category: ItemCategory, level: number, color: string): CropBase {
   const sell = 2 + Math.floor(level / 4);
   return {
     id,
     kind: 'veg',
     category,
     ...CROP_TEXT[id],
-    growHours: (VEG_BASE_HOURS[category] ?? 3) + Math.round(level / 2),
     yield: 3,
     regions: ALL_REGIONS,
     color,
@@ -85,15 +73,12 @@ function veg(id: VegId, category: ItemCategory, level: number, color: string): C
   };
 }
 
-function tree(id: TreeId, level: number, color: string): CropDef {
-  const growHours = Math.round(2 + 1.5 * level);
+function tree(id: TreeId, level: number, color: string): CropBase {
   return {
     id,
     kind: 'tree',
     category: 'fruit',
     ...CROP_TEXT[id],
-    growHours,
-    regrowHours: Math.round(growHours * 0.6),
     yield: 2,
     regions: ALL_REGIONS,
     color,
@@ -102,14 +87,12 @@ function tree(id: TreeId, level: number, color: string): CropDef {
   };
 }
 
-function mushroom(id: MushroomId, level: number, color: string): CropDef {
+function mushroom(id: MushroomId, level: number, color: string): CropBase {
   return {
     id,
     kind: 'mushroom',
     category: 'mushroom',
     ...CROP_TEXT[id],
-    growHours: Math.round(1 + 0.75 * level),
-    regrowHours: 3,
     flushes: 3,
     yield: 2,
     regions: ALL_REGIONS,
@@ -119,17 +102,90 @@ function mushroom(id: MushroomId, level: number, color: string): CropDef {
   };
 }
 
-export const CROPS: Record<CropId, CropDef> = {
-  rice: classic('rice', 'veg', 'grain', 5, ALL_REGIONS, '#d9b44a'),
-  herbs: classic('herbs', 'veg', 'spice', 3, ALL_REGIONS, '#4f9a4a'),
-  chili: classic('chili', 'veg', 'spice', 4, ['central', 'south'], '#c8412b'),
-  scallion: classic('scallion', 'veg', 'spice', 3, ['north', 'south'], '#7cb35a'),
-  bean: classic('bean', 'veg', 'grain', 4, ['north', 'central'], '#8f9a3c'),
-  tomato: classic('tomato', 'veg', 'fruitveg', 5, ['north', 'south'], '#d6452f'),
-  lemongrass: classic('lemongrass', 'veg', 'spice', 4, ['central', 'south'], '#b9c96a', 2),
-  garlic: classic('garlic', 'veg', 'spice', 5, ['north', 'central'], '#efe6d2', 3),
-  cucumber: classic('cucumber', 'veg', 'fruitveg', 4, ['north', 'south'], '#5f9a3a', 4),
-  lime: classic('lime', 'tree', 'fruit', 6, ALL_REGIONS, '#8cc43f', 5),
+/**
+ * Every crop's own clock, in minutes: [to harvest, to germinate, (trees and mushrooms)
+ * between harvests]. Spread on purpose from minutes to more than a day, so there is always
+ * something quick to tend while playing and something long to leave overnight:
+ * - quick (20 min – 1 h): leafy greens and herbs that come up fast;
+ * - medium (1.5 – 4 h): fruiting vegetables, beans, rice;
+ * - long (5 – 16 h): pumpkins, corn, roots and rhizomes (slow to germinate, too);
+ * - trees fruit first after 3 – 36 h and again after half of that or so;
+ * - mushrooms fruit after 1 – 8 h and flush again sooner.
+ * Germination is its own number: carrots, garlic, ginger and taro sit in the ground a long
+ * time before showing, greens are up in minutes.
+ */
+const TIMES: Record<CropId, readonly [grow: number, sprout: number, regrow?: number]> = {
+  herbs: [20, 5],
+  scallion: [30, 8],
+  napa: [45, 10],
+  radish: [60, 15],
+  shallot: [60, 15],
+  lemongrass: [75, 20],
+  bean: [90, 20],
+  cucumber: [120, 20],
+  chili: [120, 25],
+  beet: [120, 30],
+  cabbage: [150, 30],
+  bittermelon: [150, 30],
+  tomato: [180, 30],
+  carrot: [180, 60],
+  eggplant: [210, 40],
+  rice: [240, 40],
+  potato: [240, 60],
+  garlic: [300, 90],
+  cauliflower: [300, 45],
+  peanut: [300, 60],
+  sweetpotato: [360, 60],
+  corn: [360, 45],
+  pumpkin: [480, 90],
+  wintermelon: [600, 90],
+  ginger: [720, 180],
+  taro: [960, 180],
+
+  strawberry: [180, 30, 90],
+  lime: [360, 45, 180],
+  papaya: [480, 60, 240],
+  dragonfruit: [480, 60, 240],
+  banana: [600, 60, 360],
+  guava: [600, 90, 300],
+  pineapple: [720, 90, 480],
+  mandarin: [720, 90, 360],
+  orange: [840, 120, 360],
+  mango: [1080, 120, 480],
+  lychee: [1200, 150, 600],
+  rambutan: [1200, 150, 600],
+  coconut: [1440, 180, 720],
+  jackfruit: [1800, 180, 960],
+  durian: [2160, 240, 1200],
+
+  oyster: [60, 15, 45],
+  button: [120, 30, 60],
+  enoki: [180, 45, 90],
+  shiitake: [360, 90, 180],
+  woodear: [480, 120, 240],
+};
+
+function timed(base: CropBase): CropDef {
+  const [grow, sprout, regrow] = TIMES[base.id];
+  return {
+    ...base,
+    growHours: grow / 60,
+    sproutHours: sprout / 60,
+    ...(regrow ? { regrowHours: regrow / 60 } : {}),
+  };
+}
+
+const CROP_BASES: Record<CropId, CropBase> = {
+  rice: classic('rice', 'veg', 'grain', ALL_REGIONS, '#d9b44a'),
+  herbs: classic('herbs', 'veg', 'spice', ALL_REGIONS, '#4f9a4a'),
+  chili: classic('chili', 'veg', 'spice', ['central', 'south'], '#c8412b'),
+  scallion: classic('scallion', 'veg', 'spice', ['north', 'south'], '#7cb35a'),
+  bean: classic('bean', 'veg', 'grain', ['north', 'central'], '#8f9a3c'),
+  tomato: classic('tomato', 'veg', 'fruitveg', ['north', 'south'], '#d6452f'),
+  lemongrass: classic('lemongrass', 'veg', 'spice', ['central', 'south'], '#b9c96a', 2),
+  garlic: classic('garlic', 'veg', 'spice', ['north', 'central'], '#efe6d2', 3),
+  cucumber: classic('cucumber', 'veg', 'fruitveg', ['north', 'south'], '#5f9a3a', 4),
+  lime: classic('lime', 'tree', 'fruit', ALL_REGIONS, '#8cc43f', 5),
 
   napa: veg('napa', 'leafy', 2, '#b7d77a'),
   radish: veg('radish', 'root', 2, '#f1efe6'),
@@ -170,6 +226,19 @@ export const CROPS: Record<CropId, CropDef> = {
   enoki: mushroom('enoki', 8, '#f4ead2'),
   woodear: mushroom('woodear', 9, '#5a3a2e'),
 };
+
+export const CROPS = Object.fromEntries(
+  Object.entries(CROP_BASES).map(([id, base]) => [id, timed(base)]),
+) as Record<CropId, CropDef>;
+
+/**
+ * XP for a harvest grows with the wait (2 for a 20-minute crop, ~26 for a 16-hour one), so
+ * quick crops reward active play without becoming the fastest way to level, and long crops
+ * left overnight are worth it. Animals, the hive and the boat use the same rule.
+ */
+export function harvestXp(hours: number): number {
+  return Math.min(40, Math.max(2, Math.round(2 + hours * 1.5)));
+}
 
 /** The six crops every guest starts with; the rest open by level. */
 export const BASE_CROPS: CropId[] = ['rice', 'herbs', 'chili', 'scallion', 'bean', 'tomato'];
@@ -435,18 +504,19 @@ const animal = (
 });
 
 /**
- * Hen and cow keep their numbers. The others follow one rule: the later an animal opens, the
- * longer its cycle and the more its product sells for; each eats a crop open before it.
+ * Each animal keeps its own pace, from half an hour (quail lay small and often) to most of a
+ * day (a fleece takes long): eggs are quick, milk medium, wool slow. Each eats a crop that
+ * opens before it.
  */
 export const ANIMALS: Record<AnimalId, AnimalDef> = {
-  chicken: animal('chicken', 'rice', 'egg', 2, 3, 2),
-  duck: animal('duck', 'rice', 'duckegg', 2, 4, 3),
-  cow: animal('cow', 'herbs', 'milk', 1, 5, 4),
-  quail: animal('quail', 'rice', 'quailegg', 3, 3, 5),
-  goat: animal('goat', 'napa', 'goatmilk', 1, 5, 6),
+  quail: animal('quail', 'rice', 'quailegg', 3, 0.5, 5),
+  chicken: animal('chicken', 'rice', 'egg', 2, 1, 2),
+  duck: animal('duck', 'rice', 'duckegg', 2, 1.5, 3),
+  goat: animal('goat', 'napa', 'goatmilk', 1, 3, 6),
+  cow: animal('cow', 'herbs', 'milk', 1, 4, 4),
   goose: animal('goose', 'herbs', 'gooseegg', 1, 6, 7),
-  sheep: animal('sheep', 'cabbage', 'wool', 1, 8, 8),
-  rabbit: animal('rabbit', 'carrot', 'rabbitwool', 1, 8, 9),
+  rabbit: animal('rabbit', 'carrot', 'rabbitwool', 1, 6, 9),
+  sheep: animal('sheep', 'cabbage', 'wool', 1, 10, 8),
 };
 
 export const ANIMAL_LIST: AnimalDef[] = Object.values(ANIMALS);
@@ -474,7 +544,7 @@ const ANIMAL_PRODUCE: Record<
 
 export const HIVE = {
   unlockLevel: 6,
-  hours: 8,
+  hours: 5,
   yield: { honey: 2, honeycomb: 1 } as Record<BeeProduct, number>,
 } as const;
 
@@ -529,7 +599,7 @@ export const CATCHES: Record<Catch, CatchDef> = {
 /** The boat: one trip at a time; it brings back a few of the sea catches open at the guest's level. */
 export const BOAT = {
   unlockLevel: 5,
-  hours: 4,
+  hours: 2.5,
   catches: 2,
 } as const;
 
@@ -658,8 +728,6 @@ export const XP = {
   checkinAte: 20,
   checkinSwapped: 15,
   checkinSkipped: 5,
-  harvestPerPlot: 5,
-  collectAnimal: 4,
   friendHelp: 3,
   /** Picking one from a friend's ripe plot. */
   steal: 2,
