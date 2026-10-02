@@ -296,16 +296,22 @@ export function FarmGame({
     return () => document.removeEventListener('keydown', onKey);
   }, []);
 
-  const harvestAll = () => {
-    if (ready.length === 0) return;
+  /** Pick every ripe plot, or just `plotId` (a tap on it). */
+  const harvestAll = (plotId?: number) => {
+    const picked = plotId === undefined ? ready : ready.filter((p) => p.id === plotId);
+    if (picked.length === 0) return;
     const counts = new Map<string, number>();
     // What lands in the pantry: each plot gives its yield (one less if a friend picked from it).
-    ready.forEach((p) => {
+    picked.forEach((p) => {
       const def = CROPS[p.crop!];
       const got = Math.max(1, def.yield - (p.stolen ? 1 : 0));
       counts.set(def.produceName, (counts.get(def.produceName) ?? 0) + got);
     });
-    dispatch({ type: 'HARVEST_ALL', now: currentTime() });
+    dispatch(
+      plotId === undefined
+        ? { type: 'HARVEST_ALL', now: currentTime() }
+        : { type: 'HARVEST_PLOT', plotId, now: currentTime() },
+    );
     setJustHarvested((n) => n + 1);
     toast({
       message: m.harvested([...counts].map(([n, q]) => `${n} ×${q}`).join(', ')),
@@ -436,16 +442,30 @@ export function FarmGame({
   }
 
   /**
-   * A tap on a plot: with the can out, water it straight away; otherwise open its card
-   * (seeds, water, harvest, cook).
+   * A tap on a plot does what its bubble asks: a ripe plot is picked, a dry growing one is
+   * watered, both straight away. Anything else opens its card (seeds, time left, a lock).
    */
   const onPlot = (id: number) => {
     const plot = state.plots.find((p) => p.id === id);
-    if (watering && plot && isGrowing(plotStage(plot, currentTime()))) {
-      const block = waterBlock(state, plot, currentTime());
-      if (block === null) waterAt(id);
-      else toast({ message: BLOCK_NOTE[block] || m.cantWater });
+    const at = currentTime();
+    const stage = plot ? plotStage(plot, at) : null;
+    if (plot && stage === 'ready') {
+      setPlotCard(null);
+      harvestAll(id);
       return;
+    }
+    if (plot && stage && isGrowing(stage)) {
+      const block = waterBlock(state, plot, at);
+      if (block === null) {
+        setPlotCard(null);
+        waterAt(id);
+        return;
+      }
+      // With the can out, say why this one cannot be watered instead of opening the card.
+      if (watering) {
+        toast({ message: BLOCK_NOTE[block] || m.cantWater });
+        return;
+      }
     }
     setPlotCard(plotCard?.id === id ? null : { id });
   };
@@ -475,7 +495,7 @@ export function FarmGame({
 
   const harvestFromCard = (id: number) => {
     const crop = state.plots.find((p) => p.id === id)?.crop ?? undefined;
-    harvestAll();
+    harvestAll(id);
     setPlotCard({ id, harvested: crop });
   };
 
@@ -754,7 +774,7 @@ export function FarmGame({
               highlight={justHarvested > 0}
               onCook={onCook}
               onOrders={() => open('orders')}
-              onHarvest={harvestAll}
+              onHarvest={() => harvestAll()}
               onAnimal={animalAct}
               onPlant={(plotId, crop) => plantAt(plotId, crop)}
               onFind={spinForSeed}
@@ -844,7 +864,7 @@ export function FarmGame({
           <button
             type="button"
             className={`fg-tool fg-tool--harvest${ready.length ? ' is-ready' : ''}`}
-            onClick={harvestAll}
+            onClick={() => harvestAll()}
             disabled={ready.length === 0}
             aria-label={m.harvestAll(ready.length)}
           >

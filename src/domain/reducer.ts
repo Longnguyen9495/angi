@@ -63,6 +63,8 @@ export type Action =
   | { type: 'PLANT_FROM_TRAY'; crop: CropId; plotId: number; now: number }
   | { type: 'WATER'; plotId: number; now: number }
   | { type: 'HARVEST_ALL'; now: number }
+  /** One ripe plot picked with a tap (same rewards as HARVEST_ALL gives it). */
+  | { type: 'HARVEST_PLOT'; plotId: number; now: number }
   /** A bite landed at the pond for the cast made at `castAt` (what bites follows from it). */
   | { type: 'CATCH'; castAt: number; now: number }
   | { type: 'COOK'; recipeId: RecipeId; now: number }
@@ -424,8 +426,13 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       return s;
     }
 
+    case 'HARVEST_PLOT':
     case 'HARVEST_ALL': {
-      const ready = state.plots.filter((p) => plotStage(p, action.now) === 'ready');
+      const ready = state.plots.filter(
+        (p) =>
+          plotStage(p, action.now) === 'ready' &&
+          (action.type === 'HARVEST_ALL' || p.id === action.plotId),
+      );
       if (ready.length === 0) return state;
       const s = structuredClone(state);
       for (const plot of ready) {

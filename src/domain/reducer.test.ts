@@ -175,6 +175,21 @@ describe('harvest and cook', () => {
     expect(cooked.ingredients.rice).toBe(0);
     expect(gameReducer(cooked, { type: 'COOK', recipeId: 'com-tam', now: NOON + 2 })).toBe(cooked);
   });
+
+  it('picks only the tapped ripe plot, once', () => {
+    const start = createInitialProgress(NOON);
+    const ripe = start.plots[0]!;
+    // Two ripe plots of herbs: plot 1 and a copy on plot 2.
+    const s = {
+      ...start,
+      plots: start.plots.map((p) => (p.id === 2 ? { ...ripe, id: 2 } : p)),
+    };
+    const picked = gameReducer(s, { type: 'HARVEST_PLOT', plotId: 2, now: NOON });
+    expect(picked.ingredients.herbs).toBe(CROPS.herbs.yield);
+    expect(picked.plots.find((p) => p.id === 2)?.crop).toBeNull();
+    expect(picked.plots.find((p) => p.id === 1)?.crop).toBe(ripe.crop);
+    expect(gameReducer(picked, { type: 'HARVEST_PLOT', plotId: 2, now: NOON })).toBe(picked);
+  });
 });
 
 describe('soft streak', () => {
