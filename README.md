@@ -92,10 +92,9 @@ Tiếng Việt là ngôn ngữ gốc và là bản dự phòng ở mọi lớp; 
   Trên server bước xuất snapshot báo “keeping the existing snapshot” là đúng ý: `rexllm` không ghi được DB nên
   giữ snapshot đã commit, cây git không bị bẩn và lần `git pull` sau không vướng. Snapshot chỉ là dự phòng khi API
   không trả lời; trang luôn tải danh mục thật từ `/api/dishes`.
-- Danh mục local và production được tạo riêng nên id 7 món khác nhau (production: `com-tam-suon-bi-cha`,
-  `com-tempura`… ; local: `com-tam-suon-bi-cha-trung`, `tendon`…). Production là bản thật: muốn local giống hệt thì
+- Production là danh mục thật. Muốn local giống hệt (sao lưu MySQL trước, lệnh xoá danh mục local):
   `curl -s https://angi.221-121-1-68.sslip.io/api/dishes > prod.json` rồi `php server/bin/seed.php --force --from=prod.json`
-  (xoá danh mục local — sao lưu MySQL trước). Không chạy `seed.php --force` trên production nếu chưa chắc.
+  (giữ cả `cook`; video YouTube thử nghiệm phải chép lại riêng). Không chạy `seed.php --force` trên production nếu chưa chắc.
 - Cách nấu trong game (bảng `dish_cook`): món nào có `cook` thì thành công thức trong Sổ bếp. AI tự viết khi
   tạo/đọc lại món; điền cho các món còn thiếu: `php server/bin/ai-cook.php` (`--all` để viết lại hết, `--only=…`).
   Mang sang server không cần gọi AI lại: `npm run build` ở local, commit snapshot, rồi trên server
