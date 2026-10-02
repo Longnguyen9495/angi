@@ -24,7 +24,55 @@ final class Friends
     public const GIFTS_PER_DAY = 3;
     /** How far back the friends' news goes. */
     private const FEED_DAYS = 14;
-    private const CROPS = ['rice', 'herbs', 'chili', 'scallion', 'bean', 'tomato', 'lemongrass', 'garlic', 'cucumber', 'lime'];
+    /** Every crop id a seed can be sent as (keep in sync with CROPS in src/data/game.ts). */
+    private const CROPS = [
+        'rice',
+        'herbs',
+        'chili',
+        'scallion',
+        'bean',
+        'tomato',
+        'lemongrass',
+        'garlic',
+        'cucumber',
+        'lime',
+        'napa',
+        'radish',
+        'cabbage',
+        'eggplant',
+        'carrot',
+        'bittermelon',
+        'potato',
+        'shallot',
+        'cauliflower',
+        'sweetpotato',
+        'peanut',
+        'pumpkin',
+        'beet',
+        'corn',
+        'wintermelon',
+        'ginger',
+        'taro',
+        'strawberry',
+        'pineapple',
+        'banana',
+        'papaya',
+        'guava',
+        'orange',
+        'mandarin',
+        'mango',
+        'dragonfruit',
+        'coconut',
+        'lychee',
+        'rambutan',
+        'jackfruit',
+        'durian',
+        'button',
+        'oyster',
+        'shiitake',
+        'enoki',
+        'woodear',
+    ];
     private const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     /** Seeds Cô Ba may gift: the crops every garden has from day one. */
     private const GIFT_CROPS = ['rice', 'herbs', 'chili', 'scallion', 'bean', 'tomato'];

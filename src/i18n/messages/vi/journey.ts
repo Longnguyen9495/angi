@@ -421,6 +421,14 @@ const journey = {
     notEnough: 'Chưa đủ hàng',
   },
 
+  itemFilter: {
+    search: 'Tìm vật phẩm',
+    placeholder: 'Tìm: cà chua, trứng, mật ong…',
+    groups: 'Nhóm',
+    all: 'Tất cả',
+    noMatch: 'Không có vật phẩm nào khớp — thử tên khác hoặc chọn “Tất cả”.',
+  },
+
   market: {
     tabs: { sell: 'Bán nông sản', seeds: 'Mua hạt', decor: 'Trang trí vườn' },
     coins: 'xu',
@@ -430,6 +438,12 @@ const journey = {
     sold: (produce: string, coins: number) => `Đã bán 1 ${produce}, +${coins} xu.`,
     sell: (coins: number) => `Bán 1 · +${coins} xu`,
     seedMeta: (hours: number, tray: number) => `Chín sau ${hours} giờ · khay ×${tray}`,
+    treeMeta: (first: number, again: number, tray: number) =>
+      `Cây lâu năm · trái đầu sau ${first} giờ, rồi ${again} giờ/lần · khay ×${tray}`,
+    mushroomMeta: (first: number, flushes: number, tray: number) =>
+      `Phôi nấm · đợt đầu sau ${first} giờ, thu ${flushes} đợt · khay ×${tray}`,
+    soon: 'Sắp mở',
+    opensAt: (level: number) => `Mở ở cấp ${level}`,
     boughtSeed: (seed: string) => `Đã mua 1 ${seed}.`,
     buy: (price: number) => `Mua · ${price} xu`,
     owned: 'Đã đặt trong vườn',

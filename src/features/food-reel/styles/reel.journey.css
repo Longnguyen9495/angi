@@ -1883,6 +1883,74 @@
   color: var(--fr-ivory);
 }
 
+/* Search + groups for long item lists (pantry, seeds, market). */
+.fj-filter {
+  display: grid;
+  gap: 10px;
+  margin: 4px 0 16px;
+}
+
+.fj-filter__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--fr-line-strong);
+  border-radius: 999px;
+  color: var(--fr-muted);
+}
+
+.fj-filter__search:focus-within {
+  border-color: var(--fr-gold);
+}
+
+.fj-filter__search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--fr-ivory);
+  font: inherit;
+  font-size: 16px;
+  outline: none;
+}
+
+.fj-filter__groups {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.fj-filter__group {
+  flex: none;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--fr-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fr-muted);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.fj-filter__group[aria-pressed='true'] {
+  border-color: var(--fr-gold);
+  background: rgb(215 168 93 / 10%);
+  color: var(--fr-ivory);
+}
+
+.fj-market__soon {
+  margin-top: 24px;
+}
+
+.fj-stall__item.is-locked {
+  opacity: 0.55;
+}
+
 .fj-stall {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));

@@ -423,6 +423,14 @@ const journey: Messages['journey'] = {
     notEnough: 'Not enough yet',
   },
 
+  itemFilter: {
+    search: 'Find an item',
+    placeholder: 'Find: tomato, egg, honey…',
+    groups: 'Groups',
+    all: 'All',
+    noMatch: 'Nothing matches — try another name or pick “All”.',
+  },
+
   market: {
     tabs: { sell: 'Sell produce', seeds: 'Buy seeds', decor: 'Garden decor' },
     coins: 'coins',
@@ -432,6 +440,12 @@ const journey: Messages['journey'] = {
     sold: (produce, coins) => `Sold 1 ${produce}, +${coins} ${s(coins, 'coin', 'coins')}.`,
     sell: (coins) => `Sell 1 · +${coins} ${s(coins, 'coin', 'coins')}`,
     seedMeta: (hours, tray) => `Ripens in ${hours} ${s(hours, 'hour', 'hours')} · tray ×${tray}`,
+    treeMeta: (first, again, tray) =>
+      `Perennial · first fruit in ${first} h, then every ${again} h · tray ×${tray}`,
+    mushroomMeta: (first, flushes, tray) =>
+      `Spawn block · first flush in ${first} h, ${flushes} flushes · tray ×${tray}`,
+    soon: 'Coming up',
+    opensAt: (level) => `Opens at level ${level}`,
     boughtSeed: (seed) => `Bought 1 ${seed}.`,
     buy: (price) => `Buy · ${price} ${s(price, 'coin', 'coins')}`,
     owned: 'In your garden',
