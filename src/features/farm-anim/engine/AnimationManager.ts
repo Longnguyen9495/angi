@@ -328,6 +328,15 @@ export class AnimationManager {
   }
 
   /** Graphics quality: how many particles may live at once and how big the bursts are. */
+  /** Height at the bottom of the canvas covered by the game's UI (seed tray, dock), in CSS px. */
+  private insetBottom = 0;
+  setInsetBottom(px: number) {
+    const v = Math.max(0, Math.round(px));
+    if (v === this.insetBottom) return;
+    this.insetBottom = v;
+    this.resize();
+  }
+
   setQuality(q: Quality) {
     this.quality = q;
     this.game.quality = q;
@@ -533,25 +542,29 @@ export class AnimationManager {
     const contain = Math.min(cw / W, ch / H);
     // Scene: wide screens fill; tall phones show more of the island than a hard crop would.
     // Game: the whole island when it fits, otherwise two thirds of the screen tall, dragged.
-    const s =
-      this.mode === 'game'
-        ? Math.max(contain, Math.min(cover, (ch * 0.66) / H))
-        : Math.min(cover, contain * 1.9);
+    const game = this.mode === 'game';
+    // On the farm the bottom is covered by the seed tray and the dock: the island lives above.
+    const ah = game ? Math.max(ch * 0.5, ch - this.insetBottom) : ch;
+    const fitIn = Math.min(cw / W, ah / H);
+    const s = game
+      ? Math.max(fitIn, Math.min(cover, (ch * 0.66) / H))
+      : Math.min(cover, contain * 1.9);
     // Keep looking at the same spot across a resize (rotation, address bar).
     const k = s / this.fit.s;
     this.cam = { x: this.cam.x * k, y: this.cam.y * k };
     if (this.camGoal) this.camGoal = { x: this.camGoal.x * k, y: this.camGoal.y * k };
     this.fit = { s, ox: 0, oy: 0, cw, ch, dpr };
-    const game = this.mode === 'game';
-    // The painting ends in a flat cut under the cliffs. When the whole picture is shorter than
-    // the screen, sit it on the bottom edge with that cut just out of view (behind the dock on
-    // the farm), and let the spare height be sky on top instead of an empty band below.
+    // The painting ends in a flat cut under the cliffs. When the whole picture fits above the
+    // covered band, sit it on top of that band with the cut just behind the tray, and let the
+    // spare height be sky on top. Otherwise centre it in the free band and let it be dragged
+    // up and down to see all of it.
     const sh = H * s;
+    const fits = sh <= ah;
     this.base = {
       ox: (cw - W * s) / 2,
-      oy: sh < ch ? ch - sh * 0.97 : (ch - sh) / 2,
+      oy: fits ? ah - sh * 0.97 : (ah - sh) / 2,
       mx: game ? Math.max(0, (W * s - cw) / 2) : 0,
-      my: game ? Math.max(0, (H * s - ch) / 2) : 0,
+      my: game && !fits ? (sh - ah) / 2 : 0,
     };
     if (this.focusAt && cw > 1) {
       this.cam = { x: (W / 2 - this.focusAt[0]) * s, y: (H / 2 - this.focusAt[1]) * s };

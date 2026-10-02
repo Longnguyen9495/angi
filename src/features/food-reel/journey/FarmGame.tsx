@@ -161,6 +161,35 @@ export function FarmGame({
   const scene = useRef<FarmSceneApi | null>(null);
   const casting = useRef(false);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const trayRef = useRef<HTMLDivElement>(null);
+  const dockRef = useRef<HTMLElement>(null);
+  // How much of the stage is covered at its horizontal centre (the seed tray on phones, the
+  // dock on wide screens), so the island sits above it and its flat bottom stays hidden.
+  const [insetBottom, setInsetBottom] = useState(0);
+  useEffect(() => {
+    const measure = () => {
+      const stage = wrapRef.current?.getBoundingClientRect();
+      if (!stage) return;
+      const mid = stage.left + stage.width / 2;
+      let top = stage.bottom;
+      for (const el of [trayRef.current, dockRef.current]) {
+        // The tray box spans the width; what covers the centre is its seed strip.
+        const box = (
+          el === trayRef.current ? el?.querySelector('.fg-seeds') : el
+        )?.getBoundingClientRect();
+        if (box && box.height > 0 && box.left <= mid && box.right >= mid)
+          top = Math.min(top, box.top);
+      }
+      setInsetBottom(Math.max(0, stage.bottom - top));
+    };
+    measure();
+    if (typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(measure);
+    if (wrapRef.current) ro.observe(wrapRef.current);
+    if (trayRef.current) ro.observe(trayRef.current);
+    if (dockRef.current) ro.observe(dockRef.current);
+    return () => ro.disconnect();
+  }, []);
   const [cam, setCam] = useState<CameraView>({ canPan: false, side: 'field' });
   const [panned, setPanned] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -592,6 +621,7 @@ export function FarmGame({
             >
               <FarmScene
                 className="fg-scene"
+                insetBottom={insetBottom}
                 mode="game"
                 focus="field"
                 reduced={reduced}
@@ -782,7 +812,7 @@ export function FarmGame({
         </p>
       )}
 
-      <div className="fg-tray">
+      <div className="fg-tray" ref={trayRef}>
         <SeedTray
           seeds={seeds}
           counts={state.seeds}
@@ -825,7 +855,7 @@ export function FarmGame({
         </div>
       </div>
 
-      <nav className="fg-dock" aria-label={g.dockLabel}>
+      <nav className="fg-dock" aria-label={g.dockLabel} ref={dockRef}>
         {dock.map((d) => (
           <button
             key={d.id}

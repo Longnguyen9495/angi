@@ -44,6 +44,7 @@ export default function FarmScene({
   className = '',
   reduced = false,
   quality = 'high',
+  insetBottom = 0,
   flyTarget,
   farm = null,
   onPlace,
@@ -62,6 +63,8 @@ export default function FarmScene({
   reduced?: boolean;
   /** Graphics quality: particle budget and burst sizes. */
   quality?: 'low' | 'medium' | 'high';
+  /** Game: CSS px at the bottom covered by the UI (seed tray, dock); the island sits above. */
+  insetBottom?: number;
   /** CSS selector of the page element harvested produce flies to (e.g. the pantry button). */
   flyTarget?: string;
   /** The game drawn into the scene (plots, animal bubbles); null = scenery only. */
@@ -153,6 +156,10 @@ export default function FarmScene({
   useEffect(() => {
     manager.current?.setQuality(quality);
   }, [quality, state]);
+
+  useEffect(() => {
+    manager.current?.setInsetBottom(insetBottom);
+  }, [insetBottom, state]);
 
   useEffect(() => {
     manager.current?.setFlyTarget(flyTarget ?? null);
