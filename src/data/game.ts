@@ -788,8 +788,8 @@ export const DECOR_LIST: DecorDef[] = Object.values(DECOR);
 
 export const XP_PER_LEVEL = 100;
 export const FARM_PLOT_COUNT = 6;
-/** One more plot at each of these levels (6 → 9). */
-export const PLOT_UNLOCK_LEVELS = [3, 5, 7] as const;
+/** One more plot at each of these levels (6 → 12). */
+export const PLOT_UNLOCK_LEVELS = [3, 5, 7, 9, 11, 13] as const;
 export const MAX_PLOT_COUNT = FARM_PLOT_COUNT + PLOT_UNLOCK_LEVELS.length;
 
 export const BUDGET_OPTIONS: { id: BudgetId | 'any'; label: string; hint: string }[] = (

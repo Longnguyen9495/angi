@@ -5,7 +5,7 @@ import { Spring } from '../engine/WindSystem';
 import { type World, clamp, easeOut, smooth } from '../engine/world';
 
 /**
- * The game drawn into the painting: the 9 plots on the painted field (empty soil stamped on the
+ * The game drawn into the painting: the 12 plots on the painted field (empty soil stamped on the
  * unlocked ones, crops growing with the wind, wet soil, thirsty and hover outlines, a lock on the
  * next plot to open), status bubbles over the cows and the coop, and the float while fishing.
  * The page pushes its state with setView(); every plot animation comes from the diff between two
@@ -324,7 +324,7 @@ export class FarmGameLayer {
     this.view = view;
   }
 
-  /** Plot id at picture point p (any of the 9, locked ones too). */
+  /** Plot id at picture point p (any of them, locked ones too). */
   hit(p: { x: number; y: number }): number | null {
     if (!this.view) return null;
     for (const d of this.field.plots) if (inQuad(d.quad, p.x, p.y)) return d.id;
@@ -677,10 +677,8 @@ export class FarmGameLayer {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#4a2a10';
-    ctx.font = '700 8px "Be Vietnam Pro", system-ui, sans-serif';
-    ctx.fillText(t.farm.anim.signUnlock, cx, cy - 5, x1 - x0 - 6);
-    ctx.font = '800 11px "Be Vietnam Pro", system-ui, sans-serif';
-    ctx.fillText(t.farm.anim.lockLevel(v.unlockLevel ?? '?'), cx, cy + 5, x1 - x0 - 6);
+    ctx.font = '800 14px "Be Vietnam Pro", system-ui, sans-serif';
+    ctx.fillText(t.farm.anim.lockLevel(v.unlockLevel ?? '?'), cx, cy + 1, x1 - x0 - 6);
     ctx.restore();
   }
 

@@ -171,8 +171,6 @@ const farm = {
     title: 'Nông trại trên đảo bay',
     loading: 'Đang dựng nông trại…',
     lockLevel: (level: number | string) => `Cấp ${level}`,
-    /** First line on the signpost of a locked plot (the level goes under it). */
-    signUnlock: 'Mở khóa',
     /** Animation showcase panel on /farm-animation-test. */
     showcase: {
       heading: 'Animation showcase',

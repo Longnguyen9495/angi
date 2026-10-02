@@ -1293,10 +1293,11 @@ const glass = await maskFile(
   (x, y, r, g, b) => inPoly(GLASS, x, y) && r + g + b > 500 && sat(r, g, b) < 0.25,
 );
 
-// ——— 7b. Field plots: the game's 9 plots on the painted lattice, and an empty-soil tile ———
+// ——— 7b. Field plots: the game's 12 plots on the painted lattice, and an empty-soil tile ———
 // Lattice measured on the seams (i along R, j along L). Plots 1–6 are the painted tilled tiles,
-// 7–9 (unlocked later) the grass column beside them, front to back, closing a 3×3 field (the
-// last one is the tile with the signpost); the runtime stamps soil on unlocked ones.
+// 7–9 (unlocked later) the grass column beside them, front to back, closing a 3×3 field (9 is
+// the tile with the signpost), then 10–12 the grass row in front, left to right; the runtime
+// stamps soil on unlocked ones.
 const FIELD = { v0: wPt([620, 342]), R: wVec([88, 51]), L: wVec([-92.5, 43.5]) };
 const corner = (i, j) => [
   FIELD.v0[0] + FIELD.R[0] * i + FIELD.L[0] * j,
@@ -1313,6 +1314,9 @@ const PLOT_TILES = [
   [2, 2],
   [2, 1],
   [2, 0],
+  [0, 3],
+  [1, 3],
+  [2, 3],
 ];
 const plots = PLOT_TILES.map(([i, j], k) => ({
   id: k + 1,
