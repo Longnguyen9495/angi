@@ -17,6 +17,11 @@ import type { AnimSystem, World } from './world';
  *  straw    hay wisps
  *  splash   the sheet's splash crown flashing on the water (image)
  *  reward   an item icon floating up and fading (image)
+ *  leaf     a green leaf shaken off a plant at harvest: tumbles and drifts down
+ *  spore    pale mushroom spores: drift up slowly and fade
+ *
+ * The pool always holds 240 particles; `cap` (set from the graphics quality) limits how many
+ * may be alive at once, so a light device runs a smaller share of the same pool.
  */
 
 export type ParticleKind =
@@ -32,7 +37,9 @@ export type ParticleKind =
   | 'harvest'
   | 'straw'
   | 'splash'
-  | 'reward';
+  | 'reward'
+  | 'leaf'
+  | 'spore';
 
 export const PARTICLE_KINDS: ParticleKind[] = [
   'wind',
@@ -47,8 +54,13 @@ export const PARTICLE_KINDS: ParticleKind[] = [
   'sparkle',
   'pollen',
   'straw',
+  'leaf',
+  'spore',
   'reward',
 ];
+
+/** Live particles allowed per graphics quality. */
+export const PARTICLE_CAP = { low: 40, medium: 120, high: 240 } as const;
 
 interface Particle {
   alive: boolean;
@@ -87,6 +99,10 @@ export class ParticleSystem implements AnimSystem {
     img: null,
   }));
   private live = 0;
+  /** Particles alive right now (exact on spawn and death, for the cap). */
+  private alive = 0;
+  /** Most particles alive at once (graphics quality). */
+  cap = POOL;
   private perKind = new Map<ParticleKind, number>();
   private puff: HTMLCanvasElement;
   private glow: HTMLCanvasElement;
@@ -127,8 +143,10 @@ export class ParticleSystem implements AnimSystem {
     floor = 1e9,
     img: CanvasImageSource | null = null,
   ) {
+    if (this.alive >= this.cap) return;
     const p = this.pool.find((q) => !q.alive);
     if (!p) return;
+    this.alive++;
     p.alive = true;
     p.kind = kind;
     p.x = x;
@@ -154,6 +172,7 @@ export class ParticleSystem implements AnimSystem {
       const settles = p.kind === 'soil' || p.kind === 'seed';
       if (p.age >= p.life || (p.y > p.floor && !settles)) {
         p.alive = false;
+        this.alive--;
         continue;
       }
       live++;
@@ -193,6 +212,16 @@ export class ParticleSystem implements AnimSystem {
           break;
         case 'splash':
           break;
+        case 'leaf':
+          // Tossed up, then tumbling down with a side-to-side flutter.
+          p.vy += (36 - p.vy) * dt * 1.6;
+          p.vx += (wind * 18 + Math.sin(p.age * 5 + p.seed) * 30 - p.vx) * dt * 2;
+          p.spin += dt * 3;
+          break;
+        case 'spore':
+          p.vx += (wind * 8 + Math.sin(p.age * 1.7 + p.seed) * 5 - p.vx) * dt;
+          p.vy += (-9 - p.vy) * dt * 0.8;
+          break;
         case 'straw':
           p.vx += (wind * 40 - p.vx) * dt * 1.5;
           p.vy += (12 - p.vy) * dt;
@@ -222,10 +251,18 @@ export class ParticleSystem implements AnimSystem {
           break;
         }
         case 'drop':
-          ctx.globalAlpha = 0.85 * (1 - u);
-          ctx.fillStyle = '#e9fbff';
+          // A short streak along the fall, bright head.
+          ctx.globalAlpha = 0.9 * (1 - u * 0.6);
+          ctx.strokeStyle = 'rgba(190,232,255,0.9)';
+          ctx.lineWidth = p.size * 1.3;
+          ctx.lineCap = 'round';
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.moveTo(p.x - p.vx * 0.025, p.y - p.vy * 0.025);
+          ctx.lineTo(p.x, p.y);
+          ctx.stroke();
+          ctx.fillStyle = '#f2fcff';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * 0.8, 0, Math.PI * 2);
           ctx.fill();
           break;
         case 'sparkle':
@@ -306,6 +343,24 @@ export class ParticleSystem implements AnimSystem {
           ctx.drawImage(p.img, p.x - r, p.y - r, r * 2, r * 2);
           break;
         }
+        case 'leaf':
+          ctx.globalAlpha = Math.min(1, (1 - u) * 2.5);
+          ctx.fillStyle = p.seed % 3 > 1.5 ? '#6fbf45' : '#4f9e33';
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.spin);
+          ctx.scale(1, 0.5 + 0.5 * Math.abs(Math.cos(p.spin * 1.7)));
+          ctx.beginPath();
+          ctx.ellipse(0, 0, p.size * 1.6, p.size * 0.7, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+          break;
+        case 'spore': {
+          const a = Math.sin(u * Math.PI);
+          ctx.globalAlpha = a * 0.75;
+          ctx.drawImage(this.glow, p.x - p.size * 2, p.y - p.size * 2, p.size * 4, p.size * 4);
+          break;
+        }
         case 'straw':
           ctx.globalAlpha = Math.sin(u * Math.PI) * 0.9;
           ctx.strokeStyle = '#e8c35a';
@@ -330,6 +385,12 @@ export class ParticleSystem implements AnimSystem {
 
   clear() {
     for (const p of this.pool) p.alive = false;
+    this.alive = 0;
+  }
+
+  /** Room left under the cap (effects shrink their bursts instead of being cut off). */
+  room() {
+    return Math.max(0, this.cap - this.alive);
   }
 
   count() {

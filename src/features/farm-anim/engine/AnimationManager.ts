@@ -1,3 +1,4 @@
+import { CROPS } from '../../../data/game';
 import { cropSprite } from '../../../data/sprites';
 import type { CropId } from '../../../data/types';
 import { AmbientSystem } from '../systems/AmbientSystem';
@@ -8,15 +9,17 @@ import { EnvironmentAnimation } from '../systems/EnvironmentAnimation';
 import {
   FarmGameLayer,
   type FarmView,
+  type PlotKindView,
   type PlotStageView,
   type PlotView,
+  type Quality,
 } from '../systems/FarmGameLayer';
 import { FishAnimation } from '../systems/FishAnimation';
 import { SkySystem, type SkyMood } from '../systems/SkySystem';
 import { WaterAnimation } from '../systems/WaterAnimation';
 import type { Assets } from './assets';
-import { ParticleSystem } from './ParticleSystem';
-import { DEFAULT_SETTINGS, type Settings } from './types';
+import { PARTICLE_CAP, ParticleSystem } from './ParticleSystem';
+import { DEFAULT_SETTINGS, type Settings, type Vec2 } from './types';
 import { WindSystem, rng } from './WindSystem';
 import type { World } from './world';
 
@@ -93,7 +96,13 @@ export interface ManagerOptions {
   onCamera?: (v: CameraView) => void;
   /** A drag started moving the camera (cards anchored to the picture should close). */
   onPanStart?: () => void;
+  /** CSS selector of the page element harvested produce flies to (the pantry button). */
+  flyTarget?: string;
 }
+
+/** Produce icons in flight at most (screen space, outside the canvas). */
+const MAX_FLIGHTS = 12;
+const FLY_PX = 46;
 
 /** A press that travels further than this (CSS px) is a drag, not a tap. */
 const DRAG_PX = 8;
@@ -159,6 +168,9 @@ export class AnimationManager {
   ) as Record<GroupId, { on: boolean; speed: number; t: number; dt: number }>;
   private worlds: Record<GroupId, World> | null = null;
   private selected: SpriteInfo | null = null;
+  private quality: Quality = 'high';
+  private flyTarget: string | null;
+  private flights = new Set<HTMLElement>();
 
   constructor(
     private canvas: HTMLCanvasElement,
@@ -176,6 +188,7 @@ export class AnimationManager {
       this.mode !== 'game' || !f ? null : typeof f === 'string' ? assets.layout.places.focus[f] : f;
     this.onCamera = opts.onCamera ?? (() => {});
     this.onPanStart = opts.onPanStart ?? (() => {});
+    this.flyTarget = opts.flyTarget ?? null;
     const { layout, img } = assets;
     this.size = layout.size;
     this.sky = img('sky.jpg');
@@ -183,6 +196,7 @@ export class AnimationManager {
     this.clouds = new CloudAnimation(layout.clouds, img, layout.size);
     this.env = new EnvironmentAnimation(assets);
     this.game = new FarmGameLayer(assets);
+    this.game.onHarvest = (at, icon, n) => this.fly(at, icon, n);
     this.water = new WaterAnimation(assets, layout.places.dockPosts);
     this.fish = new FishAnimation(assets, this.water);
     this.animals = new AnimalAnimation(assets);
@@ -311,6 +325,85 @@ export class AnimationManager {
   setReduced(on: boolean) {
     this.forcedReduced = on;
     this.reduced = this.mediaReduced || on;
+  }
+
+  /** Graphics quality: how many particles may live at once and how big the bursts are. */
+  setQuality(q: Quality) {
+    this.quality = q;
+    this.game.quality = q;
+    this.particles.cap = PARTICLE_CAP[q];
+  }
+
+  /** CSS selector of the element harvested produce flies to (null: it floats up in the scene). */
+  setFlyTarget(selector: string | null) {
+    this.flyTarget = selector;
+  }
+
+  /**
+   * Harvested produce flies from the plot to the pantry button: icons on fixed-position
+   * elements over the page, animated by the browser (Web Animations), so they can leave the
+   * canvas and cost the frame loop nothing. Start and end are read now, from the camera as it
+   * is and the button where it is, so pans, zoom and resizes are always accounted for.
+   * Returns false when it cannot fly (reduced motion, no target on the page).
+   */
+  private fly(at: Vec2, icon: string, count: number): boolean {
+    if (this.reduced || !this.flyTarget || document.hidden) return false;
+    const target = document.querySelector<HTMLElement>(this.flyTarget);
+    const tr = target?.getBoundingClientRect();
+    if (!target || !tr || tr.width === 0 || typeof target.animate !== 'function') return false;
+    const cr = this.canvas.getBoundingClientRect();
+    const p = this.toScreen(at[0], at[1]);
+    const x0 = cr.left + p.x;
+    const y0 = cr.top + p.y;
+    const x1 = tr.left + tr.width / 2;
+    const y1 = tr.top + tr.height / 2;
+    const n = Math.min(count, this.quality === 'low' ? 1 : 3);
+    for (let i = 0; i < n && this.flights.size < MAX_FLIGHTS; i++) {
+      const el = document.createElement('img');
+      el.src = icon;
+      el.alt = '';
+      el.setAttribute('aria-hidden', 'true');
+      el.className = 'fa-fly';
+      document.body.appendChild(el);
+      this.flights.add(el);
+      // A quadratic arc: up and over towards the button, the icons a little apart.
+      const sx = x0 + (i - (n - 1) / 2) * 18;
+      const mx = (sx + x1) / 2;
+      const my = Math.min(y0, y1) - 80 - i * 14;
+      const frames: Keyframe[] = [];
+      for (let k = 0; k <= 12; k++) {
+        const u = k / 12;
+        const x = (1 - u) ** 2 * sx + 2 * (1 - u) * u * mx + u * u * x1;
+        const y = (1 - u) ** 2 * y0 + 2 * (1 - u) * u * my + u * u * y1;
+        const s = u < 0.15 ? 0.6 + (u / 0.15) * 0.6 : 1.2 - 0.55 * ((u - 0.15) / 0.85);
+        frames.push({
+          offset: u,
+          transform: `translate(${(x - FLY_PX / 2).toFixed(1)}px, ${(y - FLY_PX / 2).toFixed(1)}px) scale(${s.toFixed(3)})`,
+          opacity: u < 0.85 ? 1 : 1 - ((u - 0.85) / 0.15) * 0.7,
+        });
+      }
+      const anim = el.animate(frames, {
+        duration: 800 + i * 70,
+        delay: i * 110,
+        easing: 'cubic-bezier(0.4, 0, 0.6, 1)',
+        fill: 'both',
+      });
+      const done = () => {
+        el.remove();
+        this.flights.delete(el);
+      };
+      anim.onfinish = () => {
+        done();
+        // The pantry button takes it in with a small bump.
+        if (i === n - 1)
+          target.animate([{ scale: '1' }, { scale: '1.16' }, { scale: '1' }], {
+            duration: 320,
+            easing: 'ease-out',
+          });
+      };
+      anim.oncancel = done;
+    }
+    return true;
   }
 
   /** Hour and weather for the sky behind the island. */
@@ -478,6 +571,8 @@ export class AnimationManager {
   destroy() {
     this.stop();
     for (const c of this.cleanup) c();
+    for (const el of this.flights) el.remove();
+    this.flights.clear();
   }
 
   /** Change settings (debug panel); returns a copy for the UI. */
@@ -881,12 +976,37 @@ export class AnimationManager {
       );
   }
 
-  // Crop cycle demo: six plots go through sprout → young (watered) → flowering → ready → harvested,
-  // staggered, with the crops' own pictures; the last three plots stay locked.
-  private demo: { t: number; last: string } | null = null;
+  // Crop cycle demo: six plots (vegetables, two fruit trees, a mushroom block, a root crop) go
+  // sow → sprout → young (watered) → flowering → ready → harvest, staggered, with the crops' own
+  // pictures. A tree fruits again after a harvest (three times, then it is cleared); the block
+  // gives three flushes. The last three plots stay locked.
+  private demo: {
+    plots: {
+      crop: CropId;
+      kind: PlotKindView;
+      stage: PlotStageView;
+      clock: number;
+      harvests: number;
+      cycle: number;
+      wet: boolean;
+    }[];
+    last: string;
+  } | null = null;
 
   startCropDemo() {
-    this.demo = { t: 0, last: '' };
+    const crops: CropId[] = ['chili', 'durian', 'shiitake', 'carrot', 'mango', 'cucumber'];
+    this.demo = {
+      plots: crops.map((crop, i) => ({
+        crop,
+        kind: CROPS[crop].kind,
+        stage: 'empty',
+        clock: -i * 0.7,
+        harvests: 0,
+        cycle: 0,
+        wet: false,
+      })),
+      last: '',
+    };
   }
 
   stopCropDemo() {
@@ -896,25 +1016,43 @@ export class AnimationManager {
   private runCropDemo(dt: number) {
     const d = this.demo;
     if (!d) return;
-    d.t += dt;
-    const CYCLE = 13;
-    const crops: CropId[] = ['chili', 'bean', 'cucumber', 'garlic', 'herbs', 'lemongrass'];
-    const stageAt = (u: number): PlotStageView =>
-      u < 1.4
-        ? 'empty'
-        : u < 4
-          ? 'sprout'
-          : u < 6.6
-            ? 'young'
-            : u < 9.2
-              ? 'flowering'
-              : u < 11.8
-                ? 'ready'
-                : 'empty';
-    const plots: PlotView[] = this.assets.layout.field.plots.map((p, i) => {
-      if (i >= 6)
+    const HOLD: Record<PlotStageView, number> = {
+      empty: 1.4,
+      sprout: 2.6,
+      young: 2.6,
+      flowering: 2.6,
+      ready: 2.6,
+    };
+    for (const p of d.plots) {
+      p.clock += dt;
+      if (p.clock < HOLD[p.stage]) continue;
+      p.clock = 0;
+      const next: Record<PlotStageView, PlotStageView> = {
+        empty: 'sprout',
+        sprout: 'young',
+        young: 'flowering',
+        flowering: 'ready',
+        ready: 'empty',
+      };
+      if (p.stage === 'ready') {
+        p.harvests++;
+        p.cycle++;
+        if (p.kind === 'tree' && p.harvests < 3) p.stage = 'flowering';
+        else if (p.kind === 'mushroom' && p.harvests < 3) p.stage = 'young';
+        else {
+          p.stage = 'empty';
+          p.harvests = 0;
+        }
+      } else p.stage = next[p.stage];
+      if (p.stage === 'sprout') p.cycle++;
+      // Watered as it turns young (or, for a tree, as it flowers again).
+      p.wet = p.stage === 'young' || (p.stage === 'flowering' && p.harvests > 0);
+    }
+    const plots: PlotView[] = this.assets.layout.field.plots.map((def, i) => {
+      const p = d.plots[i];
+      if (!p)
         return {
-          id: p.id,
+          id: def.id,
           unlocked: false,
           unlockLevel: 3,
           crop: null,
@@ -924,23 +1062,27 @@ export class AnimationManager {
           thirsty: false,
           label: '',
         };
-      const u = (((d.t - i * 0.7) % CYCLE) + CYCLE) % CYCLE;
-      const stage = d.t < i * 0.7 ? 'empty' : stageAt(u);
-      const crop = stage === 'empty' ? null : crops[i]!;
+      const planted = p.stage !== 'empty';
+      const flushes = CROPS[p.crop].flushes ?? 1;
       return {
-        id: p.id,
+        id: def.id,
         unlocked: true,
         unlockLevel: null,
-        crop,
-        stage,
-        image: crop && stage !== 'empty' ? cropSprite(crop, stage) : null,
-        // Watered while young: the soil darkens and drops fall.
-        wet: stage === 'young' && u < 5.4,
+        crop: planted ? p.crop : null,
+        stage: p.stage,
+        image: planted ? cropSprite(p.crop, p.stage as Exclude<PlotStageView, 'empty'>) : null,
+        wet: planted && p.wet && p.clock < 2,
         thirsty: false,
-        label: crop ? `${crop} · ${stage}` : '',
+        label: planted ? `${p.crop} · ${p.stage}` : '',
+        kind: p.kind,
+        harvests: p.harvests,
+        left: p.kind === 'tree' ? Infinity : p.kind === 'mushroom' ? flushes - p.harvests : 1,
+        cycle: p.cycle,
+        produce: cropSprite(p.crop, 'produce'),
+        yield: CROPS[p.crop].yield,
       };
     });
-    const key = plots.map((p) => `${p.stage}${p.wet ? 'w' : ''}`).join(',');
+    const key = plots.map((p) => `${p.stage}${p.wet ? 'w' : ''}${p.harvests ?? ''}`).join(',');
     if (key === d.last) return;
     d.last = key;
     this.game.setView({

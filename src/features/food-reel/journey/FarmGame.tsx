@@ -50,6 +50,7 @@ import {
   biteDelay,
   catchFor,
   fishingLeft,
+  harvestsLeft,
   isGrowing,
   isWet,
   level,
@@ -61,7 +62,7 @@ import {
   recipeAvailable,
   recipeProgress,
 } from '../../../domain/selectors';
-import { FarmPlotCard, type CookIdea, type PlotCardMode } from './FarmPlotCard';
+import { FarmPlotCard, type CookIdea, type PlotCardMode, type PlotExtra } from './FarmPlotCard';
 import { useSeedDrag } from './seedDrag';
 // Scene overlay styles (plot card, seed strip) load with the game, not with the lazy scene.
 import '../../farm-anim/farm-anim.css';
@@ -69,6 +70,7 @@ import './farm-game.css';
 import { currentTime, formatDuration, slotKey } from '../../../domain/time';
 import { t } from '../../../i18n';
 import { claimableCount } from '../../../domain/quests';
+import { ranchBadge } from '../../ranch/badge';
 import { useAccount, useFeedback, useGame, useUi } from '../../../state/hooks';
 import { NextStepCard } from './NextStepCard';
 import { Atmosphere } from './Atmosphere';
@@ -85,7 +87,16 @@ const DOCK_CARD_BELOW = 720;
 
 /** Areas of the farm that open as an in-game panel. */
 export type PanelId =
-  'meal' | 'storage' | 'kitchen' | 'orders' | 'market' | 'map' | 'missions' | 'friends' | 'stats';
+  | 'meal'
+  | 'storage'
+  | 'kitchen'
+  | 'orders'
+  | 'market'
+  | 'map'
+  | 'missions'
+  | 'friends'
+  | 'stats'
+  | 'ranch';
 
 /** If the farm scene throws, the guest keeps the HUD, the tray and every panel. */
 class SceneBoundary extends Component<
@@ -145,7 +156,7 @@ export function FarmGame({
   /** The panel open over the farm (its dock button shows as current). */
   panel: PanelId | null;
 }) {
-  const { state, dispatch, now, reduced } = useGame();
+  const { state, dispatch, now, reduced, quality } = useGame();
   const [sceneFailed, setSceneFailed] = useState(false);
   const scene = useRef<FarmSceneApi | null>(null);
   const casting = useRef(false);
@@ -203,6 +214,7 @@ export function FarmGame({
   const mealPending = !!meal && !meal.checkedIn;
   const { friends } = useAccount();
   const claimable = claimableCount(state, now);
+  const ranchReady = ranchBadge(state, now);
   // Friends whose garden has a long-ripe plot we may still pick from today.
   const ripeFriends =
     friends && friends.stealsLeft > 0
@@ -253,9 +265,11 @@ export function FarmGame({
   const harvestAll = () => {
     if (ready.length === 0) return;
     const counts = new Map<string, number>();
+    // What lands in the pantry: each plot gives its yield (one less if a friend picked from it).
     ready.forEach((p) => {
-      const name = CROPS[p.crop!].produceName;
-      counts.set(name, (counts.get(name) ?? 0) + 1);
+      const def = CROPS[p.crop!];
+      const got = Math.max(1, def.yield - (p.stolen ? 1 : 0));
+      counts.set(def.produceName, (counts.get(def.produceName) ?? 0) + got);
     });
     dispatch({ type: 'HARVEST_ALL', now: currentTime() });
     setJustHarvested((n) => n + 1);
@@ -353,6 +367,14 @@ export function FarmGame({
         wet: isWet(plot, now),
         thirsty: watering && growing && block === null,
         label,
+        // Plot animations: the kind (a tree stays after a harvest), the harvest cycle (one
+        // flight per harvest) and the produce that flies to the pantry.
+        kind: crop?.kind,
+        harvests: plot.harvests ?? 0,
+        left: harvestsLeft(plot),
+        cycle: plot.plantedAt,
+        produce: plot.crop ? produceSprite(plot.crop) : null,
+        yield: crop?.yield,
       };
     }),
     cow: animalBubble('cow'),
@@ -450,9 +472,21 @@ export function FarmGame({
       };
     } else {
       const stage = plotStage(plot, now);
-      const crop = plot.crop ? CROPS[plot.crop].name : '';
+      const def = plot.crop ? CROPS[plot.crop] : null;
+      const crop = def?.name ?? '';
+      // Fruit trees and mushroom blocks: harvests, next fruiting, flushes left (and a way out).
+      const extra: PlotExtra | undefined =
+        def?.kind === 'tree'
+          ? {
+              type: 'tree',
+              harvests: plot.harvests ?? 0,
+              again: formatDuration((def.regrowHours ?? def.growHours) * 3_600_000),
+            }
+          : def?.kind === 'mushroom'
+            ? { type: 'mushroom', left: harvestsLeft(plot) }
+            : undefined;
       if (stage === 'empty') cardMode = { kind: 'empty' };
-      else if (stage === 'ready') cardMode = { kind: 'ready', crop };
+      else if (stage === 'ready') cardMode = { kind: 'ready', crop, extra };
       else {
         const block = waterBlock(state, plot, now);
         cardMode = {
@@ -460,6 +494,7 @@ export function FarmGame({
           crop,
           left: formatDuration((plot.readyAt ?? now) - now),
           water: { ok: block === null, note: block ? BLOCK_NOTE[block] || m.cantWater : '', cans },
+          extra,
         };
       }
     }
@@ -526,6 +561,7 @@ export function FarmGame({
     { id: 'market', label: g.dock.market, icon: <Storefront size={22} /> },
   ];
   const more: { id: PanelId; label: string; badge?: number }[] = [
+    { id: 'ranch', label: t.ranch.menu, badge: ranchReady },
     { id: 'map', label: g.dock.map },
     { id: 'missions', label: g.dock.missions, badge: claimable },
     { id: 'friends', label: g.dock.friends, badge: ripeFriends },
@@ -559,6 +595,8 @@ export function FarmGame({
                 mode="game"
                 focus="field"
                 reduced={reduced}
+                quality={quality}
+                flyTarget='[data-farm-dock="storage"]'
                 farm={farmView}
                 label={m.farmLabel}
                 onPlace={onPlace}
@@ -588,6 +626,7 @@ export function FarmGame({
               setPlotCard(null);
               onCook(r);
             }}
+            onClear={() => dispatch({ type: 'CLEAR_PLOT', plotId: plotCard.id })}
             onClose={() => setPlotCard(null)}
           />
         )}
@@ -648,7 +687,9 @@ export function FarmGame({
           onClick={() => setMenuOpen((o) => !o)}
         >
           <DotsThreeOutline size={20} weight="fill" aria-hidden="true" />
-          {claimable + ripeFriends > 0 && <span className="fg-dot" aria-hidden="true" />}
+          {claimable + ripeFriends + ranchReady > 0 && (
+            <span className="fg-dot" aria-hidden="true" />
+          )}
         </button>
         {menuOpen && (
           <ul id="fg-menu" className="fg-menu" data-game-overlay>
@@ -804,6 +845,7 @@ export function FarmGame({
             key={d.id}
             type="button"
             className="fg-dock__item"
+            data-farm-dock={d.id}
             aria-current={panel === d.id ? 'true' : undefined}
             onClick={() => open(d.id)}
           >

@@ -109,6 +109,22 @@ const farm: Messages['farm'] = {
       bite: 'A bite!',
     },
   },
+  plot: {
+    tree: (harvests: number, again: string) =>
+      harvests > 0
+        ? `Harvest ${harvests} · fruits again in ${again}`
+        : `Fruit tree · fruits again ${again} after picking`,
+    mushroom: (left: number) =>
+      left === 1 ? 'Mushroom block · 1 flush left' : `Mushroom block · ${left} flushes left`,
+    clearTree: 'Dig up tree',
+    clearBlock: 'Remove block',
+    confirmTree: (crop: string) =>
+      `Dig up the ${crop.toLowerCase()} tree? It will be gone for good.`,
+    confirmBlock: (crop: string) =>
+      `Remove the ${crop.toLowerCase()} block? Its remaining flushes will be lost.`,
+    confirmYes: 'Yes',
+    confirmNo: 'Cancel',
+  },
   pc: {
     badge: 'PlayCanvas · experiment',
     loading: 'Building the garden corner…',

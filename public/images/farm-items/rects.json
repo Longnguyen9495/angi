@@ -756,18 +756,18 @@
   "height": 50
  },
  "chili-ready": {
-  "cell": "veg-r13-c9",
-  "left": 650,
+  "cell": "veg-r13-c8",
+  "left": 567,
   "top": 636,
   "width": 77,
-  "height": 49
+  "height": 48
  },
  "chili-produce": {
-  "cell": "veg-r13-c9",
-  "left": 650,
+  "cell": "veg-r13-c8",
+  "left": 567,
   "top": 636,
   "width": 77,
-  "height": 49
+  "height": 48
  },
  "herbs-sprout": {
   "cell": "veg-r14-c5",
@@ -1839,5 +1839,68 @@
   "top": 1015,
   "width": 363,
   "height": 151
+ },
+ "sweetpotato-young": {
+  "cell": "veg-r09-c1",
+  "left": 13,
+  "top": 433,
+  "width": 66,
+  "height": 50
+ },
+ "sweetpotato-flowering": {
+  "cell": "veg-r09-c1",
+  "left": 13,
+  "top": 433,
+  "width": 66,
+  "height": 50
+ },
+ "sweetpotato-ready": {
+  "cell": "veg-r09-c2",
+  "left": 83,
+  "top": 432,
+  "width": 70,
+  "height": 50
+ },
+ "carrot-young": {
+  "cell": "veg-r09-c1",
+  "left": 13,
+  "top": 433,
+  "width": 66,
+  "height": 50
+ },
+ "carrot-flowering": {
+  "cell": "veg-r09-c1",
+  "left": 13,
+  "top": 433,
+  "width": 66,
+  "height": 50
+ },
+ "carrot-ready": {
+  "cell": "veg-r09-c3",
+  "left": 156,
+  "top": 427,
+  "width": 79,
+  "height": 54
+ },
+ "taro-young": {
+  "cell": "veg-r09-c1",
+  "left": 13,
+  "top": 433,
+  "width": 66,
+  "height": 50
+ },
+ "taro-flowering": {
+  "cell": "veg-r09-c1",
+  "left": 13,
+  "top": 433,
+  "width": 66,
+  "height": 50
+ },
+ "taro-ready": {
+  "cell": "veg-r09-c4",
+  "left": 242,
+  "top": 425,
+  "width": 80,
+  "height": 56
  }
 }

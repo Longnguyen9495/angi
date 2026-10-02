@@ -1,17 +1,28 @@
 import { t } from '../../../i18n';
-import type { Assets } from '../engine/assets';
+import { type Assets, canvas } from '../engine/assets';
 import type { FieldDef, Vec2 } from '../engine/types';
 import { Spring } from '../engine/WindSystem';
-import { type World, clamp, easeOut } from '../engine/world';
+import { type World, clamp, easeOut, smooth } from '../engine/world';
 
 /**
  * The game drawn into the painting: the 9 plots on the painted field (empty soil stamped on the
  * unlocked ones, crops growing with the wind, wet soil, thirsty and hover outlines, a lock on the
  * next plot to open), status bubbles over the cows and the coop, and the float while fishing.
- * The page pushes its state with setView(); plant / water / harvest effects come from the diff.
+ * The page pushes its state with setView(); every plot animation comes from the diff between two
+ * views, so a re-render with the same state never plays anything twice:
+ *  sow      empty → planted: seeds drop in, a soil puff, the sprout fades and grows in
+ *  grow     a new stage: soft grow-in (0.9 → 1) cross-faded from the previous picture
+ *  water    a stream of drops arcs into the plot, ripples on the soil, the soil darkens
+ *  ready    a calm warm glow under the plant (slow breathing, no blinking), a glint now and then
+ *  harvest  the plant shakes, leaves / sparkles / spores by kind, the produce flies to the
+ *           pantry (the manager's flight, in screen space); a tree stays, a vegetable leaves
+ *  clear    a tree or spent block taken out: it sinks and fades, clods fly
+ * Everything runs on the scene's one clock (no timers). With reduced motion nothing moves:
+ * pictures swap with a short fade, wet soil and the ready glow show still, no particles.
  */
 
 export type PlotStageView = 'empty' | 'sprout' | 'young' | 'flowering' | 'ready';
+export type PlotKindView = 'veg' | 'tree' | 'mushroom';
 
 export interface PlotView {
   id: number;
@@ -27,6 +38,18 @@ export interface PlotView {
   thirsty: boolean;
   /** Shown on hover, e.g. "Ô 3 · Hành · còn 2 giờ". */
   label: string;
+  /** Vegetable (one harvest), fruit tree (stays), mushroom block (a few flushes). Default veg. */
+  kind?: PlotKindView;
+  /** Harvests already taken from this planting (trees, mushrooms). */
+  harvests?: number;
+  /** Harvests left (veg 1, tree Infinity, mushroom flushes left). Default 1. */
+  left?: number;
+  /** Start of the current growing cycle (a harvest key: one flight per cycle). */
+  cycle?: number | null;
+  /** Produce icon (URL) that flies to the pantry at harvest. */
+  produce?: string | null;
+  /** Items one harvest gives (how many icons fly, capped). */
+  yield?: number;
 }
 
 export interface BubbleView {
@@ -43,26 +66,64 @@ export interface FarmView {
   watering: boolean;
 }
 
+/** A harvest the page can show flying to the pantry: picture point, icon, how many. */
+export type HarvestFlight = (at: Vec2, icon: string, count: number) => boolean;
+
 interface PlotFx {
   prev: PlotView | null;
-  /** Seconds since the crop last changed stage (pop-in). */
-  pop: number;
+  /** Picture drawn now and the one it cross-fades from. */
+  img: string | null;
+  from: string | null;
+  kind: PlotKindView;
+  /** Seconds since the picture changed (negative: not shown yet, the seed is still falling). */
+  grow: number;
+  /** Seconds since sowing / watering / the harvest shake (large = idle). */
+  sow: number;
+  water: number;
+  shake: number;
+  /** Wet look shown, 0..1 (fades in as the drops land, out as it dries). */
+  wet: number;
+  /** Drops still owed to the watering stream (fractional). */
+  stream: number;
+  /** Clock for the ready glint. */
+  glint: number;
   sway: Spring;
+  treeSway: Spring;
   bend: number;
-  /** A harvested crop flying up out of the plot. */
-  picked: { img: HTMLImageElement; t: number } | null;
+  /** A plant leaving the plot (vegetable harvested, tree / block cleared). */
+  gone: { img: string; t: number; up: boolean } | null;
+  /** Last harvest played (crop:cycle:harvests), so a view pushed twice flies once. */
+  harvestKey: string;
 }
 
-type Event = { kind: 'plant' | 'water' | 'harvest' | 'grow'; at: Vec2; img?: HTMLImageElement };
+type Event =
+  | { kind: 'sow' | 'grow' | 'water' | 'clear'; id: number; at: Vec2; plant?: PlotKindView }
+  | {
+      kind: 'harvest';
+      id: number;
+      at: Vec2;
+      plant: PlotKindView;
+      icon: string | null;
+      count: number;
+    };
 
-const CROP_PX = 96;
-const STAGE_SCALE: Record<PlotStageView, number> = {
-  empty: 0,
-  sprout: 0.5,
-  young: 0.72,
-  flowering: 0.88,
-  ready: 1,
-};
+/** Picture px per image px: one scale for every stage, so a sprout stays sprout-sized. */
+const CROP_SCALE = 1.3;
+/** Where the soil mound sits in a crop picture, as a share of its height from the bottom. */
+const MOUND = 0.14;
+const IDLE = 99;
+const SOW_DROP = 0.35;
+const WATER_STREAM = 0.9;
+const WATER_FALL = 0.5;
+const SHAKE = 0.45;
+const GONE = 0.55;
+/** Breathing period of the ready glow (s) and the gap between its glints. */
+const GLOW_PERIOD = 3.4;
+const GLINT_GAP = 2.8;
+
+/** Burst sizes by graphics quality. */
+const FX_SCALE = { low: 0.35, medium: 0.7, high: 1 } as const;
+export type Quality = keyof typeof FX_SCALE;
 
 function inQuad(q: Vec2[], x: number, y: number) {
   let pos = 0;
@@ -89,6 +150,16 @@ function quadPath(ctx: CanvasRenderingContext2D, q: Vec2[], inset = 0, centre?: 
   ctx.closePath();
 }
 
+/**
+ * A stage picture that is not drawn (yet): young / flowering fall back to the sprout, ready to
+ * the produce (the root crops have only those two drawings).
+ */
+function fallbackOf(url: string): string | null {
+  const m = /^(.*)-(young|flowering|ready)\.webp$/.exec(url);
+  if (!m) return null;
+  return `${m[1]}-${m[2] === 'ready' ? 'produce' : 'sprout'}.webp`;
+}
+
 export class FarmGameLayer {
   view: FarmView | null = null;
   /** Plot under the pointer. */
@@ -97,11 +168,16 @@ export class FarmGameLayer {
   selected: number | null = null;
   /** Plot a seed is being dragged over. */
   drop: number | null = null;
+  /** Burst size by graphics quality. */
+  quality: Quality = 'high';
+  /** Shows the produce flying to the pantry; returns false when it cannot (no target, reduced). */
+  onHarvest: HarvestFlight | null = null;
   private field: FieldDef;
   private soil: HTMLImageElement;
   private fx = new Map<number, PlotFx>();
   private events: Event[] = [];
   private images = new Map<string, HTMLImageElement>();
+  private glow: HTMLCanvasElement;
   private float: { x: number; y: number; t: number; bite: number } | null = null;
   /** Where the bubbles float over the cow and the hens (picture px). */
   private bubbles: Record<'cow' | 'chicken', Vec2>;
@@ -113,22 +189,57 @@ export class FarmGameLayer {
     for (const p of this.field.plots)
       this.fx.set(p.id, {
         prev: null,
-        pop: 9,
+        img: null,
+        from: null,
+        kind: 'veg',
+        grow: IDLE,
+        sow: IDLE,
+        water: IDLE,
+        shake: IDLE,
+        wet: 0,
+        stream: 0,
+        glint: (p.id * 0.37) % GLINT_GAP,
         sway: new Spring(4 + p.id * 0.17, 0.3),
+        treeSway: new Spring(2.1 + p.id * 0.07, 0.45),
         bend: 0,
-        picked: null,
+        gone: null,
+        harvestKey: '',
       });
+    // Warm glow under a ripe plant, painted once (squashed to lie on the soil when drawn).
+    const [g, gc] = canvas(128, 128);
+    const grad = gc.createRadialGradient(64, 64, 0, 64, 64, 64);
+    grad.addColorStop(0, 'rgba(255,240,160,1)');
+    grad.addColorStop(0.6, 'rgba(255,214,110,0.55)');
+    grad.addColorStop(1, 'rgba(255,200,90,0)');
+    gc.fillStyle = grad;
+    gc.fillRect(0, 0, 128, 128);
+    this.glow = g;
   }
 
   private img(url: string) {
     let im = this.images.get(url);
     if (!im) {
-      im = new Image();
-      im.decoding = 'async';
-      im.src = url;
-      this.images.set(url, im);
+      const el = new Image();
+      el.decoding = 'async';
+      // A missing stage drawing falls back once to the nearest one that exists.
+      el.onerror = () => {
+        const fb = fallbackOf(url);
+        if (fb && !el.dataset.fallback) {
+          el.dataset.fallback = '1';
+          el.src = fb;
+        }
+      };
+      el.src = url;
+      this.images.set(url, el);
+      im = el;
     }
     return im;
+  }
+
+  private ready(url: string | null) {
+    if (!url) return null;
+    const im = this.img(url);
+    return im.complete && im.naturalWidth ? im : null;
   }
 
   setView(view: FarmView | null) {
@@ -137,22 +248,63 @@ export class FarmGameLayer {
         const f = this.fx.get(v.id);
         const def = this.field.plots.find((p) => p.id === v.id);
         if (!f || !def) continue;
+        if (v.image) this.img(v.image);
+        if (v.produce) this.img(v.produce);
         const prev = f.prev;
-        if (prev) {
-          if (prev.stage !== v.stage && v.stage !== 'empty') {
-            f.pop = 0;
-            if (prev.stage !== 'empty') this.events.push({ kind: 'grow', at: def.centre });
-          }
-          if (prev.stage === 'empty' && v.stage !== 'empty')
-            this.events.push({ kind: 'plant', at: def.centre });
-          if (!prev.wet && v.wet) this.events.push({ kind: 'water', at: def.centre });
-          if (prev.crop && !v.crop && prev.image) {
-            f.picked = { img: this.img(prev.image), t: 0 };
-            this.events.push({ kind: 'harvest', at: def.centre, img: f.picked.img });
+        f.prev = v;
+        if (v.crop) f.kind = v.kind ?? 'veg';
+        if (!prev) {
+          // First view: show it as it is, nothing plays.
+          f.img = v.unlocked && v.stage !== 'empty' ? v.image : null;
+          f.wet = v.wet ? 1 : 0;
+          continue;
+        }
+        const at = def.centre;
+        const wasReady = prev.stage === 'ready' && !!prev.crop;
+        const harvested =
+          wasReady &&
+          (v.crop === prev.crop ? (v.harvests ?? 0) > (prev.harvests ?? 0) : (prev.left ?? 1) <= 1);
+        if (harvested) {
+          const key = `${prev.crop}:${prev.cycle ?? ''}:${prev.harvests ?? 0}`;
+          if (key !== f.harvestKey) {
+            f.harvestKey = key;
+            f.shake = 0;
+            this.events.push({
+              kind: 'harvest',
+              id: v.id,
+              at,
+              plant: prev.kind ?? 'veg',
+              icon: prev.produce ?? prev.image,
+              count: Math.max(1, Math.min(3, prev.yield ?? 1)),
+            });
           }
         }
-        f.prev = v;
-        if (v.image) this.img(v.image);
+        const nextImg = v.unlocked && v.stage !== 'empty' ? v.image : null;
+        if (!v.crop && prev.crop) {
+          // The plant leaves: picked (it lifts out) or cleared (it sinks), then empty soil.
+          if (f.img) f.gone = { img: f.img, t: 0, up: harvested };
+          if (!harvested) this.events.push({ kind: 'clear', id: v.id, at, plant: f.kind });
+          f.img = null;
+          f.from = null;
+        } else if (nextImg !== f.img) {
+          if (prev.stage === 'empty' || !f.img) {
+            // Sown: the picture waits for the seeds to land.
+            f.from = null;
+            f.grow = -SOW_DROP;
+            f.sow = 0;
+            this.events.push({ kind: 'sow', id: v.id, at });
+          } else {
+            f.from = f.img;
+            f.grow = 0;
+            if (!harvested) this.events.push({ kind: 'grow', id: v.id, at });
+          }
+          f.img = nextImg;
+        }
+        if (!prev.wet && v.wet) {
+          f.water = 0;
+          f.stream = 0;
+          this.events.push({ kind: 'water', id: v.id, at });
+        }
       }
     for (const b of view ? [view.cow, view.chicken] : []) if (b.icon) this.img(b.icon);
     this.view = view;
@@ -178,110 +330,208 @@ export class FarmGameLayer {
     if (this.float) this.float.bite = 0;
   }
 
-  update(w: World) {
-    for (const e of this.events.splice(0)) {
-      const [x, y] = e.at;
-      if (!w.settings.particles) continue;
-      if (e.kind === 'plant') {
-        // The hoe throws up clods, then seeds drop in an arc.
-        for (let i = 0; i < 10; i++)
-          w.particles.spawn(
-            'soil',
-            x + (w.rand() - 0.5) * 30,
-            y + (w.rand() - 0.5) * 10,
-            (w.rand() - 0.5) * 70,
-            -60 - w.rand() * 60,
-            1.1,
-            1.2 + w.rand() * 1.2,
-            y + 4 + (w.rand() - 0.5) * 14,
-          );
-        for (let i = 0; i < 6; i++)
-          w.particles.spawn(
+  /** How tall the plant in a plot is drawn (picture px), for placing bursts and flights. */
+  private plantHeight(id: number) {
+    const f = this.fx.get(id);
+    const im = f ? this.ready(f.img ?? f.gone?.img ?? null) : null;
+    return im ? im.naturalHeight * CROP_SCALE : 60;
+  }
+
+  /** Bursts for the events of the last view change. */
+  private burst(w: World, e: Event) {
+    const [x, y] = e.at;
+    const P = w.particles;
+    const r = w.rand;
+    const q = FX_SCALE[this.quality];
+    // Never more than the room left under the cap (a burst shrinks, it is not cut off).
+    const n = (k: number) => Math.min(P.room(), Math.max(1, Math.round(k * q)));
+    const h = this.plantHeight(e.id);
+    switch (e.kind) {
+      case 'sow':
+        // Seeds drop from above into the furrow; the soil puff follows when they land.
+        for (let i = n(6); i-- > 0;)
+          P.spawn(
             'seed',
-            x - 20 + w.rand() * 10,
-            y - 46 - w.rand() * 8,
-            30 + w.rand() * 25,
-            -20 - w.rand() * 30,
+            x + (r() - 0.5) * 30,
+            y - 70 - r() * 16,
+            (r() - 0.5) * 14,
+            20 + r() * 20,
+            SOW_DROP + 0.9,
             1.4,
-            1.4,
-            y + (w.rand() - 0.5) * 12,
+            y + 4 + (r() - 0.5) * 12,
           );
-      }
-      if (e.kind === 'grow')
-        for (let i = 0; i < 8; i++)
-          w.particles.spawn(
+        break;
+      case 'grow':
+        for (let i = n(7); i-- > 0;)
+          P.spawn(
             'grow',
-            x + (w.rand() - 0.5) * 50,
-            y - 10 - w.rand() * 40,
+            x + (r() - 0.5) * 50,
+            y - 10 - r() * h * 0.7,
             0,
-            -18 - w.rand() * 12,
-            0.9 + w.rand() * 0.5,
-            1.8 + w.rand() * 1.4,
+            -16 - r() * 10,
+            0.9 + r() * 0.5,
+            1.6 + r() * 1.2,
           );
-      if (e.kind === 'harvest') {
-        for (let i = 0; i < 16; i++) {
-          const a = -Math.PI / 2 + (w.rand() - 0.5) * 2.2;
-          const v = 60 + w.rand() * 70;
-          w.particles.spawn(
-            'harvest',
-            x,
-            y - 20,
-            Math.cos(a) * v,
-            Math.sin(a) * v,
-            1.2 + w.rand() * 0.5,
-            1.6 + w.rand(),
+        break;
+      case 'water':
+        break; // The stream is spawned frame by frame in update().
+      case 'clear':
+        for (let i = n(10); i-- > 0;)
+          P.spawn(
+            'soil',
+            x + (r() - 0.5) * 34,
+            y + (r() - 0.5) * 10,
+            (r() - 0.5) * 80,
+            -50 - r() * 60,
+            1.1,
+            1.3 + r() * 1.2,
+            y + 6 + (r() - 0.5) * 14,
           );
+        break;
+      case 'harvest': {
+        const top = y - h * 0.6;
+        if (e.plant === 'mushroom')
+          for (let i = n(12); i-- > 0;)
+            P.spawn(
+              'spore',
+              x + (r() - 0.5) * 40,
+              y - r() * h * 0.6,
+              (r() - 0.5) * 10,
+              -6 - r() * 10,
+              1.6 + r() * 1,
+              1.4 + r() * 1.2,
+            );
+        else {
+          // Leaves shaken off (from the canopy for a tree), golden confetti for a crop.
+          for (let i = n(e.plant === 'tree' ? 10 : 6); i-- > 0;)
+            P.spawn(
+              'leaf',
+              x + (r() - 0.5) * (e.plant === 'tree' ? 70 : 40),
+              top + (r() - 0.5) * h * 0.3,
+              (r() - 0.5) * 40,
+              -30 - r() * 30,
+              1.4 + r() * 0.6,
+              2 + r() * 1.5,
+            );
+          for (let i = n(e.plant === 'tree' ? 6 : 10); i-- > 0;) {
+            const a = -Math.PI / 2 + (r() - 0.5) * 2.2;
+            const v = 50 + r() * 60;
+            P.spawn(
+              'harvest',
+              x,
+              top,
+              Math.cos(a) * v,
+              Math.sin(a) * v,
+              1.1 + r() * 0.4,
+              1.5 + r(),
+            );
+          }
         }
-        if (e.img) w.particles.spawn('reward', x, y - 70, 0, -38, 1.6, 15, 1e9, e.img);
+        for (let i = n(6); i-- > 0;)
+          P.spawn('sparkle', x + (r() - 0.5) * 60, top + (r() - 0.5) * h * 0.5, 0, -8, 0.7, 2.2);
+        // The produce flies to the pantry; if the page cannot show that, it floats up here.
+        const from: Vec2 = [x, top];
+        if (e.icon && !this.onHarvest?.(from, e.icon, e.count))
+          P.spawn('reward', x, top - 20, 0, -38, 1.4, 15, 1e9, this.img(e.icon));
+        break;
       }
-      if (e.kind === 'plant' || e.kind === 'harvest')
-        for (let i = 0; i < (e.kind === 'harvest' ? 10 : 5); i++)
-          w.particles.spawn(
-            'sparkle',
-            x + (w.rand() - 0.5) * 60,
-            y - w.rand() * 50,
-            0,
-            -8,
-            0.6 + w.rand() * 0.5,
-            2 + w.rand() * 1.5,
-          );
-      if (e.kind === 'water')
-        for (let i = 0; i < 18; i++)
-          w.particles.spawn(
-            'drop',
-            x + (w.rand() - 0.5) * 60,
-            y - 60 - w.rand() * 30,
-            (w.rand() - 0.5) * 10,
-            40 + w.rand() * 40,
-            1.2,
-            1 + w.rand() * 0.8,
-            y + 10 + (w.rand() - 0.5) * 20,
-          );
     }
+  }
+
+  update(w: World) {
+    const still = w.reduced;
+    const particles = w.settings.particles && !still;
+    for (const e of this.events.splice(0)) {
+      // Reduced motion: no bursts, but a harvest still reaches the page (it decides what shows).
+      if (particles) this.burst(w, e);
+      else if (e.kind === 'harvest' && e.icon) this.onHarvest?.(e.at, e.icon, e.count);
+    }
+    const q = FX_SCALE[this.quality];
     for (const d of this.field.plots) {
       const f = this.fx.get(d.id)!;
-      f.pop += w.dt;
-      const wind = w.wind.at(d.centre[0]);
-      f.bend = f.sway.step(
-        wind * 0.05 + w.wind.flutter(d.id * 0.37, 2) * 0.02 * (0.3 + wind),
-        w.dt,
-      );
-      if (f.picked) {
-        f.picked.t += w.dt;
-        if (f.picked.t > 0.9) f.picked = null;
-      }
+      const [cx, cy] = d.centre;
+      const sow0 = f.sow;
+      f.grow += w.dt;
+      f.sow += w.dt;
+      f.shake += w.dt;
+      f.glint += w.dt;
+      f.water += w.dt;
       const v = this.view?.plots.find((p) => p.id === d.id);
-      // Ready crops glint now and then.
-      if (v?.stage === 'ready' && w.settings.particles && w.rand() < w.dt * 0.8)
-        w.particles.spawn(
-          'sparkle',
-          d.centre[0] + (w.rand() - 0.5) * 50,
-          d.centre[1] - 20 - w.rand() * 50,
-          0,
-          -6,
-          0.8,
-          2,
+      // The soil puff when the seeds land.
+      if (particles && sow0 < SOW_DROP && f.sow >= SOW_DROP)
+        for (let i = Math.min(w.particles.room(), Math.round(8 * q)); i-- > 0;)
+          w.particles.spawn(
+            'soil',
+            cx + (w.rand() - 0.5) * 30,
+            cy + 4 + (w.rand() - 0.5) * 8,
+            (w.rand() - 0.5) * 60,
+            -40 - w.rand() * 40,
+            0.9,
+            1.1 + w.rand() * 1.1,
+            cy + 6 + (w.rand() - 0.5) * 12,
+          );
+      // Watering: a stream of drops arcing from the can (up left) into the plot.
+      if (particles && f.water < WATER_STREAM) {
+        f.stream += w.dt * 34 * q;
+        const sx = cx - 64;
+        const sy = cy - 104;
+        while (f.stream >= 1) {
+          f.stream--;
+          if (!w.particles.room()) break;
+          const tx = cx + (w.rand() - 0.5) * 60;
+          const ty = cy + (w.rand() - 0.5) * 18;
+          const T = WATER_FALL * (0.9 + w.rand() * 0.2);
+          const g = 260;
+          w.particles.spawn(
+            'drop',
+            sx + (w.rand() - 0.5) * 6,
+            sy + (w.rand() - 0.5) * 4,
+            (tx - sx) / T,
+            (ty - sy - 0.5 * g * T * T) / T,
+            T + 0.2,
+            1.3 + w.rand() * 0.8,
+            ty,
+          );
+        }
+      }
+      // Wet soil fades in as the drops land and out as the plot dries (snaps when still).
+      const wetGoal = v?.wet ? 1 : 0;
+      if (still) f.wet = wetGoal;
+      else if (wetGoal < f.wet || f.water >= WATER_FALL)
+        f.wet = clamp(f.wet + Math.sign(wetGoal - f.wet) * w.dt * 1.2, 0, 1);
+      // Sway: crops flutter with the wind, trees lean slowly about the trunk, blocks stay put.
+      const wind = w.wind.at(cx);
+      if (still || f.kind === 'mushroom') f.bend = 0;
+      else if (f.kind === 'tree')
+        f.bend = f.treeSway.step(
+          wind * 0.022 + w.wind.flutter(d.id * 0.37, 0.8) * 0.006 * (0.3 + wind),
+          w.dt,
         );
+      else
+        f.bend = f.sway.step(
+          wind * 0.05 + w.wind.flutter(d.id * 0.37, 2) * 0.02 * (0.3 + wind),
+          w.dt,
+        );
+      if (f.gone) {
+        f.gone.t += w.dt;
+        if (f.gone.t > GONE) f.gone = null;
+      }
+      // A ripe plant glints now and then (calm: one glint every few seconds).
+      if (v?.stage === 'ready' && f.glint >= GLINT_GAP) {
+        f.glint = 0;
+        if (particles && w.particles.room()) {
+          const h = this.plantHeight(d.id);
+          w.particles.spawn(
+            'sparkle',
+            cx + (w.rand() - 0.5) * 50,
+            cy - h * (0.35 + w.rand() * 0.4),
+            0,
+            -5,
+            1.1,
+            2.4,
+          );
+        }
+      }
     }
     if (this.float) {
       this.float.t += w.dt;
@@ -292,7 +542,7 @@ export class FarmGameLayer {
     }
   }
 
-  /** Soil, wet patches and outlines, right over the painted field. */
+  /** Soil, wet patches, ripples, sowing puffs and outlines, right over the painted field. */
   drawTiles(ctx: CanvasRenderingContext2D, w: World) {
     const view = this.view;
     if (!view) return;
@@ -305,20 +555,30 @@ export class FarmGameLayer {
         if (!nextLock || (v.unlockLevel ?? 99) < (nextLock.unlockLevel ?? 99)) nextLock = v;
         continue;
       }
+      const f = this.fx.get(d.id)!;
       const [qx, qy] = d.quad[0];
       ctx.drawImage(this.soil, soil.x + qx - soil.anchor[0], soil.y + qy - soil.anchor[1]);
-      if (v.wet) {
+      if (f.wet > 0.01) {
         quadPath(ctx, d.quad, 0.04, d.centre);
-        ctx.fillStyle = 'rgba(70,38,16,0.3)';
+        ctx.fillStyle = `rgba(56,28,10,${0.42 * f.wet})`;
         ctx.fill();
-        ctx.fillStyle = 'rgba(200,230,255,0.08)';
+        ctx.fillStyle = `rgba(200,230,255,${0.07 * f.wet})`;
         ctx.fill();
       }
+      if (!w.reduced) this.drawGround(ctx, d.centre, f);
     }
     for (const d of this.field.plots) {
       const v = view.plots.find((p) => p.id === d.id);
       if (!v) continue;
       const hover = this.hover === d.id || this.selected === d.id;
+      if (v.unlocked && v.stage === 'ready') {
+        // Ripe: a warm rim round the plot, breathing slowly (still with reduced motion).
+        const a = w.reduced ? 0.6 : 0.5 + 0.2 * Math.sin((w.t / GLOW_PERIOD) * Math.PI * 2 + d.id);
+        quadPath(ctx, d.quad, 0.07, d.centre);
+        ctx.strokeStyle = `rgba(255,222,120,${a})`;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
       if (this.drop === d.id) {
         quadPath(ctx, d.quad, 0.02, d.centre);
         ctx.fillStyle = 'rgba(255,224,120,0.28)';
@@ -356,6 +616,30 @@ export class FarmGameLayer {
     }
   }
 
+  /** On the soil: the dust puff where seeds landed, the ripples where the watering drops land. */
+  private drawGround(ctx: CanvasRenderingContext2D, [cx, cy]: Vec2, f: PlotFx) {
+    const puff = f.sow - SOW_DROP;
+    if (puff >= 0 && puff < 0.7) {
+      const u = puff / 0.7;
+      ctx.fillStyle = `rgba(150,108,66,${0.35 * (1 - u)})`;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy + 4, 14 + 34 * easeOut(u), 5 + 11 * easeOut(u), 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.lineWidth = 1.5;
+    for (let k = 0; k < 4; k++) {
+      const r0 = f.water - WATER_FALL - k * 0.17;
+      if (r0 < 0 || r0 > 0.7) continue;
+      const u = r0 / 0.7;
+      const ox = ((k * 37) % 50) - 25;
+      const oy = ((k * 23) % 14) - 7;
+      ctx.strokeStyle = `rgba(225,245,255,${0.6 * (1 - u)})`;
+      ctx.beginPath();
+      ctx.ellipse(cx + ox, cy + oy, 4 + 18 * easeOut(u), 1.5 + 6 * easeOut(u), 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
   private drawLock(ctx: CanvasRenderingContext2D, x: number, y: number, text: string) {
     ctx.save();
     ctx.globalAlpha = 0.92;
@@ -376,51 +660,129 @@ export class FarmGameLayer {
     ctx.restore();
   }
 
-  /** Crops back to front, swaying, popping in on a new stage, flying out at harvest. */
+  /**
+   * Crops back to front (nearer plots over farther ones, trees reaching up): the ready glow,
+   * the plant swaying about its base, growing in cross-faded from the last stage, shaking at a
+   * harvest, and a plant leaving the plot.
+   */
   drawCrops(ctx: CanvasRenderingContext2D, w: World) {
     const view = this.view;
     if (!view) return;
+    const still = w.reduced;
     const order = [...this.field.plots].sort((a, b) => a.centre[1] - b.centre[1]);
     for (const d of order) {
       const v = view.plots.find((p) => p.id === d.id);
       const f = this.fx.get(d.id)!;
       const [cx, cy] = d.centre;
-      const baseY = cy + 16;
-      if (v?.unlocked && v.image && v.stage !== 'empty') {
-        const im = this.img(v.image);
-        if (im.complete && im.naturalWidth) {
-          const pop =
-            f.pop < 0.6
-              ? 0.55 + 0.45 * easeOut(f.pop / 0.6) + Math.sin(f.pop * 14) * 0.06 * (1 - f.pop / 0.6)
-              : 1;
-          const bob = v.stage === 'ready' ? Math.sin(w.t * 3 + d.id) * 1.5 : 0;
-          const size = CROP_PX * STAGE_SCALE[v.stage] * pop;
-          // Soft contact shadow.
-          ctx.fillStyle = 'rgba(50,28,10,0.25)';
-          ctx.beginPath();
-          ctx.ellipse(cx, baseY - 2, size * 0.32, size * 0.09, 0, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.save();
-          ctx.translate(cx, baseY + bob);
-          ctx.transform(1, 0, -f.bend, 1, 0, 0);
-          ctx.drawImage(im, -size / 2, -size * 0.92, size, size);
-          ctx.restore();
-        }
-      }
-      if (f.picked) {
-        const u = f.picked.t / 0.9;
-        const size = CROP_PX * (1 + u * 0.2);
-        ctx.globalAlpha = clamp(1 - u, 0, 1);
-        ctx.drawImage(
-          f.picked.img,
-          cx - size / 2,
-          baseY - size * 0.92 - easeOut(u) * 70,
-          size,
-          size,
-        );
+      const im = v?.unlocked ? this.ready(f.img) : null;
+      if (im && v?.stage === 'ready') {
+        // Calm, clearly visible, never blinking: the glow breathes over a few seconds.
+        const k = still ? 0.8 : 0.7 + 0.18 * Math.sin((w.t / GLOW_PERIOD) * Math.PI * 2 + d.id);
+        const gw = Math.max(150, im.naturalWidth * CROP_SCALE * 2);
+        ctx.globalAlpha = k;
+        ctx.drawImage(this.glow, cx - gw / 2, cy + 6 - gw * 0.22, gw, gw * 0.44);
         ctx.globalAlpha = 1;
       }
+      if (im) {
+        // Fade in (and grow 0.9 → 1) over the last picture; reduced motion: a short fade only.
+        const fade = still ? clamp(f.grow / 0.25, 0, 1) : smooth(f.grow / 0.6);
+        const scale = still ? 1 : 0.9 + 0.1 * easeOut(f.grow / 0.7);
+        const old = f.from && fade < 1 ? this.ready(f.from) : null;
+        const shake =
+          !still && f.shake < SHAKE
+            ? Math.sin(f.shake * 42) * 3.2 * (1 - f.shake / SHAKE) * (f.kind === 'tree' ? 1.3 : 1)
+            : 0;
+        // Soft contact shadow.
+        const sw = im.naturalWidth * CROP_SCALE;
+        ctx.fillStyle = 'rgba(50,28,10,0.18)';
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + 10, sw * 0.32, sw * 0.08, 0, 0, Math.PI * 2);
+        ctx.fill();
+        if (old) this.drawPlant(ctx, old, cx + shake, cy, 1, f.bend, 1 - fade);
+        if (fade > 0) this.drawPlant(ctx, im, cx + shake, cy, scale, f.bend, fade);
+      }
+      if (!still && f.water < WATER_STREAM + 0.3) this.drawCan(ctx, cx - 64, cy - 104, f.water);
+      if (f.gone) {
+        const g = this.ready(f.gone.img);
+        if (g) {
+          const u = f.gone.t / GONE;
+          if (still) this.drawPlant(ctx, g, cx, cy, 1, 0, 1 - u);
+          else {
+            // Picked: lifts out of the soil; cleared: sinks into it.
+            const dy = f.gone.up ? -22 * easeOut(u) : 10 * u;
+            const s = f.gone.up ? 1 + 0.06 * u : 1 - 0.25 * u;
+            this.drawPlant(ctx, g, cx, cy + dy, s, 0, clamp(1 - u, 0, 1));
+          }
+        }
+      }
     }
+  }
+
+  /** The watering can over a plot being watered: tips in, pours (the stream), tips back, fades. */
+  private drawCan(ctx: CanvasRenderingContext2D, x: number, y: number, t: number) {
+    const a = clamp(t / 0.15, 0, 1) * clamp((WATER_STREAM + 0.3 - t) / 0.3, 0, 1);
+    if (a <= 0) return;
+    const tilt = 0.15 + 0.4 * smooth(t / 0.2) - 0.3 * smooth((t - WATER_STREAM) / 0.3);
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.translate(x, y);
+    ctx.rotate(tilt);
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#2f5f7a';
+    ctx.lineWidth = 1.4;
+    // Spout to the rose at (0, 0).
+    ctx.fillStyle = '#5ea9cc';
+    ctx.beginPath();
+    ctx.moveTo(-17, 6);
+    ctx.lineTo(-1, -2);
+    ctx.lineTo(1, 2);
+    ctx.lineTo(-15, 12);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 2.2, 3.4, 0.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    // Handle, then the body (light face, darker side).
+    ctx.beginPath();
+    ctx.moveTo(-38, 2);
+    ctx.quadraticCurveTo(-28, -14, -18, 2);
+    ctx.lineWidth = 2.6;
+    ctx.stroke();
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.roundRect(-42, 0, 28, 22, 4);
+    ctx.fillStyle = '#7cc6e6';
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(30,80,110,0.25)';
+    ctx.fillRect(-23, 1, 8, 20);
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.fillRect(-38, 3, 4, 15);
+    ctx.restore();
+  }
+
+  /** A crop picture at its native size (× CROP_SCALE), soil mound on the plot centre. */
+  private drawPlant(
+    ctx: CanvasRenderingContext2D,
+    im: HTMLImageElement,
+    cx: number,
+    cy: number,
+    scale: number,
+    bend: number,
+    alpha: number,
+  ) {
+    const pw = im.naturalWidth * CROP_SCALE * scale;
+    const ph = im.naturalHeight * CROP_SCALE * scale;
+    const baseY = cy + 8 + ph * MOUND;
+    ctx.globalAlpha = alpha;
+    ctx.save();
+    ctx.translate(cx, baseY);
+    if (bend) ctx.transform(1, 0, -bend, 1, 0, 0);
+    ctx.drawImage(im, -pw / 2, -ph, pw, ph);
+    ctx.restore();
+    ctx.globalAlpha = 1;
   }
 
   /** Bubbles over the animals, the fishing float and the hover label (above everything). */

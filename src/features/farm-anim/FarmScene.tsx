@@ -14,7 +14,7 @@ import { loadAssets } from './engine/assets';
 import './farm-anim.css';
 
 export type { CameraView, FarmPlace, FocusName, PlaceInfo };
-export type { BubbleView, FarmView, PlotView } from './systems/FarmGameLayer';
+export type { BubbleView, FarmView, PlotKindView, PlotView } from './systems/FarmGameLayer';
 
 /** What the page can ask of a running scene. */
 export interface FarmSceneApi {
@@ -43,6 +43,8 @@ export interface FarmSceneApi {
 export default function FarmScene({
   className = '',
   reduced = false,
+  quality = 'high',
+  flyTarget,
   farm = null,
   onPlace,
   onReady,
@@ -58,6 +60,10 @@ export default function FarmScene({
   className?: string;
   /** The game's reduced-motion setting (the system setting is always honoured too). */
   reduced?: boolean;
+  /** Graphics quality: particle budget and burst sizes. */
+  quality?: 'low' | 'medium' | 'high';
+  /** CSS selector of the page element harvested produce flies to (e.g. the pantry button). */
+  flyTarget?: string;
   /** The game drawn into the scene (plots, animal bubbles); null = scenery only. */
   farm?: FarmView | null;
   onPlace?: (place: FarmPlace, info: PlaceInfo) => void;
@@ -143,6 +149,14 @@ export default function FarmScene({
   useEffect(() => {
     manager.current?.setReduced(reduced);
   }, [reduced, state]);
+
+  useEffect(() => {
+    manager.current?.setQuality(quality);
+  }, [quality, state]);
+
+  useEffect(() => {
+    manager.current?.setFlyTarget(flyTarget ?? null);
+  }, [flyTarget, state]);
 
   useEffect(() => {
     manager.current?.setFarm(farm);

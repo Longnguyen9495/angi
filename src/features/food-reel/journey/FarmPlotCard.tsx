@@ -1,9 +1,14 @@
-import type { PointerEvent as ReactPointerEvent } from 'react';
+import { useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { CropIcon } from '../../../components/ui/CropIcon';
 import type { CropId, ProduceId, RecipeId } from '../../../data/types';
 import { t } from '../../../i18n';
 
 const m = t.journey.garden;
+const pm = t.farm.plot;
+
+/** What a fruit tree or a mushroom block adds to the card. */
+export type PlotExtra =
+  { type: 'tree'; harvests: number; again: string } | { type: 'mushroom'; left: number };
 
 export type PlotCardMode =
   | { kind: 'locked'; level: string }
@@ -13,8 +18,9 @@ export type PlotCardMode =
       crop: string;
       left: string;
       water: { ok: boolean; note: string; cans: number };
+      extra?: PlotExtra;
     }
-  | { kind: 'ready'; crop: string }
+  | { kind: 'ready'; crop: string; extra?: PlotExtra }
   | { kind: 'harvested'; produce: string; crop: ProduceId };
 
 export interface CookIdea {
@@ -38,6 +44,7 @@ export function FarmPlotCard({
   onHarvest,
   cook,
   onCook,
+  onClear,
   onClose,
 }: {
   plotId: number;
@@ -50,8 +57,14 @@ export function FarmPlotCard({
   onHarvest: () => void;
   cook: CookIdea[];
   onCook: (id: RecipeId) => void;
+  /** Dig up the tree / remove the block (asked to confirm first). */
+  onClear?: () => void;
   onClose: () => void;
 }) {
+  // The confirm belongs to one plot: another plot's card starts unasked.
+  const [confirm, setConfirm] = useState<number | null>(null);
+  const extra = mode.kind === 'growing' || mode.kind === 'ready' ? mode.extra : undefined;
+  const crop = mode.kind === 'growing' || mode.kind === 'ready' ? mode.crop : '';
   return (
     <div
       className={`fj-plot-card${!at ? ' is-docked' : at.below ? ' is-below' : ''}`}
@@ -119,6 +132,49 @@ export function FarmPlotCard({
           </button>
         </>
       )}
+
+      {extra && (
+        <p className="fj-plot-card__note">
+          {extra.type === 'tree' ? pm.tree(extra.harvests, extra.again) : pm.mushroom(extra.left)}
+        </p>
+      )}
+
+      {extra &&
+        onClear &&
+        (confirm === plotId ? (
+          <>
+            <p className="fj-plot-card__note" role="alert">
+              {extra.type === 'tree' ? pm.confirmTree(crop) : pm.confirmBlock(crop)}
+            </p>
+            <div className="fj-plot-card__confirm">
+              <button
+                type="button"
+                className="fj-plot-card__act is-danger"
+                onClick={() => {
+                  setConfirm(null);
+                  onClear();
+                }}
+              >
+                {pm.confirmYes}
+              </button>
+              <button
+                type="button"
+                className="fj-plot-card__act is-plain"
+                onClick={() => setConfirm(null)}
+              >
+                {pm.confirmNo}
+              </button>
+            </div>
+          </>
+        ) : (
+          <button
+            type="button"
+            className="fj-plot-card__act is-clear"
+            onClick={() => setConfirm(plotId)}
+          >
+            {extra.type === 'tree' ? pm.clearTree : pm.clearBlock}
+          </button>
+        ))}
 
       {mode.kind === 'harvested' && (
         <>

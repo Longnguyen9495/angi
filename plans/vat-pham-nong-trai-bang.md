@@ -7,7 +7,7 @@
 
 - Nguyên liệu thô hợp lệ: **67** (có sẵn 14, bổ sung 53).
 - Nguồn sản xuất: **46** loại cây trồng trong ô (26 rau, 15 cây lâu năm, 5 nấm), **8** vật nuôi, 1 trại ong, 1 ao, 1 thuyền đánh cá.
-- Hình đã xuất: **263** tệp trong `public/images/farm-items/`.
+- Hình đã xuất: **272** tệp trong `public/images/farm-items/`.
 - Món chế biến mới: **0** (ảnh nguồn không có hình món chế biến; 14 công thức bếp hiện có giữ nguyên).
 
 | Nhóm | Số nguyên liệu |
@@ -32,7 +32,7 @@
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | `rice` | Gạo | Ngũ cốc & đậu | Ô trồng · Rau (thu 1 lần) | 5 h | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | high |
 | `herbs` | Rau thơm | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | 3 h | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | medium |
-| `chili` | Ớt | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | 4 h | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | high |
+| `chili` | Ớt | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | 4 h | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | medium |
 | `scallion` | Hành | Gia vị & rau thơm | Ô trồng · Rau (thu 1 lần) | 3 h | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | high |
 | `bean` | Đậu | Ngũ cốc & đậu | Ô trồng · Rau (thu 1 lần) | 4 h | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | medium |
 | `tomato` | Cà chua | Rau ăn quả | Ô trồng · Rau (thu 1 lần) | 5 h | 3 | 6 | 2 | 1 | thay hình | tạm: hình giai đoạn chín | high |
@@ -106,7 +106,7 @@
 |---|---|---|---|---|---|---|
 | `rice` | Rau (thu 1 lần) | `rice-sprout` (69×53) | `rice-young` (71×54) | `rice-flowering` (76×51) | `rice-ready` (76×53) |  |
 | `herbs` | Rau (thu 1 lần) | `herbs-sprout` (74×59) | `herbs-young` (75×57) | `herbs-flowering` (76×55) | `herbs-ready` (78×57) |  |
-| `chili` | Rau (thu 1 lần) | `chili-sprout` (69×46) | `chili-young` (72×50) | `chili-flowering` (75×50) | `chili-ready` (77×49) |  |
+| `chili` | Rau (thu 1 lần) | `chili-sprout` (69×46) | `chili-young` (72×50) | `chili-flowering` (75×50) | `chili-ready` (77×48) |  |
 | `scallion` | Rau (thu 1 lần) | `scallion-sprout` (66×57) | `scallion-young` (69×57) | `scallion-flowering` (72×57) | `scallion-ready` (73×59) |  |
 | `bean` | Rau (thu 1 lần) | `bean-sprout` (70×51) | `bean-young` (72×53) | `bean-flowering` (76×51) | `bean-ready` (83×54) |  |
 | `tomato` | Rau (thu 1 lần) | `tomato-sprout` (69×54) | `tomato-young` (71×50) | `tomato-flowering` (70×47) | `tomato-ready` (74×48) |  |
@@ -118,19 +118,19 @@
 | `radish` | Rau (thu 1 lần) | `radish-sprout` (67×48) | `radish-young` (68×56) | `radish-flowering` (72×52) | `radish-ready` (78×54) |  |
 | `cabbage` | Rau (thu 1 lần) | `cabbage-sprout` (67×49) | `cabbage-young` (67×54) | `cabbage-flowering` (72×51) | `cabbage-ready` (73×47) |  |
 | `eggplant` | Rau (thu 1 lần) | `eggplant-sprout` (68×46) | `eggplant-young` (70×53) | `eggplant-flowering` (70×52) | `eggplant-ready` (81×50) |  |
-| `carrot` | Rau (thu 1 lần) | `carrot-sprout` (66×50) | = mầm | = mầm | = mầm | young, flowering, ready (in soil) |
+| `carrot` | Rau (thu 1 lần) | `carrot-sprout` (66×50) | `carrot-young` (66×50) | `carrot-flowering` (66×50) | `carrot-ready` (79×54) | young, flowering, ready (in soil) |
 | `bittermelon` | Rau (thu 1 lần) | `bittermelon-sprout` (70×52) | `bittermelon-young` (71×53) | `bittermelon-flowering` (76×53) | `bittermelon-ready` (80×52) |  |
 | `potato` | Rau (thu 1 lần) | `potato-sprout` (66×52) | `potato-young` (68×52) | `potato-flowering` (78×48) | `potato-ready` (75×50) |  |
 | `shallot` | Rau (thu 1 lần) | `shallot-sprout` (65×50) | `shallot-young` (68×51) | `shallot-flowering` (72×52) | `shallot-ready` (74×49) |  |
 | `cauliflower` | Rau (thu 1 lần) | `cauliflower-sprout` (67×49) | `cauliflower-young` (68×50) | `cauliflower-flowering` (73×49) | `cauliflower-ready` (73×50) |  |
-| `sweetpotato` | Rau (thu 1 lần) | `sweetpotato-sprout` (66×50) | = mầm | = mầm | = mầm | young, flowering, ready (in soil) |
+| `sweetpotato` | Rau (thu 1 lần) | `sweetpotato-sprout` (66×50) | `sweetpotato-young` (66×50) | `sweetpotato-flowering` (66×50) | `sweetpotato-ready` (70×50) | young, flowering, ready (in soil) |
 | `peanut` | Rau (thu 1 lần) | `peanut-sprout` (69×50) | `peanut-young` (73×48) | `peanut-flowering` (74×51) | `peanut-ready` (83×51) |  |
 | `pumpkin` | Rau (thu 1 lần) | `pumpkin-sprout` (70×54) | `pumpkin-young` (72×53) | `pumpkin-flowering` (79×52) | `pumpkin-ready` (84×47) |  |
 | `beet` | Rau (thu 1 lần) | `beet-sprout` (66×48) | `beet-young` (68×50) | `beet-flowering` (75×55) | `beet-ready` (75×51) |  |
 | `corn` | Rau (thu 1 lần) | `corn-sprout` (71×53) | `corn-young` (73×55) | `corn-flowering` (75×56) | `corn-ready` (82×54) |  |
 | `wintermelon` | Rau (thu 1 lần) | `wintermelon-sprout` (70×51) | `wintermelon-young` (71×48) | `wintermelon-flowering` (79×49) | `wintermelon-ready` (83×52) |  |
 | `ginger` | Rau (thu 1 lần) | `ginger-sprout` (70×49) | `ginger-young` (75×50) | `ginger-flowering` (76×51) | `ginger-ready` (79×52) |  |
-| `taro` | Rau (thu 1 lần) | `taro-sprout` (66×50) | = mầm | = mầm | = mầm | young, flowering, ready (in soil) |
+| `taro` | Rau (thu 1 lần) | `taro-sprout` (66×50) | `taro-young` (66×50) | `taro-flowering` (66×50) | `taro-ready` (80×56) | young, flowering, ready (in soil) |
 | `strawberry` | Cây lâu năm | `strawberry-sprout` (74×69) | `strawberry-young` (72×69) | `strawberry-flowering` (79×66) | `strawberry-ready` (68×62) |  |
 | `pineapple` | Cây lâu năm | `pineapple-sprout` (70×80) | `pineapple-young` (72×81) | `pineapple-flowering` (70×81) | `pineapple-ready` (67×81) |  |
 | `banana` | Cây lâu năm | `banana-sprout` (79×83) | `banana-young` (83×83) | `banana-flowering` (72×83) | `banana-ready` (73×81) |  |

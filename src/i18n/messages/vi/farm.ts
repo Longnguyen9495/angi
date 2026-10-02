@@ -111,6 +111,21 @@ const farm = {
       bite: 'Cá cắn câu!',
     },
   },
+  /** The plot card on the painted farm: fruit trees and mushroom blocks. */
+  plot: {
+    /** A fruit tree: harvests so far, and how long it takes to fruit again. */
+    tree: (harvests: number, again: string) =>
+      harvests > 0
+        ? `Thu hoạch lần ${harvests} · ra trái lại sau ${again}`
+        : `Cây lâu năm · hái xong ra trái lại sau ${again}`,
+    mushroom: (left: number) => `Giá thể nấm · còn ${left} đợt`,
+    clearTree: 'Nhổ cây',
+    clearBlock: 'Bỏ giá thể',
+    confirmTree: (crop: string) => `Nhổ cây ${crop.toLowerCase()}? Cây sẽ mất hẳn.`,
+    confirmBlock: (crop: string) => `Bỏ giá thể ${crop.toLowerCase()}? Các đợt còn lại sẽ mất.`,
+    confirmYes: 'Đồng ý',
+    confirmNo: 'Thôi',
+  },
   /** The PlayCanvas corner (experiment). */
   pc: {
     badge: 'PlayCanvas · thử nghiệm',

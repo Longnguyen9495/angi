@@ -20,6 +20,7 @@ import { pressFx } from './pressFx';
 import { RecipesSection } from './RecipesSection';
 import { SaveJourneyPrompt } from './SaveJourneyPrompt';
 import { StoragePanel } from './StoragePanel';
+import RanchPanel from '../../ranch/RanchPanel';
 
 const sec = t.journey.scene.sections;
 const g = t.journey.game;
@@ -34,6 +35,7 @@ const PANEL_TITLE: Record<PanelId, string> = {
   missions: sec.missions.title,
   friends: g.panel.friends,
   stats: g.panel.stats,
+  ranch: t.ranch.title,
 };
 
 const PANEL_INTRO: Partial<Record<PanelId, string>> = {
@@ -159,6 +161,7 @@ export default function JourneyScene({ onBackToReel, onOpenDish }: JourneySceneP
       </>
     ),
     friends: () => <FriendsSection />,
+    ranch: () => <RanchPanel />,
     stats: () => (
       <>
         <JourneyStats />
