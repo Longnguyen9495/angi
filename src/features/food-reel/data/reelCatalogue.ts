@@ -1,4 +1,11 @@
-import { CROPS, PRODUCE_IDS, RECIPES, RECIPE_LIST, registerRecipes } from '../../../data/game';
+import {
+  CROPS,
+  PRODUCE_IDS,
+  RECIPES,
+  RECIPE_LIST,
+  registerRecipes,
+  resolveBuiltinDishes,
+} from '../../../data/game';
 import { locale, localized, t } from '../../../i18n';
 import type {
   AvoidId,
@@ -128,6 +135,7 @@ export function applyCatalogue(payload: CataloguePayload): boolean {
   dishes = items.map(toReelDish);
   byId = new Map(dishes.map((d) => [d.id, d]));
   // Recipes first: a dish's seed and recipe link point at its own recipe when it has one.
+  resolveBuiltinDishes((id) => byId.has(id));
   registerRecipes(
     items.flatMap((item) => {
       const dish = byId.get(item.id);

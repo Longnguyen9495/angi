@@ -3,7 +3,9 @@ import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { CROPS, RECIPES, RECIPE_LIST, getRecipe, isBuiltinRecipe } from '../../data/game';
 import { getDish } from '../../data/dishes';
+import snapshot from './data/catalogue.snapshot.json';
 import {
+  applyCatalogue,
   dishAt,
   getReelDish,
   recipeFromCook,
@@ -21,10 +23,12 @@ import {
   SPIN_MAX_MS,
   SPIN_MIN_MS,
 } from './engine/spin';
-import type { ReelState } from './foodReel.types';
+import type { CatalogueItem, CataloguePayload, ReelState } from './foodReel.types';
 import { foodReelReducer, initialReelState } from './foodReelReducer';
 
 const PUBLIC = join(process.cwd(), 'public');
+const item = (id: string): CatalogueItem =>
+  (snapshot as CataloguePayload).items.find((i) => i.id === id)!;
 const localFile = (url: string) =>
   url.startsWith('/uploads/') ? join(process.cwd(), 'storage', url) : join(PUBLIC, url);
 
@@ -84,6 +88,21 @@ describe('reel catalogue', () => {
     );
     expect(own.some((r) => builtinDishes.has(r.dishId))).toBe(false);
     expect(RECIPES['pho-bo']?.steps).toBeUndefined();
+  });
+
+  it('a built-in recipe follows its dish to an older catalogue id', () => {
+    const d = reelDishes().find((x) => x.id === getRecipe('com-tam').dishId)!;
+    applyCatalogue({
+      version: 'old-ids',
+      count: 1,
+      items: [{ ...item(d.id), id: 'com-tam-suon-bi-cha' }],
+    });
+    expect(getRecipe('com-tam').dishId).toBe('com-tam-suon-bi-cha');
+    expect(
+      RECIPE_LIST.some((r) => !isBuiltinRecipe(r.id) && r.dishId === 'com-tam-suon-bi-cha'),
+    ).toBe(false);
+    applyCatalogue(snapshot as CataloguePayload);
+    expect(getRecipe('com-tam').dishId).toBe(d.id);
   });
 
   it('only keeps pantry items the game knows and needs three steps', () => {

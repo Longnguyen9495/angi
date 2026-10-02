@@ -167,6 +167,8 @@ export interface RecipeDef {
   name: string;
   /** The reel dish this recipe cooks (photo for the cookbook and the result card). */
   dishId: string;
+  /** Older ids of that dish, used when a catalogue still has one of them (built-in recipes). */
+  dishAliases?: string[];
   /** Dishes from abroad ('world') open once a second region of the map is open. */
   region: RegionId | 'world';
   group: DishGroup;

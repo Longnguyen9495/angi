@@ -252,6 +252,7 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
     id: 'com-tam',
     name: 'Cơm tấm sườn',
     dishId: 'com-tam-suon-bi-cha-trung',
+    dishAliases: ['com-tam-suon-bi-cha', 'com-tam'],
     region: 'south',
     group: 'rice',
     ingredients: [
@@ -701,10 +702,27 @@ export function getRecipe(id: RecipeId): RecipeDef {
  */
 export function registerRecipes(made: RecipeDef[]): void {
   for (const id of Object.keys(RECIPES)) if (!isBuiltinRecipe(id)) delete RECIPES[id];
-  const taken = new Set(Object.values(BUILTIN).flatMap((r) => [r.id, r.dishId]));
+  const taken = new Set(
+    Object.values(BUILTIN).flatMap((r) => [r.id, r.dishId, ...(r.dishAliases ?? [])]),
+  );
   const extra = made.filter((r) => !taken.has(r.id) && !taken.has(r.dishId));
   for (const r of extra) RECIPES[r.id] = r;
   RECIPE_LIST.splice(0, RECIPE_LIST.length, ...Object.values(BUILTIN), ...extra);
+}
+
+/**
+ * Points each built-in recipe at the id its dish has in this catalogue: the current id when
+ * present, else the first older id that is (a server not yet re-seeded keeps the old ones).
+ */
+export function resolveBuiltinDishes(has: (dishId: string) => boolean): void {
+  for (const r of Object.values(BUILTIN)) {
+    const ids = [r.dishId, ...(r.dishAliases ?? [])];
+    const found = ids.find(has);
+    if (found && found !== r.dishId) {
+      r.dishAliases = ids.filter((id) => id !== found);
+      r.dishId = found;
+    }
+  }
 }
 
 /** Region label for a recipe (dishes from abroad have no map region). */
