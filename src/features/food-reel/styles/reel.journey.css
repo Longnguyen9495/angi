@@ -1619,19 +1619,95 @@
   margin-bottom: 6px;
 }
 
-.fj-page__media img {
+.fj-page.is-whole {
+  border-color: rgb(215 168 93 / 80%);
+  box-shadow: 0 0 0 1px rgb(215 168 93 / 25%) inset;
+}
+
+/* ——— Dish puzzle: the photo in eight cake slices, one uncovered per cook ——— */
+.fj-puzzle {
+  position: relative;
+  display: block;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   border-radius: 50%;
+}
+
+.fj-puzzle img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
-.fj-page.is-blank .fj-page__media img {
+.fj-page.is-blank .fj-puzzle img {
   filter: grayscale(1) brightness(0.35) blur(2px);
 }
 
+.fj-puzzle__cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.fj-puzzle__piece {
+  fill: rgb(14 12 10 / 88%);
+  stroke: rgb(215 168 93 / 35%);
+  stroke-width: 0.6;
+}
+
+.fj-page.is-blank .fj-puzzle__piece {
+  fill: rgb(14 12 10 / 45%);
+  stroke: rgb(244 237 225 / 10%);
+}
+
+/* The slice this cook uncovered: a dark cover that fades away. */
+.fj-puzzle__new {
+  fill: rgb(14 12 10 / 88%);
+  stroke: var(--fr-gold);
+  stroke-width: 0.8;
+  animation: fj-piece-reveal 1200ms 300ms var(--fr-ease) both;
+}
+
+@keyframes fj-piece-reveal {
+  to {
+    fill: rgb(14 12 10 / 0%);
+    stroke: rgb(215 168 93 / 0%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fj-puzzle__new {
+    animation: none;
+    fill: transparent;
+  }
+}
+
+.fj-puzzle.is-whole {
+  box-shadow: 0 0 0 2px rgb(215 168 93 / 70%);
+}
+
+.fj-cook__puzzle {
+  display: block;
+  width: min(160px, 50vw);
+  aspect-ratio: 1;
+}
+
+.fj-page__pieces {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--fr-soft);
+  font-size: 0.72rem;
+}
+
+.is-whole .fj-page__pieces {
+  color: var(--fr-gold);
+}
+
 /* No photo for this dish: an empty plate instead of a hole. */
-.fj-page__plate {
+.fj-puzzle__plate {
   display: grid;
   place-items: center;
   width: 100%;
@@ -1642,7 +1718,7 @@
   color: var(--fr-gold);
 }
 
-.fj-page.is-blank .fj-page__plate svg {
+.fj-page.is-blank .fj-puzzle__plate svg {
   display: none;
 }
 

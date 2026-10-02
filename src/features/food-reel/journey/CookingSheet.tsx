@@ -10,6 +10,7 @@ import { currentTime } from '../../../domain/time';
 import { t } from '../../../i18n';
 import { useFeedback, useGame } from '../../../state/hooks';
 import { getReelDish } from '../data/reelCatalogue';
+import { DishPuzzle, PUZZLE_PIECES } from './DishPuzzle';
 
 type Step = 'prep' | 'cooking' | 'done';
 
@@ -225,8 +226,14 @@ function CookingScene({
           <p className="fr-kicker">
             <SealCheck aria-hidden="true" size={16} weight="fill" /> {m.done(recipe.xp)}
           </p>
+          <span className="fj-cook__puzzle">
+            <DishPuzzle recipe={recipe} cooked={cooked} fresh={cooked <= PUZZLE_PIECES} />
+          </span>
           <p className="fj-cook__fact">{recipe.fact}</p>
           <p className="fj-note">{cooked === 1 ? m.firstPage : m.cookedTimes(cooked)}</p>
+          {cooked <= PUZZLE_PIECES && (
+            <p className="fj-note fj-cook__piece">{m.newPiece(cooked, PUZZLE_PIECES)}</p>
+          )}
           <button type="button" className="fr-ghost" onClick={onOpenCookbook}>
             <BookOpenText aria-hidden="true" size={16} />
             {m.openCookbook}

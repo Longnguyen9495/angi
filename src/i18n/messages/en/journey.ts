@@ -415,6 +415,10 @@ const journey: Messages['journey'] = {
     title: (done, total) => `Cookbook · ${done}/${total} ${s(total, 'page', 'pages')}`,
     cooked: (n) => `Cooked ×${n}`,
     notCooked: ' · Not cooked yet',
+    puzzleHint: (whole, total) =>
+      `Each cook uncovers 1 of the dish photo’s 8 pieces · ${whole}/${total} ${s(total, 'dish', 'dishes')} complete`,
+    pieces: (shown, total) => `Piece ${shown}/${total}`,
+    whole: 'Photo complete',
   },
 
   cooking: {
@@ -433,6 +437,10 @@ const journey: Messages['journey'] = {
     firstPage:
       'A new page in your cookbook — this dish’s story on the reel now has a “Home-cooked” stamp.',
     cookedTimes: (n) => `You’ve cooked this dish ${n} ${s(n, 'time', 'times')}.`,
+    newPiece: (shown, total) =>
+      shown >= total
+        ? `Last piece! The dish photo is complete, ${total}/${total}.`
+        : `One more piece of the dish photo · ${shown}/${total}.`,
     openCookbook: 'Open cookbook',
   },
 

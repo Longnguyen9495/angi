@@ -1,59 +1,33 @@
-import { CookingPot, LockSimple, SealCheck } from '@phosphor-icons/react';
-import { useState } from 'react';
+import { LockSimple, PuzzlePiece, SealCheck } from '@phosphor-icons/react';
 import { RECIPE_LIST, recipeRegionName } from '../../../data/game';
 import { t } from '../../../i18n';
 import { useGame } from '../../../state/hooks';
-import { getReelDish, snapshotThumbnail } from '../data/reelCatalogue';
+import { DishPuzzle, PUZZLE_PIECES, piecesShown } from './DishPuzzle';
 
 /**
- * The page photo: the live thumbnail, then the bundled one, then an empty
- * plate — a dish missing from the catalogue or a dead admin upload must not
- * leave a hole in the page.
+ * Sổ bếp: one page per recipe. The first cook opens the page; each cook after
+ * that uncovers another of the photo's eight slices until the dish is whole.
  */
-function PageThumb({ dishId }: { dishId: string }) {
-  const sources = [getReelDish(dishId)?.thumbnail, snapshotThumbnail(dishId)].filter(
-    (s, i, all): s is string => !!s && all.indexOf(s) === i,
-  );
-  const [failed, setFailed] = useState(0);
-  const src = sources[failed];
-  if (!src) {
-    return (
-      <span className="fj-page__plate">
-        <CookingPot size={28} weight="light" />
-      </span>
-    );
-  }
-  return (
-    <img
-      key={src}
-      src={src}
-      alt=""
-      width={384}
-      height={384}
-      loading="lazy"
-      decoding="async"
-      onError={() => setFailed((n) => n + 1)}
-    />
-  );
-}
-
-/** Sổ bếp: one page per recipe, filled in the first time it is cooked. */
 export function Cookbook() {
   const { state } = useGame();
   const pages = RECIPE_LIST;
   const done = pages.filter((r) => (state.cooked[r.id] ?? 0) > 0).length;
+  const whole = pages.filter((r) => piecesShown(state.cooked[r.id] ?? 0) === PUZZLE_PIECES).length;
   return (
     <div className="fj-book">
       <h3 className="fj-h3" id="so-bep" tabIndex={-1}>
         {t.journey.cookbook.title(done, pages.length)}
       </h3>
+      <p className="fj-note">{t.journey.cookbook.puzzleHint(whole, pages.length)}</p>
       <ul className="fj-book__pages">
         {pages.map((r) => {
           const n = state.cooked[r.id] ?? 0;
+          const shown = piecesShown(n);
+          const cls = n === 0 ? 'is-blank' : shown === PUZZLE_PIECES ? 'is-cooked is-whole' : 'is-cooked';
           return (
-            <li key={r.id} className={`fj-page ${n > 0 ? 'is-cooked' : 'is-blank'}`}>
+            <li key={r.id} className={`fj-page ${cls}`}>
               <span className="fj-page__media">
-                <PageThumb dishId={r.dishId} />
+                <DishPuzzle recipe={r} cooked={n} />
                 {n === 0 && (
                   <span className="fj-page__lock" aria-hidden="true">
                     <LockSimple size={18} />
@@ -73,6 +47,14 @@ export function Cookbook() {
                   t.journey.cookbook.notCooked
                 )}
               </span>
+              {n > 0 && (
+                <span className="fj-page__pieces">
+                  <PuzzlePiece aria-hidden="true" size={12} weight="fill" />{' '}
+                  {shown === PUZZLE_PIECES
+                    ? t.journey.cookbook.whole
+                    : t.journey.cookbook.pieces(shown, PUZZLE_PIECES)}
+                </span>
+              )}
               {n > 0 && <span className="fj-page__fact">{r.fact}</span>}
             </li>
           );

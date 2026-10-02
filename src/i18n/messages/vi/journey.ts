@@ -418,6 +418,10 @@ const journey = {
     title: (done: number, total: number) => `Sổ bếp · ${done}/${total} trang`,
     cooked: (n: number) => `Đã nấu ×${n}`,
     notCooked: ' · Chưa nấu',
+    puzzleHint: (whole: number, total: number) =>
+      `Mỗi lần nấu lộ thêm 1 trong 8 mảnh ảnh món · ${whole}/${total} món đã ghép đủ`,
+    pieces: (shown: number, total: number) => `Mảnh ghép ${shown}/${total}`,
+    whole: 'Đã ghép đủ ảnh',
   },
 
   cooking: {
@@ -434,6 +438,10 @@ const journey = {
     done: (xp: number) => `Đã nấu xong · +${xp} XP`,
     firstPage: 'Trang mới trong sổ bếp — câu chuyện của món trên reel giờ có dấu “Tự nấu”.',
     cookedTimes: (n: number) => `Bạn đã nấu món này ${n} lần.`,
+    newPiece: (shown: number, total: number) =>
+      shown >= total
+        ? `Mảnh cuối! Ảnh món đã ghép đủ ${total}/${total}.`
+        : `Lộ thêm 1 mảnh ảnh món · ${shown}/${total}.`,
     openCookbook: 'Xem sổ bếp',
   },
 
