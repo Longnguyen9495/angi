@@ -5,7 +5,8 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules', '*.html', 'plans', 'deploy', '.tmp-*'] },
+  // storage/ holds local tool output (exported PlayCanvas bundles, test runs), not app code.
+  { ignores: ['dist', 'node_modules', '*.html', 'plans', 'deploy', 'storage', '.tmp-*'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],

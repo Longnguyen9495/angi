@@ -139,8 +139,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         lines.push(t.account.friendEvents.gift(CROPS[crop].seedName.toLowerCase()));
       if (e.type === 'stolen' && crop)
         lines.push(t.account.friendEvents.stolen(e.from, CROPS[crop].name.toLowerCase()));
-      if (e.type === 'stole' && crop)
-        lines.push(t.account.friendEvents.stole(CROPS[crop].name.toLowerCase()));
+      // 'stole' and 'helped' come from our own taps, which already showed a toast.
       if (e.type === 'present' && crop)
         lines.push(t.account.friendEvents.present(e.from, CROPS[crop].seedName.toLowerCase()));
       if (e.type === 'thanks') lines.push(t.account.friendEvents.thanks(e.from));

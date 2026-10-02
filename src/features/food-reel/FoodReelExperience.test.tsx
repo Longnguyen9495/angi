@@ -7,7 +7,7 @@ import { mockConfig } from '../../services/mockApi';
 import { FeedbackProvider } from '../../state/FeedbackProvider';
 import { GameProvider } from '../../state/GameProvider';
 import { FoodVideo } from './components/FoodVideo';
-import { dishAt, getReelDish, reelCount } from './data/reelCatalogue';
+import { dishAt, getReelDish, getReelDishBySlug, reelCount } from './data/reelCatalogue';
 import type { ReelDish } from './foodReel.types';
 import { reelBootConfig } from './hooks/useAssetPreloader';
 
@@ -167,7 +167,8 @@ describe('spin → story → back', () => {
     window.history.replaceState(null, '', '/mon/bun-moc');
     renderApp();
     const story = await screen.findByRole('dialog', { name: 'Bún mọc' }, { timeout: 2000 });
-    expect(within(story).getByText(/mọc mềm thơm/i)).toBeInTheDocument();
+    // The story text is catalogue content (editable), so read it from the catalogue.
+    expect(within(story).getByText(getReelDishBySlug('bun-moc')!.story)).toBeInTheDocument();
     expect(document.querySelector('[data-reel-centre]')).toHaveAccessibleName(/^Bún mọc/);
   });
 });

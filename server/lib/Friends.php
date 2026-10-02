@@ -238,8 +238,8 @@ final class Friends
 
     /**
      * Pick one from a friend's plot that has been ripe for a while. Each crop can be picked
-     * once (by anyone); a picker gets one pick per friend and three a day. The owner keeps
-     * the crop: their client only drops that plot's harvest XP when it sees the event.
+     * once (by anyone); a picker gets one pick per friend and three a day. The picker gets one
+     * of the plot's three crops; the owner's client harvests one less when it sees the event.
      */
     public function steal(string $code, array $body): array
     {

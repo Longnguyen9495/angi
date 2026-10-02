@@ -365,7 +365,7 @@ const journey: Messages['journey'] = {
     stole: (crop, name, xp) => `You picked 1 ${crop} from ${name}! +${xp} XP`,
     stealFailed: 'Could not pick that.',
     stealRule: (left, minutes) =>
-      `A plot ripe for over ${minutes} minutes can be picked once (the owner keeps the crop and only loses the harvest XP). ${left} left today.`,
+      `A plot ripe for over ${minutes} minutes can be picked once: you take 1 of its 3 crops, the owner keeps 2. ${left} left today.`,
   },
 
   recipes: {

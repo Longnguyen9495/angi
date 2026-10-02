@@ -22,11 +22,19 @@ export function ReviewBrowser({
   const dish = reviewDish(dishId);
   const [province, setProvince] = useState<ProvinceId | null>(readProvince);
   const [provinces, setProvinces] = useState<{ id: ProvinceId; name: string }[]>([]);
-  const [videos, setVideos] = useState<YoutubeVideo[]>([]);
-  const [status, setStatus] = useState('');
+  // Reviews belong to the request that loaded them: a new dish, province or retry shows
+  // "loading" until its own answer arrives, without resetting state inside the effect.
+  const [result, setResult] = useState<{ key: string; videos: YoutubeVideo[]; status: string }>({
+    key: '',
+    videos: [],
+    status: '',
+  });
   const [geoStatus, setGeoStatus] = useState('');
   const [provinceError, setProvinceError] = useState('');
   const [retry, setRetry] = useState(0);
+  const reqKey = dish && province ? `${dish}|${province}|${retry}` : '';
+  const videos = result.key === reqKey ? result.videos : [];
+  const status = !reqKey ? '' : result.key === reqKey ? result.status : 'Đang tải review…';
   const generation = useRef(0);
   const reverse = useRef<AbortController | null>(null);
   const geoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -41,7 +49,6 @@ export function ReviewBrowser({
   useEffect(() => {
     const controller = new AbortController();
     let live = true;
-    setProvinceError('');
     reviewRequest('/api/provinces', controller.signal)
       .then((data) => {
         if (!live) return;
@@ -53,6 +60,7 @@ export function ReviewBrowser({
         if (items.length !== 2 || new Set(items.map((item: { id: string }) => item.id)).size !== 2)
           throw new Error('Danh sách tỉnh không hợp lệ.');
         setProvinces(items);
+        setProvinceError('');
       })
       .catch((error: unknown) => {
         if (live) setProvinceError(error instanceof Error ? error.message : 'Không tải được tỉnh.');
@@ -64,28 +72,30 @@ export function ReviewBrowser({
   }, [retry]);
   useEffect(() => {
     cancelGPS();
-    setVideos([]);
     onReset(null);
-    if (!dish || !province) {
-      setStatus('');
-      return;
-    }
+    if (!dish || !province) return;
+    const key = `${dish}|${province}|${retry}`;
     let live = true;
     const controller = new AbortController();
-    setStatus('Đang tải review…');
     reviewRequest(`/api/reviews?dish=${dish}&province=${province}`, controller.signal)
       .then((data) => {
         const items = reviewItems(data, dish, province);
         if (!live) return;
-        setVideos(items);
-        setStatus(
-          items.length
+        setResult({
+          key,
+          videos: items,
+          status: items.length
             ? `${items.length} review phù hợp metadata.`
             : 'Chưa có review phù hợp metadata cho món và tỉnh này.',
-        );
+        });
       })
       .catch((error: unknown) => {
-        if (live) setStatus(error instanceof Error ? error.message : 'Không tải được review.');
+        if (live)
+          setResult({
+            key,
+            videos: [],
+            status: error instanceof Error ? error.message : 'Không tải được review.',
+          });
       });
     return () => {
       live = false;
@@ -174,7 +184,6 @@ export function ReviewBrowser({
           onChange={(event) => {
             cancelGPS();
             setGeoStatus('');
-            setVideos([]);
             const id = normalizeProvince(event.target.value);
             setProvince(id);
             if (id) persistProvince(id);
@@ -202,6 +211,7 @@ export function ReviewBrowser({
         type="button"
         onClick={() => {
           cancelGPS();
+          setProvinceError('');
           setRetry((value) => value + 1);
         }}
       >

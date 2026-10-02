@@ -365,7 +365,7 @@ const journey = {
       `Đã hái trộm 1 ${crop} ở vườn ${name}! +${xp} XP`,
     stealFailed: 'Chưa hái được.',
     stealRule: (left: number, minutes: number) =>
-      `Ô chín quá ${minutes} phút thì hái trộm được 1 phần (chủ vườn vẫn giữ cây, chỉ mất XP thu hoạch). Còn ${left} lượt hôm nay.`,
+      `Ô chín quá ${minutes} phút thì hái trộm được 1 trong 3 phần (chủ vườn vẫn giữ 2). Còn ${left} lượt hôm nay.`,
   },
 
   recipes: {

@@ -193,7 +193,9 @@ export default function JourneyScene({ onBackToReel, onOpenDish }: JourneySceneP
                     el.getBoundingClientRect().top -
                     body.getBoundingClientRect().top +
                     body.scrollTop;
-                  body.scrollTo({ top, behavior: reduced ? 'auto' : 'smooth' });
+                  if (typeof body.scrollTo === 'function')
+                    body.scrollTo({ top, behavior: reduced ? 'auto' : 'smooth' });
+                  else body.scrollTop = top;
                 }
                 el?.focus({ preventScroll: true });
               }, 50);

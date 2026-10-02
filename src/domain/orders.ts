@@ -64,13 +64,14 @@ export function dailyOrders(date: string, crops: readonly ProduceId[] = BASE_CRO
     {
       id: `${date}:0`,
       line: LINES[Math.floor(r() * LINES.length)]!,
-      items: small.map((crop) => ({ crop, qty: 1 })),
+      // A plot gives three of a crop, so orders ask for two of each crop (one egg or milk).
+      items: small.map((crop) => ({ crop, qty: isCrop(crop) ? 2 : 1 })),
       reward: { xp: 15, seeds: [{ crop: seedOf(), qty: 1 }], water: 1 },
     },
     {
       id: `${date}:1`,
       line: LINES[Math.floor(r() * LINES.length)]!,
-      items: big.map((crop, i) => ({ crop, qty: i === 0 ? 2 : 1 })),
+      items: big.map((crop, i) => ({ crop, qty: (i === 0 ? 2 : 1) * (isCrop(crop) ? 2 : 1) })),
       reward: {
         xp: 30,
         seeds: pick(seedCrops, 2, r).map((crop) => ({ crop, qty: 1 })),

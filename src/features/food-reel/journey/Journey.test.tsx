@@ -202,7 +202,7 @@ describe('seed reward loop', () => {
     // Onboarding herb plot + the meal's plot are both ready now.
     await user.click(within(layer).getByRole('button', { name: /thu hoạch tất cả \(2\)/i }));
     const after = stored();
-    expect(after.ingredients.herbs + after.ingredients.rice).toBe(2);
+    expect(after.ingredients.herbs + after.ingredients.rice).toBe(6); // two plots of three
     const storage = await openPanel(user, layer, 'Kho');
     expect(within(storage).getByText(/kho nguyên liệu/i)).toBeInTheDocument();
     await closePanel(user, layer);
@@ -318,7 +318,7 @@ describe('after the harvest', () => {
     // New guests have one herb plot ready: the card asks to harvest it first.
     const card = within(layer).getByRole('region', { name: /ô đã chín/i });
     await user.click(within(card).getByRole('button', { name: 'Thu hoạch' }));
-    expect(stored().ingredients.herbs).toBe(1);
+    expect(stored().ingredients.herbs).toBe(3);
 
     // Nothing ready, tray empty, plots free → find the seed the closest recipe needs.
     const find = await within(layer).findByRole('button', { name: /quay các món cho/i });
@@ -338,7 +338,7 @@ describe('the kitchen', () => {
       {
         ...base,
         plots: base.plots.map((p) => ({ ...p, crop: null, plantedAt: null, readyAt: null })),
-        ingredients: { ...EMPTY_PRODUCE, rice: 1, scallion: 1 },
+        ingredients: { ...EMPTY_PRODUCE, rice: 2, scallion: 2 },
       },
       now,
     );

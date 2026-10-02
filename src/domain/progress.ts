@@ -17,7 +17,7 @@ export interface Plot {
   sourceDishId: string | null;
   /** Last time the plot was watered (can or post-meal rain); drives the wet-soil look. */
   wateredAt: number | null;
-  /** A friend picked from this crop while it was ripe: its harvest pays no XP. */
+  /** A friend picked one of this crop while it was ripe: the harvest gives one less. */
   stolen?: boolean;
 }
 

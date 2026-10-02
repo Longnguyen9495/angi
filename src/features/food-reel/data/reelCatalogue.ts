@@ -153,8 +153,12 @@ export function getReelDish(id: string | null | undefined): ReelDish | undefined
   return id ? byId.get(id) : undefined;
 }
 
+/** /mon/com-tam is the short link for whichever cơm tấm the catalogue has (ids are editable). */
 export function getReelDishBySlug(slug: string): ReelDish | undefined {
-  return byId.get(slug) ?? (slug === 'com-tam' ? byId.get('com-tam-suon-bi-cha-trung') : undefined);
+  return (
+    byId.get(slug) ??
+    (slug === 'com-tam' ? dishes.find((d) => d.id.startsWith('com-tam-')) : undefined)
+  );
 }
 
 /** Maps an unbounded virtual reel index onto the catalogue. */

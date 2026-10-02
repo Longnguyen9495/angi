@@ -49,7 +49,7 @@ function shareUrl(code: string): string {
  * account; signed out it is a short invitation.
  */
 export function FriendsSection() {
-  const { status, checkInbox, refreshFriends } = useAccount();
+  const { status, checkInbox, refreshFriends, friends } = useAccount();
   const { openAccount } = useUi();
   const { toast } = useFeedback();
   const [data, setData] = useState<FriendsList | null>(null);
@@ -69,6 +69,14 @@ export function FriendsSection() {
       })
       .catch((e: unknown) => setError(e instanceof AccountError ? e.message : m.loadFailed));
   }, []);
+
+  // The account refreshes the list too (every few minutes, after an invite link adds a
+  // friend): take its newer copy as soon as it arrives.
+  const [seenFriends, setSeenFriends] = useState(friends);
+  if (friends !== seenFriends) {
+    setSeenFriends(friends);
+    if (friends) setData(friends);
+  }
 
   useEffect(() => {
     if (status !== 'signed-in') return;

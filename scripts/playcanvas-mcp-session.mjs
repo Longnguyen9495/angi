@@ -26,7 +26,10 @@ child.stdout.on('data', (data) => {
         ready = true;
       }
       if (response.id) {
-        writeFileSync(resolve(dir, `response-${response.id}.json`), JSON.stringify(response, null, 2));
+        writeFileSync(
+          resolve(dir, `response-${response.id}.json`),
+          JSON.stringify(response, null, 2),
+        );
         console.log(`MCP response ${response.id} saved`);
       }
     } catch {
@@ -35,15 +38,26 @@ child.stdout.on('data', (data) => {
   }
 });
 send({
-  jsonrpc: '2.0', id: 1, method: 'initialize',
-  params: { protocolVersion: '2024-11-05', capabilities: {}, clientInfo: { name: 'angi-local-cli', version: '1.0' } },
+  jsonrpc: '2.0',
+  id: 1,
+  method: 'initialize',
+  params: {
+    protocolVersion: '2024-11-05',
+    capabilities: {},
+    clientInfo: { name: 'angi-local-cli', version: '1.0' },
+  },
 });
 setInterval(() => {
   const queue = resolve(dir, 'requests.json');
   if (!ready || !existsSync(queue)) return;
   try {
     for (const request of JSON.parse(readFileSync(queue, 'utf8'))) {
-      if (request.id <= 1 || sent.has(request.id) || existsSync(resolve(dir, `response-${request.id}.json`))) continue;
+      if (
+        request.id <= 1 ||
+        sent.has(request.id) ||
+        existsSync(resolve(dir, `response-${request.id}.json`))
+      )
+        continue;
       sent.add(request.id);
       send({ jsonrpc: '2.0', ...request });
     }
@@ -51,5 +65,8 @@ setInterval(() => {
     console.error(error.message);
   }
 }, 500);
-process.on('SIGINT', () => { child.kill(); process.exit(); });
+process.on('SIGINT', () => {
+  child.kill();
+  process.exit();
+});
 child.on('exit', (code) => process.exit(code ?? 0));

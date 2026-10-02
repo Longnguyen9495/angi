@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getDish } from '../data/dishes';
 import { reelGameDishes } from '../features/food-reel/data/reelCatalogue';
+import { CROPS } from '../data/game';
 import { createInitialProgress } from './progress';
 import { dailyQuests } from './quests';
 import { gameReducer, touchStreak } from './reducer';
@@ -66,11 +67,15 @@ describe('planting the meal seed', () => {
   });
 
   it('raises recipe and region progress', () => {
-    // A southern dish from the live catalogue that cooks the com-tam recipe.
-    const s1 = chosen('com-tam-suon-bi-cha-trung');
+    // A southern dish from the live catalogue whose seed goes into the com-tam recipe
+    // (picked by content, since catalogue ids are editable).
+    const dish = reelGameDishes().find(
+      (d) => d.region === 'south' && ['rice', 'scallion'].includes(d.seed),
+    )!;
+    const s1 = chosen(dish.id);
     const before = recipeProgress(s1, 'com-tam').secured;
     const s2 = gameReducer(s1, { type: 'PLANT_MEAL_SEED', now: NOON + 5000 });
-    expect(recipeProgress(s2, 'com-tam').secured).toBe(before + 1);
+    expect(recipeProgress(s2, 'com-tam').secured).toBeGreaterThan(before);
     expect(regionProgress(s2, 'south').discovered).toBe(1);
   });
 
@@ -160,11 +165,11 @@ describe('harvest and cook', () => {
   it('harvests ready plots into ingredients, never below zero, then cooks', () => {
     let s = createInitialProgress(NOON);
     s = gameReducer(s, { type: 'HARVEST_ALL', now: NOON });
-    expect(s.ingredients.herbs).toBe(1);
+    expect(s.ingredients.herbs).toBe(CROPS.herbs.yield);
     expect(s.plots[0]?.crop).toBeNull();
     expect(gameReducer(s, { type: 'HARVEST_ALL', now: NOON })).toBe(s);
 
-    s = { ...s, ingredients: { ...s.ingredients, rice: 1, scallion: 1 } };
+    s = { ...s, ingredients: { ...s.ingredients, rice: 2, scallion: 2 } };
     const cooked = gameReducer(s, { type: 'COOK', recipeId: 'com-tam', now: NOON + 1 });
     expect(cooked.cooked['com-tam']).toBe(1);
     expect(cooked.ingredients.rice).toBe(0);
@@ -289,10 +294,10 @@ describe('the market', () => {
   it('sells produce for xu and buys seeds and decorations, never going negative', () => {
     const s0 = {
       ...createInitialProgress(NOON),
-      ingredients: { ...createInitialProgress(NOON).ingredients, herbs: 3 },
+      ingredients: { ...createInitialProgress(NOON).ingredients, herbs: 6 },
     };
     let s = s0;
-    for (let i = 0; i < 3; i++) s = gameReducer(s, { type: 'SELL', crop: 'herbs', now: NOON + i });
+    for (let i = 0; i < 6; i++) s = gameReducer(s, { type: 'SELL', crop: 'herbs', now: NOON + i });
     expect(s.ingredients.herbs).toBe(0);
     expect(s.coins).toBe(12);
     expect(gameReducer(s, { type: 'SELL', crop: 'herbs', now: NOON + 9 })).toBe(s);

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { CROPS } from '../data/game';
 import { createInitialProgress, type GuestProgress } from './progress';
 import { parseProgress } from './persistence';
 import {
@@ -103,7 +104,7 @@ describe('streak chest and achievements', () => {
 });
 
 describe('friends: picking and gifts', () => {
-  it('a pick from a friend gives us the crop; being picked costs only the harvest XP', () => {
+  it('a pick from a friend gives us one crop; the owner harvests one less', () => {
     let thief = gameReducer(fresh(), {
       type: 'FRIEND_EVENT',
       event: { id: 'e1', type: 'stole', crop: 'tomato', plotId: 2 },
@@ -127,8 +128,8 @@ describe('friends: picking and gifts', () => {
     expect(owner.plots[0]?.stolen).toBe(true);
     const xp = owner.xp;
     owner = gameReducer(owner, { type: 'HARVEST_ALL', now: NOON + 1 });
-    expect(owner.ingredients.herbs).toBe(1);
-    expect(owner.xp).toBe(xp);
+    expect(owner.ingredients.herbs).toBe(CROPS.herbs.yield - 1);
+    expect(owner.xp).toBeGreaterThan(xp);
     expect(owner.plots[0]?.stolen).toBeUndefined();
     thief = gameReducer(thief, { type: 'HARVEST_ALL', now: NOON + 1 });
     expect(thief.xp).toBeGreaterThan(0);

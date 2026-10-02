@@ -58,7 +58,7 @@ describe('pond', () => {
   it('feeds recipes and the market like any pantry item', () => {
     const s = {
       ...fresh(),
-      ingredients: { ...EMPTY_PRODUCE, fish: 1, tomato: 1, herbs: 1 },
+      ingredients: { ...EMPTY_PRODUCE, fish: 1, tomato: 2, herbs: 2 },
     };
     expect(recipeProgress(s, 'canh-chua-ca').canCook).toBe(true);
     const sold = gameReducer(s, { type: 'SELL', crop: 'fish', now: NOON });

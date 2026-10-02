@@ -63,7 +63,7 @@ export function pressFx(e: PointerEvent<HTMLElement>, reduced: boolean) {
       const a = start + (spread * (i + 0.5)) / n + (Math.random() - 0.5) * 0.35;
       const dist = 34 + Math.random() * 30;
       // On a fixed layer: the button may disable (dim) or reflow the moment it acts.
-      spawn(document.body, `fx-particle fx-particle--${kind}${i % 3 ? "" : " is-alt"}`, {
+      spawn(document.body, `fx-particle fx-particle--${kind}${i % 3 ? '' : ' is-alt'}`, {
         left: `${e.clientX}px`,
         top: `${e.clientY}px`,
         '--dx': `${Math.cos(a) * dist}px`,

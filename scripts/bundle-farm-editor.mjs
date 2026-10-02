@@ -32,16 +32,18 @@ const result = await build({
   legalComments: 'inline',
   write: false,
   metafile: true,
-  plugins: [{
-    name: 'preserve-editor-attributes',
-    setup(build) {
-      build.onLoad({ filter: /motion\.ts$/ }, async ({ path }) => ({
-        // esbuild removes ordinary JSDoc. Temporarily mark it as legal comment.
-        contents: (await readFile(path, 'utf8')).replace(/\/\*\*(?=[\s\S]*?\*\/)/g, '/*!'),
-        loader: 'ts',
-      }));
+  plugins: [
+    {
+      name: 'preserve-editor-attributes',
+      setup(build) {
+        build.onLoad({ filter: /motion\.ts$/ }, async ({ path }) => ({
+          // esbuild removes ordinary JSDoc. Temporarily mark it as legal comment.
+          contents: (await readFile(path, 'utf8')).replace(/\/\*\*(?=[\s\S]*?\*\/)/g, '/*!'),
+          loader: 'ts',
+        }));
+      },
     },
-  }],
+  ],
 });
 let text = result.outputFiles[0].text.replace(/\/\*!/g, '/**');
 for (const name of Object.keys(expected)) {
@@ -56,7 +58,10 @@ for (const name of Object.keys(expected)) {
 }
 // Avoid duplicate exports now that script classes are exported declarations.
 text = text.replace(/export \{([\s\S]*?)\};/g, (_, members) => {
-  const retained = members.split(',').map((s) => s.trim()).filter(Boolean)
+  const retained = members
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
     .filter((name) => !Object.hasOwn(expected, name));
   return retained.length ? `export {\n  ${retained.join(',\n  ')}\n};` : '';
 });
@@ -70,7 +75,9 @@ for (const [name, spec] of Object.entries(expected)) {
   const end = text.indexOf('\n}', start);
   const body = text.slice(start, end);
   assert.ok(body.includes(`static scriptName = "${spec.scriptName}";`), `scriptName: ${name}`);
-  const attributes = [...body.matchAll(/\/\*\*\s*@attribute[^]*?\*\/\s*(\w+)\s*=/g)].map((m) => m[1]);
+  const attributes = [...body.matchAll(/\/\*\*\s*@attribute[^]*?\*\/\s*(\w+)\s*=/g)].map(
+    (m) => m[1],
+  );
   assert.deepEqual(attributes, spec.attributes, `Attributes: ${name}`);
   checks.push({ className: name, ...spec });
 }
@@ -80,16 +87,33 @@ assert.ok(imports.every((item) => item.external && item.path === 'playcanvas'));
 assert.ok(!/(?:from\s*|import\s*\()['"]\.{1,2}\//.test(text));
 await mkdir(resolve(root, dirname(output)), { recursive: true });
 await writeFile(resolve(root, output), text);
-const syntax = spawnSync(process.execPath, ['--check', resolve(root, output)], { encoding: 'utf8' });
+const syntax = spawnSync(process.execPath, ['--check', resolve(root, output)], {
+  encoding: 'utf8',
+});
 assert.ifError(syntax.error);
 assert.equal(syntax.status, 0, syntax.stderr);
 const report = {
-  entry, output, esbuildVersion: version, format: 'esm', target: 'es2022',
-  external: ['playcanvas'], classes: checks,
-  checks: { moduleSyntax: true, directExportClasses: true, scriptNames: true, attributeComments: true, noRelativeImports: true },
+  entry,
+  output,
+  esbuildVersion: version,
+  format: 'esm',
+  target: 'es2022',
+  external: ['playcanvas'],
+  classes: checks,
+  checks: {
+    moduleSyntax: true,
+    directExportClasses: true,
+    scriptNames: true,
+    attributeComments: true,
+    noRelativeImports: true,
+  },
   editorParserVerified: false,
   runtimeVerified: false,
-  parentFollowUp: 'Verify registration of all five scripts and their attribute types in the Editor parser; then Launch and test event delivery, initial state, reduced motion and cleanup. No MCP/upload performed by this tool.',
+  parentFollowUp:
+    'Verify registration of all five scripts and their attribute types in the Editor parser; then Launch and test event delivery, initial state, reduced motion and cleanup. No MCP/upload performed by this tool.',
 };
-await writeFile(resolve(root, 'storage/playcanvas-mcp/farm-motion.checks.json'), JSON.stringify(report, null, 2) + '\n');
+await writeFile(
+  resolve(root, 'storage/playcanvas-mcp/farm-motion.checks.json'),
+  JSON.stringify(report, null, 2) + '\n',
+);
 console.log(JSON.stringify(report, null, 2));

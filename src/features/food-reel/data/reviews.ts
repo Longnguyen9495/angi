@@ -67,7 +67,9 @@ export async function reviewRequest(
     return await response.json();
   } catch (error) {
     if (controller.signal.aborted && !signal.aborted)
-      throw new Error('Yêu cầu quá thời gian. Hãy thử lại hoặc chọn tỉnh thủ công.');
+      throw new Error('Yêu cầu quá thời gian. Hãy thử lại hoặc chọn tỉnh thủ công.', {
+        cause: error,
+      });
     throw error;
   } finally {
     clearTimeout(timer);

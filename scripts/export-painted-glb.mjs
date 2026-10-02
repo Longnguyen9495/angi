@@ -21,8 +21,12 @@ await withPage('scripts/garden-export/index.html', async ({ evaluate }) => {
     writeFileSync(join(OUT, file), buf);
     bytes += buf.length;
   }
-  writeFileSync(join(OUT, 'manifest.json'), `${JSON.stringify({ pieces: result.pieces, bytes }, null, 2)}\n`);
+  writeFileSync(
+    join(OUT, 'manifest.json'),
+    `${JSON.stringify({ pieces: result.pieces, bytes }, null, 2)}\n`,
+  );
   const tris = result.pieces.reduce((s, p) => s + p.tris, 0);
   console.log(`Wrote ${result.pieces.length} GLBs, ${bytes} bytes, ${tris} triangles.`);
-  for (const p of result.pieces) console.log(`  ${p.file.padEnd(28)} ${String(p.tris).padStart(7)} tris`);
+  for (const p of result.pieces)
+    console.log(`  ${p.file.padEnd(28)} ${String(p.tris).padStart(7)} tris`);
 });

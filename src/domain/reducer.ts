@@ -411,10 +411,10 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       for (const plot of ready) {
         const crop = CROPS[plot.crop!];
         const tag = `${plot.id}:${plot.plantedAt}`;
-        post(s, `harvest:${tag}`, `ingredient:${crop.id}`, crop.yield, 'harvest', action.now);
-        // A plot a friend picked from still gives its crop, but not the harvest XP.
-        if (!plot.stolen)
-          post(s, `xp:harvest:${tag}`, 'xp', XP.harvestPerPlot, 'harvest', action.now);
+        // A friend's pick took one of the plot's crops; the rest (and the XP) are ours.
+        const got = Math.max(1, crop.yield - (plot.stolen ? 1 : 0));
+        post(s, `harvest:${tag}`, `ingredient:${crop.id}`, got, 'harvest', action.now);
+        post(s, `xp:harvest:${tag}`, 'xp', XP.harvestPerPlot, 'harvest', action.now);
       }
       const readyIds = new Set(ready.map((p) => p.id));
       s.plots = s.plots.map((p) =>

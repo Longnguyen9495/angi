@@ -137,7 +137,9 @@ export function recipeProgress(p: GuestProgress, id: RecipeId): RecipeProgress {
     have: p.ingredients[crop],
     // Crops in the ground, or an animal busy producing it, count as "đang lớn".
     growing: isCrop(crop)
-      ? p.plots.filter((pl) => pl.crop === crop).length
+      ? p.plots
+          .filter((pl) => pl.crop === crop)
+          .reduce((n, pl) => n + CROPS[crop].yield - (pl.stolen ? 1 : 0), 0)
       : isAnimalProduct(crop) && p.animals[animalOf(crop)].readyAt !== null
         ? ANIMALS[animalOf(crop)].yield
         : 0,
