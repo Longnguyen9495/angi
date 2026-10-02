@@ -80,11 +80,22 @@ Tiếng Việt là ngôn ngữ gốc và là bản dự phòng ở mọi lớp; 
 
 - Code: `/var/www/angi` (git clone của repo, owner `rexllm:www-data`), nginx: `deploy/nginx/angi.conf` → `/etc/nginx/sites-available/angi`, SSL bằng certbot.
 - `.env` trên server dùng `DB_DRIVER=sqlite`; file DB ở `storage/database/angi.sqlite` (www-data ghi được, không nằm trong git).
-- Cập nhật bản mới:
+- Cập nhật bản mới (repo thuộc `rexllm`, file SQLite thuộc `www-data` — chạy đúng user, không chạy git/npm bằng root):
   ```bash
-  cd /var/www/angi && git pull && npm ci && npm run build
-  php server/bin/migrate.php   # chỉ khi schema đổi
+  cd /var/www/angi
+  cp -p storage/database/angi.sqlite storage/database/angi.sqlite.bak-$(date +%Y%m%d-%H%M%S)
+  sudo -u rexllm git pull --ff-only
+  sudo -u www-data php server/bin/migrate.php        # an toàn chạy mỗi lần (CREATE … IF NOT EXISTS)
+  sudo -u www-data php server/bin/ai-cook.php        # món mới chưa có cách nấu (gọi AI, chỉ món thiếu)
+  sudo -u rexllm npm ci && sudo -u rexllm npm run build
   ```
+  Trên server bước xuất snapshot báo “keeping the existing snapshot” là đúng ý: `rexllm` không ghi được DB nên
+  giữ snapshot đã commit, cây git không bị bẩn và lần `git pull` sau không vướng. Snapshot chỉ là dự phòng khi API
+  không trả lời; trang luôn tải danh mục thật từ `/api/dishes`.
+- Danh mục local và production được tạo riêng nên id 7 món khác nhau (production: `com-tam-suon-bi-cha`,
+  `com-tempura`… ; local: `com-tam-suon-bi-cha-trung`, `tendon`…). Production là bản thật: muốn local giống hệt thì
+  `curl -s https://angi.221-121-1-68.sslip.io/api/dishes > prod.json` rồi `php server/bin/seed.php --force --from=prod.json`
+  (xoá danh mục local — sao lưu MySQL trước). Không chạy `seed.php --force` trên production nếu chưa chắc.
 - Cách nấu trong game (bảng `dish_cook`): món nào có `cook` thì thành công thức trong Sổ bếp. AI tự viết khi
   tạo/đọc lại món; điền cho các món còn thiếu: `php server/bin/ai-cook.php` (`--all` để viết lại hết, `--only=…`).
   Mang sang server không cần gọi AI lại: `npm run build` ở local, commit snapshot, rồi trên server
