@@ -1294,10 +1294,11 @@ const glass = await maskFile(
 );
 
 // ——— 7b. Field plots: the game's 12 plots on the painted lattice, and an empty-soil tile ———
-// Lattice measured on the seams (i along R, j along L). Plots 1–6 are the painted tilled tiles,
-// 7–8 (unlocked later) carry the two tilled columns on to the front fence, then 9–12 open the
-// grass column beside them back to front, starting at the tile with the signpost; the runtime
-// stamps soil on unlocked ones.
+// Lattice measured on the seams (i along R, j along L). Plots 1–6 are the painted tilled tiles
+// (a new guest has 1–4; the runtime lays grass over the painted ones still locked), 7–8 carry
+// the two tilled columns on to the front fence, then 9–12 open the grass column beside them
+// back to front, starting at the tile with the signpost; the runtime stamps soil on unlocked
+// ones.
 const FIELD = { v0: wPt([620, 342]), R: wVec([88, 51]), L: wVec([-92.5, 43.5]) };
 const corner = (i, j) => [
   FIELD.v0[0] + FIELD.R[0] * i + FIELD.L[0] * j,
@@ -1353,6 +1354,28 @@ let soilTile;
       Math.max(0, Math.min(1, (edge(x + 0.5, y + 0.5) + 2.5) / 2.5)),
     )),
     anchor: corner(1, 2),
+  };
+}
+// A clear grass tile (2, 1), laid over the painted tilled tiles while they are still locked (a
+// new guest starts on four), a little past the seams so the soil's rim doesn't show.
+let grassTile;
+{
+  const q = tileQuad(2, 1);
+  const edge = (x, y) => {
+    let d = Infinity;
+    for (let k = 0; k < 4; k++) {
+      const [ax, ay] = q[k];
+      const [bx, by] = q[(k + 1) % 4];
+      d = Math.min(d, ((bx - ax) * (y - ay) - (by - ay) * (x - ax)) / Math.hypot(bx - ax, by - ay));
+    }
+    return d;
+  };
+  const box = polyBox(q);
+  grassTile = {
+    ...(await sprite('tile-grass', M, [box[0] - 5, box[1] - 5, box[2] + 5, box[3] + 5], (x, y) =>
+      Math.max(0, Math.min(1, (edge(x + 0.5, y + 0.5) + 4) / 2.5)),
+    )),
+    anchor: corner(2, 1),
   };
 }
 // The signpost on the last plot's back corner (measured on the repaint): cut out so it stands on
@@ -1448,7 +1471,7 @@ const places = {
 };
 const layout = {
   size: [W, H],
-  field: { ...FIELD, plots, soil: soilTile, sign },
+  field: { ...FIELD, plots, soil: soilTile, grass: grassTile, painted: 6, sign },
   clouds,
   sprites,
   layers,

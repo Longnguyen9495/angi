@@ -787,9 +787,15 @@ export const DECOR: Record<DecorId, DecorDef> = {
 export const DECOR_LIST: DecorDef[] = Object.values(DECOR);
 
 export const XP_PER_LEVEL = 100;
-export const FARM_PLOT_COUNT = 6;
-/** One more plot at each of these levels (6 → 12). */
-export const PLOT_UNLOCK_LEVELS = [3, 5, 7, 9, 11, 13] as const;
+/** Plots a new guest starts with. */
+export const FARM_PLOT_COUNT = 4;
+/**
+ * One more plot at each of these levels (4 → 12), the gaps widening (1, 1, 2, 2, 3, 3, 4, 5).
+ * A level is a flat 100 XP and an everyday player earns some 200–300 XP a day (three check-ins,
+ * the daily quests, a dish or two, harvests), so the first plots come within the first days and
+ * the last one after a couple of weeks.
+ */
+export const PLOT_UNLOCK_LEVELS = [2, 3, 5, 7, 10, 13, 17, 22] as const;
 export const MAX_PLOT_COUNT = FARM_PLOT_COUNT + PLOT_UNLOCK_LEVELS.length;
 
 export const BUDGET_OPTIONS: { id: BudgetId | 'any'; label: string; hint: string }[] = (

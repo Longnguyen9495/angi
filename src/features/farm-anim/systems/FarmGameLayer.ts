@@ -174,6 +174,7 @@ export class FarmGameLayer {
   onHarvest: HarvestFlight | null = null;
   private field: FieldDef;
   private soil: HTMLImageElement;
+  private grass: HTMLImageElement | null = null;
   private sign: HTMLImageElement | null = null;
   /** Plot the signpost stands on; while it is locked its board carries the unlock level. */
   private signPlot: number | null = null;
@@ -189,6 +190,7 @@ export class FarmGameLayer {
     this.field = assets.layout.field;
     this.bubbles = assets.layout.places.bubbles;
     this.soil = assets.img(this.field.soil.file);
+    if (this.field.grass) this.grass = assets.img(this.field.grass.file);
     const sign = this.field.sign;
     if (sign) {
       this.sign = assets.img(sign.file);
@@ -578,6 +580,12 @@ export class FarmGameLayer {
       if (!v.unlocked) {
         if (!nextLock || (v.unlockLevel ?? 99) < (nextLock.unlockLevel ?? 99)) nextLock = v;
         locked.push({ d, v });
+        // A tile tilled in the painting stays grass until it opens.
+        const g = this.field.grass;
+        if (this.grass && g && d.id <= (this.field.painted ?? 0)) {
+          const [gx, gy] = d.quad[0];
+          ctx.drawImage(this.grass, g.x + gx - g.anchor[0], g.y + gy - g.anchor[1]);
+        }
         continue;
       }
       const f = this.fx.get(d.id)!;

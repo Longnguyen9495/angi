@@ -29,7 +29,7 @@ describe('guest progress persistence', () => {
     localStorage.setItem(STORAGE_KEY, '{not json');
     const r = loadProgress(NOON);
     expect(r.status).toBe('recovered');
-    expect(r.progress.plots).toHaveLength(6);
+    expect(r.progress.plots).toHaveLength(4);
   });
 
   it('recovers from a structurally invalid snapshot', () => {

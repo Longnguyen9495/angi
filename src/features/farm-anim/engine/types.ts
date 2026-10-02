@@ -113,6 +113,10 @@ export interface FieldDef {
   plots: { id: number; quad: [Vec2, Vec2, Vec2, Vec2]; centre: Vec2 }[];
   /** Empty soil tile, cut at the lattice corner `anchor`. */
   soil: Placed & { anchor: Vec2 };
+  /** Clear grass tile, cut at the lattice corner `anchor`, laid over locked painted plots. */
+  grass?: Placed & { anchor: Vec2 };
+  /** Plots 1..painted are tilled in the painting itself. */
+  painted?: number;
   /** The signpost on the last plot, cut out to stand on stamped soil; `board` [x0, y0, x1, y1]. */
   sign?: Placed & { board: [number, number, number, number] };
 }
