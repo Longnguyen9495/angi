@@ -294,7 +294,10 @@ export class AnimationManager {
       const p = this.toPicture({ x: e.clientX - r.left, y: e.clientY - r.top });
       // The door swings open and counts as the farmhouse.
       const plotId = this.game.hit(p);
-      if (plotId !== null) return this.onPlace('plot', { ...p, plotId });
+      if (plotId !== null) {
+        this.game.tap(plotId);
+        return this.onPlace('plot', { ...p, plotId });
+      }
       if (this.buildings.click(p)) return this.onPlace('farmhouse', p);
       const place = this.hit(p);
       if (place) this.onPlace(place, p);
@@ -1120,6 +1123,7 @@ export class AnimationManager {
         image: planted ? cropSprite(p.crop, p.stage as Exclude<PlotStageView, 'empty'>) : null,
         wet: planted && p.wet && p.clock < 2,
         thirsty: false,
+        needsWater: planted && p.stage !== 'ready' && !(p.wet && p.clock < 2),
         label: planted ? `${p.crop} · ${p.stage}` : '',
         kind: p.kind,
         harvests: p.harvests,

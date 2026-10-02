@@ -36,6 +36,8 @@ export interface PlotView {
   wet: boolean;
   /** Watering mode is on and this plot can be watered. */
   thirsty: boolean;
+  /** Growing, dry and wateable now (a water-drop bubble floats over it). */
+  needsWater?: boolean;
   /** Shown on hover, e.g. "Ô 3 · Hành · còn 2 giờ". */
   label: string;
   /** Vegetable (one harvest), fruit tree (stays), mushroom block (a few flushes). Default veg. */
@@ -69,6 +71,9 @@ export interface FarmView {
 /** A harvest the page can show flying to the pantry: picture point, icon, how many. */
 export type HarvestFlight = (at: Vec2, icon: string, count: number) => boolean;
 
+/** What a plot's bubble says: ripe (its produce) or thirsty (a drop). */
+type Mark = 'ready' | 'water';
+
 interface PlotFx {
   prev: PlotView | null;
   /** Picture drawn now and the one it cross-fades from. */
@@ -81,6 +86,11 @@ interface PlotFx {
   sow: number;
   water: number;
   shake: number;
+  /** Seconds since the plot was tapped (the plant bounces, a ring runs over the soil). */
+  tap: number;
+  /** Status bubble over the plot and seconds since it last changed (it pops in). */
+  mark: Mark | null;
+  markT: number;
   /** Wet look shown, 0..1 (fades in as the drops land, out as it dries). */
   wet: number;
   /** Drops still owed to the watering stream (fractional). */
@@ -97,7 +107,12 @@ interface PlotFx {
 }
 
 type Event =
-  | { kind: 'sow' | 'grow' | 'water' | 'clear'; id: number; at: Vec2; plant?: PlotKindView }
+  | {
+      kind: 'sow' | 'grow' | 'water' | 'clear' | 'tap';
+      id: number;
+      at: Vec2;
+      plant?: PlotKindView;
+    }
   | {
       kind: 'harvest';
       id: number;
@@ -117,6 +132,8 @@ const WATER_STREAM = 0.9;
 const WATER_FALL = 0.5;
 const SHAKE = 0.45;
 const GONE = 0.55;
+/** Tap feedback: the plant's squash-and-bounce and the ring over the soil (s). */
+const TAP = 0.5;
 /** Breathing period of the ready glow (s) and the gap between its glints. */
 const GLOW_PERIOD = 3.4;
 const GLINT_GAP = 2.8;
@@ -212,6 +229,9 @@ export class FarmGameLayer {
         sow: IDLE,
         water: IDLE,
         shake: IDLE,
+        tap: IDLE,
+        mark: null,
+        markT: IDLE,
         wet: 0,
         stream: 0,
         glint: (p.id * 0.37) % GLINT_GAP,
@@ -348,6 +368,15 @@ export class FarmGameLayer {
     return d ? [d.centre[0], d.quad[0][1]] : null;
   }
 
+  /** A tap on a plot: the plant bounces, a ring runs over the soil, a puff (or a lock wiggle). */
+  tap(id: number) {
+    const f = this.fx.get(id);
+    const d = this.field.plots.find((p) => p.id === id);
+    if (!f || !d) return;
+    f.tap = 0;
+    this.events.push({ kind: 'tap', id, at: d.centre });
+  }
+
   cast(x: number, y: number) {
     this.float = { x, y, t: 0, bite: -1 };
   }
@@ -400,6 +429,34 @@ export class FarmGameLayer {
         break;
       case 'water':
         break; // The stream is spawned frame by frame in update().
+      case 'tap': {
+        // A little soil kicked up round the plant, and a few glints over a ripe or growing one.
+        const v = this.view?.plots.find((p) => p.id === e.id);
+        if (!v?.unlocked) break;
+        for (let i = n(5); i-- > 0;)
+          P.spawn(
+            'soil',
+            x + (r() - 0.5) * 40,
+            y + 2 + (r() - 0.5) * 10,
+            (r() - 0.5) * 50,
+            -30 - r() * 30,
+            0.7,
+            0.9 + r() * 0.8,
+            y + 6 + (r() - 0.5) * 12,
+          );
+        if (v.crop)
+          for (let i = n(v.stage === 'ready' ? 6 : 3); i-- > 0;)
+            P.spawn(
+              'sparkle',
+              x + (r() - 0.5) * 50,
+              y - h * (0.3 + r() * 0.5),
+              0,
+              -12,
+              0.6 + r() * 0.3,
+              2 + r(),
+            );
+        break;
+      }
       case 'clear':
         for (let i = n(10); i-- > 0;)
           P.spawn(
@@ -479,9 +536,23 @@ export class FarmGameLayer {
       f.grow += w.dt;
       f.sow += w.dt;
       f.shake += w.dt;
+      f.tap += w.dt;
       f.glint += w.dt;
       f.water += w.dt;
+      f.markT += w.dt;
       const v = this.view?.plots.find((p) => p.id === d.id);
+      const mark: Mark | null =
+        !v?.unlocked || !v.crop
+          ? null
+          : v.stage === 'ready'
+            ? 'ready'
+            : v.needsWater
+              ? 'water'
+              : null;
+      if (mark !== f.mark) {
+        f.mark = mark;
+        f.markT = 0;
+      }
       // The soil puff when the seeds land.
       if (particles && sow0 < SOW_DROP && f.sow >= SOW_DROP)
         for (let i = Math.min(w.particles.room(), Math.round(8 * q)); i-- > 0;)
@@ -629,12 +700,28 @@ export class FarmGameLayer {
         ctx.setLineDash([]);
       }
       if (hover) {
+        // The chosen plot breathes a little so it reads as the one the card is about.
+        const pulse = this.selected === d.id && !w.reduced ? Math.sin(w.t * 4) : 0;
         quadPath(ctx, d.quad, 0.03, d.centre);
-        ctx.fillStyle = 'rgba(255,248,210,0.16)';
+        ctx.fillStyle = `rgba(255,248,210,${0.16 + 0.06 * pulse})`;
         ctx.fill();
         ctx.strokeStyle = 'rgba(255,244,190,0.95)';
-        ctx.lineWidth = 2.5;
+        ctx.lineWidth = 2.5 + 0.8 * pulse;
         ctx.stroke();
+      }
+      const f = this.fx.get(d.id)!;
+      if (f.tap < TAP) {
+        // Tap: a flash on the plot and a ring running out past its edge.
+        const u = f.tap / TAP;
+        quadPath(ctx, d.quad, 0.03, d.centre);
+        ctx.fillStyle = `rgba(255,250,220,${0.28 * (1 - u)})`;
+        ctx.fill();
+        if (!w.reduced) {
+          quadPath(ctx, d.quad, 0.12 - 0.22 * easeOut(u), d.centre);
+          ctx.strokeStyle = `rgba(255,244,190,${0.9 * (1 - u)})`;
+          ctx.lineWidth = 3 * (1 - u) + 1;
+          ctx.stroke();
+        }
       }
     }
     // Every locked plot shows it is part of the field: a faint dashed rim and its own level (on
@@ -647,10 +734,13 @@ export class FarmGameLayer {
       ctx.setLineDash([8, 6]);
       ctx.stroke();
       ctx.setLineDash([]);
+      // A tapped lock wiggles: "not yet".
+      const tap = this.fx.get(d.id)!.tap;
+      const wiggle = !w.reduced && tap < TAP ? Math.sin(tap * 38) * 5 * (1 - tap / TAP) : 0;
       if (d.id !== this.signPlot)
         this.drawLock(
           ctx,
-          d.centre[0],
+          d.centre[0] + wiggle,
           d.centre[1] - 6,
           t.farm.anim.lockLevel(v.unlockLevel ?? '?'),
           next ? 0.92 : 0.6,
@@ -765,8 +855,14 @@ export class FarmGameLayer {
         ctx.beginPath();
         ctx.ellipse(cx, cy + 10, sw * 0.32, sw * 0.08, 0, 0, Math.PI * 2);
         ctx.fill();
-        if (old) this.drawPlant(ctx, old, cx + shake, cy, 1, f.bend, 1 - fade);
-        if (fade > 0) this.drawPlant(ctx, im, cx + shake, cy, scale, f.bend, fade);
+        // Tap: squash into the soil, spring up, settle (a tree only nods).
+        const tu = f.tap / TAP;
+        const squash =
+          !still && tu < 1
+            ? 1 - Math.sin(tu * Math.PI * 2.5) * (1 - tu) * (f.kind === 'tree' ? 0.05 : 0.14)
+            : 1;
+        if (old) this.drawPlant(ctx, old, cx + shake, cy, 1, f.bend, 1 - fade, squash);
+        if (fade > 0) this.drawPlant(ctx, im, cx + shake, cy, scale, f.bend, fade, squash);
       }
       if (!still && f.water < WATER_STREAM + 0.3) this.drawCan(ctx, cx - 64, cy - 104, f.water);
       if (f.gone) {
@@ -839,6 +935,7 @@ export class FarmGameLayer {
     scale: number,
     bend: number,
     alpha: number,
+    squash = 1,
   ) {
     const pw = im.naturalWidth * CROP_SCALE * scale;
     const ph = im.naturalHeight * CROP_SCALE * scale;
@@ -847,6 +944,8 @@ export class FarmGameLayer {
     ctx.save();
     ctx.translate(cx, baseY);
     if (bend) ctx.transform(1, 0, -bend, 1, 0, 0);
+    // Squash and stretch about the soil line, keeping the volume.
+    if (squash !== 1) ctx.scale(1 + (1 - squash) * 0.6, squash);
     ctx.drawImage(im, -pw / 2, -ph, pw, ph);
     ctx.restore();
     ctx.globalAlpha = 1;
@@ -863,6 +962,15 @@ export class FarmGameLayer {
       const by = by0 + Math.sin(w.t * 2.2 + (key === 'cow' ? 0 : 1.5)) * 3;
       const r = b.kind === 'ready' ? 17 : 14;
       ctx.save();
+      if (b.kind === 'ready' && !w.reduced) {
+        // Same pulse as a ripe plot's bubble: something to collect here.
+        const p = (w.t * 0.7 + (key === 'cow' ? 0 : 0.5)) % 1;
+        ctx.strokeStyle = `rgba(255,214,107,${0.75 * (1 - p)})`;
+        ctx.lineWidth = 3 * (1 - p) + 0.5;
+        ctx.beginPath();
+        ctx.arc(bx, by, r + 2 + p * 14, 0, Math.PI * 2);
+        ctx.stroke();
+      }
       ctx.globalAlpha = b.kind === 'locked' ? 0.75 : 1;
       ctx.fillStyle = b.kind === 'ready' ? '#fff8e1' : 'rgba(255,255,255,0.92)';
       ctx.strokeStyle = b.kind === 'ready' ? '#e8a52a' : 'rgba(80,60,40,0.55)';
@@ -908,6 +1016,7 @@ export class FarmGameLayer {
       ctx.strokeStyle = '#4a2a14';
       ctx.stroke();
     }
+    this.drawMarks(ctx, w);
     // The open card already says it all; the hover label is for the other plots.
     const hp =
       this.hover !== null && this.hover !== this.selected
@@ -928,6 +1037,83 @@ export class FarmGameLayer {
       ctx.textBaseline = 'middle';
       ctx.fillText(hp.label, x, y - 17);
       ctx.textAlign = 'start';
+    }
+  }
+
+  /**
+   * A bubble over each plot that wants something: its produce on a gold rim when ripe (a ring
+   * pulses out of it), a water drop on a blue rim when it can be watered. Bubbles pop in when
+   * they appear and bob gently; the hovered and the open plot skip theirs (label / card).
+   */
+  private drawMarks(ctx: CanvasRenderingContext2D, w: World) {
+    const still = w.reduced;
+    for (const d of this.field.plots) {
+      const f = this.fx.get(d.id)!;
+      if (!f.mark || d.id === this.selected || d.id === this.hover) continue;
+      const v = this.view?.plots.find((p) => p.id === d.id);
+      if (!v) continue;
+      const ready = f.mark === 'ready';
+      const r = ready ? 21 : 18;
+      const [cx, cy] = d.centre;
+      // Just over the plant's top (never far up a tall tree), and never below the plot's top.
+      const top = Math.max(cy + 8 - this.plantHeight(d.id) * 0.86, cy - 150);
+      const bob = still ? 0 : Math.sin(w.t * 2.4 + d.id * 0.9) * 3;
+      const x = cx;
+      const y = Math.min(top, d.quad[0][1]) - r - 8 + bob;
+      // Pop in: overshoot a little, settle.
+      const k = still ? 1 : clamp(f.markT / 0.35, 0, 1);
+      const pop = k >= 1 ? 1 : 1 + 2.2 * (k - 1) ** 3 + 1.2 * (k - 1) ** 2;
+      if (pop <= 0.01) continue;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(pop, pop);
+      if (ready && !still) {
+        const p = (w.t * 0.7 + d.id * 0.31) % 1;
+        ctx.strokeStyle = `rgba(255,214,107,${0.75 * (1 - p)})`;
+        ctx.lineWidth = 3 * (1 - p) + 0.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, r + 2 + p * 14, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.shadowColor = 'rgba(30,20,10,0.35)';
+      ctx.shadowBlur = 6;
+      ctx.shadowOffsetY = 2;
+      ctx.fillStyle = ready ? '#fff8e1' : '#eef8ff';
+      ctx.strokeStyle = ready ? '#e8a52a' : '#3f9fd0';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.moveTo(-5, r - 1);
+      ctx.lineTo(0, r + 8);
+      ctx.lineTo(5, r - 1);
+      ctx.fill();
+      ctx.shadowColor = 'transparent';
+      ctx.stroke();
+      if (ready) {
+        const im = this.ready(v.produce ?? v.image);
+        if (im) {
+          const s = (r * 1.5) / Math.max(im.naturalWidth, im.naturalHeight);
+          const iw = im.naturalWidth * s;
+          const ih = im.naturalHeight * s;
+          ctx.drawImage(im, -iw / 2, -ih / 2, iw, ih);
+        }
+      } else {
+        // A drop that tips now and then, as if asking.
+        const tilt = still ? 0 : Math.sin(w.t * 3 + d.id) * 0.12;
+        ctx.rotate(tilt);
+        ctx.fillStyle = '#4fb3e8';
+        ctx.beginPath();
+        ctx.moveTo(0, -11);
+        ctx.bezierCurveTo(5, -4, 8, 0, 8, 4);
+        ctx.arc(0, 4, 8, 0, Math.PI);
+        ctx.bezierCurveTo(-8, 0, -5, -4, 0, -11);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.7)';
+        ctx.beginPath();
+        ctx.ellipse(-3, 3, 2, 3.5, -0.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
     }
   }
 

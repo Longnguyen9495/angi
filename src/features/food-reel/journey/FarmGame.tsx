@@ -400,6 +400,7 @@ export function FarmGame({
         image: plot.crop && stage !== 'empty' ? cropSprite(plot.crop, stage) : null,
         wet: isWet(plot, now),
         thirsty: watering && growing && block === null,
+        needsWater: growing && block === null,
         label,
         // Plot animations: the kind (a tree stays after a harvest), the harvest cycle (one
         // flight per harvest) and the produce that flies to the pantry.

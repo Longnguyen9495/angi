@@ -228,6 +228,15 @@ export class YardStage extends Stage {
       ctx.beginPath();
       ctx.ellipse(a.x, a.y - 1, sw * (1 + hopY / 60), sw * 0.22, 0, 0, Math.PI * 2);
       ctx.fill();
+      if (hopK > 0) {
+        // Tapped: a ring runs out over the grass from its feet.
+        const u = 1 - hopK;
+        ctx.strokeStyle = `rgba(255, 244, 190, ${0.85 * hopK})`;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(a.x, a.y - 1, sw * (0.8 + u), sw * (0.18 + u * 0.22), 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
       // Mirror through zero while turning; never quite flat, so it stays visible.
       const sx = Math.sign(a.facing || 1) * Math.max(0.12, Math.abs(a.facing));
       drawSprite(ctx, img, a.x, a.y + bob + hopY, scale, { sx, sy: breathe * squash });
@@ -259,12 +268,27 @@ export class YardStage extends Stage {
     const ready = st === 'ready';
     const icon = sprite(ready ? a.data.product : a.data.feed);
     const float = reduced ? 0 : Math.sin(t * 1.7 + a.phase) * 2.5;
-    const r = ready ? 14 : 11;
+    const r = ready ? 16 : 13;
     const cy = headY - r + float;
-    ctx.globalAlpha = ready ? 1 : 0.82;
-    ctx.fillStyle = ready ? '#fff7e2' : 'rgba(255, 247, 226, 0.85)';
-    ctx.strokeStyle = ready ? '#e3b871' : 'rgba(120, 90, 50, 0.45)';
-    ctx.lineWidth = ready ? 2 : 1.2;
+    if (ready && !reduced) {
+      // A ring pulses out of a ready bubble: something to collect here.
+      const p = (t * 0.7 + a.phase) % 1;
+      ctx.strokeStyle = `rgba(255, 214, 107, ${0.75 * (1 - p)})`;
+      ctx.lineWidth = 2.5 * (1 - p) + 0.5;
+      ctx.beginPath();
+      ctx.arc(a.x, cy, r + 2 + p * 11, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    // A hungry bubble nods now and then, as if asking.
+    const nod = !ready && !reduced ? Math.max(0, Math.sin(t * 2.6 + a.phase)) ** 6 * 0.18 : 0;
+    ctx.save();
+    ctx.translate(a.x, cy + r);
+    ctx.rotate(nod);
+    ctx.translate(-a.x, -(cy + r));
+    ctx.globalAlpha = ready ? 1 : 0.9;
+    ctx.fillStyle = ready ? '#fff7e2' : 'rgba(255, 247, 226, 0.92)';
+    ctx.strokeStyle = ready ? '#e8a52a' : 'rgba(120, 90, 50, 0.55)';
+    ctx.lineWidth = ready ? 2.2 : 1.4;
     ctx.beginPath();
     ctx.arc(a.x, cy, r, 0, Math.PI * 2);
     ctx.moveTo(a.x - 4, cy + r - 1);
@@ -276,6 +300,7 @@ export class YardStage extends Stage {
       const s = ((r * 2 - 6) / Math.max(icon.naturalWidth, icon.naturalHeight)) * 1;
       drawSprite(ctx, icon, a.x, cy, s, { anchor: 'center' });
     }
+    ctx.restore();
     ctx.globalAlpha = 1;
   }
 
