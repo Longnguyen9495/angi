@@ -27,6 +27,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
     saveProgress(state, Date.now());
   }, [state]);
 
+  // A save from before the item pack, at a level that already opens new crops, gets them now.
+  useEffect(() => {
+    baseDispatch({ type: 'SYNC_UNLOCKS', now: Date.now() });
+  }, []);
+
   // CSS keys every motion rule off this attribute, so the in-app toggle wins over the OS.
   useEffect(() => {
     document.documentElement.dataset.motion = reduced ? 'reduced' : 'full';

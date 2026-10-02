@@ -14,8 +14,12 @@ export function StoragePanel() {
   const filter = useItemFilter();
   const ownedSeeds = CROP_LIST.filter((c) => state.seeds[c.id] > 0);
   const owned = PRODUCE_IDS.filter((id) => state.ingredients[id] > 0);
-  const seeds = ownedSeeds.filter((c) => filter.matches(c.seedName, c.category));
-  const pantry = owned.filter((id) => filter.matches(produceName(id), produceCategory(id)));
+  // The filter only shows for long lists, and only a visible filter filters.
+  const showFilter = ownedSeeds.length + owned.length > 8;
+  const seeds = ownedSeeds.filter((c) => !showFilter || filter.matches(c.seedName, c.category));
+  const pantry = owned.filter(
+    (id) => !showFilter || filter.matches(produceName(id), produceCategory(id)),
+  );
   const categories = presentCategories([
     ...ownedSeeds.map((c) => c.category),
     ...owned.map(produceCategory),
@@ -24,7 +28,7 @@ export function StoragePanel() {
 
   return (
     <>
-      {ownedSeeds.length + owned.length > 8 && (
+      {showFilter && (
         <ItemFilter
           state={filter.state}
           onChange={filter.setState}

@@ -43,11 +43,15 @@ export function MarketSection() {
   const [tab, setTab] = useState<Tab>('sell');
   const filter = useItemFilter();
   const owned = PRODUCE_IDS.filter((id) => state.ingredients[id] > 0);
-  const pantry = owned
-    .filter((id) => filter.matches(produceName(id), produceCategory(id)))
-    .map((id) => ({ id, produceName: produceName(id) }));
   const open = CROP_LIST.filter((c) => cropAvailable(state, c.id));
-  const seeds = open.filter((c) => filter.matches(c.seedName, c.category));
+  // The filter only shows for long lists, and only a visible filter filters.
+  const showFilter = tab !== 'decor' && (tab === 'sell' ? owned.length : open.length) > 8;
+  const matches = (name: string, cat: Parameters<typeof filter.matches>[1]) =>
+    !showFilter || filter.matches(name, cat);
+  const pantry = owned
+    .filter((id) => matches(produceName(id), produceCategory(id)))
+    .map((id) => ({ id, produceName: produceName(id) }));
+  const seeds = open.filter((c) => matches(c.seedName, c.category));
   // The next few crops to open, so the catalogue shows where it is going without opening it all.
   const lv = level(state.xp).level;
   const soon = CROP_LIST.filter((c) => c.unlock && c.unlock.level > lv)
@@ -70,7 +74,11 @@ export function MarketSection() {
               role="tab"
               aria-selected={tab === tb.id}
               className="fj-market__tab"
-              onClick={() => setTab(tb.id)}
+              onClick={() => {
+                setTab(tb.id);
+                // A search typed for one stall does not carry over to the next.
+                filter.setState({ query: '', category: 'all' });
+              }}
             >
               {tb.label}
             </button>
@@ -78,7 +86,7 @@ export function MarketSection() {
         </div>
       </div>
 
-      {tab !== 'decor' && (tab === 'sell' ? owned.length : open.length) > 8 && (
+      {showFilter && (
         <ItemFilter
           state={filter.state}
           onChange={filter.setState}

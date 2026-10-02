@@ -151,6 +151,17 @@ describe('beehive and boat', () => {
 });
 
 describe('saves from before the item pack', () => {
+  it('a high-level save gets the crops its level opens as soon as it loads, once', () => {
+    const old = { ...createInitialProgress(NOON), xp: 960, unlockedCrops: [] as CropId[] };
+    const s = gameReducer(old, { type: 'SYNC_UNLOCKS', now: NOON });
+    expect(s.unlockedCrops).toContain('mango');
+    expect(s.unlockedCrops).not.toContain('durian');
+    expect(s.seeds.mango).toBe(1);
+    const again = gameReducer(s, { type: 'SYNC_UNLOCKS', now: NOON + 1 });
+    expect(again.seeds.mango).toBe(1);
+    expect(again.unlockedCrops).toEqual(s.unlockedCrops);
+  });
+
   it('a version-1 save loads with its pantry, coins and growing plots intact', () => {
     const old = createInitialProgress(NOON) as unknown as Record<string, unknown>;
     // What a v1 save looked like: only the first ten crops, no hive or boat.
