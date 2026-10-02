@@ -12,6 +12,8 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
+  /* clip, not just hidden: focus or scroll calls inside a panel must never scroll the frame. */
+  overflow: clip;
 }
 
 .fr-journey__game:focus,

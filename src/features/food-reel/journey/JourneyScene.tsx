@@ -185,7 +185,16 @@ export default function JourneyScene({ onBackToReel, onOpenDish }: JourneySceneP
               setPanel('kitchen');
               window.setTimeout(() => {
                 const el = document.getElementById('so-bep');
-                el?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+                // Scroll the panel body only: scrollIntoView would also scroll the clipped game
+                // frame and lift the whole panel off the bottom on phones.
+                const body = el?.closest('.fg-panel__body');
+                if (el && body) {
+                  const top =
+                    el.getBoundingClientRect().top -
+                    body.getBoundingClientRect().top +
+                    body.scrollTop;
+                  body.scrollTo({ top, behavior: reduced ? 'auto' : 'smooth' });
+                }
                 el?.focus({ preventScroll: true });
               }, 50);
             }}
