@@ -6,11 +6,11 @@ import { FeedbackContext, type ToastInput, type ToastTone } from './context';
 const MAX_TOASTS = 3;
 /** Problems and rewards stay a little longer than a plain "done". */
 const TOAST_MS: Record<ToastTone, number> = {
-  info: 4800,
-  success: 4800,
-  warning: 6500,
-  error: 7000,
-  reward: 5600,
+  info: 2500,
+  success: 2500,
+  warning: 4000,
+  error: 4500,
+  reward: 3000,
 };
 /** Matches the longest exit keyframes in toast.css. */
 const EXIT_MS = 340;
