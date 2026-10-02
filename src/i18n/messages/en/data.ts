@@ -271,21 +271,85 @@ const data: Messages['data'] = {
     pancake: 'Cakes & pancakes',
   },
   cooking: {
-    rice: ['Rinse the rice, into the pot', 'Grill over charcoal', 'Steam the rice', 'Plate up'],
-    noodleSoup: [
-      'Add ingredients to the pot',
-      'Simmer the broth',
-      'Season to taste',
+    'com-tam': [
+      'Cook the broken rice',
+      'Grill pork chops',
+      'Make scallion oil',
+      'Plate, add scallion oil',
+    ],
+    'bun-rieu': [
+      'Strain crab, make broth',
+      'Fry the tomatoes',
+      'Add crab and tofu',
       'Blanch noodles, ladle broth',
     ],
-    breadRoll: ['Prep the greens', 'Boil until cooked', 'Roll by hand'],
-    noodleDry: [
-      'Add ingredients to the pot',
-      'Stir-fry on high heat',
-      'Blanch the noodles',
-      'Toss with sauce',
+    'bun-bo-hue': [
+      'Simmer beef bones, lemongrass',
+      'Fry chilli satay',
+      'Season with shrimp paste',
+      'Blanch noodles, ladle broth',
     ],
-    pancake: ['Mix the batter', 'Pour into the pan', 'Fry until crisp', 'Fold it over'],
+    'goi-cuon': ['Boil shrimp and pork', 'Pick the herbs', 'Wet rice paper, roll'],
+    'banh-xeo': [
+      'Mix turmeric batter',
+      'Sear shrimp and pork',
+      'Pour batter, add sprouts',
+      'Fold, serve with greens',
+    ],
+    'bo-luc-lac': [
+      'Marinate beef with garlic',
+      'Shake beef on high heat',
+      'Slice tomato, cucumber',
+      'Plate up',
+    ],
+    'mi-quang': [
+      'Stir-fry shrimp and pork',
+      'Add a little broth',
+      'Blanch Quảng noodles',
+      'Top with peanuts, herbs',
+    ],
+    'com-ga-hoi-an': [
+      'Poach the chicken',
+      'Cook rice in chicken stock',
+      'Shred chicken with herbs',
+      'Squeeze lime, plate up',
+    ],
+    'nem-nuong': [
+      'Pound pork with garlic',
+      'Grill skewers over coals',
+      'Mix the dipping sauce',
+      'Roll with herbs, cucumber',
+    ],
+    'pho-bo': [
+      'Char onion and ginger',
+      'Simmer beef bones',
+      'Season the broth',
+      'Blanch phở, ladle broth',
+    ],
+    'bun-cha': [
+      'Marinate pork with garlic',
+      'Grill patties over charcoal',
+      'Mix sweet-sour fish sauce',
+      'Serve noodles and herbs',
+    ],
+    'banh-cuon': [
+      'Fry mushroom-pork filling',
+      'Steam the rice sheets',
+      'Roll in the filling',
+      'Top with fried shallots',
+    ],
+    'banh-mi-chao': [
+      'Heat the iron pan',
+      'Fry eggs in tomato sauce',
+      'Add butter and milk',
+      'Toast the bread',
+    ],
+    'canh-chua-ca': [
+      'Boil water with tamarind',
+      'Add the fish',
+      'Add tomato, season',
+      'Add herbs, turn off heat',
+    ],
   },
   dishes: {
     'pho-bo': {

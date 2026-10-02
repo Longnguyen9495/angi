@@ -21,3 +21,18 @@ describe('cookPlan', () => {
     );
   });
 });
+
+describe('cooking steps', () => {
+  it('every recipe has its own named steps, one per stage', () => {
+    for (const recipe of RECIPE_LIST) {
+      const labels = cookPlan(recipe).stages.map((s) => s.label);
+      expect(labels.length).toBeGreaterThanOrEqual(3);
+      expect(labels.every((l) => l.length > 0)).toBe(true);
+    }
+  });
+
+  it('a fish soup is not cooked like rice', () => {
+    const labels = cookPlan(RECIPES['canh-chua-ca']).stages.map((s) => s.label);
+    expect(labels).not.toEqual(cookPlan(RECIPES['com-tam']).stages.map((s) => s.label));
+  });
+});

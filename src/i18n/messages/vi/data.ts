@@ -250,13 +250,42 @@ const data = {
     breadRoll: 'Bánh mì & cuốn',
     pancake: 'Bánh',
   },
-  /** Cooking steps per dish family, in order (see src/data/cooking.ts). */
+  /** Cooking steps per recipe, in order (heat and timing in src/data/cooking.ts). */
   cooking: {
-    rice: ['Vo gạo, cho vào nồi', 'Nướng than', 'Hấp cơm', 'Bày đĩa'],
-    noodleSoup: ['Cho nguyên liệu vào nồi', 'Ninh nước dùng', 'Nêm nếm', 'Chần bún, chan nước'],
-    breadRoll: ['Sơ chế rau', 'Luộc chín', 'Cuốn tay'],
-    noodleDry: ['Cho nguyên liệu vào nồi', 'Xào lửa lớn', 'Trụng mì', 'Trộn nước sốt'],
-    pancake: ['Pha bột', 'Đổ chảo', 'Chiên giòn', 'Gấp bánh'],
+    'com-tam': ['Nấu cơm tấm', 'Nướng sườn than', 'Phi mỡ hành', 'Bày đĩa, rưới mỡ hành'],
+    'bun-rieu': [
+      'Lọc cua, nấu nước dùng',
+      'Phi cà chua',
+      'Thả riêu cua, đậu',
+      'Chần bún, chan nước',
+    ],
+    'bun-bo-hue': ['Hầm xương bò, sả', 'Phi sa tế ớt', 'Nêm mắm ruốc', 'Chần bún, chan nước'],
+    'goi-cuon': ['Luộc tôm, thịt', 'Nhặt rau thơm', 'Nhúng bánh tráng, cuốn'],
+    'banh-xeo': ['Pha bột nghệ', 'Xào tôm thịt', 'Đổ bột, thêm giá', 'Gấp bánh, kèm rau'],
+    'bo-luc-lac': ['Ướp bò với tỏi', 'Lắc bò lửa lớn', 'Xắt cà chua, dưa leo', 'Bày đĩa'],
+    'mi-quang': ['Xào nhân tôm thịt', 'Chế chút nước nhân', 'Trụng mì Quảng', 'Rắc đậu phộng, rau'],
+    'com-ga-hoi-an': ['Luộc gà', 'Nấu cơm nước gà', 'Xé gà, trộn rau răm', 'Vắt chanh, bày đĩa'],
+    'nem-nuong': [
+      'Quết thịt với tỏi',
+      'Nướng nem trên than',
+      'Pha nước chấm',
+      'Cuốn với rau, dưa leo',
+    ],
+    'pho-bo': ['Nướng hành, gừng', 'Ninh xương bò', 'Nêm nước dùng', 'Chần bánh phở, chan nước'],
+    'bun-cha': [
+      'Ướp thịt với tỏi',
+      'Nướng chả than hoa',
+      'Pha nước mắm chua ngọt',
+      'Bày bún, rau sống',
+    ],
+    'banh-cuon': ['Xào nhân nấm, thịt', 'Tráng bánh trên nồi hấp', 'Cuốn nhân', 'Rắc hành phi'],
+    'banh-mi-chao': ['Làm nóng chảo gang', 'Ốp trứng, xốt cà', 'Thêm bơ sữa', 'Nướng giòn bánh mì'],
+    'canh-chua-ca': [
+      'Nấu nước me chua',
+      'Thả cá',
+      'Thêm cà chua, nêm nếm',
+      'Rắc rau thơm, tắt bếp',
+    ],
   },
   /** Classic dishes (src/data/dishes.ts); dish names stay as they are. */
   dishes: {

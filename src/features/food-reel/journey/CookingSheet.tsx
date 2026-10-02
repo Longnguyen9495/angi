@@ -30,7 +30,7 @@ interface CookingSheetProps {
 
 /**
  * The cooking scene: ingredients drop into the pot, then the dish runs through
- * its own timeline of stages (each family of dishes cooks differently) while a
+ * its own timeline of stages (each recipe has its own steps and heat) while a
  * countdown runs down, and the dish comes out. The COOK action is committed the
  * moment cooking starts, so closing the sheet mid-cook never loses or
  * duplicates the result.

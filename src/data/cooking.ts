@@ -1,5 +1,5 @@
 import { t } from '../i18n';
-import type { DishGroup, RecipeDef } from './types';
+import type { DishGroup, RecipeDef, RecipeId } from './types';
 
 /** How hard the fire burns during a stage — drives flame, bubbles and pot shake. */
 export type Heat = 'low' | 'mid' | 'high';
@@ -21,38 +21,100 @@ export interface CookPlan {
   totalMs: number;
 }
 
-/** Every dish family is cooked in its own order of steps. */
-const STAGES: Record<DishGroup, CookStage[]> = {
-  rice: [
-    { label: t.data.cooking.rice[0]!, heat: 'low', weight: 2 },
-    { label: t.data.cooking.rice[1]!, heat: 'high', weight: 3 },
-    { label: t.data.cooking.rice[2]!, heat: 'mid', weight: 3 },
-    { label: t.data.cooking.rice[3]!, heat: 'low', weight: 1 },
+/**
+ * Every dish is cooked in its own order of steps: how hot the fire burns in each one and
+ * what share of the time it takes. The step names are in t.data.cooking[recipe].
+ */
+const STEPS: Record<RecipeId, [Heat, number][]> = {
+  'com-tam': [
+    ['mid', 3],
+    ['high', 3],
+    ['mid', 1],
+    ['low', 1],
   ],
-  'noodle-soup': [
-    { label: t.data.cooking.noodleSoup[0]!, heat: 'low', weight: 2 },
-    { label: t.data.cooking.noodleSoup[1]!, heat: 'high', weight: 5 },
-    { label: t.data.cooking.noodleSoup[2]!, heat: 'mid', weight: 2 },
-    { label: t.data.cooking.noodleSoup[3]!, heat: 'low', weight: 2 },
+  'bun-rieu': [
+    ['high', 4],
+    ['mid', 2],
+    ['mid', 2],
+    ['low', 2],
   ],
-  'bread-roll': [
-    { label: t.data.cooking.breadRoll[0]!, heat: 'low', weight: 2 },
-    { label: t.data.cooking.breadRoll[1]!, heat: 'high', weight: 3 },
-    { label: t.data.cooking.breadRoll[2]!, heat: 'low', weight: 2 },
+  'bun-bo-hue': [
+    ['high', 5],
+    ['mid', 2],
+    ['mid', 1],
+    ['low', 2],
   ],
-  'noodle-dry': [
-    { label: t.data.cooking.noodleDry[0]!, heat: 'low', weight: 2 },
-    { label: t.data.cooking.noodleDry[1]!, heat: 'high', weight: 3 },
-    { label: t.data.cooking.noodleDry[2]!, heat: 'mid', weight: 2 },
-    { label: t.data.cooking.noodleDry[3]!, heat: 'low', weight: 1 },
+  'goi-cuon': [
+    ['high', 3],
+    ['low', 1],
+    ['low', 3],
   ],
-  pancake: [
-    { label: t.data.cooking.pancake[0]!, heat: 'low', weight: 2 },
-    { label: t.data.cooking.pancake[1]!, heat: 'mid', weight: 2 },
-    { label: t.data.cooking.pancake[2]!, heat: 'high', weight: 3 },
-    { label: t.data.cooking.pancake[3]!, heat: 'low', weight: 1 },
+  'banh-xeo': [
+    ['low', 2],
+    ['mid', 2],
+    ['high', 3],
+    ['low', 1],
+  ],
+  'bo-luc-lac': [
+    ['low', 2],
+    ['high', 3],
+    ['low', 1],
+    ['low', 1],
+  ],
+  'mi-quang': [
+    ['high', 3],
+    ['mid', 2],
+    ['mid', 2],
+    ['low', 1],
+  ],
+  'com-ga-hoi-an': [
+    ['high', 3],
+    ['mid', 3],
+    ['low', 2],
+    ['low', 1],
+  ],
+  'nem-nuong': [
+    ['low', 2],
+    ['high', 3],
+    ['low', 1],
+    ['low', 2],
+  ],
+  'pho-bo': [
+    ['mid', 1],
+    ['high', 5],
+    ['mid', 1],
+    ['low', 2],
+  ],
+  'bun-cha': [
+    ['low', 2],
+    ['high', 3],
+    ['low', 1],
+    ['low', 1],
+  ],
+  'banh-cuon': [
+    ['mid', 2],
+    ['high', 3],
+    ['low', 2],
+    ['low', 1],
+  ],
+  'banh-mi-chao': [
+    ['high', 1],
+    ['mid', 3],
+    ['low', 1],
+    ['mid', 2],
+  ],
+  'canh-chua-ca': [
+    ['high', 3],
+    ['mid', 2],
+    ['mid', 2],
+    ['low', 1],
   ],
 };
+
+function stagesFor(id: RecipeId): CookStage[] {
+  const labels = t.data.cooking[id];
+  return STEPS[id].map(([heat, weight], i) => ({ label: labels[i] ?? '', heat, weight }));
+}
 
 /** Base cooking time per family; soups simmer longest, rolls are quickest. */
 const BASE_MS: Record<DishGroup, number> = {
@@ -69,7 +131,7 @@ const PER_INGREDIENT_MS = 700;
 export function cookPlan(recipe: RecipeDef): CookPlan {
   const pieces = recipe.ingredients.reduce((n, i) => n + i.qty, 0);
   const totalMs = BASE_MS[recipe.group] + pieces * PER_INGREDIENT_MS;
-  const stages = STAGES[recipe.group];
+  const stages = stagesFor(recipe.id);
   const weights = stages.reduce((n, s) => n + s.weight, 0);
   let startMs = 0;
   return {
