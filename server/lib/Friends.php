@@ -606,6 +606,7 @@ final class Friends
                 'plantedAt' => $num($p['plantedAt'] ?? null),
                 'readyAt' => $num($p['readyAt'] ?? null),
                 'wateredAt' => $num($p['wateredAt'] ?? null),
+                'harvests' => $num($p['harvests'] ?? null),
             ];
         }
         return array_slice($out, 0, 12);

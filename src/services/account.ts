@@ -119,6 +119,8 @@ export interface FriendPlot {
   plantedAt: number | null;
   readyAt: number | null;
   wateredAt: number | null;
+  /** Trees and mushrooms: harvests taken from this planting. */
+  harvests?: number | null;
   /** Already picked by a friend this crop / can be picked now. */
   stolen?: boolean;
   stealable?: boolean;

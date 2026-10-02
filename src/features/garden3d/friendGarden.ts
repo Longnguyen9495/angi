@@ -14,6 +14,8 @@ export function friendPlots(garden: FriendGarden): Plot[] {
     readyAt: p.readyAt,
     wateredAt: p.wateredAt,
     sourceDishId: null,
+    // A tree that already fruited stays grown (older servers send no count).
+    harvests: p.harvests ?? undefined,
   }));
 }
 

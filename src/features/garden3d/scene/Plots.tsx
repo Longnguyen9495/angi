@@ -1,23 +1,17 @@
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { memo, useMemo, useRef } from 'react';
 import type { Group, Mesh } from 'three';
+import { CROPS } from '../../../data/game';
 import type { Plot } from '../../../domain/progress';
-import { isWet, plotGrowth, plotStage, type PlotStage } from '../../../domain/selectors';
+import { isWet, plotGrowth, plotStage } from '../../../domain/selectors';
 import { t } from '../../../i18n';
 import { PLOT_SIZE, plotPosition } from '../layout';
 import { RIDGE_TOP, RIDGE_Z, bedGeometries } from './bedGeometry';
-import { CropModel } from './Crop';
+import { CropBillboards, CropSprite } from './Crop';
 import { Blobs } from './Instances';
 import { kitMaterial } from './kit';
 import { C, labelTexture, mat } from './materials';
 import { isTap } from './tap';
-
-const STAGE_SCALE: Record<Exclude<PlotStage, 'empty'>, number> = {
-  sprout: 0.9,
-  young: 0.8,
-  flowering: 0.95,
-  ready: 1,
-};
 
 /** Spots for 1 or 3 plants, each on top of a ridge row. */
 const SPOTS: Record<number, [number, number][]> = {
@@ -53,29 +47,26 @@ const PlotBed = memo(function PlotBed({
   const [x, z] = plotPosition(index);
   const stage = plotStage(plot, now);
   const wet = isWet(plot, now);
-  const sway = useRef<Group>(null);
   const pop = useRef<Group>(null);
   const star = useRef<Mesh>(null);
   const born = useRef({ stage, at: -1 });
   const phase = index * 1.37;
+  const tree = !!plot.crop && CROPS[plot.crop].kind === 'tree';
+  // A tree stands alone in its bed; other plants follow the quality tier.
+  const starY = tree ? 2.2 : 1.35;
 
   useFrame(({ clock }) => {
     if (reduced) return;
     const t = clock.elapsedTime;
-    if (sway.current) {
-      sway.current.rotation.z = Math.sin(t * 1.6 + phase) * 0.06;
-      sway.current.rotation.x = Math.cos(t * 1.3 + phase) * 0.04;
-    }
     // Each new stage pops in once: scale 0.6 → overshoot → 1.
     if (born.current.stage !== stage) born.current = { stage, at: t };
     if (born.current.at < 0) born.current.at = t - 1;
     const k = Math.min(1, (t - born.current.at) / 0.55);
     const s = k >= 1 ? 1 : 0.6 + 0.4 * (1 - Math.pow(1 - k, 3)) + Math.sin(k * Math.PI) * 0.12;
-    if (pop.current)
-      pop.current.scale.setScalar(s * STAGE_SCALE[stage === 'empty' ? 'sprout' : stage]);
+    if (pop.current) pop.current.scale.setScalar(s);
     if (star.current) {
       star.current.rotation.y = t * 1.8;
-      star.current.position.y = 1.35 + Math.sin(t * 2.4 + phase) * 0.08;
+      star.current.position.y = starY + Math.sin(t * 2.4 + phase) * 0.08;
     }
   });
 
@@ -84,7 +75,7 @@ const PlotBed = memo(function PlotBed({
     if (isTap(e)) onSelect(plot.id);
   };
   const progress = plotGrowth(plot, now);
-  const spots = SPOTS[plants] ?? SPOTS[1]!;
+  const spots = SPOTS[tree ? 1 : plants] ?? SPOTS[1]!;
   const geo = bedGeometries();
   // Freshly watered soil is a shade darker — matte, never shiny.
   const soilTint = kitMaterial(wet ? { tint: '#8a8078' } : {});
@@ -106,19 +97,13 @@ const PlotBed = memo(function PlotBed({
       <mesh geometry={geo.fringe} material={kitMaterial({ sway: 0.08 })} />
 
       {plot.crop && stage !== 'empty' && (
-        <group ref={sway} position={[0, RIDGE_TOP - 0.03, 0]}>
-          <group ref={pop}>
-            {spots.map(([sx, sz], i) => (
-              <group
-                key={i}
-                position={[sx, 0, sz]}
-                rotation={[0, i * 2.1 + index, 0]}
-                scale={i === 0 && plants > 1 ? 1.05 : 0.92}
-              >
-                <CropModel crop={plot.crop!} stage={stage} />
-              </group>
-            ))}
-          </group>
+        // The image's soil mound sits a little into the ridge so it reads as hilled earth.
+        <group ref={pop} position={[0, RIDGE_TOP - 0.04, 0]}>
+          {spots.map(([sx, sz], i) => (
+            <group key={i} position={[sx, 0, sz]}>
+              <CropSprite crop={plot.crop!} stage={stage} phase={phase + i * 2.3} />
+            </group>
+          ))}
         </group>
       )}
 
@@ -138,7 +123,7 @@ const PlotBed = memo(function PlotBed({
       )}
 
       {stage === 'ready' && (
-        <mesh ref={star} position={[0, 1.35, 0]} material={mat(C.gold, { emissive: '#8a6a10' })}>
+        <mesh ref={star} position={[0, starY, 0]} material={mat(C.gold, { emissive: '#8a6a10' })}>
           <octahedronGeometry args={[0.13, 0]} />
         </mesh>
       )}
@@ -245,7 +230,7 @@ export function Plots({
     [count],
   );
   return (
-    <group>
+    <CropBillboards reduced={reduced}>
       <Blobs items={blobs} />
       {plots.map((p, i) => (
         <PlotBed
@@ -263,6 +248,6 @@ export function Plots({
       {nextPlotLevel !== null && plots.length < 9 && (
         <LockedPlot index={plots.length} level={nextPlotLevel} />
       )}
-    </group>
+    </CropBillboards>
   );
 }
