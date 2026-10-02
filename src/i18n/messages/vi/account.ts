@@ -191,6 +191,14 @@ const account = {
     },
     motionApplied: (reduced: boolean) =>
       `Đang áp dụng: ${reduced ? 'giảm chuyển động' : 'chuyển động đầy đủ'}.`,
+    qualityHeading: 'Chất lượng hiệu ứng',
+    quality: {
+      auto: { label: 'Tự động', hint: 'Theo sức của máy (điện thoại thường dùng mức thấp)' },
+      low: { label: 'Thấp', hint: 'Ít hạt hiệu ứng, ít con vật di chuyển — nhẹ pin' },
+      medium: { label: 'Vừa', hint: 'Cân bằng giữa đẹp và nhẹ' },
+      high: { label: 'Cao', hint: 'Đầy đủ hạt, ong và vật nuôi chuyển động' },
+    },
+    qualityApplied: (tier: string) => `Đang dùng mức: ${tier.toLowerCase()}.`,
     outcomes: { ate: 'Đã ăn', swapped: 'Đổi món', skipped: 'Bỏ bữa' },
     history: 'Lịch sử bữa ăn',
     historyEmpty: 'Chưa có check-in nào.',

@@ -20,6 +20,7 @@ import {
   type FriendEvent,
   type GuestProgress,
   type LedgerEntry,
+  type EffectsQuality,
   type MotionPref,
   type Resource,
 } from './progress';
@@ -107,6 +108,7 @@ export type Action =
   | { type: 'ACK_UNLOCK' }
   | { type: 'ACK_CROP_UNLOCK' }
   | { type: 'SET_MOTION'; motion: MotionPref }
+  | { type: 'SET_QUALITY'; quality: EffectsQuality }
   | { type: 'SET_SIMULATE_FAILURE'; value: boolean }
   | { type: 'RESET'; now: number };
 
@@ -843,6 +845,9 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
 
     case 'ACK_CROP_UNLOCK':
       return state.recentCropUnlock ? { ...state, recentCropUnlock: null } : state;
+
+    case 'SET_QUALITY':
+      return { ...state, settings: { ...state.settings, quality: action.quality } };
 
     case 'SET_MOTION':
       return { ...state, settings: { ...state.settings, motion: action.motion } };

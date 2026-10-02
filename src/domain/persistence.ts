@@ -187,7 +187,15 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
     filters: isObject(raw.filters) ? { ...DEFAULT_FILTERS, ...p.filters } : DEFAULT_FILTERS,
     hiddenDishIds: isStringArray(raw.hiddenDishIds) ? raw.hiddenDishIds : [],
     history: Array.isArray(raw.history) ? p.history : [],
-    settings: isObject(raw.settings) ? { ...base.settings, ...p.settings } : base.settings,
+    settings: isObject(raw.settings)
+      ? {
+          ...base.settings,
+          ...p.settings,
+          quality: (['auto', 'low', 'medium', 'high'] as const).find(
+            (q) => q === p.settings.quality,
+          ),
+        }
+      : base.settings,
     quests: parseQuests(raw.quests, now),
     streak: isObject(raw.streak) ? p.streak : base.streak,
     cooked: isObject(raw.cooked) ? p.cooked : {},

@@ -8,6 +8,11 @@ export interface GameContextValue {
   dispatch: Dispatch<Action>;
   /** Effective reduced-motion flag: OS preference or in-app setting. */
   reduced: boolean;
+  /**
+   * Effective effects tier ('auto' resolved for this device). Animation code reads it to size
+   * particle pools, the number of moving animals and bees, and whether flights run at all.
+   */
+  quality: 'low' | 'medium' | 'high';
   /** Ticks every minute so crop stages update without reloads. */
   now: number;
   /** Message shown once when stored progress could not be restored. */

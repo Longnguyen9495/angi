@@ -193,6 +193,14 @@ const account: Messages['account'] = {
     },
     motionApplied: (reduced: boolean) =>
       `Now using: ${reduced ? 'reduced motion' : 'full motion'}.`,
+    qualityHeading: 'Effects quality',
+    quality: {
+      auto: { label: 'Automatic', hint: 'Matches your device (phones usually get low)' },
+      low: { label: 'Low', hint: 'Fewer particles and moving animals — easy on the battery' },
+      medium: { label: 'Medium', hint: 'A balance of looks and lightness' },
+      high: { label: 'High', hint: 'All particles, bees and animals moving' },
+    },
+    qualityApplied: (tier: string) => `Now using: ${tier.toLowerCase()}.`,
     outcomes: { ate: 'Ate it', swapped: 'Swapped', skipped: 'Skipped' },
     history: 'Meal history',
     historyEmpty: 'No check-ins yet.',

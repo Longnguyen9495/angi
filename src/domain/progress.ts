@@ -5,6 +5,8 @@ import { DEFAULT_FILTERS, type Filters } from './recommend';
 import { HOUR_MS, dateKey } from './time';
 
 export type MotionPref = 'system' | 'reduce' | 'full';
+/** Effects detail (particles, how many animals and bees move, flights); 'auto' follows the device. */
+export type EffectsQuality = 'auto' | 'low' | 'medium' | 'high';
 export type CheckInOutcome = 'ate' | 'swapped' | 'skipped';
 export type AgainAnswer = 'yes' | 'maybe' | 'no';
 
@@ -114,7 +116,7 @@ export interface GuestProgress {
    */
   photos: string[];
   journeySaved: boolean;
-  settings: { motion: MotionPref; simulateFailure: boolean };
+  settings: { motion: MotionPref; simulateFailure: boolean; quality?: EffectsQuality };
   ledger: LedgerEntry[];
 }
 

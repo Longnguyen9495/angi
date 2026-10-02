@@ -1,7 +1,7 @@
 import { DownloadSimple, Eye, Trash } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { getDish } from '../../data/dishes';
-import type { MotionPref } from '../../domain/progress';
+import type { EffectsQuality, MotionPref } from '../../domain/progress';
 import { exportProgress } from '../../domain/persistence';
 import { level, stampCount } from '../../domain/selectors';
 import { t } from '../../i18n';
@@ -21,6 +21,10 @@ const MOTION_OPTIONS: { id: MotionPref; label: string; hint: string }[] = [
   { id: 'full', label: p.motion.full.label, hint: p.motion.full.hint },
 ];
 
+const QUALITY_OPTIONS: { id: EffectsQuality; label: string; hint: string }[] = (
+  ['auto', 'low', 'medium', 'high'] as const
+).map((id) => ({ id, ...p.quality[id] }));
+
 const OUTCOME_TEXT = p.outcomes;
 
 export function ProfileSheet({
@@ -32,7 +36,7 @@ export function ProfileSheet({
   onClose: () => void;
   variant?: 'light' | 'dark';
 }) {
-  const { state, dispatch, reduced } = useGame();
+  const { state, dispatch, reduced, quality } = useGame();
   const { toast } = useFeedback();
   const [confirmReset, setConfirmReset] = useState(false);
   const lv = level(state.xp);
@@ -107,6 +111,26 @@ export function ProfileSheet({
             </label>
           ))}
           <p className="empty-note">{p.motionApplied(reduced)}</p>
+        </fieldset>
+
+        <fieldset className="profile__block option-group">
+          <legend className="profile__heading">{p.qualityHeading}</legend>
+          {QUALITY_OPTIONS.map((q) => (
+            <label key={q.id} className="option-card option-card--compact">
+              <input
+                type="radio"
+                name="quality"
+                value={q.id}
+                checked={(state.settings.quality ?? 'auto') === q.id}
+                onChange={() => dispatch({ type: 'SET_QUALITY', quality: q.id })}
+              />
+              <span className="option-card__face">
+                <span className="option-card__label">{q.label}</span>
+                <span className="option-card__hint">{q.hint}</span>
+              </span>
+            </label>
+          ))}
+          <p className="empty-note">{p.qualityApplied(p.quality[quality].label)}</p>
         </fieldset>
 
         <section className="profile__block" aria-labelledby="pf-history">
