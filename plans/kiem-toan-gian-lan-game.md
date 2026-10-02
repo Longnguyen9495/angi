@@ -2,6 +2,8 @@
 
 Ngày rà soát: 02/10/2026. Phạm vi: logic game, lưu/đồng bộ tiến độ, API tài khoản, bạn bè, referral, xác thực và cấu hình triển khai liên quan. Lượt đầu chỉ đọc mã nguồn và lập kế hoạch. Lượt kiểm thử bổ sung cùng ngày đã chạy regression/đối kháng trên dữ liệu cách ly, không sửa logic game/backend và không gửi yêu cầu tới server thật; kết quả và giới hạn xem mục 7. Các kết luận không phải chứng nhận an toàn toàn hệ thống. Phần catalogue, AI, upload và review được kiểm tra ở ranh giới truy cập liên quan; chưa phải kiểm toán chuyên sâu toàn bộ các dịch vụ đó.
 
+Bổ sung cùng ngày: [kiểm toán bảo mật toàn project](kiem-toan-bao-mat-project.md) mở rộng source–sink XSS, injection, media/upload, AI/review outbound, auth/privacy và deployment; có phân loại proven/suspected/no-evidence, actual isolated tests và kế hoạch triển khai. Báo cáo bổ sung không vá implementation và không thay thế các findings gian lận dưới đây.
+
 ## 1. Kết luận chính
 
 Game hiện có kiến trúc **trình duyệt làm chủ trạng thái**. Người chơi tự tính phần thưởng, số dư, thời gian và lịch sử; máy chủ lưu bản chụp này và dùng nó để xét tương tác giữa tài khoản. Vì vậy không thể sửa hết gian lận chỉ bằng khóa giao diện, làm rối mã hoặc thêm checksum trong trình duyệt.
