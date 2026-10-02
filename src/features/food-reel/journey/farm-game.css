@@ -481,6 +481,38 @@
   pointer-events: auto;
 }
 
+/* Phones and tablets: seeds and tools sit on one solid sheet joined to the dock, so the
+   island's flat cut hides behind its top edge and no sky shows between tray and dock. */
+@media (max-width: 899px) {
+  .fg-tray {
+    bottom: calc(var(--fg-dock) + var(--fg-bottom));
+    right: 0;
+    left: 0;
+    align-items: center;
+    padding: 8px var(--fg-side) 6px;
+    border: 1.5px solid var(--fg-edge);
+    border-bottom: 0;
+    border-radius: 22px 22px 0 0;
+    background: var(--fg-glass-strong);
+    box-shadow: 0 -8px 22px rgb(0 0 0 / 22%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    pointer-events: auto;
+  }
+
+  .fg-tray .fg-seeds,
+  .fg-tray .fg-tool {
+    background: rgb(255 255 255 / 6%);
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .fg-dock {
+    border-top-color: rgb(255 244 214 / 8%);
+  }
+}
+
 /* Seed tray: the chosen seed (large, named), a few quick picks, "all seeds" opens a grid. */
 .fg-seedtray {
   position: relative;

@@ -777,6 +777,7 @@ export class AnimationManager {
     this.clouds.drawSky(ctx, G.environment);
     // The hour and weather shade the backdrop only (sky picture and its clouds), not the island.
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (this.mode === 'game') this.drawMist(ctx, cw, ch, oy + this.par.y * DEPTH.mid + H * s);
     this.skyMood.draw(ctx, cw, ch, this.t);
 
     layer(DEPTH.mid);
@@ -807,6 +808,35 @@ export class AnimationManager {
     if ('filter' in ctx) ctx.filter = 'none';
     this.ambient.drawLeaves(ctx);
     this.ambient.drawCreatures(ctx);
+  }
+
+  /**
+   * Game: a sea of cloud under the floating island (screen space, behind it), so whatever sky
+   * shows below the cliffs or beside them reads as mist rather than an empty band. `bottom` is
+   * the island's lower edge on screen. Drawn before the sky shade, so the hour and weather tint it.
+   */
+  private drawMist(ctx: CanvasRenderingContext2D, cw: number, ch: number, bottom: number) {
+    const top = bottom - Math.min(140, ch * 0.18);
+    if (top >= ch) return;
+    const g = ctx.createLinearGradient(0, top, 0, Math.min(ch, bottom + 40));
+    g.addColorStop(0, 'rgba(236, 246, 252, 0)');
+    g.addColorStop(0.55, 'rgba(236, 246, 252, 0.7)');
+    g.addColorStop(1, 'rgba(240, 248, 253, 0.95)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, top, cw, ch - top);
+    // Soft puffs along the top of the mist, drifting slowly sideways.
+    const r = Math.max(60, cw * 0.16);
+    const n = Math.ceil(cw / (r * 1.1)) + 2;
+    const drift = (this.t * 4) % (r * 1.1);
+    for (let i = -1; i < n; i++) {
+      const x = i * r * 1.1 + drift;
+      const y = top + r * 0.55 + Math.sin(i * 1.7 + this.t * 0.2) * r * 0.08;
+      const p = ctx.createRadialGradient(x, y, 0, x, y, r);
+      p.addColorStop(0, 'rgba(248, 252, 255, 0.85)');
+      p.addColorStop(1, 'rgba(248, 252, 255, 0)');
+      ctx.fillStyle = p;
+      ctx.fillRect(x - r, y - r, r * 2, r * 2);
+    }
   }
 
   /** Showcase: a dashed ring round the inspected sprite, softly pulsing. */

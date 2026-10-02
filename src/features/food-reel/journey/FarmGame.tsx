@@ -173,9 +173,14 @@ export function FarmGame({
       const mid = stage.left + stage.width / 2;
       let top = stage.bottom;
       for (const el of [trayRef.current, dockRef.current]) {
-        // The tray box spans the width; what covers the centre is its seed strip.
+        // On phones the tray is a solid sheet and covers it all; on wide screens it is a clear
+        // box spanning the width and what covers the centre is its seed strip.
+        const sheet =
+          !!el &&
+          el === trayRef.current &&
+          getComputedStyle(el).backgroundColor.replace(/\s/g, '') !== 'rgba(0,0,0,0)';
         const box = (
-          el === trayRef.current ? el?.querySelector('.fg-seeds') : el
+          el === trayRef.current && !sheet ? el?.querySelector('.fg-seeds') : el
         )?.getBoundingClientRect();
         if (box && box.height > 0 && box.left <= mid && box.right >= mid)
           top = Math.min(top, box.top);
