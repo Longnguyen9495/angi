@@ -221,8 +221,9 @@ function config_problems(): array
         $out[] = 'APP_KEY must be a random string of at least 32 characters.';
     }
     $pass = (string) env('ADMIN_PASSWORD', '');
-    if ($pass !== '' && (strlen($pass) < 12 || $placeholder($pass))) {
-        $out[] = 'ADMIN_PASSWORD must be at least 12 characters and not a placeholder (or empty to disable admin).';
+    // A short password is only a warning (check-config.php): the login limiter slows guessing.
+    if ($pass !== '' && (strlen($pass) < 8 || $placeholder($pass))) {
+        $out[] = 'ADMIN_PASSWORD must be at least 8 characters and not a placeholder (or empty to disable admin).';
     }
     $mail = (string) (env('MAIL_DRIVER', '') ?: env('MAIL_MAILER', '') ?: 'log');
     if (!in_array($mail, ['smtp', 'mail'], true)) {

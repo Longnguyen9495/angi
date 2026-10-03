@@ -27,6 +27,9 @@ if (is_file($env) && DIRECTORY_SEPARATOR === '/' && (fileperms($env) & 0o007)) {
 if (is_production() && trim((string) env('TRUSTED_PROXIES', '')) === '' && empty($_SERVER['HTTPS'])) {
     $notes[] = 'TRUSTED_PROXIES is empty: fine when PHP sees HTTPS directly; set it to the proxy IP when TLS ends at a proxy.';
 }
+if (is_production() && strlen((string) env('ADMIN_PASSWORD', '')) > 0 && strlen((string) env('ADMIN_PASSWORD', '')) < 12) {
+    $notes[] = 'ADMIN_PASSWORD is shorter than 12 characters: a longer one (or ADMIN_TOTP_SECRET) is safer.';
+}
 foreach ($notes as $n) {
     echo "note: $n\n";
 }

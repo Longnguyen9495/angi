@@ -52,7 +52,7 @@ Server từ chối thì app tải lại bản đã lưu và báo cho người ch
 | A08 | Có nút "Đổi mã" vườn để thu hồi mã đã lộ; nhà bạn chỉ trả trường đã kiểm (cây, đồ trang trí, vật nuôi, số trong giới hạn) |
 | A09, F17 | Xoá tài khoản trong một transaction. Quà và tưới đã gửi vẫn thuộc người nhận, người gửi được ẩn danh ("Một người bạn cũ") |
 | A10 | Bản export thêm: sự kiện (gửi/nhận), mã đăng nhập (chỉ thời gian), số lời mời đã tính, thống kê đã kiểm chứng |
-| A11 | `config_problems()`: production thiếu https `APP_URL`, `APP_KEY` dưới 32 ký tự hoặc placeholder, `ADMIN_PASSWORD` yếu, hoặc `MAIL_DRIVER=log` thì API trả 503. Có lệnh `php server/bin/check-config.php` |
+| A11 | `config_problems()`: production thiếu https `APP_URL`, `APP_KEY` dưới 32 ký tự hoặc placeholder, `ADMIN_PASSWORD` placeholder hoặc dưới 8 ký tự (dưới 12 chỉ cảnh báo), hoặc `MAIL_DRIVER=log` thì API trả 503. Có lệnh `php server/bin/check-config.php` |
 | A12 | Body JSON đọc có giới hạn trước khi giải mã (64 KB mặc định, 576 KB cho bản lưu, 900 KB cho admin); danh sách người dùng admin lọc, tìm và phân trang trong SQL |
 | A13, F09 | Ghi bản lưu kiểm tra số dòng đổi, thua thì trả 409; app không còn tự đoán bản mới hơn bằng XP hay độ dài ledger (dùng dòng mới nhất, khác số dư thì hỏi người chơi) |
 | A14 | `.gitignore` chặn `.env.*`, khoá, file SQLite, `*.bak` |

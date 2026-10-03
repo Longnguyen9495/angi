@@ -94,7 +94,7 @@ Tiếng Việt là ngôn ngữ gốc và là bản dự phòng ở mọi lớp; 
   giữ snapshot đã commit, cây git không bị bẩn và lần `git pull` sau không vướng. Snapshot chỉ là dự phòng khi API
   không trả lời; trang luôn tải danh mục thật từ `/api/dishes`.
 - Bảo mật khi chạy production (xem `plans/sua-bao-mat-va-gian-lan.md`): `APP_ENV` khác `local` là production —
-  API trả 503 nếu `APP_URL` không phải https, `APP_KEY` ngắn/placeholder, `ADMIN_PASSWORD` yếu hoặc `MAIL_DRIVER=log`.
+  API trả 503 nếu `APP_URL` không phải https, `APP_KEY` ngắn/placeholder, `ADMIN_PASSWORD` placeholder hoặc dưới 8 ký tự, hoặc `MAIL_DRIVER=log`.
   Admin có giới hạn đăng nhập sai, phiên hết hạn (2 giờ không dùng / 12 giờ tối đa), MFA tuỳ chọn qua `ADMIN_TOTP_SECRET`.
   Mỗi lần lưu nông trại được `server/lib/ProgressGuard.php` kiểm theo luật game trong `server/data/game-rules.json`;
   đổi số liệu game trong `src/data/game.ts` thì chạy `npm run rules:export` và commit file JSON (test sẽ báo nếu quên).
