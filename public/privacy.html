@@ -33,7 +33,7 @@
   <main>
     <nav class="top"><a class="back" href="/">← Back to Ăn gì?</a><a class="lang" href="/quyen-rieng-tu.html" hreflang="vi" lang="vi">Tiếng Việt</a></nav>
     <h1>Privacy</h1>
-    <p class="updated">Version 2026-09-30</p>
+    <p class="updated">Version 2026-10-03</p>
 
     <div class="summary">
       <p><strong>No account needed.</strong> Every feature — spinning for a dish, growing crops, cooking, check-ins — works without signing in. Your progress then lives only in your browser.</p>
@@ -65,11 +65,11 @@
     <ul>
       <li><strong>View and download:</strong> Profile → "Download a copy" (data on this device) and "Download my server data" (account data).</li>
       <li><strong>Change your email preferences:</strong> Profile → Account → "Get offers by email".</li>
-      <li><strong>Delete:</strong> Profile → "Delete account" permanently deletes your email, progress and sessions from the server. "Reset progress" deletes the data and photos on this device. Clearing this site's data in your browser also deletes the copy on your device.</li>
+      <li><strong>Delete:</strong> Profile → "Delete account" permanently deletes your email, progress, garden, friends list and sessions from the server. Seeds or thanks you already sent to friends stay theirs, no longer linked to you (shown as “a former friend”). So that an account cannot be deleted and re-created to collect invite rewards again, we keep a keyed hash of the email (it cannot be turned back into the email) together with the garden that invited it. "Reset progress" deletes the data and photos on this device. Clearing this site's data in your browser also deletes the copy on your device.</li>
     </ul>
 
     <h2>5. How long we keep data, and how we protect it</h2>
-    <p>Account data is kept until you delete your account. Sign-in codes expire after 10 minutes; sign-in sessions expire after 180 days. Codes and sessions are stored only as SHA-256 hashes; connections use HTTPS.</p>
+    <p>Account data is kept until you delete your account. Sign-in codes expire after 10 minutes; sign-in sessions expire after 180 days. Sign-in codes are stored only as keyed hashes, links and sessions as SHA-256 hashes; connections use HTTPS. To keep the game fair, the server checks every farm save and records the one-time rewards already received and the harvests and cooking it verified; these records are deleted with the account.</p>
 
     <h2>6. Contact</h2>
     <p>You can view, download or delete your personal data at any time under <strong>Profile → Account</strong>: “Download my server data” gives you a copy of everything we store, and “Delete account” permanently removes the account and all its server data; unticking the newsletter box withdraws consent to emails. We will update this page when the way we handle data changes, and note the version date.</p>

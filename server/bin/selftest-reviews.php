@@ -1,5 +1,11 @@
 <?php
 declare(strict_types=1);
+
+// Command-line only: a web request that reaches this file gets a 404 and nothing runs.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
 require_once __DIR__.'/../lib/ReviewService.php';
 $failed=0;$checks=0;
 $check=function($name,$ok)use(&$failed,&$checks){$checks++;$failed+=!$ok;echo ($ok?'PASS ':'FAIL ').$name."\n";};

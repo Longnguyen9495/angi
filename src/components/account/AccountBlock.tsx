@@ -88,9 +88,13 @@ export function AccountBlock() {
         <button
           type="button"
           className="btn btn--ghost btn--sm"
-          onClick={() => {
-            void account.logout();
-            toast({ message: m.loggedOut, tone: 'info' });
+          onClick={async () => {
+            try {
+              await account.logout();
+              toast({ message: m.loggedOut, tone: 'info' });
+            } catch {
+              toast({ message: m.logoutFailed, tone: 'error' });
+            }
           }}
         >
           <SignOut aria-hidden="true" size={18} />

@@ -67,6 +67,10 @@ export interface AccountContextValue {
     remote: import('../domain/sync').ProgressSummary;
   } | null;
   resolveConflict: (keep: 'local' | 'remote') => Promise<void>;
+  /** An emailed link opened in a browser that did not ask for it: which account it is for. */
+  linkConfirm: { email: string } | null;
+  /** The guest's answer to linkConfirm (yes signs in). */
+  answerLink: (yes: boolean) => Promise<void>;
   /** Called by the sign-in sheet once the code is verified. */
   signedIn: (user: import('../services/account').AccountUser) => Promise<void>;
   logout: () => Promise<void>;

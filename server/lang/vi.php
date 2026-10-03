@@ -31,6 +31,9 @@ return [
     'account.notSignedIn' => 'Bạn chưa đăng nhập.',
     'account.badRequest' => 'Yêu cầu không hợp lệ.',
     'account.badEmail' => 'Email chưa đúng định dạng.',
+    'account.progressRejected' => 'Bản lưu này không khớp với cách nông trại vận hành — giữ lại nông trại đã lưu gần nhất.',
+
+    'friends.formerFriend' => 'Một người bạn cũ',
 
     // ——— Friends' gardens ———
     'friends.notFound' => 'Không tìm thấy khu vườn có mã này.',
@@ -52,6 +55,7 @@ return [
     'friends.badSeed' => 'Hạt giống này không tặng được.',
     'friends.giftedToday' => 'Hôm nay bạn đã tặng quà cho bạn này rồi.',
     'friends.giftLimit' => 'Hôm nay bạn đã tặng {max} món quà rồi.',
+    'friends.noSeed' => 'Bạn không còn hạt giống này để tặng.',
 
     // ——— Login-code email ———
     'email.subject' => '{code} là mã đăng nhập Ăn gì? của bạn',

@@ -42,7 +42,7 @@ final class YoutubePilot
     {
         for ($attempt = 0; $attempt < 3; $attempt++) {
             $ch = curl_init($url);
-            $options = [CURLOPT_RETURNTRANSFER => true, CURLOPT_CONNECTTIMEOUT => 10, CURLOPT_TIMEOUT => 60, CURLOPT_FOLLOWLOCATION => false];
+            $options = [CURLOPT_RETURNTRANSFER => true, CURLOPT_CONNECTTIMEOUT => 10, CURLOPT_TIMEOUT => 60, CURLOPT_FOLLOWLOCATION => false, CURLOPT_PROTOCOLS => CURLPROTO_HTTPS, CURLOPT_NOPROGRESS => false, CURLOPT_PROGRESSFUNCTION => static fn ($c, $dt, $dn) => $dn > 4 * 1024 * 1024 ? 1 : 0];
             if ($payload !== null) {
                 $options += [CURLOPT_POST => true, CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'Authorization: Bearer ' . $this->aiKey], CURLOPT_POSTFIELDS => json_encode($payload, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)];
             }

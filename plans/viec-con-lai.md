@@ -2,26 +2,17 @@
 
 Ghi ngày 02/10/2026, sau đợt sửa nông trại trên điện thoại (commit `03b0e6d` → `51168e1`) và hai báo cáo kiểm toán. Đây là danh sách để quay lại làm tiếp; chi tiết, bằng chứng và tiêu chí nghiệm thu nằm trong các file được liên kết.
 
-## 1. Bảo mật — chưa vá mục nào
+## 1. Bảo mật — đã sửa trong code (03/10/2026), chưa deploy
 
-Nguồn: [kiem-toan-bao-mat-project.md](kiem-toan-bao-mat-project.md) (mục 3 và kế hoạch mục 7), phụ lục [backend](audit-backend-evidence.md), [frontend](audit-frontend-evidence.md), [auth/deploy](audit-auth-deploy-evidence.md).
+Chi tiết từng mã, rủi ro còn lại và kiểm thử: [sua-bao-mat-va-gian-lan.md](sua-bao-mat-va-gian-lan.md). Còn lại:
 
-| Ưu tiên | Việc | Mã |
-|---|---|---|
-| P0 | Kiểm tra cấu hình production thật trên VPS: chặn web vào `server/bin`, script dev và dotfile; bắt buộc HTTPS và cookie Secure; cấu hình sai/placeholder thì từ chối chạy; rà `.gitignore` cho secret | B02, B07, A06, A11, A14 |
-| P1 | Chặn đường dẫn ảnh có `../` trước khi đọc file gửi AI (mức Cao); giới hạn kích thước upload và response; ép HTTPS/host khi gọi provider; không trả lỗi thô về admin; Host lạ không đổi canonical/OG | B01, B03–B06, FE-01, FE-02 |
-| P2 | Đăng nhập: OTP và mã dùng một lần an toàn khi có request đồng thời; link đăng nhập không bị tiêu chỉ vì mở (GET) và không ghi token vào log; admin có giới hạn số lần thử, MFA, thời hạn phiên; login/logout có CSRF | A01–A05 |
-| P3 | Xóa tài khoản trọn vẹn hoặc không xóa gì, giữ quà và sự kiện của người khác; lưu tiến độ khi xung đột không báo thành công giả; phân trang danh sách admin; GET không ghi dữ liệu | A08–A10, A12, A13, A15 |
+- **P0 trên VPS (cần người có quyền production):** chạy `php server/bin/check-config.php` trên server (API trả 503 nếu `.env` chưa an toàn, ví dụ `MAIL_DRIVER=log`), đối chiếu nginx với mẫu mới `deploy/nginx/angi.conf` (HTTPS, HSTS, chặn Host lạ, body theo route), rồi kiểm từ ngoài `/.env`, `/server/bin/…` trả 404 và cookie có `Secure`.
+- **Deploy:** sao lưu SQLite → pull → `migrate.php` → build (mục 5 của file trên).
+- **P5 (chưa làm):** CSP cho site chính (thử với PlayCanvas, YouTube), quét secret và advisory định kỳ.
 
-**Đề xuất bắt đầu:** B01 (sửa nhỏ, chỉ trong `server/lib/Catalogue.php` và `server/lib/AiEnricher.php`), sau đó A01 và A03.
+## 2. Chống gian lận game — đã chọn và làm
 
-## 2. Chống gian lận game — cần quyết định trước khi làm
-
-Nguồn: [kiem-toan-gian-lan-game.md](kiem-toan-gian-lan-game.md) (F01–F17), là P4 trong báo cáo bảo mật.
-
-- Client hiện tự sửa được tiền, XP, kho rồi lưu lên server; tặng hạt khi không có hạt; giả mốc mời bạn; chỉnh giờ máy cho cây lớn nhanh; chọn trước kết quả câu cá.
-- Lỗi đã biết được giữ bằng 4 test `it.fails` trong [security-audit.test.ts](../src/domain/security-audit.test.ts) và 5 KNOWN-FAIL trong [selftest-security.php](../server/bin/selftest-security.php). Khi sửa xong một lỗi, test tương ứng sẽ báo để bỏ đánh dấu.
-- **Cần chọn:** server nắm kho và phần thưởng (ước tính 8–15 ngày trở lên, phải chuyển đổi bản lưu cũ), hay chấp nhận game chỉ để vui và gian lận chỉ hại chính người chơi đó.
+Server kiểm từng bản lưu theo luật game (`server/lib/ProgressGuard.php`, luật xuất từ `src/data/game.ts` bằng `npm run rules:export`); các thao tác giữa khu vườn (tặng, hái, mời bạn) do server quyết. Game vẫn chơi được khi mất mạng. Không chặn được: bot chơi đúng luật, nhiều tài khoản người thật, check-in tự khai.
 
 ## 3. Nông trại
 

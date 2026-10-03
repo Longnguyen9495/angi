@@ -26,3 +26,15 @@ docs/PAGESEED-SERVER-ACCESS.md
 # Farm item pipeline intermediates (scripts/farm-items/cut.mjs): large, regenerated locally
 storage/farm-items-cut/
 storage/item-pdf-v2-check/
+
+# Secrets and local copies of them, whatever they are called
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.sqlite
+*.sqlite-*
+*.bak
+id_rsa*
+id_ed25519*

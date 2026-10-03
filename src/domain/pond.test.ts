@@ -10,7 +10,8 @@ import { HOUR_MS } from './time';
 const NOON = new Date(2026, 8, 29, 12, 0, 0).getTime();
 
 const fresh = (): GuestProgress => createInitialProgress(NOON);
-const cast = (s: GuestProgress, castAt: number, now = castAt + 3000) =>
+/** Reported just after the fish bites, as the garden does. */
+const cast = (s: GuestProgress, castAt: number, now = castAt + biteDelay(castAt) + 100) =>
   gameReducer(s, { type: 'CATCH', castAt, now });
 
 describe('pond', () => {
@@ -26,6 +27,12 @@ describe('pond', () => {
   it('ignores the same cast reported twice', () => {
     const once = cast(fresh(), NOON);
     expect(cast(once, NOON)).toBe(once);
+  });
+
+  it('ignores a catch reported before the fish bites', () => {
+    const s = fresh();
+    expect(cast(s, NOON, NOON)).toBe(s);
+    expect(cast(s, NOON, NOON + biteDelay(NOON) - 1000)).toBe(s);
   });
 
   it('rejects stale or future casts', () => {

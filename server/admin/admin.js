@@ -28,6 +28,8 @@
   const toastEl = document.getElementById('toast');
   let csrf = null;
   let user = null;
+  /** The server asks for an authenticator code at login (ADMIN_TOTP_SECRET is set). */
+  let mfa = false;
   let cache = { dishes: null, ingredients: null, stats: null };
 
   // ——— Utilities ———
@@ -98,7 +100,11 @@
 
   async function api(path, { method = 'GET', body, form } = {}) {
     const headers = {};
-    if (method !== 'GET' && csrf) headers['X-CSRF-Token'] = csrf;
+    if (method !== 'GET') {
+      // Same-origin marker the server requires on every write, login and logout included.
+      headers['X-Bepviet'] = '1';
+      if (csrf) headers['X-CSRF-Token'] = csrf;
+    }
     if (body !== undefined) headers['Content-Type'] = 'application/json';
     const res = await fetch(`/api${path}`, {
       method,
@@ -182,6 +188,7 @@
           <p class="hint">Quản lý món ăn, nguyên liệu và nội dung đọc từ ảnh bằng AI.</p>
           <label class="field">Tên đăng nhập<input id="lg-user" type="text" name="username" autocomplete="username" required value="admin" /></label>
           <label class="field">Mật khẩu<input id="lg-pass" type="password" name="password" autocomplete="current-password" required /></label>
+          ${mfa ? '<label class="field">Mã xác thực (6 số)<input id="lg-otp" type="text" name="otp" inputmode="numeric" autocomplete="one-time-code" required /></label>' : ''}
           <p class="error" id="lg-error">${esc(error)}</p>
           <button class="btn btn--primary" type="submit">Đăng nhập</button>
         </form>
@@ -195,6 +202,7 @@
           body: {
             user: document.getElementById('lg-user').value,
             password: document.getElementById('lg-pass').value,
+            otp: document.getElementById('lg-otp')?.value ?? '',
           },
         });
         csrf = s.csrf;
@@ -1114,13 +1122,18 @@ ${locales.extra
             <thead><tr><th>Người dùng</th><th class="num">Cấp</th><th class="num">Xu</th><th class="num">Chuỗi</th><th class="num">Bạn</th><th class="num">Thiết bị</th><th>Hoạt động</th><th>Tham gia</th><th></th></tr></thead>
             <tbody>${rows.map((u) => userRow(u, now)).join('')}</tbody></table></div>`
         : '<p class="empty">Không có người dùng nào khớp.</p>';
+      if (current.truncated) {
+        list.insertAdjacentHTML('beforeend', '<p class="hint">Đang hiện 100 tài khoản hoạt động gần nhất — tìm theo email hoặc mã vườn để thấy người khác.</p>');
+      }
     };
 
     const refresh = async () => {
       const sync = document.getElementById('u-sync');
       sync?.classList.add('is-syncing');
       try {
-        current = await api('/admin/users');
+        // The server filters, searches and pages (100 at a time, most recently active first).
+        const params = new URLSearchParams({ filter, q: q.value.trim() });
+        current = await api(`/admin/users?${params}`);
         usersOnline = current.summary.online;
         draw();
         if (sync) sync.textContent = `Cập nhật lúc ${new Date().toLocaleTimeString('vi-VN')}`;
@@ -1131,7 +1144,12 @@ ${locales.extra
       }
     };
 
-    q.addEventListener('input', draw);
+    let searchTimer = 0;
+    q.addEventListener('input', () => {
+      draw();
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(refresh, 350);
+    });
     document.querySelectorAll('.seg button').forEach((b) =>
       b.addEventListener('click', () => {
         filter = b.dataset.f;
@@ -1139,6 +1157,7 @@ ${locales.extra
           .querySelectorAll('.seg button')
           .forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
         draw();
+        refresh();
       }),
     );
     document.getElementById('u-refresh').onclick = refresh;
@@ -1299,6 +1318,7 @@ ${locales.extra
     .then((s) => {
       csrf = s.csrf;
       user = s.user;
+      mfa = !!s.mfa;
       route();
     })
     .catch(() => renderLogin());

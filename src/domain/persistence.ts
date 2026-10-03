@@ -245,6 +245,7 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
       typeof raw.recentCropUnlock === 'string' && raw.recentCropUnlock in EMPTY_CROPS
         ? (raw.recentCropUnlock as CropId)
         : null,
+    owner: typeof raw.owner === 'string' ? raw.owner : null,
     unlockedCrops: isStringArray(raw.unlockedCrops)
       ? (raw.unlockedCrops.filter((c) => c in EMPTY_CROPS) as CropId[])
       : [],

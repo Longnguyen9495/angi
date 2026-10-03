@@ -11,13 +11,20 @@ export interface AccountUser {
   email: string;
   marketing: boolean;
   createdAt: number;
+  /** Opaque, stable per account: marks which account a journey on this device belongs to. */
+  key?: string;
 }
 
 export interface RemoteProgress {
   data: unknown;
   version: number;
   updatedAt: number | null;
+  /** The server's clock (ms) when it answered. */
+  serverNow?: number;
 }
+
+/** The emailed sign-in link: signed in, or (opened elsewhere) which account it is for. */
+export type LinkResult = { user: AccountUser } | { needsConfirm: true; email: string };
 
 export class AccountError extends Error {
   constructor(
@@ -63,10 +70,19 @@ export const accountApi = {
       marketing,
     }),
   verify: (email: string, code: string) => call<AccountUser>('POST', '/verify', { email, code }),
+  /** The token from the link's #login= fragment; `confirm` once the guest agreed to that account. */
+  link: (t: string, confirm = false) => call<LinkResult>('POST', '/link', { t, confirm }),
   me: () => call<{ user: AccountUser | null }>('GET', '/me'),
   getProgress: () => call<RemoteProgress>('GET', '/progress'),
+  /** `clientNow` lets the server keep this device's clock offset (it checks saves against it). */
   putProgress: (data: unknown, baseVersion: number) =>
-    call<{ version: number; updatedAt: number }>('PUT', '/progress', { data, baseVersion }),
+    call<{ version: number; updatedAt: number; serverNow?: number }>('PUT', '/progress', {
+      data,
+      baseVersion,
+      clientNow: Date.now(),
+    }),
+  /** The device clock moved: the server shifts the saved garden's times to it (gains nothing). */
+  rebase: () => call<RemoteProgress>('POST', '/progress/rebase', { clientNow: Date.now() }),
   setMarketing: (marketing: boolean) => call<AccountUser>('PUT', '/preferences', { marketing }),
   exportData: () => call<Record<string, unknown>>('GET', '/export'),
   logout: () => call<{ ok: true }>('POST', '/logout'),
@@ -192,6 +208,8 @@ export interface RemoteFriendEvent {
   type: FriendEventType;
   plotId: number | null;
   crop: string | null;
+  /** water / stolen: the planting it touched. */
+  cycle?: number | null;
   from: string;
   at: number;
   coins?: number;
@@ -201,6 +219,8 @@ export interface RemoteFriendEvent {
 export const friendsApi = {
   profile: () => call<GardenProfile>('GET', '/garden'),
   rename: (name: string) => call<GardenProfile>('PUT', '/garden', { name }),
+  /** A new garden code: the old one stops working for anyone who has it. */
+  newCode: () => call<GardenProfile>('POST', '/garden/code'),
   list: () => call<FriendsList>('GET', '/friends'),
   add: (code: string) => call<FriendsList>('POST', '/friends', { code }),
   remove: (code: string) => call<FriendsList>('DELETE', `/friends/${encodeURIComponent(code)}`),
@@ -224,6 +244,13 @@ export const friendsApi = {
   thanks: (code: string) =>
     call<{ ok: true }>('POST', `/friends/${encodeURIComponent(code)}/thanks`),
   feed: () => call<{ items: FeedItem[] }>('GET', '/feed'),
-  events: () => call<{ events: RemoteFriendEvent[] }>('GET', '/events'),
-  ack: (ids: string[]) => call<{ ok: true }>('POST', '/events/ack', { ids }),
+  /**
+   * Cô Ba's daily gift, invite rewards, then everything not yet saved into this garden.
+   * There is no acknowledging: an event stops coming once a save holds its effect.
+   */
+  events: () =>
+    call<{ events: RemoteFriendEvent[]; pendingGifts: { id: string; crop: string }[] }>(
+      'POST',
+      '/events',
+    ),
 };

@@ -118,6 +118,11 @@ export interface GuestProgress {
   journeySaved: boolean;
   settings: { motion: MotionPref; simulateFailure: boolean; quality?: EffectsQuality };
   ledger: LedgerEntry[];
+  /**
+   * The account this journey is saved to (an opaque key from the server), null while it is
+   * only on this device. A journey that belongs to one account is never uploaded to another.
+   */
+  owner?: string | null;
 }
 
 export interface DecorPlacement {
@@ -142,6 +147,8 @@ export interface FriendEvent {
   type: FriendEventType;
   plotId?: number;
   crop?: CropId;
+  /** water / stolen: the planting (plantedAt) it touched; a replanted plot is not affected. */
+  cycle?: number;
   from?: string;
   /** referral: coins and XP paid to each side. */
   coins?: number;

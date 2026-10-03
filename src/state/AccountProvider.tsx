@@ -10,6 +10,7 @@ import {
   friendsApi,
   type AccountUser,
   type FriendsList,
+  type RemoteProgress,
 } from '../services/account';
 import { AccountContext, type AccountContextValue, type SyncState } from './context';
 import { useFeedback, useGame } from './hooks';
@@ -48,10 +49,23 @@ function clearInvite() {
   window.history.replaceState(null, '', window.location.pathname + (q ? `?${q}` : ''));
 }
 
+/** The emailed link's token (#login=…), taken out of the address bar at once. */
+function takeLoginToken(): string | null {
+  const m = /(?:^#|&)login=([a-f0-9]{48})(?:&|$)/.exec(window.location.hash);
+  if (!m) return null;
+  window.history.replaceState(null, '', window.location.pathname + window.location.search);
+  return m[1] ?? null;
+}
+
 /**
  * Optional guest account. Signed out, nothing happens here beyond one /me call.
- * Signed in, the whole progress snapshot is mirrored to the server (with a
- * version so two devices can't silently overwrite each other).
+ * Signed in, the whole progress snapshot is mirrored to the server (with a version so two
+ * devices can't silently overwrite each other); the server checks every save against the
+ * game's rules and may refuse one, in which case the saved copy comes back.
+ *
+ * Each sign-in starts a new "session generation": anything still in flight from before
+ * (a save, the inbox, the friends list) is dropped when it returns, so one account's answer
+ * can never land in another account's garden.
  */
 export function AccountProvider({ children }: { children: ReactNode }) {
   const { state, dispatch } = useGame();
@@ -61,6 +75,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const [sync, setSync] = useState<SyncState>('idle');
   const [lastSyncAt, setLastSyncAt] = useState<number | null>(null);
   const [friends, setFriends] = useState<FriendsList | null>(null);
+  const [linkConfirm, setLinkConfirm] = useState<{ token: string; email: string } | null>(null);
   const [conflict, setConflict] = useState<{
     remote: GuestProgress;
     version: number;
@@ -68,62 +83,47 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const version = useRef(0);
   const ready = useRef(false);
   const skipPush = useRef(false);
+  const pushing = useRef(false);
+  /** A change arrived while a save was in flight: save again when it returns. */
+  const again = useRef(false);
+  const generation = useRef(0);
+  const owner = useRef<string | null>(null);
   const stateRef = useRef(state);
   useEffect(() => {
     stateRef.current = state;
   });
 
-  const push = useCallback(
-    async (data: GuestProgress) => {
-      setSync('saving');
-      try {
-        const r = await accountApi.putProgress(data, version.current);
-        version.current = r.version;
-        setSync('saved');
-        setLastSyncAt(Date.now());
-      } catch (e) {
-        if (e instanceof AccountError && e.status === 409) {
-          // Another device saved first: follow whichever journey is further along.
-          const remote = await accountApi.getProgress().catch(() => null);
-          if (!remote) return setSync('offline');
-          version.current = remote.version;
-          const parsed = parseProgress(remote.data, Date.now());
-          if (parsed && reconcile(stateRef.current, parsed).kind === 'pull') {
-            skipPush.current = true;
-            dispatch({ type: 'LOAD_PROGRESS', progress: parsed });
-            setSync('saved');
-            setLastSyncAt(Date.now());
-            return;
-          }
-          // Ours is ahead: one retry on top of the version we just read.
-          try {
-            const r = await accountApi.putProgress(stateRef.current, version.current);
-            version.current = r.version;
-            setSync('saved');
-            setLastSyncAt(Date.now());
-          } catch {
-            setSync('offline');
-          }
-          return;
-        }
-        if (e instanceof AccountError && e.status === 401) {
-          ready.current = false;
-          setUser(null);
-          setStatus('guest');
-          return;
-        }
-        setSync('offline');
-      }
+  const saved = useCallback(() => {
+    setSync('saved');
+    setLastSyncAt(Date.now());
+  }, []);
+
+  /** Replaces the garden on this device with the account's saved copy. */
+  const load = useCallback(
+    (remote: RemoteProgress): boolean => {
+      version.current = remote.version;
+      const parsed = remote.data ? parseProgress(remote.data, Date.now()) : null;
+      if (!parsed) return false;
+      skipPush.current = true;
+      dispatch({ type: 'LOAD_PROGRESS', progress: { ...parsed, owner: owner.current } });
+      return true;
     },
     [dispatch],
   );
 
-  /** Friends' watering, Cô Ba's daily seed, XP for helping: apply once, then acknowledge. */
+  /** Friends' watering, Cô Ba's daily seed, XP for helping: applied once, kept by the next save. */
   const pullEvents = useCallback(async () => {
     if (!ready.current) return;
+    const gen = generation.current;
     const r = await friendsApi.events().catch(() => null);
-    if (!r || r.events.length === 0) return;
+    if (!r || gen !== generation.current || !ready.current) return;
     const now = Date.now();
+    // Seeds this garden sent whose debit never reached a save (a closed tab): take them now.
+    for (const g of r.pendingGifts ?? []) {
+      if (!(g.crop in CROPS)) continue;
+      if (stateRef.current.ledger.some((l) => l.key === `present:${g.id}`)) continue;
+      dispatch({ type: 'GIFT_SENT', id: g.id, crop: g.crop as CropId, now });
+    }
     const lines: string[] = [];
     for (const e of r.events) {
       const seen = stateRef.current.ledger.some((l) => l.key.startsWith(`friend:${e.id}:`));
@@ -135,6 +135,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
           type: e.type,
           plotId: e.plotId ?? undefined,
           crop,
+          cycle: e.cycle ?? undefined,
           from: e.from,
           coins: e.coins,
           xp: e.xp,
@@ -154,7 +155,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       if (e.type === 'referral')
         lines.push(t.account.friendEvents.referral(e.from, e.coins ?? 0, e.xp ?? 0));
     }
-    await friendsApi.ack(r.events.map((e) => e.id)).catch(() => undefined);
+    // No acknowledging: the server stops sending an event once a save holds its effect.
     if (lines.length > 0) {
       toast({
         message:
@@ -166,9 +167,114 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     }
   }, [dispatch, toast]);
 
+  /**
+   * The server refused a save. The saved copy is the truth: load it (after re-anchoring it
+   * to this device's clock when the clock is what moved), then fetch the inbox again so
+   * seeds sent to friends are taken from the tray.
+   */
+  const refused = useCallback(
+    async (code: string, gen: number) => {
+      if (code === 'import') {
+        // A first save this account cannot take: keep the garden on this device untouched.
+        ready.current = false;
+        setSync('offline');
+        toast({ message: t.account.toasts.importRefused, tone: 'warning' });
+        return;
+      }
+      const remote =
+        code === 'clock'
+          ? await accountApi.rebase().catch(() => null)
+          : await accountApi.getProgress().catch(() => null);
+      if (gen !== generation.current) return;
+      if (!remote) return setSync('offline');
+      if (code === 'owned' || !load(remote)) {
+        // This device's journey belongs to another account: this one starts its own.
+        skipPush.current = false;
+        dispatch({ type: 'RESET', now: Date.now() });
+        dispatch({ type: 'SET_OWNER', owner: owner.current });
+      }
+      saved();
+      toast({
+        message:
+          code === 'clock' ? t.account.toasts.clockChanged : t.account.toasts.progressRefused,
+        tone: 'warning',
+      });
+      void pullEvents();
+    },
+    [dispatch, load, pullEvents, saved, toast],
+  );
+
+  /** One save at a time; a newer state waits for the next debounce. */
+  const push = useCallback(
+    async (data: GuestProgress) => {
+      if (pushing.current) {
+        again.current = true;
+        return;
+      }
+      pushing.current = true;
+      again.current = false;
+      const gen = generation.current;
+      setSync('saving');
+      try {
+        const r = await accountApi.putProgress(data, version.current);
+        if (gen !== generation.current) return;
+        version.current = r.version;
+        saved();
+      } catch (e) {
+        if (gen !== generation.current) return;
+        if (e instanceof AccountError && e.status === 409) {
+          // Another device saved first: follow its copy only when it is clearly ahead.
+          const remote = await accountApi.getProgress().catch(() => null);
+          if (gen !== generation.current) return;
+          if (!remote) return setSync('offline');
+          version.current = remote.version;
+          const parsed = remote.data ? parseProgress(remote.data, Date.now()) : null;
+          const plan = reconcile(stateRef.current, parsed, owner.current);
+          if (plan.kind === 'pull' && parsed) {
+            load(remote);
+            return saved();
+          }
+          if (plan.kind === 'ask' && parsed) {
+            // Two different copies: the guest chooses; nothing is overwritten meanwhile.
+            ready.current = false;
+            setConflict({ remote: parsed, version: remote.version });
+            return;
+          }
+          // Ours is ahead: save again on top of the version just read.
+          again.current = true;
+          return;
+        }
+        if (e instanceof AccountError && e.status === 422 && typeof e.body.code === 'string') {
+          return void (await refused(e.body.code, gen));
+        }
+        if (e instanceof AccountError && e.status === 401) {
+          ready.current = false;
+          generation.current++;
+          setUser(null);
+          setStatus('guest');
+          return;
+        }
+        setSync('offline');
+      } finally {
+        pushing.current = false;
+        if (again.current && gen === generation.current && ready.current) {
+          again.current = false;
+          setTimeout(() => void pushRef.current(stateRef.current), 0);
+        }
+      }
+    },
+    [load, refused, saved],
+  );
+
+  const pushRef = useRef(push);
+  useEffect(() => {
+    pushRef.current = push;
+  });
+
   /** Friends list for badges and the social quests; also adds a friend from an invite link. */
   const refreshFriends = useCallback(async () => {
     if (!ready.current) return;
+    const gen = generation.current;
     const invite = readInvite();
     if (invite) {
       try {
@@ -182,7 +288,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       clearInvite();
     }
     const r = await friendsApi.list().catch(() => null);
-    if (!r) return;
+    if (!r || gen !== generation.current) return;
     setFriends(r);
     dispatch({ type: 'SET_SOCIAL', on: r.friends.length > 0 });
   }, [dispatch, toast]);
@@ -190,36 +296,62 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   /** First contact after sign-in (or page load): decide push, pull or ask. */
   const attach = useCallback(
     async (u: AccountUser) => {
+      const gen = ++generation.current;
+      owner.current = u.key ?? null;
       setUser(u);
       setStatus('signed-in');
       const remote = await accountApi.getProgress().catch(() => null);
+      if (gen !== generation.current) return;
       if (!remote) {
         setSync('offline');
         return;
       }
       version.current = remote.version;
       const parsed = remote.data ? parseProgress(remote.data, Date.now()) : null;
-      const plan = reconcile(stateRef.current, parsed);
+      const plan = reconcile(stateRef.current, parsed, owner.current);
       if (plan.kind === 'ask' && parsed) {
         setConflict({ remote: parsed, version: remote.version });
         return;
       }
       ready.current = true;
       if (plan.kind === 'pull' && parsed) {
-        skipPush.current = true;
-        dispatch({ type: 'LOAD_PROGRESS', progress: parsed });
-        setSync('saved');
-        setLastSyncAt(Date.now());
+        load(remote);
+        saved();
+      } else if (plan.kind === 'fresh') {
+        // Another account's journey is on this device: this account begins its own.
+        dispatch({ type: 'RESET', now: Date.now() });
+        dispatch({ type: 'SET_OWNER', owner: owner.current });
       } else if (plan.kind === 'push') {
-        await push(stateRef.current);
+        dispatch({ type: 'SET_OWNER', owner: owner.current });
+        await push({ ...stateRef.current, owner: owner.current });
       } else {
-        setSync('saved');
-        setLastSyncAt(Date.now());
+        dispatch({ type: 'SET_OWNER', owner: owner.current });
+        saved();
       }
       void pullEvents();
       void refreshFriends();
     },
-    [dispatch, push, pullEvents, refreshFriends],
+    [dispatch, load, push, pullEvents, refreshFriends, saved],
+  );
+
+  /** The emailed link: sign in here, or ask first when it was asked for in another browser. */
+  const openLink = useCallback(
+    async (token: string, confirm: boolean) => {
+      try {
+        const r = await accountApi.link(token, confirm);
+        if ('needsConfirm' in r) {
+          setLinkConfirm({ token, email: r.email });
+          return;
+        }
+        setLinkConfirm(null);
+        toast({ message: t.account.toasts.signedIn, tone: 'success' });
+        await attach(r.user);
+      } catch {
+        setLinkConfirm(null);
+        toast({ message: t.account.toasts.linkExpired, tone: 'warning' });
+      }
+    },
+    [attach, toast],
   );
 
   // While signed in: check for friends' help now and then, and when the tab comes back.
@@ -243,15 +375,18 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   // Who is this? One quiet request per page load; failure just means "guest".
   useEffect(() => {
     let alive = true;
+    const token = takeLoginToken();
     accountApi
       .me()
       .then((r) => {
         if (!alive) return;
-        if (r.user) void attach(r.user);
+        if (token) void openLink(token, false);
+        else if (r.user) void attach(r.user);
         else setStatus('guest');
+        if (token && !r.user) setStatus('guest');
       })
       .catch(() => alive && setStatus('guest'));
-    // Coming back from the email link: say so once and tidy the URL.
+    // Older links land on ?account=expired: say so once and tidy the URL.
     const params = new URLSearchParams(window.location.search);
     const flag = params.get('account');
     if (flag) {
@@ -282,6 +417,20 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(timer);
   }, [state, status, conflict, push]);
 
+  /** Signed out (or deleted): the garden on this device starts over as a guest's. */
+  const leave = useCallback(() => {
+    generation.current++;
+    ready.current = false;
+    owner.current = null;
+    setUser(null);
+    setStatus('guest');
+    setSync('idle');
+    setConflict(null);
+    setFriends(null);
+    // The account keeps its garden; this device must not carry it into the next account.
+    dispatch({ type: 'RESET', now: Date.now() });
+  }, [dispatch]);
+
   const value = useMemo<AccountContextValue>(
     () => ({
       status,
@@ -295,33 +444,30 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         setConflict(null);
         ready.current = true;
         if (keep === 'remote') {
-          skipPush.current = true;
-          dispatch({ type: 'LOAD_PROGRESS', progress: conflict.remote });
-          setSync('saved');
-          setLastSyncAt(Date.now());
+          load({ data: conflict.remote, version: conflict.version, updatedAt: null });
+          saved();
         } else {
-          await push(stateRef.current);
+          dispatch({ type: 'SET_OWNER', owner: owner.current });
+          await push({ ...stateRef.current, owner: owner.current });
         }
         void pullEvents();
         void refreshFriends();
       },
       signedIn: attach,
+      linkConfirm: linkConfirm ? { email: linkConfirm.email } : null,
+      answerLink: async (yes) => {
+        const pending = linkConfirm;
+        setLinkConfirm(null);
+        if (yes && pending) await openLink(pending.token, true);
+      },
       logout: async () => {
-        await accountApi.logout().catch(() => undefined);
-        ready.current = false;
-        setUser(null);
-        setStatus('guest');
-        setSync('idle');
-        setConflict(null);
-        setFriends(null);
+        // Out on the server first: a failed sign-out must not look like one.
+        await accountApi.logout();
+        leave();
       },
       deleteAccount: async () => {
         await accountApi.remove();
-        ready.current = false;
-        setUser(null);
-        setStatus('guest');
-        setSync('idle');
-        setConflict(null);
+        leave();
       },
       checkInbox: pullEvents,
       friends,
@@ -336,10 +482,15 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       sync,
       lastSyncAt,
       conflict,
+      linkConfirm,
       state,
       dispatch,
       push,
+      load,
+      saved,
       attach,
+      openLink,
+      leave,
       pullEvents,
       friends,
       refreshFriends,

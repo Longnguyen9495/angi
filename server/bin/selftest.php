@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+// Command-line only: a web request that reaches this file gets a 404 and nothing runs.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 // Exercises the catalogue repository end to end on a throwaway dish (and one
 // throwaway ingredient); everything it creates is deleted again at the end.
 // Usage: php server/bin/selftest.php   (needs the database running)

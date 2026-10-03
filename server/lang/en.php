@@ -29,6 +29,9 @@ return [
     'account.notSignedIn' => 'You are not signed in.',
     'account.badRequest' => 'Invalid request.',
     'account.badEmail' => 'That email address does not look right.',
+    'account.progressRejected' => 'This save does not match how the farm plays — the last saved farm is kept.',
+
+    'friends.formerFriend' => 'A former friend',
 
     // ——— Friends' gardens ———
     'friends.notFound' => 'No garden has this code.',
@@ -50,6 +53,7 @@ return [
     'friends.badSeed' => 'That seed cannot be sent.',
     'friends.giftedToday' => 'You already sent this friend a gift today.',
     'friends.giftLimit' => 'You have sent {max} gifts today.',
+    'friends.noSeed' => 'You have no seed of this kind to send.',
 
     // ——— Login-code email ———
     'email.subject' => '{code} is your Ăn gì? sign-in code',

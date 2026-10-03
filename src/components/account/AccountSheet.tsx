@@ -17,7 +17,34 @@ const RESEND_AFTER_S = 30;
 export function AccountSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
   const account = useAccount();
   const conflict = account.conflict;
+  const link = account.linkConfirm;
   const m = t.account.sheet;
+  if (link && !conflict) {
+    return (
+      <Sheet
+        open
+        onClose={() => void account.answerLink(false)}
+        title={m.linkTitle}
+        description={m.linkDescription(link.email)}
+        variant="dark"
+      >
+        <div className="account">
+          <div className="account__actions">
+            <button type="button" className="fr-cta" onClick={() => void account.answerLink(true)}>
+              {m.linkYes}
+            </button>
+            <button
+              type="button"
+              className="fr-ghost"
+              onClick={() => void account.answerLink(false)}
+            >
+              {m.linkNo}
+            </button>
+          </div>
+        </div>
+      </Sheet>
+    );
+  }
   return (
     <Sheet
       open={open || !!conflict}

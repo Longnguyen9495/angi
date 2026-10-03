@@ -35,6 +35,12 @@ const account: Messages['account'] = {
   toasts: {
     signedIn: 'Signed in — your farm is being saved.',
     linkExpired: 'That sign-in link has expired. Send a new code from your Profile.',
+    progressRefused:
+      'That save did not match the farm in your account — the last saved farm is back.',
+    importRefused:
+      'The farm on this device could not be saved to the account — it stays as it is on this device. Contact us if you need it moved.',
+    clockChanged:
+      'This device’s clock changed since the last save — your farm was restored on the new time.',
   },
   block: {
     heading: 'Account',
@@ -47,7 +53,9 @@ const account: Messages['account'] = {
     serverNote:
       'The server keeps only your email and game progress. Check-in photos are never uploaded.',
     download: 'Download my server data',
-    loggedOut: 'Signed out. Your progress is still on this device.',
+    loggedOut:
+      'Signed out. Your farm stays in your account — sign in again to get it back; this device starts over as a guest.',
+    logoutFailed: 'Could not sign out — check your connection and try again.',
     logout: 'Sign out',
     confirmDeleteLabel: 'Confirm account deletion',
     deleted: 'Your account and all its server data have been deleted.',
@@ -67,6 +75,11 @@ const account: Messages['account'] = {
     conflictTitle: 'Choose which farm to keep',
     description: 'No password — just an email to get a code.',
     conflictDescription: 'This device and your account have two different farms.',
+    linkTitle: 'Sign in with the link from your email?',
+    linkDescription: (email: string) =>
+      `This link opens the account ${email}. Only sign in if you just asked for a code.`,
+    linkYes: 'Sign in',
+    linkNo: 'Not me',
     consentRequired: 'Please agree to how we store your data to continue.',
     codeSentAnnounce: (email: string) => `Code sent to ${email}.`,
     sendFailed: "Couldn't send the code — please try again.",

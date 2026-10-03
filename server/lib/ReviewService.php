@@ -73,7 +73,7 @@ final class ReviewService
     private function request(string $url, ?array $body = null, string $key = ''): array
     {
         $ch=curl_init($url);
-        curl_setopt_array($ch,[CURLOPT_RETURNTRANSFER=>true,CURLOPT_CONNECTTIMEOUT=>8,CURLOPT_TIMEOUT=>35,CURLOPT_FOLLOWLOCATION=>false,CURLOPT_USERAGENT=>'AngiReviewPilot/1.0',CURLOPT_PROTOCOLS=>CURLPROTO_HTTPS]);
+        curl_setopt_array($ch,[CURLOPT_RETURNTRANSFER=>true,CURLOPT_CONNECTTIMEOUT=>8,CURLOPT_TIMEOUT=>35,CURLOPT_FOLLOWLOCATION=>false,CURLOPT_USERAGENT=>'AngiReviewPilot/1.0',CURLOPT_PROTOCOLS=>CURLPROTO_HTTPS,CURLOPT_NOPROGRESS=>false,CURLOPT_PROGRESSFUNCTION=>static fn ($c,$dt,$dn)=>$dn>2*1024*1024?1:0]);
         if ($body!==null) { curl_setopt_array($ch,[CURLOPT_POST=>true,CURLOPT_HTTPHEADER=>['Content-Type: application/json','Authorization: Bearer '.$key],CURLOPT_POSTFIELDS=>json_encode($body,JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR)]); }
         $raw=curl_exec($ch); $status=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE); curl_close($ch);
         $data=is_string($raw)?json_decode($raw,true):null;

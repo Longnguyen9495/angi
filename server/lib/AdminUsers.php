@@ -15,61 +15,88 @@ final class AdminUsers
 {
     public const ONLINE_WINDOW = 600;
     private const XP_PER_LEVEL = 100;
-    private const MAX_ROWS = 500;
+    /** Accounts per page of the admin list. */
+    private const PAGE = 100;
 
     public function __construct(private PDO $db)
     {
     }
 
+    /**
+     * One page of accounts, most recently active first. Counting, filtering, searching and
+     * paging all happen in SQL, and only the page's progress rows are decoded, so a large
+     * user base (or large saves) cannot exhaust the admin request.
+     */
     public function list(array $query): array
     {
         $now = time();
-        $rows = $this->all(
-            'SELECT u.id, u.email, u.marketing, u.created_at,
-                    (SELECT MAX(s.last_seen) FROM user_sessions s WHERE s.user_id = u.id) AS last_seen,
-                    (SELECT COUNT(*) FROM user_sessions s WHERE s.user_id = u.id AND s.expires_at > ?) AS sessions,
-                    (SELECT COUNT(*) FROM friendships f WHERE f.user_id = u.id) AS friends,
-                    g.friend_code, g.garden_name, p.data, p.updated_at AS progress_at
-             FROM users u
-             LEFT JOIN garden_profiles g ON g.user_id = u.id
-             LEFT JOIN user_progress p ON p.user_id = u.id',
-            [$now],
-        );
+        $active = '(SELECT MAX(s.last_seen) FROM user_sessions s WHERE s.user_id = u.id)';
+        $summary = $this->one(
+            "SELECT COUNT(*) AS total,
+                    SUM(CASE WHEN $active >= ? THEN 1 ELSE 0 END) AS online,
+                    SUM(CASE WHEN $active >= ? THEN 1 ELSE 0 END) AS day,
+                    SUM(CASE WHEN $active >= ? THEN 1 ELSE 0 END) AS week,
+                    SUM(CASE WHEN u.created_at >= ? THEN 1 ELSE 0 END) AS new_week
+             FROM users u",
+            [$now - self::ONLINE_WINDOW, $now - 86400, $now - 7 * 86400, $now - 7 * 86400],
+        ) ?? [];
 
-        $items = array_map(fn (array $r) => $this->row($r, $now), $rows);
-        $summary = [
-            'total' => count($items),
-            'online' => count(array_filter($items, fn ($u) => $u['online'])),
-            'day' => count(array_filter($items, fn ($u) => $u['lastSeen'] >= $now - 86400)),
-            'week' => count(array_filter($items, fn ($u) => $u['lastSeen'] >= $now - 7 * 86400)),
-            'newWeek' => count(array_filter($items, fn ($u) => $u['createdAt'] >= $now - 7 * 86400)),
-            'onlineWindow' => self::ONLINE_WINDOW,
-        ];
-
-        $filter = (string) ($query['filter'] ?? 'all');
-        $since = match ($filter) {
+        $where = [];
+        $args = [$now];
+        $since = match ((string) ($query['filter'] ?? 'all')) {
             'online' => $now - self::ONLINE_WINDOW,
             'day' => $now - 86400,
             'week' => $now - 7 * 86400,
             default => null,
         };
         if ($since !== null) {
-            $items = array_filter($items, fn ($u) => $u['lastSeen'] >= $since);
+            $where[] = "$active >= ?";
+            $args[] = $since;
         }
-        $q = mb_strtolower(trim((string) ($query['q'] ?? '')));
+        $q = mb_strtolower(trim(mb_substr((string) ($query['q'] ?? ''), 0, 100)));
         if ($q !== '') {
-            $items = array_filter(
-                $items,
-                fn ($u) => str_contains(mb_strtolower($u['email'] . ' ' . $u['friendCode'] . ' ' . $u['gardenName']), $q),
-            );
+            $like = '%' . str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $q) . '%';
+            $where[] = "(LOWER(u.email) LIKE ? ESCAPE '!' OR LOWER(COALESCE(g.friend_code, '')) LIKE ? ESCAPE '!' OR LOWER(COALESCE(g.garden_name, '')) LIKE ? ESCAPE '!')";
+            array_push($args, $like, $like, $like);
         }
-        $items = array_values($items);
+        $page = max(1, min(1000, (int) ($query['page'] ?? 1)));
+        $sql = "SELECT u.id, u.email, u.marketing, u.created_at,
+                       $active AS last_seen,
+                       (SELECT COUNT(*) FROM user_sessions s WHERE s.user_id = u.id AND s.expires_at > ?) AS sessions,
+                       (SELECT COUNT(*) FROM friendships f WHERE f.user_id = u.id) AS friends,
+                       g.friend_code, g.garden_name, p.updated_at AS progress_at
+                FROM users u
+                LEFT JOIN garden_profiles g ON g.user_id = u.id
+                LEFT JOIN user_progress p ON p.user_id = u.id"
+            . ($where ? ' WHERE ' . implode(' AND ', $where) : '')
+            . ' ORDER BY last_seen DESC, u.id DESC LIMIT ' . (self::PAGE + 1) . ' OFFSET ' . (($page - 1) * self::PAGE);
+        $rows = $this->all($sql, $args);
+        $more = count($rows) > self::PAGE;
+        $rows = array_slice($rows, 0, self::PAGE);
+        // Only this page's saves are read, and only up to a size worth summarising.
+        $data = [];
+        if ($rows) {
+            $ids = array_map(fn ($r) => (int) $r['id'], $rows);
+            $marks = implode(',', array_fill(0, count($ids), '?'));
+            foreach ($this->all("SELECT user_id, data FROM user_progress WHERE user_id IN ($marks)", $ids) as $d) {
+                $data[(int) $d['user_id']] = strlen((string) $d['data']) <= 600_000 ? $d['data'] : null;
+            }
+        }
+        $items = array_map(fn (array $r) => $this->row($r + ['data' => $data[(int) $r['id']] ?? null], $now), $rows);
         usort($items, fn ($a, $b) => [$b['online'], $b['lastSeen'], $b['id']] <=> [$a['online'], $a['lastSeen'], $a['id']]);
 
         return [
-            'summary' => $summary,
-            'items' => array_slice($items, 0, self::MAX_ROWS),
-            'truncated' => count($items) > self::MAX_ROWS,
+            'summary' => [
+                'total' => (int) ($summary['total'] ?? 0),
+                'online' => (int) ($summary['online'] ?? 0),
+                'day' => (int) ($summary['day'] ?? 0),
+                'week' => (int) ($summary['week'] ?? 0),
+                'newWeek' => (int) ($summary['new_week'] ?? 0),
+                'onlineWindow' => self::ONLINE_WINDOW,
+            ],
+            'items' => $items,
+            'page' => $page,
+            'truncated' => $more,
             'now' => $now,
         ];
     }

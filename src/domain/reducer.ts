@@ -29,6 +29,7 @@ import {
 import type { Filters } from './recommend';
 import {
   animalStage,
+  biteDelay,
   boatCatch,
   boatStage,
   catchFor,
@@ -55,6 +56,9 @@ import {
   type QuestReward,
 } from './quests';
 import { HOUR_MS, dateKey, daysBetween, slotKey } from './time';
+
+/** Timers fire a little early or late; a catch this close to the bite still counts. */
+const BITE_SLACK_MS = 250;
 
 export type Action =
   | { type: 'SET_FILTERS'; filters: Filters }
@@ -116,9 +120,16 @@ export type Action =
   /** On load: open what the guest's level already earns (a save from before new crops existed). */
   | { type: 'SYNC_UNLOCKS'; now: number }
   | { type: 'SET_SIMULATE_FAILURE'; value: boolean }
+  /** This journey is now saved to that account (see GuestProgress.owner). */
+  | { type: 'SET_OWNER'; owner: string | null }
   | { type: 'RESET'; now: number };
 
-const LEDGER_LIMIT = 400;
+/**
+ * Entries kept on the device. The server keeps every one-time reward for good
+ * (server/lib/ProgressGuard.php checks each save against them), so this is just the window
+ * a save is checked in; it holds far more than a day of play between two saves.
+ */
+export const LEDGER_LIMIT = 1000;
 /** Minutes after choosing a dish when the in-page check-in reminder fires. */
 export const REMINDER_DELAY_MS = 45 * 60 * 1000;
 
@@ -305,8 +316,9 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       ensureDay(s, action.now);
       const rev = s.ledger.filter((e) => e.key.startsWith(`seed:${key}:r`)).length;
       if (current) {
-        // Switching dish before planting re-targets the pending seed instead of adding one.
-        post(
+        // Switching dish before planting re-targets the pending seed instead of adding one;
+        // when that seed is already gone (sent to a friend), the new choice pays nothing.
+        const back = post(
           s,
           `seed:${key}:r${rev}:reverse`,
           `seed:${current.seedCrop}`,
@@ -314,6 +326,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
           'reversal',
           action.now,
         );
+        if (!back) return { ...state, meal: { ...current, dishId: dish.id, chosenAt: action.now } };
       }
       post(s, `seed:${key}:r${rev + 1}`, `seed:${dish.seed}`, 1, `dish:${dish.id}`, action.now);
       post(s, `xp:choose:${key}`, 'xp', XP.chooseDish, 'choose', action.now);
@@ -413,7 +426,13 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
 
     case 'CATCH': {
       const age = action.now - action.castAt;
-      if (age < 0 || age > FISHING.maxCastMs || fishingLeft(state, action.now) <= 0) return state;
+      // Only once the fish has bitten (the bite comes biteDelay after the cast).
+      if (
+        age < biteDelay(action.castAt) - BITE_SLACK_MS ||
+        age > FISHING.maxCastMs ||
+        fishingLeft(state, action.now) <= 0
+      )
+        return state;
       const kind = catchFor(action.castAt, level(state.xp).level);
       const s = structuredClone(state);
       ensureDay(s, action.now);
@@ -435,13 +454,17 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       );
       if (ready.length === 0) return state;
       const s = structuredClone(state);
+      let picked = 0;
       for (const plot of ready) {
         const crop = CROPS[plot.crop!];
         // Each cycle starts at its own plantedAt, so a tree's next harvest has a new key.
         const tag = `${plot.id}:${plot.plantedAt}`;
         // A friend's pick took one of the plot's crops; the rest (and the XP) are ours.
         const got = Math.max(1, crop.yield - (plot.stolen ? 1 : 0));
-        post(s, `harvest:${tag}`, `ingredient:${crop.id}`, got, 'harvest', action.now);
+        // A cycle already harvested (a plot restored from an older copy) pays and counts nothing.
+        if (!post(s, `harvest:${tag}`, `ingredient:${crop.id}`, got, 'harvest', action.now))
+          continue;
+        picked++;
         // XP grows with the wait of this cycle (first fruit, or a regrow for trees/mushrooms).
         const hours =
           (plot.harvests ?? 0) > 0 ? (crop.regrowHours ?? crop.growHours) : crop.growHours;
@@ -477,7 +500,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
           harvests: undefined,
         };
       });
-      track(s, 'harvest', action.now, ready.length);
+      track(s, 'harvest', action.now, picked);
       return s;
     }
 
@@ -487,10 +510,12 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       const recipe = getRecipe(action.recipeId);
       const s = structuredClone(state);
       const key = `cook:${recipe.id}:${action.now}`;
+      // All or nothing: a repeat of the same cook (same key) changes nothing, counts included.
       for (const ing of recipe.ingredients) {
-        post(s, `${key}:${ing.crop}`, `ingredient:${ing.crop}`, -ing.qty, 'cook', action.now);
+        if (!post(s, `${key}:${ing.crop}`, `ingredient:${ing.crop}`, -ing.qty, 'cook', action.now))
+          return state;
       }
-      post(s, `${key}:xp`, 'xp', recipe.xp, 'cook', action.now);
+      if (!post(s, `${key}:xp`, 'xp', recipe.xp, 'cook', action.now)) return state;
       s.cooked = { ...s.cooked, [recipe.id]: (s.cooked[recipe.id] ?? 0) + 1 };
       track(s, 'cook', action.now);
       return s;
@@ -524,9 +549,10 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         return state;
       }
       const s = structuredClone(state);
-      post(s, `photo:${action.slotKey}`, 'xp', XP.checkinPhoto, 'photo', action.now);
       s.photos = [...s.photos, action.slotKey];
-      track(s, 'photo', action.now);
+      // A photo put back after removing it shows again, but pays and counts only the first time.
+      if (post(s, `photo:${action.slotKey}`, 'xp', XP.checkinPhoto, 'photo', action.now))
+        track(s, 'photo', action.now);
       return s;
     }
 
@@ -599,6 +625,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         if (
           plot &&
           (!ev.crop || plot.crop === ev.crop) &&
+          (ev.cycle === undefined || plot.plantedAt === ev.cycle) &&
           plot.readyAt !== null &&
           plot.readyAt > action.now
         ) {
@@ -628,8 +655,14 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         // stolen / thanks: nothing to pay, but mark the event as applied.
         if (ev.type === 'stolen') {
           const plot = s.plots.find((p) => p.id === ev.plotId);
-          // Only the same, still unharvested crop: a replanted plot is not touched.
-          if (plot && plot.crop !== null && (!ev.crop || plot.crop === ev.crop)) plot.stolen = true;
+          // Only the same planting, still unharvested: a replanted plot is not touched.
+          if (
+            plot &&
+            plot.crop !== null &&
+            (!ev.crop || plot.crop === ev.crop) &&
+            (ev.cycle === undefined || plot.plantedAt === ev.cycle)
+          )
+            plot.stolen = true;
         }
         post(s, `${key}:seen`, 'xp', 0, `friend:${ev.type}`, action.now);
       }
@@ -875,6 +908,9 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
 
     case 'SET_MOTION':
       return { ...state, settings: { ...state.settings, motion: action.motion } };
+
+    case 'SET_OWNER':
+      return (state.owner ?? null) === action.owner ? state : { ...state, owner: action.owner };
 
     case 'SET_SIMULATE_FAILURE':
       return { ...state, settings: { ...state.settings, simulateFailure: action.value } };

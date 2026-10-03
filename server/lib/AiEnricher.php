@@ -51,6 +51,32 @@ RULES;
         if ($this->baseUrl === '' || $this->apiKey === '') {
             throw new HttpError(500, 'Chưa cấu hình AI_BASE_URL / AI_API_KEY trong .env.');
         }
+        self::checkProvider($this->baseUrl);
+    }
+
+    /** Largest model answer read into memory; a bigger one is cut off and fails to parse. */
+    private const MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
+
+    /**
+     * The key travels as a Bearer header, so the provider must be https on a public host
+     * (AI_HOSTS, when set, narrows it to those exact names). Plain http is allowed only for
+     * a loopback test server in APP_ENV=local.
+     */
+    public static function checkProvider(string $baseUrl): void
+    {
+        $p = parse_url($baseUrl);
+        $host = strtolower(trim((string) ($p['host'] ?? ''), '[]'));
+        $local = env('APP_ENV', 'production') === 'local' && in_array($host, ['127.0.0.1', 'localhost', '::1'], true);
+        $allowed = array_filter(array_map('trim', explode(',', strtolower((string) env('AI_HOSTS', '')))));
+        $publicIp = !filter_var($host, FILTER_VALIDATE_IP)
+            || filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
+        $ok = is_array($p) && $host !== '' && !isset($p['user']) && !isset($p['pass'])
+            && (($p['scheme'] ?? '') === 'https' || ($local && ($p['scheme'] ?? '') === 'http'))
+            && ($local || ($publicIp && $host !== 'localhost'))
+            && (!$allowed || in_array($host, $allowed, true));
+        if (!$ok) {
+            throw new HttpError(500, 'AI_BASE_URL phải là https tới nhà cung cấp hợp lệ.');
+        }
     }
 
     public function model(): string
@@ -61,15 +87,12 @@ RULES;
     /** Builds the chat request for one dish. */
     public function buildRequest(array $dish, array $library, bool $identify = false): array
     {
-        $imagePath = self::localPath($dish['thumbnail'] ?: $dish['image']);
-        if (!is_file($imagePath)) {
-            throw new HttpError(422, "Không tìm thấy file ảnh của món {$dish['id']}.");
+        // Only our own stored images, checked before a single byte is read and sent out.
+        $imagePath = self::localPath((string) ($dish['thumbnail'] ?: $dish['image']));
+        if ($imagePath === null) {
+            throw new HttpError(422, 'Không tìm thấy file ảnh hợp lệ của món ' . ($dish['id'] ?? '') . '.');
         }
-        $mime = match (strtolower(pathinfo($imagePath, PATHINFO_EXTENSION))) {
-            'jpg', 'jpeg' => 'image/jpeg',
-            'png' => 'image/png',
-            default => 'image/webp',
-        };
+        $mime = (string) (getimagesize($imagePath)['mime'] ?? 'image/webp');
         $dataUri = "data:$mime;base64," . base64_encode((string) file_get_contents($imagePath));
         $lib = implode('; ', array_map(fn ($i) => "{$i['id']}={$i['name']}", $library));
         $cookShape = self::COOK_SHAPE;
@@ -127,6 +150,14 @@ TXT;
             CURLOPT_POST => true,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 120,
+            CURLOPT_CONNECTTIMEOUT => 15,
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTPS | CURLPROTO_HTTP,
+            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYHOST => 2,
+            // Stop reading once the answer is larger than any real one.
+            CURLOPT_NOPROGRESS => false,
+            CURLOPT_PROGRESSFUNCTION => static fn ($ch, $dlTotal, $dlNow) => $dlNow > self::MAX_RESPONSE_BYTES ? 1 : 0,
             CURLOPT_HTTPHEADER => [
                 'Authorization: Bearer ' . $this->apiKey,
                 'Content-Type: application/json',
@@ -140,7 +171,8 @@ TXT;
     public function parse(string $httpBody, int $status): array
     {
         if ($status !== 200) {
-            throw new RuntimeException("AI trả về HTTP $status: " . mb_substr($httpBody, 0, 200));
+            self::logProvider("HTTP $status", $httpBody);
+            throw new RuntimeException("AI trả về lỗi HTTP $status.");
         }
         $envelope = json_decode($httpBody, true);
         $content = $envelope['choices'][0]['message']['content'] ?? null;
@@ -230,7 +262,8 @@ Giới thiệu: " . ($dish['story'] ?? '');
     public function parseCook(string $httpBody, int $status): array
     {
         if ($status !== 200) {
-            throw new RuntimeException("AI trả về HTTP $status: " . mb_substr($httpBody, 0, 200));
+            self::logProvider("HTTP $status", $httpBody);
+            throw new RuntimeException("AI trả về lỗi HTTP $status.");
         }
         $content = json_decode($httpBody, true)['choices'][0]['message']['content'] ?? null;
         if (!is_string($content)) {
@@ -312,7 +345,9 @@ Giới thiệu: " . ($dish['story'] ?? '');
         $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $err = curl_error($ch);
         if ($err !== '') {
-            throw new HttpError(502, "Không gọi được AI: $err");
+            // The raw cURL text can carry hosts and addresses: it goes to the log, not the admin.
+            self::logProvider('transport', $err);
+            throw new HttpError(502, 'Không gọi được AI, hãy thử lại sau.');
         }
         try {
             return $this->parse($body, $status);
@@ -382,11 +417,19 @@ Giới thiệu: " . ($dish['story'] ?? '');
     }
 
     /** Maps a public URL (/images/…, /uploads/…) to its file on disk. */
-    public static function localPath(string $url): string
+    public static function localPath(string $url): ?string
     {
-        if (str_starts_with($url, UPLOAD_URL . '/')) {
-            return UPLOAD_DIR . substr($url, strlen(UPLOAD_URL));
+        return Images::safeLocalImage($url);
+    }
+
+    /** Provider failures in full for the operator's log; the key never appears in them. */
+    private static function logProvider(string $what, string $detail): void
+    {
+        $detail = mb_substr(preg_replace('/\s+/', ' ', $detail) ?? '', 0, 500);
+        $key = (string) env('AI_API_KEY', '');
+        if ($key !== '') {
+            $detail = str_replace($key, '[key]', $detail);
         }
-        return APP_ROOT . '/public' . $url;
+        error_log("[angi ai] $what: $detail");
     }
 }

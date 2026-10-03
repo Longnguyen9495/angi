@@ -67,12 +67,8 @@ function localize_dish(array $dish, string $locale): array
 
 function site_url(): string
 {
-    $url = rtrim((string) env('APP_URL', ''), '/');
-    if ($url !== '') {
-        return $url;
-    }
-    $https = !empty($_SERVER['HTTPS']) || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
-    return ($https ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
+    // APP_URL (required in production, see bootstrap) — never the request's Host header.
+    return app_origin();
 }
 
 /** Version of a dish's preview: changes when its name, photo or the artwork does. */
@@ -91,9 +87,10 @@ function og_prefix(string $slug): string
 function set_meta(string $html, string $key, string $value): string
 {
     $v = htmlspecialchars($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-    return preg_replace(
+    // A callback keeps "$" and "\" in the text literal (a replacement string reads them as groups).
+    return preg_replace_callback(
         '#(<meta\b[^>]*\b(?:property|name)="' . preg_quote($key, '#') . '"[^>]*?\bcontent=")[^"]*(")#s',
-        '${1}' . str_replace(['\\', '$'], ['\\\\', '\$'], $v) . '${2}',
+        fn ($m) => $m[1] . $v . $m[2],
         $html,
         1,
     ) ?? $html;
@@ -124,8 +121,9 @@ function serve_page(?array $dish): never
         $image = $site . '/og/' . $dish['id'] . '.jpg?v=' . og_version($dish) . ($locale !== Lang::FALLBACK ? '&lang=' . $locale : '');
         $alt = $dish['name'] . ($dish['subtitle'] !== '' ? ' — ' . $dish['subtitle'] : '');
 
-        $html = preg_replace('#<title>.*?</title>#s', '<title>' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '</title>', $html, 1) ?? $html;
-        $html = preg_replace('#(<link rel="canonical" href=")[^"]*(")#', '${1}' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '${2}', $html, 1) ?? $html;
+        // Callbacks keep $ and \ in a dish name literal (a replacement string would read them as groups).
+        $html = preg_replace_callback('#<title>.*?</title>#s', fn () => '<title>' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '</title>', $html, 1) ?? $html;
+        $html = preg_replace_callback('#(<link rel="canonical" href=")[^"]*(")#', fn ($m) => $m[1] . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . $m[2], $html, 1) ?? $html;
         foreach ([
             'description' => $desc,
             'og:type' => 'article',

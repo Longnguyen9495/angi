@@ -160,6 +160,21 @@ export function FriendsSection() {
     }
   };
 
+  /** A code that leaked (posted somewhere) stops working; current friends stay. */
+  const renewCode = async () => {
+    if (!data || !window.confirm(m.confirmNewCode)) return;
+    try {
+      const p = await friendsApi.newCode();
+      toast({ message: m.newCodeDone(p.code), tone: 'success' });
+      load();
+    } catch (err) {
+      toast({
+        message: err instanceof AccountError ? err.message : m.renameFailed,
+        tone: 'warning',
+      });
+    }
+  };
+
   const saveName = async (e: FormEvent) => {
     e.preventDefault();
     if (naming === null) return;
@@ -220,6 +235,9 @@ export function FriendsSection() {
               </button>
               <button type="button" className="fr-ghost" onClick={share}>
                 <ShareNetwork size={16} aria-hidden="true" /> {m.inviteFriend}
+              </button>
+              <button type="button" className="fr-ghost" onClick={() => void renewCode()}>
+                {m.newCode}
               </button>
             </div>
             {naming === null ? (

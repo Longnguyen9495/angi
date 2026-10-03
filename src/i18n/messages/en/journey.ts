@@ -301,6 +301,10 @@ const journey: Messages['journey'] = {
     myCode: 'Your garden code',
     codeAria: (spaced) => `Code ${spaced}`,
     copyCode: 'Copy code',
+    newCode: 'New code',
+    confirmNewCode:
+      'Switch to a new code? Anyone holding the old one can no longer add your garden (current friends stay).',
+    newCodeDone: (code) => `Your new garden code: ${code}.`,
     inviteFriend: 'Invite a friend',
     renameCurrent: (name) => `“${name}” · rename`,
     nameGarden: 'Name your garden',

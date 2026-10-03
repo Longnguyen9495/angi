@@ -102,7 +102,7 @@ export function App() {
 
 /** Mounts the sign-in sheet when asked for, or when two journeys need a choice. */
 function AccountLayer({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { conflict } = useAccount();
-  if (!open && !conflict) return null;
+  const { conflict, linkConfirm } = useAccount();
+  if (!open && !conflict && !linkConfirm) return null;
   return <AccountSheet open={open} onClose={onClose} />;
 }

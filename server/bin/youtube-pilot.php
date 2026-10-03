@@ -1,6 +1,12 @@
 <?php
 
 declare(strict_types=1);
+
+// Command-line only: a web request that reaches this file gets a 404 and nothing runs.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
 require_once __DIR__ . '/../lib/YoutubePilot.php';
 require_once __DIR__ . '/../lib/Catalogue.php';
 $options = getopt('', ['check-config', 'dry-run', 'resume', 'dish:']);

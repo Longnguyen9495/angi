@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/Images.php';
 
 /** Dish + ingredient persistence and the public catalogue shape. */
 final class Catalogue
@@ -742,14 +743,18 @@ final class Catalogue
         $video = null;
         if (!empty($in['video']['src'])) {
             $video = [
-                'src' => (string) $in['video']['src'],
-                'poster' => (string) ($in['video']['poster'] ?? ''),
-                'credit' => (string) ($in['video']['credit'] ?? ''),
+                'src' => trim((string) $in['video']['src']),
+                'poster' => trim((string) ($in['video']['poster'] ?? '')),
+                'credit' => mb_substr(trim((string) ($in['video']['credit'] ?? '')), 0, 255),
             ];
+            // Our own uploads, or https on a host named in MEDIA_HOSTS — never any URL at all.
+            if (!Images::allowedVideoUrl($video['src']) || !Images::allowedPosterUrl($video['poster'])) {
+                throw new HttpError(422, 'Đường dẫn video không hợp lệ.');
+            }
         }
-        // Image paths come from our own upload/storage only (never arbitrary URLs).
+        // Image paths come from our own upload/storage only (never arbitrary URLs, never "..").
         foreach (['image', 'thumbnail'] as $k) {
-            if (isset($in[$k]) && $in[$k] !== '' && !preg_match('#^/(uploads|images)/[A-Za-z0-9/_.-]+$#', (string) $in[$k])) {
+            if (isset($in[$k]) && $in[$k] !== '' && !preg_match(Images::LOCAL_IMAGE, (string) $in[$k])) {
                 throw new HttpError(422, 'Đường dẫn ảnh không hợp lệ.');
             }
         }

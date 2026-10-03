@@ -301,6 +301,10 @@ const journey = {
     /** Spoken code, letters spaced out. */
     codeAria: (spaced: string) => `Mã ${spaced}`,
     copyCode: 'Chép mã',
+    newCode: 'Đổi mã',
+    confirmNewCode:
+      'Đổi sang mã mới? Ai đang giữ mã cũ sẽ không thêm được vườn bạn nữa (bạn bè hiện có vẫn giữ nguyên).',
+    newCodeDone: (code: string) => `Mã vườn mới: ${code}.`,
     inviteFriend: 'Mời bạn',
     renameCurrent: (name: string) => `“${name}” · đổi tên`,
     nameGarden: 'Đặt tên cho khu vườn',

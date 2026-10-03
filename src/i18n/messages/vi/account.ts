@@ -34,6 +34,12 @@ const account = {
   toasts: {
     signedIn: 'Đã đăng nhập — nông trại của bạn đang được lưu.',
     linkExpired: 'Link đăng nhập đã hết hạn. Gửi mã mới trong Hồ sơ nhé.',
+    progressRefused:
+      'Bản lưu vừa rồi không khớp với nông trại trong tài khoản — đã khôi phục bản đã lưu gần nhất.',
+    importRefused:
+      'Nông trại trên máy này chưa lưu vào tài khoản được — nông trại vẫn giữ nguyên trên máy. Hãy liên hệ chúng tôi nếu cần chuyển.',
+    clockChanged:
+      'Giờ trên máy đã đổi so với lần lưu trước — nông trại đã được khôi phục theo giờ mới.',
   },
   block: {
     heading: 'Tài khoản',
@@ -46,7 +52,9 @@ const account = {
     serverNote:
       'Máy chủ chỉ giữ email và tiến trình trò chơi. Ảnh check-in không bao giờ được tải lên.',
     download: 'Tải dữ liệu trên máy chủ',
-    loggedOut: 'Đã đăng xuất. Tiến trình vẫn còn trên máy này.',
+    loggedOut:
+      'Đã đăng xuất. Nông trại vẫn nằm trong tài khoản — đăng nhập lại là có ngay; máy này bắt đầu lại như khách.',
+    logoutFailed: 'Chưa đăng xuất được — kiểm tra mạng rồi thử lại nhé.',
     logout: 'Đăng xuất',
     confirmDeleteLabel: 'Xác nhận xoá tài khoản',
     deleted: 'Đã xoá tài khoản và mọi dữ liệu trên máy chủ.',
@@ -66,6 +74,11 @@ const account = {
     conflictTitle: 'Chọn nông trại để giữ',
     description: 'Không cần mật khẩu — chỉ một email để nhận mã.',
     conflictDescription: 'Máy này và tài khoản của bạn đang có hai nông trại khác nhau.',
+    linkTitle: 'Đăng nhập bằng link trong email?',
+    linkDescription: (email: string) =>
+      `Link này mở tài khoản ${email}. Chỉ đăng nhập nếu chính bạn vừa yêu cầu mã.`,
+    linkYes: 'Đăng nhập',
+    linkNo: 'Không phải tôi',
     consentRequired: 'Bạn cần đồng ý với cách lưu dữ liệu để tiếp tục.',
     codeSentAnnounce: (email: string) => `Đã gửi mã tới ${email}.`,
     sendFailed: 'Chưa gửi được mã, bạn thử lại nhé.',

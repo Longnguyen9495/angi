@@ -95,9 +95,17 @@ function toReelDish(item: CatalogueItem, index: number): ReelDish {
     region,
     image: item.image,
     thumbnail: item.thumbnail,
-    video: item.video
-      ? { src: item.video.src, poster: item.video.poster, credit: item.video.credit ?? undefined }
-      : undefined,
+    // The server only stores our own uploads or allowed https hosts; anything else is dropped here too.
+    video:
+      item.video &&
+      isMediaUrl(item.video.src) &&
+      (item.video.poster === '' || isMediaUrl(item.video.poster))
+        ? {
+            src: item.video.src,
+            poster: item.video.poster,
+            credit: item.video.credit ?? undefined,
+          }
+        : undefined,
     youtubeVideos: normalizeYoutubeVideos(item.youtubeVideos),
     ingredients,
     flavor: item.flavor,
@@ -285,6 +293,15 @@ function groupOf(name: string): DishGroup {
 /** About 7–8 XP per item, like the hand-written recipes (4 items 30, 8 items 60). */
 function recipeXp(pieces: number): number {
   return Math.min(75, Math.max(15, Math.round((pieces * 7.5) / 5) * 5));
+}
+
+/** A same-origin path or an https URL — never javascript:, data:, http: or a protocol-relative URL. */
+function isMediaUrl(url: unknown): url is string {
+  return (
+    typeof url === 'string' &&
+    url.length < 500 &&
+    ((url.startsWith('/') && !url.startsWith('//')) || url.startsWith('https://'))
+  );
 }
 
 /**

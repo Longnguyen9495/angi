@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+// Command-line only: a web request that reaches this file gets a 404 and nothing runs.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 /*
  * Writes how the farm game cooks each dish (steps + pantry items, table dish_cook).
  * Text-only requests: the dish's name, story and ingredients are enough, no photo.

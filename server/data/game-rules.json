@@ -1,0 +1,1300 @@
+{
+  "version": 1,
+  "xpPerLevel": 100,
+  "xp": {
+    "chooseDish": 10,
+    "checkinAte": 20,
+    "checkinSwapped": 15,
+    "checkinSkipped": 5,
+    "friendHelp": 3,
+    "steal": 2,
+    "checkinPhoto": 5,
+    "catch": 3
+  },
+  "baseCrops": [
+    "rice",
+    "herbs",
+    "chili",
+    "scallion",
+    "bean",
+    "tomato"
+  ],
+  "crops": {
+    "rice": {
+      "kind": "veg",
+      "growMs": 14400000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 1,
+      "seedPrice": 6
+    },
+    "herbs": {
+      "kind": "veg",
+      "growMs": 1200000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 1,
+      "seedPrice": 6
+    },
+    "chili": {
+      "kind": "veg",
+      "growMs": 7200000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 1,
+      "seedPrice": 6
+    },
+    "scallion": {
+      "kind": "veg",
+      "growMs": 1800000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 1,
+      "seedPrice": 6
+    },
+    "bean": {
+      "kind": "veg",
+      "growMs": 5400000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 1,
+      "seedPrice": 6
+    },
+    "tomato": {
+      "kind": "veg",
+      "growMs": 10800000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 1,
+      "seedPrice": 6
+    },
+    "lemongrass": {
+      "kind": "veg",
+      "growMs": 4500000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 2,
+      "seedPrice": 10
+    },
+    "garlic": {
+      "kind": "veg",
+      "growMs": 18000000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 3,
+      "seedPrice": 10
+    },
+    "cucumber": {
+      "kind": "veg",
+      "growMs": 7200000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 4,
+      "seedPrice": 10
+    },
+    "lime": {
+      "kind": "tree",
+      "growMs": 21600000,
+      "regrowMs": 10800000,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 5,
+      "seedPrice": 10
+    },
+    "napa": {
+      "kind": "veg",
+      "growMs": 2700000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 2,
+      "seedPrice": 6
+    },
+    "radish": {
+      "kind": "veg",
+      "growMs": 3600000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 2,
+      "seedPrice": 6
+    },
+    "cabbage": {
+      "kind": "veg",
+      "growMs": 9000000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 3,
+      "seedPrice": 6
+    },
+    "eggplant": {
+      "kind": "veg",
+      "growMs": 12600000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 3,
+      "seedPrice": 6
+    },
+    "carrot": {
+      "kind": "veg",
+      "growMs": 10800000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 3,
+      "seedPrice": 6
+    },
+    "bittermelon": {
+      "kind": "veg",
+      "growMs": 9000000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 4,
+      "seedPrice": 9
+    },
+    "potato": {
+      "kind": "veg",
+      "growMs": 14400000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 4,
+      "seedPrice": 9
+    },
+    "shallot": {
+      "kind": "veg",
+      "growMs": 3600000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 4,
+      "seedPrice": 9
+    },
+    "cauliflower": {
+      "kind": "veg",
+      "growMs": 18000000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 5,
+      "seedPrice": 9
+    },
+    "sweetpotato": {
+      "kind": "veg",
+      "growMs": 21600000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 5,
+      "seedPrice": 9
+    },
+    "peanut": {
+      "kind": "veg",
+      "growMs": 18000000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 5,
+      "seedPrice": 9
+    },
+    "pumpkin": {
+      "kind": "veg",
+      "growMs": 28800000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 6,
+      "seedPrice": 9
+    },
+    "beet": {
+      "kind": "veg",
+      "growMs": 7200000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 6,
+      "seedPrice": 9
+    },
+    "corn": {
+      "kind": "veg",
+      "growMs": 21600000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 6,
+      "seedPrice": 9
+    },
+    "wintermelon": {
+      "kind": "veg",
+      "growMs": 36000000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 7,
+      "seedPrice": 9
+    },
+    "ginger": {
+      "kind": "veg",
+      "growMs": 43200000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 7,
+      "seedPrice": 9
+    },
+    "taro": {
+      "kind": "veg",
+      "growMs": 57600000,
+      "regrowMs": null,
+      "yield": 3,
+      "flushes": null,
+      "unlockLevel": 8,
+      "seedPrice": 12
+    },
+    "strawberry": {
+      "kind": "tree",
+      "growMs": 10800000,
+      "regrowMs": 5400000,
+      "yield": 2,
+      "flushes": null,
+      "unlockLevel": 5,
+      "seedPrice": 35
+    },
+    "pineapple": {
+      "kind": "tree",
+      "growMs": 43200000,
+      "regrowMs": 28800000,
+      "yield": 2,
+      "flushes": null,
+      "unlockLevel": 6,
+      "seedPrice": 40
+    },
+    "banana": {
+      "kind": "tree",
+      "growMs": 36000000,
+      "regrowMs": 21600000,
+      "yield": 2,
+      "flushes": null,
+      "unlockLevel": 7,
+      "seedPrice": 45
+    },
+    "papaya": {
+      "kind": "tree",
+      "growMs": 28800000,
+      "regrowMs": 14400000,
+      "yield": 2,
+      "flushes": null,
+      "unlockLevel": 7,
+      "seedPrice": 45
+    },
+    "guava": {
+      "kind": "tree",
+      "growMs": 36000000,
+      "regrowMs": 18000000,
+      "yield": 2,
+      "flushes": null,
+      "unlockLevel": 8,
+      "seedPrice": 50
+    },
+    "orange": {
+      "kind": "tree",
+      "growMs": 50400000,
+      "regrowMs": 21600000,
+      "yield": 2,
+      "flushes": null,
+      "unlockLevel": 9,
+      "seedPrice": 55
+    },
+    "mandarin": {
+      "kind": "tree",
+      "growMs": 43200000,
+      "regrowMs": 21600000,
+      "yield": 2,
+      "flushes": null,
+      "unlockLevel": 9,
+      "seedPrice": 55
+    },
+    "mango": {
+      "kind": "tree",
+      "growMs": 64800000,
+      "regrowMs": 28800000,
+      "yield": 2,
+      "flushes": null,
+      "unlockLevel": 10,
+      "seedPrice": 60
+    },
+    "dragonfruit": {
+      "kind": "tree",
+      "growMs": 28800000,
+      "regrowMs": 14400000,
+      "yield": 2,
+      "flushes": null,
+      "unlockLevel": 10,
+      "seedPrice": 60
+    },
+    "coconut": {
+      "kind": "tree",
+      "growMs": 86400000,
+      "regrowMs": 43200000,
+      "yield": 2,
+      "flushes": null,
+      "unlockLevel": 11,
+      "seedPrice": 65
+    },
+    "lychee": {
+      "kind": "tree",
+      "growMs": 72000000,
+      "regrowMs": 36000000,
+      "yield": 2,
+      "flushes": null,
+      "unlockLevel": 12,
+      "seedPrice": 70
+    },
+    "rambutan": {
+      "kind": "tree",
+      "growMs": 72000000,
+      "regrowMs": 36000000,
+      "yield": 2,
+      "flushes": null,
+      "unlockLevel": 12,
+      "seedPrice": 70
+    },
+    "jackfruit": {
+      "kind": "tree",
+      "growMs": 108000000,
+      "regrowMs": 57600000,
+      "yield": 2,
+      "flushes": null,
+      "unlockLevel": 13,
+      "seedPrice": 75
+    },
+    "durian": {
+      "kind": "tree",
+      "growMs": 129600000,
+      "regrowMs": 72000000,
+      "yield": 2,
+      "flushes": null,
+      "unlockLevel": 14,
+      "seedPrice": 80
+    },
+    "button": {
+      "kind": "mushroom",
+      "growMs": 7200000,
+      "regrowMs": 3600000,
+      "yield": 2,
+      "flushes": 3,
+      "unlockLevel": 3,
+      "seedPrice": 17
+    },
+    "oyster": {
+      "kind": "mushroom",
+      "growMs": 3600000,
+      "regrowMs": 2700000,
+      "yield": 2,
+      "flushes": 3,
+      "unlockLevel": 4,
+      "seedPrice": 20
+    },
+    "shiitake": {
+      "kind": "mushroom",
+      "growMs": 21600000,
+      "regrowMs": 10800000,
+      "yield": 2,
+      "flushes": 3,
+      "unlockLevel": 6,
+      "seedPrice": 26
+    },
+    "enoki": {
+      "kind": "mushroom",
+      "growMs": 10800000,
+      "regrowMs": 5400000,
+      "yield": 2,
+      "flushes": 3,
+      "unlockLevel": 8,
+      "seedPrice": 32
+    },
+    "woodear": {
+      "kind": "mushroom",
+      "growMs": 28800000,
+      "regrowMs": 14400000,
+      "yield": 2,
+      "flushes": 3,
+      "unlockLevel": 9,
+      "seedPrice": 35
+    }
+  },
+  "sell": {
+    "rice": 2,
+    "herbs": 2,
+    "chili": 2,
+    "scallion": 2,
+    "bean": 2,
+    "tomato": 2,
+    "lemongrass": 3,
+    "garlic": 3,
+    "cucumber": 3,
+    "lime": 3,
+    "napa": 2,
+    "radish": 2,
+    "cabbage": 2,
+    "eggplant": 2,
+    "carrot": 2,
+    "bittermelon": 3,
+    "potato": 3,
+    "shallot": 3,
+    "cauliflower": 3,
+    "sweetpotato": 3,
+    "peanut": 3,
+    "pumpkin": 3,
+    "beet": 3,
+    "corn": 3,
+    "wintermelon": 3,
+    "ginger": 3,
+    "taro": 4,
+    "strawberry": 4,
+    "pineapple": 5,
+    "banana": 5,
+    "papaya": 5,
+    "guava": 5,
+    "orange": 6,
+    "mandarin": 6,
+    "mango": 6,
+    "dragonfruit": 6,
+    "coconut": 6,
+    "lychee": 7,
+    "rambutan": 7,
+    "jackfruit": 7,
+    "durian": 7,
+    "button": 3,
+    "oyster": 4,
+    "shiitake": 4,
+    "enoki": 5,
+    "woodear": 5,
+    "egg": 7,
+    "duckegg": 7,
+    "quailegg": 6,
+    "gooseegg": 10,
+    "milk": 7,
+    "goatmilk": 8,
+    "wool": 10,
+    "rabbitwool": 12,
+    "honey": 12,
+    "honeycomb": 9,
+    "fish": 7,
+    "shrimp": 9,
+    "carp": 8,
+    "crab": 10,
+    "mackerel": 10,
+    "scad": 8,
+    "clam": 8,
+    "squid": 10,
+    "bloodcockle": 9,
+    "scallop": 11,
+    "octopus": 12
+  },
+  "animals": {
+    "quail": {
+      "feed": "rice",
+      "product": "quailegg",
+      "yield": 3,
+      "hoursMs": 1800000,
+      "unlockLevel": 5
+    },
+    "chicken": {
+      "feed": "rice",
+      "product": "egg",
+      "yield": 2,
+      "hoursMs": 3600000,
+      "unlockLevel": 2
+    },
+    "duck": {
+      "feed": "rice",
+      "product": "duckegg",
+      "yield": 2,
+      "hoursMs": 5400000,
+      "unlockLevel": 3
+    },
+    "goat": {
+      "feed": "napa",
+      "product": "goatmilk",
+      "yield": 1,
+      "hoursMs": 10800000,
+      "unlockLevel": 6
+    },
+    "cow": {
+      "feed": "herbs",
+      "product": "milk",
+      "yield": 1,
+      "hoursMs": 14400000,
+      "unlockLevel": 4
+    },
+    "goose": {
+      "feed": "herbs",
+      "product": "gooseegg",
+      "yield": 1,
+      "hoursMs": 21600000,
+      "unlockLevel": 7
+    },
+    "rabbit": {
+      "feed": "carrot",
+      "product": "rabbitwool",
+      "yield": 1,
+      "hoursMs": 21600000,
+      "unlockLevel": 9
+    },
+    "sheep": {
+      "feed": "cabbage",
+      "product": "wool",
+      "yield": 1,
+      "hoursMs": 36000000,
+      "unlockLevel": 8
+    }
+  },
+  "hive": {
+    "unlockLevel": 6,
+    "hoursMs": 18000000,
+    "yield": {
+      "honey": 2,
+      "honeycomb": 1
+    }
+  },
+  "boat": {
+    "unlockLevel": 5,
+    "hoursMs": 9000000,
+    "catches": 2
+  },
+  "catches": {
+    "fish": {
+      "chance": 0.65,
+      "source": "pond",
+      "unlockLevel": 1
+    },
+    "shrimp": {
+      "chance": 0.35,
+      "source": "pond",
+      "unlockLevel": 1
+    },
+    "carp": {
+      "chance": 0.25,
+      "source": "pond",
+      "unlockLevel": 3
+    },
+    "crab": {
+      "chance": 0.15,
+      "source": "pond",
+      "unlockLevel": 5
+    },
+    "mackerel": {
+      "chance": 1,
+      "source": "boat",
+      "unlockLevel": 5
+    },
+    "scad": {
+      "chance": 1,
+      "source": "boat",
+      "unlockLevel": 5
+    },
+    "clam": {
+      "chance": 1,
+      "source": "boat",
+      "unlockLevel": 5
+    },
+    "squid": {
+      "chance": 0.8,
+      "source": "boat",
+      "unlockLevel": 6
+    },
+    "bloodcockle": {
+      "chance": 0.7,
+      "source": "boat",
+      "unlockLevel": 7
+    },
+    "scallop": {
+      "chance": 0.6,
+      "source": "boat",
+      "unlockLevel": 8
+    },
+    "octopus": {
+      "chance": 0.5,
+      "source": "boat",
+      "unlockLevel": 9
+    }
+  },
+  "catchOrder": [
+    "fish",
+    "shrimp",
+    "carp",
+    "crab",
+    "mackerel",
+    "scad",
+    "clam",
+    "squid",
+    "bloodcockle",
+    "scallop",
+    "octopus"
+  ],
+  "fishing": {
+    "perDay": 5,
+    "biteMinMs": 1800,
+    "biteMaxMs": 5200,
+    "windowMs": 2000,
+    "maxCastMs": 60000
+  },
+  "watering": {
+    "perDay": 3,
+    "cut": 0.25,
+    "cooldownMs": 3600000
+  },
+  "plots": {
+    "start": 4,
+    "unlockLevels": [
+      2,
+      3,
+      5,
+      7,
+      10,
+      13,
+      17,
+      22
+    ]
+  },
+  "decor": {
+    "scarecrow": 40,
+    "lantern": 30,
+    "jar": 25,
+    "fence": 35
+  },
+  "recipes": {
+    "com-tam": {
+      "xp": 30,
+      "ingredients": [
+        {
+          "id": "rice",
+          "qty": 2
+        },
+        {
+          "id": "scallion",
+          "qty": 2
+        }
+      ]
+    },
+    "bun-rieu": {
+      "xp": 45,
+      "ingredients": [
+        {
+          "id": "rice",
+          "qty": 2
+        },
+        {
+          "id": "tomato",
+          "qty": 2
+        },
+        {
+          "id": "bean",
+          "qty": 2
+        }
+      ]
+    },
+    "bun-bo-hue": {
+      "xp": 60,
+      "ingredients": [
+        {
+          "id": "rice",
+          "qty": 2
+        },
+        {
+          "id": "chili",
+          "qty": 2
+        },
+        {
+          "id": "herbs",
+          "qty": 2
+        },
+        {
+          "id": "scallion",
+          "qty": 2
+        }
+      ]
+    },
+    "goi-cuon": {
+      "xp": 45,
+      "ingredients": [
+        {
+          "id": "rice",
+          "qty": 2
+        },
+        {
+          "id": "herbs",
+          "qty": 2
+        },
+        {
+          "id": "shrimp",
+          "qty": 1
+        }
+      ]
+    },
+    "banh-xeo": {
+      "xp": 55,
+      "ingredients": [
+        {
+          "id": "rice",
+          "qty": 2
+        },
+        {
+          "id": "bean",
+          "qty": 2
+        },
+        {
+          "id": "herbs",
+          "qty": 2
+        },
+        {
+          "id": "scallion",
+          "qty": 2
+        }
+      ]
+    },
+    "bo-luc-lac": {
+      "xp": 65,
+      "ingredients": [
+        {
+          "id": "tomato",
+          "qty": 2
+        },
+        {
+          "id": "garlic",
+          "qty": 2
+        },
+        {
+          "id": "cucumber",
+          "qty": 2
+        },
+        {
+          "id": "scallion",
+          "qty": 2
+        }
+      ]
+    },
+    "mi-quang": {
+      "xp": 45,
+      "ingredients": [
+        {
+          "id": "rice",
+          "qty": 2
+        },
+        {
+          "id": "bean",
+          "qty": 2
+        },
+        {
+          "id": "herbs",
+          "qty": 2
+        }
+      ]
+    },
+    "com-ga-hoi-an": {
+      "xp": 60,
+      "ingredients": [
+        {
+          "id": "rice",
+          "qty": 2
+        },
+        {
+          "id": "scallion",
+          "qty": 2
+        },
+        {
+          "id": "herbs",
+          "qty": 2
+        },
+        {
+          "id": "lime",
+          "qty": 2
+        }
+      ]
+    },
+    "nem-nuong": {
+      "xp": 60,
+      "ingredients": [
+        {
+          "id": "rice",
+          "qty": 2
+        },
+        {
+          "id": "herbs",
+          "qty": 2
+        },
+        {
+          "id": "garlic",
+          "qty": 2
+        },
+        {
+          "id": "cucumber",
+          "qty": 2
+        }
+      ]
+    },
+    "pho-bo": {
+      "xp": 60,
+      "ingredients": [
+        {
+          "id": "rice",
+          "qty": 2
+        },
+        {
+          "id": "scallion",
+          "qty": 2
+        },
+        {
+          "id": "herbs",
+          "qty": 2
+        },
+        {
+          "id": "lime",
+          "qty": 2
+        }
+      ]
+    },
+    "bun-cha": {
+      "xp": 60,
+      "ingredients": [
+        {
+          "id": "rice",
+          "qty": 2
+        },
+        {
+          "id": "herbs",
+          "qty": 2
+        },
+        {
+          "id": "garlic",
+          "qty": 2
+        },
+        {
+          "id": "chili",
+          "qty": 2
+        }
+      ]
+    },
+    "banh-cuon": {
+      "xp": 45,
+      "ingredients": [
+        {
+          "id": "rice",
+          "qty": 2
+        },
+        {
+          "id": "scallion",
+          "qty": 2
+        },
+        {
+          "id": "bean",
+          "qty": 2
+        }
+      ]
+    },
+    "banh-mi-chao": {
+      "xp": 50,
+      "ingredients": [
+        {
+          "id": "egg",
+          "qty": 1
+        },
+        {
+          "id": "milk",
+          "qty": 1
+        },
+        {
+          "id": "tomato",
+          "qty": 2
+        }
+      ]
+    },
+    "canh-chua-ca": {
+      "xp": 45,
+      "ingredients": [
+        {
+          "id": "fish",
+          "qty": 1
+        },
+        {
+          "id": "tomato",
+          "qty": 2
+        },
+        {
+          "id": "herbs",
+          "qty": 2
+        }
+      ]
+    }
+  },
+  "quests": {
+    "d-choose": {
+      "metric": "choose",
+      "target": 1,
+      "weekly": false,
+      "xp": 10,
+      "coins": 0,
+      "seeds": 1,
+      "water": 0
+    },
+    "d-checkin": {
+      "metric": "checkin",
+      "target": 1,
+      "weekly": false,
+      "xp": 15,
+      "coins": 0,
+      "seeds": 0,
+      "water": 1
+    },
+    "d-plant": {
+      "metric": "plant",
+      "target": 2,
+      "weekly": false,
+      "xp": 8,
+      "coins": 0,
+      "seeds": 1,
+      "water": 0
+    },
+    "d-water": {
+      "metric": "water",
+      "target": 2,
+      "weekly": false,
+      "xp": 8,
+      "coins": 4,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-harvest": {
+      "metric": "harvest",
+      "target": 3,
+      "weekly": false,
+      "xp": 10,
+      "coins": 5,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-cook": {
+      "metric": "cook",
+      "target": 1,
+      "weekly": false,
+      "xp": 15,
+      "coins": 0,
+      "seeds": 1,
+      "water": 0
+    },
+    "d-catch": {
+      "metric": "catch",
+      "target": 2,
+      "weekly": false,
+      "xp": 8,
+      "coins": 4,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-sell": {
+      "metric": "sell",
+      "target": 3,
+      "weekly": false,
+      "xp": 8,
+      "coins": 0,
+      "seeds": 1,
+      "water": 0
+    },
+    "d-buy": {
+      "metric": "buy",
+      "target": 1,
+      "weekly": false,
+      "xp": 6,
+      "coins": 3,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-order": {
+      "metric": "order",
+      "target": 1,
+      "weekly": false,
+      "xp": 12,
+      "coins": 5,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-feed": {
+      "metric": "feed",
+      "target": 1,
+      "weekly": false,
+      "xp": 8,
+      "coins": 0,
+      "seeds": 1,
+      "water": 0
+    },
+    "d-collect": {
+      "metric": "collect",
+      "target": 1,
+      "weekly": false,
+      "xp": 10,
+      "coins": 4,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-photo": {
+      "metric": "photo",
+      "target": 1,
+      "weekly": false,
+      "xp": 10,
+      "coins": 3,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-help": {
+      "metric": "help",
+      "target": 1,
+      "weekly": false,
+      "xp": 10,
+      "coins": 0,
+      "seeds": 0,
+      "water": 1
+    },
+    "d-steal": {
+      "metric": "steal",
+      "target": 1,
+      "weekly": false,
+      "xp": 10,
+      "coins": 3,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-gift": {
+      "metric": "gift",
+      "target": 1,
+      "weekly": false,
+      "xp": 12,
+      "coins": 0,
+      "seeds": 1,
+      "water": 0
+    },
+    "w-harvest": {
+      "metric": "harvest",
+      "target": 25,
+      "weekly": true,
+      "xp": 60,
+      "coins": 30,
+      "seeds": 2,
+      "water": 0
+    },
+    "w-cook": {
+      "metric": "cook",
+      "target": 5,
+      "weekly": true,
+      "xp": 60,
+      "coins": 20,
+      "seeds": 3,
+      "water": 0
+    },
+    "w-checkin": {
+      "metric": "checkin",
+      "target": 5,
+      "weekly": true,
+      "xp": 70,
+      "coins": 25,
+      "seeds": 2,
+      "water": 2
+    },
+    "w-catch": {
+      "metric": "catch",
+      "target": 12,
+      "weekly": true,
+      "xp": 50,
+      "coins": 30,
+      "seeds": 0,
+      "water": 0
+    },
+    "w-order": {
+      "metric": "order",
+      "target": 6,
+      "weekly": true,
+      "xp": 60,
+      "coins": 35,
+      "seeds": 2,
+      "water": 0
+    },
+    "w-water": {
+      "metric": "water",
+      "target": 12,
+      "weekly": true,
+      "xp": 40,
+      "coins": 20,
+      "seeds": 2,
+      "water": 0
+    },
+    "w-sell": {
+      "metric": "sell",
+      "target": 20,
+      "weekly": true,
+      "xp": 40,
+      "coins": 0,
+      "seeds": 4,
+      "water": 0
+    },
+    "w-plant": {
+      "metric": "plant",
+      "target": 15,
+      "weekly": true,
+      "xp": 50,
+      "coins": 25,
+      "seeds": 2,
+      "water": 0
+    },
+    "w-help": {
+      "metric": "help",
+      "target": 5,
+      "weekly": true,
+      "xp": 50,
+      "coins": 20,
+      "seeds": 0,
+      "water": 2
+    },
+    "w-steal": {
+      "metric": "steal",
+      "target": 5,
+      "weekly": true,
+      "xp": 50,
+      "coins": 30,
+      "seeds": 0,
+      "water": 0
+    }
+  },
+  "dailyCount": 4,
+  "weeklyCount": 3,
+  "badges": {
+    "farmer": {
+      "metric": "harvest",
+      "tiers": [
+        10,
+        50,
+        200,
+        500
+      ]
+    },
+    "cook": {
+      "metric": "cook",
+      "tiers": [
+        1,
+        10,
+        50,
+        150
+      ]
+    },
+    "recipes": {
+      "metric": "recipes",
+      "tiers": [
+        3,
+        7,
+        14
+      ]
+    },
+    "angler": {
+      "metric": "catch",
+      "tiers": [
+        10,
+        50,
+        200
+      ]
+    },
+    "supplier": {
+      "metric": "order",
+      "tiers": [
+        5,
+        25,
+        100
+      ]
+    },
+    "neighbour": {
+      "metric": "help",
+      "tiers": [
+        5,
+        25,
+        100
+      ]
+    },
+    "sneaky": {
+      "metric": "steal",
+      "tiers": [
+        1,
+        10,
+        50
+      ]
+    },
+    "generous": {
+      "metric": "gift",
+      "tiers": [
+        1,
+        10,
+        50
+      ]
+    },
+    "explorer": {
+      "metric": "eaten",
+      "tiers": [
+        5,
+        20,
+        50
+      ]
+    }
+  },
+  "regions": {
+    "north": 4,
+    "central": 2,
+    "south": 0
+  },
+  "chests": {
+    "3": {
+      "xp": 20,
+      "coins": 15,
+      "seeds": 1,
+      "water": 1
+    },
+    "5": {
+      "xp": 30,
+      "coins": 25,
+      "seeds": 2,
+      "water": 1
+    },
+    "7": {
+      "xp": 50,
+      "coins": 40,
+      "seeds": 3,
+      "water": 2
+    },
+    "14": {
+      "xp": 80,
+      "coins": 70,
+      "seeds": 4,
+      "water": 2
+    },
+    "30": {
+      "xp": 150,
+      "coins": 150,
+      "seeds": 6,
+      "water": 3
+    }
+  },
+  "orders": {
+    "perDay": 2,
+    "maxXp": 30,
+    "maxSeeds": 2,
+    "maxWater": 1
+  }
+}

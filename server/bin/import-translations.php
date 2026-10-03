@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+// Command-line only: a web request that reaches this file gets a 404 and nothing runs.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 // Upserts catalogue translations from server/sql/i18n/<locale>.json into the existing
 // database. Only *_translations rows change: Vietnamese fields are never touched, ids
 // that are not in the catalogue are skipped (and listed), fields missing from the file

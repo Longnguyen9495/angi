@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+// Command-line only: a web request that reaches this file gets a 404 and nothing runs.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 // Imports server/sql/seed.json. Refuses to touch a non-empty catalogue unless --force.
 // --from=<file> imports a catalogue snapshot instead (GET /api/dishes shape, e.g.
 // src/features/food-reel/data/catalogue.snapshot.json) — used to copy a local catalogue to production.

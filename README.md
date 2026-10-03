@@ -85,13 +85,19 @@ Tiếng Việt là ngôn ngữ gốc và là bản dự phòng ở mọi lớp; 
   cd /var/www/angi
   cp -p storage/database/angi.sqlite storage/database/angi.sqlite.bak-$(date +%Y%m%d-%H%M%S)
   sudo -u rexllm git pull --ff-only
-  sudo -u www-data php server/bin/migrate.php        # an toàn chạy mỗi lần (CREATE … IF NOT EXISTS)
+  sudo -u www-data php server/bin/check-config.php   # .env an toàn chưa (API từ chối chạy khi còn PROBLEM)
+  sudo -u www-data php server/bin/migrate.php        # an toàn chạy mỗi lần (CREATE … IF NOT EXISTS + cột mới)
   sudo -u www-data php server/bin/ai-cook.php        # món mới chưa có cách nấu (gọi AI, chỉ món thiếu)
   sudo -u rexllm npm ci && sudo -u rexllm npm run build
   ```
   Trên server bước xuất snapshot báo “keeping the existing snapshot” là đúng ý: `rexllm` không ghi được DB nên
   giữ snapshot đã commit, cây git không bị bẩn và lần `git pull` sau không vướng. Snapshot chỉ là dự phòng khi API
   không trả lời; trang luôn tải danh mục thật từ `/api/dishes`.
+- Bảo mật khi chạy production (xem `plans/sua-bao-mat-va-gian-lan.md`): `APP_ENV` khác `local` là production —
+  API trả 503 nếu `APP_URL` không phải https, `APP_KEY` ngắn/placeholder, `ADMIN_PASSWORD` yếu hoặc `MAIL_DRIVER=log`.
+  Admin có giới hạn đăng nhập sai, phiên hết hạn (2 giờ không dùng / 12 giờ tối đa), MFA tuỳ chọn qua `ADMIN_TOTP_SECRET`.
+  Mỗi lần lưu nông trại được `server/lib/ProgressGuard.php` kiểm theo luật game trong `server/data/game-rules.json`;
+  đổi số liệu game trong `src/data/game.ts` thì chạy `npm run rules:export` và commit file JSON (test sẽ báo nếu quên).
 - Production là danh mục thật. Muốn local giống hệt (sao lưu MySQL trước, lệnh xoá danh mục local):
   `curl -s https://angi.221-121-1-68.sslip.io/api/dishes > prod.json` rồi `php server/bin/seed.php --force --from=prod.json`
   (giữ cả `cook`; video YouTube thử nghiệm phải chép lại riêng). Không chạy `seed.php --force` trên production nếu chưa chắc.

@@ -20,7 +20,11 @@ require_once __DIR__ . '/../lib/AdminUsers.php';
 
 require_once __DIR__ . '/../lib/ReviewService.php';
 
+/** Admin dish/ingredient JSON (translations included) stays well under this. */
+const ADMIN_JSON_MAX = 900 * 1024;
+
 header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: same-origin');
 header('Content-Language: ' . Lang::locale());
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
@@ -28,6 +32,8 @@ $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $path = '/' . trim((string) preg_replace('#^/api#', '', $path), '/');
 
 try {
+    // A production site with a placeholder key, http URL or log-file mail does not serve.
+    require_safe_config();
     if (in_array($path, ['/provinces', '/reviews', '/reverse'], true)) {
         header('Cache-Control: no-store');
         if ($path === '/provinces' && $method === 'GET') {
@@ -38,7 +44,7 @@ try {
             throw new HttpError(405, 'Method not allowed.');
         }
         $reviews = new ReviewService(db());
-        $reviews->rate((string) ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+        $reviews->rate(client_ip() ?: 'unknown');
         if ($path === '/reviews') {
             json_response($reviews->reviews((string) ($_GET['dish'] ?? ''), (string) ($_GET['province'] ?? '')));
         }
@@ -94,17 +100,21 @@ try {
         match ($route) {
             'GET /account/garden' => json_response($friends->profile()),
             'PUT /account/garden' => json_response($friends->rename(read_json_body())),
+            'POST /account/garden/code' => json_response($friends->newCode()),
             'GET /account/friends' => json_response($friends->list()),
             'POST /account/friends' => json_response($friends->add(read_json_body())),
             'GET /account/events' => json_response($friends->events()),
+            'POST /account/events' => json_response($friends->syncEvents()),
             'GET /account/feed' => json_response($friends->feed()),
             'POST /account/events/ack' => json_response($friends->ack(read_json_body())),
-            'POST /account/code' => json_response($account->requestCode(read_json_body(), (string) ($_SERVER['REMOTE_ADDR'] ?? ''))),
+            'POST /account/code' => json_response($account->requestCode(read_json_body(), client_ip())),
             'POST /account/verify' => json_response($account->verifyCode(read_json_body())),
-            'GET /account/link' => $account->verifyLink((string) ($_GET['t'] ?? '')),
+            'POST /account/link' => json_response($account->verifyLink(read_json_body())),
+            'GET /account/link' => $account->legacyLink((string) ($_GET['t'] ?? '')),
             'GET /account/me' => json_response(['user' => $account->me()]),
             'GET /account/progress' => json_response($account->getProgress()),
-            'PUT /account/progress' => json_response($account->putProgress(read_json_body())),
+            'PUT /account/progress' => json_response($account->putProgress(read_json_body(Account::MAX_PROGRESS_BYTES + 64 * 1024))),
+            'POST /account/progress/rebase' => json_response($account->rebaseProgress(read_json_body())),
             'PUT /account/preferences' => json_response($account->setPreferences(read_json_body())),
             'GET /account/export' => json_response($account->export()),
             'POST /account/logout' => (function () use ($account) {
@@ -125,7 +135,7 @@ try {
     }
     if ($path === '/admin/login' && $method === 'POST') {
         $body = read_json_body();
-        json_response(Auth::login((string) ($body['user'] ?? ''), (string) ($body['password'] ?? '')));
+        json_response(Auth::login((string) ($body['user'] ?? ''), (string) ($body['password'] ?? ''), (string) ($body['otp'] ?? '')));
     }
     if ($path === '/admin/logout' && $method === 'POST') {
         Auth::logout();
@@ -147,7 +157,7 @@ try {
                 json_response(['items' => $catalogue->listDishes()]);
             }
             if ($method === 'POST') {
-                json_response($catalogue->saveDish(read_json_body(), null, 'manual'), 201);
+                json_response($catalogue->saveDish(read_json_body(ADMIN_JSON_MAX), null, 'manual'), 201);
             }
         }
         // Photo only → AI identifies the dish and fills the blanks (form reviews it).
@@ -167,7 +177,7 @@ try {
                 json_response($catalogue->getDish($id) ?? throw new HttpError(404, 'Không tìm thấy món.'));
             }
             if ($action === '' && $method === 'PUT') {
-                json_response($catalogue->saveDish(read_json_body(), $id, 'manual'));
+                json_response($catalogue->saveDish(read_json_body(ADMIN_JSON_MAX), $id, 'manual'));
             }
             if ($action === '' && $method === 'DELETE') {
                 $catalogue->deleteDish($id);
@@ -205,7 +215,7 @@ try {
         }
         if (preg_match('#^/admin/ingredients/([a-z0-9-]+)$#', $path, $m)) {
             if ($method === 'PUT') {
-                $catalogue->saveIngredient($m[1], read_json_body());
+                $catalogue->saveIngredient($m[1], read_json_body(ADMIN_JSON_MAX));
                 json_response(['ok' => true]);
             }
             if ($method === 'DELETE') {
@@ -217,7 +227,7 @@ try {
 
     throw new HttpError(404, __t('api.notFound'));
 } catch (HttpError $e) {
-    json_response(['error' => $e->getMessage()], $e->status);
+    json_response(['error' => $e->getMessage()] + $e->extra, $e->status);
 } catch (PDOException $e) {
     error_log('[angi api] database operation failed');
     json_response(['error' => __t('api.dbError')], 500);

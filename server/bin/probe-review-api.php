@@ -1,5 +1,11 @@
 <?php
 declare(strict_types=1);
+
+// Command-line only: a web request that reaches this file gets a 404 and nothing runs.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
 // Fixed local endpoint; print status/count only, never response metadata or URLs.
 $cases=[['GET','/provinces',200,2],['GET','/reviews?dish=com-tam&province=HCMC',200,5],['GET','/reviews?dish=pho-bo&province=HCMC',200,4],['GET','/reviews?dish=pho-bo&province=HN',200,null],['GET','/reverse',405,null]];
 // Deliberately do not trigger an uncached HN provider call during a probe.
