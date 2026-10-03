@@ -199,7 +199,8 @@ export class AnimationManager {
     const { layout, img } = assets;
     this.size = layout.size;
     this.sky = img('sky.jpg');
-    this.island = img('island.webp');
+    // Drawn from the 2× copy (sharper on phones), at the picture's own size.
+    this.island = img('island-2x.webp');
     this.clouds = new CloudAnimation(layout.clouds, img, layout.size);
     this.env = new EnvironmentAnimation(assets);
     this.game = new FarmGameLayer(assets);
@@ -559,11 +560,16 @@ export class AnimationManager {
 
   resize() {
     const r = this.canvas.getBoundingClientRect();
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    // The screen's own sharpness (3× on most phones): a 2× canvas stretched by the browser is a
+    // second blur on top of the painting's own enlargement.
+    const dpr = Math.min(3, window.devicePixelRatio || 1);
     const cw = Math.max(1, r.width);
     const ch = Math.max(1, r.height);
     this.canvas.width = Math.round(cw * dpr);
     this.canvas.height = Math.round(ch * dpr);
+    // Resizing resets the context: ask again for the smoother (less blocky) enlargement.
+    this.ctx.imageSmoothingEnabled = true;
+    this.ctx.imageSmoothingQuality = 'high';
     const [W, H] = this.size;
     const cover = Math.max(cw / W, ch / H);
     const contain = Math.min(cw / W, ch / H);
@@ -808,7 +814,7 @@ export class AnimationManager {
     this.skyMood.draw(ctx, cw, ch, this.t);
 
     layer(DEPTH.mid);
-    ctx.drawImage(this.island, 0, 0);
+    ctx.drawImage(this.island, 0, 0, W, H);
     this.game.drawTiles(ctx, G.crops);
     this.water.drawSurface(ctx, G.water);
     this.fish.drawUnder(ctx);

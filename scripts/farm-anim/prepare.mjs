@@ -1250,6 +1250,14 @@ for (const l of LAYERS) {
 await sharp(island, { raw: { width: W, height: H, channels: 4 } })
   .webp({ quality: 92, alphaQuality: 100 })
   .toFile(join(OUT, 'island.webp'));
+// What the game draws: on a phone the painting is shown ~1.8× its size, so a plain stretch is
+// soft. Twice the size with Lanczos and a light sharpen keeps its lines clean (island.webp
+// stays the 1× source the other layers cut their pieces from).
+await sharp(island, { raw: { width: W, height: H, channels: 4 } })
+  .resize(W * 2, H * 2, { kernel: 'lanczos3' })
+  .sharpen({ sigma: 0.8, m1: 0.6, m2: 2 })
+  .webp({ quality: 85, alphaQuality: 90, effort: 6 })
+  .toFile(join(OUT, 'island-2x.webp'));
 
 // ——— 7. Masks: pond water and greenhouse glass ———
 async function maskFile(file, box, test) {

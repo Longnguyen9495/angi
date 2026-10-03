@@ -29,6 +29,7 @@ export async function loadAssets(): Promise<Assets> {
   const files = new Set<string>([
     'sky.jpg',
     'island.webp',
+    'island-2x.webp',
     layout.water.file,
     layout.glass.file,
     layout.field.soil.file,
