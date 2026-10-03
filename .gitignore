@@ -41,3 +41,6 @@ id_ed25519*
 
 # Phone check screenshots and reports (scripts/phone-check.mjs)
 storage/phone-check/
+
+# Cut-out run: preview images and the undo list (old image paths)
+storage/cutout-*

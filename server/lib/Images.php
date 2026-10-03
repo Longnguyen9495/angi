@@ -68,6 +68,113 @@ final class Images
         return $out;
     }
 
+    /**
+     * Makes a plain studio background transparent, in place: the dish photos are a plate on
+     * black (or charcoal), which shows as a dark square on any other backdrop. The background
+     * is what the border is made of; everything reachable from the border through pixels close
+     * to it fades out (fully below LO, partly up to HI, so edges stay soft), and the dark fringe
+     * on those edges is unblended from it. A photo with a real background (its border not one
+     * flat colour) is left alone. Returns whether anything changed.
+     */
+    public static function cutOutBackground(GdImage $im): bool
+    {
+        $lo = 10;
+        $hi = 34;
+        $w = imagesx($im);
+        $h = imagesy($im);
+        if ($w < 16 || $h < 16) {
+            return false;
+        }
+        if (!imageistruecolor($im)) {
+            imagepalettetotruecolor($im);
+        }
+        $rgb = static fn (int $c): array => [($c >> 16) & 0xFF, ($c >> 8) & 0xFF, $c & 0xFF];
+        $edge = [];
+        for ($x = 0; $x < $w; $x += 3) {
+            $edge[] = $rgb(imagecolorat($im, $x, 0));
+            $edge[] = $rgb(imagecolorat($im, $x, $h - 1));
+        }
+        for ($y = 0; $y < $h; $y += 3) {
+            $edge[] = $rgb(imagecolorat($im, 0, $y));
+            $edge[] = $rgb(imagecolorat($im, $w - 1, $y));
+        }
+        $bg = [];
+        foreach ([0, 1, 2] as $ch) {
+            $vals = array_column($edge, $ch);
+            sort($vals);
+            $bg[$ch] = $vals[intdiv(count($vals), 2)];
+        }
+        $dist = static fn (array $c): int => max(abs($c[0] - $bg[0]), abs($c[1] - $bg[1]), abs($c[2] - $bg[2]));
+        $flat = count(array_filter($edge, fn ($c) => $dist($c) <= $lo + 6));
+        // A dark studio backdrop, and a border that is (almost) all of it.
+        if (max($bg) > 70 || $flat < 0.9 * count($edge)) {
+            return false;
+        }
+
+        // Flood from the border through background-like pixels.
+        $seen = array_fill(0, $w * $h, false);
+        $stack = [];
+        $push = function (int $x, int $y) use (&$seen, &$stack, $w, $im, $rgb, $dist, $hi): void {
+            $i = $y * $w + $x;
+            if (!$seen[$i] && $dist($rgb(imagecolorat($im, $x, $y))) <= $hi) {
+                $seen[$i] = true;
+                $stack[] = $i;
+            }
+        };
+        for ($x = 0; $x < $w; $x++) {
+            $push($x, 0);
+            $push($x, $h - 1);
+        }
+        for ($y = 0; $y < $h; $y++) {
+            $push(0, $y);
+            $push($w - 1, $y);
+        }
+        $region = [];
+        while ($stack) {
+            $i = array_pop($stack);
+            $region[] = $i;
+            $x = $i % $w;
+            $y = intdiv($i, $w);
+            if ($x > 0) {
+                $push($x - 1, $y);
+            }
+            if ($x < $w - 1) {
+                $push($x + 1, $y);
+            }
+            if ($y > 0) {
+                $push($x, $y - 1);
+            }
+            if ($y < $h - 1) {
+                $push($x, $y + 1);
+            }
+        }
+        if (!$region) {
+            return false;
+        }
+
+        imagealphablending($im, false);
+        imagesavealpha($im, true);
+        foreach ($region as $i) {
+            $x = $i % $w;
+            $y = intdiv($i, $w);
+            $c = $rgb(imagecolorat($im, $x, $y));
+            $d = $dist($c);
+            $a = $d <= $lo ? 0.0 : ($d - $lo) / ($hi - $lo); // opacity 0..1
+            if ($a <= 0.0) {
+                imagesetpixel($im, $x, $y, 127 << 24);
+                continue;
+            }
+            // Unblend from the backdrop so the edge keeps the plate's colour, not a dark rim.
+            $out = [];
+            foreach ([0, 1, 2] as $ch) {
+                $out[$ch] = (int) max(0, min(255, round(($c[$ch] - $bg[$ch] * (1 - $a)) / $a)));
+            }
+            $alpha = (int) round(127 * (1 - $a));
+            imagesetpixel($im, $x, $y, ($alpha << 24) | ($out[0] << 16) | ($out[1] << 8) | $out[2]);
+        }
+        return true;
+    }
+
     /** Centre-crops to a square and saves a WebP of $size px. */
     private static function squareWebp(GdImage $src, int $size, string $path): void
     {
@@ -81,6 +188,8 @@ final class Images
         imagealphablending($dst, false);
         imagesavealpha($dst, true);
         imagecopyresampled($dst, $src, 0, 0, (int) (($w - $side) / 2), (int) (($h - $side) / 2), $size, $size, $side, $side);
+        // A plate on a black studio backdrop: keep the plate, drop the square around it.
+        self::cutOutBackground($dst);
         if (!imagewebp($dst, $path, 84)) {
             throw new HttpError(500, 'Không lưu được ảnh WebP.');
         }
