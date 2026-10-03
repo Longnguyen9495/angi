@@ -88,6 +88,8 @@ export type Action =
   | { type: 'GIFT_SENT'; id: string; crop: CropId; now: number }
   /** Whether the guest has friends: the social quests join the draw once they do. */
   | { type: 'SET_SOCIAL'; on: boolean }
+  /** Fixes today's and this week's quest lists the moment they are shown (a new day or week). */
+  | { type: 'ROLL_QUESTS'; now: number }
   | { type: 'CLAIM_QUEST'; id: string; now: number }
   | { type: 'CLAIM_BADGE'; id: string; now: number }
   | { type: 'OPEN_CHEST'; now: number }
@@ -465,6 +467,9 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         if (!post(s, `harvest:${tag}`, `ingredient:${crop.id}`, got, 'harvest', action.now))
           continue;
         picked++;
+        if (crop.kind === 'tree') track(s, 'fruit', action.now);
+        if (crop.kind === 'mushroom') track(s, 'mushroom', action.now);
+        if (!(s.grown ?? []).includes(crop.id)) s.grown = [...(s.grown ?? []), crop.id];
         // XP grows with the wait of this cycle (first fruit, or a regrow for trees/mushrooms).
         const hours =
           (plot.harvests ?? 0) > 0 ? (crop.regrowHours ?? crop.growHours) : crop.growHours;
@@ -516,8 +521,10 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
           return state;
       }
       if (!post(s, `${key}:xp`, 'xp', recipe.xp, 'cook', action.now)) return state;
+      const first = !state.cooked[recipe.id];
       s.cooked = { ...s.cooked, [recipe.id]: (s.cooked[recipe.id] ?? 0) + 1 };
       track(s, 'cook', action.now);
+      if (first) track(s, 'newRecipe', action.now);
       return s;
     }
 
@@ -683,6 +690,11 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         ? state
         : { ...state, quests: { ...state.quests, social: action.on } };
 
+    case 'ROLL_QUESTS': {
+      const qs = questsFor(state, action.now);
+      return qs === state.quests ? state : { ...state, quests: qs };
+    }
+
     case 'CLAIM_QUEST': {
       const qs = questsFor(state, action.now);
       const def = QUEST_DEFS[action.id];
@@ -699,6 +711,9 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       s.quests = weekly
         ? { ...s.quests, weekClaimed: [...s.quests.weekClaimed, def.id] }
         : { ...s.quests, claimed: [...s.quests.claimed, def.id] };
+      if (!weekly && s.quests.daily.every((id) => s.quests.claimed.includes(id))) {
+        track(s, 'allDaily', action.now);
+      }
       return s;
     }
 
@@ -708,7 +723,13 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       const tier = b.claimed + 1;
       const s = structuredClone(state);
       if (
-        !grant(s, `badge:${b.def.id}:${tier}`, badgeReward(tier), `badge:${b.def.id}`, action.now)
+        !grant(
+          s,
+          `badge:${b.def.id}:${tier}`,
+          badgeReward(tier, b.def.id),
+          `badge:${b.def.id}`,
+          action.now,
+        )
       )
         return state;
       s.quests = { ...s.quests, badges: { ...s.quests.badges, [b.def.id]: tier } };
@@ -766,7 +787,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       post(s, `xp:${key}`, 'xp', harvestXp(HIVE.hours), 'hive', action.now);
       // The bees start filling it again straight away.
       s.hive = { startedAt: action.now, readyAt: action.now + HIVE.hours * HOUR_MS };
-      track(s, 'collect', action.now);
+      track(s, 'honey', action.now);
       return s;
     }
 
@@ -789,6 +810,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       post(s, `xp:boat:${b.sentAt}`, 'xp', XP.catch * items.length, 'boat', action.now);
       s.boat = { sentAt: null, returnAt: null };
       track(s, 'catch', action.now, items.length);
+      track(s, 'boat', action.now);
       return s;
     }
 
@@ -801,6 +823,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       }
       post(s, `${key}:coin`, 'coin', MARKET.sell(action.crop), 'market', action.now);
       track(s, 'sell', action.now);
+      track(s, 'earn', action.now, MARKET.sell(action.crop));
       return s;
     }
 
@@ -821,6 +844,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       const s = structuredClone(state);
       if (!post(s, `decor:${def.id}`, 'coin', -def.price, 'decor', action.now)) return state;
       s.decor = [...s.decor, def.id];
+      track(s, 'decor', action.now);
       return s;
     }
 
@@ -867,6 +891,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       ].slice(0, 30);
       if (s.reminder?.slotKey === meal.slotKey) s.reminder = null;
       track(s, 'checkin', action.now);
+      if (action.outcome !== 'skipped' && action.rating !== null) track(s, 'rate', action.now);
       const before = s.streak.count;
       s.streak = touchStreak(s.streak, action.now);
       streakChest(s, before, action.now);

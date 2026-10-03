@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useReducer, useState, type ReactNode } from 'react';
 import { loadProgress, saveProgress } from '../domain/persistence';
 import { gameReducer, type Action } from '../domain/reducer';
+import { weekKey } from '../domain/quests';
+import { dateKey } from '../domain/time';
 import { deviceQuality } from '../features/garden3d/quality';
 import { GameContext } from './context';
 import { useNow, useReducedMotion } from './hooks';
@@ -31,6 +33,14 @@ export function GameProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     baseDispatch({ type: 'SYNC_UNLOCKS', now: Date.now() });
   }, []);
+
+  // A new day or week draws its quests once, when the app first shows it: later changes to
+  // the farm (a tree planted) must not swap quests the guest has already seen.
+  const period = `${dateKey(now)}|${weekKey(now)}`;
+  const drawn = `${state.quests.date}|${state.quests.week}`;
+  useEffect(() => {
+    if (drawn !== period) baseDispatch({ type: 'ROLL_QUESTS', now: Date.now() });
+  }, [period, drawn]);
 
   // CSS keys every motion rule off this attribute, so the in-app toggle wins over the OS.
   useEffect(() => {

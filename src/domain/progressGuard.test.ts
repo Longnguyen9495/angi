@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -303,6 +303,53 @@ function cheats(last: GuestProgress, lastAt: number) {
     ),
     'rule',
   );
+  // Holes found in the anti-cheat review (03/10/2026): each must stay shut.
+  const day = new Date(at).toISOString().slice(0, 10);
+  add(
+    'chest xu without the chest',
+    withEntry(last, `chest:${day}:30:coin`, 'coin', 150, at),
+    'rule',
+  );
+  add(
+    "order seeds without Cô Ba's order",
+    withEntry(last, `order:${day}:77:seed:rice`, 'seed:rice', 500, at),
+    'rule',
+  );
+  add(
+    'a badge tier spelled with a leading zero',
+    withEntry(last, 'badge:cook:01', 'xp', 20, at),
+    'rule',
+  );
+  add(
+    'a planting that spends no seed',
+    withEntry(last, `tray:2:${at}`, 'seed:rice', 0, at),
+    'rule',
+  );
+  add(
+    'a meal seed handed back for nothing',
+    withEntry(last, `seed:${day}:breakfast:r1:reverse`, 'seed:rice', 0, at),
+    'rule',
+  );
+  {
+    // A stamp moves no balance: added by hand (withEntry books resources).
+    const stamped = structuredClone(last);
+    stamped.ledger = [
+      ...stamped.ledger,
+      {
+        key: 'stamp:discovered:made-up-dish',
+        resource: 'stamp' as const,
+        delta: 1,
+        balanceAfter: 0,
+        reason: 'x',
+        at,
+      },
+    ].slice(-LEDGER_LIMIT);
+    stamped.stamps = {
+      ...stamped.stamps,
+      discovered: [...stamped.stamps.discovered, 'made-up-dish'],
+    };
+    add('a stamp for a dish that does not exist', stamped, 'rule');
+  }
   return out;
 }
 
@@ -383,6 +430,8 @@ describe('server save guard (ProgressGuard.php)', () => {
           file,
           JSON.stringify({ steps, cheats: cheats(last, lastAt), parity: parity() }),
         );
+        // KEEP_FIXTURE=path keeps a copy to replay with php server/bin/selftest-guard.php <path>.
+        if (process.env.KEEP_FIXTURE) writeFileSync(process.env.KEEP_FIXTURE, readFileSync(file));
         const r = spawnSync(
           php!,
           [resolve(__dirname, '../../server/bin/selftest-guard.php'), file],

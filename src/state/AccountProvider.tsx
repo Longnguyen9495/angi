@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { parseProgress } from '../domain/persistence';
-import type { GuestProgress } from '../domain/progress';
-import { reconcile, summarize } from '../domain/sync';
+import { createInitialProgress, type GuestProgress } from '../domain/progress';
+import { isTrivial, reconcile, summarize } from '../domain/sync';
 import { CROPS } from '../data/game';
 import type { CropId } from '../data/types';
 import {
@@ -15,6 +15,7 @@ import {
 import { AccountContext, type AccountContextValue, type SyncState } from './context';
 import { useFeedback, useGame } from './hooks';
 import { t } from '../i18n';
+import { clearPhotos } from '../services/photoStore';
 
 /** Changes are gathered for this long before one save to the account. */
 const PUSH_DELAY_MS = 3000;
@@ -93,6 +94,15 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     stateRef.current = state;
   });
 
+  /**
+   * This device's journey is not the next player's: a fresh garden, and the meal photos go
+   * with it (they live in IndexedDB, outside the garden, and the album lists them all).
+   */
+  const startOver = useCallback(() => {
+    dispatch({ type: 'RESET', now: Date.now() });
+    void clearPhotos().catch(() => undefined);
+  }, [dispatch]);
+
   const saved = useCallback(() => {
     setSync('saved');
     setLastSyncAt(Date.now());
@@ -120,14 +130,14 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     const now = Date.now();
     // Seeds this garden sent whose debit never reached a save (a closed tab): take them now.
     for (const g of r.pendingGifts ?? []) {
-      if (!(g.crop in CROPS)) continue;
+      if (!Object.hasOwn(CROPS, g.crop)) continue;
       if (stateRef.current.ledger.some((l) => l.key === `present:${g.id}`)) continue;
       dispatch({ type: 'GIFT_SENT', id: g.id, crop: g.crop as CropId, now });
     }
     const lines: string[] = [];
     for (const e of r.events) {
       const seen = stateRef.current.ledger.some((l) => l.key.startsWith(`friend:${e.id}:`));
-      const crop = e.crop && e.crop in CROPS ? (e.crop as CropId) : undefined;
+      const crop = e.crop && Object.hasOwn(CROPS, e.crop) ? (e.crop as CropId) : undefined;
       dispatch({
         type: 'FRIEND_EVENT',
         event: {
@@ -190,7 +200,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       if (code === 'owned' || !load(remote)) {
         // This device's journey belongs to another account: this one starts its own.
         skipPush.current = false;
-        dispatch({ type: 'RESET', now: Date.now() });
+        startOver();
         dispatch({ type: 'SET_OWNER', owner: owner.current });
       }
       saved();
@@ -201,7 +211,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       });
       void pullEvents();
     },
-    [dispatch, load, pullEvents, saved, toast],
+    [dispatch, load, pullEvents, saved, startOver, toast],
   );
 
   /** One save at a time; a newer state waits for the next debounce. */
@@ -277,15 +287,29 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     const gen = generation.current;
     const invite = readInvite();
     if (invite) {
-      try {
-        const r = await friendsApi.add(invite);
-        const name = r.friends.find((f) => f.code === invite)?.name;
-        if (name) toast({ message: t.journey.friends.inviteAdded(name), tone: 'success' });
-      } catch (e) {
-        // Own code, unknown code, a full list: say why once and drop the invite.
-        if (e instanceof AccountError) toast({ message: e.message, tone: 'warning' });
-      }
+      // An invite link only asks: opening a link must not make a friendship (a friend sees the
+      // garden and may pick from it). One tap on the notice makes it.
       clearInvite();
+      const accept = async () => {
+        try {
+          const r = await friendsApi.add(invite);
+          const name = r.friends.find((f) => f.code === invite)?.name;
+          if (name) toast({ message: t.journey.friends.inviteAdded(name), tone: 'success' });
+          if (gen === generation.current) {
+            setFriends(r);
+            dispatch({ type: 'SET_SOCIAL', on: r.friends.length > 0 });
+          }
+        } catch (e) {
+          // Own code, unknown code, a full list: say why.
+          if (e instanceof AccountError) toast({ message: e.message, tone: 'warning' });
+        }
+      };
+      toast({
+        message: t.journey.friends.inviteAsk(invite),
+        tone: 'info',
+        action: { label: t.journey.friends.inviteAccept, onClick: () => void accept() },
+        duration: 15000,
+      });
     }
     const r = await friendsApi.list().catch(() => null);
     if (!r || gen !== generation.current) return;
@@ -295,7 +319,8 @@ export function AccountProvider({ children }: { children: ReactNode }) {
 
   /** First contact after sign-in (or page load): decide push, pull or ask. */
   const attach = useCallback(
-    async (u: AccountUser) => {
+    /** `otherBrowser`: signed in by a link asked for elsewhere (it may have been forwarded). */
+    async (u: AccountUser, otherBrowser = false) => {
       const gen = ++generation.current;
       owner.current = u.key ?? null;
       setUser(u);
@@ -313,13 +338,23 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         setConflict({ remote: parsed, version: remote.version });
         return;
       }
+      // A link from another browser may be someone else's, forwarded: never hand this device's
+      // guest garden to it unasked. The guest chooses, the account's (empty) garden or this one.
+      const local = stateRef.current;
+      if (otherBrowser && plan.kind === 'push' && !local.owner && !isTrivial(local)) {
+        setConflict({
+          remote: parsed ?? createInitialProgress(Date.now()),
+          version: remote.version,
+        });
+        return;
+      }
       ready.current = true;
       if (plan.kind === 'pull' && parsed) {
         load(remote);
         saved();
       } else if (plan.kind === 'fresh') {
         // Another account's journey is on this device: this account begins its own.
-        dispatch({ type: 'RESET', now: Date.now() });
+        startOver();
         dispatch({ type: 'SET_OWNER', owner: owner.current });
       } else if (plan.kind === 'push') {
         dispatch({ type: 'SET_OWNER', owner: owner.current });
@@ -331,7 +366,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       void pullEvents();
       void refreshFriends();
     },
-    [dispatch, load, push, pullEvents, refreshFriends, saved],
+    [dispatch, load, push, pullEvents, refreshFriends, saved, startOver],
   );
 
   /** The emailed link: sign in here, or ask first when it was asked for in another browser. */
@@ -345,7 +380,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         }
         setLinkConfirm(null);
         toast({ message: t.account.toasts.signedIn, tone: 'success' });
-        await attach(r.user);
+        await attach(r.user, confirm);
       } catch {
         setLinkConfirm(null);
         toast({ message: t.account.toasts.linkExpired, tone: 'warning' });
@@ -428,8 +463,8 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     setConflict(null);
     setFriends(null);
     // The account keeps its garden; this device must not carry it into the next account.
-    dispatch({ type: 'RESET', now: Date.now() });
-  }, [dispatch]);
+    startOver();
+  }, [startOver]);
 
   const value = useMemo<AccountContextValue>(
     () => ({

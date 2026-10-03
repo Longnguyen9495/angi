@@ -50,7 +50,10 @@ export default function FriendIsland({
   const q = QUALITY[deviceQuality()];
   const cam = useRef<CameraHandle>(null);
   const plots = useMemo(() => friendPlots(garden), [garden]);
-  const decor = useMemo(() => garden.decor.filter((d): d is DecorId => d in DECOR), [garden.decor]);
+  const decor = useMemo(
+    () => garden.decor.filter((d): d is DecorId => Object.hasOwn(DECOR, d)),
+    [garden.decor],
+  );
   const spots = useMemo(
     () => decorSpots(decor, garden.decorLayout as Parameters<typeof decorSpots>[1]),
     [decor, garden.decorLayout],

@@ -1085,6 +1085,105 @@
       "seeds": 1,
       "water": 0
     },
+    "d-plant-5": {
+      "metric": "plant",
+      "target": 5,
+      "weekly": false,
+      "xp": 14,
+      "coins": 6,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-water-5": {
+      "metric": "water",
+      "target": 5,
+      "weekly": false,
+      "xp": 14,
+      "coins": 6,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-harvest-6": {
+      "metric": "harvest",
+      "target": 6,
+      "weekly": false,
+      "xp": 18,
+      "coins": 8,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-cook-2": {
+      "metric": "cook",
+      "target": 2,
+      "weekly": false,
+      "xp": 25,
+      "coins": 0,
+      "seeds": 2,
+      "water": 0
+    },
+    "d-catch-4": {
+      "metric": "catch",
+      "target": 4,
+      "weekly": false,
+      "xp": 14,
+      "coins": 6,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-earn-30": {
+      "metric": "earn",
+      "target": 30,
+      "weekly": false,
+      "xp": 12,
+      "coins": 0,
+      "seeds": 1,
+      "water": 0
+    },
+    "d-honey": {
+      "metric": "honey",
+      "target": 1,
+      "weekly": false,
+      "xp": 12,
+      "coins": 5,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-boat": {
+      "metric": "boat",
+      "target": 1,
+      "weekly": false,
+      "xp": 10,
+      "coins": 4,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-fruit": {
+      "metric": "fruit",
+      "target": 1,
+      "weekly": false,
+      "xp": 12,
+      "coins": 5,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-mushroom": {
+      "metric": "mushroom",
+      "target": 1,
+      "weekly": false,
+      "xp": 12,
+      "coins": 5,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-rate": {
+      "metric": "rate",
+      "target": 1,
+      "weekly": false,
+      "xp": 10,
+      "coins": 0,
+      "seeds": 0,
+      "water": 1
+    },
     "w-harvest": {
       "metric": "harvest",
       "target": 25,
@@ -1174,20 +1273,119 @@
       "coins": 30,
       "seeds": 0,
       "water": 0
+    },
+    "w-all-daily": {
+      "metric": "allDaily",
+      "target": 3,
+      "weekly": true,
+      "xp": 80,
+      "coins": 40,
+      "seeds": 3,
+      "water": 2
+    },
+    "w-choose": {
+      "metric": "choose",
+      "target": 6,
+      "weekly": true,
+      "xp": 60,
+      "coins": 20,
+      "seeds": 2,
+      "water": 0
+    },
+    "w-earn": {
+      "metric": "earn",
+      "target": 200,
+      "weekly": true,
+      "xp": 50,
+      "coins": 0,
+      "seeds": 3,
+      "water": 0
+    },
+    "w-feed": {
+      "metric": "feed",
+      "target": 10,
+      "weekly": true,
+      "xp": 50,
+      "coins": 25,
+      "seeds": 2,
+      "water": 0
+    },
+    "w-collect": {
+      "metric": "collect",
+      "target": 8,
+      "weekly": true,
+      "xp": 50,
+      "coins": 30,
+      "seeds": 0,
+      "water": 0
+    },
+    "w-buy": {
+      "metric": "buy",
+      "target": 8,
+      "weekly": true,
+      "xp": 40,
+      "coins": 20,
+      "seeds": 2,
+      "water": 0
+    },
+    "w-photo": {
+      "metric": "photo",
+      "target": 3,
+      "weekly": true,
+      "xp": 40,
+      "coins": 20,
+      "seeds": 0,
+      "water": 0
+    },
+    "w-gift": {
+      "metric": "gift",
+      "target": 5,
+      "weekly": true,
+      "xp": 50,
+      "coins": 0,
+      "seeds": 3,
+      "water": 0
+    },
+    "w-new-recipe": {
+      "metric": "newRecipe",
+      "target": 1,
+      "weekly": true,
+      "xp": 70,
+      "coins": 30,
+      "seeds": 2,
+      "water": 0
+    },
+    "w-fruit": {
+      "metric": "fruit",
+      "target": 6,
+      "weekly": true,
+      "xp": 50,
+      "coins": 25,
+      "seeds": 0,
+      "water": 0
+    },
+    "w-mushroom": {
+      "metric": "mushroom",
+      "target": 5,
+      "weekly": true,
+      "xp": 50,
+      "coins": 25,
+      "seeds": 0,
+      "water": 0
+    },
+    "w-boat": {
+      "metric": "boat",
+      "target": 3,
+      "weekly": true,
+      "xp": 50,
+      "coins": 30,
+      "seeds": 0,
+      "water": 0
     }
   },
-  "dailyCount": 4,
-  "weeklyCount": 3,
+  "dailyCount": 5,
+  "weeklyCount": 4,
   "badges": {
-    "farmer": {
-      "metric": "harvest",
-      "tiers": [
-        10,
-        50,
-        200,
-        500
-      ]
-    },
     "cook": {
       "metric": "cook",
       "tiers": [
@@ -1195,6 +1393,58 @@
         10,
         50,
         150
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 60,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        },
+        {
+          "xp": 80,
+          "coins": 40,
+          "seeds": 2,
+          "water": 0
+        }
       ]
     },
     "recipes": {
@@ -1203,46 +1453,46 @@
         3,
         7,
         14
-      ]
-    },
-    "angler": {
-      "metric": "catch",
-      "tiers": [
-        10,
-        50,
-        200
-      ]
-    },
-    "supplier": {
-      "metric": "order",
-      "tiers": [
-        5,
-        25,
-        100
-      ]
-    },
-    "neighbour": {
-      "metric": "help",
-      "tiers": [
-        5,
-        25,
-        100
-      ]
-    },
-    "sneaky": {
-      "metric": "steal",
-      "tiers": [
-        1,
-        10,
-        50
-      ]
-    },
-    "generous": {
-      "metric": "gift",
-      "tiers": [
-        1,
-        10,
-        50
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
       ]
     },
     "explorer": {
@@ -1251,6 +1501,1337 @@
         5,
         20,
         50
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "discoverer": {
+      "metric": "discovered",
+      "tiers": [
+        10,
+        30,
+        60
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "regular": {
+      "metric": "checkin",
+      "tiers": [
+        5,
+        30,
+        100,
+        365
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 60,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        },
+        {
+          "xp": 80,
+          "coins": 40,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "photographer": {
+      "metric": "photo",
+      "tiers": [
+        1,
+        10,
+        50
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "regions": {
+      "metric": "regions",
+      "tiers": [
+        2,
+        3
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        }
+      ]
+    },
+    "streak": {
+      "metric": "streakMax",
+      "tiers": [
+        3,
+        7,
+        14,
+        30,
+        60
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 60,
+          "seeds": 3,
+          "water": 0
+        },
+        {
+          "xp": 75,
+          "coins": 75,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        },
+        {
+          "xp": 80,
+          "coins": 40,
+          "seeds": 2,
+          "water": 0
+        },
+        {
+          "xp": 100,
+          "coins": 50,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "farmer": {
+      "metric": "harvest",
+      "tiers": [
+        10,
+        50,
+        200,
+        500
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 60,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        },
+        {
+          "xp": 80,
+          "coins": 40,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "planter": {
+      "metric": "plant",
+      "tiers": [
+        20,
+        100,
+        400,
+        1000
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 60,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        },
+        {
+          "xp": 80,
+          "coins": 40,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "waterer": {
+      "metric": "water",
+      "tiers": [
+        20,
+        100,
+        400
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "variety": {
+      "metric": "variety",
+      "tiers": [
+        5,
+        15,
+        25,
+        46
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 60,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        },
+        {
+          "xp": 80,
+          "coins": 40,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "orchard": {
+      "metric": "fruit",
+      "tiers": [
+        5,
+        30,
+        100
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "mycologist": {
+      "metric": "mushroom",
+      "tiers": [
+        5,
+        30,
+        100
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "landowner": {
+      "metric": "plots",
+      "tiers": [
+        6,
+        8,
+        10,
+        12
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 60,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        },
+        {
+          "xp": 80,
+          "coins": 40,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "angler": {
+      "metric": "catch",
+      "tiers": [
+        10,
+        50,
+        200
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "rancher": {
+      "metric": "collect",
+      "tiers": [
+        10,
+        50,
+        200
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "beekeeper": {
+      "metric": "honey",
+      "tiers": [
+        1,
+        10,
+        50
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "sailor": {
+      "metric": "boat",
+      "tiers": [
+        1,
+        10,
+        50
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "supplier": {
+      "metric": "order",
+      "tiers": [
+        5,
+        25,
+        100
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "merchant": {
+      "metric": "sell",
+      "tiers": [
+        20,
+        100,
+        500
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "tycoon": {
+      "metric": "earn",
+      "tiers": [
+        200,
+        1000,
+        5000
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "decorator": {
+      "metric": "decor",
+      "tiers": [
+        1,
+        2,
+        4
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "neighbour": {
+      "metric": "help",
+      "tiers": [
+        5,
+        25,
+        100
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "sneaky": {
+      "metric": "steal",
+      "tiers": [
+        1,
+        10,
+        50
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "generous": {
+      "metric": "gift",
+      "tiers": [
+        1,
+        10,
+        50
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "level": {
+      "metric": "level",
+      "tiers": [
+        5,
+        10,
+        20,
+        30
+      ],
+      "rewards": [
+        {
+          "xp": 0,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 0,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 0,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        },
+        {
+          "xp": 0,
+          "coins": 60,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        },
+        {
+          "xp": 80,
+          "coins": 40,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "diligent": {
+      "metric": "allDaily",
+      "tiers": [
+        3,
+        15,
+        50
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
       ]
     }
   },

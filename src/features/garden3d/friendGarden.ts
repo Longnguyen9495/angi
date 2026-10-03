@@ -9,7 +9,7 @@ const REWATER_MS = 60 * 60 * 1000;
 export function friendPlots(garden: FriendGarden): Plot[] {
   return garden.plots.map((p) => ({
     id: p.id,
-    crop: p.crop && p.crop in CROPS ? (p.crop as CropId) : null,
+    crop: p.crop && Object.hasOwn(CROPS, p.crop) ? (p.crop as CropId) : null,
     plantedAt: p.plantedAt,
     readyAt: p.readyAt,
     wateredAt: p.wateredAt,

@@ -101,6 +101,8 @@ export interface ManagerOptions {
   onPanStart?: () => void;
   /** CSS selector of the page element harvested produce flies to (the pantry button). */
   flyTarget?: string;
+  /** Game: closer than the fit (a small box, e.g. a friend's garden in a sheet). Default 1. */
+  zoom?: number;
 }
 
 /** Produce icons in flight at most (screen space, outside the canvas). */
@@ -139,6 +141,7 @@ export class AnimationManager {
   private camGoal: { x: number; y: number } | null = null;
   private camView: CameraView = { canPan: false, side: 'field' };
   private mode: 'scene' | 'game';
+  private zoom: number;
   private focusAt: [number, number] | null;
   private onCamera: (v: CameraView) => void;
   private onPanStart: () => void;
@@ -186,6 +189,7 @@ export class AnimationManager {
     this.onStats = opts.onStats ?? (() => {});
     this.onPlace = opts.onPlace ?? (() => {});
     this.mode = opts.mode ?? 'scene';
+    this.zoom = opts.zoom ?? 1;
     const f = opts.focus;
     this.focusAt =
       this.mode !== 'game' || !f ? null : typeof f === 'string' ? assets.layout.places.focus[f] : f;
@@ -302,13 +306,18 @@ export class AnimationManager {
       const r = canvas.getBoundingClientRect();
       const p = this.toPicture({ x: e.clientX - r.left, y: e.clientY - r.top });
       // The door swings open and counts as the farmhouse.
-      // A bubble first: it floats over the plots behind its own.
-      const mark = this.game.markAt(p);
+      // A bubble first: it floats over the plots behind its own. Its finger-sized margin only
+      // counts off other plots: on a small screen a front plot's bubble reaches over the plot
+      // behind it, and a tap on that plot must stay that plot's (pick the mushroom, not water
+      // the rice in front).
+      const plotId = this.game.hit(p);
+      const near = this.game.markAt(p);
+      const mark =
+        near && (plotId === null || plotId === near.plotId) ? near : this.game.markAt(p, 2);
       if (mark) {
         this.game.tap(mark.plotId);
         return this.onPlace('plot', { ...p, plotId: mark.plotId, mark: mark.mark });
       }
-      const plotId = this.game.hit(p);
       if (plotId !== null) {
         this.game.tap(plotId);
         return this.onPlace('plot', { ...p, plotId });
@@ -565,7 +574,7 @@ export class AnimationManager {
     const ah = game ? Math.max(ch * 0.5, ch - this.insetBottom) : ch;
     const fitIn = Math.min(cw / W, ah / H);
     const s = game
-      ? Math.max(fitIn, Math.min(cover, (ch * 0.66) / H))
+      ? Math.max(fitIn, Math.min(cover, (ch * 0.66) / H)) * this.zoom
       : Math.min(cover, contain * 1.9);
     // Keep looking at the same spot across a resize (rotation, address bar).
     const k = s / this.fit.s;

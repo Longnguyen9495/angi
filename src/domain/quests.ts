@@ -1,6 +1,15 @@
-import { ANIMAL_LIST, RECIPE_LIST, XP_PER_LEVEL } from '../data/game';
+import {
+  ANIMAL_LIST,
+  BOAT,
+  CROPS,
+  DECOR_LIST,
+  HIVE,
+  RECIPE_LIST,
+  XP_PER_LEVEL,
+} from '../data/game';
 import { t } from '../i18n';
 import type { GuestProgress } from './progress';
+import { produceAvailable, recipeAvailable } from './selectors';
 import { dateKey } from './time';
 
 /*
@@ -26,7 +35,24 @@ export type QuestMetric =
   | 'photo'
   | 'help'
   | 'steal'
-  | 'gift';
+  | 'gift'
+  /** Honey taken from the hive (no longer counted as `collect`). */
+  | 'honey'
+  /** Boat trips brought home (counted when the boat is unloaded). */
+  | 'boat'
+  /** Fruit-tree plots and mushroom blocks picked. */
+  | 'fruit'
+  | 'mushroom'
+  /** Xu earned at the market. */
+  | 'earn'
+  /** Meals given a rating at check-in. */
+  | 'rate'
+  /** A recipe cooked for the first time. */
+  | 'newRecipe'
+  /** Days on which every daily quest was claimed. */
+  | 'allDaily'
+  /** Decorations bought. */
+  | 'decor';
 
 export interface QuestReward {
   xp: number;
@@ -42,6 +68,8 @@ export interface QuestDef {
   metric: QuestMetric;
   target: number;
   reward: QuestReward;
+  /** Only drawn when the guest can do it today (hive open, a fruit tree planted…). */
+  when?: (p: GuestProgress, now: number) => boolean;
 }
 
 export type Tally = Partial<Record<QuestMetric, number>>;
@@ -95,6 +123,30 @@ const DAILY_POOL: QuestDef[] = [
   { id: 'd-help', metric: 'help', target: 1, reward: R(10, 0, 0, 1) },
   { id: 'd-steal', metric: 'steal', target: 1, reward: R(10, 3) },
   { id: 'd-gift', metric: 'gift', target: 1, reward: R(12, 0, 1) },
+  // Harder levels of the same jobs (never two of one kind on the same day).
+  { id: 'd-plant-5', metric: 'plant', target: 5, reward: R(14, 6) },
+  { id: 'd-water-5', metric: 'water', target: 5, reward: R(14, 6) },
+  { id: 'd-harvest-6', metric: 'harvest', target: 6, reward: R(18, 8) },
+  { id: 'd-cook-2', metric: 'cook', target: 2, reward: R(25, 0, 2) },
+  { id: 'd-catch-4', metric: 'catch', target: 4, reward: R(14, 6) },
+  { id: 'd-earn-30', metric: 'earn', target: 30, reward: R(12, 0, 1) },
+  { id: 'd-honey', metric: 'honey', target: 1, reward: R(12, 5), when: hiveOpen },
+  { id: 'd-boat', metric: 'boat', target: 1, reward: R(10, 4), when: boatOpen },
+  {
+    id: 'd-fruit',
+    metric: 'fruit',
+    target: 1,
+    reward: R(12, 5),
+    when: (p, now) => ripensToday(p, 'tree', now),
+  },
+  {
+    id: 'd-mushroom',
+    metric: 'mushroom',
+    target: 1,
+    reward: R(12, 5),
+    when: (p, now) => ripensToday(p, 'mushroom', now),
+  },
+  { id: 'd-rate', metric: 'rate', target: 1, reward: R(10, 0, 0, 1) },
 ];
 
 const WEEKLY_POOL: QuestDef[] = [
@@ -108,38 +160,148 @@ const WEEKLY_POOL: QuestDef[] = [
   { id: 'w-plant', metric: 'plant', target: 15, reward: R(50, 25, 2) },
   { id: 'w-help', metric: 'help', target: 5, reward: R(50, 20, 0, 2) },
   { id: 'w-steal', metric: 'steal', target: 5, reward: R(50, 30) },
+  { id: 'w-all-daily', metric: 'allDaily', target: 3, reward: R(80, 40, 3, 2) },
+  { id: 'w-choose', metric: 'choose', target: 6, reward: R(60, 20, 2) },
+  { id: 'w-earn', metric: 'earn', target: 200, reward: R(50, 0, 3) },
+  { id: 'w-feed', metric: 'feed', target: 10, reward: R(50, 25, 2) },
+  { id: 'w-collect', metric: 'collect', target: 8, reward: R(50, 30) },
+  { id: 'w-buy', metric: 'buy', target: 8, reward: R(40, 20, 2) },
+  { id: 'w-photo', metric: 'photo', target: 3, reward: R(40, 20) },
+  { id: 'w-gift', metric: 'gift', target: 5, reward: R(50, 0, 3) },
+  {
+    id: 'w-new-recipe',
+    metric: 'newRecipe',
+    target: 1,
+    reward: R(70, 30, 2),
+    // A recipe never cooked that this guest can actually make (open, every ingredient grows).
+    when: (p) =>
+      RECIPE_LIST.some(
+        (r) =>
+          !p.cooked[r.id] &&
+          recipeAvailable(p, r.id) &&
+          r.ingredients.every((i) => produceAvailable(p, i.crop)),
+      ),
+  },
+  { id: 'w-fruit', metric: 'fruit', target: 6, reward: R(50, 25), when: (p) => planted(p, 'tree') },
+  {
+    id: 'w-mushroom',
+    metric: 'mushroom',
+    target: 5,
+    reward: R(50, 25),
+    when: (p) => planted(p, 'mushroom'),
+  },
+  { id: 'w-boat', metric: 'boat', target: 3, reward: R(50, 30), when: boatOpen },
 ];
 
-export const DAILY_COUNT = 4;
-export const WEEKLY_COUNT = 3;
+export const DAILY_COUNT = 5;
+export const WEEKLY_COUNT = 4;
+
+function lv(p: GuestProgress): number {
+  return Math.floor(p.xp / XP_PER_LEVEL) + 1;
+}
+function hiveOpen(p: GuestProgress): boolean {
+  return lv(p) >= HIVE.unlockLevel;
+}
+function boatOpen(p: GuestProgress): boolean {
+  return lv(p) >= BOAT.unlockLevel;
+}
+/** A fruit tree or mushroom block is in the ground now. */
+function planted(p: GuestProgress, kind: 'tree' | 'mushroom'): boolean {
+  return p.plots.some((pl) => pl.crop !== null && CROPS[pl.crop].kind === kind);
+}
+
+/** A tree or mushroom block that gives its next harvest before today ends (a daily quest). */
+function ripensToday(p: GuestProgress, kind: 'tree' | 'mushroom', now: number): boolean {
+  const end = new Date(now);
+  end.setHours(24, 0, 0, 0);
+  return p.plots.some(
+    (pl) =>
+      pl.crop !== null &&
+      CROPS[pl.crop].kind === kind &&
+      pl.readyAt !== null &&
+      pl.readyAt < end.getTime(),
+  );
+}
 
 const SOCIAL: ReadonlySet<QuestMetric> = new Set(['help', 'steal', 'gift']);
 
+/** The four shelves of the achievements screen. */
+export type AchievementGroup = 'meals' | 'garden' | 'ranch' | 'social';
+
 export interface AchievementDef {
   id: string;
+  group: AchievementGroup;
   tiers: readonly number[];
   value: (p: GuestProgress) => number;
 }
 
+const total = (m: QuestMetric) => (p: GuestProgress) => p.quests.total[m] ?? 0;
+
 export const ACHIEVEMENTS: AchievementDef[] = [
-  { id: 'farmer', tiers: [10, 50, 200, 500], value: (p) => p.quests.total.harvest ?? 0 },
-  { id: 'cook', tiers: [1, 10, 50, 150], value: (p) => p.quests.total.cook ?? 0 },
+  // ——— Meals ———
+  { id: 'cook', group: 'meals', tiers: [1, 10, 50, 150], value: total('cook') },
   {
     id: 'recipes',
+    group: 'meals',
     tiers: [3, 7, RECIPE_LIST.length],
     value: (p) => Object.values(p.cooked).filter((n) => (n ?? 0) > 0).length,
   },
-  { id: 'angler', tiers: [10, 50, 200], value: (p) => p.quests.total.catch ?? 0 },
-  { id: 'supplier', tiers: [5, 25, 100], value: (p) => p.quests.total.order ?? 0 },
-  { id: 'neighbour', tiers: [5, 25, 100], value: (p) => p.quests.total.help ?? 0 },
-  { id: 'sneaky', tiers: [1, 10, 50], value: (p) => p.quests.total.steal ?? 0 },
-  { id: 'generous', tiers: [1, 10, 50], value: (p) => p.quests.total.gift ?? 0 },
-  { id: 'explorer', tiers: [5, 20, 50], value: (p) => p.stamps.eaten.length },
+  { id: 'explorer', group: 'meals', tiers: [5, 20, 50], value: (p) => p.stamps.eaten.length },
+  {
+    id: 'discoverer',
+    group: 'meals',
+    tiers: [10, 30, 60],
+    value: (p) => p.stamps.discovered.length,
+  },
+  { id: 'regular', group: 'meals', tiers: [5, 30, 100, 365], value: total('checkin') },
+  { id: 'photographer', group: 'meals', tiers: [1, 10, 50], value: total('photo') },
+  { id: 'regions', group: 'meals', tiers: [2, 3], value: (p) => p.unlockedRegions.length },
+  { id: 'streak', group: 'meals', tiers: [3, 7, 14, 30, 60], value: (p) => p.streak.count },
+  // ——— Garden ———
+  { id: 'farmer', group: 'garden', tiers: [10, 50, 200, 500], value: total('harvest') },
+  { id: 'planter', group: 'garden', tiers: [20, 100, 400, 1000], value: total('plant') },
+  { id: 'waterer', group: 'garden', tiers: [20, 100, 400], value: total('water') },
+  {
+    id: 'variety',
+    group: 'garden',
+    tiers: [5, 15, 25, Object.keys(CROPS).length],
+    value: (p) => (p.grown ?? []).length,
+  },
+  { id: 'orchard', group: 'garden', tiers: [5, 30, 100], value: total('fruit') },
+  { id: 'mycologist', group: 'garden', tiers: [5, 30, 100], value: total('mushroom') },
+  { id: 'landowner', group: 'garden', tiers: [6, 8, 10, 12], value: (p) => p.plots.length },
+  // ——— Ranch & market ———
+  { id: 'angler', group: 'ranch', tiers: [10, 50, 200], value: total('catch') },
+  { id: 'rancher', group: 'ranch', tiers: [10, 50, 200], value: total('collect') },
+  { id: 'beekeeper', group: 'ranch', tiers: [1, 10, 50], value: total('honey') },
+  { id: 'sailor', group: 'ranch', tiers: [1, 10, 50], value: total('boat') },
+  { id: 'supplier', group: 'ranch', tiers: [5, 25, 100], value: total('order') },
+  { id: 'merchant', group: 'ranch', tiers: [20, 100, 500], value: total('sell') },
+  { id: 'tycoon', group: 'ranch', tiers: [200, 1000, 5000], value: total('earn') },
+  {
+    id: 'decorator',
+    group: 'ranch',
+    tiers: [1, 2, DECOR_LIST.length],
+    value: (p) => p.decor.length,
+  },
+  // ——— Friends & the farm itself ———
+  { id: 'neighbour', group: 'social', tiers: [5, 25, 100], value: total('help') },
+  { id: 'sneaky', group: 'social', tiers: [1, 10, 50], value: total('steal') },
+  { id: 'generous', group: 'social', tiers: [1, 10, 50], value: total('gift') },
+  { id: 'level', group: 'social', tiers: [5, 10, 20, 30], value: (p) => lv(p) },
+  { id: 'diligent', group: 'social', tiers: [3, 15, 50], value: total('allDaily') },
 ];
 
-/** Tier n (1-based) pays more the higher it is. */
-export function badgeReward(tier: number): QuestReward {
-  return R(20 * tier, 10 * tier, tier >= 3 ? 2 : 1);
+export const ACHIEVEMENT_GROUPS: AchievementGroup[] = ['meals', 'garden', 'ranch', 'social'];
+
+/**
+ * Tier n (1-based) pays more the higher it is: XP for the first two, then more xu and seeds
+ * than XP (28 achievements of XP would be some 50 levels). The level achievement pays no XP
+ * (levelling up must not pay XP that levels you up).
+ */
+export function badgeReward(tier: number, id = ''): QuestReward {
+  const r = tier <= 2 ? R(20 * tier, 10 * tier, 1) : R(15 * tier, 15 * tier, 3);
+  return id === 'level' ? { ...r, xp: 0 } : r;
 }
 
 /** Streak days that open a chest, and what is inside. */
@@ -188,22 +350,41 @@ function rng(seed: number): () => number {
 }
 
 /** Quests the guest can actually do: animals once one is open, friends' quests with friends. */
-function doable(p: GuestProgress, def: QuestDef): boolean {
-  const lvl = Math.floor(p.xp / XP_PER_LEVEL) + 1;
-  const animals = ANIMAL_LIST.some((a) => a.unlockLevel <= lvl);
+function doable(p: GuestProgress, def: QuestDef, now: number): boolean {
+  const animals = ANIMAL_LIST.some((a) => a.unlockLevel <= lv(p));
   if ((def.metric === 'feed' || def.metric === 'collect') && !animals) return false;
   if (SOCIAL.has(def.metric) && !p.quests.social) return false;
-  return true;
+  return def.when ? def.when(p, now) : true;
 }
 
-/** Up to `n` quests from `pool`, at most one social one, stable for the guest and the period. */
-function draw(p: GuestProgress, pool: QuestDef[], n: number, seed: string): string[] {
+/**
+ * Up to `n` quests from `pool`, stable for the guest and the period: at most one social one,
+ * never two that count the same thing, none `taken` already (today's choose quest).
+ */
+function draw(
+  p: GuestProgress,
+  pool: QuestDef[],
+  n: number,
+  seed: string,
+  now: number,
+  taken: QuestMetric[] = [],
+): string[] {
   const r = rng(hash(`${seed}:${p.guestId}`));
-  const left = pool.filter((d) => doable(p, d));
+  // The whole pool is shuffled first and only then filtered: a gate that opens later in the
+  // day (a tree planted) moves one quest in, it does not reshuffle the list.
+  const order = [...pool];
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(r() * (i + 1));
+    [order[i], order[j]] = [order[j]!, order[i]!];
+  }
   const out: QuestDef[] = [];
-  while (out.length < n && left.length > 0) {
-    const d = left.splice(Math.floor(r() * left.length), 1)[0]!;
+  const used = new Set<QuestMetric>(taken);
+  for (const d of order) {
+    if (out.length >= n) break;
+    if (!doable(p, d, now)) continue;
+    if (used.has(d.metric)) continue;
     if (SOCIAL.has(d.metric) && out.some((o) => SOCIAL.has(o.metric))) continue;
+    used.add(d.metric);
     out.push(d);
   }
   return out.map((d) => d.id);
@@ -235,7 +416,10 @@ export function questsFor(p: GuestProgress, now: number): QuestState {
     qs = {
       ...qs,
       date,
-      daily: [CORE.id, ...draw(p, DAILY_POOL, DAILY_COUNT - 1, `daily:${date}`)],
+      daily: [
+        CORE.id,
+        ...draw(p, DAILY_POOL, DAILY_COUNT - 1, `daily:${date}`, now, [CORE.metric]),
+      ],
       day: {},
       claimed: [],
     };
@@ -244,7 +428,7 @@ export function questsFor(p: GuestProgress, now: number): QuestState {
     qs = {
       ...qs,
       week,
-      weekly: draw(p, WEEKLY_POOL, WEEKLY_COUNT, `weekly:${week}`),
+      weekly: draw(p, WEEKLY_POOL, WEEKLY_COUNT, `weekly:${week}`, now),
       weekTally: qs.week === week ? qs.weekTally : {},
       weekClaimed: qs.week === week ? qs.weekClaimed : [],
     };

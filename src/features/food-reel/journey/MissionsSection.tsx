@@ -1,12 +1,15 @@
-import { CheckCircle, Circle, Gift, Medal, TreasureChest } from '@phosphor-icons/react';
+import { CaretDown, CheckCircle, Circle, Gift, Medal, TreasureChest } from '@phosphor-icons/react';
+import { useState } from 'react';
 import { getDish } from '../../../data/dishes';
 import {
+  ACHIEVEMENT_GROUPS,
   STREAK_CHESTS,
   badgeReward,
   badgeTitle,
   badges,
   dailyQuests,
   weeklyQuests,
+  type AchievementGroup,
   type BadgeView,
   type QuestReward,
   type QuestView,
@@ -49,7 +52,7 @@ export function MissionsSection() {
   };
   const claimBadge = (b: BadgeView) => {
     dispatch({ type: 'CLAIM_BADGE', id: b.def.id, now: currentTime() });
-    paid(badgeReward(b.claimed + 1));
+    paid(badgeReward(b.claimed + 1, b.def.id));
   };
 
   const chest = state.quests.chest;
@@ -109,43 +112,103 @@ export function MissionsSection() {
         <QuestList list={weeklyQuests(state, now)} onClaim={claim} />
       </section>
 
-      <section aria-labelledby="fj-q-badges">
+      <BadgeShelves list={badges(state)} onClaim={claimBadge} />
+    </div>
+  );
+}
+
+/** Ready to claim first, then in progress (closest to its next tier first), then maxed. */
+function badgeOrder(a: BadgeView, b: BadgeView): number {
+  const rank = (v: BadgeView) => (v.ready ? 0 : v.next === null ? 2 : 1);
+  const share = (v: BadgeView) => (v.next ? v.value / v.next : 0);
+  return rank(a) - rank(b) || share(b) - share(a);
+}
+
+/**
+ * The achievements in four shelves (meals, garden, ranch & market, friends & the farm).
+ * A shelf opens by itself when it holds something to claim; the others stay folded.
+ */
+function BadgeShelves({ list, onClaim }: { list: BadgeView[]; onClaim: (b: BadgeView) => void }) {
+  const [open, setOpen] = useState<Partial<Record<AchievementGroup, boolean>>>({});
+  const done = list.filter((b) => b.next === null).length;
+  // A shelf that opened by itself stays open once something in it is claimed.
+  const claim = (b: BadgeView) => {
+    setOpen((o) => ({ ...o, [b.def.group]: true }));
+    onClaim(b);
+  };
+  return (
+    <section aria-labelledby="fj-q-badges" className="fj-shelves">
+      <div className="fj-quests__head">
         <h3 className="fj-h3" id="fj-q-badges">
           {m.badges}
         </h3>
-        <ul className="fj-badges">
-          {badges(state).map((b) => {
-            const title = badgeTitle(b.def.id);
-            const total = b.def.tiers.length;
-            const goal = b.next ?? b.def.tiers[total - 1]!;
-            return (
-              <li
-                key={b.def.id}
-                className={`fj-badge${b.ready ? ' is-ready' : ''}${b.claimed > 0 ? ' has-tier' : ''}`}
-              >
-                <Medal size={26} weight={b.claimed > 0 ? 'fill' : 'regular'} aria-hidden="true" />
-                <div className="fj-badge__text">
-                  <p className="fj-badge__name">{title.name}</p>
-                  <p className="fj-note">
-                    {b.next === null ? m.maxed : title.goal(goal)}
-                    {' · '}
-                    {m.tier(b.claimed, total)}
-                  </p>
-                  {b.next !== null && (
-                    <Meter value={Math.min(b.value, goal)} max={goal} label={title.goal(goal)} />
-                  )}
-                </div>
-                {b.ready && (
-                  <button type="button" className="fr-cta" onClick={() => claimBadge(b)}>
-                    {m.claim}
-                  </button>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      </section>
-    </div>
+        <p className="fj-note">{m.badgesDone(done, list.length)}</p>
+      </div>
+      {ACHIEVEMENT_GROUPS.map((g) => {
+        const items = list.filter((b) => b.def.group === g).sort(badgeOrder);
+        const ready = items.filter((b) => b.ready).length;
+        const isOpen = open[g] ?? ready > 0;
+        const id = `fj-shelf-${g}`;
+        return (
+          <div key={g} className={`fj-shelf${isOpen ? ' is-open' : ''}`}>
+            <button
+              type="button"
+              className="fj-shelf__head"
+              aria-expanded={isOpen}
+              aria-controls={id}
+              onClick={() => setOpen((o) => ({ ...o, [g]: !isOpen }))}
+            >
+              <span className="fj-shelf__name">{m.groups[g]}</span>
+              <span className="fj-shelf__meta">
+                {ready > 0 && <span className="fj-shelf__ready">{m.badgesReady(ready)}</span>}
+                {items.filter((b) => b.next === null).length}/{items.length}
+              </span>
+              <CaretDown size={16} aria-hidden="true" className="fj-shelf__caret" />
+            </button>
+            {isOpen && (
+              <ul className="fj-badges" id={id}>
+                {items.map((b) => (
+                  <BadgeCard key={b.def.id} b={b} onClaim={claim} />
+                ))}
+              </ul>
+            )}
+          </div>
+        );
+      })}
+    </section>
+  );
+}
+
+function BadgeCard({ b, onClaim }: { b: BadgeView; onClaim: (b: BadgeView) => void }) {
+  const title = badgeTitle(b.def.id);
+  const total = b.def.tiers.length;
+  const goal = b.next ?? b.def.tiers[total - 1]!;
+  return (
+    <li className={`fj-badge${b.ready ? ' is-ready' : ''}${b.claimed > 0 ? ' has-tier' : ''}`}>
+      <Medal size={26} weight={b.claimed > 0 ? 'fill' : 'regular'} aria-hidden="true" />
+      <div className="fj-badge__text">
+        <p className="fj-badge__name">
+          {title.name}
+          <span className="fj-dots" role="img" aria-label={m.tier(b.claimed, total)}>
+            {Array.from({ length: total }, (_, i) => (
+              <i key={i} className={i < b.claimed ? 'is-on' : ''} />
+            ))}
+          </span>
+        </p>
+        <p className="fj-note">
+          {b.next === null ? m.maxed : title.goal(goal)}
+          {b.next !== null && ` · ${m.progress(Math.min(b.value, goal), goal)}`}
+        </p>
+        {b.next !== null && (
+          <Meter value={Math.min(b.value, goal)} max={goal} label={title.goal(goal)} />
+        )}
+      </div>
+      {b.ready && (
+        <button type="button" className="fr-cta" onClick={() => onClaim(b)}>
+          {m.claim}
+        </button>
+      )}
+    </li>
   );
 }
 

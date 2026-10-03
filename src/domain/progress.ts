@@ -96,6 +96,8 @@ export interface GuestProgress {
   fishing: { date: string; used: number };
   /** Cô Ba's daily orders already delivered, for `date` only. */
   orders: { date: string; done: string[] };
+  /** Every crop ever harvested here (the "Vườn trăm thứ" achievement). */
+  grown?: CropId[];
   /** Crops opened by levelling up (the starting six are always available). */
   unlockedCrops: CropId[];
   /** Crop opened by the latest level-up, shown once in the garden. */
@@ -229,6 +231,7 @@ export function createInitialProgress(now: number): GuestProgress {
     fishing: { date: dateKey(now), used: 0 },
     orders: { date: dateKey(now), done: [] },
     unlockedCrops: [],
+    grown: [],
     recentCropUnlock: null,
     coins: 0,
     decor: [],

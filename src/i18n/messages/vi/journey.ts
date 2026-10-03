@@ -335,6 +335,8 @@ const journey = {
     giftFailed: 'Chưa tặng được.',
     giftedToday: ' · đã tặng hôm nay',
     inviteAdded: (name: string) => `Đã kết bạn vườn với ${name} qua link mời!`,
+    inviteAsk: (code: string) => `Bạn được mời kết bạn vườn với mã ${code}. Kết bạn nhé?`,
+    inviteAccept: 'Kết bạn',
     invitePending: 'Lưu nông trại bằng email để kết bạn với người đã mời bạn.',
     referral: {
       title: 'Mời bạn mới',
@@ -385,7 +387,7 @@ const journey = {
     loading: 'Đang ghé vườn…',
     description: (level: number, status: string) => `Cấp ${level} · ${status}`,
     helpedToday: 'bạn đã tưới giúp hôm nay',
-    canHelp: 'chạm ô có viền xanh để tưới giúp',
+    canHelp: 'chạm giọt nước trên ô để tưới giúp',
     noHelpsLeft: 'hết lượt tưới giúp hôm nay',
     flying: 'Đang bay tới đảo của bạn…',
     plotsLabel: 'Các ô đất của bạn vườn',
@@ -538,6 +540,14 @@ const journey = {
     chestNext: (n: number, left: number) =>
       `Rương tiếp theo ở chuỗi ${n} ngày (còn ${left} ngày). Chốt món hoặc check-in mỗi ngày để giữ chuỗi.`,
     tier: (n: number, total: number) => `Bậc ${n}/${total}`,
+    badgesDone: (done: number, total: number) => `${done}/${total} đã xong hết bậc`,
+    badgesReady: (n: number) => `${n} sẵn nhận`,
+    groups: {
+      meals: 'Bữa ăn',
+      garden: 'Vườn',
+      ranch: 'Trại & chợ',
+      social: 'Bạn bè & chung',
+    } as Record<string, string>,
     maxed: 'Đã đạt bậc cao nhất',
     badgeProgress: (have: number, need: number) => `${have}/${need}`,
     logEmpty: 'Chưa có bữa nào được check-in. Check-in đầu tiên sẽ hiện ở đây.',

@@ -40,6 +40,7 @@ return [
     'friends.ownCode' => 'Đây là mã khu vườn của chính bạn.',
     'friends.tooManyFriends' => 'Bạn đã có {max} người bạn — bớt một người để thêm mới.',
     'friends.friendFull' => 'Khu vườn này đã đủ bạn rồi.',
+    'friends.tooManyAdds' => 'Bạn đã thử quá nhiều mã kết bạn — đợi khoảng một tiếng rồi thử lại nhé.',
     'friends.noWaterNeeded' => 'Ô này không cần tưới lúc này.',
     'friends.alreadyWatered' => 'Hôm nay bạn đã tưới giúp vườn này rồi — mai ghé lại nhé.',
     'friends.helpLimit' => 'Hôm nay bạn đã giúp {max} khu vườn — nghỉ tay thôi!',

@@ -31,10 +31,11 @@ final class ReviewService
         $insert = $this->pdo->prepare(($mysql ? 'INSERT IGNORE' : 'INSERT OR IGNORE') . ' INTO review_provinces(id,name) VALUES (?,?)');
         foreach (self::PROVINCES as $id => $name) { $insert->execute([$id,$name]); }
     }
-    private function locked(string $name, callable $fn): mixed
+    /** `$wait` false: a busy lock answers 429 at once instead of queueing PHP workers behind it. */
+    private function locked(string $name, callable $fn, bool $wait = true): mixed
     {
         $h = fopen($this->dir . '/' . hash('sha256', $name) . '.lock', 'c');
-        if (!$h || !flock($h, LOCK_EX)) { throw new HttpError(503, 'Lock unavailable.'); }
+        if (!$h || !flock($h, $wait ? LOCK_EX : LOCK_EX | LOCK_NB)) { if ($h) { fclose($h); } throw new HttpError($wait ? 503 : 429, $wait ? 'Lock unavailable.' : 'Busy, try again shortly.'); }
         try { return $fn(); } finally { flock($h, LOCK_UN); fclose($h); }
     }
     private function read(string $name): array
@@ -157,6 +158,8 @@ final class ReviewService
         if (!is_finite($lat)||!is_finite($lon)||$lat < -90||$lat>90||$lon < -180||$lon>180) { throw new HttpError(422,'Coordinates invalid.'); }
         $e=$this->read('reverse-verification');
         if (($e['verifiedAt']??0)<time()-86400) { throw new HttpError(503,'Reverse chưa được verify.'); }
-        return $this->locked('reverse-provider',function () use ($lat,$lon) { usleep(1100000); $r=$this->locate($lat,$lon); return ['provinceId'=>$r['provinceId'],'provinceName'=>self::PROVINCES[$r['provinceId']]]; });
+        // The day's budget first (cheap), then one lookup at a time without a queue.
+        $q = $this->read('quota'); if (($q['day'] ?? '') === gmdate('Y-m-d') && ($q['reverse'] ?? 0) >= 10) { throw new HttpError(429,'Daily provider budget exhausted.'); }
+        return $this->locked('reverse-provider',function () use ($lat,$lon) { usleep(1100000); $r=$this->locate($lat,$lon); return ['provinceId'=>$r['provinceId'],'provinceName'=>self::PROVINCES[$r['provinceId']]]; }, false);
     }
 }

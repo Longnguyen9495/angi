@@ -28,7 +28,22 @@ if (!is_array($fixture)) {
 $pdo = new PDO('sqlite::memory:', null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
 $pdo->exec(file_get_contents(__DIR__ . '/../sql/schema.sqlite.sql'));
 Schema::upgrade($pdo);
-$pdo->exec("INSERT INTO users (id, email, consent_version, consent_at, created_at) VALUES (1, 'bot@example.invalid', 'x', 0, 0)");
+$pdo->prepare("INSERT INTO users (id, email, consent_version, consent_at, created_at) VALUES (1, 'bot@example.invalid', 'x', 0, ?)")
+    ->execute([intdiv((int) $fixture['steps'][0]['clientNow'], 1000)]);
+// The catalogue the honest bot ate and cooked from (stamps and dish recipes must be real dishes).
+$dish = $pdo->prepare("INSERT OR IGNORE INTO dishes (id, name, image, thumbnail) VALUES (?, ?, '', '')");
+foreach ($fixture['steps'] as $step) {
+    foreach (['discovered', 'eaten'] as $k) {
+        foreach ($step['data']['stamps'][$k] ?? [] as $id) {
+            $dish->execute([$id, $id]);
+        }
+    }
+    foreach (array_keys($step['data']['cooked'] ?? []) as $id) {
+        if (!isset(ProgressGuard::rules()['recipes'][$id])) {
+            $dish->execute([$id, $id]);
+        }
+    }
+}
 
 $pass = $fail = 0;
 $check = function (string $name, bool $ok, string $why = '') use (&$pass, &$fail): void {

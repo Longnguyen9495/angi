@@ -164,7 +164,7 @@ Danh sách đầy đủ, sinh từ `catalog.json`, nằm cuối [bảng](vat-pha
 - Bạn bè ghé vườn chỉ thấy gà và bò trên đảo 3D. Các vật nuôi khác chỉ có trong bảng Chuồng trại của chính người chơi.
 - Nhổ một phôi nấm đang chín ở đợt cuối sẽ chạy hiệu ứng như thu hoạch.
 - Nếu kéo camera trong 0,8 giây lúc nông sản đang bay, điểm xuất phát không đổi theo.
-- Server (`Friends.php`) giữ một danh sách mã cây để kiểm tra hạt được tặng; khi thêm cây mới phải thêm vào cả hai nơi.
+- ~~Server (`Friends.php`) giữ một danh sách mã cây riêng~~: từ 03/10/2026 server đọc `server/data/game-rules.json` (`npm run rules:export`), không còn danh sách riêng.
 
 ## Tệp chính
 

@@ -628,7 +628,7 @@ export const PRODUCE_IDS: ProduceId[] = [
 ];
 
 export function isCrop(id: ProduceId): id is CropId {
-  return id in CROPS;
+  return Object.hasOwn(CROPS, id);
 }
 
 export function isCatch(id: ProduceId): id is Catch {

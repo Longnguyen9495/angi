@@ -381,12 +381,13 @@
 
 .fg-quest__toggle {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 4px;
+  right: 4px;
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  /* 36px: big enough for a thumb (the × itself stays small). */
+  width: 36px;
+  height: 36px;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -790,8 +791,9 @@
     height: 56px;
   }
 
+  /* Above the "Chuồng & ao" / "Ruộng" button (bottom +90px, 40px tall), never over it. */
   .fg-hint {
-    bottom: calc(var(--fg-dock) + var(--fg-bottom) + 84px);
+    bottom: calc(var(--fg-dock) + var(--fg-bottom) + 138px);
   }
 }
 
@@ -1195,14 +1197,16 @@
 
 /* ——— Notices are in-game banners while the farm is open ——— */
 /* Phones: right above the seed tray and tools, clear of the next-step hint at the top. */
+/* --fg-toast-bottom is set by FarmGame: just above the seed tray, or above the plot card
+   docked at the bottom while it is open, so a notice never covers either. */
 html[data-farm-game='on'] .toast-region {
-  bottom: calc(66px + env(safe-area-inset-bottom) + 88px);
+  bottom: var(--fg-toast-bottom, calc(66px + env(safe-area-inset-bottom) + 88px));
   width: min(420px, calc(100vw - 24px));
 }
 
 @media (max-height: 480px) and (orientation: landscape) {
   html[data-farm-game='on'] .toast-region {
-    bottom: calc(52px + env(safe-area-inset-bottom) + 74px);
+    bottom: var(--fg-toast-bottom, calc(52px + env(safe-area-inset-bottom) + 74px));
   }
 }
 

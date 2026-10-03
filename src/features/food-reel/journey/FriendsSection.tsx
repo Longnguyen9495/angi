@@ -32,7 +32,12 @@ import { useAccount, useFeedback, useGame, useUi } from '../../../state/hooks';
 const m = t.journey.friends;
 const v = t.journey.visit;
 
+import { FriendFarm } from './FriendFarm';
+
 const FriendIsland = lazy(() => import('../../garden3d/FriendIsland'));
+/** The old 3D island stays reachable with ?visit=3d while the 2D farm is new. */
+const VISIT_3D =
+  typeof location !== 'undefined' && new URLSearchParams(location.search).get('visit') === '3d';
 
 /** ?ban=K7QM2P in a shared link pre-fills the add-friend box. */
 function codeFromUrl(): string {
@@ -436,7 +441,7 @@ function GiftSheet({
 
 function feedText(i: FeedItem): string {
   const f = m.feed;
-  const crop = i.crop && i.crop in CROPS ? CROPS[i.crop as CropId] : null;
+  const crop = i.crop && Object.hasOwn(CROPS, i.crop) ? CROPS[i.crop as CropId] : null;
   switch (i.type) {
     case 'water':
       return f.water(i.name, i.plotId);
@@ -589,7 +594,7 @@ function FriendVisit({
   onClose: () => void;
   onHelped: () => void;
 }) {
-  const { now, reduced } = useGame();
+  const { now, reduced, quality } = useGame();
   const { toast } = useFeedback();
   const [garden, setGarden] = useState<FriendGarden | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -628,7 +633,9 @@ function FriendVisit({
     try {
       const g = await friendsApi.steal(code, plotId);
       setGarden(g);
-      const crop = g.crop in CROPS ? CROPS[g.crop as CropId].name.toLowerCase() : g.crop;
+      const crop = Object.hasOwn(CROPS, g.crop)
+        ? CROPS[g.crop as CropId].name.toLowerCase()
+        : g.crop;
       toast({ message: v.stole(crop, g.name, XP.steal), tone: 'reward' });
       onHelped();
     } catch (e) {
@@ -680,7 +687,22 @@ function FriendVisit({
       fullOnMobile
     >
       {error && <p className="fj-note">{error}</p>}
-      {garden && canUseWebGL() && (
+      {garden && !VISIT_3D && (
+        <FriendFarm
+          garden={garden}
+          now={now}
+          reduced={reduced}
+          quality={quality}
+          waterable={waterable}
+          pickable={pickable}
+          onPlot={(id) => {
+            setPicked(id);
+            if (waterable.has(id)) void water(id);
+            else if (pickable.has(id)) void pick(id);
+          }}
+        />
+      )}
+      {garden && VISIT_3D && canUseWebGL() && (
         <Suspense fallback={<div className="g3d-loading">{v.flying}</div>}>
           <FriendIsland
             garden={garden}

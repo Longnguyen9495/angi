@@ -40,6 +40,12 @@ final class ProgressGuard
     public const MAX_LEDGER = 1000;
     private const IMPORT_CAPS = ['xp' => 20000, 'coins' => 100000, 'items' => 20000, 'seeds' => 5000];
     private const SLOT = '(\d{4}-\d{2}-\d{2}):(breakfast|lunch|dinner)';
+    /** Tallies the server counts itself from each accepted save (verified_stats). */
+    private const COUNTED = ['harvest', 'cook', 'catch', 'order', 'help', 'steal', 'gift', 'checkin', 'photo', 'plant', 'collect', 'honey', 'boat', 'sell', 'earn', 'fruit', 'mushroom'];
+    /** How much XP one of each could at least have earned: caps a copy's own claims (see baseTotals). */
+    /** XP a garden may gain in one server day, however it is split into saves. */
+    private const XP_PER_DAY = 20000;
+    private const XP_PER = ['harvest' => 2, 'cook' => 15, 'catch' => 3, 'order' => 15, 'help' => 3, 'steal' => 2, 'gift' => 10, 'checkin' => 5, 'photo' => 5, 'plant' => 3, 'collect' => 2, 'honey' => 10, 'boat' => 6, 'fruit' => 2, 'mushroom' => 2];
 
     private static ?array $rules = null;
     private array $r;
@@ -77,6 +83,19 @@ final class ProgressGuard
             $this->reject('clock', 'device clock is more than a year off');
         }
         $offset = $clientNow - $serverMs;
+        if ($this->nowMs === null) {
+            // The game saves a few seconds after a change: far more often is a script.
+            (new RateLimit($this->db))->hit(['save:' . $this->user => [1500, 3600]], __t('account.progressRejected'));
+        }
+        // Parts an older client may leave out: read as empty, never as a PHP warning.
+        foreach (['animals', 'decor', 'cooked', 'unlockedRegions', 'unlockedCrops', 'decorLayout'] as $k) {
+            $new[$k] ??= [];
+        }
+        foreach ((array) ($new['plots'] ?? []) as $i => $pl) {
+            if (is_array($pl)) {
+                $new['plots'][$i] += ['crop' => null, 'plantedAt' => null, 'readyAt' => null, 'wateredAt' => null];
+            }
+        }
         $this->shape($new);
         $guestId = (string) $new['guestId'];
 
@@ -89,11 +108,18 @@ final class ProgressGuard
 
         $old = $row ? json_decode((string) $row['data'], true) : null;
         if (!is_array($old) || ($old['guestId'] ?? null) !== $guestId) {
-            return $this->import($new, $clientNow, $offset);
+            return $this->import($new, $clientNow, $offset, is_array($old));
         }
         $prevOffset = $row['client_offset'] ?? null;
         if ($prevOffset !== null && abs($offset - (int) $prevOffset) > self::SKEW_MS) {
             $this->reject('clock', 'device clock moved since the last save');
+        }
+        // Small moves add up: a device clock may wander SKEW_MS in a day, not SKEW_MS a save
+        // (twenty saves each nine minutes ahead would otherwise ripen crops three hours early).
+        $drift = $prevOffset === null ? 0 : abs($offset - (int) $prevOffset);
+        $driftKey = 'drift:' . intdiv(intdiv($serverMs, 1000), 86400);
+        if ($drift > 0 && $this->counted($driftKey) + intdiv($drift, 1000) > intdiv(self::SKEW_MS, 1000)) {
+            $this->reject('clock', 'device clock keeps moving');
         }
         $skew = $prevOffset === null ? self::LEGACY_SKEW_MS : self::SKEW_MS;
         $ctx = [
@@ -104,12 +130,18 @@ final class ProgressGuard
             'offset' => $offset,
             'level' => self::level((int) $new['xp']),
             'elapsedMs' => max(0, $serverMs - (int) $row['updated_at'] * 1000),
+            'serverMs' => $serverMs,
         ];
         $out = $this->diff($ctx) + ['guestId' => $guestId, 'clientAt' => $clientNow, 'offset' => $offset];
         if ($prevOffset === null) {
             // Saved before the guard existed: what that copy counted is where badges build on.
-            $out['base'] = self::baseTotals($old, PHP_INT_MAX);
+            $out['base'] = self::baseTotals($old, PHP_INT_MAX, $this->r);
         }
+        if ($drift >= 1000) {
+            $out['stats'][$driftKey] = intdiv($drift, 1000);
+        }
+        $out['stats'][self::dayKey('xpday', $serverMs)] = $out['gained'];
+        $out['streakBase'] = $this->streakBase($ctx, $serverMs);
         return $out;
     }
 
@@ -117,7 +149,7 @@ final class ProgressGuard
     public function commit(array $c): void
     {
         $sqlite = $this->db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite';
-        $now = time();
+        $now = $this->nowMs !== null ? intdiv($this->nowMs, 1000) : time();
         if ($c['claims']) {
             $ins = $this->db->prepare(($sqlite ? 'INSERT OR IGNORE' : 'INSERT IGNORE') . ' INTO progress_claims (user_id, claim_key, created_at) VALUES (?, ?, ?)');
             foreach (array_unique($c['claims']) as $k) {
@@ -141,6 +173,16 @@ final class ProgressGuard
         // The longest streak this garden has shown (a running maximum, not a sum).
         if (($c['streak'] ?? 0) > $this->longestStreak()) {
             $set->execute([$this->user, 'streakMax', (int) $c['streak']]);
+        }
+        if (isset($c['streakBase'])) {
+            $set->execute([$this->user, 'streakBase', $c['streakBase'][0]]);
+            $set->execute([$this->user, 'streakBaseDay', $c['streakBase'][1]]);
+        }
+        // Per-day tallies (clock drift, XP) are only read for today.
+        if (random_int(1, 20) === 1) {
+            $today = intdiv($now, 86400);
+            $this->db->prepare("DELETE FROM verified_stats WHERE user_id = ? AND (metric LIKE 'drift:%' OR metric LIKE 'xpday:%') AND metric NOT IN (?, ?)")
+                ->execute([$this->user, "drift:$today", "xpday:$today"]);
         }
         foreach (array_chunk($c['settle'], 100) as $ids) {
             $marks = implode(',', array_fill(0, count($ids), '?'));
@@ -203,10 +245,14 @@ final class ProgressGuard
 
     // ——— A journey seen for the first time ———
 
-    private function import(array $new, int $clientNow, int $offset): array
+    private function import(array $new, int $clientNow, int $offset, bool $replacing = false): array
     {
         if ($this->nowMs === null) {
-            (new RateLimit($this->db))->hit(['import:' . $this->user => [3, 7 * 86400]], __t('account.progressRejected'));
+            // A garden replacing the account's own (the guest chose this device's copy) is rare.
+            (new RateLimit($this->db))->hit(
+                ['import:' . $this->user => [3, 7 * 86400]] + ($replacing ? ['import-replace:' . $this->user => [2, 7 * 86400]] : []),
+                __t('account.progressRejected'),
+            );
         }
         $xp = (int) $new['xp'];
         $items = array_sum(array_map('intval', $new['ingredients']));
@@ -229,6 +275,26 @@ final class ProgressGuard
                 $claims[] = (string) $e['key'];
             }
         }
+        // What the copy already holds beyond its ledger's tail: badge tiers (later tiers follow
+        // them in order) and the crops it has grown ("Vườn trăm thứ").
+        foreach ((array) ($new['quests']['badges'] ?? []) as $id => $tier) {
+            for ($n = 1; isset($this->r['badges'][$id]) && $n <= min((int) $tier, count($this->r['badges'][$id]['tiers'])); $n++) {
+                $claims[] = "badge:$id:$n";
+            }
+        }
+        foreach (self::grownCrops($new, $this->r) as $c) {
+            $claims[] = "grown:$c";
+        }
+        // What badges may build on; never what invite rewards are paid from. A garden replacing
+        // the account's own never raises what that one had already shown.
+        $base = self::baseTotals($new, $xp, $this->r, $clientNow);
+        if ($replacing) {
+            $st = $this->db->prepare("SELECT metric FROM verified_stats WHERE user_id = ? AND metric LIKE 'base:%'");
+            $st->execute([$this->user]);
+            foreach ($st->fetchAll(PDO::FETCH_COLUMN) as $m) {
+                unset($base[substr((string) $m, 5)]);
+            }
+        }
         return [
             'mode' => 'import',
             'guestId' => (string) $new['guestId'],
@@ -236,10 +302,10 @@ final class ProgressGuard
             'offset' => $offset,
             'claims' => $claims,
             'stats' => [],
-            // What badges may build on; never what invite rewards are paid from.
-            'base' => self::baseTotals($new, $xp),
+            'base' => $base,
             'settle' => [],
             'deliver' => [],
+            'streakBase' => [(int) ($new['streak']['count'] ?? 0), self::serverDay($this->nowMs ?? (int) floor(microtime(true) * 1000))],
         ];
     }
 
@@ -247,20 +313,39 @@ final class ProgressGuard
      * Tallies a copy claims (quests.total), held to what its XP could have earned (`$xp`;
      * PHP_INT_MAX for a copy the server already accepted). Base for badges only.
      */
-    private static function baseTotals(array $p, int $xp): array
+    public static function baseTotals(array $p, int $xp, array $R, ?int $nowMs = null): array
     {
         $total = is_array($p['quests']['total'] ?? null) ? $p['quests']['total'] : [];
         $cap = fn (string $m, int $div) => max(0, min((int) ($total[$m] ?? 0), $xp === PHP_INT_MAX ? PHP_INT_MAX : intdiv($xp, $div)));
-        return [
-            'harvest' => $cap('harvest', 2),
-            'cook' => $cap('cook', 15),
-            'catch' => $cap('catch', 3),
-            'order' => $cap('order', 15),
-            'help' => $cap('help', 3),
-            'steal' => $cap('steal', 2),
-            'gift' => $cap('gift', 10),
-            'streakMax' => max(0, min((int) ($p['streak']['count'] ?? 0), $xp === PHP_INT_MAX ? 100_000 : 30)),
-        ];
+        $out = [];
+        foreach (self::XP_PER as $m => $div) {
+            $out[$m] = $cap($m, $div);
+        }
+        // Market tallies earn no XP: held to the xu the copy could have made instead.
+        $out['sell'] = max(0, min((int) ($total['sell'] ?? 0), $xp === PHP_INT_MAX ? PHP_INT_MAX : $xp * 2));
+        $out['earn'] = max(0, min((int) ($total['earn'] ?? 0), $xp === PHP_INT_MAX ? PHP_INT_MAX : $xp * 20));
+        $out['variety'] = count(self::grownCrops($p, $R));
+        $out['streakMax'] = max(0, min((int) ($p['streak']['count'] ?? 0), $xp === PHP_INT_MAX ? 100_000 : 30));
+        // Watering and full quest days are not in the ledger: held to the garden's age (the
+        // same 15 cans a day the badge allows later), and to one full day per day.
+        $created = (int) ($p['createdAt'] ?? 0);
+        $now = $nowMs ?? (int) floor(microtime(true) * 1000);
+        $days = $created > 0 ? min(400, max(0, intdiv($now - $created, 86_400_000))) + 1 : 1;
+        $out['water'] = max(0, min((int) ($total['water'] ?? 0), 15 * $days));
+        $out['allDaily'] = max(0, min((int) ($total['allDaily'] ?? 0), $days));
+        return $out;
+    }
+
+    /** The crops a copy says it has grown, as known crop ids without repeats. */
+    private static function grownCrops(array $p, array $R): array
+    {
+        $out = [];
+        foreach ((array) ($p['grown'] ?? []) as $c) {
+            if (is_string($c) && isset($R['crops'][$c])) {
+                $out[$c] = true;
+            }
+        }
+        return array_keys($out);
     }
 
     // ——— A save of the same journey ———
@@ -300,6 +385,15 @@ final class ProgressGuard
         }
         if (!$foundLast) {
             $this->reject('gap', 'saved ledger entries are missing');
+        }
+        // One spelling per number: "e05", "01" or "-0" would be a new key (a new claim) for the
+        // same event, cycle or tier.
+        foreach ($fresh as $e) {
+            foreach (explode(':', (string) $e['key']) as $part) {
+                if (preg_match('/^(?:e|r)?(-?\d+)$/', $part, $m) && $m[1] !== (string) (int) $m[1]) {
+                    $this->reject('rule', "ledger key {$e['key']} spells a number oddly");
+                }
+            }
         }
 
         // Balances: stored value + new deltas, exactly.
@@ -352,15 +446,30 @@ final class ProgressGuard
                 $gained += (int) $e['delta'];
             }
         }
-        // Backstop on top of the rules: more than any real session could earn.
+        // Backstop on top of the rules: more than any real session could earn, in one save and
+        // over the server's day (many quick saves must not add up past it).
         if ($gained > 2000 + intdiv($ctx['elapsedMs'], 3_600_000) * 800) {
             $this->reject('rule', "XP gained ($gained) too fast");
         }
-        $out['stats']['xp'] = $gained;
+        if ($gained > 0 && $this->counted(self::dayKey('xpday', $ctx['serverMs'])) + $gained > self::XP_PER_DAY) {
+            $this->reject('rule', 'more XP than a day of play earns');
+        }
+        $earned = 0;
+        foreach ($fresh as $e) {
+            if ($e['resource'] === 'xp' && (int) $e['delta'] > 0 && !preg_match('/^(quest|badge|chest|friend):/', (string) $e['key'])) {
+                $earned += (int) $e['delta'];
+            }
+        }
+        $out['stats']['xp'] = $earned;
         $out['streak'] = (int) ($new['streak']['count'] ?? 0);
-        $out['claims'] = array_values(array_map(fn ($e) => (string) $e['key'], array_filter($fresh, [self::class, 'claimable'])));
+        $out['claims'] = array_values(array_merge(
+            array_map(fn ($e) => (string) $e['key'], array_filter($fresh, [self::class, 'claimable'])),
+            // Every crop ever harvested here, for "Vườn trăm thứ".
+            array_map(fn ($c) => "grown:$c", $out['grown']),
+        ));
         $out['mode'] = 'diff';
         $out['base'] = [];
+        $out['gained'] = $gained;
         return $out;
     }
 
@@ -376,7 +485,8 @@ final class ProgressGuard
         foreach ($fresh as $e) {
             $byKey[(string) $e['key']] = $e;
         }
-        $stats = ['harvest' => 0, 'cook' => 0, 'catch' => 0, 'order' => 0, 'help' => 0, 'steal' => 0, 'gift' => 0];
+        $stats = array_fill_keys(self::COUNTED, 0);
+        $grown = [];
         $settle = [];
         $deliver = [];
         $cooked = [];
@@ -387,16 +497,29 @@ final class ProgressGuard
         $checkins = [];  // non-skipped check-ins: at => used
         $stamps = ['discovered' => [], 'eaten' => []];
         $decor = [];
+        $harvests = [];  // plot => [{t, at, kind}]
+        $collects = [];  // animal => [fedAt => at]
+        $hiveRuns = [];  // startedAt => emptied at
+        $boatTrips = []; // sentAt => back at
 
         // Evidence first: plantings, feeding, check-ins (rewards are checked against them below).
         foreach ($fresh as $e) {
             $key = (string) $e['key'];
             $at = (int) $e['at'];
+            // A planting spends one seed of the crop it plants; feeding spends one of the feed.
+            $seedSpent = (int) $e['delta'] === -1 && self::sub((string) $e['resource'], 'seed') !== '';
             if (preg_match('/^tray:(\d+):(-?\d+)$/', $key, $m) && (int) $m[2] === $at) {
+                $seedSpent || $this->reject('rule', "$key: a planting spends one seed");
                 $plantings["{$m[1]}:$at"] = self::sub((string) $e['resource'], 'seed');
+                $stats['plant']++;
             } elseif (preg_match("/^plant:$S$/", $key) && preg_match('/^plot:(\d+)$/', (string) $e['reason'], $m)) {
+                $seedSpent || $this->reject('rule', "$key: a planting spends one seed");
                 $plantings["{$m[1]}:$at"] = self::sub((string) $e['resource'], 'seed');
+                $stats['plant']++;
             } elseif (preg_match('/^feed:([a-z]+):(-?\d+)$/', $key, $m) && (int) $m[2] === $at) {
+                $a = $R['animals'][$m[1]] ?? null;
+                ($a !== null && (int) $e['delta'] === -1 && $e['resource'] === "ingredient:{$a['feed']}")
+                    || $this->reject('rule', "$key: feeding spends one of the animal's feed");
                 $fed["{$m[1]}:$at"] = true;
             } elseif (preg_match("/^checkin:$S$/", $key) && (int) $e['delta'] !== (int) $R['xp']['checkinSkipped']) {
                 $checkins[$at] = false;
@@ -405,9 +528,11 @@ final class ProgressGuard
 
         $events = $this->events($fresh);
         $catches = [];
+        $catchKeys = [];
         foreach ($ledger as $e) {
             if (preg_match('/^catch:\d+$/', (string) $e['key'])) {
                 $catches[] = (int) $e['at'];
+                $catchKeys[(string) $e['key']] = true;
             }
         }
         $xpRun = (int) $old['xp'];
@@ -436,6 +561,9 @@ final class ProgressGuard
                     }
                 }
                 $grants <= $reversals + 1 || $fail('more than one seed for a meal');
+            } elseif (preg_match("/^seed:$S:r\d+:reverse$/", $key)) {
+                // Switching dish hands the pending seed back: a reversal takes one seed.
+                ($d === -1 && self::sub($res, 'seed') !== '') || $fail('a reversal takes the seed back');
             } elseif (preg_match("/^xp:choose:$S$/", $key, $m)) {
                 $d === (int) $R['xp']['chooseDish'] || $fail('choose XP');
                 $this->slotDate($m[1], $at) || $fail('meal slot is not today');
@@ -457,7 +585,11 @@ final class ProgressGuard
                 if (in_array($def['kind'], ['tree', 'mushroom'], true)) {
                     $regrows["{$m[1]}:$at"] = $crop;
                 }
+                $harvests[(int) $m[1]][] = ['t' => (int) $m[2], 'at' => $at, 'kind' => $def['kind']];
                 $stats['harvest']++;
+                $stats['fruit'] += $def['kind'] === 'tree' ? 1 : 0;
+                $stats['mushroom'] += $def['kind'] === 'mushroom' ? 1 : 0;
+                $grown[$crop] = true;
             } elseif (preg_match('/^xp:harvest:(\d+):(-?\d+)$/', $key, $m)) {
                 $h = $byKey["harvest:{$m[1]}:{$m[2]}"] ?? null;
                 $h !== null || $fail('XP without its harvest');
@@ -473,7 +605,12 @@ final class ProgressGuard
                 ($d === 1 && $kind === $this->catchFor($castAt, $lvBefore)) || $fail('not what bites on this cast');
                 $age = $at - $castAt;
                 ($age >= $this->biteDelay($castAt) - 1500 && $age <= (int) $R['fishing']['maxCastMs']) || $fail('caught before the bite');
+                // Counted from the server's own record too: a ledger can leave old catches out.
                 $recent = count(array_filter($catches, fn ($t) => $t > $at - 86_400_000 && $t <= $at));
+                $recent += count(array_filter(
+                    $this->claimKeysBetween('catch:', $at - 86_400_000, $at),
+                    fn ($k) => !isset($catchKeys[$k]),
+                ));
                 $recent <= 2 * (int) $R['fishing']['perDay'] || $fail('more catches than a day allows');
                 $stats['catch']++;
             } elseif (preg_match('/^xp:catch:(\d+)$/', $key, $m)) {
@@ -493,6 +630,9 @@ final class ProgressGuard
                     ksort($debits);
                     ($debits === $want && $d === (int) $builtin['xp']) || $fail('not this recipe');
                 } else {
+                    // A catalogue dish's recipe: the dish must exist (its ingredients may have been
+                    // edited since the guest's copy was loaded, so only the size is checked).
+                    $this->dishExists($m[1]) || $fail('no such dish to cook');
                     $pieces = array_sum($debits);
                     (count($debits) >= 1 && count($debits) <= 5 && max($debits) <= 3 && $d === self::recipeXp($pieces)) || $fail('recipe XP');
                 }
@@ -519,30 +659,38 @@ final class ProgressGuard
                 $count = $this->countClaims("order:{$m[1]}:%", fn ($k) => str_ends_with($k, ':xp')) + 1;
                 $count <= (int) $R['orders']['perDay'] || $fail('more orders than a day has');
                 $stats['order']++;
-            } elseif (preg_match('/^order:\d{4}-\d{2}-\d{2}:\d+:seed:[a-z]+$/', $key)) {
-                $d >= 1 || $fail('order seed');
+            } elseif (preg_match('/^order:(\d{4}-\d{2}-\d{2}:\d+):seed:([a-z]+)$/', $key, $m)) {
+                // Paid with its order (whose XP entry checks the order as a whole), never alone.
+                (isset($byKey["order:{$m[1]}:xp"]) && $res === "seed:{$m[2]}" && $d >= 1 && $d <= (int) $R['orders']['maxSeeds'])
+                    || $fail('order seed without its order');
             } elseif (preg_match("/^photo:$S$/", $key, $m)) {
                 $d === (int) $R['xp']['checkinPhoto'] || $fail('photo XP');
                 (isset($byKey["checkin:{$m[1]}:{$m[2]}"]) || $this->countClaims("checkin:{$m[1]}:{$m[2]}") > 0) || $fail('photo of a meal never checked in');
+                $stats['photo']++;
             } elseif (preg_match("/^checkin:$S$/", $key, $m)) {
                 in_array($d, [(int) $R['xp']['checkinAte'], (int) $R['xp']['checkinSwapped'], (int) $R['xp']['checkinSkipped']], true) || $fail('check-in XP');
                 $this->slotDate($m[1], $at) || $fail('check-in is not today');
+                $stats['checkin']++;
             } elseif (preg_match('/^stamp:(discovered|eaten):([a-z0-9-]{1,80})$/', $key, $m)) {
                 $res === 'stamp' || $fail('stamp');
                 $stamps[$m[1]][] = $m[2];
             } elseif (preg_match('/^unlock:crop:([a-z]+)$/', $key, $m)) {
                 $def = $R['crops'][$m[1]] ?? null;
                 ($def && $d === 1 && $res === "seed:{$m[1]}" && (int) $def['unlockLevel'] > 1 && (int) $def['unlockLevel'] <= $level) || $fail('crop not unlocked');
-            } elseif (preg_match('/^quest:(\d{4}-\d{2}-\d{2}):([a-z-]+)(:coin|:seed:(\d+))?$/', $key, $m)) {
+            } elseif (preg_match('/^quest:(\d{4}-\d{2}-\d{2}):([a-z0-9-]+)(:coin|:seed:(\d+))?$/', $key, $m)) {
                 $q = $R['quests'][$m[2]] ?? null;
                 $q !== null || $fail('unknown quest');
                 $this->rewardPart($m[3] ?? '', $m[4] ?? null, $res, $d, $q, $level) || $fail('not this quest\'s reward');
-                $this->slotDate($m[1], $at, $q['weekly'] ? 8 : 2) || $fail('quest period is not now');
+                (($m[3] ?? '') === '' || isset($byKey["quest:{$m[1]}:{$m[2]}"])) || $fail('reward part without its quest');
+                // A daily quest is the device's today; a weekly one is keyed by the week's Monday.
+                $q['weekly']
+                    ? ($this->isMonday($m[1]) && $this->inWeek($m[1], $at)) || $fail('quest week is not now')
+                    : $this->slotDate($m[1], $at, 1.2) || $fail('quest day is not now');
                 if (($m[3] ?? '') === '') {
-                    $same = $this->countClaims("quest:{$m[1]}:%", fn ($k) => preg_match('/^quest:[0-9-]+:[a-z-]+$/', $k) === 1
+                    $same = $this->countClaims("quest:{$m[1]}:%", fn ($k) => preg_match('/^quest:[0-9-]+:[a-z0-9-]+$/', $k) === 1
                         && (($R['quests'][explode(':', $k)[2]]['weekly'] ?? false) === $q['weekly']));
                     foreach ($fresh as $f) {
-                        if (preg_match("/^quest:{$m[1]}:([a-z-]+)$/", (string) $f['key'], $mm) && (($R['quests'][$mm[1]]['weekly'] ?? false) === $q['weekly'])) {
+                        if (preg_match("/^quest:{$m[1]}:([a-z0-9-]+)$/", (string) $f['key'], $mm) && (($R['quests'][$mm[1]]['weekly'] ?? false) === $q['weekly'])) {
                             $same++;
                         }
                     }
@@ -552,16 +700,22 @@ final class ProgressGuard
                 $b = $R['badges'][$m[1]] ?? null;
                 $tier = (int) $m[2];
                 ($b !== null && $tier >= 1 && $tier <= count($b['tiers'])) || $fail('unknown badge tier');
-                $reward = ['xp' => 20 * $tier, 'coins' => 10 * $tier, 'seeds' => $tier >= 3 ? 2 : 1, 'water' => 0];
-                $this->rewardPart($m[3] ?? '', $m[4] ?? null, $res, $d, $reward, $level) || $fail('not this badge\'s reward');
+                // Today's table, or the one before it (a client still running the older build).
+                $ok = false;
+                foreach ([$b['rewards'][$tier - 1], $b['legacyRewards'][$tier - 1] ?? null] as $reward) {
+                    $ok = $ok || ($reward !== null && $this->rewardPart($m[3] ?? '', $m[4] ?? null, $res, $d, $reward, $level));
+                }
+                $ok || $fail('not this badge\'s reward');
+                (($m[3] ?? '') === '' || isset($byKey["badge:{$m[1]}:{$m[2]}"])) || $fail('reward part without its badge');
                 if (($m[3] ?? '') === '') {
                     ($tier === 1 || isset($byKey["badge:{$m[1]}:" . ($tier - 1)]) || $this->countClaims("badge:{$m[1]}:" . ($tier - 1)) > 0) || $fail('tiers are claimed in order');
-                    $this->badgeValue($b['metric'], $new, $stats, $cooked) >= (int) $b['tiers'][$tier - 1] || $fail('badge goal not reached');
+                    $this->badgeValue($b['metric'], $ctx, $stats, $grown, $fresh) >= (int) $b['tiers'][$tier - 1] || $fail('badge goal not reached');
                 }
             } elseif (preg_match('/^chest:(\d{4}-\d{2}-\d{2}):(\d+)(:coin|:seed:(\d+))?$/', $key, $m)) {
                 $chest = $R['chests'][$m[2]] ?? null;
                 $chest !== null || $fail('no chest at this streak');
                 $this->rewardPart($m[3] ?? '', $m[4] ?? null, $res, $d, $chest, $level) || $fail('not this chest');
+                (($m[3] ?? '') === '' || isset($byKey["chest:{$m[1]}:{$m[2]}"])) || $fail('reward part without its chest');
                 if (($m[3] ?? '') === '') {
                     $n = (int) $m[2];
                     // The streak reached that day (it may have dropped since; the chest waits).
@@ -598,6 +752,8 @@ final class ProgressGuard
                 ($res === "ingredient:{$a['product']}" && $d === (int) $a['yield']) || $fail('not what this animal gives');
                 ((int) ($old['animals'][$m[1]]['fedAt'] ?? PHP_INT_MIN) === $t || isset($fed["{$m[1]}:$t"])) || $fail('animal was not fed');
                 ($at + self::SLACK_MS >= $t + (int) $a['hoursMs'] && $level >= (int) $a['unlockLevel']) || $fail('collected too early');
+                $collects[$m[1]][$t] = $at;
+                $stats['collect']++;
             } elseif (preg_match('/^xp:collect:([a-z]+):(-?\d+)$/', $key, $m)) {
                 $a = $R['animals'][$m[1]] ?? null;
                 ($a !== null && isset($byKey["collect:{$m[1]}:{$m[2]}"]) && $d === self::harvestXp((int) $a['hoursMs'])) || $fail('animal XP');
@@ -608,6 +764,8 @@ final class ProgressGuard
                 ((int) ($old['hive']['startedAt'] ?? PHP_INT_MIN) === $t || isset($hiveRestarts[$t]) || $t >= $ctx['lower']) || $fail('hive was not started');
                 ($at + self::SLACK_MS >= $t + (int) $R['hive']['hoursMs'] && $level >= (int) $R['hive']['unlockLevel']) || $fail('hive emptied too early');
                 $hiveRestarts[$at] = true;
+                $hiveRuns[$t] = $at;
+                $stats['honey'] += $m[2] === 'honey' ? 1 : 0;
             } elseif (preg_match('/^xp:hive:(-?\d+)$/', $key, $m)) {
                 (isset($byKey["hive:{$m[1]}:honey"]) && $d === self::harvestXp((int) $R['hive']['hoursMs'])) || $fail('hive XP');
             } elseif (preg_match('/^boat:(-?\d+):(\d+)$/', $key, $m)) {
@@ -617,13 +775,17 @@ final class ProgressGuard
                 ($i < count($catch) && $d === 1 && $res === "ingredient:{$catch[$i]}") || $fail('not what the boat brought');
                 ((int) ($old['boat']['sentAt'] ?? PHP_INT_MIN) === $t || $t >= $ctx['lower']) || $fail('boat was not sent');
                 ($at + self::SLACK_MS >= $t + (int) $R['boat']['hoursMs'] && $level >= (int) $R['boat']['unlockLevel']) || $fail('boat back too early');
+                $boatTrips[$t] = $at;
                 $stats['catch']++;
             } elseif (preg_match('/^xp:boat:(-?\d+)$/', $key, $m)) {
                 $n = count(array_filter(array_keys($byKey), fn ($k) => preg_match("/^boat:{$m[1]}:\d+$/", (string) $k) === 1));
                 ($n > 0 && $d === (int) $R['xp']['catch'] * $n) || $fail('boat XP');
+                $stats['boat']++;
             } elseif (preg_match('/^sell:([a-z0-9]+):(-?\d+):coin$/', $key, $m)) {
                 $out = $byKey["sell:{$m[1]}:{$m[2]}:out"] ?? null;
                 ($out !== null && (int) $out['delta'] === -1 && $out['resource'] === "ingredient:{$m[1]}" && $d === (int) ($R['sell'][$m[1]] ?? -1)) || $fail('sale price');
+                $stats['sell']++;
+                $stats['earn'] += $d;
             } elseif (preg_match('/^buy:([a-z]+):(-?\d+):seed$/', $key, $m)) {
                 $pay = $byKey["buy:{$m[1]}:{$m[2]}:coin"] ?? null;
                 $def = $R['crops'][$m[1]] ?? null;
@@ -636,8 +798,10 @@ final class ProgressGuard
                 $fail('nothing in the game pays this');
             }
         }
+        $this->oneAtATime($ctx, $plantings, $harvests, $fed, $collects, $hiveRuns, $boatTrips);
         return [
             'stats' => $stats,
+            'grown' => array_keys($grown),
             'settle' => $settle,
             'deliver' => array_values(array_unique($deliver)),
             'cooked' => $cooked,
@@ -648,6 +812,92 @@ final class ProgressGuard
             'stamps' => $stamps,
             'decor' => $decor,
         ];
+    }
+
+    /**
+     * A plot holds one crop at a time, an animal eats once per cycle, the hive fills once and the
+     * boat makes one trip at a time. A new planting needs the plot's previous crop picked (a
+     * vegetable or the last mushroom flush leaves the plot empty); clearing a plot by hand is not
+     * in the ledger, so that is allowed once per plot per save.
+     */
+    private function oneAtATime(array $ctx, array $plantings, array $harvests, array $fed, array $collects, array $hiveRuns, array $boatTrips): void
+    {
+        $old = $ctx['old'];
+        $byPlot = [];
+        foreach (array_keys($plantings) as $k) {
+            [$plot, $t] = array_map('intval', explode(':', (string) $k, 2));
+            $byPlot[$plot][] = $t;
+        }
+        $oldPlots = [];
+        foreach ((array) ($old['plots'] ?? []) as $p) {
+            if (is_array($p) && isset($p['id'])) {
+                $oldPlots[(int) $p['id']] = $p;
+            }
+        }
+        foreach ($byPlot as $plot => $times) {
+            sort($times);
+            $o = $oldPlots[$plot] ?? null;
+            $cycle = ($o['crop'] ?? null) !== null ? (int) $o['plantedAt'] : null;
+            $handCleared = false;
+            foreach ($times as $t) {
+                if ($cycle !== null) {
+                    $picked = false;
+                    foreach ($harvests[$plot] ?? [] as $h) {
+                        $picked = $picked || ($h['t'] === $cycle && $h['kind'] !== 'tree' && $h['at'] <= $t + self::SLACK_MS);
+                    }
+                    if (!$picked) {
+                        $handCleared && $this->reject('rule', "plot $plot planted while it still held a crop");
+                        $handCleared = true;
+                    }
+                }
+                $cycle = $t;
+            }
+        }
+
+        $feeds = [];
+        foreach (array_keys($fed) as $k) {
+            [$animal, $t] = explode(':', (string) $k, 2);
+            $feeds[$animal][] = (int) $t;
+        }
+        foreach ($feeds as $animal => $times) {
+            sort($times);
+            $busy = isset($old['animals'][$animal]['fedAt']) ? (int) $old['animals'][$animal]['fedAt'] : null;
+            foreach ($times as $t) {
+                if ($busy !== null && !(isset($collects[$animal][$busy]) && $collects[$animal][$busy] <= $t + self::SLACK_MS)) {
+                    $this->reject('rule', "$animal fed again before its last yield was collected");
+                }
+                $busy = $t;
+            }
+        }
+
+        // The hive starts once (from idle) and then refills from each emptying.
+        ksort($hiveRuns);
+        $next = isset($old['hive']['startedAt']) ? (int) $old['hive']['startedAt'] : null;
+        $idle = $next === null;
+        foreach ($hiveRuns as $t => $at) {
+            if ($t === $next) {
+                // the run already under way, or the refill after the last emptying
+            } elseif ($idle && $t >= $ctx['lower']) {
+                $idle = false;
+            } else {
+                $this->reject('rule', 'hive runs overlap');
+            }
+            $next = $at;
+        }
+
+        // The boat sails again only once it is back.
+        ksort($boatTrips);
+        $out = isset($old['boat']['sentAt']) ? (int) $old['boat']['sentAt'] : null;
+        $back = $ctx['lower'];
+        foreach ($boatTrips as $t => $at) {
+            if ($out !== null) {
+                $t === $out || $this->reject('rule', 'boat trips overlap');
+                $out = null;
+            } elseif ($t < $back - self::SLACK_MS) {
+                $this->reject('rule', 'boat trips overlap');
+            }
+            $back = $at;
+        }
     }
 
     /** Things outside the ledger: timers, unlocks, decorations, stamps, the gift debt. */
@@ -737,15 +987,28 @@ final class ProgressGuard
                 if (!in_array($dish, $out['stamps'][$kind], true)) {
                     $this->reject('rule', "stamp $dish without its entry");
                 }
+                if (!$this->dishExists($dish)) {
+                    $this->reject('rule', "stamp for unknown dish $dish");
+                }
             }
+        }
+        // "Eaten" is stamped by a check-in that says the meal was eaten.
+        if ($out['stamps']['eaten']) {
+            $ate = false;
+            foreach ($fresh as $e) {
+                $ate = $ate || (str_starts_with((string) $e['key'], 'checkin:') && (int) $e['delta'] === (int) $R['xp']['checkinAte']);
+            }
+            $ate || $this->reject('rule', 'eaten stamp without a check-in');
         }
         foreach ($new['cooked'] as $recipe => $n) {
             if ((int) $n - (int) ($old['cooked'][$recipe] ?? 0) > ($out['cooked'][$recipe] ?? 0)) {
                 $this->reject('rule', "cooked $recipe more often than recipes were cooked");
             }
         }
-        $days = intdiv($ctx['elapsedMs'], 86_400_000) + 2;
-        if ((int) ($new['streak']['count'] ?? 0) > (int) ($old['streak']['count'] ?? 0) + $days) {
+        // A streak grows one a day: never past where it stood on a remembered day plus the days
+        // since (one more for time zones), however many saves come in between.
+        [$from, $day] = $this->streakFrom($ctx);
+        if ((int) ($new['streak']['count'] ?? 0) > $from + max(0, self::serverDay($ctx['serverMs']) - $day) + 1) {
             $this->reject('rule', 'streak grew faster than days passed');
         }
 
@@ -851,6 +1114,73 @@ final class ProgressGuard
 
     // ——— Helpers ———
 
+    private static function serverDay(int $ms): int
+    {
+        return intdiv(intdiv($ms, 1000), 86400);
+    }
+
+    /** A per-server-day tally's metric name (verified_stats), e.g. "xpday:20729". */
+    private static function dayKey(string $what, int $ms): string
+    {
+        return $what . ':' . self::serverDay($ms);
+    }
+
+    /** Where the streak stood on a remembered server day: [count, day] (the stored copy at first). */
+    private function streakFrom(array $ctx): array
+    {
+        $st = $this->db->prepare("SELECT metric, value FROM verified_stats WHERE user_id = ? AND metric IN ('streakBase', 'streakBaseDay')");
+        $st->execute([$this->user]);
+        $row = $st->fetchAll(PDO::FETCH_KEY_PAIR);
+        if (isset($row['streakBase'], $row['streakBaseDay'])) {
+            return [(int) $row['streakBase'], (int) $row['streakBaseDay']];
+        }
+        return [(int) ($ctx['old']['streak']['count'] ?? 0), self::serverDay($ctx['serverMs'])];
+    }
+
+    /** What to remember after this save: the same base, or a new one when the streak fell back. */
+    private function streakBase(array $ctx, int $serverMs): array
+    {
+        [$from, $day] = $this->streakFrom($ctx);
+        $now = (int) ($ctx['new']['streak']['count'] ?? 0);
+        $today = self::serverDay($serverMs);
+        return $now < $from + max(0, $today - $day) - 1 ? [$now, $today] : [$from, $day];
+    }
+
+    private function dishExists(string $id): bool
+    {
+        static $cache = [];
+        if (!array_key_exists($id, $cache)) {
+            $st = $this->db->prepare('SELECT 1 FROM dishes WHERE id = ?');
+            $st->execute([$id]);
+            $cache[$id] = (bool) $st->fetchColumn();
+        }
+        return $cache[$id];
+    }
+
+    /**
+     * Claimed keys `<prefix><t>` with t in [from, to] (device ms; thirteen digits, so they sort
+     * as text). Catches the guest's ledger left out still count.
+     */
+    private function claimKeysBetween(string $prefix, int $from, int $to): array
+    {
+        $st = $this->db->prepare('SELECT claim_key FROM progress_claims WHERE user_id = ? AND claim_key >= ? AND claim_key <= ?');
+        $st->execute([$this->user, $prefix . max(0, $from), $prefix . $to]);
+        return array_filter($st->fetchAll(PDO::FETCH_COLUMN), fn ($k) => preg_match('/^' . preg_quote($prefix, '/') . '\d{13}$/', (string) $k) === 1);
+    }
+
+    private function isMonday(string $date): bool
+    {
+        $t = strtotime($date . ' 12:00:00 UTC');
+        return $t !== false && gmdate('N', $t) === '1';
+    }
+
+    /** `at` falls in the week starting on that Monday (on any device's time zone). */
+    private function inWeek(string $monday, int $at): bool
+    {
+        $t = strtotime($monday . ' 12:00:00 UTC');
+        return $t !== false && $at >= $t * 1000 - 1.2 * 86_400_000 && $at <= $t * 1000 + 7.2 * 86_400_000;
+    }
+
     private function reject(string $code, string $detail): never
     {
         error_log("[angi progress] user {$this->user} refused ($code): $detail");
@@ -865,7 +1195,7 @@ final class ProgressGuard
         }
         $k = $e['key'];
         return (int) ($e['delta'] ?? 0) > 0 || ($e['resource'] ?? '') === 'stamp'
-            || preg_match('/^(friend|present|checkin|plant|seed|xp:choose):/', $k) === 1;
+            || preg_match('/^(friend|present|checkin|plant|seed|xp:choose|badge|quest|chest):/', $k) === 1;
     }
 
     /** Which of these keys were already paid to this garden. */
@@ -1018,18 +1348,113 @@ final class ProgressGuard
         return (bool) $st->fetchColumn();
     }
 
-    private function badgeValue(string $metric, array $new, array $stats, array $cooked): int
+    /**
+     * What an achievement measures, from what the server can stand behind: the checked save
+     * itself (stamps, recipes, regions, plots, decorations, level), its own counts of accepted
+     * saves (plus the base a first copy brought, capped by its XP), or — for watering, which
+     * the ledger does not record — the garden's own count held to a daily maximum.
+     */
+    private function badgeValue(string $metric, array $ctx, array $stats, array $grown, array $fresh): int
     {
-        if ($metric === 'eaten') {
-            return count($new['stamps']['eaten']);
+        $new = $ctx['new'];
+        $old = $ctx['old'];
+        return match ($metric) {
+            'eaten' => count($new['stamps']['eaten']),
+            'discovered' => count($new['stamps']['discovered']),
+            'recipes' => count(array_filter($new['cooked'], fn ($n) => (int) $n > 0)),
+            'regions' => count($new['unlockedRegions'] ?? []),
+            'plots' => count($new['plots']),
+            'decor' => count($new['decor'] ?? []),
+            'level' => $ctx['level'],
+            'streakMax' => max((int) ($new['streak']['count'] ?? 0), $this->longestStreak()),
+            'variety' => max($this->baseStat('variety'), count(array_unique(array_merge(
+                array_map(fn ($k) => substr($k, strlen('grown:')), $this->claimKeys('grown:%')),
+                array_keys($grown),
+            )))),
+            'water' => min((int) ($new['quests']['total']['water'] ?? 0), $this->baseStat('water') + 15 * ($this->accountDays() + 1)),
+            'allDaily' => $this->fullQuestDays($fresh),
+            default => $this->baseStat($metric) + $this->counted($metric) + (int) ($stats[$metric] ?? 0),
+        };
+    }
+
+    /** verified_stats increments for one metric. */
+    private function counted(string $metric): int
+    {
+        $st = $this->db->prepare('SELECT value FROM verified_stats WHERE user_id = ? AND metric = ?');
+        $st->execute([$this->user, $metric]);
+        return (int) $st->fetchColumn();
+    }
+
+    /**
+     * The base a metric starts from: what the garden brought when it was first seen (or, for a
+     * metric added later, what its stored copy held on the day that metric came: backfillBases).
+     * Never read from the copy now: a save could have inflated it just before.
+     */
+    private function baseStat(string $metric): int
+    {
+        $st = $this->db->prepare('SELECT value FROM verified_stats WHERE user_id = ? AND metric = ?');
+        $st->execute([$this->user, 'base:' . $metric]);
+        return (int) $st->fetchColumn();
+    }
+
+    /**
+     * Run once when the schema moves to a version with new badge metrics: every stored garden
+     * gets the bases it lacks, from its copy as stored right now, held to its XP (uncapped for a
+     * copy saved before the guard existed, as check() does), plus the crops it has grown and
+     * the badge tiers it holds. Existing rows are never changed.
+     */
+    public static function backfillBases(PDO $db): void
+    {
+        $R = self::rules();
+        $sqlite = $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite';
+        $ignore = $sqlite ? 'INSERT OR IGNORE' : 'INSERT IGNORE';
+        $stat = $db->prepare("$ignore INTO verified_stats (user_id, metric, value) VALUES (?, ?, ?)");
+        $claim = $db->prepare("$ignore INTO progress_claims (user_id, claim_key, created_at) VALUES (?, ?, ?)");
+        $rows = $db->query('SELECT user_id, data, client_offset FROM user_progress')->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as $row) {
+            $p = json_decode((string) $row['data'], true);
+            if (!is_array($p)) {
+                continue;
+            }
+            $uid = (int) $row['user_id'];
+            $xp = $row['client_offset'] === null ? PHP_INT_MAX : max(0, (int) ($p['xp'] ?? 0));
+            foreach (self::baseTotals($p, $xp, $R) as $metric => $v) {
+                $stat->execute([$uid, 'base:' . $metric, $v]);
+            }
+            foreach (self::grownCrops($p, $R) as $c) {
+                $claim->execute([$uid, "grown:$c", time()]);
+            }
+            foreach ((array) ($p['quests']['badges'] ?? []) as $id => $tier) {
+                for ($n = 1; isset($R['badges'][$id]) && $n <= min((int) $tier, count($R['badges'][$id]['tiers'])); $n++) {
+                    $claim->execute([$uid, "badge:$id:$n", time()]);
+                }
+            }
         }
-        if ($metric === 'recipes') {
-            return count(array_filter($new['cooked'], fn ($n) => (int) $n > 0));
+    }
+
+    private function accountDays(): int
+    {
+        $st = $this->db->prepare('SELECT created_at FROM users WHERE id = ?');
+        $st->execute([$this->user]);
+        $created = (int) $st->fetchColumn();
+        $now = $this->nowMs !== null ? intdiv($this->nowMs, 1000) : time();
+        return $created > 0 ? intdiv(max(0, $now - $created), 86400) : 0;
+    }
+
+    /** Days on which at least four daily quests were claimed (four or five were drawn). */
+    private function fullQuestDays(array $fresh): int
+    {
+        $keys = $this->claimKeys('quest:%:d-%');
+        foreach ($fresh as $e) {
+            $keys[] = (string) $e['key'];
         }
-        $st = $this->db->prepare('SELECT metric, value FROM verified_stats WHERE user_id = ? AND metric IN (?, ?)');
-        $st->execute([$this->user, $metric, 'base:' . $metric]);
-        $total = array_sum(array_map('intval', $st->fetchAll(PDO::FETCH_KEY_PAIR)));
-        return $total + (int) ($stats[$metric] ?? 0);
+        $per = [];
+        foreach (array_unique($keys) as $k) {
+            if (preg_match('/^quest:(\d{4}-\d{2}-\d{2}):d-[a-z0-9-]+$/', $k, $m)) {
+                $per[$m[1]] = ($per[$m[1]] ?? 0) + 1;
+            }
+        }
+        return count(array_filter($per, fn ($n) => $n >= 4)) + $this->baseStat('allDaily');
     }
 
     /** One part of a quest/badge/chest reward: the XP itself, `:coin`, or `:seed:<i>`. */
@@ -1089,7 +1514,7 @@ final class ProgressGuard
     }
 
     /** A dated key (meal slot, order, quest day) belongs near this entry's time (device time zones vary). */
-    private function slotDate(string $date, int $at, int $days = 2): bool
+    private function slotDate(string $date, int $at, float $days = 2): bool
     {
         $t = strtotime($date . ' 12:00:00 UTC');
         return $t !== false && abs($t * 1000 - $at) <= $days * 86_400_000;

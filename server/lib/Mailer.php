@@ -31,6 +31,11 @@ final class Mailer
     public static function send(string $to, string $subject, string $text, ?string $html = null): void
     {
         $driver = self::cfg('MAIL_DRIVER', 'MAIL_MAILER') ?: 'log';
+        // Reserved names (RFC 2606/6761) can never receive mail: log instead of sending, so test
+        // accounts never reach the real mail server.
+        if (preg_match('/@(?:[^@]+\.)?(?:invalid|test|example|localhost|example\.(?:com|net|org))\z/i', $to)) {
+            $driver = 'log';
+        }
         match ($driver) {
             'mail' => self::viaMail($to, $subject, $text, $html),
             'smtp' => self::viaSmtp($to, $subject, $text, $html),

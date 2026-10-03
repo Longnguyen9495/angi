@@ -20,7 +20,14 @@ import {
 } from '../data/game';
 import type { CropId } from '../data/types';
 import { ORDERS_PER_DAY, dailyOrders } from './orders';
-import { ACHIEVEMENTS, DAILY_COUNT, QUEST_DEFS, STREAK_CHESTS, WEEKLY_COUNT } from './quests';
+import {
+  ACHIEVEMENTS,
+  DAILY_COUNT,
+  QUEST_DEFS,
+  STREAK_CHESTS,
+  WEEKLY_COUNT,
+  badgeReward,
+} from './quests';
 
 /*
  * The numbers the server needs to check a saved garden (server/lib/ProgressGuard.php), taken
@@ -35,15 +42,34 @@ export const GAME_RULES_VERSION = 1;
  * A new achievement must be added here, or the export fails.
  */
 const BADGE_METRIC: Record<string, string> = {
-  farmer: 'harvest',
   cook: 'cook',
   recipes: 'recipes',
+  explorer: 'eaten',
+  discoverer: 'discovered',
+  regular: 'checkin',
+  photographer: 'photo',
+  regions: 'regions',
+  streak: 'streakMax',
+  farmer: 'harvest',
+  planter: 'plant',
+  waterer: 'water',
+  variety: 'variety',
+  orchard: 'fruit',
+  mycologist: 'mushroom',
+  landowner: 'plots',
   angler: 'catch',
+  rancher: 'collect',
+  beekeeper: 'honey',
+  sailor: 'boat',
   supplier: 'order',
+  merchant: 'sell',
+  tycoon: 'earn',
+  decorator: 'decor',
   neighbour: 'help',
   sneaky: 'steal',
   generous: 'gift',
-  explorer: 'eaten',
+  level: 'level',
+  diligent: 'allDaily',
 };
 
 export function buildGameRules() {
@@ -128,7 +154,22 @@ export function buildGameRules() {
           a.id === 'recipes'
             ? a.tiers.map((t, i) => (i === a.tiers.length - 1 ? builtinRecipes().length : t))
             : [...a.tiers];
-        return [a.id, { metric, tiers }];
+        return [
+          a.id,
+          {
+            metric,
+            tiers,
+            rewards: tiers.map((_, i) => badgeReward(i + 1, a.id)),
+            // What the build before 28 badges paid: a page loaded before an update still claims
+            // with it. Drop once that build is gone from browsers.
+            legacyRewards: tiers.map((_, i) => ({
+              xp: 20 * (i + 1),
+              coins: 10 * (i + 1),
+              seeds: i + 1 >= 3 ? 2 : 1,
+              water: 0,
+            })),
+          },
+        ];
       }),
     ),
     regions: Object.fromEntries(Object.values(REGIONS).map((r) => [r.id, r.stampsToUnlock])),

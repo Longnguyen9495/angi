@@ -52,6 +52,10 @@ export interface PlotView {
   produce?: string | null;
   /** Items one harvest gives (how many icons fly, capped). */
   yield?: number;
+  /** The bubble to show, when the page decides (a friend's garden); default from the stage. */
+  mark?: Mark | null;
+  /** Empty plot: the seed a tap on its bubble would sow (its picture), or null for no bubble. */
+  seedImage?: string | null;
 }
 
 export interface BubbleView {
@@ -71,8 +75,8 @@ export interface FarmView {
 /** A harvest the page can show flying to the pantry: picture point, icon, how many. */
 export type HarvestFlight = (at: Vec2, icon: string, count: number) => boolean;
 
-/** What a plot's bubble says: ripe (its produce) or thirsty (a drop). */
-export type Mark = 'ready' | 'water';
+/** What a plot's bubble says: ripe (its produce), thirsty (a drop), or empty with a seed to sow. */
+export type Mark = 'ready' | 'water' | 'plant';
 
 interface PlotFx {
   prev: PlotView | null;
@@ -541,14 +545,19 @@ export class FarmGameLayer {
       f.water += w.dt;
       f.markT += w.dt;
       const v = this.view?.plots.find((p) => p.id === d.id);
-      const mark: Mark | null =
-        !v?.unlocked || !v.crop
-          ? null
-          : v.stage === 'ready'
-            ? 'ready'
-            : v.needsWater
-              ? 'water'
-              : null;
+      const mark: Mark | null = !v?.unlocked
+        ? null
+        : !v.crop
+          ? v.seedImage && v.mark !== null
+            ? 'plant'
+            : null
+          : v.mark !== undefined
+            ? v.mark
+            : v.stage === 'ready'
+              ? 'ready'
+              : v.needsWater
+                ? 'water'
+                : null;
       if (mark !== f.mark) {
         f.mark = mark;
         f.markT = 0;
@@ -1049,7 +1058,7 @@ export class FarmGameLayer {
   private markSpot(d: FieldDef['plots'][number]): { x: number; y: number; r: number } | null {
     const f = this.fx.get(d.id);
     if (!f?.mark || d.id === this.selected || d.id === this.hover) return null;
-    const r = f.mark === 'ready' ? 21 : 18;
+    const r = f.mark === 'ready' ? 21 : f.mark === 'plant' ? 17 : 18;
     const [cx, cy] = d.centre;
     // Just over the plant's top (never far up a tall tree), and never below the plot's top.
     const top = Math.max(cy + 8 - this.plantHeight(d.id) * 0.86, cy - 150);
@@ -1060,12 +1069,12 @@ export class FarmGameLayer {
    * The bubble at picture point p (with room round it for a finger): its plot and what it
    * asks for. Nearer plots win, as they are drawn over farther ones.
    */
-  markAt(p: { x: number; y: number }): { plotId: number; mark: Mark } | null {
+  markAt(p: { x: number; y: number }, slack = 14): { plotId: number; mark: Mark } | null {
     let best: { plotId: number; mark: Mark } | null = null;
     let bestY = -Infinity;
     for (const d of this.field.plots) {
       const s = this.markSpot(d);
-      if (!s || Math.hypot(p.x - s.x, p.y - s.y) > s.r + 14 || d.centre[1] < bestY) continue;
+      if (!s || Math.hypot(p.x - s.x, p.y - s.y) > s.r + slack || d.centre[1] < bestY) continue;
       best = { plotId: d.id, mark: this.fx.get(d.id)!.mark! };
       bestY = d.centre[1];
     }
@@ -1102,8 +1111,9 @@ export class FarmGameLayer {
       ctx.shadowColor = 'rgba(30,20,10,0.35)';
       ctx.shadowBlur = 6;
       ctx.shadowOffsetY = 2;
-      ctx.fillStyle = ready ? '#fff8e1' : '#eef8ff';
-      ctx.strokeStyle = ready ? '#e8a52a' : '#3f9fd0';
+      const plant = f.mark === 'plant';
+      ctx.fillStyle = ready ? '#fff8e1' : plant ? '#f1f9e8' : '#eef8ff';
+      ctx.strokeStyle = ready ? '#e8a52a' : plant ? '#5a9e3c' : '#3f9fd0';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.arc(0, 0, r, 0, Math.PI * 2);
@@ -1113,7 +1123,20 @@ export class FarmGameLayer {
       ctx.fill();
       ctx.shadowColor = 'transparent';
       ctx.stroke();
-      if (ready) {
+      if (plant) {
+        // The seed that would go in: a quiet invitation, smaller than a ripe bubble.
+        const im = this.ready(v.seedImage ?? null);
+        if (im) {
+          const s = (r * 1.4) / Math.max(im.naturalWidth, im.naturalHeight);
+          ctx.drawImage(
+            im,
+            (-im.naturalWidth * s) / 2,
+            (-im.naturalHeight * s) / 2,
+            im.naturalWidth * s,
+            im.naturalHeight * s,
+          );
+        }
+      } else if (ready) {
         const im = this.ready(v.produce ?? v.image);
         if (im) {
           const s = (r * 1.5) / Math.max(im.naturalWidth, im.naturalHeight);

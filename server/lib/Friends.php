@@ -159,6 +159,11 @@ final class Friends
         $u = $this->account->requireUser();
         $me = (int) $u['id'];
         $this->ensureProfile($me);
+        // Codes are short: no walking the code space, and no filling a garden's friend list.
+        (new RateLimit($this->db))->hit([
+            'friend-add:user:' . $me => [20, 3600],
+            'friend-add:ip:' . secret_hash('ip|' . ip_bucket(client_ip())) => [40, 3600],
+        ], __t('friends.tooManyAdds'));
         $code = self::normaliseCode((string) ($body['code'] ?? ''));
         $friend = $this->one('SELECT user_id FROM garden_profiles WHERE friend_code = ?', [$code]);
         if (!$friend) {

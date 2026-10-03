@@ -165,20 +165,8 @@ final class AdminUsers
     public function delete(int $id): array
     {
         $email = $this->requireExists($id);
-        $this->db->beginTransaction();
-        try {
-            $this->exec('DELETE FROM farm_events WHERE to_user = ? OR from_user = ?', [$id, $id]);
-            $this->exec('DELETE FROM friendships WHERE user_id = ? OR friend_id = ?', [$id, $id]);
-            $this->exec('DELETE FROM garden_profiles WHERE user_id = ?', [$id]);
-            $this->exec('DELETE FROM user_progress WHERE user_id = ?', [$id]);
-            $this->exec('DELETE FROM user_sessions WHERE user_id = ?', [$id]);
-            $this->exec('DELETE FROM login_codes WHERE email = ?', [$email]);
-            $this->exec('DELETE FROM users WHERE id = ?', [$id]);
-            $this->db->commit();
-        } catch (Throwable $e) {
-            $this->db->rollBack();
-            throw $e;
-        }
+        // The very same code path: claims, verified stats, referrals and gifts others received.
+        Account::deleteUser($this->db, $id, $email);
         return ['ok' => true];
     }
 

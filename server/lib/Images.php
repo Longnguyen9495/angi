@@ -17,8 +17,8 @@ final class Images
      * A public media path we serve ourselves: /uploads/… or /images/…, plain segments that
      * never start with a dot (so no "..", no hidden files), no backslashes or encoded bytes.
      */
-    public const LOCAL_IMAGE = '#^/(uploads|images)/(?:[A-Za-z0-9_-][A-Za-z0-9_.-]{0,120}/){0,6}[A-Za-z0-9_-][A-Za-z0-9_.-]{0,120}\.(?:webp|jpe?g|png)$#i';
-    public const LOCAL_VIDEO = '#^/(?:uploads/videos|video)/[A-Za-z0-9_-][A-Za-z0-9_.-]{0,160}\.(?:mp4|webm)$#i';
+    public const LOCAL_IMAGE = '#^/(uploads|images)/(?:[A-Za-z0-9_-][A-Za-z0-9_.-]{0,120}/){0,6}[A-Za-z0-9_-][A-Za-z0-9_.-]{0,120}\.(?:webp|jpe?g|png)\z#i';
+    public const LOCAL_VIDEO = '#^/(?:uploads/videos|video)/[A-Za-z0-9_-][A-Za-z0-9_.-]{0,160}\.(?:mp4|webm)\z#i';
 
     /** @return array{image: string, thumbnail: string} public URLs */
     public static function storeDishPhoto(array $file, string $dishId): array

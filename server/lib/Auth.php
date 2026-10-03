@@ -52,20 +52,26 @@ final class Auth
     {
         self::requireSameOrigin();
         $limits = new RateLimit(db());
-        $ipBucket = 'admin:ip:' . secret_hash('ip|' . client_ip());
-        // Refuse before checking anything once the limit is reached: a guesser learns nothing.
-        if ($limits->full($ipBucket, 5) || $limits->full('admin:all', 30)) {
-            throw new HttpError(429, 'Đăng nhập sai quá nhiều lần — đợi 15 phút rồi thử lại.');
-        }
+        $tooMany = 'Đăng nhập sai quá nhiều lần — đợi 15 phút rồi thử lại.';
+        $ipBucket = 'admin:ip:' . secret_hash('ip|' . ip_bucket(client_ip()));
+        // Every attempt is counted before anything is checked, in one transaction: a burst of
+        // parallel guesses cannot all slip in under the limit. Refused once it is reached.
+        $limits->hit([$ipBucket => [5, 900]], $tooMany);
+        // Guesses spread over many addresses fill the site-wide bucket. That must not lock the
+        // real admin out for good: while it is full, only a valid TOTP code still gets in.
+        $siteFull = $limits->full('admin:all', 30);
         self::start();
         $expectedUser = (string) env('ADMIN_USER', 'admin');
         $expectedPass = (string) env('ADMIN_PASSWORD', '');
         $secret = (string) env('ADMIN_TOTP_SECRET', '');
         $ok = $expectedPass !== '' && hash_equals($expectedUser, $user) && hash_equals($expectedPass, $password)
             && ($secret === '' || self::totpValid($secret, $otp));
+        if ($siteFull && !($ok && $secret !== '')) {
+            throw new HttpError(429, $tooMany);
+        }
         if (!$ok) {
             try {
-                $limits->hit([$ipBucket => [5, 900], 'admin:all' => [30, 3600]], 'Đăng nhập sai quá nhiều lần — đợi 15 phút rồi thử lại.');
+                $limits->hit(['admin:all' => [30, 3600]], $tooMany);
             } catch (HttpError) {
                 // This was the attempt that filled the bucket: still just "wrong".
             }

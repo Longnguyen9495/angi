@@ -137,7 +137,7 @@ function timePair<A extends string, B extends string, T extends Record<A | B, nu
 function parseLayout(v: Record<string, unknown>): GuestProgress['decorLayout'] {
   const out: GuestProgress['decorLayout'] = {};
   for (const [id, pos] of Object.entries(v)) {
-    if (!(id in DECOR)) continue;
+    if (!Object.hasOwn(DECOR, id)) continue;
     if (pos === null) {
       out[id as DecorId] = null;
     } else if (
@@ -203,7 +203,7 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
     plots: p.plots.map((pl) => ({
       ...pl,
       // A crop id this version does not know (a newer save on an older app) leaves the plot empty.
-      ...(pl.crop !== null && !(pl.crop in EMPTY_CROPS)
+      ...(pl.crop !== null && !Object.hasOwn(EMPTY_CROPS, pl.crop)
         ? { crop: null, plantedAt: null, readyAt: null }
         : {}),
       wateredAt: typeof pl.wateredAt === 'number' ? pl.wateredAt : null,
@@ -240,14 +240,20 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
     photos: isStringArray(raw.photos) ? raw.photos : [],
     animals: parseAnimals(raw.animals),
     decorLayout: isObject(raw.decorLayout) ? parseLayout(raw.decorLayout) : {},
-    decor: isStringArray(raw.decor) ? (raw.decor.filter((d) => d in DECOR) as DecorId[]) : [],
+    decor: isStringArray(raw.decor)
+      ? (raw.decor.filter((d) => Object.hasOwn(DECOR, d)) as DecorId[])
+      : [],
     recentCropUnlock:
-      typeof raw.recentCropUnlock === 'string' && raw.recentCropUnlock in EMPTY_CROPS
+      typeof raw.recentCropUnlock === 'string' && Object.hasOwn(EMPTY_CROPS, raw.recentCropUnlock)
         ? (raw.recentCropUnlock as CropId)
         : null,
     owner: typeof raw.owner === 'string' ? raw.owner : null,
+    // Added with the 28 achievements: older saves start with no crop counted yet.
+    grown: isStringArray(raw.grown)
+      ? ([...new Set(raw.grown)].filter((c) => Object.hasOwn(EMPTY_CROPS, c)) as CropId[])
+      : [],
     unlockedCrops: isStringArray(raw.unlockedCrops)
-      ? (raw.unlockedCrops.filter((c) => c in EMPTY_CROPS) as CropId[])
+      ? (raw.unlockedCrops.filter((c) => Object.hasOwn(EMPTY_CROPS, c)) as CropId[])
       : [],
   };
 }

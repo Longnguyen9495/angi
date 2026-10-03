@@ -57,6 +57,7 @@ export default function FarmScene({
   sky,
   onManager,
   onStats,
+  zoom,
 }: {
   className?: string;
   /** The game's reduced-motion setting (the system setting is always honoured too). */
@@ -84,6 +85,8 @@ export default function FarmScene({
   onManager?: (m: AnimationManager | null) => void;
   /** Frame rate, object count and wind, twice a second. */
   onStats?: (s: Stats) => void;
+  /** Game: closer than the fit (read once, like the mode). */
+  zoom?: number;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const manager = useRef<AnimationManager | null>(null);
@@ -96,7 +99,7 @@ export default function FarmScene({
   const onManagerRef = useRef(onManager);
   const onStatsRef = useRef(onStats);
   // Read once: the camera mode and start point are fixed for the life of the scene.
-  const start = useRef({ mode, focus });
+  const start = useRef({ mode, focus, zoom });
   useEffect(() => {
     onPlaceRef.current = onPlace;
     onReadyRef.current = onReady;
@@ -116,6 +119,7 @@ export default function FarmScene({
           onPlace: (p, info) => onPlaceRef.current?.(p, info),
           mode: start.current.mode,
           focus: start.current.focus,
+          zoom: start.current.zoom,
           onCamera: (v) => onCameraRef.current?.(v),
           onPanStart: () => onPanStartRef.current?.(),
           onStats: (st) => onStatsRef.current?.(st),

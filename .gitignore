@@ -38,3 +38,6 @@ storage/item-pdf-v2-check/
 *.bak
 id_rsa*
 id_ed25519*
+
+# Phone check screenshots and reports (scripts/phone-check.mjs)
+storage/phone-check/

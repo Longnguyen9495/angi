@@ -3,11 +3,15 @@ import { CROPS } from '../data/game';
 import { createInitialProgress, type GuestProgress } from './progress';
 import { parseProgress } from './persistence';
 import {
+  ACHIEVEMENTS,
   DAILY_COUNT,
+  QUEST_DEFS,
   WEEKLY_COUNT,
+  badgeReward,
   badges,
   claimableCount,
   dailyQuests,
+  questsFor,
   weekKey,
   weeklyQuests,
 } from './quests';
@@ -193,5 +197,155 @@ describe('saves', () => {
     s = gameReducer(s, { type: 'CLAIM_QUEST', id: 'd-choose', now: NOON });
     const p = parseProgress(JSON.parse(JSON.stringify(s)), NOON)!;
     expect(p.quests).toEqual(s.quests);
+  });
+});
+
+describe('more quests and 28 achievements', () => {
+  const every = (s: GuestProgress, days: number) =>
+    Array.from({ length: days }, (_, d) => [
+      dailyQuests(s, NOON + d * DAY).map((v) => v.def),
+      weeklyQuests(s, NOON + d * 7 * DAY).map((v) => v.def),
+    ]);
+
+  it('every quest and achievement has words in Vietnamese and English', async () => {
+    const vi = (await import('../i18n/messages/vi/data')).default.quests;
+    const en = (await import('../i18n/messages/en/data')).default.quests;
+    for (const def of Object.values(QUEST_DEFS)) {
+      expect(vi.metric[def.metric], def.id).toBeTypeOf('function');
+      expect(en.metric[def.metric], def.id).toBeTypeOf('function');
+    }
+    for (const a of ACHIEVEMENTS) {
+      expect(vi.badges[a.id as keyof typeof vi.badges]?.name, a.id).toBeTruthy();
+      expect(en.badges[a.id as keyof typeof en.badges]?.name, a.id).toBeTruthy();
+    }
+    expect(ACHIEVEMENTS).toHaveLength(28);
+  });
+
+  it('never draws two quests that count the same thing, nor more than one friends quest', () => {
+    const s = { ...gameReducer(fresh(), { type: 'SET_SOCIAL', on: true }), xp: 2000 };
+    for (const [daily, weekly] of every(s, 60)) {
+      for (const list of [daily!, weekly!]) {
+        expect(new Set(list.map((d) => d.metric)).size).toBe(list.length);
+        expect(
+          list.filter((d) => ['help', 'steal', 'gift'].includes(d.metric)).length,
+        ).toBeLessThan(2);
+      }
+      expect(daily).toHaveLength(DAILY_COUNT);
+      expect(weekly).toHaveLength(WEEKLY_COUNT);
+    }
+  });
+
+  it('a level-1 guest with no friends, animals, hive, boat or trees gets only quests they can do', () => {
+    const s = fresh();
+    const cannot = [
+      'd-honey',
+      'd-boat',
+      'd-fruit',
+      'd-mushroom',
+      'w-boat',
+      'w-fruit',
+      'w-mushroom',
+    ];
+    const social = ['d-help', 'd-steal', 'd-gift', 'w-help', 'w-steal', 'w-gift'];
+    for (const [daily, weekly] of every(s, 60)) {
+      for (const d of [...daily!, ...weekly!]) {
+        expect(cannot, d.id).not.toContain(d.id);
+        expect(social, d.id).not.toContain(d.id);
+        expect(['feed', 'collect'], d.id).not.toContain(d.metric);
+      }
+    }
+  });
+
+  it('counts the new tallies where they happen', () => {
+    let s = { ...fresh(), ingredients: { ...fresh().ingredients, rice: 3 } };
+    s = gameReducer(s, { type: 'SELL', crop: 'rice', now: NOON });
+    expect(s.quests.total.earn).toBe(s.coins);
+    // First cook of a recipe counts once as new, the second time not.
+    const r = { ...s, ingredients: { ...s.ingredients, rice: 4, scallion: 4 } };
+    const once = gameReducer(r, { type: 'COOK', recipeId: 'com-tam', now: NOON + 1 });
+    const twice = gameReducer(once, { type: 'COOK', recipeId: 'com-tam', now: NOON + 2 });
+    expect(once.quests.total.newRecipe).toBe(1);
+    expect(twice.quests.total.newRecipe).toBe(1);
+    // A rated check-in counts as rated; a skipped meal does not.
+    let m = gameReducer(fresh(), { type: 'CHOOSE_DISH', dishId: 'com-tam', now: NOON });
+    m = gameReducer(m, { type: 'CHECK_IN', outcome: 'ate', rating: 4, again: 'yes', now: NOON });
+    expect(m.quests.total.rate).toBe(1);
+    // Harvests remember the crop; trees and mushrooms have their own tallies.
+    const h = gameReducer(fresh(), { type: 'HARVEST_ALL', now: NOON });
+    expect(h.grown).toEqual(['herbs']);
+    const tree = fresh();
+    tree.plots[2] = {
+      ...tree.plots[2]!,
+      crop: 'lime',
+      plantedAt: NOON - 7 * HOUR_MS,
+      readyAt: NOON - 1,
+    };
+    const picked = gameReducer(tree, { type: 'HARVEST_ALL', now: NOON });
+    expect(picked.quests.total.fruit).toBe(1);
+    expect(new Set(picked.grown)).toEqual(new Set(['herbs', 'lime']));
+  });
+
+  it('claiming the last daily quest of the day counts the day once', () => {
+    let s = fresh();
+    const list = dailyQuests(s, NOON).map((v) => v.def);
+    const tally = Object.fromEntries(list.map((d) => [d.metric, d.target]));
+    s = { ...s, quests: { ...questsFor(s, NOON), day: tally } };
+    for (const d of list) s = gameReducer(s, { type: 'CLAIM_QUEST', id: d.id, now: NOON + 1 });
+    expect(s.quests.total.allDaily).toBe(1);
+    expect(gameReducer(s, { type: 'CLAIM_QUEST', id: list[0]!.id, now: NOON + 2 })).toBe(s);
+  });
+
+  it('an older save keeps its four quests today and draws five tomorrow', () => {
+    const s = fresh();
+    const four = questsFor(s, NOON);
+    const old = { ...s, quests: { ...four, daily: four.daily.slice(0, 4) } };
+    expect(dailyQuests(old, NOON)).toHaveLength(4);
+    expect(dailyQuests(old, NOON + DAY)).toHaveLength(5);
+    const p = parseProgress({ ...JSON.parse(JSON.stringify(old)), grown: undefined }, NOON)!;
+    expect(p.grown).toEqual([]);
+  });
+
+  it('achievements the save already earns are claimable at once, level paying no XP', () => {
+    const s = { ...fresh(), xp: 450 };
+    const level = badges(s).find((b) => b.def.id === 'level')!;
+    expect(level.ready).toBe(true);
+    expect(claimableCount(s, NOON)).toBeGreaterThanOrEqual(1);
+    const after = gameReducer(s, { type: 'CLAIM_BADGE', id: 'level', now: NOON });
+    expect(after.xp).toBe(s.xp);
+    expect(after.coins).toBe(s.coins + badgeReward(1, 'level').coins);
+  });
+});
+
+describe('quest lists stay put once seen', () => {
+  // A level 6 guest whose farm gains a tree that ripens today, after the lists were drawn.
+  const withTree = (s: GuestProgress): GuestProgress => ({
+    ...s,
+    plots: s.plots.map((p, i) =>
+      i === 0
+        ? { ...p, crop: 'lime', plantedAt: NOON - DAY, readyAt: NOON + HOUR_MS, wateredAt: null }
+        : p,
+    ),
+  });
+  const guest = (n: number): GuestProgress => ({ ...fresh(), guestId: `g-${n}`, xp: 500 });
+
+  it('keeps the rolled lists when a gate opens later in the day', () => {
+    for (let n = 0; n < 50; n++) {
+      const rolled = gameReducer(guest(n), { type: 'ROLL_QUESTS', now: NOON });
+      const later = withTree(rolled);
+      expect(dailyQuests(later, NOON + 60_000).map((v) => v.def.id)).toEqual(
+        dailyQuests(rolled, NOON).map((v) => v.def.id),
+      );
+      expect(weeklyQuests(later, NOON + 60_000).map((v) => v.def.id)).toEqual(
+        weeklyQuests(rolled, NOON).map((v) => v.def.id),
+      );
+    }
+  });
+
+  it('even unrolled, a gate that opens swaps in at most one quest', () => {
+    for (let n = 0; n < 50; n++) {
+      const before = dailyQuests(guest(n), NOON).map((v) => v.def.id);
+      const after = dailyQuests(withTree(guest(n)), NOON).map((v) => v.def.id);
+      expect(after.filter((id) => !before.includes(id)).length).toBeLessThanOrEqual(1);
+    }
   });
 });

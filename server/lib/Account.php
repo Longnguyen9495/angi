@@ -45,7 +45,7 @@ final class Account
         $ipHash = secret_hash('ip|' . $ip);
         (new RateLimit($this->db))->hit([
             'code:email:' . secret_hash('email|' . $email) => [3, 900],
-            'code:ip:' . $ipHash => [10, 3600],
+            'code:ip:' . secret_hash('ip|' . ip_bucket($ip)) => [10, 3600],
             // The whole site: a ceiling on mail sent (and on what a flood can cost).
             'code:all' => [300, 3600],
         ], __t('account.tooManyCodes'));
@@ -77,8 +77,12 @@ final class Account
     {
         $email = self::normaliseEmail((string) ($body['email'] ?? ''));
         $code = preg_replace('/\D/', '', (string) ($body['code'] ?? '')) ?? '';
-        // Across every code this email asks for, not just the latest one's five tries.
-        (new RateLimit($this->db))->hit(['verify:email:' . secret_hash('email|' . $email) => [20, 3600]], __t('account.tooManyAttempts'));
+        // Across every code this email asks for, not just the latest one's five tries; and per
+        // network, so one machine cannot spend five guesses on each of many accounts' codes.
+        (new RateLimit($this->db))->hit([
+            'verify:email:' . secret_hash('email|' . $email) => [20, 3600],
+            'verify:ip:' . secret_hash('ip|' . ip_bucket(client_ip())) => [60, 3600],
+        ], __t('account.tooManyAttempts'));
         // The check, the attempt count and the one-time use happen under one lock: two
         // parallel requests can neither both use the code nor both get the last try.
         $result = db_tx($this->db, function () use ($email, $code) {
@@ -139,7 +143,9 @@ final class Account
             }
             $sameBrowser = $browser !== '' && $row['browser_hash'] !== null && hash_equals((string) $row['browser_hash'], self::hash($browser));
             if (!$sameBrowser && !$confirmed) {
-                return ['needsConfirm' => true, 'email' => self::maskEmail((string) $row['email'])];
+                // The whole address: the link's holder learns nothing new, and a look-alike
+                // account (lu•••@gmail.com) cannot pass for the visitor's own.
+                return ['needsConfirm' => true, 'email' => (string) $row['email']];
             }
             if (!$this->consume((int) $row['id'], $now)) {
                 return null;
@@ -184,6 +190,11 @@ final class Account
             $this->db->prepare('UPDATE users SET marketing = ?, consent_version = ?, consent_at = ? WHERE id = ?')
                 ->execute([$codeRow['marketing'], $codeRow['consent_version'], $now, $user['id']]);
             $user = $this->one('SELECT * FROM users WHERE id = ?', [$user['id']]);
+        }
+        // Signing in again on this browser ends the session it held before (a new token each time).
+        $previous = (string) ($_COOKIE[self::COOKIE] ?? '');
+        if ($previous !== '') {
+            $this->db->prepare('DELETE FROM user_sessions WHERE token_hash = ?')->execute([self::hash($previous)]);
         }
         $token = bin2hex(random_bytes(32));
         $expires = $now + self::SESSION_DAYS * 86400;
@@ -342,6 +353,14 @@ final class Account
             if (abs($delta) < 60_000) {
                 return;
             }
+            if (abs($offset) > 400 * 86_400_000) {
+                throw new HttpError(422, __t('account.progressRejected'), ['code' => 'clock']);
+            }
+            // A clock set right again moves freely. One moving further from the real time is a
+            // new day's quests and check-ins sooner than the day comes: once a week at most.
+            if (abs($offset) > abs((int) $row['client_offset']) + 10 * 60_000) {
+                (new RateLimit($this->db))->hit(['rebase-away:' . $uid => [1, 7 * 86400]], __t('account.progressRejected'));
+            }
             $data = json_decode((string) $row['data'], true);
             $json = json_encode(ProgressGuard::shiftTimes(is_array($data) ? $data : [], $delta), JSON_UNESCAPED_UNICODE);
             $this->db->prepare('UPDATE user_progress SET data = ?, version = version + 1, updated_at = ?, client_offset = ?, client_at = ? WHERE user_id = ?')
@@ -480,7 +499,9 @@ final class Account
     public static function normaliseEmail(string $email): string
     {
         $email = mb_strtolower(trim($email), 'UTF-8');
-        if (strlen($email) > 254 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        // A plain mailbox only: no quoted local part ("a>b"@x) and no address literal (a@[1.2.3.4]),
+        // which would point the mail relay at an arbitrary host.
+        if (strlen($email) > 254 || !filter_var($email, FILTER_VALIDATE_EMAIL) || str_contains($email, '"') || str_contains($email, '[')) {
             throw new HttpError(422, __t('account.badEmail'));
         }
         return $email;

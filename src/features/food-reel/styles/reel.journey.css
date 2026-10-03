@@ -979,9 +979,103 @@
 }
 
 .fj-badge__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
   color: var(--fr-ivory);
   font-family: var(--fr-display);
   font-size: 1.02rem;
+}
+
+/* Tiers as dots: ●●○○ */
+.fj-dots {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.fj-dots i {
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid var(--fr-gold);
+  border-radius: 50%;
+}
+
+.fj-dots i.is-on {
+  background: var(--fr-gold);
+}
+
+/* Achievement shelves: a folding header per group. */
+.fj-shelves {
+  display: grid;
+  gap: 10px;
+}
+
+.fj-shelf {
+  border: 1px solid var(--fr-line);
+  border-radius: 18px;
+}
+
+.fj-shelf.is-open {
+  padding-bottom: 12px;
+}
+
+.fj-shelf .fj-badges {
+  margin-top: 0;
+  padding: 0 12px;
+}
+
+.fj-shelf__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 16px;
+  border: 0;
+  background: none;
+  color: var(--fr-ivory);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.fj-shelf__name {
+  flex: 1;
+  font-family: var(--fr-display);
+  font-size: 1.05rem;
+}
+
+.fj-shelf__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--fr-soft);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.fj-shelf__ready {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--fr-gold);
+  color: #2b1d0e;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.fj-shelf__caret {
+  transition: transform 160ms ease;
+}
+
+.fj-shelf.is-open .fj-shelf__caret {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fj-shelf__caret {
+    transition: none;
+  }
 }
 
 @media (max-width: 520px) {
@@ -2501,6 +2595,27 @@
 .fj-board__remove:disabled {
   opacity: 0.35;
   cursor: default;
+}
+
+/* A friend's garden: the painted 2D farm, look-only (FriendFarm.tsx). */
+.fj-visit__farm {
+  position: relative;
+  height: clamp(320px, 56vh, 560px);
+  margin: 0 -4px 14px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #6fa6c9;
+}
+
+.fj-visit__farm .fa-scene {
+  position: absolute;
+  inset: 0;
+}
+
+.fj-visit__farm .fa-loading {
+  display: grid;
+  height: 100%;
+  place-items: center;
 }
 
 .fj-visit__plots {

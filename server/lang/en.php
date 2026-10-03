@@ -38,6 +38,7 @@ return [
     'friends.ownCode' => 'This is your own garden code.',
     'friends.tooManyFriends' => 'You already have {max} friends — remove one to add someone new.',
     'friends.friendFull' => 'This garden already has as many friends as it can.',
+    'friends.tooManyAdds' => 'Too many friend codes tried for now — please try again in an hour.',
     'friends.noWaterNeeded' => 'This plot does not need water right now.',
     'friends.alreadyWatered' => 'You already watered this garden today — come back tomorrow.',
     'friends.helpLimit' => 'You have helped {max} gardens today — time for a break!',

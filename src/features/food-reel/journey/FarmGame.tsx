@@ -266,6 +266,61 @@ export function FarmGame({
     };
   }, []);
 
+  const cardOpenForTick = plotCard !== null;
+  const [cardTick, setCardTick] = useState(0);
+  useEffect(() => {
+    if (!cardOpenForTick) return;
+    const id = window.setInterval(() => setCardTick(currentTime()), 5000);
+    return () => window.clearInterval(id);
+  }, [cardOpenForTick]);
+
+  // Phones: notices sit just above the seed tray, or above the plot card while it is docked
+  // at the bottom, so a harvest notice never hides the card it came from (farm-game.css).
+  // Placed again for each card (another plot, or the same one after its harvest).
+  const cardKey = plotCard ? `${plotCard.id}:${plotCard.harvested ?? ''}` : '';
+  useEffect(() => {
+    const root = document.documentElement;
+    const place = () => {
+      const tops = [trayRef.current, document.querySelector('.fj-plot-card.is-docked')]
+        .filter((el): el is Element => el !== null)
+        .map((el) => el.getBoundingClientRect().top)
+        .filter((top) => top > 0);
+      if (tops.length === 0) {
+        root.style.removeProperty('--fg-toast-bottom');
+        return;
+      }
+      root.style.setProperty(
+        '--fg-toast-bottom',
+        `${Math.round(innerHeight - Math.min(...tops) + 8)}px`,
+      );
+    };
+    place();
+    // Again once the card has slid in, whenever the tray or card changes size (a harvest
+    // adds what to cook), and the moment a notice appears.
+    const late = window.setTimeout(place, 350);
+    window.addEventListener('resize', place);
+    const sized = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(place);
+    const card = document.querySelector('.fj-plot-card');
+    for (const el of [trayRef.current, card]) if (el) sized?.observe(el);
+    const region = document.querySelector('.toast-region');
+    const added = typeof MutationObserver === 'undefined' ? null : new MutationObserver(place);
+    if (region) added?.observe(region, { childList: true });
+    // A card that docks to the bottom (or leaves it) without changing size.
+    if (card) added?.observe(card, { attributes: true, attributeFilter: ['class'] });
+    return () => {
+      window.clearTimeout(late);
+      window.removeEventListener('resize', place);
+      sized?.disconnect();
+      added?.disconnect();
+    };
+  }, [cardKey]);
+  useEffect(
+    () => () => {
+      document.documentElement.style.removeProperty('--fg-toast-bottom');
+    },
+    [],
+  );
+
   // A level-up opened a new crop (and gifted a seed): say so once.
   const cropUnlock = state.recentCropUnlock;
   useEffect(() => {
@@ -320,8 +375,12 @@ export function FarmGame({
    * harvest: a Cook button when it can be cooked now, otherwise what is still missing.
    */
   const harvestAll = (plotId?: number, suggestCook = false) => {
-    const picked = plotId === undefined ? ready : ready.filter((p) => p.id === plotId);
-    if (picked.length === 0) return;
+    // Ripe as of this moment, not the once-a-minute clock: a card that has just turned to
+    // "Thu hoạch" on its 5 s tick must find its plot ripe here too.
+    const at = currentTime();
+    const ripe = readyPlots(state.plots, at);
+    const picked = plotId === undefined ? ripe : ripe.filter((p) => p.id === plotId);
+    if (picked.length === 0) return false;
     const counts = new Map<string, number>();
     // What lands in the pantry: each plot gives its yield (one less if a friend picked from it).
     picked.forEach((p) => {
@@ -331,8 +390,8 @@ export function FarmGame({
     });
     const action: Action =
       plotId === undefined
-        ? { type: 'HARVEST_ALL', now: currentTime() }
-        : { type: 'HARVEST_PLOT', plotId, now: currentTime() };
+        ? { type: 'HARVEST_ALL', now: at }
+        : { type: 'HARVEST_PLOT', plotId, now: at };
     const best =
       suggestCook && picked.length === 1
         ? cookIdeasFor(picked[0]!.crop!, gameReducer(state, action))[0]
@@ -352,6 +411,7 @@ export function FarmGame({
         message: best ? `${message} ${m.cookMissing(best.name, best.missing)}` : message,
         tone: 'reward',
       });
+    return true;
   };
 
   const plantAt = (plotId: number, seed: CropId | null = activeSeed) => {
@@ -451,6 +511,8 @@ export function FarmGame({
         cycle: plot.plantedAt,
         produce: plot.crop ? produceSprite(plot.crop) : null,
         yield: crop?.yield,
+        // An empty plot invites a sowing while there are seeds (not in watering mode).
+        seedImage: !plot.crop && activeSeed && !watering ? produceSprite(activeSeed) : null,
       };
     }),
     cow: animalBubble('cow'),
@@ -490,6 +552,11 @@ export function FarmGame({
       harvestAll(id, true);
       return;
     }
+    if (plot && stage === 'empty' && mark === 'plant' && activeSeed) {
+      setPlotCard(null);
+      plantAt(id);
+      return;
+    }
     if (plot && stage && isGrowing(stage) && (mark === 'water' || watering)) {
       const block = waterBlock(state, plot, at);
       if (block === null) {
@@ -526,12 +593,14 @@ export function FarmGame({
 
   const harvestFromCard = (id: number) => {
     const crop = state.plots.find((p) => p.id === id)?.crop ?? undefined;
-    harvestAll(id);
-    setPlotCard({ id, harvested: crop });
+    if (harvestAll(id)) setPlotCard({ id, harvested: crop });
   };
 
   // What the open card shows.
   let cardMode: PlotCardMode | null = null;
+  // The farm's clock ticks once a minute; an open card follows a 5 s one, so a crop that
+  // ripens while its card is open turns to "Thu hoạch" right away.
+  const cardNow = Math.max(now, cardTick);
   let cookIdeas: CookIdea[] = [];
   if (plotCard) {
     const plot = state.plots.find((p) => p.id === plotCard.id);
@@ -545,7 +614,7 @@ export function FarmGame({
         level: String(PLOT_UNLOCK_LEVELS[plotCard.id - FARM_PLOT_COUNT - 1] ?? '?'),
       };
     } else {
-      const stage = plotStage(plot, now);
+      const stage = plotStage(plot, cardNow);
       const def = plot.crop ? CROPS[plot.crop] : null;
       const crop = def?.name ?? '';
       // Fruit trees and mushroom blocks: harvests, next fruiting, flushes left (and a way out).
@@ -562,11 +631,11 @@ export function FarmGame({
       if (stage === 'empty') cardMode = { kind: 'empty' };
       else if (stage === 'ready') cardMode = { kind: 'ready', crop, extra };
       else {
-        const block = waterBlock(state, plot, now);
+        const block = waterBlock(state, plot, cardNow);
         cardMode = {
           kind: 'growing',
           crop,
-          left: formatDuration((plot.readyAt ?? now) - now),
+          left: formatDuration((plot.readyAt ?? cardNow) - cardNow),
           water: { ok: block === null, note: block ? BLOCK_NOTE[block] || m.cantWater : '', cans },
           extra,
         };

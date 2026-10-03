@@ -13,7 +13,7 @@ require_once __DIR__ . '/bootstrap.php';
 final class Schema
 {
     /** Bump with every change below; stored in app_meta so the API checks one row per request. */
-    public const VERSION = 3;
+    public const VERSION = 4;
 
     public static function ensure(PDO $pdo): void
     {
@@ -87,6 +87,10 @@ final class Schema
         self::column($pdo, 'user_progress', 'client_offset', "$big NULL");
         self::column($pdo, 'user_progress', 'baseline_at', "$int NULL");
         self::index($pdo, 'user_progress', 'idx_progress_guest', 'guest_id');
+
+        // v4: the achievement metrics added with 28 badges get their bases from each stored garden.
+        require_once __DIR__ . '/ProgressGuard.php';
+        ProgressGuard::backfillBases($pdo);
 
         $set = $sqlite
             ? 'INSERT INTO app_meta (name, value) VALUES (\'schema\', ?) ON CONFLICT(name) DO UPDATE SET value = excluded.value'

@@ -201,6 +201,18 @@ function client_ip(): string
 }
 
 /**
+ * The address as a rate-limit bucket: IPv4 as is, IPv6 by its /64 (one home or one VPS gets a
+ * whole /64, so counting single v6 addresses would let one machine rotate past every limit).
+ */
+function ip_bucket(string $ip): string
+{
+    if (str_contains($ip, ':') && ($bin = @inet_pton($ip)) !== false && strlen($bin) === 16) {
+        return bin2hex(substr($bin, 0, 8)) . '::/64';
+    }
+    return $ip;
+}
+
+/**
  * What is unsafe about this configuration for a public deployment, as short messages that
  * never contain a value (server/bin/check-config.php prints them; web requests refuse to run
  * with any of them in production).

@@ -336,6 +336,8 @@ const journey: Messages['journey'] = {
     giftFailed: 'Could not send the gift.',
     giftedToday: ' · gift sent today',
     inviteAdded: (name) => `You and ${name} are garden friends now!`,
+    inviteAsk: (code) => `You were invited to be garden friends with ${code}. Add them?`,
+    inviteAccept: 'Add friend',
     invitePending: 'Save your farm with your email to become friends with whoever invited you.',
     referral: {
       title: 'Invite someone new',
@@ -383,7 +385,7 @@ const journey: Messages['journey'] = {
     loading: 'Visiting garden…',
     description: (level, status) => `Level ${level} · ${status}`,
     helpedToday: 'you’ve already helped water today',
-    canHelp: 'tap a plot with a green outline to help water',
+    canHelp: 'tap the water drop over a plot to help water',
     noHelpsLeft: 'no watering helps left today',
     flying: 'Flying to your friend’s island…',
     plotsLabel: 'Your friend’s plots',
@@ -536,6 +538,14 @@ const journey: Messages['journey'] = {
     chestNext: (n, left) =>
       `Next chest at a ${n}-day streak (${left} to go). Pick a dish or check in every day to keep it.`,
     tier: (n, total) => `Tier ${n}/${total}`,
+    badgesDone: (done, total) => `${done}/${total} fully done`,
+    badgesReady: (n) => `${n} ready`,
+    groups: {
+      meals: 'Meals',
+      garden: 'Garden',
+      ranch: 'Ranch & market',
+      social: 'Friends & the farm',
+    },
     maxed: 'Top tier reached',
     badgeProgress: (have, need) => `${have}/${need}`,
     logEmpty: 'No meals checked in yet. Your first check-in will show up here.',
