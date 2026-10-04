@@ -11,7 +11,12 @@ export type PlotExtra =
   { type: 'tree'; harvests: number; again: string } | { type: 'mushroom'; left: number };
 
 export type PlotCardMode =
-  | { kind: 'locked'; level: string }
+  | {
+      kind: 'locked';
+      level: string;
+      /** The next plot to clear: its price, and whether the level and purse allow it now. */
+      land?: { price: number; open: boolean; short: number };
+    }
   | { kind: 'empty' }
   | {
       kind: 'growing';
@@ -45,6 +50,7 @@ export function FarmPlotCard({
   cook,
   onCook,
   onClear,
+  onLand,
   onClose,
 }: {
   plotId: number;
@@ -59,6 +65,8 @@ export function FarmPlotCard({
   onCook: (id: RecipeId) => void;
   /** Dig up the tree / remove the block (asked to confirm first). */
   onClear?: () => void;
+  /** Clear (buy) this plot. */
+  onLand?: () => void;
   onClose: () => void;
 }) {
   // The confirm belongs to one plot: another plot's card starts unasked.
@@ -85,7 +93,25 @@ export function FarmPlotCard({
         </button>
       </div>
 
-      {mode.kind === 'locked' && <p>{m.cardLocked(mode.level)}</p>}
+      {mode.kind === 'locked' &&
+        (mode.land?.open ? (
+          <>
+            <p>{m.cardLand(mode.land.price)}</p>
+            {mode.land.short > 0 && <p className="fj-note">{m.landShort(mode.land.short)}</p>}
+            <button
+              type="button"
+              className="fr-cta"
+              aria-disabled={mode.land.short > 0}
+              onClick={() => mode.land!.short === 0 && onLand?.()}
+            >
+              {m.landBuy(mode.land.price)}
+            </button>
+          </>
+        ) : (
+          <p>
+            {mode.land ? m.cardLockedPrice(mode.level, mode.land.price) : m.cardLocked(mode.level)}
+          </p>
+        ))}
 
       {mode.kind === 'empty' &&
         (seeds.length === 0 ? (

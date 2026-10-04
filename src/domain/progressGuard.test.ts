@@ -31,6 +31,7 @@ import {
   fishingLeft,
   hiveStage,
   level,
+  nextLand,
   plotStage,
   recipeAvailable,
   recipeProgress,
@@ -93,6 +94,8 @@ function play(): { steps: Step[]; last: GuestProgress; lastAt: number } {
       }
     }
     act({ type: 'HARVEST_ALL', now: at() });
+    // A new plot as soon as the level and the purse allow.
+    if (nextLand(s)?.affordable) act({ type: 'BUY_LAND', now: at() });
     const thirsty = s.plots.find((p) => waterBlock(s, p, clock) === null);
     if (thirsty) act({ type: 'WATER', plotId: thirsty.id, now: at() });
 
@@ -291,6 +294,25 @@ function cheats(last: GuestProgress, lastAt: number) {
     'rule',
   );
   add('an XP entry nothing in the game pays', withEntry(last, `bonus:${at}`, 'xp', 50, at), 'rule');
+  {
+    // One more plot, as the app would add it, but without paying for it; then paid too little.
+    const id = last.plots.length + 1;
+    const plot = {
+      id,
+      crop: null,
+      plantedAt: null,
+      readyAt: null,
+      sourceDishId: null,
+      wateredAt: null,
+    };
+    add(
+      'a plot added without clearing it',
+      { ...structuredClone(last), plots: [...last.plots, plot] },
+      'rule',
+    );
+    const cheap = withEntry(last, `land:${id}:${at}`, 'coin', -1, at);
+    add('a plot cleared below its price', { ...cheap, plots: [...cheap.plots, plot] }, 'rule');
+  }
   add(
     'meat bought below the market price',
     withEntry(
@@ -414,6 +436,8 @@ describe('server save guard (ProgressGuard.php)', () => {
       // The bot really used the butcher, so market purchases are checked too.
       const bought = steps.flatMap((st) => st.data.ledger.map((e) => e.key));
       expect(bought.some((k) => /^buy:[a-z]+:-?\d+:item$/.test(k))).toBe(true);
+      expect(bought.some((k) => /^land:\d+:-?\d+$/.test(k))).toBe(true);
+      expect(last.plots.length).toBeGreaterThan(4);
       // The bot really played: every part of the game came into its saves.
       const families = new Set(
         steps.flatMap((st) => st.data.ledger.map((e) => e.key.split(':')[0])),

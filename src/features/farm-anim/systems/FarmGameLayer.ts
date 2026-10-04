@@ -29,6 +29,8 @@ export interface PlotView {
   unlocked: boolean;
   /** Level that opens it (locked plots). */
   unlockLevel: number | null;
+  /** The next plot to clear, its level reached: the price the sign shows instead. */
+  landPrice?: number;
   crop: string | null;
   stage: PlotStageView;
   /** Crop picture for the stage (URL). */
@@ -825,7 +827,11 @@ export class FarmGameLayer {
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#4a2a10';
     ctx.font = '800 14px "Be Vietnam Pro", system-ui, sans-serif';
-    ctx.fillText(t.farm.anim.lockLevel(v.unlockLevel ?? '?'), cx, cy + 1, x1 - x0 - 6);
+    const text =
+      v.landPrice !== undefined
+        ? t.farm.anim.landPrice(v.landPrice)
+        : t.farm.anim.lockLevel(v.unlockLevel ?? '?');
+    ctx.fillText(text, cx, cy + 1, x1 - x0 - 6);
     ctx.restore();
   }
 

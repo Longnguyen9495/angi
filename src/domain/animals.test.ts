@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ANIMALS } from '../data/game';
+import { ANIMALS, xpForLevel } from '../data/game';
 import { EMPTY_PRODUCE, createInitialProgress, type GuestProgress } from './progress';
 import { gameReducer } from './reducer';
 import { animalStage } from './selectors';
@@ -9,7 +9,7 @@ const NOON = new Date(2026, 8, 29, 12, 0, 0).getTime();
 
 function level(n: number): GuestProgress {
   const s = createInitialProgress(NOON);
-  return { ...s, xp: (n - 1) * 100, ingredients: { ...EMPTY_PRODUCE, rice: 2, herbs: 1 } };
+  return { ...s, xp: xpForLevel(n), ingredients: { ...EMPTY_PRODUCE, rice: 2, herbs: 1 } };
 }
 
 describe('animals', () => {

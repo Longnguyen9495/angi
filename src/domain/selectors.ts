@@ -12,8 +12,10 @@ import {
   FARM_PLOT_COUNT,
   FISHING,
   PLOT_UNLOCK_LEVELS,
+  LAND_PRICES,
   WATERING,
-  XP_PER_LEVEL,
+  levelForXp,
+  xpForLevel,
   animalOf,
   isAnimalProduct,
   isMeat,
@@ -273,17 +275,30 @@ export function newlyUnlockableCrops(p: GuestProgress): CropId[] {
   });
 }
 
-/** Plots the guest should have at their level (never fewer than they already have). */
-export function newPlotCount(p: GuestProgress): number {
-  const lv = level(p.xp).level;
-  const earned = FARM_PLOT_COUNT + PLOT_UNLOCK_LEVELS.filter((l) => lv >= l).length;
-  return Math.max(p.plots.length, earned);
+/** Most plots the guest may hold at their level (each beyond the first four is bought). */
+export function plotsAllowed(xp: number): number {
+  const lv = level(xp).level;
+  return FARM_PLOT_COUNT + PLOT_UNLOCK_LEVELS.filter((l) => lv >= l).length;
 }
 
-/** Level at which the next plot opens, or null when the garden is at full size. */
+/**
+ * The next plot to clear: its id, the level it needs and its price, and whether the guest
+ * can clear it now. Null when the garden is at full size.
+ */
+export function nextLand(
+  p: GuestProgress,
+): { id: number; level: number; price: number; open: boolean; affordable: boolean } | null {
+  const i = p.plots.length - FARM_PLOT_COUNT;
+  const need = PLOT_UNLOCK_LEVELS[i];
+  const price = LAND_PRICES[i];
+  if (need === undefined || price === undefined) return null;
+  const open = level(p.xp).level >= need;
+  return { id: p.plots.length + 1, level: need, price, open, affordable: open && p.coins >= price };
+}
+
+/** Level at which the next plot can be cleared, or null when the garden is at full size. */
 export function nextPlotLevel(p: GuestProgress): number | null {
-  const lv = level(p.xp).level;
-  return PLOT_UNLOCK_LEVELS.find((l) => l > lv) ?? null;
+  return nextLand(p)?.level ?? null;
 }
 
 export function stampCount(p: GuestProgress): number {
@@ -343,7 +358,9 @@ export function nextLockedRegion(p: GuestProgress): RegionId | null {
 }
 
 export function level(xp: number): { level: number; into: number; span: number } {
-  return { level: Math.floor(xp / XP_PER_LEVEL) + 1, into: xp % XP_PER_LEVEL, span: XP_PER_LEVEL };
+  const lv = levelForXp(xp);
+  const start = xpForLevel(lv);
+  return { level: lv, into: xp - start, span: xpForLevel(lv + 1) - start };
 }
 
 export function cropName(id: CropId): string {

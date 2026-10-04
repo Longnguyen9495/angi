@@ -55,6 +55,7 @@ import {
   isGrowing,
   isWet,
   level,
+  nextLand,
   plotStage,
   readyPlots,
   waterBlock,
@@ -453,6 +454,9 @@ export function FarmGame({
     toast({ message, tone: 'reward' });
   };
 
+  // The next plot to clear: once its level is reached the sign shows its price.
+  const land = nextLand(state);
+  const clearable = land?.open ? land : null;
   // The game as the painted farm shows it: 9 plots (locked ones open with levels), animal bubbles.
   const farmView: FarmView = {
     watering,
@@ -466,12 +470,16 @@ export function FarmGame({
           id,
           unlocked: false,
           unlockLevel,
+          landPrice: clearable?.id === id ? clearable.price : undefined,
           crop: null,
           stage: 'empty',
           image: null,
           wet: false,
           thirsty: false,
-          label: m.farmPlotLocked(id, String(unlockLevel ?? '?')),
+          label:
+            clearable?.id === id
+              ? m.farmPlotClearable(id, clearable.price)
+              : m.farmPlotLocked(id, String(unlockLevel ?? '?')),
         };
       const stage = plotStage(plot, now);
       const growing = isGrowing(stage);
@@ -571,10 +579,13 @@ export function FarmGame({
   /** Plant a seed dropped on (or tapped for) a plot. */
   const dropSeed = (id: number, crop: CropId) => {
     const plot = state.plots.find((p) => p.id === id);
-    if (!plot)
+    if (!plot) {
+      // The plot the guest can clear now: open its card with the price instead.
+      if (clearable?.id === id) return setPlotCard({ id });
       return toast({
         message: m.plotOpensAt(id, String(PLOT_UNLOCK_LEVELS[id - FARM_PLOT_COUNT - 1] ?? '?')),
       });
+    }
     if (plotStage(plot, currentTime()) !== 'empty') return setPlotCard({ id });
     setPicked(crop);
     plantAt(id, crop);
@@ -612,6 +623,10 @@ export function FarmGame({
       cardMode = {
         kind: 'locked',
         level: String(PLOT_UNLOCK_LEVELS[plotCard.id - FARM_PLOT_COUNT - 1] ?? '?'),
+        land:
+          land?.id === plotCard.id
+            ? { price: land.price, open: land.open, short: Math.max(0, land.price - state.coins) }
+            : undefined,
       };
     } else {
       const stage = plotStage(plot, cardNow);
@@ -771,6 +786,14 @@ export function FarmGame({
               onCook(r);
             }}
             onClear={() => dispatch({ type: 'CLEAR_PLOT', plotId: plotCard.id })}
+            onLand={() => {
+              const id = plotCard.id;
+              dispatch({ type: 'BUY_LAND', now: currentTime() });
+              const message = m.landDone(id);
+              announce(message);
+              toast({ message, tone: 'reward' });
+              setPlotCard({ id });
+            }}
             onClose={() => setPlotCard(null)}
           />
         )}

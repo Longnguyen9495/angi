@@ -162,6 +162,8 @@ const journey: Messages['journey'] = {
       'Farm on a floating island: tap a plot to plant, water or harvest; the pond to fish; the cow or chicken to tend them; the house or the market to go there',
     farmSeedsLabel: 'Seed to plant when you tap a plot',
     farmPlotLocked: (plot, level) => `Plot ${plot} · unlocks at level ${level}`,
+    farmPlotClearable: (plot, price) =>
+      `Plot ${plot} · clear it for ${price} ${s(price, 'coin', 'coins')}`,
     farmPlotPlant: (plot, seed) => `Plot ${plot} · tap to plant ${seed}`,
     farmPlotNoSeed: (plot) => `Plot ${plot} · empty, waiting for seeds`,
     farmPlotHarvest: (plot, crop) => `Plot ${plot} · ${crop} · tap to harvest`,
@@ -196,6 +198,13 @@ const journey: Messages['journey'] = {
     cookReady: (dish) => `You can cook ${dish} now!`,
     cookMissing: (dish, list) => `${dish} still needs ${list}.`,
     cardLocked: (level) => `This plot unlocks at level ${level}.`,
+    cardLockedPrice: (level, price) =>
+      `At level ${level} you can clear this plot for ${price} ${s(price, 'coin', 'coins')}.`,
+    cardLand: (price) =>
+      `You're level enough! Clear this plot for ${price} ${s(price, 'coin', 'coins')} to grow more.`,
+    landBuy: (price) => `Clear · ${price} ${s(price, 'coin', 'coins')}`,
+    landShort: (n) => `${n} ${s(n, 'coin', 'coins')} short — sell some produce at the market.`,
+    landDone: (plot) => `Plot ${plot} cleared!`,
     plotsLabel: 'Plots',
     tapToPlant: 'Tap to plant',
     waitingSeed: 'Waiting for seeds',
@@ -247,6 +256,12 @@ const journey: Messages['journey'] = {
       body: (feed, when, qty, product) =>
         `1 ${feed} → ${qty} ${product} for your recipes after ${when}.`,
       action: 'Feed',
+    },
+    land: {
+      title: (plot) => `Clear plot ${plot}`,
+      body: (price) =>
+        `You have the level and the coins to open another plot (${price} ${s(price, 'coin', 'coins')}). More room, more harvests.`,
+      action: (price) => `Clear · ${price} ${s(price, 'coin', 'coins')}`,
     },
     buy: {
       title: (recipe, meat) => `${recipe} still needs ${meat}`,

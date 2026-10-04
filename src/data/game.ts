@@ -894,16 +894,40 @@ export const DECOR: Record<DecorId, DecorDef> = {
 
 export const DECOR_LIST: DecorDef[] = Object.values(DECOR);
 
-export const XP_PER_LEVEL = 100;
+/**
+ * Levels get longer as the farm grows: level L → L+1 takes `base + step × (L − 1)` XP
+ * (100, 120, 140 …). An everyday player (three visits a day) earns some 450 XP a day once
+ * the farm is running, so the first levels still come within the first hours and level 22
+ * (the last plot) after about two weeks; a flat 100 XP had them there in four days.
+ */
+export const LEVEL_CURVE = { base: 100, step: 20 } as const;
+
+/** Total XP needed to reach a level (level 1 = 0 XP). */
+export function xpForLevel(lv: number): number {
+  const n = Math.max(0, Math.floor(lv) - 1);
+  return LEVEL_CURVE.base * n + (LEVEL_CURVE.step * n * (n - 1)) / 2;
+}
+
+/** The level a total of XP stands at. */
+export function levelForXp(xp: number): number {
+  // Solve xpForLevel(n + 1) <= xp for n, then step past any rounding at the edge.
+  const { base, step } = LEVEL_CURVE;
+  const b = base - step / 2;
+  let lv = Math.floor((-b + Math.sqrt(b * b + 2 * step * Math.max(0, xp))) / step) + 1;
+  while (lv > 1 && xpForLevel(lv) > xp) lv--;
+  while (xpForLevel(lv + 1) <= xp) lv++;
+  return lv;
+}
+
 /** Plots a new guest starts with. */
 export const FARM_PLOT_COUNT = 4;
 /**
- * One more plot at each of these levels (4 → 12), the gaps widening (1, 1, 2, 2, 3, 3, 4, 5).
- * A level is a flat 100 XP and an everyday player earns some 200–300 XP a day (three check-ins,
- * the daily quests, a dish or two, harvests), so the first plots come within the first days and
- * the last one after a couple of weeks.
+ * One more plot can be cleared at each of these levels (4 → 12), for the xu in LAND_PRICES:
+ * a goal to save towards, and somewhere for the market's xu to go.
  */
 export const PLOT_UNLOCK_LEVELS = [2, 3, 5, 7, 10, 13, 17, 22] as const;
+/** What clearing each of those plots costs, in the same order. */
+export const LAND_PRICES = [30, 60, 120, 200, 320, 480, 700, 1000] as const;
 export const MAX_PLOT_COUNT = FARM_PLOT_COUNT + PLOT_UNLOCK_LEVELS.length;
 
 export const BUDGET_OPTIONS: { id: BudgetId | 'any'; label: string; hint: string }[] = (

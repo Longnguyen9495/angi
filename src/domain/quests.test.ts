@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CROPS } from '../data/game';
+import { CROPS, xpForLevel } from '../data/game';
 import { createInitialProgress, type GuestProgress } from './progress';
 import { parseProgress } from './persistence';
 import {
@@ -305,7 +305,7 @@ describe('more quests and 28 achievements', () => {
   });
 
   it('achievements the save already earns are claimable at once, level paying no XP', () => {
-    const s = { ...fresh(), xp: 450 };
+    const s = { ...fresh(), xp: xpForLevel(5) + 50 };
     const level = badges(s).find((b) => b.def.id === 'level')!;
     expect(level.ready).toBe(true);
     expect(claimableCount(s, NOON)).toBeGreaterThanOrEqual(1);

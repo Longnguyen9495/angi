@@ -167,6 +167,7 @@ const farm: Messages['farm'] = {
     title: 'Farm on a floating island',
     loading: 'Building the farm…',
     lockLevel: (level: number | string) => `Level ${level}`,
+    landPrice: (price: number) => `${price} coins`,
     showcase: {
       heading: 'Animation showcase',
       hide: 'Hide panel',

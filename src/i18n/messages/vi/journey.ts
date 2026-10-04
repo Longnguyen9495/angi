@@ -160,6 +160,7 @@ const journey = {
       'Nông trại trên đảo bay: chạm ô đất để gieo, tưới hoặc thu hoạch; chạm ao để câu cá; chạm bò hoặc gà để chăm; chạm nhà hoặc chợ để đi tới đó',
     farmSeedsLabel: 'Hạt để gieo khi chạm ô đất',
     farmPlotLocked: (plot: number, level: string) => `Ô ${plot} · mở ở cấp ${level}`,
+    farmPlotClearable: (plot: number, price: number) => `Ô ${plot} · khai hoang ${price} xu`,
     farmPlotPlant: (plot: number, seed: string) => `Ô ${plot} · chạm để gieo ${seed}`,
     farmPlotNoSeed: (plot: number) => `Ô ${plot} · trống, chờ hạt`,
     farmPlotHarvest: (plot: number, crop: string) => `Ô ${plot} · ${crop} · chạm để thu hoạch`,
@@ -195,6 +196,13 @@ const journey = {
     cookReady: (dish: string) => `Nấu được ${dish} rồi!`,
     cookMissing: (dish: string, list: string) => `${dish} còn thiếu ${list}.`,
     cardLocked: (level: string) => `Ô này mở khi lên cấp ${level}.`,
+    cardLockedPrice: (level: string, price: number) =>
+      `Lên cấp ${level} là khai hoang được ô này, giá ${price} xu.`,
+    cardLand: (price: number) =>
+      `Đủ cấp rồi! Khai hoang ô này với ${price} xu để có thêm chỗ trồng.`,
+    landBuy: (price: number) => `Khai hoang · ${price} xu`,
+    landShort: (n: number) => `Còn thiếu ${n} xu — bán bớt nông sản ở chợ nhé.`,
+    landDone: (plot: number) => `Đã khai hoang ô ${plot}!`,
     plotsLabel: 'Các ô đất',
     tapToPlant: 'Chạm để gieo',
     waitingSeed: 'Chờ hạt',
@@ -246,6 +254,12 @@ const journey = {
       body: (feed: string, when: string, qty: number, product: string) =>
         `1 ${feed} → sau ${when} có ${qty} ${product} cho công thức.`,
       action: 'Cho ăn',
+    },
+    land: {
+      title: (plot: number) => `Khai hoang ô ${plot}`,
+      body: (price: number) =>
+        `Bạn đủ cấp và đủ xu để mở thêm một ô vườn (${price} xu). Thêm ô là thêm chỗ trồng, thêm thu hoạch.`,
+      action: (price: number) => `Khai hoang · ${price} xu`,
     },
     buy: {
       title: (recipe: string, meat: string) => `${recipe} còn thiếu ${meat}`,

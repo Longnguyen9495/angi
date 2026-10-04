@@ -497,6 +497,7 @@ final class ProgressGuard
         $checkins = [];  // non-skipped check-ins: at => used
         $stamps = ['discovered' => [], 'eaten' => []];
         $decor = [];
+        $lands = [];     // plot id => cleared in this save
         $harvests = [];  // plot => [{t, at, kind}]
         $collects = [];  // animal => [fedAt => at]
         $hiveRuns = [];  // startedAt => emptied at
@@ -794,6 +795,12 @@ final class ProgressGuard
                 $pay = $byKey["buy:{$m[1]}:{$m[2]}:coin"] ?? null;
                 $price = $R['buy'][$m[1]] ?? null;
                 ($price !== null && $pay !== null && (int) $pay['delta'] === -(int) $price && $d === 1 && $res === "ingredient:{$m[1]}") || $fail('market purchase');
+            } elseif (preg_match('/^land:(\d+):(-?\d+)$/', $key, $m)) {
+                // Clearing a plot: the next one in order, open at this level, for its price.
+                $i = (int) $m[1] - (int) $R['plots']['start'] - 1;
+                $need = $R['plots']['unlockLevels'][$i] ?? null;
+                ($need !== null && $level >= (int) $need && $res === 'coin' && $d === -(int) $R['plots']['prices'][$i]) || $fail('land price');
+                $lands[(int) $m[1]] = true;
             } elseif (preg_match('/^decor:([a-z]+)$/', $key, $m)) {
                 $price = $R['decor'][$m[1]] ?? null;
                 ($price !== null && $d === -(int) $price && $res === 'coin') || $fail('decoration price');
@@ -815,6 +822,7 @@ final class ProgressGuard
             'checkins' => $checkins,
             'stamps' => $stamps,
             'decor' => $decor,
+            'lands' => $lands,
         ];
     }
 
@@ -917,6 +925,13 @@ final class ProgressGuard
         $this->unlocksFit($new, $level);
         if (count($new['plots']) < count($old['plots'] ?? [])) {
             $this->reject('rule', 'plots disappeared');
+        }
+        // Every plot beyond the old copy's was cleared (paid for) in this save. A first save has
+        // no old copy to compare with: there the level cap in unlocksFit is the rule.
+        if (count($old['plots'] ?? []) > 0) {
+            for ($id = count($old['plots']) + 1; $id <= count($new['plots']); $id++) {
+                isset($out['lands'][$id]) || $this->reject('rule', "plot $id was not cleared");
+            }
         }
 
         $oldPlots = [];
@@ -1436,6 +1451,50 @@ final class ProgressGuard
         }
     }
 
+    /**
+     * Same as fitToLevel() in src/domain/persistence.ts: a garden keeps no more plots than its
+     * level opens (the last ones go, with what grew on them) and no crop above its level. The
+     * seed gift of a crop it gives back is forgotten, so reaching that level again pays it again.
+     * Idempotent: a garden that already fits is not touched.
+     */
+    public static function fitToLevel(array $p): array
+    {
+        $R = self::rules();
+        $lv = self::level((int) ($p['xp'] ?? 0));
+        $allowed = (int) $R['plots']['start'] + count(array_filter($R['plots']['unlockLevels'], fn ($l) => $lv >= (int) $l));
+        $plots = array_values(array_filter((array) ($p['plots'] ?? []), 'is_array'));
+        usort($plots, fn ($a, $b) => (int) ($a['id'] ?? 0) <=> (int) ($b['id'] ?? 0));
+        $p['plots'] = array_slice($plots, 0, $allowed);
+        $p['unlockedCrops'] = array_values(array_filter(
+            (array) ($p['unlockedCrops'] ?? []),
+            fn ($c) => isset($R['crops'][$c]) && (int) $R['crops'][$c]['unlockLevel'] <= $lv,
+        ));
+        return $p;
+    }
+
+    /** Runs fitToLevel over every stored garden (schema v5). */
+    public static function fitStoredToLevel(PDO $db): void
+    {
+        $save = $db->prepare('UPDATE user_progress SET data = ? WHERE user_id = ?');
+        $forget = $db->prepare('DELETE FROM progress_claims WHERE user_id = ? AND claim_key = ?');
+        $rows = $db->query('SELECT user_id, data FROM user_progress')->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as $row) {
+            $p = json_decode((string) $row['data'], true);
+            if (!is_array($p)) {
+                continue;
+            }
+            $fit = self::fitToLevel($p);
+            $gone = array_diff((array) ($p['unlockedCrops'] ?? []), $fit['unlockedCrops']);
+            if (count($fit['plots']) === count((array) ($p['plots'] ?? [])) && !$gone) {
+                continue;
+            }
+            $save->execute([json_encode($fit, JSON_UNESCAPED_UNICODE), (int) $row['user_id']]);
+            foreach ($gone as $c) {
+                $forget->execute([(int) $row['user_id'], "unlock:crop:$c"]);
+            }
+        }
+    }
+
     private function accountDays(): int
     {
         $st = $this->db->prepare('SELECT created_at FROM users WHERE id = ?');
@@ -1542,9 +1601,28 @@ final class ProgressGuard
         return (int) ($p[$field][$id] ?? 0);
     }
 
+    /** Same as levelForXp() in src/data/game.ts: level L → L+1 costs base + step × (L − 1) XP. */
     public static function level(int $xp): int
     {
-        return intdiv(max(0, $xp), (int) self::rules()['xpPerLevel']) + 1;
+        $c = self::rules()['levelCurve'];
+        $xp = max(0, $xp);
+        $b = (int) $c['base'] - (int) $c['step'] / 2;
+        $lv = (int) floor((-$b + sqrt($b * $b + 2 * (int) $c['step'] * $xp)) / (int) $c['step']) + 1;
+        while ($lv > 1 && self::xpForLevel($lv) > $xp) {
+            $lv--;
+        }
+        while (self::xpForLevel($lv + 1) <= $xp) {
+            $lv++;
+        }
+        return $lv;
+    }
+
+    /** Same as xpForLevel() in src/data/game.ts. */
+    public static function xpForLevel(int $lv): int
+    {
+        $c = self::rules()['levelCurve'];
+        $n = max(0, $lv - 1);
+        return (int) $c['base'] * $n + intdiv((int) $c['step'] * $n * ($n - 1), 2);
     }
 
     /** Same as harvestXp() in src/data/game.ts. */

@@ -16,7 +16,8 @@ import {
   REGIONS,
   WATERING,
   XP,
-  XP_PER_LEVEL,
+  LAND_PRICES,
+  LEVEL_CURVE,
   isBuiltinRecipe,
 } from '../data/game';
 import type { CropId } from '../data/types';
@@ -93,7 +94,7 @@ export function buildGameRules() {
   );
   return {
     version: GAME_RULES_VERSION,
-    xpPerLevel: XP_PER_LEVEL,
+    levelCurve: { ...LEVEL_CURVE },
     xp: { ...XP },
     baseCrops: [...BASE_CROPS],
     crops,
@@ -131,7 +132,11 @@ export function buildGameRules() {
     catchOrder: Object.keys(CATCHES),
     fishing: { ...FISHING },
     watering: { ...WATERING },
-    plots: { start: FARM_PLOT_COUNT, unlockLevels: [...PLOT_UNLOCK_LEVELS] },
+    plots: {
+      start: FARM_PLOT_COUNT,
+      unlockLevels: [...PLOT_UNLOCK_LEVELS],
+      prices: [...LAND_PRICES],
+    },
     decor: Object.fromEntries(Object.values(DECOR).map((d) => [d.id, d.price])),
     recipes: Object.fromEntries(
       builtinRecipes().map((r) => [

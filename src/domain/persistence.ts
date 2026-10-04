@@ -1,5 +1,12 @@
 import { t } from '../i18n';
-import { DECOR, FARM_PLOT_COUNT, MAX_PLOT_COUNT } from '../data/game';
+import {
+  CROPS,
+  DECOR,
+  FARM_PLOT_COUNT,
+  MAX_PLOT_COUNT,
+  PLOT_UNLOCK_LEVELS,
+  levelForXp,
+} from '../data/game';
 import type { CropId, DecorId } from '../data/types';
 import {
   createInitialProgress,
@@ -179,7 +186,7 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
   if (!isStringArray(raw.unlockedRegions) || !Array.isArray(raw.ledger)) return null;
 
   const p = raw as unknown as GuestProgress;
-  return {
+  return fitToLevel({
     ...base,
     ...p,
     seeds,
@@ -255,6 +262,24 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
     unlockedCrops: isStringArray(raw.unlockedCrops)
       ? (raw.unlockedCrops.filter((c) => Object.hasOwn(EMPTY_CROPS, c)) as CropId[])
       : [],
+  });
+}
+
+/**
+ * Holds a save to what its level opens. Levels follow LEVEL_CURVE (they used to be a flat
+ * 100 XP), so a garden grown under the old pace keeps its XP but gives back the plots and
+ * crops its level no longer reaches (the last plots, with whatever grew on them); the
+ * server trims its stored copies the same way (ProgressGuard::fitToLevel). Idempotent.
+ */
+export function fitToLevel(p: GuestProgress): GuestProgress {
+  const lv = levelForXp(p.xp);
+  const allowed = FARM_PLOT_COUNT + PLOT_UNLOCK_LEVELS.filter((l) => lv >= l).length;
+  const crops = p.unlockedCrops.filter((c) => (CROPS[c].unlock?.level ?? 1) <= lv);
+  if (p.plots.length <= allowed && crops.length === p.unlockedCrops.length) return p;
+  return {
+    ...p,
+    plots: [...p.plots].sort((a, b) => a.id - b.id).slice(0, allowed),
+    unlockedCrops: crops,
   };
 }
 

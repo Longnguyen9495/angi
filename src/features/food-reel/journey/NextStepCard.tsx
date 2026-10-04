@@ -96,6 +96,16 @@ export function NextStepCard({
       action = { label: m.feed.action, run: () => onAnimal(a.id, 'feed') };
       break;
     }
+    case 'land': {
+      icon = <Plant size={22} aria-hidden="true" />;
+      title = m.land.title(step.plotId);
+      body = m.land.body(step.price);
+      action = {
+        label: m.land.action(step.price),
+        run: () => dispatch({ type: 'BUY_LAND', now: currentTime() }),
+      };
+      break;
+    }
     case 'buy': {
       const r = getRecipe(step.recipe);
       const meat = produceName(step.item).toLowerCase();

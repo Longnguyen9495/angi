@@ -1,6 +1,9 @@
 {
   "version": 1,
-  "xpPerLevel": 100,
+  "levelCurve": {
+    "base": 100,
+    "step": 20
+  },
   "xp": {
     "chooseDish": 10,
     "checkinAte": 20,
@@ -706,6 +709,16 @@
       13,
       17,
       22
+    ],
+    "prices": [
+      30,
+      60,
+      120,
+      200,
+      320,
+      480,
+      700,
+      1000
     ]
   },
   "decor": {

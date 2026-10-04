@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { STORAGE_KEY, SCHEMA_VERSION, loadProgress, saveProgress } from './persistence';
+import { CROPS, levelForXp } from '../data/game';
+import type { CropId } from '../data/types';
+import {
+  STORAGE_KEY,
+  SCHEMA_VERSION,
+  fitToLevel,
+  loadProgress,
+  parseProgress,
+  saveProgress,
+} from './persistence';
 import { createInitialProgress } from './progress';
 import { gameReducer } from './reducer';
 import { dateKey } from './time';
@@ -61,5 +70,23 @@ describe('guest progress persistence', () => {
     expect(r.status).toBe('restored');
     expect(r.progress.plots.every((p) => p.wateredAt === null)).toBe(true);
     expect(r.progress.water).toEqual({ date: dateKey(NOON), used: 0, bonus: 0 });
+  });
+});
+
+describe('levels on a curve', () => {
+  it('gives back the plots and crops a save grown at the old pace no longer reaches', () => {
+    const now = Date.now();
+    const base = createInitialProgress(now);
+    const plots = Array.from({ length: 10 }, (_, i) => ({ ...base.plots[0]!, id: i + 1 }));
+    const crops = Object.keys(CROPS).filter((c) => CROPS[c as CropId].unlock) as CropId[];
+    // 1512 XP was level 16 at a flat 100 XP; on the curve it is level 9.
+    const old = { ...base, xp: 1512, plots, unlockedCrops: crops };
+    const p = parseProgress(JSON.parse(JSON.stringify(old)), now)!;
+    expect(levelForXp(1512)).toBe(9);
+    expect(p.plots.map((x) => x.id)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    expect(p.unlockedCrops.every((c) => (CROPS[c].unlock?.level ?? 1) <= 9)).toBe(true);
+    expect(p.unlockedCrops).toContain('lime');
+    expect(p.unlockedCrops).not.toContain('mango');
+    expect(fitToLevel(p)).toBe(p);
   });
 });

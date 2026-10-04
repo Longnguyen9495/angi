@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ANIMALS } from '../../data/game';
+import { ANIMALS, xpForLevel } from '../../data/game';
 import { createInitialProgress } from '../../domain/progress';
 import { ranchBadge } from './badge';
 import { beeCount, hiveStep } from './hive';
@@ -145,7 +145,7 @@ describe('ranch badge', () => {
     const now = 1_000_000_000;
     const p = createInitialProgress(now);
     expect(ranchBadge(p, now)).toBe(0);
-    const lv9 = { ...p, xp: 900 };
+    const lv9 = { ...p, xp: xpForLevel(9) };
     const feed = { ...lv9.ingredients };
     Object.keys(feed).forEach((k) => (feed[k as keyof typeof feed] = 0));
     const none = { ...lv9, ingredients: feed };

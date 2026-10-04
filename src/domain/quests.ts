@@ -1,12 +1,4 @@
-import {
-  ANIMAL_LIST,
-  BOAT,
-  CROPS,
-  DECOR_LIST,
-  HIVE,
-  RECIPE_LIST,
-  XP_PER_LEVEL,
-} from '../data/game';
+import { ANIMAL_LIST, BOAT, CROPS, DECOR_LIST, HIVE, RECIPE_LIST, levelForXp } from '../data/game';
 import { t } from '../i18n';
 import type { GuestProgress } from './progress';
 import { produceAvailable, recipeAvailable } from './selectors';
@@ -197,7 +189,7 @@ export const DAILY_COUNT = 5;
 export const WEEKLY_COUNT = 4;
 
 function lv(p: GuestProgress): number {
-  return Math.floor(p.xp / XP_PER_LEVEL) + 1;
+  return levelForXp(p.xp);
 }
 function hiveOpen(p: GuestProgress): boolean {
   return lv(p) >= HIVE.unlockLevel;

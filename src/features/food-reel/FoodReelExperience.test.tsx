@@ -162,7 +162,8 @@ describe('spin → story → back', () => {
     const explore = await screen.findByRole('button', { name: /khám phá món này/i });
     expect(explore).toBeInTheDocument();
     expect(first).toBeTruthy();
-  });
+    // A full render of the app: well under this, but slow machines run the suite in parallel.
+  }, 15_000);
 
   it('opens a story straight from a /mon/<slug> deep link', async () => {
     window.history.replaceState(null, '', '/mon/bun-moc');

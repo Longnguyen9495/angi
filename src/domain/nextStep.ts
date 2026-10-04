@@ -12,6 +12,7 @@ import {
   recipeProgress,
   animalStage,
   fishingLeft,
+  nextLand,
 } from './selectors';
 import {
   ANIMALS,
@@ -36,6 +37,7 @@ export type NextStep =
   | { kind: 'feed'; animal: AnimalId }
   | { kind: 'fish'; catch: Catch; recipe: RecipeId; left: number }
   | { kind: 'buy'; item: Meat; recipe: RecipeId; price: number }
+  | { kind: 'land'; plotId: number; price: number }
   | { kind: 'plant'; crop: CropId; plotId: number }
   | { kind: 'find'; crop: CropId; recipe: RecipeId }
   | { kind: 'wait'; recipe: RecipeId; readyAt: number }
@@ -65,6 +67,10 @@ export function nextStep(p: GuestProgress, now: number): NextStep {
 
   const collectable = ANIMAL_LIST.find((a) => animalStage(p, a.id, now) === 'ready');
   if (collectable) return { kind: 'collect', animal: collectable.id };
+
+  // A new plot the guest can clear right now: more room is the farm's biggest step.
+  const land = nextLand(p);
+  if (land?.affordable) return { kind: 'land', plotId: land.id, price: land.price };
 
   // The recipe closest to done (by share of ingredients secured) is the one to work on.
   const open = recipes

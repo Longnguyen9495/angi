@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getDish } from '../data/dishes';
 import { reelGameDishes } from '../features/food-reel/data/reelCatalogue';
-import { CROPS } from '../data/game';
+import { CROPS, LAND_PRICES, xpForLevel } from '../data/game';
 import { createInitialProgress } from './progress';
 import { dailyQuests } from './quests';
 import { gameReducer, touchStreak } from './reducer';
@@ -299,16 +299,37 @@ describe('levelling up', () => {
     expect(s1.unlockedCrops).toContain('lemongrass');
     expect(s1.seeds.lemongrass).toBe(1);
     expect(s1.recentCropUnlock).toBe(openAt(2).at(-1));
-    expect(s1.plots).toHaveLength(5);
+    // Plots are not given with the level any more: they are cleared for xu.
+    expect(s1.plots).toHaveLength(4);
     const s2 = gameReducer(s1, { type: 'PLANT_MEAL_SEED', now: NOON + 1 });
     expect(s2.seeds.lemongrass).toBe(1);
 
-    // Level 3 adds garlic (and the other level-3 crops) and plot 6.
-    const s3 = gameReducer({ ...s2, xp: 200 }, { type: 'WATER', plotId: 2, now: NOON + 2 });
+    // Level 3 adds garlic (and the other level-3 crops).
+    const s3 = gameReducer(
+      { ...s2, xp: xpForLevel(3) },
+      { type: 'WATER', plotId: 2, now: NOON + 2 },
+    );
     expect([...s3.unlockedCrops].sort()).toEqual(openAt(3).sort());
     expect(s3.unlockedCrops).toContain('garlic');
-    expect(s3.plots).toHaveLength(6);
-    expect(s3.plots[5]).toMatchObject({ id: 6, crop: null });
+    expect(s3.plots).toHaveLength(4);
+  });
+
+  it('clears the next plot for its price once its level is reached, in order', () => {
+    const poor = { ...createInitialProgress(NOON), xp: xpForLevel(3), coins: LAND_PRICES[0] - 1 };
+    expect(gameReducer(poor, { type: 'BUY_LAND', now: NOON })).toBe(poor);
+    const low = { ...poor, xp: xpForLevel(2) - 1, coins: 1000 };
+    expect(gameReducer(low, { type: 'BUY_LAND', now: NOON })).toBe(low);
+    let s = { ...poor, coins: LAND_PRICES[0] + LAND_PRICES[1] + 5 };
+    s = gameReducer(s, { type: 'BUY_LAND', now: NOON });
+    expect(s.plots).toHaveLength(5);
+    expect(s.plots[4]).toMatchObject({ id: 5, crop: null });
+    s = gameReducer(s, { type: 'BUY_LAND', now: NOON + 1 });
+    expect(s.plots).toHaveLength(6);
+    expect(s.coins).toBe(5);
+    // Plot 7 needs level 5.
+    expect(
+      gameReducer({ ...s, coins: 999 }, { type: 'BUY_LAND', now: NOON + 2 }).plots,
+    ).toHaveLength(6);
   });
 });
 

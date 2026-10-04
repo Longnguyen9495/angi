@@ -39,7 +39,7 @@ import {
   cropAvailable,
   fishingLeft,
   firstEmptyPlot,
-  newPlotCount,
+  nextLand,
   newlyUnlockable,
   newlyUnlockableCrops,
   plotStage,
@@ -104,6 +104,7 @@ export type Action =
   | { type: 'COLLECT_BOAT'; now: number }
   | { type: 'BUY_SEED'; crop: CropId; now: number }
   | { type: 'BUY_ITEM'; item: Meat; now: number }
+  | { type: 'BUY_LAND'; now: number }
   | { type: 'BUY_DECOR'; decor: DecorId; now: number }
   | {
       type: 'CHECK_IN';
@@ -269,25 +270,11 @@ function addStamp(s: GuestProgress, kind: 'discovered' | 'eaten', dishId: string
  */
 function applyUnlocks(s: GuestProgress, now: number): GuestProgress {
   const crops = newlyUnlockableCrops(s);
-  const plots = newPlotCount(s) - s.plots.length;
-  if (crops.length === 0 && plots <= 0) return s;
+  if (crops.length === 0) return s;
   const next = structuredClone(s);
   for (const crop of crops) {
     next.unlockedCrops = [...next.unlockedCrops, crop];
     post(next, `unlock:crop:${crop}`, `seed:${crop}`, 1, 'unlock', now);
-  }
-  for (let i = 0; i < plots; i++) {
-    next.plots = [
-      ...next.plots,
-      {
-        id: next.plots.length + 1,
-        crop: null,
-        plantedAt: null,
-        readyAt: null,
-        sourceDishId: null,
-        wateredAt: null,
-      },
-    ];
   }
   next.recentCropUnlock = crops[crops.length - 1] ?? next.recentCropUnlock;
   return next;
@@ -848,6 +835,29 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       const key = `buy:${action.item}:${action.now}`;
       if (!post(s, `${key}:coin`, 'coin', -price, 'market', action.now)) return state;
       post(s, `${key}:item`, `ingredient:${action.item}`, 1, 'market', action.now);
+      track(s, 'buy', action.now);
+      return s;
+    }
+
+    case 'BUY_LAND': {
+      // Clearing the next plot: open at this level, paid in xu.
+      const land = nextLand(state);
+      if (!land?.affordable) return state;
+      const s = structuredClone(state);
+      if (!post(s, `land:${land.id}:${action.now}`, 'coin', -land.price, 'land', action.now)) {
+        return state;
+      }
+      s.plots = [
+        ...s.plots,
+        {
+          id: land.id,
+          crop: null,
+          plantedAt: null,
+          readyAt: null,
+          sourceDishId: null,
+          wateredAt: null,
+        },
+      ];
       track(s, 'buy', action.now);
       return s;
     }

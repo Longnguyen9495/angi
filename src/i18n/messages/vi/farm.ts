@@ -171,6 +171,7 @@ const farm = {
     title: 'Nông trại trên đảo bay',
     loading: 'Đang dựng nông trại…',
     lockLevel: (level: number | string) => `Cấp ${level}`,
+    landPrice: (price: number) => `${price} xu`,
     /** Animation showcase panel on /farm-animation-test. */
     showcase: {
       heading: 'Animation showcase',

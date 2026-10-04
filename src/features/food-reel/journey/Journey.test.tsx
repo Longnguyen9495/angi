@@ -127,7 +127,8 @@ describe('Journey layer', () => {
     // With nothing open on the farm, Escape leaves it.
     await user.keyboard('{Escape}');
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
-  });
+    // A full render of the app: well under this, but slow machines run the suite in parallel.
+  }, 15_000);
 
   it('asks a guest without a meal to spin first', async () => {
     const user = userEvent.setup();

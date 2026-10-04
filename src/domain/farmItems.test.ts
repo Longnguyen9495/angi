@@ -9,6 +9,7 @@ import {
   harvestXp,
   produceName,
   sellPrice,
+  xpForLevel,
 } from '../data/game';
 import type { CropId } from '../data/types';
 import { STORAGE_KEY, loadProgress, parseProgress } from './persistence';
@@ -24,7 +25,7 @@ function withRipe(crop: CropId, lv = 15): GuestProgress {
   const s = createInitialProgress(NOON);
   return {
     ...s,
-    xp: (lv - 1) * 100,
+    xp: xpForLevel(lv),
     unlockedCrops: Object.keys(CROPS) as CropId[],
     plots: s.plots.map((p) =>
       p.id === 1
@@ -129,10 +130,10 @@ describe('perennial crops', () => {
 
 describe('beehive and boat', () => {
   it('the hive opens at its level, fills, and is emptied once per fill', () => {
-    const lv5 = { ...createInitialProgress(NOON), xp: 400 };
+    const lv5 = { ...createInitialProgress(NOON), xp: xpForLevel(5) };
     expect(hiveStage(lv5, NOON)).toBe('locked');
     expect(gameReducer(lv5, { type: 'START_HIVE', now: NOON })).toBe(lv5);
-    let s = { ...lv5, xp: (HIVE.unlockLevel - 1) * 100 };
+    let s = { ...lv5, xp: xpForLevel(HIVE.unlockLevel) };
     s = gameReducer(s, { type: 'START_HIVE', now: NOON });
     expect(hiveStage(s, NOON + HOUR_MS)).toBe('filling-1');
     expect(gameReducer(s, { type: 'COLLECT_HIVE', now: NOON + HOUR_MS })).toBe(s);
@@ -145,7 +146,7 @@ describe('beehive and boat', () => {
   });
 
   it('the boat brings back the same catch however often it is unloaded', () => {
-    let s = { ...createInitialProgress(NOON), xp: (BOAT.unlockLevel - 1) * 100 };
+    let s = { ...createInitialProgress(NOON), xp: xpForLevel(BOAT.unlockLevel) };
     s = gameReducer(s, { type: 'SEND_BOAT', now: NOON });
     expect(boatStage(s, NOON + 1)).toBe('away');
     expect(gameReducer(s, { type: 'SEND_BOAT', now: NOON + 2 })).toBe(s);
@@ -169,7 +170,11 @@ describe('beehive and boat', () => {
 
 describe('saves from before the item pack', () => {
   it('a high-level save gets the crops its level opens as soon as it loads, once', () => {
-    const old = { ...createInitialProgress(NOON), xp: 960, unlockedCrops: [] as CropId[] };
+    const old = {
+      ...createInitialProgress(NOON),
+      xp: xpForLevel(10) + 60,
+      unlockedCrops: [] as CropId[],
+    };
     const s = gameReducer(old, { type: 'SYNC_UNLOCKS', now: NOON });
     expect(s.unlockedCrops).toContain('mango');
     expect(s.unlockedCrops).not.toContain('durian');
