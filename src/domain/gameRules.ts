@@ -9,6 +9,7 @@ import {
   FISHING,
   HIVE,
   MARKET,
+  MEAT_FOR_SALE,
   PLOT_UNLOCK_LEVELS,
   PRODUCE_IDS,
   RECIPE_LIST,
@@ -97,6 +98,7 @@ export function buildGameRules() {
     baseCrops: [...BASE_CROPS],
     crops,
     sell: Object.fromEntries(PRODUCE_IDS.map((id) => [id, MARKET.sell(id)])),
+    buy: Object.fromEntries(MEAT_FOR_SALE.map((id) => [id, MARKET.buy(id)])),
     animals: Object.fromEntries(
       Object.values(ANIMALS).map((a) => [
         a.id,

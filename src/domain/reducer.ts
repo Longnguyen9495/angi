@@ -13,8 +13,9 @@ import {
   WATERING,
   XP,
   harvestXp,
+  isMeat,
 } from '../data/game';
-import type { AnimalId, CropId, DecorId, ProduceId, RecipeId } from '../data/types';
+import type { AnimalId, CropId, DecorId, Meat, ProduceId, RecipeId } from '../data/types';
 import {
   createInitialProgress,
   type AgainAnswer,
@@ -102,6 +103,7 @@ export type Action =
   | { type: 'SEND_BOAT'; now: number }
   | { type: 'COLLECT_BOAT'; now: number }
   | { type: 'BUY_SEED'; crop: CropId; now: number }
+  | { type: 'BUY_ITEM'; item: Meat; now: number }
   | { type: 'BUY_DECOR'; decor: DecorId; now: number }
   | {
       type: 'CHECK_IN';
@@ -834,6 +836,18 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       const key = `buy:${action.crop}:${action.now}`;
       if (!post(s, `${key}:coin`, 'coin', -price, 'market', action.now)) return state;
       post(s, `${key}:seed`, `seed:${action.crop}`, 1, 'market', action.now);
+      track(s, 'buy', action.now);
+      return s;
+    }
+
+    case 'BUY_ITEM': {
+      if (!isMeat(action.item)) return state;
+      const price = MARKET.buy(action.item);
+      if (state.coins < price) return state;
+      const s = structuredClone(state);
+      const key = `buy:${action.item}:${action.now}`;
+      if (!post(s, `${key}:coin`, 'coin', -price, 'market', action.now)) return state;
+      post(s, `${key}:item`, `ingredient:${action.item}`, 1, 'market', action.now);
       track(s, 'buy', action.now);
       return s;
     }

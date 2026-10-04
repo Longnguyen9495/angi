@@ -208,8 +208,20 @@
                 ],
                 "produce": [
                     {
+                        "id": "beef",
+                        "qty": 2
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
+                    },
+                    {
+                        "id": "ginger",
+                        "qty": 1
+                    },
+                    {
+                        "id": "shallot",
+                        "qty": 1
                     },
                     {
                         "id": "scallion",
@@ -217,10 +229,6 @@
                     },
                     {
                         "id": "herbs",
-                        "qty": 1
-                    },
-                    {
-                        "id": "chili",
                         "qty": 1
                     }
                 ]
@@ -342,6 +350,22 @@
                     }
                 ],
                 "produce": [
+                    {
+                        "id": "chickenmeat",
+                        "qty": 2
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 1
+                    },
+                    {
+                        "id": "egg",
+                        "qty": 1
+                    },
+                    {
+                        "id": "garlic",
+                        "qty": 1
+                    },
                     {
                         "id": "tomato",
                         "qty": 1
@@ -526,15 +550,23 @@
                         "qty": 2
                     },
                     {
+                        "id": "pork",
+                        "qty": 1
+                    },
+                    {
+                        "id": "milk",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
                         "id": "tomato",
                         "qty": 1
                     },
                     {
                         "id": "button",
-                        "qty": 1
-                    },
-                    {
-                        "id": "chili",
                         "qty": 1
                     }
                 ]
@@ -700,6 +732,10 @@
                     }
                 ],
                 "produce": [
+                    {
+                        "id": "fish",
+                        "qty": 2
+                    },
                     {
                         "id": "rice",
                         "qty": 2
@@ -887,6 +923,10 @@
                 ],
                 "produce": [
                     {
+                        "id": "pork",
+                        "qty": 3
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
@@ -895,11 +935,11 @@
                         "qty": 1
                     },
                     {
-                        "id": "carrot",
+                        "id": "papaya",
                         "qty": 1
                     },
                     {
-                        "id": "radish",
+                        "id": "shallot",
                         "qty": 1
                     },
                     {
@@ -1057,6 +1097,18 @@
                 ],
                 "produce": [
                     {
+                        "id": "pork",
+                        "qty": 2
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
+                        "id": "cucumber",
+                        "qty": 1
+                    },
+                    {
                         "id": "carrot",
                         "qty": 1
                     },
@@ -1065,15 +1117,7 @@
                         "qty": 1
                     },
                     {
-                        "id": "cucumber",
-                        "qty": 1
-                    },
-                    {
                         "id": "herbs",
-                        "qty": 1
-                    },
-                    {
-                        "id": "chili",
                         "qty": 1
                     }
                 ]
@@ -1243,11 +1287,11 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "bean",
                         "qty": 2
                     },
                     {
-                        "id": "bean",
+                        "id": "rice",
                         "qty": 2
                     },
                     {
@@ -1260,6 +1304,10 @@
                     },
                     {
                         "id": "carrot",
+                        "qty": 1
+                    },
+                    {
+                        "id": "cucumber",
                         "qty": 1
                     }
                 ]
@@ -1437,12 +1485,16 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "beef",
                         "qty": 2
                     },
                     {
                         "id": "egg",
                         "qty": 1
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
                     },
                     {
                         "id": "bean",
@@ -1630,6 +1682,10 @@
                     }
                 ],
                 "produce": [
+                    {
+                        "id": "chickenmeat",
+                        "qty": 2
+                    },
                     {
                         "id": "rice",
                         "qty": 2
@@ -1825,12 +1881,16 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "beef",
                         "qty": 2
                     },
                     {
-                        "id": "bean",
+                        "id": "pork",
                         "qty": 1
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
                     },
                     {
                         "id": "lemongrass",
@@ -1841,7 +1901,7 @@
                         "qty": 1
                     },
                     {
-                        "id": "scallion",
+                        "id": "bean",
                         "qty": 1
                     }
                 ]
@@ -2019,16 +2079,20 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "pork",
                         "qty": 2
                     },
                     {
                         "id": "shrimp",
-                        "qty": 2
+                        "qty": 1
                     },
                     {
                         "id": "quailegg",
                         "qty": 1
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
                     },
                     {
                         "id": "bean",
@@ -2205,23 +2269,27 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "shrimp",
                         "qty": 2
                     },
                     {
-                        "id": "shrimp",
-                        "qty": 2
+                        "id": "pork",
+                        "qty": 1
                     },
                     {
                         "id": "egg",
                         "qty": 1
                     },
                     {
-                        "id": "bean",
-                        "qty": 1
+                        "id": "rice",
+                        "qty": 2
                     },
                     {
                         "id": "peanut",
+                        "qty": 1
+                    },
+                    {
+                        "id": "bean",
                         "qty": 1
                     }
                 ]
@@ -2367,11 +2435,7 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
-                        "qty": 2
-                    },
-                    {
-                        "id": "napa",
+                        "id": "beef",
                         "qty": 2
                     },
                     {
@@ -2379,11 +2443,19 @@
                         "qty": 1
                     },
                     {
-                        "id": "chili",
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
+                        "id": "napa",
                         "qty": 1
                     },
                     {
                         "id": "scallion",
+                        "qty": 1
+                    },
+                    {
+                        "id": "garlic",
                         "qty": 1
                     }
                 ]
@@ -2549,15 +2621,23 @@
                 ],
                 "produce": [
                     {
-                        "id": "potato",
+                        "id": "beef",
                         "qty": 2
                     },
                     {
-                        "id": "tomato",
+                        "id": "potato",
+                        "qty": 1
+                    },
+                    {
+                        "id": "shallot",
                         "qty": 1
                     },
                     {
                         "id": "garlic",
+                        "qty": 1
+                    },
+                    {
+                        "id": "tomato",
                         "qty": 1
                     }
                 ]
@@ -2711,15 +2791,23 @@
                 ],
                 "produce": [
                     {
+                        "id": "pork",
+                        "qty": 2
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
                     {
-                        "id": "bean",
+                        "id": "woodear",
                         "qty": 1
                     },
                     {
                         "id": "shallot",
+                        "qty": 1
+                    },
+                    {
+                        "id": "bean",
                         "qty": 1
                     },
                     {
@@ -2901,15 +2989,19 @@
                 ],
                 "produce": [
                     {
+                        "id": "pork",
+                        "qty": 2
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
                     {
-                        "id": "peanut",
+                        "id": "lemongrass",
                         "qty": 1
                     },
                     {
-                        "id": "cucumber",
+                        "id": "peanut",
                         "qty": 1
                     },
                     {
@@ -2917,7 +3009,7 @@
                         "qty": 1
                     },
                     {
-                        "id": "radish",
+                        "id": "cucumber",
                         "qty": 1
                     }
                 ]
@@ -3083,11 +3175,15 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "shrimp",
                         "qty": 2
                     },
                     {
-                        "id": "shrimp",
+                        "id": "pork",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
                         "qty": 2
                     },
                     {
@@ -3096,6 +3192,10 @@
                     },
                     {
                         "id": "herbs",
+                        "qty": 1
+                    },
+                    {
+                        "id": "scallion",
                         "qty": 1
                     }
                 ]
@@ -3273,11 +3373,11 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "crab",
                         "qty": 2
                     },
                     {
-                        "id": "crab",
+                        "id": "rice",
                         "qty": 2
                     },
                     {
@@ -3290,6 +3390,10 @@
                     },
                     {
                         "id": "woodear",
+                        "qty": 1
+                    },
+                    {
+                        "id": "shallot",
                         "qty": 1
                     }
                 ]
@@ -3467,11 +3571,19 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "bean",
                         "qty": 2
                     },
                     {
-                        "id": "bean",
+                        "id": "pork",
+                        "qty": 1
+                    },
+                    {
+                        "id": "shrimp",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
                         "qty": 2
                     },
                     {
@@ -3480,10 +3592,6 @@
                     },
                     {
                         "id": "cucumber",
-                        "qty": 1
-                    },
-                    {
-                        "id": "chili",
                         "qty": 1
                     }
                 ]
@@ -3630,15 +3738,27 @@
                 ],
                 "produce": [
                     {
+                        "id": "beef",
+                        "qty": 2
+                    },
+                    {
                         "id": "egg",
                         "qty": 1
                     },
                     {
-                        "id": "napa",
+                        "id": "rice",
                         "qty": 2
                     },
                     {
+                        "id": "napa",
+                        "qty": 1
+                    },
+                    {
                         "id": "carrot",
+                        "qty": 1
+                    },
+                    {
+                        "id": "shallot",
                         "qty": 1
                     }
                 ]
@@ -3816,11 +3936,15 @@
                         "qty": 1
                     },
                     {
+                        "id": "herbs",
+                        "qty": 1
+                    },
+                    {
                         "id": "scallion",
                         "qty": 1
                     },
                     {
-                        "id": "herbs",
+                        "id": "shallot",
                         "qty": 1
                     }
                 ]
@@ -4144,6 +4268,10 @@
                 ],
                 "produce": [
                     {
+                        "id": "pork",
+                        "qty": 2
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
@@ -4334,11 +4462,15 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "pork",
                         "qty": 2
                     },
                     {
                         "id": "egg",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
                         "qty": 2
                     },
                     {
@@ -4529,7 +4661,15 @@
                 ],
                 "produce": [
                     {
+                        "id": "beef",
+                        "qty": 2
+                    },
+                    {
                         "id": "shrimp",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
                         "qty": 2
                     },
                     {
@@ -4696,6 +4836,14 @@
                 ],
                 "produce": [
                     {
+                        "id": "pork",
+                        "qty": 2
+                    },
+                    {
+                        "id": "egg",
+                        "qty": 1
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
@@ -4708,7 +4856,7 @@
                         "qty": 1
                     },
                     {
-                        "id": "egg",
+                        "id": "shallot",
                         "qty": 1
                     }
                 ]
@@ -4862,16 +5010,16 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
-                        "qty": 2
-                    },
-                    {
                         "id": "fish",
                         "qty": 1
                     },
                     {
                         "id": "egg",
                         "qty": 1
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 3
                     },
                     {
                         "id": "chili",
@@ -5057,11 +5205,27 @@
                 ],
                 "produce": [
                     {
-                        "id": "potato",
+                        "id": "beef",
                         "qty": 2
                     },
                     {
+                        "id": "milk",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 1
+                    },
+                    {
+                        "id": "potato",
+                        "qty": 1
+                    },
+                    {
                         "id": "tomato",
+                        "qty": 1
+                    },
+                    {
+                        "id": "shallot",
                         "qty": 1
                     }
                 ]
@@ -5239,10 +5403,6 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
-                        "qty": 2
-                    },
-                    {
                         "id": "shrimp",
                         "qty": 2
                     },
@@ -5251,11 +5411,19 @@
                         "qty": 1
                     },
                     {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
                         "id": "bean",
                         "qty": 1
                     },
                     {
                         "id": "peanut",
+                        "qty": 1
+                    },
+                    {
+                        "id": "lime",
                         "qty": 1
                     }
                 ]
@@ -5410,11 +5578,23 @@
                 ],
                 "produce": [
                     {
+                        "id": "beef",
+                        "qty": 2
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
                         "id": "tomato",
                         "qty": 2
                     },
                     {
                         "id": "garlic",
+                        "qty": 1
+                    },
+                    {
+                        "id": "milk",
                         "qty": 1
                     },
                     {
@@ -5602,10 +5782,14 @@
                     },
                     {
                         "id": "squid",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
                         "qty": 2
                     },
                     {
-                        "id": "oyster",
+                        "id": "lemongrass",
                         "qty": 1
                     },
                     {
@@ -5771,12 +5955,16 @@
                 ],
                 "produce": [
                     {
-                        "id": "oyster",
+                        "id": "shiitake",
                         "qty": 2
                     },
                     {
-                        "id": "shiitake",
-                        "qty": 2
+                        "id": "oyster",
+                        "qty": 1
+                    },
+                    {
+                        "id": "enoki",
+                        "qty": 1
                     },
                     {
                         "id": "bean",
@@ -5971,10 +6159,14 @@
                     },
                     {
                         "id": "enoki",
-                        "qty": 2
+                        "qty": 1
                     },
                     {
                         "id": "bean",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
                         "qty": 2
                     },
                     {
@@ -5982,7 +6174,7 @@
                         "qty": 1
                     },
                     {
-                        "id": "herbs",
+                        "id": "chili",
                         "qty": 1
                     }
                 ]
@@ -6148,6 +6340,14 @@
                 ],
                 "produce": [
                     {
+                        "id": "pork",
+                        "qty": 2
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
                         "id": "carrot",
                         "qty": 1
                     },
@@ -6157,10 +6357,6 @@
                     },
                     {
                         "id": "cucumber",
-                        "qty": 1
-                    },
-                    {
-                        "id": "herbs",
                         "qty": 1
                     },
                     {
@@ -6330,11 +6526,11 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "bean",
                         "qty": 2
                     },
                     {
-                        "id": "bean",
+                        "id": "rice",
                         "qty": 2
                     },
                     {
@@ -6524,10 +6720,6 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
-                        "qty": 2
-                    },
-                    {
                         "id": "bean",
                         "qty": 2
                     },
@@ -6536,11 +6728,19 @@
                         "qty": 1
                     },
                     {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
                         "id": "cucumber",
                         "qty": 1
                     },
                     {
                         "id": "tomato",
+                        "qty": 1
+                    },
+                    {
+                        "id": "carrot",
                         "qty": 1
                     }
                 ]
@@ -6718,8 +6918,16 @@
                 ],
                 "produce": [
                     {
+                        "id": "chickenmeat",
+                        "qty": 2
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
+                    },
+                    {
+                        "id": "garlic",
+                        "qty": 1
                     },
                     {
                         "id": "cucumber",
@@ -6731,10 +6939,6 @@
                     },
                     {
                         "id": "scallion",
-                        "qty": 1
-                    },
-                    {
-                        "id": "chili",
                         "qty": 1
                     }
                 ]
@@ -6904,11 +7108,15 @@
                 ],
                 "produce": [
                     {
+                        "id": "crab",
+                        "qty": 2
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
                     {
-                        "id": "crab",
+                        "id": "tomato",
                         "qty": 2
                     },
                     {
@@ -6916,7 +7124,7 @@
                         "qty": 1
                     },
                     {
-                        "id": "tomato",
+                        "id": "shallot",
                         "qty": 1
                     },
                     {
@@ -7090,10 +7298,6 @@
                         "qty": 2
                     },
                     {
-                        "id": "rice",
-                        "qty": 2
-                    },
-                    {
                         "id": "shrimp",
                         "qty": 1
                     },
@@ -7102,7 +7306,15 @@
                         "qty": 1
                     },
                     {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
                         "id": "scallion",
+                        "qty": 1
+                    },
+                    {
+                        "id": "shallot",
                         "qty": 1
                     }
                 ]
@@ -7280,19 +7492,27 @@
                 ],
                 "produce": [
                     {
+                        "id": "beef",
+                        "qty": 2
+                    },
+                    {
                         "id": "egg",
                         "qty": 2
                     },
                     {
-                        "id": "potato",
-                        "qty": 2
+                        "id": "pork",
+                        "qty": 1
                     },
                     {
-                        "id": "tomato",
+                        "id": "potato",
                         "qty": 1
                     },
                     {
                         "id": "garlic",
+                        "qty": 1
+                    },
+                    {
+                        "id": "tomato",
                         "qty": 1
                     }
                 ]
@@ -7471,23 +7691,27 @@
                 ],
                 "produce": [
                     {
+                        "id": "chickenmeat",
+                        "qty": 2
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
                     {
-                        "id": "cauliflower",
+                        "id": "ginger",
+                        "qty": 1
+                    },
+                    {
+                        "id": "garlic",
+                        "qty": 1
+                    },
+                    {
+                        "id": "honey",
                         "qty": 1
                     },
                     {
                         "id": "carrot",
-                        "qty": 1
-                    },
-                    {
-                        "id": "corn",
-                        "qty": 1
-                    },
-                    {
-                        "id": "shiitake",
                         "qty": 1
                     }
                 ]
@@ -7653,6 +7877,14 @@
                     }
                 ],
                 "produce": [
+                    {
+                        "id": "pork",
+                        "qty": 2
+                    },
+                    {
+                        "id": "egg",
+                        "qty": 1
+                    },
                     {
                         "id": "rice",
                         "qty": 2
@@ -7844,23 +8076,27 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
-                        "qty": 2
-                    },
-                    {
                         "id": "shrimp",
                         "qty": 2
                     },
                     {
                         "id": "squid",
-                        "qty": 2
+                        "qty": 1
                     },
                     {
                         "id": "egg",
                         "qty": 1
                     },
                     {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
                         "id": "carrot",
+                        "qty": 1
+                    },
+                    {
+                        "id": "scallion",
                         "qty": 1
                     }
                 ]
@@ -8019,15 +8255,27 @@
                 ],
                 "produce": [
                     {
-                        "id": "shiitake",
+                        "id": "duckmeat",
                         "qty": 2
                     },
                     {
-                        "id": "scallion",
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
+                        "id": "shiitake",
                         "qty": 1
                     },
                     {
-                        "id": "herbs",
+                        "id": "napa",
+                        "qty": 1
+                    },
+                    {
+                        "id": "ginger",
+                        "qty": 1
+                    },
+                    {
+                        "id": "scallion",
                         "qty": 1
                     }
                 ]
@@ -8205,15 +8453,23 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
-                        "qty": 2
+                        "id": "beef",
+                        "qty": 1
                     },
                     {
                         "id": "egg",
                         "qty": 1
                     },
                     {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
                         "id": "carrot",
+                        "qty": 1
+                    },
+                    {
+                        "id": "radish",
                         "qty": 1
                     },
                     {
@@ -8396,23 +8652,27 @@
                 ],
                 "produce": [
                     {
+                        "id": "beef",
+                        "qty": 2
+                    },
+                    {
                         "id": "egg",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
                         "qty": 2
                     },
                     {
                         "id": "napa",
-                        "qty": 2
+                        "qty": 1
                     },
                     {
-                        "id": "bean",
+                        "id": "chili",
                         "qty": 1
                     },
                     {
                         "id": "cucumber",
-                        "qty": 1
-                    },
-                    {
-                        "id": "carrot",
                         "qty": 1
                     }
                 ]
@@ -8591,8 +8851,12 @@
                 ],
                 "produce": [
                     {
-                        "id": "egg",
+                        "id": "chickenmeat",
                         "qty": 2
+                    },
+                    {
+                        "id": "egg",
+                        "qty": 1
                     },
                     {
                         "id": "tomato",
@@ -8607,7 +8871,7 @@
                         "qty": 1
                     },
                     {
-                        "id": "carrot",
+                        "id": "honey",
                         "qty": 1
                     }
                 ]
@@ -8762,7 +9026,19 @@
                 ],
                 "produce": [
                     {
+                        "id": "pork",
+                        "qty": 2
+                    },
+                    {
+                        "id": "egg",
+                        "qty": 1
+                    },
+                    {
                         "id": "milk",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
                         "qty": 2
                     },
                     {
@@ -8937,11 +9213,19 @@
                 ],
                 "produce": [
                     {
-                        "id": "tomato",
+                        "id": "beef",
                         "qty": 2
                     },
                     {
                         "id": "milk",
+                        "qty": 2
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
+                        "id": "tomato",
                         "qty": 2
                     },
                     {
@@ -9120,15 +9404,27 @@
                 ],
                 "produce": [
                     {
-                        "id": "potato",
+                        "id": "beef",
                         "qty": 2
+                    },
+                    {
+                        "id": "milk",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 1
+                    },
+                    {
+                        "id": "potato",
+                        "qty": 1
                     },
                     {
                         "id": "tomato",
                         "qty": 1
                     },
                     {
-                        "id": "milk",
+                        "id": "shallot",
                         "qty": 1
                     }
                 ]
@@ -9263,12 +9559,20 @@
                 ],
                 "produce": [
                     {
-                        "id": "tomato",
+                        "id": "pork",
                         "qty": 2
                     },
                     {
                         "id": "milk",
                         "qty": 2
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
+                        "id": "tomato",
+                        "qty": 1
                     },
                     {
                         "id": "herbs",
@@ -9430,7 +9734,7 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "beef",
                         "qty": 2
                     },
                     {
@@ -9438,11 +9742,19 @@
                         "qty": 1
                     },
                     {
-                        "id": "scallion",
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
+                        "id": "shallot",
                         "qty": 1
                     },
                     {
                         "id": "ginger",
+                        "qty": 1
+                    },
+                    {
+                        "id": "scallion",
                         "qty": 1
                     }
                 ]
@@ -9625,7 +9937,7 @@
                         "qty": 1
                     },
                     {
-                        "id": "tomato",
+                        "id": "radish",
                         "qty": 1
                     },
                     {
@@ -9808,7 +10120,15 @@
                 ],
                 "produce": [
                     {
+                        "id": "beef",
+                        "qty": 2
+                    },
+                    {
                         "id": "egg",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
                         "qty": 2
                     },
                     {
@@ -9999,7 +10319,7 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "chickenmeat",
                         "qty": 2
                     },
                     {
@@ -10007,8 +10327,12 @@
                         "qty": 2
                     },
                     {
-                        "id": "potato",
+                        "id": "rice",
                         "qty": 2
+                    },
+                    {
+                        "id": "potato",
+                        "qty": 1
                     },
                     {
                         "id": "chili",
@@ -10186,8 +10510,12 @@
                 ],
                 "produce": [
                     {
-                        "id": "egg",
+                        "id": "mackerel",
                         "qty": 2
+                    },
+                    {
+                        "id": "egg",
+                        "qty": 1
                     },
                     {
                         "id": "tomato",
@@ -10199,6 +10527,10 @@
                     },
                     {
                         "id": "corn",
+                        "qty": 1
+                    },
+                    {
+                        "id": "shallot",
                         "qty": 1
                     }
                 ]
@@ -10357,6 +10689,10 @@
                 ],
                 "produce": [
                     {
+                        "id": "mackerel",
+                        "qty": 2
+                    },
+                    {
                         "id": "egg",
                         "qty": 2
                     },
@@ -10369,7 +10705,7 @@
                         "qty": 1
                     },
                     {
-                        "id": "herbs",
+                        "id": "shallot",
                         "qty": 1
                     }
                 ]
@@ -10552,6 +10888,10 @@
                         "qty": 2
                     },
                     {
+                        "id": "rice",
+                        "qty": 1
+                    },
+                    {
                         "id": "cucumber",
                         "qty": 1
                     },
@@ -10560,7 +10900,7 @@
                         "qty": 1
                     },
                     {
-                        "id": "chili",
+                        "id": "shallot",
                         "qty": 1
                     },
                     {
@@ -10731,8 +11071,16 @@
                 ],
                 "produce": [
                     {
+                        "id": "beef",
+                        "qty": 2
+                    },
+                    {
                         "id": "potato",
                         "qty": 2
+                    },
+                    {
+                        "id": "garlic",
+                        "qty": 1
                     },
                     {
                         "id": "cauliflower",
@@ -10914,12 +11262,16 @@
                 ],
                 "produce": [
                     {
-                        "id": "cauliflower",
+                        "id": "fish",
                         "qty": 2
                     },
                     {
                         "id": "potato",
-                        "qty": 2
+                        "qty": 1
+                    },
+                    {
+                        "id": "cauliflower",
+                        "qty": 1
                     },
                     {
                         "id": "carrot",
@@ -11109,7 +11461,7 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "fish",
                         "qty": 2
                     },
                     {
@@ -11117,11 +11469,11 @@
                         "qty": 1
                     },
                     {
-                        "id": "cucumber",
-                        "qty": 1
+                        "id": "rice",
+                        "qty": 2
                     },
                     {
-                        "id": "carrot",
+                        "id": "cucumber",
                         "qty": 1
                     },
                     {
@@ -11304,7 +11656,7 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "beef",
                         "qty": 2
                     },
                     {
@@ -11312,15 +11664,19 @@
                         "qty": 1
                     },
                     {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
                         "id": "napa",
                         "qty": 1
                     },
                     {
-                        "id": "carrot",
+                        "id": "garlic",
                         "qty": 1
                     },
                     {
-                        "id": "bean",
+                        "id": "honey",
                         "qty": 1
                     }
                 ]
@@ -11499,12 +11855,16 @@
                 ],
                 "produce": [
                     {
+                        "id": "fish",
+                        "qty": 2
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
                     {
                         "id": "bean",
-                        "qty": 2
+                        "qty": 1
                     },
                     {
                         "id": "cauliflower",
@@ -11694,6 +12054,14 @@
                 ],
                 "produce": [
                     {
+                        "id": "fish",
+                        "qty": 2
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
                         "id": "cucumber",
                         "qty": 1
                     },
@@ -11703,6 +12071,10 @@
                     },
                     {
                         "id": "tomato",
+                        "qty": 1
+                    },
+                    {
+                        "id": "bean",
                         "qty": 1
                     }
                 ]
@@ -11863,23 +12235,27 @@
                 ],
                 "produce": [
                     {
-                        "id": "tomato",
-                        "qty": 2
-                    },
-                    {
                         "id": "shrimp",
                         "qty": 2
                     },
                     {
                         "id": "squid",
-                        "qty": 2
+                        "qty": 1
                     },
                     {
                         "id": "clam",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
                         "qty": 2
                     },
                     {
-                        "id": "herbs",
+                        "id": "tomato",
+                        "qty": 2
+                    },
+                    {
+                        "id": "garlic",
                         "qty": 1
                     }
                 ]
@@ -12044,6 +12420,10 @@
                     }
                 ],
                 "produce": [
+                    {
+                        "id": "pork",
+                        "qty": 2
+                    },
                     {
                         "id": "rice",
                         "qty": 2
@@ -12239,8 +12619,16 @@
                 ],
                 "produce": [
                     {
+                        "id": "beef",
+                        "qty": 2
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
+                    },
+                    {
+                        "id": "lemongrass",
+                        "qty": 1
                     },
                     {
                         "id": "herbs",
@@ -12252,10 +12640,6 @@
                     },
                     {
                         "id": "bean",
-                        "qty": 1
-                    },
-                    {
-                        "id": "cucumber",
                         "qty": 1
                     }
                 ]
@@ -12408,15 +12792,19 @@
                 ],
                 "produce": [
                     {
+                        "id": "pork",
+                        "qty": 2
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
                     {
-                        "id": "scallion",
+                        "id": "shallot",
                         "qty": 1
                     },
                     {
-                        "id": "shallot",
+                        "id": "scallion",
                         "qty": 1
                     },
                     {
@@ -12590,6 +12978,10 @@
                 ],
                 "produce": [
                     {
+                        "id": "duckmeat",
+                        "qty": 2
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
@@ -12598,7 +12990,7 @@
                         "qty": 1
                     },
                     {
-                        "id": "herbs",
+                        "id": "shallot",
                         "qty": 1
                     },
                     {
@@ -12606,7 +12998,7 @@
                         "qty": 1
                     },
                     {
-                        "id": "chili",
+                        "id": "herbs",
                         "qty": 1
                     }
                 ]
@@ -12771,6 +13163,10 @@
                 ],
                 "produce": [
                     {
+                        "id": "pork",
+                        "qty": 3
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
@@ -12783,11 +13179,11 @@
                         "qty": 1
                     },
                     {
-                        "id": "carrot",
+                        "id": "peanut",
                         "qty": 1
                     },
                     {
-                        "id": "radish",
+                        "id": "garlic",
                         "qty": 1
                     }
                 ]
@@ -12966,15 +13362,23 @@
                 ],
                 "produce": [
                     {
-                        "id": "carrot",
-                        "qty": 1
+                        "id": "beef",
+                        "qty": 2
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
                     },
                     {
                         "id": "napa",
                         "qty": 1
                     },
                     {
-                        "id": "herbs",
+                        "id": "ginger",
+                        "qty": 1
+                    },
+                    {
+                        "id": "carrot",
                         "qty": 1
                     },
                     {
@@ -13149,6 +13553,10 @@
                 ],
                 "produce": [
                     {
+                        "id": "chickenmeat",
+                        "qty": 2
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
@@ -13157,11 +13565,11 @@
                         "qty": 1
                     },
                     {
-                        "id": "cucumber",
+                        "id": "garlic",
                         "qty": 1
                     },
                     {
-                        "id": "tomato",
+                        "id": "cucumber",
                         "qty": 1
                     },
                     {
@@ -13344,7 +13752,7 @@
                 ],
                 "produce": [
                     {
-                        "id": "napa",
+                        "id": "beef",
                         "qty": 2
                     },
                     {
@@ -13352,15 +13760,19 @@
                         "qty": 1
                     },
                     {
-                        "id": "cucumber",
-                        "qty": 1
+                        "id": "rice",
+                        "qty": 2
                     },
                     {
                         "id": "radish",
                         "qty": 1
                     },
                     {
-                        "id": "scallion",
+                        "id": "cucumber",
+                        "qty": 1
+                    },
+                    {
+                        "id": "napa",
                         "qty": 1
                     }
                 ]
@@ -13524,18 +13936,22 @@
                     },
                     {
                         "id": "squid",
-                        "qty": 2
-                    },
-                    {
-                        "id": "tomato",
                         "qty": 1
                     },
                     {
-                        "id": "chili",
+                        "id": "clam",
                         "qty": 1
                     },
                     {
                         "id": "milk",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
+                        "id": "tomato",
                         "qty": 1
                     }
                 ]
@@ -13693,8 +14109,20 @@
                 ],
                 "produce": [
                     {
+                        "id": "chickenmeat",
+                        "qty": 2
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
+                    },
+                    {
+                        "id": "ginger",
+                        "qty": 1
+                    },
+                    {
+                        "id": "shallot",
+                        "qty": 1
                     },
                     {
                         "id": "scallion",
@@ -13702,10 +14130,6 @@
                     },
                     {
                         "id": "herbs",
-                        "qty": 1
-                    },
-                    {
-                        "id": "chili",
                         "qty": 1
                     }
                 ]
@@ -13871,19 +14295,23 @@
                 ],
                 "produce": [
                     {
+                        "id": "duckmeat",
+                        "qty": 2
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
                     {
-                        "id": "herbs",
-                        "qty": 1
-                    },
-                    {
-                        "id": "scallion",
+                        "id": "ginger",
                         "qty": 1
                     },
                     {
                         "id": "shallot",
+                        "qty": 1
+                    },
+                    {
+                        "id": "herbs",
                         "qty": 1
                     },
                     {
@@ -14065,11 +14493,11 @@
                 ],
                 "produce": [
                     {
-                        "id": "bean",
+                        "id": "shiitake",
                         "qty": 2
                     },
                     {
-                        "id": "shiitake",
+                        "id": "bean",
                         "qty": 2
                     },
                     {
@@ -14078,6 +14506,10 @@
                     },
                     {
                         "id": "tomato",
+                        "qty": 1
+                    },
+                    {
+                        "id": "carrot",
                         "qty": 1
                     },
                     {
@@ -14237,16 +14669,12 @@
                 ],
                 "produce": [
                     {
-                        "id": "scallion",
-                        "qty": 1
+                        "id": "fish",
+                        "qty": 2
                     },
                     {
-                        "id": "herbs",
-                        "qty": 1
-                    },
-                    {
-                        "id": "chili",
-                        "qty": 1
+                        "id": "rice",
+                        "qty": 2
                     },
                     {
                         "id": "bean",
@@ -14254,6 +14682,14 @@
                     },
                     {
                         "id": "shallot",
+                        "qty": 1
+                    },
+                    {
+                        "id": "herbs",
+                        "qty": 1
+                    },
+                    {
+                        "id": "scallion",
                         "qty": 1
                     }
                 ]
@@ -14430,6 +14866,10 @@
                     }
                 ],
                 "produce": [
+                    {
+                        "id": "pork",
+                        "qty": 2
+                    },
                     {
                         "id": "rice",
                         "qty": 2
@@ -14609,19 +15049,27 @@
                 ],
                 "produce": [
                     {
-                        "id": "egg",
+                        "id": "pork",
                         "qty": 2
                     },
                     {
+                        "id": "egg",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
+                        "id": "napa",
+                        "qty": 1
+                    },
+                    {
+                        "id": "honey",
+                        "qty": 1
+                    },
+                    {
                         "id": "scallion",
-                        "qty": 1
-                    },
-                    {
-                        "id": "shallot",
-                        "qty": 1
-                    },
-                    {
-                        "id": "herbs",
                         "qty": 1
                     }
                 ]
@@ -14776,15 +15224,27 @@
                 ],
                 "produce": [
                     {
+                        "id": "chickenmeat",
+                        "qty": 2
+                    },
+                    {
+                        "id": "pork",
+                        "qty": 1
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
                     {
-                        "id": "scallion",
+                        "id": "napa",
                         "qty": 1
                     },
                     {
-                        "id": "chili",
+                        "id": "ginger",
+                        "qty": 1
+                    },
+                    {
+                        "id": "scallion",
                         "qty": 1
                     }
                 ]
@@ -14958,11 +15418,15 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "shrimp",
                         "qty": 2
                     },
                     {
-                        "id": "shrimp",
+                        "id": "egg",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
                         "qty": 2
                     },
                     {
@@ -15131,15 +15595,27 @@
                 ],
                 "produce": [
                     {
+                        "id": "pork",
+                        "qty": 2
+                    },
+                    {
                         "id": "bean",
                         "qty": 2
                     },
                     {
-                        "id": "egg",
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
+                        "id": "shallot",
                         "qty": 1
                     },
                     {
                         "id": "cucumber",
+                        "qty": 1
+                    },
+                    {
+                        "id": "egg",
                         "qty": 1
                     }
                 ]
@@ -15286,11 +15762,23 @@
                 ],
                 "produce": [
                     {
-                        "id": "potato",
-                        "qty": 2
+                        "id": "pork",
+                        "qty": 3
+                    },
+                    {
+                        "id": "honey",
+                        "qty": 1
+                    },
+                    {
+                        "id": "garlic",
+                        "qty": 1
                     },
                     {
                         "id": "tomato",
+                        "qty": 1
+                    },
+                    {
+                        "id": "potato",
                         "qty": 1
                     },
                     {
@@ -15472,19 +15960,27 @@
                 ],
                 "produce": [
                     {
+                        "id": "beef",
+                        "qty": 2
+                    },
+                    {
+                        "id": "pork",
+                        "qty": 1
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
                     {
-                        "id": "bean",
-                        "qty": 1
-                    },
-                    {
-                        "id": "enoki",
+                        "id": "lemongrass",
                         "qty": 1
                     },
                     {
                         "id": "chili",
+                        "qty": 1
+                    },
+                    {
+                        "id": "bean",
                         "qty": 1
                     }
                 ]
@@ -15662,8 +16158,16 @@
                 ],
                 "produce": [
                     {
+                        "id": "pork",
+                        "qty": 2
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
+                    },
+                    {
+                        "id": "woodear",
+                        "qty": 1
                     },
                     {
                         "id": "bean",
@@ -15674,11 +16178,7 @@
                         "qty": 1
                     },
                     {
-                        "id": "woodear",
-                        "qty": 1
-                    },
-                    {
-                        "id": "scallion",
+                        "id": "shallot",
                         "qty": 1
                     }
                 ]
@@ -15856,19 +16356,23 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "fish",
                         "qty": 2
                     },
                     {
                         "id": "shrimp",
-                        "qty": 2
+                        "qty": 1
                     },
                     {
                         "id": "squid",
-                        "qty": 2
+                        "qty": 1
                     },
                     {
-                        "id": "fish",
+                        "id": "pork",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
                         "qty": 2
                     },
                     {
@@ -16042,19 +16546,27 @@
                 ],
                 "produce": [
                     {
-                        "id": "shiitake",
+                        "id": "chickenmeat",
                         "qty": 2
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
+                        "id": "shiitake",
+                        "qty": 1
                     },
                     {
                         "id": "carrot",
                         "qty": 1
                     },
                     {
-                        "id": "scallion",
+                        "id": "shallot",
                         "qty": 1
                     },
                     {
-                        "id": "herbs",
+                        "id": "scallion",
                         "qty": 1
                     }
                 ]
@@ -16219,15 +16731,19 @@
                 ],
                 "produce": [
                     {
+                        "id": "pork",
+                        "qty": 3
+                    },
+                    {
                         "id": "rice",
                         "qty": 2
                     },
                     {
-                        "id": "scallion",
+                        "id": "shallot",
                         "qty": 1
                     },
                     {
-                        "id": "shallot",
+                        "id": "scallion",
                         "qty": 1
                     },
                     {
@@ -16413,11 +16929,23 @@
                         "qty": 2
                     },
                     {
-                        "id": "chili",
+                        "id": "pork",
+                        "qty": 2
+                    },
+                    {
+                        "id": "chickenmeat",
                         "qty": 1
                     },
                     {
-                        "id": "scallion",
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
+                        "id": "shiitake",
+                        "qty": 1
+                    },
+                    {
+                        "id": "chili",
                         "qty": 1
                     }
                 ]
@@ -16600,7 +17128,15 @@
                     },
                     {
                         "id": "squid",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
                         "qty": 2
+                    },
+                    {
+                        "id": "napa",
+                        "qty": 1
                     },
                     {
                         "id": "carrot",
@@ -16608,10 +17144,6 @@
                     },
                     {
                         "id": "shiitake",
-                        "qty": 1
-                    },
-                    {
-                        "id": "herbs",
                         "qty": 1
                     }
                 ]
@@ -16769,12 +17301,20 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
+                        "id": "chickenmeat",
                         "qty": 2
                     },
                     {
                         "id": "egg",
                         "qty": 2
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
+                        "id": "shallot",
+                        "qty": 1
                     },
                     {
                         "id": "scallion",
@@ -16955,18 +17495,22 @@
                     },
                     {
                         "id": "squid",
-                        "qty": 2
-                    },
-                    {
-                        "id": "napa",
-                        "qty": 2
-                    },
-                    {
-                        "id": "enoki",
                         "qty": 1
                     },
                     {
                         "id": "egg",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
+                        "id": "napa",
+                        "qty": 1
+                    },
+                    {
+                        "id": "enoki",
                         "qty": 1
                     }
                 ]
@@ -17137,23 +17681,27 @@
                 ],
                 "produce": [
                     {
-                        "id": "shrimp",
-                        "qty": 2
-                    },
-                    {
-                        "id": "squid",
-                        "qty": 2
-                    },
-                    {
-                        "id": "napa",
+                        "id": "beef",
                         "qty": 1
                     },
                     {
-                        "id": "enoki",
+                        "id": "shrimp",
+                        "qty": 1
+                    },
+                    {
+                        "id": "squid",
                         "qty": 1
                     },
                     {
                         "id": "egg",
+                        "qty": 1
+                    },
+                    {
+                        "id": "rice",
+                        "qty": 2
+                    },
+                    {
+                        "id": "napa",
                         "qty": 1
                     }
                 ]
@@ -17372,11 +17920,15 @@
                 ],
                 "produce": [
                     {
-                        "id": "rice",
-                        "qty": 2
+                        "id": "pork",
+                        "qty": 3
                     },
                     {
                         "id": "egg",
+                        "qty": 2
+                    },
+                    {
+                        "id": "rice",
                         "qty": 2
                     },
                     {
@@ -17388,7 +17940,7 @@
                         "qty": 1
                     },
                     {
-                        "id": "radish",
+                        "id": "honey",
                         "qty": 1
                     }
                 ]

@@ -111,7 +111,7 @@ try {
             ['label' => 'Thả cá', 'heat' => 'nope', 'weight' => 9],
             ['label' => 'Rắc rau thơm', 'heat' => 'low', 'weight' => 1],
         ],
-        'produce' => [['id' => 'fish', 'qty' => 1], ['id' => 'pork', 'qty' => 2], ['id' => 'fish', 'qty' => 2], ['id' => 'tomato', 'qty' => 7]],
+        'produce' => [['id' => 'fish', 'qty' => 1], ['id' => 'tofu', 'qty' => 2], ['id' => 'fish', 'qty' => 2], ['id' => 'tomato', 'qty' => 7]],
     ];
     $k = $cat->saveDish(['cook' => $cook] + $u, $id, 'manual')['cook'];
     $check('cook keeps known pantry items once, clamps qty', $k['produce'] === [['id' => 'fish', 'qty' => 1], ['id' => 'tomato', 'qty' => 3]]);

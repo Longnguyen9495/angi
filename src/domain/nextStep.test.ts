@@ -17,7 +17,7 @@ function bare(): GuestProgress {
 
 describe('nextStep', () => {
   it('cooks first when a recipe is complete', () => {
-    const s = { ...bare(), ingredients: { ...EMPTY_PRODUCE, rice: 2, scallion: 2 } };
+    const s = { ...bare(), ingredients: { ...EMPTY_PRODUCE, pork: 2, rice: 2, scallion: 2 } };
     expect(nextStep(s, NOON)).toEqual({ kind: 'cook', recipe: 'com-tam' });
   });
 
@@ -29,14 +29,14 @@ describe('nextStep', () => {
   it('plants a tray seed the closest recipe needs, into the first empty plot', () => {
     const s = {
       ...bare(),
-      ingredients: { ...EMPTY_PRODUCE, rice: 2 },
+      ingredients: { ...EMPTY_PRODUCE, pork: 2, rice: 2 },
       seeds: { ...EMPTY_CROPS, chili: 1, scallion: 1 },
     };
     expect(nextStep(s, NOON)).toEqual({ kind: 'plant', crop: 'scallion', plotId: 1 });
   });
 
   it('points to dishes that grant the missing seed when the tray is empty', () => {
-    const s = { ...bare(), ingredients: { ...EMPTY_PRODUCE, rice: 2 } };
+    const s = { ...bare(), ingredients: { ...EMPTY_PRODUCE, pork: 2, rice: 2 } };
     const step = nextStep(s, NOON);
     expect(step).toEqual({ kind: 'find', crop: 'scallion', recipe: 'com-tam' });
     const ids = dishIdsForSeed('scallion');
@@ -48,6 +48,8 @@ describe('nextStep', () => {
     const s0 = bare();
     const s = {
       ...s0,
+      // Today's casts are spent, so the pond has nothing to offer either.
+      fishing: { date: s0.fishing.date, used: 5 },
       plots: s0.plots.map((p, i) => ({
         ...p,
         crop: 'bean' as const,

@@ -16,6 +16,7 @@ import {
   XP_PER_LEVEL,
   animalOf,
   isAnimalProduct,
+  isMeat,
   isBeeProduct,
   isCatch,
   isCrop,
@@ -243,6 +244,8 @@ export function cropAvailable(p: GuestProgress, crop: CropId): boolean {
 /** A pantry item can be obtained: its crop is open, or its source is unlocked. */
 export function produceAvailable(p: GuestProgress, id: ProduceId): boolean {
   if (isCrop(id)) return cropAvailable(p, id);
+  // Meat is always to be had: the market sells it before the animal opens.
+  if (isMeat(id)) return true;
   if (isAnimalProduct(id)) return animalUnlocked(p, animalOf(id));
   if (isBeeProduct(id)) return hiveUnlocked(p);
   return isCatch(id) ? level(p.xp).level >= CATCHES[id].unlockLevel : true;

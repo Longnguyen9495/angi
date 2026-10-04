@@ -1,6 +1,6 @@
 import { reelGameDishes } from '../features/food-reel/data/reelCatalogue';
 import { RECIPE_LIST } from '../data/game';
-import type { AnimalId, Catch, CropId, RecipeId } from '../data/types';
+import type { AnimalId, Catch, CropId, Meat, RecipeId } from '../data/types';
 import { canFulfill, todaysOrders } from './orders';
 import type { GuestProgress } from './progress';
 import {
@@ -13,7 +13,16 @@ import {
   animalStage,
   fishingLeft,
 } from './selectors';
-import { ANIMALS, ANIMAL_LIST, animalOf, isAnimalProduct, isCatch, isCrop } from '../data/game';
+import {
+  ANIMALS,
+  ANIMAL_LIST,
+  MARKET,
+  animalOf,
+  isAnimalProduct,
+  isCatch,
+  isCrop,
+  isMeat,
+} from '../data/game';
 
 /**
  * The one thing worth doing next in the garden loop, so a harvest never ends
@@ -26,6 +35,7 @@ export type NextStep =
   | { kind: 'collect'; animal: AnimalId }
   | { kind: 'feed'; animal: AnimalId }
   | { kind: 'fish'; catch: Catch; recipe: RecipeId; left: number }
+  | { kind: 'buy'; item: Meat; recipe: RecipeId; price: number }
   | { kind: 'plant'; crop: CropId; plotId: number }
   | { kind: 'find'; crop: CropId; recipe: RecipeId }
   | { kind: 'wait'; recipe: RecipeId; readyAt: number }
@@ -63,32 +73,40 @@ export function nextStep(p: GuestProgress, now: number): NextStep {
       (a, b) => b.prog.secured / b.prog.total - a.prog.secured / a.prog.total || a.r.xp - b.r.xp,
     );
   const focus = open[0];
-  const missing = focus?.prog.ingredients.find((i) => i.have + i.growing < i.qty);
+  const short = focus?.prog.ingredients.filter((i) => i.have + i.growing < i.qty) ?? [];
+  const missingCrop = short.map((i) => i.crop).find(isCrop) ?? null;
+  // Meat, eggs, milk and catches: what the farm has to fetch rather than grow.
+  const fetch = short.find((i) => !isCrop(i.crop))?.crop ?? null;
+  const plot = firstEmptyPlot(p.plots);
+  const anySeed = (Object.keys(p.seeds) as CropId[]).find((c) => p.seeds[c] > 0) ?? null;
 
-  // Fish or shrimp short: the pond, while today's catches last.
-  if (focus && missing && isCatch(missing.crop) && fishingLeft(p, now) > 0) {
-    return { kind: 'fish', catch: missing.crop, recipe: focus.r.id, left: fishingLeft(p, now) };
+  // Crops first: they take longest, so a free plot gets the seed the recipe still needs
+  // (or any seed in the tray), else the reel points at dishes that give it.
+  if (plot && missingCrop) {
+    const crop = p.seeds[missingCrop] > 0 ? missingCrop : anySeed;
+    if (crop) return { kind: 'plant', crop, plotId: plot.id };
+    if (focus) return { kind: 'find', crop: missingCrop, recipe: focus.r.id };
   }
 
-  // An egg or milk short: feed the animal if the pantry has its feed.
-  if (missing && isAnimalProduct(missing.crop)) {
-    const animal = ANIMALS[animalOf(missing.crop)];
-    if (animalStage(p, animal.id, now) === 'hungry' && p.ingredients[animal.feed] > 0) {
+  // Fish or shrimp short: the pond, while today's catches last.
+  if (focus && fetch && isCatch(fetch) && fishingLeft(p, now) > 0) {
+    return { kind: 'fish', catch: fetch, recipe: focus.r.id, left: fishingLeft(p, now) };
+  }
+
+  // An egg, milk or meat short: feed the animal if the pantry has its feed.
+  if (fetch && isAnimalProduct(fetch)) {
+    const animal = ANIMALS[animalOf(fetch)];
+    const stage = animalStage(p, animal.id, now);
+    if (stage === 'hungry' && p.ingredients[animal.feed] > 0) {
       return { kind: 'feed', animal: animal.id };
+    }
+    // Meat whose animal cannot help right now (locked, or nothing to feed it): the market.
+    if (focus && isMeat(fetch) && stage !== 'busy' && p.coins >= MARKET.buy(fetch)) {
+      return { kind: 'buy', item: fetch, recipe: focus.r.id, price: MARKET.buy(fetch) };
     }
   }
 
-  const plot = firstEmptyPlot(p.plots);
-  const missingCrop = missing && isCrop(missing.crop) ? missing.crop : null;
-  if (plot) {
-    // Prefer a tray seed the focus recipe still needs, else any seed at all.
-    const wanted = missingCrop && p.seeds[missingCrop] > 0 ? missingCrop : null;
-    const any = (Object.keys(p.seeds) as CropId[]).find((c) => p.seeds[c] > 0) ?? null;
-    const crop = wanted ?? any;
-    if (crop) return { kind: 'plant', crop, plotId: plot.id };
-  }
-
-  if (focus && missingCrop && plot) return { kind: 'find', crop: missingCrop, recipe: focus.r.id };
+  if (plot && anySeed) return { kind: 'plant', crop: anySeed, plotId: plot.id };
 
   const growing = p.plots
     .filter((pl) => pl.readyAt !== null && plotStage(pl, now) !== 'ready')

@@ -366,12 +366,18 @@ function tagsOf(d: ReelDish): string[] {
  * related seed through the same idempotent reducer as the classic flow.
  */
 export function toGameDish(d: ReelDish): Dish {
-  // A dish with its own recipe gives a seed that recipe needs (a starting crop when it can).
+  // A dish with its own recipe gives a seed that recipe needs (a starting crop when it can),
+  // preferably one of the dish's own listed ingredients and rice last: nearly every recipe
+  // uses rice, so leading with it would hand out little else.
   const own = RECIPE_LIST.find((r) => r.dishId === d.id);
   const ownCrops = (own?.ingredients ?? [])
     .map((i) => i.crop)
     .filter((c): c is CropId => CROP_IDS.has(c));
-  const ownSeed = ownCrops.find((c) => !CROPS[c].unlock) ?? ownCrops[0];
+  const base = ownCrops
+    .filter((c) => !CROPS[c].unlock)
+    .sort((a, b) => Number(a === 'rice') - Number(b === 'rice'));
+  const listed = new Set(d.ingredients.map((i) => i.crop));
+  const ownSeed = base.find((c) => listed.has(c)) ?? base[0] ?? ownCrops[0];
   const seeded = ownSeed
     ? d.ingredients.find((i) => i.crop === ownSeed)
     : d.ingredients.find((i) => i.crop);

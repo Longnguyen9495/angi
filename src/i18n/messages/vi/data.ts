@@ -120,6 +120,10 @@ const data = {
     goat: 'Dê',
     sheep: 'Cừu',
     rabbit: 'Thỏ',
+    pig: 'Heo',
+    broiler: 'Gà ta',
+    muscovy: 'Vịt xiêm',
+    cattle: 'Bò vàng',
   },
   animalProduce: {
     egg: 'Trứng gà',
@@ -130,6 +134,10 @@ const data = {
     goatmilk: 'Sữa dê',
     wool: 'Lông cừu',
     rabbitwool: 'Lông thỏ',
+    pork: 'Thịt heo',
+    beef: 'Thịt bò',
+    chickenmeat: 'Thịt gà',
+    duckmeat: 'Thịt vịt',
   },
   beeProduce: {
     honey: 'Mật ong',
@@ -157,6 +165,7 @@ const data = {
     fruit: 'Trái cây',
     mushroom: 'Nấm',
     egg: 'Trứng',
+    meat: 'Thịt',
     dairy: 'Sữa',
     fiber: 'Lông',
     bee: 'Mật ong',
@@ -364,7 +373,7 @@ const data = {
       imageAlt: 'Đĩa cơm vàng nghệ với gà xé, hành tây và rau răm',
       tags: ['Cơm nghệ', 'Gà xé', 'Không cay'],
       reason: 'Cơm nấu nước gà vàng óng, gà xé trộn rau răm — no mà vẫn thanh.',
-      seedNote: 'Hành tây trộn gỏi gà giúp món cân vị — bạn nhận một củ hành giống.',
+      seedNote: 'Rau răm trộn gỏi gà giúp món dậy mùi — bạn nhận một gói hạt rau thơm.',
     },
     'banh-beo': {
       imageAlt: 'Khay bánh bèo trong chén nhỏ phủ tôm chấy và tóp mỡ',

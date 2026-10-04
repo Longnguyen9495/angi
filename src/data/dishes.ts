@@ -159,7 +159,7 @@ export const DISHES: Dish[] = [
     contains: [],
     tags: [...t.data.dishes['com-ga-hoi-an'].tags],
     reason: t.data.dishes['com-ga-hoi-an'].reason,
-    seed: 'scallion',
+    seed: 'herbs',
     seedNote: t.data.dishes['com-ga-hoi-an'].seedNote,
     recipe: 'bun-bo-hue',
   },

@@ -51,7 +51,9 @@ export type CropId = VegId | TreeId | MushroomId;
 export type CropKind = 'veg' | 'tree' | 'mushroom';
 /** Animal products: they fill the pantry like crops but are not grown in plots. */
 export type AnimalProduct =
-  'egg' | 'milk' | 'duckegg' | 'quailegg' | 'gooseegg' | 'goatmilk' | 'wool' | 'rabbitwool';
+  'egg' | 'milk' | 'duckegg' | 'quailegg' | 'gooseegg' | 'goatmilk' | 'wool' | 'rabbitwool' | Meat;
+/** Meat: raised on the farm (pig, cattle, broilers, muscovy ducks) or bought at the market. */
+export type Meat = 'pork' | 'beef' | 'chickenmeat' | 'duckmeat';
 /** From the beehive. */
 export type BeeProduct = 'honey' | 'honeycomb';
 /** Caught at the pond (fishing) or brought back by the fishing boat. */
@@ -69,7 +71,19 @@ export type Catch =
   | 'scallop';
 /** Anything that can sit in the pantry and go into a recipe. */
 export type ProduceId = CropId | AnimalProduct | BeeProduct | Catch;
-export type AnimalId = 'chicken' | 'cow' | 'duck' | 'quail' | 'goose' | 'goat' | 'sheep' | 'rabbit';
+export type AnimalId =
+  | 'chicken'
+  | 'cow'
+  | 'duck'
+  | 'quail'
+  | 'goose'
+  | 'goat'
+  | 'sheep'
+  | 'rabbit'
+  | 'pig'
+  | 'broiler'
+  | 'muscovy'
+  | 'cattle';
 /** Groups for the pantry, the market and the seed tray (search and filters). */
 export type ItemCategory =
   | 'leafy'
@@ -80,6 +94,7 @@ export type ItemCategory =
   | 'fruit'
   | 'mushroom'
   | 'egg'
+  | 'meat'
   | 'dairy'
   | 'fiber'
   | 'bee'

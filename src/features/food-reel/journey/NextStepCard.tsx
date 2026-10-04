@@ -8,10 +8,10 @@ import {
   Plant,
 } from '@phosphor-icons/react';
 import { CropIcon } from '../../../components/ui/CropIcon';
-import { ANIMALS, CROPS, getRecipe, produceName } from '../../../data/game';
+import { ANIMALS, CROPS, animalOf, getRecipe, produceName } from '../../../data/game';
 import type { AnimalId, CropId, RecipeId } from '../../../data/types';
 import { dishIdsForSeed, type NextStep } from '../../../domain/nextStep';
-import { HOUR_MS, formatDuration, slotKey } from '../../../domain/time';
+import { HOUR_MS, currentTime, formatDuration, slotKey } from '../../../domain/time';
 import { t } from '../../../i18n';
 import { useGame } from '../../../state/hooks';
 
@@ -40,7 +40,7 @@ export function NextStepCard({
   onPlant,
   onFind,
 }: NextStepCardProps) {
-  const { state, now } = useGame();
+  const { state, now, dispatch } = useGame();
   // Choosing another dish this meal is recorded, but the slot's seed is already spent.
   const meal = state.meal?.slotKey === slotKey(now) ? state.meal : null;
   const seedSpent = !!meal && (meal.planted || meal.checkedIn);
@@ -94,6 +94,19 @@ export function NextStepCard({
         produceName(a.product).toLowerCase(),
       );
       action = { label: m.feed.action, run: () => onAnimal(a.id, 'feed') };
+      break;
+    }
+    case 'buy': {
+      const r = getRecipe(step.recipe);
+      const meat = produceName(step.item).toLowerCase();
+      const item = step.item;
+      icon = <Basket size={22} aria-hidden="true" />;
+      title = m.buy.title(r.name, meat);
+      body = m.buy.body(meat, step.price, ANIMALS[animalOf(item)].name.toLowerCase());
+      action = {
+        label: m.buy.action(step.price),
+        run: () => dispatch({ type: 'BUY_ITEM', item, now: currentTime() }),
+      };
       break;
     }
     case 'fish': {

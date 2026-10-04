@@ -490,6 +490,10 @@
     "goatmilk": 8,
     "wool": 10,
     "rabbitwool": 12,
+    "pork": 7,
+    "chickenmeat": 6,
+    "duckmeat": 7,
+    "beef": 9,
     "honey": 12,
     "honeycomb": 9,
     "fish": 7,
@@ -503,6 +507,12 @@
     "bloodcockle": 9,
     "scallop": 11,
     "octopus": 12
+  },
+  "buy": {
+    "pork": 14,
+    "chickenmeat": 12,
+    "duckmeat": 14,
+    "beef": 18
   },
   "animals": {
     "quail": {
@@ -560,6 +570,34 @@
       "yield": 1,
       "hoursMs": 36000000,
       "unlockLevel": 8
+    },
+    "pig": {
+      "feed": "rice",
+      "product": "pork",
+      "yield": 2,
+      "hoursMs": 3600000,
+      "unlockLevel": 1
+    },
+    "broiler": {
+      "feed": "rice",
+      "product": "chickenmeat",
+      "yield": 2,
+      "hoursMs": 4500000,
+      "unlockLevel": 2
+    },
+    "muscovy": {
+      "feed": "bean",
+      "product": "duckmeat",
+      "yield": 2,
+      "hoursMs": 7200000,
+      "unlockLevel": 4
+    },
+    "cattle": {
+      "feed": "herbs",
+      "product": "beef",
+      "yield": 2,
+      "hoursMs": 10800000,
+      "unlockLevel": 5
     }
   },
   "hive": {
@@ -594,7 +632,7 @@
     "crab": {
       "chance": 0.15,
       "source": "pond",
-      "unlockLevel": 5
+      "unlockLevel": 2
     },
     "mackerel": {
       "chance": 1,
@@ -678,21 +716,29 @@
   },
   "recipes": {
     "com-tam": {
-      "xp": 30,
+      "xp": 40,
       "ingredients": [
+        {
+          "id": "pork",
+          "qty": 2
+        },
         {
           "id": "rice",
           "qty": 2
         },
         {
           "id": "scallion",
-          "qty": 2
+          "qty": 1
         }
       ]
     },
     "bun-rieu": {
-      "xp": 45,
+      "xp": 60,
       "ingredients": [
+        {
+          "id": "crab",
+          "qty": 2
+        },
         {
           "id": "rice",
           "qty": 2
@@ -703,7 +749,11 @@
         },
         {
           "id": "bean",
-          "qty": 2
+          "qty": 1
+        },
+        {
+          "id": "herbs",
+          "qty": 1
         }
       ]
     },
@@ -711,180 +761,228 @@
       "xp": 60,
       "ingredients": [
         {
+          "id": "beef",
+          "qty": 2
+        },
+        {
+          "id": "pork",
+          "qty": 1
+        },
+        {
           "id": "rice",
           "qty": 2
+        },
+        {
+          "id": "lemongrass",
+          "qty": 1
         },
         {
           "id": "chili",
-          "qty": 2
+          "qty": 1
         },
         {
           "id": "herbs",
-          "qty": 2
-        },
-        {
-          "id": "scallion",
-          "qty": 2
-        }
-      ]
-    },
-    "goi-cuon": {
-      "xp": 45,
-      "ingredients": [
-        {
-          "id": "rice",
-          "qty": 2
-        },
-        {
-          "id": "herbs",
-          "qty": 2
-        },
-        {
-          "id": "shrimp",
           "qty": 1
         }
       ]
     },
-    "banh-xeo": {
+    "goi-cuon": {
       "xp": 55,
       "ingredients": [
+        {
+          "id": "shrimp",
+          "qty": 2
+        },
+        {
+          "id": "pork",
+          "qty": 1
+        },
+        {
+          "id": "rice",
+          "qty": 2
+        },
+        {
+          "id": "herbs",
+          "qty": 2
+        }
+      ]
+    },
+    "banh-xeo": {
+      "xp": 45,
+      "ingredients": [
+        {
+          "id": "shrimp",
+          "qty": 1
+        },
+        {
+          "id": "pork",
+          "qty": 1
+        },
         {
           "id": "rice",
           "qty": 2
         },
         {
           "id": "bean",
-          "qty": 2
+          "qty": 1
         },
         {
           "id": "herbs",
-          "qty": 2
-        },
-        {
-          "id": "scallion",
-          "qty": 2
+          "qty": 1
         }
       ]
     },
     "bo-luc-lac": {
-      "xp": 65,
+      "xp": 45,
       "ingredients": [
         {
-          "id": "tomato",
+          "id": "beef",
           "qty": 2
         },
         {
           "id": "garlic",
-          "qty": 2
+          "qty": 1
+        },
+        {
+          "id": "shallot",
+          "qty": 1
+        },
+        {
+          "id": "tomato",
+          "qty": 1
         },
         {
           "id": "cucumber",
-          "qty": 2
-        },
-        {
-          "id": "scallion",
-          "qty": 2
+          "qty": 1
         }
       ]
     },
     "mi-quang": {
-      "xp": 45,
+      "xp": 55,
       "ingredients": [
+        {
+          "id": "shrimp",
+          "qty": 1
+        },
+        {
+          "id": "pork",
+          "qty": 1
+        },
+        {
+          "id": "egg",
+          "qty": 1
+        },
         {
           "id": "rice",
           "qty": 2
         },
         {
-          "id": "bean",
-          "qty": 2
+          "id": "peanut",
+          "qty": 1
         },
         {
           "id": "herbs",
-          "qty": 2
+          "qty": 1
         }
       ]
     },
     "com-ga-hoi-an": {
-      "xp": 60,
+      "xp": 55,
       "ingredients": [
+        {
+          "id": "chickenmeat",
+          "qty": 2
+        },
         {
           "id": "rice",
           "qty": 2
         },
         {
-          "id": "scallion",
-          "qty": 2
+          "id": "shallot",
+          "qty": 1
         },
         {
           "id": "herbs",
-          "qty": 2
+          "qty": 1
         },
         {
           "id": "lime",
-          "qty": 2
+          "qty": 1
         }
       ]
     },
     "nem-nuong": {
-      "xp": 60,
+      "xp": 55,
       "ingredients": [
+        {
+          "id": "pork",
+          "qty": 2
+        },
         {
           "id": "rice",
           "qty": 2
         },
         {
-          "id": "herbs",
-          "qty": 2
-        },
-        {
           "id": "garlic",
-          "qty": 2
+          "qty": 1
         },
         {
           "id": "cucumber",
-          "qty": 2
+          "qty": 1
+        },
+        {
+          "id": "herbs",
+          "qty": 1
         }
       ]
     },
     "pho-bo": {
-      "xp": 60,
+      "xp": 55,
       "ingredients": [
+        {
+          "id": "beef",
+          "qty": 2
+        },
         {
           "id": "rice",
           "qty": 2
         },
         {
+          "id": "shallot",
+          "qty": 1
+        },
+        {
           "id": "scallion",
-          "qty": 2
+          "qty": 1
         },
         {
           "id": "herbs",
-          "qty": 2
-        },
-        {
-          "id": "lime",
-          "qty": 2
+          "qty": 1
         }
       ]
     },
     "bun-cha": {
-      "xp": 60,
+      "xp": 55,
       "ingredients": [
+        {
+          "id": "pork",
+          "qty": 2
+        },
         {
           "id": "rice",
           "qty": 2
         },
         {
-          "id": "herbs",
-          "qty": 2
-        },
-        {
           "id": "garlic",
-          "qty": 2
+          "qty": 1
         },
         {
           "id": "chili",
-          "qty": 2
+          "qty": 1
+        },
+        {
+          "id": "herbs",
+          "qty": 1
         }
       ]
     },
@@ -892,24 +990,36 @@
       "xp": 45,
       "ingredients": [
         {
+          "id": "pork",
+          "qty": 2
+        },
+        {
           "id": "rice",
           "qty": 2
         },
         {
-          "id": "scallion",
-          "qty": 2
+          "id": "shallot",
+          "qty": 1
         },
         {
-          "id": "bean",
-          "qty": 2
+          "id": "herbs",
+          "qty": 1
         }
       ]
     },
     "banh-mi-chao": {
-      "xp": 50,
+      "xp": 45,
       "ingredients": [
         {
+          "id": "beef",
+          "qty": 1
+        },
+        {
           "id": "egg",
+          "qty": 1
+        },
+        {
+          "id": "pork",
           "qty": 1
         },
         {
@@ -917,8 +1027,12 @@
           "qty": 1
         },
         {
+          "id": "rice",
+          "qty": 1
+        },
+        {
           "id": "tomato",
-          "qty": 2
+          "qty": 1
         }
       ]
     },
@@ -927,15 +1041,23 @@
       "ingredients": [
         {
           "id": "fish",
-          "qty": 1
+          "qty": 2
         },
         {
           "id": "tomato",
-          "qty": 2
+          "qty": 1
+        },
+        {
+          "id": "bean",
+          "qty": 1
         },
         {
           "id": "herbs",
-          "qty": 2
+          "qty": 1
+        },
+        {
+          "id": "chili",
+          "qty": 1
         }
       ]
     }

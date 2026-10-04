@@ -10,6 +10,7 @@ import type {
   CropId,
   CropKind,
   ItemCategory,
+  Meat,
   MushroomId,
   TreeId,
   VegId,
@@ -246,7 +247,11 @@ export const BASE_CROPS: CropId[] = ['rice', 'herbs', 'chili', 'scallion', 'bean
 
 export const CROP_LIST: CropDef[] = Object.values(CROPS);
 
-/** Recipes grow in size on purpose: 2 → 3 → 4 ingredients. */
+/**
+ * The hand-written recipes: the dish's real main ingredient (meat, seafood, eggs) with its
+ * staple and aromatics. The three starters use only what opens early; meat is always to be
+ * had (a pig from the start, the market for the rest). XP follows recipeXp(pieces).
+ */
 const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
   'com-tam': {
     id: 'com-tam',
@@ -256,10 +261,11 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
     region: 'south',
     group: 'rice',
     ingredients: [
+      { crop: 'pork', qty: 2 },
       { crop: 'rice', qty: 2 },
-      { crop: 'scallion', qty: 2 },
+      { crop: 'scallion', qty: 1 },
     ],
-    xp: 30,
+    xp: 40,
     starter: true,
     unlockNote: t.data.recipes['com-tam'].unlockNote,
     fact: t.data.recipes['com-tam'].fact,
@@ -271,11 +277,13 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
     region: 'north',
     group: 'noodle-soup',
     ingredients: [
+      { crop: 'crab', qty: 2 },
       { crop: 'rice', qty: 2 },
       { crop: 'tomato', qty: 2 },
-      { crop: 'bean', qty: 2 },
+      { crop: 'bean', qty: 1 },
+      { crop: 'herbs', qty: 1 },
     ],
-    xp: 45,
+    xp: 60,
     starter: true,
     unlockNote: t.data.recipes['bun-rieu'].unlockNote,
     fact: t.data.recipes['bun-rieu'].fact,
@@ -287,10 +295,12 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
     region: 'central',
     group: 'noodle-soup',
     ingredients: [
+      { crop: 'beef', qty: 2 },
+      { crop: 'pork', qty: 1 },
       { crop: 'rice', qty: 2 },
-      { crop: 'chili', qty: 2 },
-      { crop: 'herbs', qty: 2 },
-      { crop: 'scallion', qty: 2 },
+      { crop: 'lemongrass', qty: 1 },
+      { crop: 'chili', qty: 1 },
+      { crop: 'herbs', qty: 1 },
     ],
     xp: 60,
     starter: true,
@@ -305,11 +315,12 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
     region: 'south',
     group: 'bread-roll',
     ingredients: [
+      { crop: 'shrimp', qty: 2 },
+      { crop: 'pork', qty: 1 },
       { crop: 'rice', qty: 2 },
       { crop: 'herbs', qty: 2 },
-      { crop: 'shrimp', qty: 1 },
     ],
-    xp: 45,
+    xp: 55,
     unlockNote: t.data.recipes['goi-cuon'].unlockNote,
     fact: t.data.recipes['goi-cuon'].fact,
   },
@@ -320,12 +331,13 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
     region: 'south',
     group: 'pancake',
     ingredients: [
+      { crop: 'shrimp', qty: 1 },
+      { crop: 'pork', qty: 1 },
       { crop: 'rice', qty: 2 },
-      { crop: 'bean', qty: 2 },
-      { crop: 'herbs', qty: 2 },
-      { crop: 'scallion', qty: 2 },
+      { crop: 'bean', qty: 1 },
+      { crop: 'herbs', qty: 1 },
     ],
-    xp: 55,
+    xp: 45,
     unlockNote: t.data.recipes['banh-xeo'].unlockNote,
     fact: t.data.recipes['banh-xeo'].fact,
   },
@@ -336,12 +348,13 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
     region: 'south',
     group: 'rice',
     ingredients: [
-      { crop: 'tomato', qty: 2 },
-      { crop: 'garlic', qty: 2 },
-      { crop: 'cucumber', qty: 2 },
-      { crop: 'scallion', qty: 2 },
+      { crop: 'beef', qty: 2 },
+      { crop: 'garlic', qty: 1 },
+      { crop: 'shallot', qty: 1 },
+      { crop: 'tomato', qty: 1 },
+      { crop: 'cucumber', qty: 1 },
     ],
-    xp: 65,
+    xp: 45,
     unlockNote: t.data.recipes['bo-luc-lac'].unlockNote,
     fact: t.data.recipes['bo-luc-lac'].fact,
   },
@@ -353,11 +366,14 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
     region: 'central',
     group: 'noodle-dry',
     ingredients: [
+      { crop: 'shrimp', qty: 1 },
+      { crop: 'pork', qty: 1 },
+      { crop: 'egg', qty: 1 },
       { crop: 'rice', qty: 2 },
-      { crop: 'bean', qty: 2 },
-      { crop: 'herbs', qty: 2 },
+      { crop: 'peanut', qty: 1 },
+      { crop: 'herbs', qty: 1 },
     ],
-    xp: 45,
+    xp: 55,
     unlockNote: t.data.recipes['mi-quang'].unlockNote,
     fact: t.data.recipes['mi-quang'].fact,
   },
@@ -368,12 +384,13 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
     region: 'central',
     group: 'rice',
     ingredients: [
+      { crop: 'chickenmeat', qty: 2 },
       { crop: 'rice', qty: 2 },
-      { crop: 'scallion', qty: 2 },
-      { crop: 'herbs', qty: 2 },
-      { crop: 'lime', qty: 2 },
+      { crop: 'shallot', qty: 1 },
+      { crop: 'herbs', qty: 1 },
+      { crop: 'lime', qty: 1 },
     ],
-    xp: 60,
+    xp: 55,
     unlockNote: t.data.recipes['com-ga-hoi-an'].unlockNote,
     fact: t.data.recipes['com-ga-hoi-an'].fact,
   },
@@ -384,12 +401,13 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
     region: 'central',
     group: 'bread-roll',
     ingredients: [
+      { crop: 'pork', qty: 2 },
       { crop: 'rice', qty: 2 },
-      { crop: 'herbs', qty: 2 },
-      { crop: 'garlic', qty: 2 },
-      { crop: 'cucumber', qty: 2 },
+      { crop: 'garlic', qty: 1 },
+      { crop: 'cucumber', qty: 1 },
+      { crop: 'herbs', qty: 1 },
     ],
-    xp: 60,
+    xp: 55,
     unlockNote: t.data.recipes['nem-nuong'].unlockNote,
     fact: t.data.recipes['nem-nuong'].fact,
   },
@@ -401,12 +419,13 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
     region: 'north',
     group: 'noodle-soup',
     ingredients: [
+      { crop: 'beef', qty: 2 },
       { crop: 'rice', qty: 2 },
-      { crop: 'scallion', qty: 2 },
-      { crop: 'herbs', qty: 2 },
-      { crop: 'lime', qty: 2 },
+      { crop: 'shallot', qty: 1 },
+      { crop: 'scallion', qty: 1 },
+      { crop: 'herbs', qty: 1 },
     ],
-    xp: 60,
+    xp: 55,
     unlockNote: t.data.recipes['pho-bo'].unlockNote,
     fact: t.data.recipes['pho-bo'].fact,
   },
@@ -417,12 +436,13 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
     region: 'north',
     group: 'noodle-dry',
     ingredients: [
+      { crop: 'pork', qty: 2 },
       { crop: 'rice', qty: 2 },
-      { crop: 'herbs', qty: 2 },
-      { crop: 'garlic', qty: 2 },
-      { crop: 'chili', qty: 2 },
+      { crop: 'garlic', qty: 1 },
+      { crop: 'chili', qty: 1 },
+      { crop: 'herbs', qty: 1 },
     ],
-    xp: 60,
+    xp: 55,
     unlockNote: t.data.recipes['bun-cha'].unlockNote,
     fact: t.data.recipes['bun-cha'].fact,
   },
@@ -433,9 +453,10 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
     region: 'north',
     group: 'bread-roll',
     ingredients: [
+      { crop: 'pork', qty: 2 },
       { crop: 'rice', qty: 2 },
-      { crop: 'scallion', qty: 2 },
-      { crop: 'bean', qty: 2 },
+      { crop: 'shallot', qty: 1 },
+      { crop: 'herbs', qty: 1 },
     ],
     xp: 45,
     unlockNote: t.data.recipes['banh-cuon'].unlockNote,
@@ -449,11 +470,14 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
     region: 'south',
     group: 'pancake',
     ingredients: [
+      { crop: 'beef', qty: 1 },
       { crop: 'egg', qty: 1 },
+      { crop: 'pork', qty: 1 },
       { crop: 'milk', qty: 1 },
-      { crop: 'tomato', qty: 2 },
+      { crop: 'rice', qty: 1 },
+      { crop: 'tomato', qty: 1 },
     ],
-    xp: 50,
+    xp: 45,
     unlockNote: t.data.recipes['banh-mi-chao'].unlockNote,
     fact: t.data.recipes['banh-mi-chao'].fact,
   },
@@ -464,9 +488,11 @@ const BUILTIN: Record<BuiltinRecipeId, RecipeDef> = {
     region: 'south',
     group: 'rice',
     ingredients: [
-      { crop: 'fish', qty: 1 },
-      { crop: 'tomato', qty: 2 },
-      { crop: 'herbs', qty: 2 },
+      { crop: 'fish', qty: 2 },
+      { crop: 'tomato', qty: 1 },
+      { crop: 'bean', qty: 1 },
+      { crop: 'herbs', qty: 1 },
+      { crop: 'chili', qty: 1 },
     ],
     xp: 45,
     unlockNote: t.data.recipes['canh-chua-ca'].unlockNote,
@@ -519,6 +545,12 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
   goose: animal('goose', 'herbs', 'gooseegg', 1, 6, 7),
   rabbit: animal('rabbit', 'carrot', 'rabbitwool', 1, 6, 9),
   sheep: animal('sheep', 'cabbage', 'wool', 1, 10, 8),
+  // Raised for meat: a pig from the start so the first recipe (cơm tấm sườn) needs no shop,
+  // then broilers, muscovy ducks and yellow cattle; the market sells the same meat dearer.
+  pig: animal('pig', 'rice', 'pork', 2, 1, 1),
+  broiler: animal('broiler', 'rice', 'chickenmeat', 2, 1.25, 2),
+  muscovy: animal('muscovy', 'bean', 'duckmeat', 2, 2, 4),
+  cattle: animal('cattle', 'herbs', 'beef', 2, 3, 5),
 };
 
 export const ANIMAL_LIST: AnimalDef[] = Object.values(ANIMALS);
@@ -540,7 +572,26 @@ const ANIMAL_PRODUCE: Record<
     category: 'fiber',
     sell: 12,
   },
+  pork: { name: t.data.animalProduce.pork, animal: 'pig', category: 'meat', sell: 7 },
+  chickenmeat: {
+    name: t.data.animalProduce.chickenmeat,
+    animal: 'broiler',
+    category: 'meat',
+    sell: 6,
+  },
+  duckmeat: { name: t.data.animalProduce.duckmeat, animal: 'muscovy', category: 'meat', sell: 7 },
+  beef: { name: t.data.animalProduce.beef, animal: 'cattle', category: 'meat', sell: 9 },
 };
+
+/**
+ * Meat the market sells, for twice what it pays: raising your own is always cheaper, and
+ * buying to sell back never pays. Open from the first level so no recipe is ever stuck.
+ */
+export const MEAT_FOR_SALE: Meat[] = ['pork', 'chickenmeat', 'duckmeat', 'beef'];
+
+export function isMeat(id: ProduceId): id is Meat {
+  return (MEAT_FOR_SALE as ProduceId[]).includes(id);
+}
 
 // ——— The beehive: no feeding; it fills on its own and is emptied for honey and comb. ———
 
@@ -588,7 +639,7 @@ export const CATCHES: Record<Catch, CatchDef> = {
   fish: catchDef('fish', 'pond', 0.65, 1, 7),
   shrimp: catchDef('shrimp', 'pond', 0.35, 1, 9),
   carp: catchDef('carp', 'pond', 0.25, 3, 8),
-  crab: catchDef('crab', 'pond', 0.15, 5, 10),
+  crab: catchDef('crab', 'pond', 0.15, 2, 10),
   mackerel: catchDef('mackerel', 'boat', 1, 5, 10),
   scad: catchDef('scad', 'boat', 1, 5, 8),
   clam: catchDef('clam', 'boat', 1, 5, 8),
@@ -813,6 +864,8 @@ export const MARKET = {
   sell: (item: ProduceId): number => sellPrice(item),
   /** What one seed (sapling, spawn block) costs; the first ten keep their old prices. */
   seed: (crop: CropId): number => CROPS[crop].price?.seed ?? (CROPS[crop].unlock ? 10 : 6),
+  /** What one piece of meat costs at the market. */
+  buy: (item: Meat): number => sellPrice(item) * 2,
 } as const;
 
 export interface DecorDef {

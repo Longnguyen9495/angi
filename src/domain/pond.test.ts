@@ -65,12 +65,12 @@ describe('pond', () => {
   it('feeds recipes and the market like any pantry item', () => {
     const s = {
       ...fresh(),
-      ingredients: { ...EMPTY_PRODUCE, fish: 1, tomato: 2, herbs: 2 },
+      ingredients: { ...EMPTY_PRODUCE, fish: 2, tomato: 1, bean: 1, herbs: 1, chili: 1 },
     };
     expect(recipeProgress(s, 'canh-chua-ca').canCook).toBe(true);
     const sold = gameReducer(s, { type: 'SELL', crop: 'fish', now: NOON });
     expect(sold.coins).toBe(MARKET.sell('fish'));
-    expect(sold.ingredients.fish).toBe(0);
+    expect(sold.ingredients.fish).toBe(1);
   });
 
   it('suggests the pond when the closest recipe misses a catch', () => {
@@ -78,7 +78,7 @@ describe('pond', () => {
       ...fresh(),
       plots: fresh().plots.map((p) => ({ ...p, crop: null, plantedAt: null, readyAt: null })),
       seeds: { ...fresh().seeds, rice: 0, herbs: 0, scallion: 0 },
-      ingredients: { ...EMPTY_PRODUCE, tomato: 1, herbs: 1 },
+      ingredients: { ...EMPTY_PRODUCE, tomato: 1, bean: 1, herbs: 1, chili: 1 },
     };
     const step = nextStep(s, NOON);
     expect(step).toMatchObject({ kind: 'fish', catch: 'fish', recipe: 'canh-chua-ca' });

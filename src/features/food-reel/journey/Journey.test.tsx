@@ -339,7 +339,7 @@ describe('the kitchen', () => {
       {
         ...base,
         plots: base.plots.map((p) => ({ ...p, crop: null, plantedAt: null, readyAt: null })),
-        ingredients: { ...EMPTY_PRODUCE, rice: 2, scallion: 2 },
+        ingredients: { ...EMPTY_PRODUCE, pork: 2, rice: 2, scallion: 1 },
       },
       now,
     );

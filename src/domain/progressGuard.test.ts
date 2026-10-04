@@ -14,6 +14,7 @@ import {
   RECIPE_LIST,
   harvestXp,
   isBuiltinRecipe,
+  isMeat,
 } from '../data/game';
 import type { AnimalId, CropId, DecorId, ProduceId } from '../data/types';
 import { canFulfill, todaysOrders } from './orders';
@@ -107,6 +108,14 @@ function play(): { steps: Step[]; last: GuestProgress; lastAt: number } {
     }
 
     for (const r of RECIPE_LIST.filter((x) => isBuiltinRecipe(x.id))) {
+      // Short of meat only: buy it at the market when the purse allows.
+      const short = recipeProgress(s, r.id).ingredients.filter((i) => i.have < i.qty);
+      if (recipeAvailable(s, r.id) && short.length > 0 && short.every((i) => isMeat(i.crop))) {
+        for (const i of short) {
+          for (let n = i.have; n < i.qty && isMeat(i.crop) && s.coins >= MARKET.buy(i.crop); n++)
+            act({ type: 'BUY_ITEM', item: i.crop, now: at() });
+        }
+      }
       if (recipeAvailable(s, r.id) && recipeProgress(s, r.id).canCook)
         act({ type: 'COOK', recipeId: r.id, now: at() });
     }
@@ -282,6 +291,17 @@ function cheats(last: GuestProgress, lastAt: number) {
     'rule',
   );
   add('an XP entry nothing in the game pays', withEntry(last, `bonus:${at}`, 'xp', 50, at), 'rule');
+  add(
+    'meat bought below the market price',
+    withEntry(
+      withEntry(last, `buy:pork:${at}:coin`, 'coin', -1, at),
+      `buy:pork:${at}:item`,
+      'ingredient:pork',
+      1,
+      at,
+    ),
+    'rule',
+  );
   const rewritten = structuredClone(last);
   const firstPay = rewritten.ledger.findIndex((e) => e.delta > 0 && e.resource === 'xp');
   if (firstPay >= 0) {
@@ -391,6 +411,9 @@ describe('server save guard (ProgressGuard.php)', () => {
     'accepts a week of honest play and refuses each forged save for its reason',
     () => {
       const { steps, last, lastAt } = play();
+      // The bot really used the butcher, so market purchases are checked too.
+      const bought = steps.flatMap((st) => st.data.ledger.map((e) => e.key));
+      expect(bought.some((k) => /^buy:[a-z]+:-?\d+:item$/.test(k))).toBe(true);
       // The bot really played: every part of the game came into its saves.
       const families = new Set(
         steps.flatMap((st) => st.data.ledger.map((e) => e.key.split(':')[0])),

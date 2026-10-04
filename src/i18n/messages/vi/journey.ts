@@ -32,7 +32,7 @@ const journey = {
       market: {
         title: 'Chợ quê',
         intro:
-          'Bán nông sản dư lấy xu, mua hạt của mọi loại cây đã mở và đồ trang trí cho khu vườn.',
+          'Bán nông sản dư lấy xu, mua hạt của mọi loại cây đã mở, thịt cho món đang nấu và đồ trang trí cho khu vườn.',
       },
       map: {
         title: 'Bản đồ ẩm thực',
@@ -246,6 +246,12 @@ const journey = {
       body: (feed: string, when: string, qty: number, product: string) =>
         `1 ${feed} → sau ${when} có ${qty} ${product} cho công thức.`,
       action: 'Cho ăn',
+    },
+    buy: {
+      title: (recipe: string, meat: string) => `${recipe} còn thiếu ${meat}`,
+      body: (meat: string, price: number, animal: string) =>
+        `Quầy thịt ở chợ bán ${meat} giá ${price} xu. Tự nuôi ${animal} trong nông trại thì rẻ hơn.`,
+      action: (price: number) => `Mua 1 · ${price} xu`,
     },
     fish: {
       title: (recipe: string, fish: string) => `${recipe} còn thiếu ${fish}`,
@@ -477,7 +483,7 @@ const journey = {
   },
 
   market: {
-    tabs: { sell: 'Bán nông sản', seeds: 'Mua hạt', decor: 'Trang trí vườn' },
+    tabs: { sell: 'Bán nông sản', seeds: 'Mua hạt', meat: 'Quầy thịt', decor: 'Trang trí vườn' },
     coins: 'xu',
     stallsLabel: 'Quầy trong chợ',
     pantryEmpty: 'Kho đang trống — thu hoạch rồi mang ra chợ bán nhé.',
@@ -493,6 +499,9 @@ const journey = {
     soon: 'Sắp mở',
     opensAt: (level: number) => `Mở ở cấp ${level}`,
     boughtSeed: (seed: string) => `Đã mua 1 ${seed}.`,
+    boughtMeat: (meat: string) => `Đã mua 1 ${meat}.`,
+    meatMeta: (have: number, animal: string) => `Trong kho ×${have} · tự nuôi ${animal} thì rẻ hơn`,
+    meatIntro: 'Thiếu thịt để nấu thì mua ở đây; nuôi trong nông trại luôn rẻ hơn.',
     buy: (price: number) => `Mua · ${price} xu`,
     owned: 'Đã đặt trong vườn',
     boughtDecor: (decor: string) => `Đã mua ${decor} cho khu vườn.`,

@@ -169,7 +169,7 @@ describe('harvest and cook', () => {
     expect(s.plots[0]?.crop).toBeNull();
     expect(gameReducer(s, { type: 'HARVEST_ALL', now: NOON })).toBe(s);
 
-    s = { ...s, ingredients: { ...s.ingredients, rice: 2, scallion: 2 } };
+    s = { ...s, ingredients: { ...s.ingredients, pork: 2, rice: 2, scallion: 1 } };
     const cooked = gameReducer(s, { type: 'COOK', recipeId: 'com-tam', now: NOON + 1 });
     expect(cooked.cooked['com-tam']).toBe(1);
     expect(cooked.ingredients.rice).toBe(0);

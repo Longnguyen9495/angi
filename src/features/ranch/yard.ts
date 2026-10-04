@@ -38,6 +38,10 @@ const SIZE: Record<AnimalId, number> = {
   goat: 0.98,
   sheep: 1.0,
   cow: 1.15,
+  pig: 0.92,
+  broiler: 0.8,
+  muscovy: 0.82,
+  cattle: 1.15,
 };
 
 interface Actor extends Body {
@@ -68,6 +72,10 @@ const SEED: Record<AnimalId, number> = {
   goose: 67,
   sheep: 79,
   rabbit: 83,
+  pig: 97,
+  broiler: 101,
+  muscovy: 109,
+  cattle: 113,
 };
 
 export class YardStage extends Stage {

@@ -141,6 +141,10 @@ const data: Messages['data'] = {
     goat: 'Goat',
     sheep: 'Sheep',
     rabbit: 'Rabbit',
+    pig: 'Pig',
+    broiler: 'Free-range chicken',
+    muscovy: 'Muscovy duck',
+    cattle: 'Yellow cattle',
   },
   animalProduce: {
     egg: 'Egg',
@@ -151,6 +155,10 @@ const data: Messages['data'] = {
     goatmilk: 'Goat milk',
     wool: 'Wool',
     rabbitwool: 'Rabbit wool',
+    pork: 'Pork',
+    beef: 'Beef',
+    chickenmeat: 'Chicken',
+    duckmeat: 'Duck meat',
   },
   beeProduce: {
     honey: 'Honey',
@@ -178,6 +186,7 @@ const data: Messages['data'] = {
     fruit: 'Fruit',
     mushroom: 'Mushrooms',
     egg: 'Eggs',
+    meat: 'Meat',
     dairy: 'Milk',
     fiber: 'Wool',
     bee: 'Honey',
@@ -432,7 +441,8 @@ const data: Messages['data'] = {
       tags: ['Turmeric rice', 'Shredded chicken', 'Not spicy'],
       reason:
         'Golden rice cooked in chicken stock, shredded chicken tossed with herbs — filling yet fresh.',
-      seedNote: 'Onion in the chicken salad balances the dish — you get a scallion bulb.',
+      seedNote:
+        'Vietnamese coriander in the chicken salad lifts the dish — you get a packet of herb seeds.',
     },
     'banh-beo': {
       imageAlt: 'A tray of little steamed rice cakes topped with dried shrimp and crispy pork fat',

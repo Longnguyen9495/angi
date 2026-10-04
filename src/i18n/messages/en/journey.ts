@@ -36,7 +36,7 @@ const journey: Messages['journey'] = {
       market: {
         title: 'Village market',
         intro:
-          'Sell spare produce for coins, buy seeds for every crop you have unlocked and decorations for your garden.',
+          'Sell spare produce for coins, buy seeds for every crop you have unlocked, meat for the dish you are cooking and decorations for your garden.',
       },
       map: {
         title: 'Food map',
@@ -247,6 +247,12 @@ const journey: Messages['journey'] = {
       body: (feed, when, qty, product) =>
         `1 ${feed} → ${qty} ${product} for your recipes after ${when}.`,
       action: 'Feed',
+    },
+    buy: {
+      title: (recipe, meat) => `${recipe} still needs ${meat}`,
+      body: (meat, price, animal) =>
+        `The market butcher sells ${meat} for ${price} ${s(price, 'coin', 'coins')}. Raising a ${animal} on the farm is cheaper.`,
+      action: (price) => `Buy 1 · ${price} ${s(price, 'coin', 'coins')}`,
     },
     fish: {
       title: (recipe, fish) => `${recipe} still needs ${fish}`,
@@ -476,7 +482,7 @@ const journey: Messages['journey'] = {
   },
 
   market: {
-    tabs: { sell: 'Sell produce', seeds: 'Buy seeds', decor: 'Garden decor' },
+    tabs: { sell: 'Sell produce', seeds: 'Buy seeds', meat: 'Butcher', decor: 'Garden decor' },
     coins: 'coins',
     stallsLabel: 'Market stalls',
     pantryEmpty: 'Your pantry is empty — harvest first, then bring it to market.',
@@ -491,6 +497,9 @@ const journey: Messages['journey'] = {
     soon: 'Coming up',
     opensAt: (level) => `Opens at level ${level}`,
     boughtSeed: (seed) => `Bought 1 ${seed}.`,
+    boughtMeat: (meat) => `Bought 1 ${meat}.`,
+    meatMeta: (have, animal) => `In the pantry ×${have} · raising a ${animal} is cheaper`,
+    meatIntro: 'Short of meat for a recipe? Buy it here; raising your own is always cheaper.',
     buy: (price) => `Buy · ${price} ${s(price, 'coin', 'coins')}`,
     owned: 'In your garden',
     boughtDecor: (decor) => `Bought a ${decor} for your garden.`,

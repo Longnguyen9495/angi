@@ -6,7 +6,10 @@ import {
   CROP_LIST,
   DECOR_LIST,
   MARKET,
+  MEAT_FOR_SALE,
   PRODUCE_IDS,
+  animalOf,
+  ANIMALS,
   produceCategory,
   produceName,
 } from '../../../data/game';
@@ -28,13 +31,14 @@ function seedMeta(c: CropDef, tray: number): string {
   return m.seedMeta(d(c.sproutHours), d(c.growHours), tray);
 }
 
-type Tab = 'sell' | 'seeds' | 'decor';
+type Tab = 'sell' | 'seeds' | 'meat' | 'decor';
 
 const m = t.journey.market;
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'sell', label: m.tabs.sell },
   { id: 'seeds', label: m.tabs.seeds },
+  { id: 'meat', label: m.tabs.meat },
   { id: 'decor', label: m.tabs.decor },
 ];
 
@@ -47,7 +51,8 @@ export function MarketSection() {
   const owned = PRODUCE_IDS.filter((id) => state.ingredients[id] > 0);
   const open = CROP_LIST.filter((c) => cropAvailable(state, c.id));
   // The filter only shows for long lists, and only a visible filter filters.
-  const showFilter = tab !== 'decor' && (tab === 'sell' ? owned.length : open.length) > 8;
+  const showFilter =
+    (tab === 'sell' || tab === 'seeds') && (tab === 'sell' ? owned.length : open.length) > 8;
   const matches = (name: string, cat: Parameters<typeof filter.matches>[1]) =>
     !showFilter || filter.matches(name, cat);
   const pantry = owned
@@ -167,6 +172,40 @@ export function MarketSection() {
                 <span className="fj-stall__meta">{m.opensAt(c.unlock!.level)}</span>
               </li>
             ))}
+          </ul>
+        </>
+      )}
+
+      {tab === 'meat' && (
+        <>
+          <p className="fj-note">{m.meatIntro}</p>
+          <ul className="fj-stall">
+            {MEAT_FOR_SALE.map((id) => {
+              const price = MARKET.buy(id);
+              const afford = state.coins >= price;
+              const name = produceName(id);
+              return (
+                <li key={id} className="fj-stall__item">
+                  <ProduceImage crop={id} size={56} />
+                  <span className="fj-stall__name">{name}</span>
+                  <span className="fj-stall__meta">
+                    {m.meatMeta(state.ingredients[id], ANIMALS[animalOf(id)].name.toLowerCase())}
+                  </span>
+                  <button
+                    type="button"
+                    className="fr-ghost fr-ghost--compact"
+                    aria-disabled={!afford}
+                    onClick={() => {
+                      if (!afford) return;
+                      dispatch({ type: 'BUY_ITEM', item: id, now: currentTime() });
+                      announce(m.boughtMeat(name.toLowerCase()));
+                    }}
+                  >
+                    {m.buy(price)}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </>
       )}

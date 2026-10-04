@@ -634,7 +634,7 @@ final class ProgressGuard
                     // edited since the guest's copy was loaded, so only the size is checked).
                     $this->dishExists($m[1]) || $fail('no such dish to cook');
                     $pieces = array_sum($debits);
-                    (count($debits) >= 1 && count($debits) <= 5 && max($debits) <= 3 && $d === self::recipeXp($pieces)) || $fail('recipe XP');
+                    (count($debits) >= 1 && count($debits) <= 6 && max($debits) <= 3 && $d === self::recipeXp($pieces)) || $fail('recipe XP');
                 }
                 $cooked[$m[1]] = ($cooked[$m[1]] ?? 0) + 1;
                 $stats['cook']++;
@@ -790,6 +790,10 @@ final class ProgressGuard
                 $pay = $byKey["buy:{$m[1]}:{$m[2]}:coin"] ?? null;
                 $def = $R['crops'][$m[1]] ?? null;
                 ($def && $pay !== null && (int) $pay['delta'] === -(int) $def['seedPrice'] && $d === 1 && $res === "seed:{$m[1]}" && $this->available($m[1], $level)) || $fail('seed purchase');
+            } elseif (preg_match('/^buy:([a-z]+):(-?\d+):item$/', $key, $m)) {
+                $pay = $byKey["buy:{$m[1]}:{$m[2]}:coin"] ?? null;
+                $price = $R['buy'][$m[1]] ?? null;
+                ($price !== null && $pay !== null && (int) $pay['delta'] === -(int) $price && $d === 1 && $res === "ingredient:{$m[1]}") || $fail('market purchase');
             } elseif (preg_match('/^decor:([a-z]+)$/', $key, $m)) {
                 $price = $R['decor'][$m[1]] ?? null;
                 ($price !== null && $d === -(int) $price && $res === 'coin') || $fail('decoration price');

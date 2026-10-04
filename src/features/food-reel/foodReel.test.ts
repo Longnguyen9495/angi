@@ -116,7 +116,7 @@ describe('reel catalogue', () => {
       steps,
       produce: [
         { id: 'rice', qty: 7 },
-        { id: 'pork', qty: 1 },
+        { id: 'tofu', qty: 1 },
       ],
     });
     expect(r?.ingredients).toEqual([{ crop: 'rice', qty: 3 }]);
@@ -124,7 +124,7 @@ describe('reel catalogue', () => {
     expect(
       recipeFromCook(d, { steps: steps.slice(0, 2), produce: [{ id: 'rice', qty: 1 }] }),
     ).toBeNull();
-    expect(recipeFromCook(d, { steps, produce: [{ id: 'pork', qty: 1 }] })).toBeNull();
+    expect(recipeFromCook(d, { steps, produce: [{ id: 'tofu', qty: 1 }] })).toBeNull();
   });
 
   it('wraps virtual indices in both directions', () => {

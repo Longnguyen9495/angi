@@ -28,7 +28,7 @@ final class AiEnricher
   - steps: 3 đến 5 bước nấu THẬT của chính món này, theo đúng thứ tự (ví dụ canh chua cá: nấu nước me chua → thả cá → thêm cà chua, nêm nếm → rắc rau thơm). Không dùng bước chung chung kiểu "chế biến", "hoàn thành".
     label: tiếng Việt, 2–6 từ, tối đa 40 ký tự, viết hoa chữ đầu. label_en: bản tiếng Anh tự nhiên, tối đa 40 ký tự.
     heat: lửa của bước đó (high = ninh, luộc, chiên, nướng, xào lửa lớn; mid = nấu, hấp, đun liu riu; low = sơ chế, trộn, cuốn, bày). weight 1–5: bước càng lâu càng lớn.
-  - produce: 1 đến 5 nông sản trong kho game mà món cần, chỉ dùng id trong danh sách dưới, mỗi id một lần, qty 1–3 (thành phần chính 2, phụ 1). Game không có thịt: món có thịt thì chỉ chọn rau, củ, gia vị, trứng, sữa, cá, hải sản đi kèm. Ưu tiên thứ món thật sự dùng, không thêm cho đủ. Bún, phở, bánh phở, bánh tráng, bánh cuốn, cơm, xôi, bột gạo đều tính là rice; đậu hũ, giá là bean.
+  - produce: 3 đến 6 nguyên liệu trong kho game mà món cần, chỉ dùng id trong danh sách dưới, mỗi id một lần, qty 1–3 (thành phần chính 2, phụ 1). Luôn có nguyên liệu chính của món: thịt (pork, beef, chickenmeat, duckmeat), trứng, sữa, mật ong, cá, tôm, mực, hải sản đúng loại món dùng, rồi tới tinh bột, rau và gia vị đặc trưng. Ưu tiên thứ món thật sự dùng, không thêm cho đủ. Bún, phở, bánh phở, bánh tráng, bánh cuốn, cơm, xôi, bột gạo đều tính là rice; đậu hũ, giá là bean.
   Kho game (id=tên): $pantry
 RULES;
     }

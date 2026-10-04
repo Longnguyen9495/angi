@@ -73,6 +73,10 @@ final class Catalogue
         'gooseegg' => 'Trứng ngỗng',
         'milk' => 'Sữa bò',
         'goatmilk' => 'Sữa dê',
+        'pork' => 'Thịt heo',
+        'beef' => 'Thịt bò',
+        'chickenmeat' => 'Thịt gà',
+        'duckmeat' => 'Thịt vịt',
         'honey' => 'Mật ong',
         'honeycomb' => 'Bánh sáp ong',
         'fish' => 'Cá rô đồng',
@@ -251,7 +255,7 @@ final class Catalogue
     }
 
     /**
-     * Validates cook data: 3–5 steps {label ≤ 40, heat, weight 1–5, translations?} and 1–5
+     * Validates cook data: 3–5 steps {label ≤ 40, heat, weight 1–5, translations?} and 1–6
      * pantry items {id from PRODUCE, qty 1–3}, no repeats. Anything unusable → null.
      */
     public static function cleanCook(mixed $in): ?array
@@ -282,7 +286,7 @@ final class Catalogue
         $produce = [];
         foreach ($in['produce'] as $p) {
             $id = is_array($p) ? (string) ($p['id'] ?? '') : '';
-            if (isset(self::PRODUCE[$id]) && !isset($produce[$id]) && count($produce) < 5) {
+            if (isset(self::PRODUCE[$id]) && !isset($produce[$id]) && count($produce) < 6) {
                 $produce[$id] = ['id' => $id, 'qty' => max(1, min(3, (int) ($p['qty'] ?? 1)))];
             }
         }

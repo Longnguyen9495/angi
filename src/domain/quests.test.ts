@@ -235,7 +235,7 @@ describe('more quests and 28 achievements', () => {
     }
   });
 
-  it('a level-1 guest with no friends, animals, hive, boat or trees gets only quests they can do', () => {
+  it('a level-1 guest with no friends, hive, boat or trees gets only quests they can do', () => {
     const s = fresh();
     const cannot = [
       'd-honey',
@@ -251,7 +251,6 @@ describe('more quests and 28 achievements', () => {
       for (const d of [...daily!, ...weekly!]) {
         expect(cannot, d.id).not.toContain(d.id);
         expect(social, d.id).not.toContain(d.id);
-        expect(['feed', 'collect'], d.id).not.toContain(d.metric);
       }
     }
   });
@@ -261,7 +260,7 @@ describe('more quests and 28 achievements', () => {
     s = gameReducer(s, { type: 'SELL', crop: 'rice', now: NOON });
     expect(s.quests.total.earn).toBe(s.coins);
     // First cook of a recipe counts once as new, the second time not.
-    const r = { ...s, ingredients: { ...s.ingredients, rice: 4, scallion: 4 } };
+    const r = { ...s, ingredients: { ...s.ingredients, pork: 4, rice: 4, scallion: 4 } };
     const once = gameReducer(r, { type: 'COOK', recipeId: 'com-tam', now: NOON + 1 });
     const twice = gameReducer(once, { type: 'COOK', recipeId: 'com-tam', now: NOON + 2 });
     expect(once.quests.total.newRecipe).toBe(1);
