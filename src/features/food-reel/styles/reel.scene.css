@@ -283,10 +283,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: 50%;
   transition: transform 420ms var(--fr-ease);
-  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 60%, transparent 70.5%);
-  mask-image: radial-gradient(circle at 50% 50%, #000 60%, transparent 70.5%);
 }
 
 /* Soft contact shadow under each plate (not masked: lives on the drift layer). */
@@ -307,8 +304,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  background: radial-gradient(circle, var(--tone, #2a2620) 0 55%, transparent 68%);
+  object-fit: contain;
   pointer-events: none;
 }
 
@@ -319,24 +315,6 @@
 }
 
 .fr-item__img--full.is-loaded {
-  opacity: 1;
-}
-
-.fr-item__sheen {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    circle at calc(42% + var(--px) * 24%) calc(34% + var(--py) * 24%),
-    rgb(255 236 210 / 16%),
-    transparent 52%
-  );
-  mix-blend-mode: screen;
-  opacity: 0;
-  transition: opacity 400ms var(--fr-ease);
-}
-
-.fr-item.is-centre .fr-item__sheen {
   opacity: 1;
 }
 

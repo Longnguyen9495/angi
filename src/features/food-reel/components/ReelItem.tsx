@@ -80,7 +80,6 @@ export const ReelItem = memo(function ReelItem({
               onLoad={() => setFullLoaded(true)}
             />
           )}
-          <span className="fr-item__sheen" aria-hidden="true" />
         </span>
         {/* Accessible name starts with the visible dish name (WCAG 2.5.3). */}
         <span className="fr-item__caption">

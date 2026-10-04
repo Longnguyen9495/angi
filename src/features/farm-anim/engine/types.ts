@@ -119,6 +119,8 @@ export interface FieldDef {
   painted?: number;
   /** The signpost on the last plot, cut out to stand on stamped soil; `board` [x0, y0, x1, y1]. */
   sign?: Placed & { board: [number, number, number, number] };
+  /** Patch that paints the signpost out of its home plot once it has moved on (sign-clear.mjs). */
+  signClear?: Placed;
 }
 
 export interface FarmLayout {

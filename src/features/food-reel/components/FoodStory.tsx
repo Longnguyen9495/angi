@@ -95,8 +95,8 @@ export function FoodStory({
         from: centreFrameRect(),
         to: mediaRef.current?.getBoundingClientRect(),
         duration: OPEN_MS,
-        radiusFrom: '50%',
-        radiusTo: '28px',
+        radiusFrom: '0',
+        radiusTo: '0',
       });
       let finished = false;
       void flight.finished.then(() => {
@@ -126,8 +126,8 @@ export function FoodStory({
         from: mediaRef.current?.getBoundingClientRect(),
         to: centreFrameRect(),
         duration: CLOSE_MS,
-        radiusFrom: '28px',
-        radiusTo: '50%',
+        radiusFrom: '0',
+        radiusTo: '0',
       });
       let finished = false;
       void flight.finished.then(() => {
@@ -257,18 +257,24 @@ export function FoodStory({
               {dish.story}
             </m.p>
             <CookedBadge dishId={dish.id} />
+            <m.div
+              className="fr-story__order"
+              initial={reduced ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.74, duration: 0.5 }}
+            >
+              <OrderLinks
+                dishName={dish.name}
+                searchName={dish.nameVi}
+                city={orderCity}
+                onCity={onOrderCity}
+                compact
+              />
+            </m.div>
           </div>
         </section>
 
         <StoryChapters dish={dish} reduced={reduced} scrollRef={scrollRef} />
-
-        <OrderLinks
-          dishName={dish.name}
-          searchName={dish.nameVi}
-          city={orderCity}
-          onCity={onOrderCity}
-          compact
-        />
 
         <p className="fr-story__credit">{t.reel.story.credit(dish.credit)}</p>
 

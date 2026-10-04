@@ -197,8 +197,11 @@ export class FarmGameLayer {
   private soil: HTMLImageElement;
   private grass: HTMLImageElement | null = null;
   private sign: HTMLImageElement | null = null;
-  /** Plot the signpost stands on; while it is locked its board carries the unlock level. */
-  private signPlot: number | null = null;
+  private signClear: HTMLImageElement | null = null;
+  /** Plot the signpost is painted on. It is moved onto the next plot to open, and stays home once all are open. */
+  private signHome: number | null = null;
+  /** Where the painted post meets the ground (its grass tuft goes with it). */
+  private signFoot: Vec2 | null = null;
   private fx = new Map<number, PlotFx>();
   private events: Event[] = [];
   private images = new Map<string, HTMLImageElement>();
@@ -215,12 +218,14 @@ export class FarmGameLayer {
     const sign = this.field.sign;
     if (sign) {
       this.sign = assets.img(sign.file);
+      if (this.field.signClear) this.signClear = assets.img(this.field.signClear.file);
       // The plot the post stands on: the one whose centre is nearest the post's foot.
       const foot: Vec2 = [(sign.board[0] + sign.board[2]) / 2, sign.y + sign.h];
+      this.signFoot = foot;
       let best = Infinity;
       for (const p of this.field.plots) {
         const dd = Math.hypot(p.centre[0] - foot[0], p.centre[1] - foot[1]);
-        if (dd < best) [best, this.signPlot] = [dd, p.id];
+        if (dd < best) [best, this.signHome] = [dd, p.id];
       }
     }
     for (const p of this.field.plots)
@@ -357,9 +362,23 @@ export class FarmGameLayer {
     return null;
   }
 
-  /** True when picture point [x, y] is on an unlocked plot (painted grass there gives way). */
+  /** Plot the signpost stands on: the next to open, or its painted home once all are open. */
+  private signSpot(): number | null {
+    let next: PlotView | null = null;
+    for (const v of this.view?.plots ?? [])
+      if (!v.unlocked && (!next || (v.unlockLevel ?? 99) < (next.unlockLevel ?? 99))) next = v;
+    return next?.id ?? this.signHome;
+  }
+
+  /**
+   * True when picture point [x, y] is on an unlocked plot, or is the painted signpost's tuft
+   * after the post has moved on (painted grass there gives way).
+   */
   onOpenPlot([x, y]: Vec2): boolean {
     if (!this.view) return false;
+    const foot = this.signFoot;
+    if (foot && this.signSpot() !== this.signHome && Math.hypot(x - foot[0], y - foot[1]) < 24)
+      return true;
     for (const d of this.field.plots)
       if (inQuad(d.quad, x, y) && this.view.plots.some((v) => v.id === d.id && v.unlocked))
         return true;
@@ -652,6 +671,12 @@ export class FarmGameLayer {
     const view = this.view;
     if (!view) return;
     const soil = this.field.soil;
+    // The signpost stands on the next plot to open; when that is not its painted home, paint
+    // it out there first (soil and outlines still go on top).
+    const signAt = this.signSpot();
+    const clear = this.field.signClear;
+    if (this.signClear && clear && signAt !== this.signHome)
+      ctx.drawImage(this.signClear, clear.x, clear.y, clear.w, clear.h);
     let nextLock: PlotView | null = null;
     const locked: { d: FieldDef['plots'][number]; v: PlotView }[] = [];
     for (const d of this.field.plots) {
@@ -746,7 +771,7 @@ export class FarmGameLayer {
       // A tapped lock wiggles: "not yet".
       const tap = this.fx.get(d.id)!.tap;
       const wiggle = !w.reduced && tap < TAP ? Math.sin(tap * 38) * 5 * (1 - tap / TAP) : 0;
-      if (d.id !== this.signPlot)
+      if (d.id !== signAt)
         this.drawLock(
           ctx,
           d.centre[0] + wiggle,
@@ -755,7 +780,7 @@ export class FarmGameLayer {
           next ? 0.92 : 0.6,
         );
     }
-    const signView = view.plots.find((p) => p.id === this.signPlot);
+    const signView = view.plots.find((p) => p.id === signAt);
     if (this.sign && signView) this.drawSign(ctx, signView);
   }
 
@@ -783,14 +808,18 @@ export class FarmGameLayer {
     }
   }
 
-  /** The signpost over the soil stamp, its locked plot's level written on the board. */
+  /** The signpost on its soil stamp, shifted onto plot `v`, that plot's level written on the board. */
   private drawSign(ctx: CanvasRenderingContext2D, v: PlotView) {
     const s = this.field.sign!;
-    ctx.drawImage(this.sign!, s.x, s.y);
+    const home = this.field.plots.find((p) => p.id === this.signHome);
+    const at = this.field.plots.find((p) => p.id === v.id);
+    const dx = home && at ? at.centre[0] - home.centre[0] : 0;
+    const dy = home && at ? at.centre[1] - home.centre[1] : 0;
+    ctx.drawImage(this.sign!, s.x + dx, s.y + dy);
     if (v.unlocked) return;
     const [x0, y0, x1, y1] = s.board;
-    const cx = (x0 + x1) / 2;
-    const cy = (y0 + y1) / 2;
+    const cx = (x0 + x1) / 2 + dx;
+    const cy = (y0 + y1) / 2 + dy;
     ctx.save();
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';

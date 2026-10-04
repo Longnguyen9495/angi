@@ -4,9 +4,8 @@
   width: 100%;
   height: auto;
   aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 28px;
-  box-shadow: 0 40px 120px -40px rgb(0 0 0 / 80%);
+  object-fit: contain;
+  filter: drop-shadow(0 30px 40px rgb(0 0 0 / 45%));
 }
 .fr-reading-progress {
   position: fixed;
@@ -467,4 +466,10 @@
     transform: none !important;
     opacity: 1 !important;
   }
+}
+
+/* Order links sit in the hero, right under the name and description. */
+.fr-story__order .fr-order--compact {
+  width: 100%;
+  margin: 4px 0 0;
 }
