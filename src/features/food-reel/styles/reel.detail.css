@@ -101,9 +101,9 @@
   justify-content: space-between;
   gap: 12px;
   padding: calc(16px + env(safe-area-inset-top)) var(--fr-gutter) 16px;
-  background: color-mix(in srgb, var(--story-bg) 88%, transparent);
-  backdrop-filter: blur(14px);
+  background: color-mix(in srgb, var(--story-bg) 94%, transparent);
   -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   animation: fr-fade 300ms var(--fr-ease) 200ms both;
 }
 
