@@ -292,9 +292,15 @@ export function FoodStory({
                 ? t.reel.story.retry
                 : t.reel.story.confirm}
           </button>
-          <button type="button" className="fr-ghost" onClick={() => onClose('spin')}>
+          <button
+            type="button"
+            className="fr-ghost"
+            onClick={() => onClose('spin')}
+            aria-label={t.reel.story.spinOther}
+            title={t.reel.story.spinOther}
+          >
             <ArrowsClockwise aria-hidden="true" size={16} />
-            {t.reel.story.spinOther}
+            <span className="fr-hide-sm">{t.reel.story.spinOther}</span>
           </button>
         </div>
       </div>

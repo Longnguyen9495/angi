@@ -73,7 +73,7 @@ const reel: Messages['reel'] = {
       ' opens up: seeds, a garden, a food map and an after-meal check-in. Progress stays on your device; to keep it when you switch phones, save it with your email in your Profile (optional).',
     privacy: (brand) => `Privacy — what ${brand} stores and how to delete it`,
     language: 'Language',
-    note: 'Dish photos are for illustration only (see the note in each story). Prices are a rough guide; ingredient info is not allergy advice. Story videos are being added bit by bit — dishes without one show a poster.',
+    note: 'Dish photos are for illustration only (see the note in each story). Prices are a rough guide; ingredient info is not allergy advice. Every dish has a story about its origin and meaning — open a dish to read it (in Vietnamese).',
   },
 
   reel: {
@@ -201,32 +201,6 @@ const reel: Messages['reel'] = {
       'dong-nai': 'Dong Nai',
       hue: 'Huế',
     },
-  },
-
-  video: {
-    open: (n) => `Watch ${n} ${n === 1 ? 'video' : 'videos'} about this dish`,
-    sectionLabel: 'YouTube videos about the dish',
-    eyebrow: 'KITCHEN CORNER · YOUTUBE',
-    heading: 'One dish, many stories',
-    count: (n) => `${n} ${n === 1 ? 'video' : 'videos'}`,
-    hint: 'Tap a clip to watch it right here.',
-    play: (title) => `Play on YouTube: ${title}`,
-    selected: 'Selected',
-    clip: (no) => `CLIP ${no}`,
-    dialogTitle: (dish) => `Videos about ${dish}`,
-    closeLabel: 'Close the video gallery',
-    close: 'Close ×',
-    loading: 'Connecting to the YouTube player…',
-    error: 'The video may be blocked or not allow embedding. You can try another one.',
-    loaded: 'The YouTube player has loaded. If it isn’t playing, press Play in the player.',
-    help: 'Video won’t play?',
-    fallback: 'Try opening it on YouTube ↗',
-    posterNote: 'Food story coming soon',
-    storyLabel: (dish) => `Story video for ${dish}`,
-    pause: 'Pause video',
-    playVideo: 'Play video',
-    unmute: 'Turn video sound on',
-    mute: 'Turn video sound off',
   },
 };
 

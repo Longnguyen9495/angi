@@ -71,7 +71,7 @@ const reel = {
       ' mở ra: hạt giống, khu vườn, bản đồ ẩm thực và check-in sau bữa. Tiến trình lưu trên thiết bị của bạn; muốn giữ khi đổi máy thì lưu bằng email trong Hồ sơ (không bắt buộc).',
     privacy: (brand: string) => `Quyền riêng tư — ${brand} lưu những gì và cách xoá`,
     language: 'Ngôn ngữ',
-    note: 'Ảnh món chỉ mang tính minh hoạ (xem ghi chú trong từng câu chuyện). Giá chỉ mang tính tham khảo; thông tin thành phần không thay thế tư vấn dị ứng. Video câu chuyện món đang được bổ sung dần — món chưa có video hiển thị poster.',
+    note: 'Ảnh món chỉ mang tính minh hoạ (xem ghi chú trong từng câu chuyện). Giá chỉ mang tính tham khảo; thông tin thành phần không thay thế tư vấn dị ứng. Mỗi món có câu chuyện về nguồn gốc và ý nghĩa — mở món để đọc.',
   },
 
   reel: {
@@ -201,32 +201,6 @@ const reel = {
       'dong-nai': 'Đồng Nai',
       hue: 'Huế',
     },
-  },
-
-  video: {
-    open: (n: number) => `Xem ${n} video về món này`,
-    sectionLabel: 'Video YouTube về món ăn',
-    eyebrow: 'GÓC BẾP · YOUTUBE',
-    heading: 'Một món ăn, nhiều câu chuyện',
-    count: (n: number) => `${n} video`,
-    hint: 'Chạm vào một thước phim để xem ngay tại đây.',
-    play: (title: string) => `Phát YouTube: ${title}`,
-    selected: 'Đang chọn',
-    clip: (no: string) => `THƯỚC PHIM ${no}`,
-    dialogTitle: (dish: string) => `Video về ${dish}`,
-    closeLabel: 'Đóng thư viện video',
-    close: 'Đóng ×',
-    loading: 'Đang kết nối trình phát YouTube…',
-    error: 'Video có thể bị chặn hoặc không cho phép nhúng. Bạn có thể thử video khác.',
-    loaded: 'Trình phát YouTube đã tải. Nếu chưa phát, nhấn Play trong trình phát.',
-    help: 'Video không phát được?',
-    fallback: 'Thử mở trên YouTube ↗',
-    posterNote: 'Food story đang được hoàn thiện',
-    storyLabel: (dish: string) => `Video câu chuyện món ${dish}`,
-    pause: 'Tạm dừng video',
-    playVideo: 'Phát video',
-    unmute: 'Bật tiếng video',
-    mute: 'Tắt tiếng video',
   },
 };
 

@@ -1,14 +1,12 @@
-import { act, render, screen, waitFor, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { App } from '../../App';
 import { STORAGE_KEY } from '../../domain/persistence';
 import { mockConfig } from '../../services/mockApi';
 import { FeedbackProvider } from '../../state/FeedbackProvider';
 import { GameProvider } from '../../state/GameProvider';
-import { FoodVideo } from './components/FoodVideo';
 import { dishAt, getReelDish, getReelDishBySlug, reelCount } from './data/reelCatalogue';
-import type { ReelDish } from './foodReel.types';
 import { reelBootConfig } from './hooks/useAssetPreloader';
 
 const realMatchMedia = window.matchMedia;
@@ -130,8 +128,10 @@ describe('spin → story → back', () => {
     await waitFor(() => expect(document.activeElement?.id).toBe('fr-story-title'));
     expect(window.location.pathname).toMatch(/^\/mon\//);
     expect(within(story).getByRole('img', { name: winnerName })).toBeInTheDocument();
-    expect(within(story).getByRole('heading', { name: /Bản sắc nguyên liệu/ })).toBeInTheDocument();
-    expect(within(story).getByText('Hồ sơ vị từ catalogue')).toBeInTheDocument();
+    expect(
+      within(story).getByRole('heading', { name: /Nguyên liệu & biểu tượng/ }),
+    ).toBeInTheDocument();
+    expect(within(story).getByText('Hồ sơ vị')).toBeInTheDocument();
     expect(story.querySelector('video, iframe, .fr-youtube-trigger')).toBeNull();
     expect(within(story).queryByRole('button', { name: /phát video/i })).not.toBeInTheDocument();
 
@@ -222,48 +222,6 @@ describe('chosen epilogue and journey', () => {
     await user.keyboard('{Escape}');
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     expect(screen.getByRole('button', { name: 'Đã lưu 1 món' })).toBeInTheDocument();
-  });
-});
-
-describe('FoodVideo', () => {
-  const withVideo: ReelDish = {
-    ...getReelDish('pho-bo')!,
-    video: {
-      src: '/videos/food-reel/pho-bo.mp4',
-      poster: '/images/food-reel/full/001-pho-bo.webp',
-    },
-  };
-
-  it('shows poster, pause/play and mute controls; stays muted by default', () => {
-    const onMuted = vi.fn();
-    render(<FoodVideo dish={withVideo} autoplay opened={false} muted onMutedChange={onMuted} />);
-    const video = screen.getByLabelText(/video câu chuyện món phở bò/i) as HTMLVideoElement;
-    expect(video.getAttribute('poster')).toBe(withVideo.video!.poster);
-    expect(video.muted).toBe(true);
-    screen.getByRole('button', { name: /bật tiếng video/i }).click();
-    expect(onMuted).toHaveBeenCalledWith(false);
-    expect(screen.getByRole('button', { name: /phát video/i })).toBeInTheDocument();
-  });
-
-  it('never autoplays under reduced motion or Save-Data', () => {
-    const play = vi.spyOn(HTMLMediaElement.prototype, 'play');
-    play.mockClear();
-    const { rerender } = render(
-      <FoodVideo dish={withVideo} autoplay={false} opened muted onMutedChange={() => {}} />,
-    );
-    expect(play).not.toHaveBeenCalled();
-    act(() => {
-      rerender(<FoodVideo dish={withVideo} autoplay opened muted onMutedChange={() => {}} />);
-    });
-    expect(play).toHaveBeenCalledTimes(1);
-  });
-
-  it('shows an honest poster instead of a fake video when footage is missing', () => {
-    render(
-      <FoodVideo dish={getReelDish('bun-moc')!} autoplay opened muted onMutedChange={() => {}} />,
-    );
-    expect(screen.queryByLabelText(/video câu chuyện/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/food story đang được hoàn thiện/i)).toBeInTheDocument();
   });
 });
 

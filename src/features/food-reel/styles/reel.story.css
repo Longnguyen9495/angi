@@ -49,6 +49,11 @@
   color: var(--story-accent);
   margin-right: 5px;
 }
+.fr-chapter-nav button {
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease;
+}
 .fr-chapter-nav button[aria-current] {
   background: var(--story-mid);
   border-color: var(--story-accent);
@@ -56,15 +61,6 @@
 .fr-narrative {
   max-width: 1080px;
   margin-inline: auto;
-}
-.fr-narrative__note {
-  margin: 32px var(--fr-gutter) 0;
-  padding: 16px 20px;
-  border-left: 2px solid var(--story-accent);
-  background: rgb(255 255 255 / 4%);
-  color: var(--fr-ivory);
-  font-size: 0.8rem;
-  line-height: 1.8;
 }
 .fr-narrative__chapter {
   scroll-margin-top: calc(170px + env(safe-area-inset-top));
@@ -74,9 +70,282 @@
   line-height: 1.95;
   margin-block: 20px;
 }
+.fr-narrative__chapter {
+  position: relative;
+  overflow: hidden;
+}
+.fr-narrative__chapter > :not(.fr-chapter-mark) {
+  position: relative;
+}
+/* Big outlined numeral drifting behind each chapter (parallax). */
+.fr-chapter-mark {
+  position: absolute;
+  top: 0;
+  right: calc(var(--fr-gutter) * -0.2);
+  font-family: var(--fr-display);
+  font-size: clamp(9rem, 26vw, 22rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--story-accent) 26%, transparent);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Cover: homeland, era and the one-line meaning. */
+.fr-cover {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: clamp(40px, 8vh, 96px) var(--fr-gutter) clamp(32px, 6vh, 72px);
+}
+.fr-cover__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 22px;
+}
+.fr-cover__chip {
+  padding: 7px 14px;
+  border: 1px solid color-mix(in srgb, var(--story-accent) 55%, transparent);
+  border-radius: 999px;
+  color: var(--fr-ivory);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+.fr-cover__tagline {
+  margin: 0;
+  max-width: 24ch;
+  font-family: var(--fr-display);
+  font-size: clamp(1.7rem, 4.2vw, 3.4rem);
+  font-weight: 420;
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+  color: var(--fr-ivory);
+}
+.fr-word {
+  display: inline-block;
+}
+
+/* Prose */
+.fr-prose {
+  max-width: 70ch;
+}
+.fr-prose--dropcap > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.12em 0 0;
+  font-family: var(--fr-display);
+  font-size: 4.2em;
+  line-height: 0.8;
+  color: var(--story-accent);
+}
+
+/* Timeline */
+.fr-timeline {
+  position: relative;
+  max-width: 760px;
+}
+.fr-timeline__rail {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 7px;
+  width: 2px;
+  background: rgb(244 237 225 / 10%);
+}
+.fr-timeline__rail > div {
+  height: 100%;
+  background: linear-gradient(
+    var(--story-accent),
+    color-mix(in srgb, var(--story-accent) 30%, transparent)
+  );
+  transform-origin: top;
+}
+.fr-timeline__list {
+  display: grid;
+  gap: 34px;
+  margin: 0;
+  padding: 0 0 0 44px;
+  list-style: none;
+}
+.fr-timeline__item {
+  position: relative;
+}
+.fr-timeline__dot {
+  position: absolute;
+  top: 4px;
+  left: -44px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--story-bg);
+  border: 2px solid var(--story-accent);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--story-accent) 14%, transparent);
+}
+.fr-timeline__when {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--fr-display);
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  color: var(--story-accent);
+}
+.fr-timeline__what {
+  margin: 0;
+  color: var(--fr-muted);
+  line-height: 1.7;
+}
+
+/* Saying */
+.fr-saying {
+  position: relative;
+  max-width: 760px;
+  margin: 48px 0 0;
+  padding: 32px 0 0 clamp(20px, 4vw, 48px);
+  border-left: 2px solid var(--story-accent);
+}
+.fr-saying__mark {
+  position: absolute;
+  top: -0.25em;
+  left: 0.12em;
+  font-family: var(--fr-display);
+  font-size: 7rem;
+  line-height: 1;
+  color: color-mix(in srgb, var(--story-accent) 35%, transparent);
+}
+.fr-saying__text {
+  margin: 0;
+  font-family: var(--fr-display);
+  font-size: clamp(1.35rem, 2.6vw, 2rem);
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--fr-ivory);
+  white-space: pre-line;
+}
+.fr-saying figcaption {
+  margin-top: 14px;
+  color: var(--fr-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+}
+
+/* Ingredient symbols */
+.fr-symbols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  perspective: 1000px;
+}
+.fr-symbol {
+  padding: 24px 22px;
+  border: 1px solid var(--fr-line);
+  border-radius: 20px;
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--story-mid) 70%, var(--story-bg)),
+    color-mix(in srgb, var(--story-bg) 92%, white)
+  );
+  transition:
+    translate 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+.fr-symbol:hover {
+  translate: 0 -6px;
+  border-color: color-mix(in srgb, var(--story-accent) 60%, transparent);
+  box-shadow: 0 24px 60px -30px rgb(0 0 0 / 70%);
+}
+.fr-symbol__no {
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  color: var(--story-accent);
+}
+.fr-symbol__name {
+  margin: 10px 0 8px;
+  font-family: var(--fr-display);
+  font-size: 1.45rem;
+  font-weight: 460;
+  color: var(--fr-ivory);
+}
+.fr-symbol__text {
+  margin: 0;
+  color: var(--fr-muted);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+.fr-recipe {
+  margin-top: 40px;
+}
+.fr-recipe__h,
+.fr-narrative__flavor h4 {
+  margin: 0 0 14px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--fr-muted);
+}
+.fr-recipe__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fr-recipe__list li {
+  display: grid;
+  gap: 2px;
+  max-width: 300px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgb(255 255 255 / 5%);
+  font-size: 0.85rem;
+}
+.fr-recipe__list span {
+  color: var(--fr-muted);
+  font-size: 0.8rem;
+}
+
+/* Tasting */
+.fr-tasting {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 80px);
+  align-items: start;
+}
 .fr-narrative__flavor {
-  max-width: 520px;
-  margin-top: 32px;
+  padding: 24px;
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--story-bg) 94%, white);
+}
+
+/* Facts */
+.fr-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fr-fact {
+  position: relative;
+  padding: 26px 22px 22px;
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--story-accent) 12%, var(--story-bg));
+  border: 1px solid color-mix(in srgb, var(--story-accent) 30%, transparent);
+}
+.fr-fact__no {
+  font-family: var(--fr-display);
+  font-size: 2.4rem;
+  line-height: 1;
+  color: var(--story-accent);
+}
+.fr-fact p {
+  margin: 12px 0 0;
+  color: var(--fr-ivory);
+  line-height: 1.65;
 }
 .fr-story-sources {
   padding-left: 22px;
@@ -116,9 +385,68 @@
   .fr-chapter-nav {
     top: calc(72px + env(safe-area-inset-top));
     padding-block: 8px;
+    scrollbar-width: none;
+    mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 28px), transparent);
   }
-  .fr-narrative__note {
-    padding: 12px 14px;
+  .fr-chapter-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .fr-chapter-nav button {
+    min-height: 40px;
+    padding: 8px 12px;
+  }
+  .fr-narrative__chapter .fr-story__h {
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 0.14em;
+  }
+  .fr-story__h-no {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .fr-cover__tagline {
+    max-width: none;
+  }
+  .fr-timeline__list {
+    gap: 26px;
+    padding-left: 38px;
+  }
+  .fr-timeline__dot {
+    left: -38px;
+  }
+  .fr-symbol,
+  .fr-fact {
+    padding: 20px 18px;
+  }
+  .fr-symbol__name {
+    font-size: 1.3rem;
+  }
+  /* One compact row: the main action plus an icon-sized "spin another". */
+  .fr-story .fr-story__actions {
+    flex-wrap: nowrap;
+    padding-top: 18px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+  .fr-story .fr-story__actions:has(.fr-story__error) {
+    flex-wrap: wrap;
+  }
+  .fr-story .fr-story__actions .fr-story__error {
+    flex: 1 1 100%;
+  }
+  .fr-story .fr-story__actions .fr-cta {
+    flex: 1 1 auto;
+    min-height: 48px;
+  }
+  .fr-story .fr-story__actions .fr-ghost {
+    flex: 0 0 auto;
+    min-height: 48px;
+    padding-inline: 14px;
+  }
+  .fr-tasting {
+    grid-template-columns: 1fr;
+  }
+  .fr-chapter-mark {
+    font-size: 8rem;
   }
   .fr-narrative__chapter {
     scroll-margin-top: calc(150px + env(safe-area-inset-top));

@@ -1,56 +1,69 @@
 import { describe, expect, it } from 'vitest';
-import { CURATED_STORIES, getDishNarrative } from './dishStories';
+import { CURATED_STORIES, STORY_ALIASES, findDishStory, getDishNarrative } from './dishStories';
 import { getReelDish, reelDishes } from './reelCatalogue';
 
-describe('dish narratives', () => {
-  it('provides five-chapter data without claiming history for every catalogue dish', () => {
-    for (const dish of reelDishes()) {
-      const story = getDishNarrative(dish);
-      expect(story.version).toBe(1);
-      expect(story.origin.length).toBeGreaterThan(0);
-      expect(story.culture.length).toBeGreaterThan(0);
-      expect(story.tasting.length).toBeGreaterThan(0);
-      expect(story.sources[0]?.status).toBe('catalogue');
-      if (!CURATED_STORIES[dish.id]) {
-        expect(story.coverage).toBe('catalogue');
-        expect(story.origin[0]).toContain('Chưa có tư liệu');
-        expect(story.origin[0]).toContain(dish.nameVi || dish.name);
+const words = (paragraphs: string[]) => paragraphs.join(' ').split(/\s+/).length;
+
+describe('dish stories', () => {
+  it('gives every catalogue dish a full story', () => {
+    const missing = reelDishes()
+      .filter((dish) => !findDishStory(dish.id))
+      .map((dish) => dish.id);
+    expect(missing).toEqual([]);
+  });
+
+  it.each(Object.entries(CURATED_STORIES))('%s is detailed and well-formed', (id, story) => {
+    expect(getReelDish(id), `${id} is not in the catalogue`).toBeDefined();
+    expect(story.homeland.trim()).not.toBe('');
+    expect(story.era.trim()).not.toBe('');
+    expect(story.tagline.length).toBeGreaterThan(20);
+    expect(story.tagline.length).toBeLessThanOrEqual(200);
+    expect(story.origin.length).toBeGreaterThanOrEqual(3);
+    expect(words(story.origin)).toBeGreaterThan(150);
+    expect(story.timeline.length).toBeGreaterThanOrEqual(3);
+    for (const step of story.timeline) {
+      expect(step.when.trim()).not.toBe('');
+      expect(step.what.trim()).not.toBe('');
+    }
+    expect(story.meaning.length).toBeGreaterThanOrEqual(2);
+    expect(words(story.meaning)).toBeGreaterThan(100);
+    expect(story.symbols.length).toBeGreaterThanOrEqual(3);
+    expect(story.tasting.length).toBeGreaterThanOrEqual(2);
+    expect(story.facts.length).toBeGreaterThanOrEqual(3);
+    if (story.reference) expect(new URL(story.reference.url).protocol).toBe('https:');
+    expect(JSON.stringify(story)).not.toMatch(/undefined|TODO|lorem/i);
+  });
+
+  it('never repeats a paragraph between dishes', () => {
+    const seen = new Map<string, string>();
+    for (const [id, story] of Object.entries(CURATED_STORIES)) {
+      for (const p of [...story.origin, ...story.meaning, ...story.tasting]) {
+        expect(seen.get(p), `${id} repeats a paragraph`).toBeUndefined();
+        seen.set(p, id);
       }
     }
   });
-  it('uses exact existing IDs with distinct substantive editorial content', () => {
-    const origins = new Set<string>();
-    for (const id of Object.keys(CURATED_STORIES)) {
-      const dish = getReelDish(id);
-      expect(dish, id).toBeDefined();
-      const story = getDishNarrative(dish!);
-      expect(story.coverage).toBe('curated');
-      expect(story.origin.join(' ').length).toBeGreaterThan(200);
-      expect(story.culture.join(' ').length).toBeGreaterThan(200);
-      expect(story.tasting.join(' ').length).toBeGreaterThan(150);
-      origins.add(story.origin.join(' '));
-      for (const source of story.sources.filter((s) => s.url)) {
-        expect(new URL(source.url!).protocol).toBe('https:');
-        expect(source.status).toBe('not-checked');
-      }
+
+  it('maps catalogue duplicates only through explicit aliases', () => {
+    for (const [alias, target] of Object.entries(STORY_ALIASES)) {
+      expect(getReelDish(alias), alias).toBeDefined();
+      expect(CURATED_STORIES[target], target).toBeDefined();
+      expect(findDishStory(alias)).toBe(CURATED_STORIES[target]);
     }
-    expect(origins.size).toBe(Object.keys(CURATED_STORIES).length);
   });
-  it('does not infer history from region, names or duplicate suffixes', () => {
+
+  it('does not borrow a history for a dish without a story', () => {
     const base = getReelDish('pho-bo')!;
-    const dish = {
+    const story = getDishNarrative({
       ...base,
       id: 'pho-bo-new',
       name: 'Món mới',
       nameVi: 'Món mới',
-      story: '',
-      ingredients: [],
-    };
-    const story = getDishNarrative(dish);
+    });
     expect(story.coverage).toBe('catalogue');
-    expect(story.origin.join(' ')).not.toContain('Nam Định');
-    expect(story.sources).toHaveLength(1);
-    expect(story.origin.join(' ')).not.toContain('undefined');
-    expect(getDishNarrative(getReelDish('bun-bo-hue-2')!).coverage).toBe('catalogue');
+    expect(story.timeline).toEqual([]);
+    expect(story.facts).toEqual([]);
+    expect(JSON.stringify(story)).not.toContain(CURATED_STORIES['pho-bo']!.origin[0]);
+    expect(story.origin.join(' ')).toContain('Món mới');
   });
 });
