@@ -40,10 +40,10 @@
 .fr-flight {
   position: fixed;
   z-index: 90;
-  object-fit: cover;
+  object-fit: contain;
   pointer-events: none;
   will-change: transform;
-  background: #1a1916;
+  filter: drop-shadow(0 30px 40px rgb(0 0 0 / 45%));
 }
 
 /* ——— Food Story (Scene E) ——— */
