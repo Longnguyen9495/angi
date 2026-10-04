@@ -23,6 +23,14 @@ import {
 } from '../data/game';
 import type { AnimalId, CropId, DecorId, Meat, ProduceId, RecipeId } from '../data/types';
 import {
+  DECOR_HOME,
+  DECOR_SLOTS,
+  decorSlot,
+  freeSlot,
+  slotsTaken,
+  type DecorSlots,
+} from '../data/decorSlots';
+import {
   createInitialProgress,
   type AgainAnswer,
   type CheckInOutcome,
@@ -92,6 +100,9 @@ export type Action =
   | { type: 'COLLECT_ANIMAL'; animal: AnimalId; now: number }
   | { type: 'PLACE_DECOR'; decor: DecorId; x: number; z: number; rot: number }
   | { type: 'STORE_DECOR'; decor: DecorId }
+  /** Painted farm: stand an owned decoration on a slot (one standing there swaps places with it). */
+  | { type: 'MOVE_DECOR'; decor: DecorId; slot: number }
+  | { type: 'FLIP_DECOR'; decor: DecorId }
   /** A friend's help or gift, confirmed by the server; applied once per event id. */
   | { type: 'FRIEND_EVENT'; event: FriendEvent; now: number }
   /** We sent a friend a seed (the server recorded it as event `id`): it leaves our tray. */
@@ -646,7 +657,41 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
 
     case 'STORE_DECOR':
       if (!state.decor.includes(action.decor)) return state;
-      return { ...state, decorLayout: { ...state.decorLayout, [action.decor]: null } };
+      return {
+        ...state,
+        decorLayout: { ...state.decorLayout, [action.decor]: null },
+        decorSlots: { ...state.decorSlots, [action.decor]: null },
+      };
+
+    case 'MOVE_DECOR': {
+      const id = action.decor;
+      if (!state.decor.includes(id) || !Number.isInteger(action.slot)) return state;
+      if (action.slot < 0 || action.slot >= DECOR_SLOTS.length) return state;
+      const from = decorSlot(id, state.decorSlots);
+      if (from?.slot === action.slot) return state;
+      const there = slotsTaken(state.decor, state.decorSlots).get(action.slot);
+      const slots: DecorSlots = {
+        ...state.decorSlots,
+        [id]: { slot: action.slot, flip: from?.flip ?? false },
+      };
+      // The one standing there takes our old place (or is put away when we came from the barn).
+      if (there && there !== id) {
+        const theirs = decorSlot(there, state.decorSlots);
+        slots[there] = from ? { slot: from.slot, flip: theirs?.flip ?? false } : null;
+      }
+      return { ...state, decorSlots: slots };
+    }
+
+    case 'FLIP_DECOR': {
+      const at = state.decor.includes(action.decor)
+        ? decorSlot(action.decor, state.decorSlots)
+        : null;
+      if (!at) return state;
+      return {
+        ...state,
+        decorSlots: { ...state.decorSlots, [action.decor]: { ...at, flip: !at.flip } },
+      };
+    }
 
     case 'FRIEND_EVENT': {
       const ev = action.event;
@@ -948,6 +993,14 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       if (!def || state.decor.includes(def.id) || state.coins < def.price) return state;
       const s = structuredClone(state);
       if (!post(s, `decor:${def.id}`, 'coin', -def.price, 'decor', action.now)) return state;
+      // Its home may hold a decoration the guest moved there: it then stands on a free slot.
+      if (slotsTaken(s.decor, s.decorSlots).has(DECOR_HOME[def.id])) {
+        const free = freeSlot(s.decor, s.decorSlots, DECOR_HOME[def.id], 1);
+        s.decorSlots = {
+          ...s.decorSlots,
+          [def.id]: free === null ? null : { slot: free, flip: false },
+        };
+      }
       s.decor = [...s.decor, def.id];
       track(s, 'decor', action.now);
       return s;

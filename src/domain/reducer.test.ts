@@ -10,6 +10,9 @@ import {
   ANIMALS,
   UPGRADES,
 } from '../data/game';
+import { DECOR_HOME, DECOR_SLOTS, decorSlot, slotsTaken } from '../data/decorSlots';
+import type { DecorId } from '../data/types';
+import { parseProgress } from './persistence';
 import { createInitialProgress } from './progress';
 import { dailyQuests } from './quests';
 import { gameReducer, touchStreak } from './reducer';
@@ -368,6 +371,75 @@ describe('the market', () => {
     expect(gameReducer(decorated, { type: 'BUY_DECOR', decor: 'jar', now: NOON + 14 })).toBe(
       decorated,
     );
+  });
+});
+
+describe('arranging decorations on the painted farm', () => {
+  const owned = (...decor: DecorId[]) => ({ ...createInitialProgress(NOON), decor });
+
+  it('moves one to a free slot, mirrored or not, and swaps with one standing there', () => {
+    const s = owned('jar', 'lantern');
+    const moved = gameReducer(s, { type: 'MOVE_DECOR', decor: 'jar', slot: 20 });
+    expect(decorSlot('jar', moved.decorSlots)).toEqual({ slot: 20, flip: false });
+    const flipped = gameReducer(moved, { type: 'FLIP_DECOR', decor: 'jar' });
+    expect(decorSlot('jar', flipped.decorSlots)).toEqual({ slot: 20, flip: true });
+    // Onto the lantern's home: the lantern takes the jar's old place.
+    const swapped = gameReducer(flipped, {
+      type: 'MOVE_DECOR',
+      decor: 'jar',
+      slot: DECOR_HOME.lantern,
+    });
+    expect(decorSlot('jar', swapped.decorSlots)).toEqual({
+      slot: DECOR_HOME.lantern,
+      flip: true,
+    });
+    expect(decorSlot('lantern', swapped.decorSlots)?.slot).toBe(20);
+    expect(slotsTaken(swapped.decor, swapped.decorSlots).size).toBe(2);
+  });
+
+  it('ignores what it does not own and slots that do not exist', () => {
+    const s = owned('jar');
+    expect(gameReducer(s, { type: 'MOVE_DECOR', decor: 'cart', slot: 20 })).toBe(s);
+    expect(gameReducer(s, { type: 'MOVE_DECOR', decor: 'jar', slot: DECOR_SLOTS.length })).toBe(s);
+    expect(gameReducer(s, { type: 'MOVE_DECOR', decor: 'jar', slot: 1.5 })).toBe(s);
+    expect(gameReducer(s, { type: 'FLIP_DECOR', decor: 'cart' })).toBe(s);
+  });
+
+  it('puts one away and brings it back; a new one never lands on a taken home', () => {
+    const s = owned('jar');
+    const away = gameReducer(s, { type: 'STORE_DECOR', decor: 'jar' });
+    expect(decorSlot('jar', away.decorSlots)).toBeNull();
+    expect(gameReducer(away, { type: 'FLIP_DECOR', decor: 'jar' })).toBe(away);
+    const back = gameReducer(away, { type: 'MOVE_DECOR', decor: 'jar', slot: 12 });
+    expect(decorSlot('jar', back.decorSlots)?.slot).toBe(12);
+
+    // The jar stands on the cart's home; the cart, bought now, goes to a free slot.
+    const blocking = gameReducer(
+      { ...s, coins: 500 },
+      {
+        type: 'MOVE_DECOR',
+        decor: 'jar',
+        slot: DECOR_HOME.cart,
+      },
+    );
+    const bought = gameReducer(blocking, { type: 'BUY_DECOR', decor: 'cart', now: NOON + 1 });
+    expect(bought.decor).toContain('cart');
+    expect(decorSlot('cart', bought.decorSlots)?.slot).not.toBe(DECOR_HOME.cart);
+    expect(slotsTaken(bought.decor, bought.decorSlots).size).toBe(2);
+  });
+
+  it('keeps the arrangement through a save, dropping bad or doubled slots', () => {
+    const s = gameReducer(owned('jar', 'lantern'), { type: 'MOVE_DECOR', decor: 'jar', slot: 15 });
+    const back = parseProgress(JSON.parse(JSON.stringify(s)), NOON);
+    expect(back?.decorSlots).toEqual(s.decorSlots);
+    const bad = parseProgress(
+      {
+        ...JSON.parse(JSON.stringify(s)),
+        decorSlots: { jar: { slot: 3, flip: true }, lantern: { slot: 3 }, cart: { slot: 999 } },
+      },
+      NOON,
+    );
+    expect(bad?.decorSlots).toEqual({ jar: { slot: 3, flip: true } });
   });
 });
 

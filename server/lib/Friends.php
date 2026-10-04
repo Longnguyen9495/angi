@@ -799,7 +799,7 @@ final class Friends
         return null;
     }
 
-    /** Decorations, their places and the animals' timers: known ids and in-range numbers only. */
+    /** Decorations, their places (3D and painted farm) and the animals' timers: known ids and in-range numbers only. */
     private static function scenery(array $data): array
     {
         $rules = ProgressGuard::rules();
@@ -817,6 +817,17 @@ final class Friends
                 $layout[$id] = ['x' => $pos['x'], 'z' => $pos['z'], 'rot' => (($pos['rot'] % 4) + 4) % 4];
             }
         }
+        $slots = [];
+        foreach ((array) ($data['decorSlots'] ?? []) as $id => $pos) {
+            if (!isset($rules['decor'][$id])) {
+                continue;
+            }
+            if ($pos === null) {
+                $slots[$id] = null;
+            } elseif (is_array($pos) && is_int($pos['slot'] ?? null) && $pos['slot'] >= 0 && $pos['slot'] < ProgressGuard::DECOR_SLOTS) {
+                $slots[$id] = ['slot' => $pos['slot'], 'flip' => ($pos['flip'] ?? false) === true];
+            }
+        }
         $animals = [];
         foreach ((array) ($data['animals'] ?? []) as $id => $a) {
             if (isset($rules['animals'][$id]) && is_array($a)) {
@@ -826,6 +837,7 @@ final class Friends
         return [
             'decor' => $decor,
             'decorLayout' => $layout ?: new stdClass(),
+            'decorSlots' => $slots ?: new stdClass(),
             'animals' => $animals ?: new stdClass(),
         ];
     }

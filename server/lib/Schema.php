@@ -13,7 +13,7 @@ require_once __DIR__ . '/bootstrap.php';
 final class Schema
 {
     /** Bump with every change below; stored in app_meta so the API checks one row per request. */
-    public const VERSION = 5;
+    public const VERSION = 6;
 
     public static function ensure(PDO $pdo): void
     {
@@ -87,6 +87,35 @@ final class Schema
         self::column($pdo, 'user_progress', 'client_offset', "$big NULL");
         self::column($pdo, 'user_progress', 'baseline_at', "$int NULL");
         self::index($pdo, 'user_progress', 'idx_progress_guest', 'guest_id');
+
+        // v6: what each garden did, kept 90 days for review (server/bin/stats.php). One row per
+        // new ledger entry of an accepted save (an import is one row, resource 'import'); the
+        // caller's address only as a keyed hash, to tell accounts sharing a network apart.
+        $id = $sqlite ? 'INTEGER PRIMARY KEY AUTOINCREMENT' : 'BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY';
+        $pdo->exec("CREATE TABLE IF NOT EXISTS progress_events (
+            id $id,
+            user_id $int NOT NULL,
+            entry_key {$text(160)} NOT NULL,
+            resource {$text(80)} NOT NULL,
+            delta $big NOT NULL,
+            at_ms $big NOT NULL,
+            saved_at $int NOT NULL,
+            ip_hash {$text(16)} NULL
+        )$engine");
+        self::index($pdo, 'progress_events', 'idx_progress_events_user', 'user_id, saved_at');
+        self::index($pdo, 'progress_events', 'idx_progress_events_saved', 'saved_at');
+        // Saves ProgressGuard refused, with its code and reason (rejected saves change nothing
+        // else, so this is the only trace of them).
+        $pdo->exec("CREATE TABLE IF NOT EXISTS guard_rejections (
+            id $id,
+            user_id $int NOT NULL,
+            code {$text(20)} NOT NULL,
+            detail {$text(255)} NOT NULL,
+            created_at $int NOT NULL,
+            ip_hash {$text(16)} NULL
+        )$engine");
+        self::index($pdo, 'guard_rejections', 'idx_guard_rejections_user', 'user_id, created_at');
+        self::index($pdo, 'guard_rejections', 'idx_guard_rejections_at', 'created_at');
 
         // v4: the achievement metrics added with 28 badges get their bases from each stored garden.
         require_once __DIR__ . '/ProgressGuard.php';

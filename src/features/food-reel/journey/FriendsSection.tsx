@@ -187,6 +187,8 @@ export function FriendsSection() {
       await friendsApi.rename(naming);
       setNaming(null);
       load();
+      // The farm's name board reads the name from the shared friends list.
+      void refreshFriends();
     } catch (err) {
       toast({
         message: err instanceof AccountError ? err.message : m.renameFailed,

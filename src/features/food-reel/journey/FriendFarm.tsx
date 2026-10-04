@@ -6,7 +6,9 @@ import {
   MAX_PLOT_COUNT,
   PLOT_UNLOCK_LEVELS,
 } from '../../../data/game';
-import type { AnimalId, CropId } from '../../../data/types';
+import type { AnimalId, CropId, DecorId } from '../../../data/types';
+import { DECOR } from '../../../data/game';
+import type { DecorSlots } from '../../../data/decorSlots';
 import { cropSprite, produceSprite } from '../../../data/sprites';
 import { harvestsLeft, isWet, plotStage } from '../../../domain/selectors';
 import { formatDuration } from '../../../domain/time';
@@ -44,6 +46,10 @@ export function FriendFarm({
   const plots = friendPlots(garden);
   const view: FarmView = {
     watering: false,
+    // Their decorations where they put them, and their garden's name on the board.
+    decor: garden.decor.filter((d): d is DecorId => Object.hasOwn(DECOR, d)),
+    decorSlots: (garden.decorSlots ?? {}) as DecorSlots,
+    sign: garden.name || null,
     plots: Array.from({ length: MAX_PLOT_COUNT }, (_, i) => {
       const id = i + 1;
       const plot = plots.find((p) => p.id === id);

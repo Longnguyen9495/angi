@@ -1,5 +1,6 @@
 import type { DecorId } from '../../../data/types';
-import { DECOR_SPOTS, decorPicture } from '../decorSpots';
+import { DECOR_SLOTS, type DecorSlots, decorSlot, slotsTaken } from '../../../data/decorSlots';
+import { DECOR_SPOTS, NAME_SIGN, decorPicture } from '../decorSpots';
 import { t } from '../../../i18n';
 import { type Assets, canvas } from '../engine/assets';
 import type { FieldDef, Vec2 } from '../engine/types';
@@ -73,6 +74,12 @@ export interface FarmView {
   plots: PlotView[];
   /** Garden decorations bought at the market, drawn on their spots. */
   decor?: DecorId[];
+  /** Where each one stands (missing: its home slot; null: put away). */
+  decorSlots?: DecorSlots;
+  /** Arranging decorations: free slots are marked, the picked decoration is lifted. */
+  arrange?: { picked: DecorId | null } | null;
+  /** The garden's name, on a board by the farmhouse path (none: no board). */
+  sign?: string | null;
   cow: BubbleView;
   chicken: BubbleView;
   watering: boolean;
@@ -672,25 +679,146 @@ export class FarmGameLayer {
     }
   }
 
-  /** Decorations the guest owns, each on its spot of the painting (back to front). */
-  drawDecor(ctx: CanvasRenderingContext2D) {
-    const owned = this.view?.decor ?? [];
-    const spots = owned
-      .map((id) => ({ id, spot: DECOR_SPOTS[id] }))
-      .filter((d) => d.spot)
-      .sort((a, b) => a.spot.y - b.spot.y);
-    for (const { id, spot } of spots) {
-      const src = decorPicture(id);
-      let img = this.images.get(src);
-      if (!img) {
-        img = new Image();
-        img.src = src;
-        this.images.set(src, img);
-      }
-      if (!img.complete || img.naturalWidth === 0) continue;
-      const h = (img.naturalHeight / img.naturalWidth) * spot.w;
-      ctx.drawImage(img, spot.x - spot.w / 2, spot.y - h, spot.w, h);
+  /** Whether the page is arranging decorations (taps pick decorations and slots, nothing else). */
+  get arranging() {
+    return !!this.view?.arrange;
+  }
+
+  /** Owned decorations standing on the farm: where, how wide, mirrored (back to front). */
+  private placedDecor() {
+    const view = this.view;
+    const out: { id: DecorId; x: number; y: number; w: number; flip: boolean }[] = [];
+    for (const id of view?.decor ?? []) {
+      const at = decorSlot(id, view?.decorSlots ?? {});
+      const slot = at ? DECOR_SLOTS[at.slot] : null;
+      const spot = DECOR_SPOTS[id];
+      if (!at || !slot || !spot) continue;
+      out.push({ id, x: slot.x, y: slot.y, w: spot.w, flip: at.flip });
     }
+    return out.sort((a, b) => a.y - b.y);
+  }
+
+  private decorImage(id: DecorId) {
+    const src = decorPicture(id);
+    let img = this.images.get(src);
+    if (!img) {
+      img = new Image();
+      img.src = src;
+      this.images.set(src, img);
+    }
+    return img.complete && img.naturalWidth > 0 ? img : null;
+  }
+
+  /**
+   * Decorations the guest owns, each on its slot of the painting (back to front), and the name
+   * board. Arranging: a ring on every free slot, the picked decoration lifted and bobbing.
+   */
+  drawDecor(ctx: CanvasRenderingContext2D, w?: World) {
+    const view = this.view;
+    if (view?.sign) this.drawNameSign(ctx, view.sign);
+    const arrange = view?.arrange ?? null;
+    if (arrange) {
+      const taken = slotsTaken(view?.decor ?? [], view?.decorSlots ?? {});
+      const pulse = w && !w.reduced ? 0.5 + 0.5 * Math.sin(w.t * 3) : 1;
+      ctx.save();
+      for (const [i, s] of DECOR_SLOTS.entries()) {
+        if (taken.has(i)) continue;
+        ctx.fillStyle = `rgba(255,248,220,${arrange.picked ? 0.22 + 0.18 * pulse : 0.16})`;
+        ctx.strokeStyle = `rgba(255,255,255,${arrange.picked ? 0.65 + 0.3 * pulse : 0.45})`;
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 4]);
+        ctx.beginPath();
+        ctx.ellipse(s.x, s.y, 24, 11, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+    for (const d of this.placedDecor()) {
+      const img = this.decorImage(d.id);
+      if (!img) continue;
+      const h = (img.naturalHeight / img.naturalWidth) * d.w;
+      const picked = arrange?.picked === d.id;
+      const lift = picked ? 6 + (w && !w.reduced ? 3 * Math.sin(w.t * 4) : 0) : 0;
+      ctx.save();
+      if (picked) {
+        // Its shadow stays on the ground while it hovers.
+        ctx.fillStyle = 'rgba(30,20,10,0.25)';
+        ctx.beginPath();
+        ctx.ellipse(d.x, d.y, d.w * 0.42, d.w * 0.14, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowColor = 'rgba(255,240,170,0.95)';
+        ctx.shadowBlur = 14;
+      }
+      ctx.translate(d.x, d.y - lift);
+      if (d.flip) ctx.scale(-1, 1);
+      ctx.drawImage(img, -d.w / 2, -h, d.w, h);
+      ctx.restore();
+    }
+  }
+
+  /** The garden's name on a small wooden board on two posts. */
+  private drawNameSign(ctx: CanvasRenderingContext2D, name: string) {
+    const { x, y } = NAME_SIGN;
+    ctx.save();
+    ctx.font = '800 15px "Be Vietnam Pro", system-ui, sans-serif';
+    const text = name.length > 22 ? `${name.slice(0, 21)}…` : name;
+    const bw = Math.min(200, Math.max(70, ctx.measureText(text).width + 22));
+    const bh = 26;
+    const top = y - 46;
+    // Shadow, posts, board, grain, text.
+    ctx.fillStyle = 'rgba(30,20,10,0.22)';
+    ctx.beginPath();
+    ctx.ellipse(x, y, bw * 0.45, 6, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#7a4a22';
+    for (const px of [x - bw / 2 + 12, x + bw / 2 - 16]) ctx.fillRect(px, top + 6, 5, y - top - 6);
+    ctx.fillStyle = '#c98a4b';
+    ctx.strokeStyle = '#6b3d17';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(x - bw / 2, top, bw, bh, 5);
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(107,61,23,0.25)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x - bw / 2 + 6, top + bh / 2 + 5);
+    ctx.lineTo(x + bw / 2 - 6, top + bh / 2 + 5);
+    ctx.stroke();
+    ctx.fillStyle = '#3e2410';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, x, top + bh / 2 + 1, bw - 12);
+    ctx.restore();
+  }
+
+  /**
+   * Arranging: what a tap at picture point `p` means — an owned decoration (front-most first),
+   * else a free slot near it; null for neither.
+   */
+  arrangeHit(p: { x: number; y: number }): { decor: DecorId } | { slot: number } | null {
+    if (!this.arranging) return null;
+    const placed = this.placedDecor().reverse();
+    for (const d of placed) {
+      const img = this.decorImage(d.id);
+      const h = img ? (img.naturalHeight / img.naturalWidth) * d.w : d.w;
+      if (
+        p.x >= d.x - d.w / 2 - 6 &&
+        p.x <= d.x + d.w / 2 + 6 &&
+        p.y >= d.y - h - 6 &&
+        p.y <= d.y + 8
+      )
+        return { decor: d.id };
+    }
+    const taken = slotsTaken(this.view?.decor ?? [], this.view?.decorSlots ?? {});
+    let best: { slot: number; d: number } | null = null;
+    for (const [i, s] of DECOR_SLOTS.entries()) {
+      if (taken.has(i)) continue;
+      const d = Math.hypot((p.x - s.x) / 1.4, p.y - s.y);
+      if (d < 34 && (!best || d < best.d)) best = { slot: i, d };
+    }
+    return best ? { slot: best.slot } : null;
   }
 
   /** Soil, wet patches, ripples, sowing puffs and outlines, right over the painted field. */

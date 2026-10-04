@@ -295,13 +295,28 @@ final class Account
         }
         $clientNow = is_numeric($body['clientNow'] ?? null) ? (int) $body['clientNow'] : null;
         $uid = (int) $u['id'];
-        $out = db_tx($this->db, function () use ($uid, $data, $json, $base, $clientNow) {
+        $guard = new ProgressGuard($this->db, $uid);
+        try {
+            $out = $this->writeProgress($guard, $uid, $data, $json, $base, $clientNow);
+        } catch (HttpError $e) {
+            // The refusal rolled the save back; its record is written after, on its own.
+            $guard->logRejection();
+            throw $e;
+        }
+        if (isset($out['conflict'])) {
+            throw new HttpError(409, __t('account.progressConflict'), ['version' => $out['conflict']]);
+        }
+        return $out + ['serverNow' => (int) (microtime(true) * 1000)];
+    }
+
+    private function writeProgress(ProgressGuard $guard, int $uid, array $data, string $json, int $base, ?int $clientNow): array
+    {
+        return db_tx($this->db, function () use ($guard, $uid, $data, $json, $base, $clientNow) {
             $row = $this->one('SELECT * FROM user_progress WHERE user_id = ?' . for_update($this->db), [$uid]);
             $current = $row ? (int) $row['version'] : 0;
             if ($base !== $current) {
                 return ['conflict' => $current];
             }
-            $guard = new ProgressGuard($this->db, $uid);
             $checked = $guard->check($row, $data, $clientNow);
             $now = time();
             if ($row) {
@@ -322,10 +337,6 @@ final class Account
             $guard->commit($checked);
             return ['version' => $current + 1, 'updatedAt' => $now];
         });
-        if (isset($out['conflict'])) {
-            throw new HttpError(409, __t('account.progressConflict'), ['version' => $out['conflict']]);
-        }
-        return $out + ['serverNow' => (int) (microtime(true) * 1000)];
     }
 
     /**
@@ -422,6 +433,16 @@ final class Account
             ], $events),
             'verifiedStats' => array_map('intval', array_column($this->all('SELECT metric, value FROM verified_stats WHERE user_id = ?', [$id]), 'value', 'metric')),
             'rewardsClaimed' => (int) ($this->one('SELECT COUNT(*) AS n FROM progress_claims WHERE user_id = ?', [$id])['n'] ?? 0),
+            // The activity log kept for fair play (90 days), without the address hashes.
+            'activity' => array_map(fn ($a) => [
+                'key' => $a['entry_key'],
+                'resource' => $a['resource'],
+                'delta' => (int) $a['delta'],
+                'at' => (int) $a['at_ms'],
+                'savedAt' => (int) $a['saved_at'],
+            ], $this->all('SELECT entry_key, resource, delta, at_ms, saved_at FROM progress_events WHERE user_id = ? ORDER BY id DESC LIMIT 5000', [$id])),
+            'refusedSaves' => array_map(fn ($r) => ['code' => $r['code'], 'detail' => $r['detail'], 'at' => (int) $r['created_at']],
+                $this->all('SELECT code, detail, created_at FROM guard_rejections WHERE user_id = ? ORDER BY id DESC LIMIT 500', [$id])),
             'loginCodes' => array_map(fn ($c) => array_map(fn ($v) => $v === null ? null : (int) $v, $c), $this->all(
                 'SELECT created_at, expires_at, used_at FROM login_codes WHERE email = ? ORDER BY id DESC LIMIT 50',
                 [$u['email']],
@@ -456,6 +477,8 @@ final class Account
             $run('DELETE FROM referral_log WHERE inviter_id = ?', [$id]);
             $run('DELETE FROM progress_claims WHERE user_id = ?', [$id]);
             $run('DELETE FROM verified_stats WHERE user_id = ?', [$id]);
+            $run('DELETE FROM progress_events WHERE user_id = ?', [$id]);
+            $run('DELETE FROM guard_rejections WHERE user_id = ?', [$id]);
             $run('DELETE FROM garden_profiles WHERE user_id = ?', [$id]);
             $run('DELETE FROM user_progress WHERE user_id = ?', [$id]);
             $run('DELETE FROM user_sessions WHERE user_id = ?', [$id]);

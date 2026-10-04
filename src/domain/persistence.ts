@@ -11,6 +11,7 @@ import {
   levelForXp,
 } from '../data/game';
 import type { CropId, DecorId } from '../data/types';
+import { DECOR_SLOTS, type DecorSlots } from '../data/decorSlots';
 import {
   createInitialProgress,
   EMPTY_ANIMALS,
@@ -190,6 +191,27 @@ function parseLayout(v: Record<string, unknown>): GuestProgress['decorLayout'] {
   return out;
 }
 
+function parseSlots(v: Record<string, unknown>): DecorSlots {
+  const out: DecorSlots = {};
+  const used = new Set<number>();
+  for (const [id, pos] of Object.entries(v)) {
+    if (!Object.hasOwn(DECOR, id)) continue;
+    if (pos === null) {
+      out[id as DecorId] = null;
+    } else if (
+      isObject(pos) &&
+      Number.isInteger(pos.slot) &&
+      (pos.slot as number) >= 0 &&
+      (pos.slot as number) < DECOR_SLOTS.length &&
+      !used.has(pos.slot as number)
+    ) {
+      used.add(pos.slot as number);
+      out[id as DecorId] = { slot: pos.slot as number, flip: pos.flip === true };
+    }
+  }
+  return out;
+}
+
 /**
  * Validates the parts of a stored snapshot the game logic relies on. Anything
  * structurally wrong is rejected as a whole; optional fields fall back to defaults.
@@ -276,6 +298,7 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
     photos: isStringArray(raw.photos) ? raw.photos : [],
     animals: parseAnimals(raw.animals),
     decorLayout: isObject(raw.decorLayout) ? parseLayout(raw.decorLayout) : {},
+    decorSlots: isObject(raw.decorSlots) ? parseSlots(raw.decorSlots) : {},
     collections: isStringArray(raw.collections) ? [...new Set(raw.collections)] : [],
     upgrades: parseUpgrades(raw.upgrades),
     events: parseEvents(raw.events),

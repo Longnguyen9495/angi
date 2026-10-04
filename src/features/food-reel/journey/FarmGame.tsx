@@ -10,6 +10,7 @@ import {
   Coins,
   DotsThreeOutline,
   Drop,
+  Flower,
   Lightbulb,
   Moon,
   Package,
@@ -23,6 +24,7 @@ import { Component, Suspense, lazy, useEffect, useRef, useState, type ReactNode 
 import {
   ANIMALS,
   CROPS,
+  DECOR,
   CROP_LIST,
   RECIPE_LIST,
   WATERING,
@@ -32,7 +34,8 @@ import {
   XP,
   produceName,
 } from '../../../data/game';
-import type { AnimalId, CropId, RecipeId } from '../../../data/types';
+import type { AnimalId, CropId, DecorId, RecipeId } from '../../../data/types';
+import { decorSlot, freeSlot } from '../../../data/decorSlots';
 import type {
   CameraView,
   FarmPlace,
@@ -67,6 +70,7 @@ import {
 } from '../../../domain/selectors';
 import { FarmPlotCard, type CookIdea, type PlotCardMode, type PlotExtra } from './FarmPlotCard';
 import { SeedTray } from './SeedTray';
+import { DecorBar } from './DecorBar';
 import { useSeedDrag } from './seedDrag';
 // Scene overlay styles (plot card, seed strip) load with the game, not with the lazy scene.
 import '../../farm-anim/farm-anim.css';
@@ -231,6 +235,9 @@ export function FarmGame({
   const [justHarvested, setJustHarvested] = useState(0);
   const [picked, setPicked] = useState<CropId | null>(null);
   const [watering, setWatering] = useState(false);
+  // Arranging decorations: taps on the farm pick one and a free slot for it.
+  const [arranging, setArranging] = useState(false);
+  const [pickedDecor, setPickedDecor] = useState<DecorId | null>(null);
 
   const seeds = CROP_LIST.filter((c) => state.seeds[c.id] > 0);
   const activeSeed = picked && state.seeds[picked] > 0 ? picked : (seeds[0]?.id ?? null);
@@ -462,6 +469,9 @@ export function FarmGame({
   const farmView: FarmView = {
     watering,
     decor: state.decor,
+    decorSlots: state.decorSlots,
+    arrange: arranging ? { picked: pickedDecor } : null,
+    sign: friends?.me.name || null,
     plots: Array.from({ length: MAX_PLOT_COUNT }, (_, i) => {
       const id = i + 1;
       const plot = state.plots.find((p) => p.id === id);
@@ -660,9 +670,54 @@ export function FarmGame({
     }
   }
 
+  const moveDecor = (id: DecorId, slot: number) => {
+    const name = DECOR[id].name;
+    dispatch({ type: 'MOVE_DECOR', decor: id, slot });
+    announce(m.decorMoved(name.toLowerCase()));
+  };
+
+  /** Picked decoration: the previous / next free slot (from the barn: the first free one). */
+  const stepDecor = (dir: 1 | -1) => {
+    if (!pickedDecor) return;
+    const at = decorSlot(pickedDecor, state.decorSlots);
+    const slot = freeSlot(state.decor, state.decorSlots, at?.slot ?? -1, dir);
+    if (slot === null) toast({ message: m.noFreeSlot });
+    else moveDecor(pickedDecor, slot);
+  };
+
+  const storeDecor = () => {
+    if (!pickedDecor) return;
+    const name = DECOR[pickedDecor].name.toLowerCase();
+    if (decorSlot(pickedDecor, state.decorSlots)) {
+      dispatch({ type: 'STORE_DECOR', decor: pickedDecor });
+      announce(m.decorStored(name));
+      return;
+    }
+    const slot = freeSlot(state.decor, state.decorSlots, -1, 1);
+    if (slot === null) {
+      toast({ message: m.noFreeSlot });
+      return;
+    }
+    dispatch({ type: 'MOVE_DECOR', decor: pickedDecor, slot });
+    announce(m.decorPlaced(name));
+  };
+
+  const arrange = (on: boolean) => {
+    setArranging(on);
+    setPickedDecor(null);
+    setPlotCard(null);
+    if (on) setWatering(false);
+  };
+
   /** A tap on the painted farm. */
   const onPlace = (place: FarmPlace, info: PlaceInfo) => {
     const at = currentTime();
+    if (place === 'decor') {
+      if (info.decor) setPickedDecor((p) => (p === info.decor ? null : (info.decor ?? null)));
+      else if (info.slot !== undefined && pickedDecor) moveDecor(pickedDecor, info.slot);
+      else if (info.slot !== undefined) announce(m.arrangeHint);
+      return;
+    }
     if (place === 'plot' && info.plotId !== undefined) {
       onPlot(info.plotId, info.mark);
       return;
@@ -730,7 +785,7 @@ export function FarmGame({
 
   return (
     <div
-      className={`fg${watering ? ' is-watering' : ''}${panel ? ' has-panel' : ''}`}
+      className={`fg${watering ? ' is-watering' : ''}${arranging ? ' is-arranging' : ''}${panel ? ' has-panel' : ''}`}
       data-daypart={part}
     >
       {/* tabIndex -1 lets reward actions ("Xem khu vườn") land focus on the farm. */}
@@ -951,46 +1006,84 @@ export function FarmGame({
         </p>
       )}
 
+      {arranging && (
+        <p className="fg-hint" role="status">
+          {pickedDecor ? m.arrangePicked(DECOR[pickedDecor].name) : m.arrangeHint}
+        </p>
+      )}
+
       <div className="fg-tray" ref={trayRef}>
-        <SeedTray
-          seeds={seeds}
-          counts={state.seeds}
-          active={activeSeed}
-          onDragStart={seedDrag.start}
-          onPick={setPicked}
-        />
-        <div className="fg-tools">
-          <button
-            type="button"
-            className={`fg-tool fg-tool--water${watering ? ' is-on' : ''}`}
-            aria-pressed={watering}
-            onClick={() => {
-              setWatering((w) => !w);
-              setPlotCard(null);
+        {arranging ? (
+          <DecorBar
+            owned={state.decor}
+            slots={state.decorSlots}
+            picked={pickedDecor}
+            onPick={setPickedDecor}
+            onStep={stepDecor}
+            onFlip={() => {
+              if (!pickedDecor) return;
+              dispatch({ type: 'FLIP_DECOR', decor: pickedDecor });
+              announce(m.decorFlipped(DECOR[pickedDecor].name.toLowerCase()));
             }}
-            disabled={!watering && (cans === 0 || growingCount === 0)}
-          >
-            <Drop aria-hidden="true" size={22} weight={watering ? 'fill' : 'regular'} />
-            <span className="fg-tool__label">{watering ? m.waterOff : m.waterOn}</span>
-            <span className="sr-only">{m.cansLeft(cans)}</span>
-          </button>
-          <button
-            type="button"
-            className={`fg-tool fg-tool--harvest${ready.length ? ' is-ready' : ''}`}
-            onClick={() => harvestAll()}
-            disabled={ready.length === 0}
-            aria-label={m.harvestAll(ready.length)}
-          >
-            <Basket aria-hidden="true" size={22} weight={ready.length ? 'fill' : 'regular'} />
-            <span className="fg-tool__label" aria-hidden="true">
-              {g.harvest}
-            </span>
-            {ready.length > 0 && (
-              <span className="fg-badge" aria-hidden="true">
-                {ready.length}
-              </span>
-            )}
-          </button>
+            onStore={storeDecor}
+          />
+        ) : (
+          <SeedTray
+            seeds={seeds}
+            counts={state.seeds}
+            active={activeSeed}
+            onDragStart={seedDrag.start}
+            onPick={setPicked}
+          />
+        )}
+        <div className="fg-tools">
+          {state.decor.length > 0 && (
+            <button
+              type="button"
+              className={`fg-tool fg-tool--arrange${arranging ? ' is-on' : ''}`}
+              aria-pressed={arranging}
+              onClick={() => arrange(!arranging)}
+            >
+              <Flower aria-hidden="true" size={22} weight={arranging ? 'fill' : 'regular'} />
+              <span className="fg-tool__label">{arranging ? m.arrangeOff : m.arrangeOn}</span>
+            </button>
+          )}
+          {/* Arranging is a mode of its own: water and harvest wait until it is done. */}
+          {!arranging && (
+            <>
+              <button
+                type="button"
+                className={`fg-tool fg-tool--water${watering ? ' is-on' : ''}`}
+                aria-pressed={watering}
+                onClick={() => {
+                  setWatering((w) => !w);
+                  setPlotCard(null);
+                }}
+                disabled={!watering && (cans === 0 || growingCount === 0)}
+              >
+                <Drop aria-hidden="true" size={22} weight={watering ? 'fill' : 'regular'} />
+                <span className="fg-tool__label">{watering ? m.waterOff : m.waterOn}</span>
+                <span className="sr-only">{m.cansLeft(cans)}</span>
+              </button>
+              <button
+                type="button"
+                className={`fg-tool fg-tool--harvest${ready.length ? ' is-ready' : ''}`}
+                onClick={() => harvestAll()}
+                disabled={ready.length === 0}
+                aria-label={m.harvestAll(ready.length)}
+              >
+                <Basket aria-hidden="true" size={22} weight={ready.length ? 'fill' : 'regular'} />
+                <span className="fg-tool__label" aria-hidden="true">
+                  {g.harvest}
+                </span>
+                {ready.length > 0 && (
+                  <span className="fg-badge" aria-hidden="true">
+                    {ready.length}
+                  </span>
+                )}
+              </button>
+            </>
+          )}
         </div>
       </div>
 

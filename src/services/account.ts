@@ -177,6 +177,8 @@ export interface FriendGarden {
   plots: FriendPlot[];
   decor: string[];
   decorLayout: Record<string, { x: number; z: number; rot: number } | null>;
+  /** Where each decoration stands on the painted farm (missing: its home; null: put away). */
+  decorSlots?: Record<string, { slot: number; flip: boolean } | null>;
   animals: Record<string, { fedAt: number | null; readyAt: number | null }>;
   updatedAt: number | null;
   helpedToday: boolean;

@@ -47,8 +47,15 @@ final class ProgressGuard
     private const XP_PER_DAY = 20000;
     private const XP_PER = ['harvest' => 2, 'cook' => 15, 'catch' => 3, 'order' => 15, 'help' => 3, 'steal' => 2, 'gift' => 10, 'checkin' => 5, 'photo' => 5, 'plant' => 3, 'collect' => 2, 'honey' => 10, 'boat' => 6, 'fruit' => 2, 'mushroom' => 2];
 
+    /** Upper bound for a decoration's slot on the painted farm (the game has fewer). */
+    public const DECOR_SLOTS = 64;
+    /** Days progress_events and guard_rejections are kept. */
+    private const LOG_DAYS = 90;
+
     private static ?array $rules = null;
     private array $r;
+    /** The refusal check() threw, [code, detail], for logRejection() once its transaction is gone. */
+    public ?array $refused = null;
 
     /** `$nowMs` fixes the server clock (self-tests replay days of play in a moment). */
     public function __construct(private PDO $db, private int $user, private ?int $nowMs = null)
@@ -88,7 +95,7 @@ final class ProgressGuard
             (new RateLimit($this->db))->hit(['save:' . $this->user => [1500, 3600]], __t('account.progressRejected'));
         }
         // Parts an older client may leave out: read as empty, never as a PHP warning.
-        foreach (['animals', 'decor', 'cooked', 'unlockedRegions', 'unlockedCrops', 'decorLayout'] as $k) {
+        foreach (['animals', 'decor', 'cooked', 'unlockedRegions', 'unlockedCrops', 'decorLayout', 'decorSlots'] as $k) {
             $new[$k] ??= [];
         }
         foreach ((array) ($new['plots'] ?? []) as $i => $pl) {
@@ -184,6 +191,7 @@ final class ProgressGuard
             $this->db->prepare("DELETE FROM verified_stats WHERE user_id = ? AND (metric LIKE 'drift:%' OR metric LIKE 'xpday:%') AND metric NOT IN (?, ?)")
                 ->execute([$this->user, "drift:$today", "xpday:$today"]);
         }
+        $this->log($c['fresh'] ?? [], $now);
         foreach (array_chunk($c['settle'], 100) as $ids) {
             $marks = implode(',', array_fill(0, count($ids), '?'));
             $this->db->prepare("UPDATE farm_events SET settled_at = ? WHERE from_user = ? AND type = 'present' AND settled_at IS NULL AND id IN ($marks)")
@@ -195,6 +203,43 @@ final class ProgressGuard
             $this->db->prepare("UPDATE farm_events SET delivered_at = ? WHERE to_user = ? AND delivered_at IS NULL AND id IN ($marks)")
                 ->execute([$now, $this->user, ...$ids]);
         }
+    }
+
+    /** Writes an accepted save's new entries to progress_events (see Schema v6). */
+    private function log(array $fresh, int $now): void
+    {
+        $ip = self::ipHash();
+        $ins = $this->db->prepare('INSERT INTO progress_events (user_id, entry_key, resource, delta, at_ms, saved_at, ip_hash) VALUES (?, ?, ?, ?, ?, ?, ?)');
+        foreach ($fresh as $e) {
+            $ins->execute([$this->user, substr((string) $e['key'], 0, 160), substr((string) $e['resource'], 0, 80), (int) $e['delta'], (int) $e['at'], $now, $ip]);
+        }
+        if (random_int(1, 200) === 1) {
+            $this->db->prepare('DELETE FROM progress_events WHERE saved_at < ?')->execute([$now - self::LOG_DAYS * 86400]);
+        }
+    }
+
+    /**
+     * Records the refusal check() threw. Called after the save's transaction rolled back (a row
+     * written inside it would be undone with the save).
+     */
+    public function logRejection(): void
+    {
+        if ($this->refused === null) {
+            return;
+        }
+        $now = $this->nowMs !== null ? intdiv($this->nowMs, 1000) : time();
+        [$code, $detail] = $this->refused;
+        $this->db->prepare('INSERT INTO guard_rejections (user_id, code, detail, created_at, ip_hash) VALUES (?, ?, ?, ?, ?)')
+            ->execute([$this->user, $code, mb_substr($detail, 0, 255), $now, self::ipHash()]);
+        if (random_int(1, 50) === 1) {
+            $this->db->prepare('DELETE FROM guard_rejections WHERE created_at < ?')->execute([$now - self::LOG_DAYS * 86400]);
+        }
+    }
+
+    /** The caller's address as a short keyed hash (null from the command line). */
+    private static function ipHash(): ?string
+    {
+        return PHP_SAPI === 'cli' ? null : substr(secret_hash('ip:' . client_ip()), 0, 16);
     }
 
     /**
@@ -297,6 +342,7 @@ final class ProgressGuard
         }
         return [
             'mode' => 'import',
+            'fresh' => [['key' => 'import:' . count($new['ledger']), 'resource' => 'import', 'delta' => $xp, 'at' => $clientNow]],
             'guestId' => (string) $new['guestId'],
             'clientAt' => $clientNow,
             'offset' => $offset,
@@ -468,6 +514,7 @@ final class ProgressGuard
             array_map(fn ($c) => "grown:$c", $out['grown']),
         ));
         $out['mode'] = 'diff';
+        $out['fresh'] = $fresh;
         $out['base'] = [];
         $out['gained'] = $gained;
         return $out;
@@ -1196,6 +1243,12 @@ final class ProgressGuard
             $coord = fn ($v) => $num($v) && $v >= -64 && $v <= 64;
             (isset($R['decor'][$id]) && ($pos === null || (is_array($pos) && $coord($pos['x'] ?? null) && $coord($pos['z'] ?? null) && $num($pos['rot'] ?? null)))) || $bad('decorLayout value');
         }
+        // Painted farm: a slot number and a mirror flag per decoration (see src/data/decorSlots.ts).
+        $slots = $p['decorSlots'] ?? [];
+        is_array($slots) || $bad('decorSlots');
+        foreach ($slots as $id => $pos) {
+            (isset($R['decor'][$id]) && ($pos === null || (is_array($pos) && is_int($pos['slot'] ?? null) && $pos['slot'] >= 0 && $pos['slot'] < self::DECOR_SLOTS && is_bool($pos['flip'] ?? false)))) || $bad('decorSlots value');
+        }
         $animals = $p['animals'] ?? [];
         is_array($animals) || $bad('animals');
         foreach ($animals as $id => $a) {
@@ -1288,6 +1341,7 @@ final class ProgressGuard
     private function reject(string $code, string $detail): never
     {
         error_log("[angi progress] user {$this->user} refused ($code): $detail");
+        $this->refused = [$code, $detail];
         throw new HttpError(422, __t('account.progressRejected'), ['code' => $code]);
     }
 

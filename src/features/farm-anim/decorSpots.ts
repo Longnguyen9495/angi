@@ -1,8 +1,9 @@
 import type { DecorId } from '../../data/types';
 
 /**
- * Where each garden decoration stands on the painted farm: picture px, the foot's centre
- * (x, y) and the width it is drawn at (its height follows the picture). Chosen on open grass
+ * Each garden decoration's home on the painted farm: picture px, the foot's centre (x, y) and
+ * the width it is drawn at (its height follows the picture). The guest can move it to any slot
+ * in src/data/decorSlots.ts (the first ten are these spots); the width goes with it. Chosen on open grass
  * clear of paths and buildings; the pictures come from scripts/farm-items/decor-art.mjs.
  */
 export const DECOR_SPOTS: Record<DecorId, { x: number; y: number; w: number }> = {
@@ -17,6 +18,9 @@ export const DECOR_SPOTS: Record<DecorId, { x: number; y: number; w: number }> =
   flowers: { x: 1452, y: 568, w: 58 },
   rocks: { x: 170, y: 478, w: 66 },
 };
+
+/** Foot of the garden's name board: on the grass patch in front of the tree, beside the path. */
+export const NAME_SIGN = { x: 1015, y: 425 };
 
 export function decorPicture(id: DecorId): string {
   return `/farm-anim/decor-${id}.webp`;

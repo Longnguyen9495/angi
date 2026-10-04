@@ -1,6 +1,7 @@
 import type { EventId, UpgradeId } from '../data/game';
 import type { AnimalId, CropId, DecorId, ProduceId, RecipeId, RegionId } from '../data/types';
 import { ANIMALS, CROPS, FARM_PLOT_COUNT, PRODUCE_IDS } from '../data/game';
+import type { DecorSlots } from '../data/decorSlots';
 import { emptyQuests, type QuestState } from './quests';
 import { DEFAULT_FILTERS, type Filters } from './recommend';
 import { HOUR_MS, dateKey } from './time';
@@ -115,6 +116,8 @@ export interface GuestProgress {
   upgrades: Partial<Record<UpgradeId, number>>;
   /** Where each decoration stands on the 3D island (grid cell + quarter turns); missing = default spot. */
   decorLayout: Partial<Record<DecorId, DecorPlacement | null>>;
+  /** Where each decoration stands on the painted farm (missing = its home slot, null = put away). */
+  decorSlots: DecorSlots;
   /** Animals: fed → producing until readyAt → collect. Never sick, never lost. */
   animals: Record<AnimalId, AnimalState>;
   hive: HiveState;
@@ -246,6 +249,7 @@ export function createInitialProgress(now: number): GuestProgress {
     upgrades: {},
     events: {},
     decorLayout: {},
+    decorSlots: {},
     animals: structuredClone(EMPTY_ANIMALS),
     hive: { startedAt: null, readyAt: null },
     boat: { sentAt: null, returnAt: null },

@@ -95,6 +95,10 @@ foreach ($fixture['steps'] as $i => $step) {
     }
 }
 echo 'honest saves: ' . count($fixture['steps']) . "\n";
+// Every accepted save leaves its new entries in the activity log (the first save, an import, one row).
+$logged = (int) $pdo->query('SELECT COUNT(*) FROM progress_events WHERE user_id = 1')->fetchColumn();
+$imports = (int) $pdo->query("SELECT COUNT(*) FROM progress_events WHERE user_id = 1 AND resource = 'import'")->fetchColumn();
+$check('activity log', $logged > count($fixture['steps']) && $imports === 1, "$logged rows, $imports imports");
 
 // ——— Forged saves on top of the last honest one ———
 foreach ($fixture['cheats'] as $cheat) {
@@ -107,10 +111,13 @@ foreach ($fixture['cheats'] as $cheat) {
         $g->check($row, $cheat['data'], $now);
     } catch (HttpError $e) {
         $code = $e->extra['code'] ?? null;
+        $g->logRejection();
     }
     $check("refuses: {$cheat['name']}", $code === $cheat['code'], 'got ' . var_export($code, true) . ", want {$cheat['code']}");
 }
 
 echo 'forged saves: ' . count($fixture['cheats']) . "\n";
+$refusals = (int) $pdo->query('SELECT COUNT(*) FROM guard_rejections WHERE user_id = 1')->fetchColumn();
+$check('refusal log', $refusals === count($fixture['cheats']), "$refusals rows, want " . count($fixture['cheats']));
 echo "SUMMARY passed=$pass failed=$fail\n";
 exit($fail === 0 ? 0 : 1);

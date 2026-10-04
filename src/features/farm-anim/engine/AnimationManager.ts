@@ -1,6 +1,6 @@
 import { CROPS } from '../../../data/game';
 import { cropSprite } from '../../../data/sprites';
-import type { CropId } from '../../../data/types';
+import type { CropId, DecorId } from '../../../data/types';
 import { AmbientSystem } from '../systems/AmbientSystem';
 import { AnimalAnimation } from '../systems/AnimalAnimation';
 import { BuildingAnimation } from '../systems/BuildingAnimation';
@@ -39,7 +39,8 @@ export interface Stats {
 }
 
 /** Places on the island a tap can mean something for the game. */
-export type FarmPlace = 'pond' | 'cow' | 'chicken' | 'farmhouse' | 'market' | 'field' | 'plot';
+export type FarmPlace =
+  'pond' | 'cow' | 'chicken' | 'farmhouse' | 'market' | 'field' | 'plot' | 'decor';
 
 /** Where a tap landed: picture point, and the plot id for 'plot'. */
 export interface PlaceInfo {
@@ -48,6 +49,9 @@ export interface PlaceInfo {
   plotId?: number;
   /** The tap landed on the plot's bubble (ripe: pick it, water: water it). */
   mark?: Mark;
+  /** 'decor' (arranging): the decoration tapped, or the free slot tapped. */
+  decor?: DecorId;
+  slot?: number;
 }
 
 /**
@@ -265,6 +269,15 @@ export class AnimationManager {
         }
       }
       const p = this.toPicture(this.pointerCss);
+      if (this.game.arranging) {
+        this.game.hover = null;
+        canvas.style.cursor = this.game.arrangeHit(p)
+          ? 'pointer'
+          : this.camView.canPan
+            ? 'grab'
+            : '';
+        return;
+      }
       // Over a bubble the plot behind it is not the one meant: no hover label there.
       const onMark = this.game.markAt(p) !== null;
       this.game.hover = onMark ? null : this.game.hit(p);
@@ -306,6 +319,12 @@ export class AnimationManager {
       }
       const r = canvas.getBoundingClientRect();
       const p = this.toPicture({ x: e.clientX - r.left, y: e.clientY - r.top });
+      // Arranging decorations: a tap picks one or a free slot, and means nothing else.
+      if (this.game.arranging) {
+        const h = this.game.arrangeHit(p);
+        if (h) this.onPlace('decor', { ...p, ...h });
+        return;
+      }
       // The door swings open and counts as the farmhouse.
       // A bubble first: it floats over the plots behind its own. Its finger-sized margin only
       // counts off other plots: on a small screen a front plot's bubble reaches over the plot
@@ -824,7 +843,7 @@ export class AnimationManager {
     this.env.drawCrops(ctx);
     this.game.drawCrops(ctx, G.crops);
     this.env.drawPlants(ctx, (p) => this.game.onOpenPlot(p));
-    this.game.drawDecor(ctx);
+    this.game.drawDecor(ctx, G.crops);
     this.buildings.drawWindmill(ctx);
     this.buildings.drawChimney(ctx);
     this.particles.draw(ctx, 'smoke');
