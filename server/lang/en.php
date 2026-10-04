@@ -86,6 +86,7 @@ return [
     'share.updating' => 'The site is updating — please reload in a few minutes.',
     'share.notFound' => 'No such dish.',
     'share.price' => 'about {price}k VND',
+    'share.more' => 'Spin for more dishes on Ăn gì?',
     'region.north' => 'Northern Vietnam',
     'region.central' => 'Central Vietnam',
     'region.south' => 'Southern Vietnam',

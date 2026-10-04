@@ -3,54 +3,108 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#0c0c0b" />
+    <title>Ăn gì? — Hôm nay ăn gì? Quay món, tìm quán ngay</title>
+    <!-- data-home: the home description, kept when server/web/share.php swaps in a dish's. -->
     <meta
       name="description"
-      content="Hôm nay ăn gì? Quay một vòng, chốt món trong vài giây — rồi tìm quán ngay trên Google Maps, GrabFood, ShopeeFood, beFood."
+      content="Hôm nay ăn gì? Quay một vòng giữa gần 100 món ngon — phở, bún bò, cơm tấm… chốt món trong vài giây rồi tìm quán ngay trên Google Maps, GrabFood, ShopeeFood."
+      data-home="Hôm nay ăn gì? Quay một vòng giữa gần 100 món ngon — phở, bún bò, cơm tấm… chốt món trong vài giây rồi tìm quán ngay trên Google Maps, GrabFood, ShopeeFood."
     />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="canonical" href="%SITE_URL%/" />
+    <meta name="theme-color" content="#0c0c0b" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="application-name" content="Ăn gì?" />
+    <meta name="apple-mobile-web-app-title" content="Ăn gì?" />
 
-    <!-- Icons -->
+    <!-- Icons (scripts/generate-brand.mjs) -->
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-    <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Link previews (Facebook, Zalo, Messenger, Telegram, X…) -->
+    <!-- Link previews (Facebook, Zalo, Messenger, Telegram, X…); /mon/<slug> gets its dish's -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Ăn gì?" />
     <meta property="og:locale" content="vi_VN" />
     <meta property="og:url" content="%SITE_URL%/" />
-    <meta property="og:title" content="Ăn gì? · Hôm nay ăn gì?" />
+    <meta property="og:title" content="Ăn gì? — Hôm nay ăn gì?" />
     <meta
       property="og:description"
-      content="Quay một vòng, chốt món trong vài giây — rồi tìm quán ngay trên Google Maps, GrabFood, ShopeeFood, beFood."
+      content="Quay một vòng giữa gần 100 món ngon, chốt món trong vài giây — rồi tìm quán ngay trên Google Maps, GrabFood, ShopeeFood, beFood."
     />
     <meta property="og:image" content="%SITE_URL%/og-image.jpg" />
     <meta property="og:image:secure_url" content="%SITE_URL%/og-image.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Ăn gì? — Hôm nay ăn gì? Đĩa cơm tấm, phở bò, bún bò Huế và gỏi cuốn." />
+    <meta
+      property="og:image:alt"
+      content="Ăn gì? — Hôm nay ăn gì? Đĩa cơm tấm, phở bò, bún bò Huế và gỏi cuốn."
+    />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Ăn gì? · Hôm nay ăn gì?" />
+    <meta name="twitter:title" content="Ăn gì? — Hôm nay ăn gì?" />
     <meta
       name="twitter:description"
-      content="Quay một vòng, chốt món trong vài giây — rồi tìm quán ngay trên Google Maps, GrabFood, ShopeeFood, beFood."
+      content="Quay một vòng giữa gần 100 món ngon, chốt món trong vài giây — rồi tìm quán ngay trên Google Maps, GrabFood, ShopeeFood, beFood."
     />
     <meta name="twitter:image" content="%SITE_URL%/og-image.jpg" />
+    <meta
+      name="twitter:image:alt"
+      content="Ăn gì? — Hôm nay ăn gì? Đĩa cơm tấm, phở bò, bún bò Huế và gỏi cuốn."
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "%SITE_URL%/#website",
+            "url": "%SITE_URL%/",
+            "name": "Ăn gì?",
+            "alternateName": "Hôm nay ăn gì?",
+            "inLanguage": "vi"
+          },
+          {
+            "@type": "WebApplication",
+            "name": "Ăn gì?",
+            "url": "%SITE_URL%/",
+            "description": "Quay một vòng giữa gần 100 món ngon, chốt món trong vài giây rồi tìm quán trên Google Maps, GrabFood, ShopeeFood, beFood.",
+            "applicationCategory": "LifestyleApplication",
+            "operatingSystem": "Web",
+            "inLanguage": "vi",
+            "image": "%SITE_URL%/og-image.jpg",
+            "isPartOf": { "@id": "%SITE_URL%/#website" },
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "VND" }
+          }
+        ]
+      }
+    </script>
+
     <link
       rel="preload"
       as="image"
       href="/images/food-reel/thumb/000-com-tam.webp"
       fetchpriority="high"
     />
-    <title>Ăn gì? — Hôm nay ăn gì?</title>
     <style>html,body{background:#0c0c0b}</style>
   </head>
   <body>
     <div id="root"></div>
-    <noscript>Ăn gì? cần JavaScript để gợi ý món. · Ăn gì? needs JavaScript to suggest a dish.</noscript>
+    <noscript>
+      <div style="max-width:720px;margin:0 auto;padding:32px 20px;color:#f4ede1;font:16px/1.6 system-ui,sans-serif">
+        <!--seo-->
+        <h1>Ăn gì? — Hôm nay ăn gì?</h1>
+        <p>Quay một vòng giữa gần 100 món ngon, chốt món trong vài giây — rồi tìm quán ngay trên Google Maps, GrabFood, ShopeeFood, beFood.</p>
+        <p>Ăn gì? cần JavaScript để quay món. · Ăn gì? needs JavaScript to suggest a dish.</p>
+        <!--/seo-->
+        <h2>Các món</h2>
+        <!--seo:dishes-->
+        <p><a href="/quyen-rieng-tu.html" style="color:#d7a85d">Quyền riêng tư</a> · <a href="/privacy.html" style="color:#d7a85d">Privacy</a></p>
+      </div>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -34,6 +34,7 @@ import { layoutFor } from './engine/layout';
 import { mod, randomSeed } from './engine/spin';
 import type { ReelEvent, ReelState } from './foodReel.types';
 import { foodReelReducer, initialReelState } from './foodReelReducer';
+import { setPageMeta } from './pageMeta';
 import { isBusy, isDetailPhase, isInteractive } from './foodReelMachine';
 import { preloadGradually, preloadImage, useAssetPreloader } from './hooks/useAssetPreloader';
 import { usePointerParallax } from './hooks/usePointerParallax';
@@ -364,9 +365,15 @@ export function FoodReelExperience({
   }, [route]);
 
   useEffect(() => {
-    document.title = detailDish
-      ? t.reel.docTitleDish(BRAND, detailDish.name)
-      : t.reel.docTitle(BRAND);
+    setPageMeta(
+      detailDish
+        ? {
+            title: t.reel.docTitleDish(BRAND, detailDish.name),
+            description: detailDish.story,
+            path: `/mon/${detailDish.id}`,
+          }
+        : { title: t.reel.docTitle(BRAND) },
+    );
   }, [detailDish]);
 
   const closeDetail = (then?: 'spin') => {

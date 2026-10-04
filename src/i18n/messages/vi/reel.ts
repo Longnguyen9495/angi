@@ -1,7 +1,7 @@
 // Vietnamese strings for the "reel" namespace (source of truth; see src/i18n/index.ts).
 // The brand is passed in (`brand`) rather than imported, so this file never depends on i18n/index.
 const reel = {
-  docTitle: (brand: string) => `${brand} — Hôm nay ăn gì?`,
+  docTitle: (brand: string) => `${brand} — Hôm nay ăn gì? Quay món, tìm quán ngay`,
   docTitleDish: (brand: string, dish: string) => `${dish} — ${brand}`,
 
   header: {

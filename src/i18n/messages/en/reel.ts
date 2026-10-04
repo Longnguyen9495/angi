@@ -4,7 +4,7 @@ import type { Messages } from '../../types';
 const dishes = (n: number) => (n === 1 ? '1 dish' : `${n} dishes`);
 
 const reel: Messages['reel'] = {
-  docTitle: (brand) => `${brand} — What to eat today?`,
+  docTitle: (brand) => `${brand} — What to eat today? Spin a dish, find a place`,
   docTitleDish: (brand, dish) => `${dish} — ${brand}`,
 
   header: {

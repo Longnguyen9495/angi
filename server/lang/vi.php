@@ -88,6 +88,7 @@ return [
     'share.updating' => 'Trang đang cập nhật, bạn tải lại sau ít phút nhé.',
     'share.notFound' => 'Không có món này.',
     'share.price' => 'khoảng {price}k',
+    'share.more' => 'Quay thêm món khác trên Ăn gì?',
     'region.north' => 'Bắc Bộ',
     'region.central' => 'Trung Bộ',
     'region.south' => 'Nam Bộ',

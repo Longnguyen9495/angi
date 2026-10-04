@@ -9,6 +9,9 @@ declare(strict_types=1);
  *                      title, description and image in the <head>
  *   /og/<slug>.jpg   → a 1200×630 preview image for the dish (built once, cached
  *                      in storage/og/)
+ *   /sitemap.xml     → live sitemap from the catalogue (the build writes a static
+ *                      fallback into dist/ from the bundled snapshot)
+ * An unknown dish still gets the app shell (generic tags) but with a 404 + noindex.
  * Anything unexpected falls back to the plain app shell: this script must never
  * be the reason a page fails to load.
  *
@@ -32,7 +35,11 @@ try {
         serve_og_image($m[1]);
     }
     if (preg_match('#^/mon/([a-z0-9-]{1,80})/?$#', $path, $m)) {
-        serve_page(find_dish($m[1]));
+        $dish = find_dish($m[1], $missing);
+        serve_page($dish, $missing);
+    }
+    if ($path === '/sitemap.xml') {
+        serve_sitemap();
     }
 } catch (Throwable $e) {
     error_log('[angi share] ' . $e->getMessage());
@@ -41,10 +48,23 @@ serve_page(null);
 
 // ——— Page ———
 
-function find_dish(string $slug): ?array
+/** $missing: true only when the catalogue answered and has no such dish (not on a DB error). */
+function find_dish(string $slug, ?bool &$missing = null): ?array
 {
+    $missing = false;
     try {
-        $dish = (new Catalogue(db()))->getDish($slug);
+        $catalogue = new Catalogue(db());
+        $dish = $catalogue->getDish($slug);
+        // Same alias as the app (getReelDishBySlug): /mon/com-tam opens the first cơm tấm.
+        if (!$dish && $slug === 'com-tam') {
+            foreach ($catalogue->listDishes() as $d) {
+                if (str_starts_with($d['id'], 'com-tam-')) {
+                    $dish = $d;
+                    break;
+                }
+            }
+        }
+        $missing = $dish === null;
         return $dish ? localize_dish($dish, Lang::locale()) : null;
     } catch (Throwable $e) {
         error_log('[angi share] ' . $e->getMessage());
@@ -96,7 +116,12 @@ function set_meta(string $html, string $key, string $value): string
     ) ?? $html;
 }
 
-function serve_page(?array $dish): never
+function esc_html(string $s): string
+{
+    return htmlspecialchars($s, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+}
+
+function serve_page(?array $dish, bool $missing = false): never
 {
     $html = @file_get_contents(DIST_INDEX);
     if ($html === false) {
@@ -136,9 +161,22 @@ function serve_page(?array $dish): never
             'twitter:title' => $title,
             'twitter:description' => $desc,
             'twitter:image' => $image,
+            'twitter:image:alt' => $alt,
         ] as $key => $value) {
             $html = set_meta($html, $key, $value);
         }
+        // Crawlers that don't run JS read the <noscript> block: give them this dish.
+        $photo = $dish['image'] !== '' ? (str_starts_with($dish['image'], 'http') ? $dish['image'] : $site . $dish['image']) : '';
+        $block = '<h1>' . esc_html($dish['name']) . '</h1>'
+            . ($dish['subtitle'] !== '' ? '<p>' . esc_html($dish['subtitle']) . '</p>' : '')
+            . ($photo !== '' ? '<img src="' . esc_html($photo) . '" alt="' . esc_html($alt) . '" width="384" height="384" style="max-width:100%;height:auto">' : '')
+            . (trim($dish['story']) !== '' ? '<p>' . esc_html($dish['story']) . '</p>' : '')
+            . '<p><a href="/" style="color:#d7a85d">' . esc_html(__t('share.more')) . '</a></p>';
+        $html = preg_replace_callback('#<!--seo-->.*?<!--/seo-->#s', fn () => $block, $html, 1) ?? $html;
+    } elseif ($missing) {
+        // No such dish: the app still opens (on the reel), but search engines shouldn't keep the URL.
+        http_response_code(404);
+        $html = set_meta($html, 'robots', 'noindex');
     }
     header('Content-Type: text/html; charset=utf-8');
     header('Cache-Control: no-cache');
@@ -146,6 +184,52 @@ function serve_page(?array $dish): never
     header('Vary: Accept-Language');
     header('X-Content-Type-Options: nosniff');
     echo $html;
+    exit;
+}
+
+// ——— Sitemap ———
+
+/**
+ * Live sitemap: home, every published dish (same filter as export-snapshot.php) and the
+ * privacy pages. The build also writes a static dist/sitemap.xml from the bundled snapshot,
+ * served when nginx doesn't route /sitemap.xml here.
+ */
+function serve_sitemap(): never
+{
+    try {
+        $dishes = (new Catalogue(db()))->listDishes();
+    } catch (Throwable $e) {
+        error_log('[angi share] ' . $e->getMessage());
+        $static = APP_ROOT . '/dist/sitemap.xml';
+        if (!is_file($static)) {
+            http_response_code(503);
+            exit;
+        }
+        header('Content-Type: application/xml; charset=utf-8');
+        readfile($static);
+        exit;
+    }
+    $site = site_url();
+    $urls = [['/', null]];
+    foreach ($dishes as $d) {
+        if ($d['image'] !== '' && $d['thumbnail'] !== '' && $d['ingredients'] && preg_match('#^[a-z0-9-]{1,80}$#', $d['id'])) {
+            $urls[] = ['/mon/' . $d['id'], $d['updatedAt'] ?? null];
+        }
+    }
+    $urls[] = ['/quyen-rieng-tu.html', null];
+    $urls[] = ['/privacy.html', null];
+    $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
+    foreach ($urls as [$path, $updated]) {
+        $time = is_string($updated) ? strtotime($updated) : false;
+        $xml .= '  <url><loc>' . htmlspecialchars($site . $path, ENT_XML1 | ENT_QUOTES, 'UTF-8') . '</loc>'
+            . ($time ? '<lastmod>' . gmdate('Y-m-d', $time) . '</lastmod>' : '')
+            . "</url>\n";
+    }
+    $xml .= "</urlset>\n";
+    header('Content-Type: application/xml; charset=utf-8');
+    header('Cache-Control: public, max-age=3600');
+    header('X-Content-Type-Options: nosniff');
+    echo $xml;
     exit;
 }
 

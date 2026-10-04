@@ -1,8 +1,10 @@
 // Brand icons from the in-app logo mark (a copper plate with a dark centre).
 // Usage: node scripts/generate-brand.mjs
-// Output (public/): favicon.png (64), favicon-32.png, apple-touch-icon.png (180),
-// icon-192.png, icon-512.png, icon-maskable-512.png. Static rasters only.
-// The link-preview image (og-image.jpg) comes from scripts/brand/og-image.html.
+// Output (public/): favicon.svg, favicon.ico (16/32/48), favicon.png (64), favicon-32.png,
+// favicon-48.png, apple-touch-icon.png (180), icon-192.png, icon-512.png,
+// icon-maskable-192.png, icon-maskable-512.png.
+// The link-preview images come from scripts/brand/*.html (node scripts/brand/render.mjs).
+import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import sharp from 'sharp';
 
@@ -40,6 +42,9 @@ const jobs = [
   ['apple-touch-icon.png', mark({ radius: 0, plate: 0.6 }), 180],
   ['icon-192.png', tile, 192],
   ['icon-512.png', tile, 512],
+  // Google Search shows a site icon from a multiple of 48 px.
+  ['favicon-48.png', tile, 48],
+  ['icon-maskable-192.png', maskable, 192],
   ['icon-maskable-512.png', maskable, 512],
 ];
 for (const [name, svg, size] of jobs) {
@@ -48,4 +53,31 @@ for (const [name, svg, size] of jobs) {
     .png({ compressionLevel: 9 })
     .toFile(join(pub, name));
 }
-console.log(`Rendered ${jobs.length} brand icons into public/`);
+// Vector favicon for browsers that take one (crisp at any size, one small file).
+writeFileSync(join(pub, 'favicon.svg'), tile.replace(/\n\s*/g, ' '));
+
+// favicon.ico: crawlers and old browsers ask for /favicon.ico whatever the page links.
+// An ICO may hold PNG images as-is: a 6-byte header, a 16-byte entry per image, then the PNGs.
+const sizes = [16, 32, 48];
+const pngs = await Promise.all(
+  sizes.map((s) =>
+    sharp(Buffer.from(tile), { density: 144 }).resize(s, s).png({ compressionLevel: 9 }).toBuffer(),
+  ),
+);
+const head = Buffer.alloc(6 + 16 * sizes.length);
+head.writeUInt16LE(0, 0);
+head.writeUInt16LE(1, 2);
+head.writeUInt16LE(sizes.length, 4);
+let offset = head.length;
+sizes.forEach((s, i) => {
+  const e = 6 + 16 * i;
+  head.writeUInt8(s, e);
+  head.writeUInt8(s, e + 1);
+  head.writeUInt16LE(1, e + 4);
+  head.writeUInt16LE(32, e + 6);
+  head.writeUInt32LE(pngs[i].length, e + 8);
+  head.writeUInt32LE(offset, e + 12);
+  offset += pngs[i].length;
+});
+writeFileSync(join(pub, 'favicon.ico'), Buffer.concat([head, ...pngs]));
+console.log(`Rendered ${jobs.length + 2} brand icons into public/`);
