@@ -5,6 +5,8 @@ import {
   FARM_PLOT_COUNT,
   MAX_PLOT_COUNT,
   PLOT_UNLOCK_LEVELS,
+  UPGRADES,
+  UPGRADE_IDS,
   levelForXp,
 } from '../data/game';
 import type { CropId, DecorId } from '../data/types';
@@ -69,6 +71,17 @@ function counts<K extends string>(v: unknown, empty: Record<K, number>): Record<
     if (n === undefined) continue;
     if (typeof n !== 'number' || !Number.isFinite(n) || n < 0) return null;
     out[k] = Math.floor(n);
+  }
+  return out;
+}
+
+function parseUpgrades(v: unknown): GuestProgress['upgrades'] {
+  if (!isObject(v)) return {};
+  const out: GuestProgress['upgrades'] = {};
+  for (const id of UPGRADE_IDS) {
+    const n = v[id];
+    if (typeof n === 'number' && Number.isInteger(n) && n > 0)
+      out[id] = Math.min(n, UPGRADES[id].prices.length);
   }
   return out;
 }
@@ -248,6 +261,7 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
     animals: parseAnimals(raw.animals),
     decorLayout: isObject(raw.decorLayout) ? parseLayout(raw.decorLayout) : {},
     collections: isStringArray(raw.collections) ? [...new Set(raw.collections)] : [],
+    upgrades: parseUpgrades(raw.upgrades),
     decor: isStringArray(raw.decor)
       ? (raw.decor.filter((d) => Object.hasOwn(DECOR, d)) as DecorId[])
       : [],

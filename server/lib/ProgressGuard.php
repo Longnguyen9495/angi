@@ -481,6 +481,10 @@ final class ProgressGuard
         $new = $ctx['new'];
         $level = $ctx['level'];
         $S = self::SLOT;
+        // A building's level before and after this save: a yield may use either (it can be
+        // upgraded in the same save, before or after the collection).
+        $up = fn (string $id, array $p) => (int) ($p['upgrades'][$id] ?? 0);
+        $upOk = fn (string $id, int $extra) => $extra >= $up($id, $old) && $extra <= $up($id, $new);
         $byKey = [];
         foreach ($fresh as $e) {
             $byKey[(string) $e['key']] = $e;
@@ -498,6 +502,7 @@ final class ProgressGuard
         $stamps = ['discovered' => [], 'eaten' => []];
         $decor = [];
         $lands = [];     // plot id => cleared in this save
+        $upgrades = [];  // building => levels bought in this save
         $harvests = [];  // plot => [{t, at, kind}]
         $collects = [];  // animal => [fedAt => at]
         $hiveRuns = [];  // startedAt => emptied at
@@ -660,6 +665,13 @@ final class ProgressGuard
                 $count = $this->countClaims("order:{$m[1]}:%", fn ($k) => str_ends_with($k, ':xp')) + 1;
                 $count <= (int) $R['orders']['perDay'] || $fail('more orders than a day has');
                 $stats['order']++;
+            } elseif (preg_match('/^upgrade:([a-z]+):(\d+)$/', $key, $m)) {
+                // A building's next level, for its price; levels are bought in order.
+                $prices = $R['upgrades'][$m[1]] ?? null;
+                $lvl = (int) $m[2];
+                ($prices !== null && $lvl >= 1 && $lvl <= count($prices) && $res === 'coin' && $d === -(int) $prices[$lvl - 1]) || $fail('upgrade price');
+                ($lvl > $up($m[1], $old) && $lvl <= $up($m[1], $new)) || $fail('upgrade level');
+                $upgrades[$m[1]][] = $lvl;
             } elseif (preg_match('/^collection:([a-z-]+):(coin|xp)$/', $key, $m)) {
                 // A finished collection: every dish of the set the game still has was cooked.
                 $set = $R['collections'][$m[1]] ?? null;
@@ -791,7 +803,7 @@ final class ProgressGuard
                 $a = $R['animals'][$m[1]] ?? null;
                 $a !== null || $fail('unknown animal');
                 $t = (int) $m[2];
-                ($res === "ingredient:{$a['product']}" && $d === (int) $a['yield']) || $fail('not what this animal gives');
+                ($res === "ingredient:{$a['product']}" && $upOk('barn', $d - (int) $a['yield'])) || $fail('not what this animal gives');
                 ((int) ($old['animals'][$m[1]]['fedAt'] ?? PHP_INT_MIN) === $t || isset($fed["{$m[1]}:$t"])) || $fail('animal was not fed');
                 ($at + self::SLACK_MS >= $t + (int) $a['hoursMs'] && $level >= (int) $a['unlockLevel']) || $fail('collected too early');
                 $collects[$m[1]][$t] = $at;
@@ -802,7 +814,7 @@ final class ProgressGuard
             } elseif (preg_match('/^hive:(-?\d+):(honey|comb)$/', $key, $m)) {
                 $t = (int) $m[1];
                 $want = $m[2] === 'honey' ? ['ingredient:honey', $R['hive']['yield']['honey']] : ['ingredient:honeycomb', $R['hive']['yield']['honeycomb']];
-                ($res === $want[0] && $d === (int) $want[1]) || $fail('hive yield');
+                ($res === $want[0] && ($m[2] === 'honey' ? $upOk('hive', $d - (int) $want[1]) : $d === (int) $want[1])) || $fail('hive yield');
                 ((int) ($old['hive']['startedAt'] ?? PHP_INT_MIN) === $t || isset($hiveRestarts[$t]) || $t >= $ctx['lower']) || $fail('hive was not started');
                 ($at + self::SLACK_MS >= $t + (int) $R['hive']['hoursMs'] && $level >= (int) $R['hive']['unlockLevel']) || $fail('hive emptied too early');
                 $hiveRestarts[$at] = true;
@@ -813,7 +825,7 @@ final class ProgressGuard
             } elseif (preg_match('/^boat:(-?\d+):(\d+)$/', $key, $m)) {
                 $t = (int) $m[1];
                 $i = (int) $m[2];
-                $catch = $this->boatCatch($t, $lvBefore);
+                $catch = $this->boatCatch($t, $lvBefore, $up('boat', $new));
                 ($i < count($catch) && $d === 1 && $res === "ingredient:{$catch[$i]}") || $fail('not what the boat brought');
                 ((int) ($old['boat']['sentAt'] ?? PHP_INT_MIN) === $t || $t >= $ctx['lower']) || $fail('boat was not sent');
                 ($at + self::SLACK_MS >= $t + (int) $R['boat']['hoursMs'] && $level >= (int) $R['boat']['unlockLevel']) || $fail('boat back too early');
@@ -851,7 +863,7 @@ final class ProgressGuard
             }
         }
         $this->oneAtATime($ctx, $plantings, $harvests, $fed, $collects, $hiveRuns, $boatTrips);
-        return [
+        $ret = [
             'stats' => $stats,
             'grown' => array_keys($grown),
             'settle' => $settle,
@@ -865,6 +877,13 @@ final class ProgressGuard
             'decor' => $decor,
             'lands' => $lands,
         ];
+        foreach (array_keys((array) ($R['upgrades'] ?? [])) as $id) {
+            $gained = $up($id, $new) - $up($id, $old);
+            $bought = $upgrades[$id] ?? [];
+            sort($bought);
+            ($gained >= 0 && $bought === ($gained > 0 ? range($up($id, $old) + 1, $up($id, $new)) : [])) || $this->reject('rule', "$id upgraded without paying");
+        }
+        return $ret;
     }
 
     /**
@@ -1701,10 +1720,10 @@ final class ProgressGuard
         return (int) round((int) $f['biteMinMs'] + $t * ((int) $f['biteMaxMs'] - (int) $f['biteMinMs']));
     }
 
-    public function boatCatch(int $sentAt, int $lv): array
+    public function boatCatch(int $sentAt, int $lv, int $extra = 0): array
     {
         $out = [];
-        for ($i = 0; $i < (int) $this->r['boat']['catches']; $i++) {
+        for ($i = 0; $i < (int) $this->r['boat']['catches'] + $extra; $i++) {
             $out[] = $this->pick('boat', $lv, self::unit($sentAt, $i + 1));
         }
         return $out;

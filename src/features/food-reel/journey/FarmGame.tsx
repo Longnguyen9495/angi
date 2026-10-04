@@ -63,6 +63,7 @@ import {
   type WaterBlock,
   recipeAvailable,
   recipeProgress,
+  animalYield,
 } from '../../../domain/selectors';
 import { FarmPlotCard, type CookIdea, type PlotCardMode, type PlotExtra } from './FarmPlotCard';
 import { SeedTray } from './SeedTray';
@@ -441,7 +442,7 @@ export function FarmGame({
     const message =
       act === 'feed'
         ? m.fed(def.name.toLowerCase(), formatDuration(def.hours * HOUR_MS))
-        : m.collected(def.yield, produceName(def.product).toLowerCase());
+        : m.collected(animalYield(state, def.id), produceName(def.product).toLowerCase());
     announce(message);
     toast({ message, tone: act === 'collect' ? 'reward' : 'success' });
   };

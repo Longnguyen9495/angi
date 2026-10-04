@@ -9,6 +9,9 @@ import {
   hiveStage,
   level,
   type AnimalStage,
+  animalYield,
+  hiveHoney,
+  upgradeLevel,
 } from '../../domain/selectors';
 import { HOUR_MS, currentTime, formatDuration } from '../../domain/time';
 import { t } from '../../i18n';
@@ -152,10 +155,11 @@ export default function RanchPanel() {
 
   // Warm up the pictures of what the boat brought back, so their flight is never blank.
   const boatSentAt = state.boat.sentAt;
+  const boatLv = upgradeLevel(state, 'boat');
   useEffect(() => {
     if (boatSt === 'back' && boatSentAt !== null)
-      boatCatch(boatSentAt, lv).forEach((id) => sprite(produceSprite(id)));
-  }, [boatSt, boatSentAt, lv]);
+      boatCatch(boatSentAt, lv, boatLv).forEach((id) => sprite(produceSprite(id)));
+  }, [boatSt, boatSentAt, lv, boatLv]);
 
   useEffect(() => {
     const e = engine.current;
@@ -212,16 +216,19 @@ export default function RanchPanel() {
       const e = engine.current;
       const p = e?.yard.bubblePoint(id);
       fly(
-        Array.from({ length: x.def.yield }, () => x.def.product),
+        Array.from({ length: animalYield(state, id) }, () => x.def.product),
         e && p ? e.scene.toClient(e.yard, p.x, p.y) : null,
       );
       e?.yard.hop(id, 'collect');
-      say(garden.collected(x.def.yield, produceName(x.def.product).toLowerCase()), 'reward');
+      say(
+        garden.collected(animalYield(state, id), produceName(x.def.product).toLowerCase()),
+        'reward',
+      );
     });
   };
 
   const hiveItems: ProduceId[] = [
-    ...Array.from({ length: HIVE.yield.honey }, () => 'honey' as const),
+    ...Array.from({ length: hiveHoney(state) }, () => 'honey' as const),
     ...Array.from({ length: HIVE.yield.honeycomb }, () => 'honeycomb' as const),
   ];
 
@@ -259,7 +266,7 @@ export default function RanchPanel() {
     if (boatSt !== 'back' || sentAt === null) return;
     once('boat-collect', () => {
       // The same catch the reducer pays (it reads the level before this collect's XP).
-      const items = boatCatch(sentAt, lv);
+      const items = boatCatch(sentAt, lv, boatLv);
       dispatch({ type: 'COLLECT_BOAT', now: currentTime() });
       const e = engine.current;
       const p = e?.boat.catchPoint();
@@ -357,11 +364,11 @@ export default function RanchPanel() {
                   <button
                     type="button"
                     className="rn-btn rn-btn--gold"
-                    aria-label={r.collectLabel(name, def.yield, productName)}
+                    aria-label={r.collectLabel(name, animalYield(state, def.id), productName)}
                     onClick={() => collect(def.id)}
                   >
                     <img src={produceSprite(def.product)} alt="" className="rn-btn__icon" />
-                    <span>{r.collect(def.yield, productName)}</span>
+                    <span>{r.collect(animalYield(state, def.id), productName)}</span>
                   </button>
                 )}
               </li>

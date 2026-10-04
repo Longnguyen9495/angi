@@ -1,4 +1,4 @@
-import { Coins, SealCheck, Storefront } from '@phosphor-icons/react';
+import { Barn, Boat, Coins, Drop, Hexagon, SealCheck, Storefront } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { ProduceImage } from '../../../components/ui/CropVisual';
 import { CropIcon } from '../../../components/ui/CropIcon';
@@ -7,6 +7,9 @@ import {
   DECOR_LIST,
   MARKET,
   MEAT_FOR_SALE,
+  UPGRADES,
+  UPGRADE_IDS,
+  type UpgradeId,
   PRODUCE_IDS,
   animalOf,
   ANIMALS,
@@ -15,7 +18,7 @@ import {
 } from '../../../data/game';
 import type { CropDef } from '../../../data/types';
 import { decorSprite } from '../../../data/sprites';
-import { cropAvailable, level } from '../../../domain/selectors';
+import { cropAvailable, level, upgradeLevel } from '../../../domain/selectors';
 import { HOUR_MS, currentTime, formatDuration } from '../../../domain/time';
 import { t } from '../../../i18n';
 import { useFeedback, useGame } from '../../../state/hooks';
@@ -31,7 +34,14 @@ function seedMeta(c: CropDef, tray: number): string {
   return m.seedMeta(d(c.sproutHours), d(c.growHours), tray);
 }
 
-type Tab = 'sell' | 'seeds' | 'meat' | 'decor';
+type Tab = 'sell' | 'seeds' | 'meat' | 'upgrades' | 'decor';
+
+const UPGRADE_ICON: Record<UpgradeId, typeof Barn> = {
+  well: Drop,
+  barn: Barn,
+  hive: Hexagon,
+  boat: Boat,
+};
 
 const m = t.journey.market;
 
@@ -39,6 +49,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'sell', label: m.tabs.sell },
   { id: 'seeds', label: m.tabs.seeds },
   { id: 'meat', label: m.tabs.meat },
+  { id: 'upgrades', label: m.tabs.upgrades },
   { id: 'decor', label: m.tabs.decor },
 ];
 
@@ -203,6 +214,50 @@ export function MarketSection() {
                   >
                     {m.buy(price)}
                   </button>
+                </li>
+              );
+            })}
+          </ul>
+        </>
+      )}
+
+      {tab === 'upgrades' && (
+        <>
+          <p className="fj-note">{m.upgradesIntro}</p>
+          <ul className="fj-stall">
+            {UPGRADE_IDS.map((id) => {
+              const def = m.upgrades[id];
+              const lv = upgradeLevel(state, id);
+              const max = UPGRADES[id].prices.length;
+              const price = UPGRADES[id].prices[lv];
+              const afford = price !== undefined && state.coins >= price;
+              const Icon = UPGRADE_ICON[id];
+              return (
+                <li key={id} className={`fj-stall__item${price === undefined ? ' is-owned' : ''}`}>
+                  <span className="fj-stall__seed">
+                    <Icon size={34} weight="duotone" aria-hidden="true" />
+                  </span>
+                  <span className="fj-stall__name">{def.name}</span>
+                  <span className="fj-stall__meta">
+                    {m.upgradeLevel(lv, max)}
+                    {lv > 0 && <> · {def.effect(lv)}</>}
+                    <br />
+                    {price === undefined ? m.upgradeMax : m.upgradeNext(def.effect(lv + 1))}
+                  </span>
+                  {price !== undefined && (
+                    <button
+                      type="button"
+                      className="fr-ghost fr-ghost--compact"
+                      aria-disabled={!afford}
+                      onClick={() => {
+                        if (!afford) return;
+                        dispatch({ type: 'BUY_UPGRADE', id, now: currentTime() });
+                        announce(m.upgraded(def.name, lv + 1));
+                      }}
+                    >
+                      {m.upgradeBuy(price)}
+                    </button>
+                  )}
                 </li>
               );
             })}

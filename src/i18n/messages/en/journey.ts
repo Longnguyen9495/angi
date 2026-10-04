@@ -29,9 +29,9 @@ const journey: Messages['journey'] = {
           'Harvested ingredients and crops still growing both count. Once you have enough, cook with one tap.',
       },
       orders: {
-        title: 'Cô Ba’s orders',
+        title: 'Orders',
         intro:
-          'Every morning Cô Ba sends two small orders. Deliver spare produce in exchange for seeds, waterings and XP.',
+          'Guests drop by for a cooked dish and pay in coins. Every morning Cô Ba also sends two produce orders for seeds, waterings and XP.',
       },
       market: {
         title: 'Village market',
@@ -522,7 +522,25 @@ const journey: Messages['journey'] = {
   },
 
   market: {
-    tabs: { sell: 'Sell produce', seeds: 'Buy seeds', meat: 'Butcher', decor: 'Garden decor' },
+    tabs: {
+      sell: 'Sell produce',
+      seeds: 'Buy seeds',
+      meat: 'Butcher',
+      upgrades: 'Upgrades',
+      decor: 'Garden decor',
+    },
+    upgradesIntro: 'Put coins into the buildings so the farm makes more — every level is for good.',
+    upgrades: {
+      well: { name: 'Well', effect: (n) => `+${n} watering ${s(n, 'can', 'cans')} a day` },
+      barn: { name: 'Barn', effect: (n) => `+${n} product per collection from the pens` },
+      hive: { name: 'Beehive', effect: (n) => `+${n} honey per harvest` },
+      boat: { name: 'Fishing boat', effect: (n) => `+${n} ${s(n, 'catch', 'catches')} per trip` },
+    },
+    upgradeLevel: (lv, max) => `Level ${lv}/${max}`,
+    upgradeNext: (effect) => `Next level: ${effect}`,
+    upgradeMax: 'Fully upgraded',
+    upgradeBuy: (price) => `Upgrade · ${price} ${s(price, 'coin', 'coins')}`,
+    upgraded: (name, lv) => `${name} is now level ${lv}!`,
     coins: 'coins',
     stallsLabel: 'Market stalls',
     pantryEmpty: 'Your pantry is empty — harvest first, then bring it to market.',

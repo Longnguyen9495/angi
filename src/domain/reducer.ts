@@ -15,6 +15,8 @@ import {
   harvestXp,
   isMeat,
   GUESTS,
+  UPGRADES,
+  type UpgradeId,
 } from '../data/game';
 import type { AnimalId, CropId, DecorId, Meat, ProduceId, RecipeId } from '../data/types';
 import {
@@ -41,6 +43,7 @@ import {
   fishingLeft,
   firstEmptyPlot,
   nextLand,
+  upgradeLevel,
   newlyUnlockable,
   newlyUnlockableCrops,
   plotStage,
@@ -110,6 +113,7 @@ export type Action =
   | { type: 'BUY_LAND'; now: number }
   | { type: 'SERVE_GUEST'; guestId: string; now: number }
   | { type: 'CLAIM_COLLECTION'; id: string; now: number }
+  | { type: 'BUY_UPGRADE'; id: UpgradeId; now: number }
   | { type: 'BUY_DECOR'; decor: DecorId; now: number }
   | {
       type: 'CHECK_IN';
@@ -606,7 +610,8 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       if (animalStage(state, def.id, action.now) !== 'ready' || a.fedAt === null) return state;
       const s = structuredClone(state);
       const tag = `${def.id}:${a.fedAt}`;
-      post(s, `collect:${tag}`, `ingredient:${def.product}`, def.yield, 'animal', action.now);
+      const yieldN = def.yield + upgradeLevel(state, 'barn');
+      post(s, `collect:${tag}`, `ingredient:${def.product}`, yieldN, 'animal', action.now);
       post(s, `xp:collect:${tag}`, 'xp', harvestXp(def.hours), 'animal', action.now);
       s.animals[def.id] = { fedAt: null, readyAt: null };
       track(s, 'collect', action.now);
@@ -796,8 +801,8 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       if (hiveStage(state, action.now) !== 'ready' || h.startedAt === null) return state;
       const s = structuredClone(state);
       const key = `hive:${h.startedAt}`;
-      if (!post(s, `${key}:honey`, 'ingredient:honey', HIVE.yield.honey, 'hive', action.now))
-        return state;
+      const honey = HIVE.yield.honey + upgradeLevel(state, 'hive');
+      if (!post(s, `${key}:honey`, 'ingredient:honey', honey, 'hive', action.now)) return state;
       post(s, `${key}:comb`, 'ingredient:honeycomb', HIVE.yield.honeycomb, 'hive', action.now);
       post(s, `xp:${key}`, 'xp', harvestXp(HIVE.hours), 'hive', action.now);
       // The bees start filling it again straight away.
@@ -818,7 +823,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       const b = state.boat;
       if (boatStage(state, action.now) !== 'back' || b.sentAt === null) return state;
       const s = structuredClone(state);
-      const items = boatCatch(b.sentAt, level(state.xp).level);
+      const items = boatCatch(b.sentAt, level(state.xp).level, upgradeLevel(state, 'boat'));
       items.forEach((kind, i) => {
         post(s, `boat:${b.sentAt}:${i}`, `ingredient:${kind}`, 1, 'boat', action.now);
       });
@@ -861,6 +866,21 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       const key = `buy:${action.item}:${action.now}`;
       if (!post(s, `${key}:coin`, 'coin', -price, 'market', action.now)) return state;
       post(s, `${key}:item`, `ingredient:${action.item}`, 1, 'market', action.now);
+      track(s, 'buy', action.now);
+      return s;
+    }
+
+    case 'BUY_UPGRADE': {
+      const def = UPGRADES[action.id];
+      if (!def) return state;
+      const lvl = upgradeLevel(state, action.id) + 1;
+      const price = def.prices[lvl - 1];
+      if (price === undefined || state.coins < price) return state;
+      const s = structuredClone(state);
+      if (!post(s, `upgrade:${action.id}:${lvl}`, 'coin', -price, 'upgrade', action.now)) {
+        return state;
+      }
+      s.upgrades = { ...s.upgrades, [action.id]: lvl };
       track(s, 'buy', action.now);
       return s;
     }

@@ -1,7 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { getDish } from '../data/dishes';
 import { reelGameDishes } from '../features/food-reel/data/reelCatalogue';
-import { CROPS, LAND_PRICES, xpForLevel, COLLECTIONS, collectionReward } from '../data/game';
+import {
+  CROPS,
+  LAND_PRICES,
+  xpForLevel,
+  COLLECTIONS,
+  collectionReward,
+  ANIMALS,
+  UPGRADES,
+} from '../data/game';
 import { createInitialProgress } from './progress';
 import { dailyQuests } from './quests';
 import { gameReducer, touchStreak } from './reducer';
@@ -12,6 +20,7 @@ import {
   regionProgress,
   waterBlock,
   waterLeft,
+  animalYield,
 } from './selectors';
 import { HOUR_MS, dateKey } from './time';
 
@@ -378,5 +387,23 @@ describe('dish collections', () => {
     expect(s.xp).toBe(done.xp + reward.xp);
     expect(s.collections).toEqual(['central']);
     expect(gameReducer(s, { type: 'CLAIM_COLLECTION', id: 'central', now: NOON + 1 })).toBe(s);
+  });
+});
+
+describe('farm upgrades', () => {
+  it('buys levels in order for their price, and the buildings give more', () => {
+    const start = { ...createInitialProgress(NOON), coins: 2000, xp: xpForLevel(5) };
+    expect(waterLeft(start, NOON)).toBe(3);
+    let s = gameReducer(start, { type: 'BUY_UPGRADE', id: 'well', now: NOON });
+    expect(s.upgrades.well).toBe(1);
+    expect(s.coins).toBe(2000 - UPGRADES.well.prices[0]!);
+    expect(waterLeft(s, NOON)).toBe(4);
+    s = gameReducer(s, { type: 'BUY_UPGRADE', id: 'barn', now: NOON + 1 });
+    expect(animalYield(s, 'chicken')).toBe(ANIMALS.chicken.yield + 1);
+    // The barn's last level, then nothing more to buy.
+    s = gameReducer(s, { type: 'BUY_UPGRADE', id: 'barn', now: NOON + 2 });
+    expect(gameReducer(s, { type: 'BUY_UPGRADE', id: 'barn', now: NOON + 3 })).toBe(s);
+    const poor = { ...s, coins: 0 };
+    expect(gameReducer(poor, { type: 'BUY_UPGRADE', id: 'hive', now: NOON + 4 })).toBe(poor);
   });
 });

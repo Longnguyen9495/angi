@@ -16,6 +16,8 @@ import {
   isBuiltinRecipe,
   isMeat,
   levelForXp,
+  UPGRADES,
+  UPGRADE_IDS,
 } from '../data/game';
 import type { AnimalId, CropId, DecorId, ProduceId } from '../data/types';
 import { canServe, guestPay, ingredientValue, todaysGuests } from './guests';
@@ -153,6 +155,11 @@ function play(): { steps: Step[]; last: GuestProgress; lastAt: number } {
       if (stage === 'ready') act({ type: 'COLLECT_ANIMAL', animal: id, now: at() });
       if (animalStage(s, id, clock) === 'hungry' && s.ingredients[ANIMALS[id].feed] > 4)
         act({ type: 'FEED_ANIMAL', animal: id, now: at() });
+    }
+    // Spare xu go into the farm's buildings, one level at a time.
+    for (const id of UPGRADE_IDS) {
+      const price = UPGRADES[id].prices[s.upgrades[id] ?? 0];
+      if (price !== undefined && s.coins > price + 150) act({ type: 'BUY_UPGRADE', id, now: at() });
     }
     if (hiveStage(s, clock) === 'idle') act({ type: 'START_HIVE', now: at() });
     if (hiveStage(s, clock) === 'ready') act({ type: 'COLLECT_HIVE', now: at() });
@@ -342,6 +349,11 @@ function cheats(last: GuestProgress, lastAt: number) {
     }
   }
   add(
+    'a building upgraded without paying',
+    { ...structuredClone(last), upgrades: { ...last.upgrades, well: 3 } },
+    'rule',
+  );
+  add(
     'a collection claimed before it is finished',
     withEntry(last, 'collection:japan:coin', 'coin', 20 * 12, at),
     'rule',
@@ -478,6 +490,7 @@ describe('server save guard (ProgressGuard.php)', () => {
       expect(bought.some((k) => /^buy:[a-z]+:-?\d+:item$/.test(k))).toBe(true);
       expect(bought.some((k) => /^land:\d+:-?\d+$/.test(k))).toBe(true);
       expect(last.plots.length).toBeGreaterThan(4);
+      expect(bought.some((k) => /^upgrade:[a-z]+:\d+$/.test(k))).toBe(true);
       expect(bought.some((k) => /^guest:[\d-]+:\d:coin$/.test(k))).toBe(true);
       // The bot really played: every part of the game came into its saves.
       const families = new Set(

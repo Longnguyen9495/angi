@@ -12,6 +12,7 @@ import { ANIMALS, CROPS, animalOf, getRecipe, produceName } from '../../../data/
 import type { AnimalId, CropId, RecipeId } from '../../../data/types';
 import { todaysGuests } from '../../../domain/guests';
 import { dishIdsForSeed, type NextStep } from '../../../domain/nextStep';
+import { animalYield } from '../../../domain/selectors';
 import { HOUR_MS, currentTime, formatDuration, slotKey } from '../../../domain/time';
 import { t } from '../../../i18n';
 import { useGame } from '../../../state/hooks';
@@ -77,7 +78,7 @@ export function NextStepCard({
       const product = produceName(a.product).toLowerCase();
       icon = <Basket size={22} aria-hidden="true" />;
       title = m.collect.title(a.name, product);
-      body = m.collect.body(a.yield, product);
+      body = m.collect.body(animalYield(state, a.id), product);
       action = {
         label: m.collect.action(product),
         run: () => onAnimal(a.id, 'collect'),
@@ -91,7 +92,7 @@ export function NextStepCard({
       body = m.feed.body(
         produceName(a.feed).toLowerCase(),
         formatDuration(a.hours * HOUR_MS),
-        a.yield,
+        animalYield(state, a.id),
         produceName(a.product).toLowerCase(),
       );
       action = { label: m.feed.action, run: () => onAnimal(a.id, 'feed') };

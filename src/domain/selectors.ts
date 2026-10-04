@@ -1,3 +1,4 @@
+import type { UpgradeId } from '../data/game';
 import { t } from '../i18n';
 import { reelGameDishes } from '../features/food-reel/data/reelCatalogue';
 import {
@@ -78,9 +79,29 @@ export function isWet(plot: Plot, now: number): boolean {
 }
 
 /** Cans left today (the day rolls over at local midnight). */
+/** Level of a farm building (0 = not upgraded). */
+export function upgradeLevel(p: GuestProgress, id: UpgradeId): number {
+  return p.upgrades?.[id] ?? 0;
+}
+
+/** What one collection from an animal gives: its yield, plus one per level of the barn. */
+export function animalYield(p: GuestProgress, id: AnimalId): number {
+  return ANIMALS[id].yield + upgradeLevel(p, 'barn');
+}
+
+/** Honey from one full hive: the base, plus one per level of the hive. */
+export function hiveHoney(p: GuestProgress): number {
+  return HIVE.yield.honey + upgradeLevel(p, 'hive');
+}
+
+/** Watering cans a day: the base, plus one per level of the well. */
+export function cansPerDay(p: GuestProgress): number {
+  return WATERING.perDay + upgradeLevel(p, 'well');
+}
+
 export function waterLeft(p: GuestProgress, now: number): number {
-  if (p.water.date !== dateKey(now)) return WATERING.perDay;
-  return Math.max(0, WATERING.perDay + p.water.bonus - p.water.used);
+  if (p.water.date !== dateKey(now)) return cansPerDay(p);
+  return Math.max(0, cansPerDay(p) + p.water.bonus - p.water.used);
 }
 
 /** Catches left today at the pond (the day rolls over at local midnight). */
@@ -121,8 +142,11 @@ export function catchFor(castAt: number, lv = 1): Catch {
 }
 
 /** What the boat brings back from the trip sent at `sentAt` (same answer every time). */
-export function boatCatch(sentAt: number, lv: number): Catch[] {
-  return Array.from({ length: BOAT.catches }, (_, i) => pickCatch('boat', lv, unit(sentAt, i + 1)));
+/** What a trip brings back: BOAT.catches, plus one per level of the boat (the first ones never change). */
+export function boatCatch(sentAt: number, lv: number, extra = 0): Catch[] {
+  return Array.from({ length: BOAT.catches + extra }, (_, i) =>
+    pickCatch('boat', lv, unit(sentAt, i + 1)),
+  );
 }
 
 export type HiveStage = 'locked' | 'idle' | 'filling-1' | 'filling-2' | 'ready';

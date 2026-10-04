@@ -1103,6 +1103,20 @@ export function collectionReward(size: number): { coins: number; xp: number } {
   return { coins: COLLECTION_REWARD.coinsPerDish * size, xp: COLLECTION_REWARD.xpPerDish * size };
 }
 
+/**
+ * Farm buildings to upgrade with xu, each level a little more from the farm: the barn +1 of
+ * every animal's product per collection, the hive +1 honey, the boat +1 catch a trip, the well
+ * +1 watering can a day. Prices by level; the server checks them (ProgressGuard).
+ */
+export type UpgradeId = 'barn' | 'hive' | 'boat' | 'well';
+export const UPGRADES: Record<UpgradeId, { prices: readonly number[] }> = {
+  well: { prices: [150, 400, 900] },
+  barn: { prices: [300, 900] },
+  hive: { prices: [300, 900] },
+  boat: { prices: [400, 1200] },
+};
+export const UPGRADE_IDS = Object.keys(UPGRADES) as UpgradeId[];
+
 /** Plots a new guest starts with. */
 export const FARM_PLOT_COUNT = 4;
 /**

@@ -25,9 +25,9 @@ const journey = {
           'Nguyên liệu thu hoạch được và cây đang lớn đều được tính. Đủ thì nấu bằng một chạm.',
       },
       orders: {
-        title: 'Đơn của Cô Ba',
+        title: 'Đơn hàng',
         intro:
-          'Mỗi sáng Cô Ba gửi hai đơn nhỏ. Giao nông sản dư để đổi lấy hạt giống, lượt tưới và XP.',
+          'Thực khách ghé bếp gọi món đã nấu, trả bằng xu. Mỗi sáng Cô Ba còn gửi hai đơn nông sản để đổi lấy hạt giống, lượt tưới và XP.',
       },
       market: {
         title: 'Chợ quê',
@@ -520,7 +520,25 @@ const journey = {
   },
 
   market: {
-    tabs: { sell: 'Bán nông sản', seeds: 'Mua hạt', meat: 'Quầy thịt', decor: 'Trang trí vườn' },
+    tabs: {
+      sell: 'Bán nông sản',
+      seeds: 'Mua hạt',
+      meat: 'Quầy thịt',
+      upgrades: 'Nâng cấp',
+      decor: 'Trang trí vườn',
+    },
+    upgradesIntro: 'Đầu tư xu vào công trình để nông trại làm ra nhiều hơn — mỗi cấp là vĩnh viễn.',
+    upgrades: {
+      well: { name: 'Giếng nước', effect: (n: number) => `+${n} lượt tưới mỗi ngày` },
+      barn: { name: 'Chuồng trại', effect: (n: number) => `+${n} sản phẩm mỗi lần thu ở chuồng` },
+      hive: { name: 'Tổ ong', effect: (n: number) => `+${n} mật ong mỗi lần lấy mật` },
+      boat: { name: 'Thuyền đánh cá', effect: (n: number) => `+${n} mẻ cá mỗi chuyến` },
+    },
+    upgradeLevel: (lv: number, max: number) => `Cấp ${lv}/${max}`,
+    upgradeNext: (effect: string) => `Cấp tới: ${effect}`,
+    upgradeMax: 'Đã nâng tối đa',
+    upgradeBuy: (price: number) => `Nâng cấp · ${price} xu`,
+    upgraded: (name: string, lv: number) => `${name} lên cấp ${lv}!`,
     coins: 'xu',
     stallsLabel: 'Quầy trong chợ',
     pantryEmpty: 'Kho đang trống — thu hoạch rồi mang ra chợ bán nhé.',
