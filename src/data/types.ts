@@ -123,7 +123,17 @@ export type BuiltinRecipeId =
 export type RecipeId = BuiltinRecipeId | (string & {});
 /** How hot the fire burns during a cooking step — drives flame, bubbles and pot shake. */
 export type Heat = 'low' | 'mid' | 'high';
-export type DecorId = 'scarecrow' | 'lantern' | 'jar' | 'fence';
+export type DecorId =
+  | 'scarecrow'
+  | 'lantern'
+  | 'jar'
+  | 'fence'
+  | 'barrel'
+  | 'cart'
+  | 'haybale'
+  | 'haystack'
+  | 'flowers'
+  | 'rocks';
 export type BudgetId = 'low' | 'mid' | 'high';
 export type MoodId = 'quick' | 'filling' | 'light' | 'novel';
 export type AvoidId = 'seafood' | 'beef' | 'pork' | 'spicy';

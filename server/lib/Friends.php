@@ -132,6 +132,7 @@ final class Friends
                 'name' => self::displayName($r['garden_name'], $r['friend_code']),
                 'xp' => self::xp($data),
                 'level' => self::level(self::xp($data)),
+                'stars' => self::stars($data),
                 'ready' => count(array_filter($plots, fn ($p) => $p['crop'] !== null && $p['readyAt'] !== null && $p['readyAt'] <= $nowMs)),
                 'growing' => count(array_filter($plots, fn ($p) => self::canWater($p, $nowMs))),
                 'helpedToday' => in_array($fid, $helped, true),
@@ -143,7 +144,7 @@ final class Friends
         }, $rows);
         $myData = self::decode($this->one('SELECT data FROM user_progress WHERE user_id = ?', [$me])['data'] ?? null);
         return [
-            'me' => $this->publicProfile($mine) + ['xp' => self::xp($myData), 'level' => self::level(self::xp($myData))],
+            'me' => $this->publicProfile($mine) + ['xp' => self::xp($myData), 'level' => self::level(self::xp($myData)), 'stars' => self::stars($myData)],
             'friends' => $friends,
             'referrals' => $this->referrals($me),
             'helpsLeft' => max(0, self::HELPS_PER_DAY - count($helped)),
@@ -748,9 +749,21 @@ final class Friends
         return max(0, (int) ($data['xp'] ?? 0));
     }
 
+    /** The game's level curve (ProgressGuard::level), not a flat 100 XP. */
     private static function level(int $xp): int
     {
-        return intdiv($xp, 100) + 1;
+        return ProgressGuard::level($xp);
+    }
+
+    /** Mastery stars over every recipe the garden cooked (1 / 2 / 3 at starAt cookings). */
+    private static function stars(array $data): int
+    {
+        $at = ProgressGuard::rules()['guests']['starAt'];
+        $n = 0;
+        foreach ((array) ($data['cooked'] ?? []) as $times) {
+            $n += count(array_filter($at, fn ($t) => (int) $times >= (int) $t));
+        }
+        return $n;
     }
 
     /** Plots as stored by the client (times in ms), cleaned to the fields a visitor needs. */

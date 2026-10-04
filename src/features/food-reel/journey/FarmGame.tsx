@@ -461,6 +461,7 @@ export function FarmGame({
   // The game as the painted farm shows it: 9 plots (locked ones open with levels), animal bubbles.
   const farmView: FarmView = {
     watering,
+    decor: state.decor,
     plots: Array.from({ length: MAX_PLOT_COUNT }, (_, i) => {
       const id = i + 1;
       const plot = state.plots.find((p) => p.id === id);

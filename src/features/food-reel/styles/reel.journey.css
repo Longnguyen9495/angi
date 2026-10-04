@@ -1972,6 +1972,22 @@
   border-color: color-mix(in srgb, var(--fr-gold, #d7a85d) 55%, transparent);
 }
 
+.fj-reputation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin: 4px 0 16px;
+  color: var(--fr-gold, #d7a85d);
+}
+.fj-reputation strong {
+  color: var(--fr-ivory);
+}
+.fj-reputation span {
+  color: var(--fr-muted);
+  font-size: 0.85rem;
+}
+
 .fj-sets {
   margin: 8px 0 24px;
 }

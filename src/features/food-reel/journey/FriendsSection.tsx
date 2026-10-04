@@ -12,7 +12,7 @@ import {
 import { Suspense, lazy, useCallback, useEffect, useState, type FormEvent } from 'react';
 import { CropIcon } from '../../../components/ui/CropIcon';
 import { Sheet } from '../../../components/ui/Sheet';
-import { CROPS, XP } from '../../../data/game';
+import { CROPS, XP, chefTitleIndex } from '../../../data/game';
 import type { CropId } from '../../../data/types';
 import { STAGE_LABEL, plotStage } from '../../../domain/selectors';
 import { currentTime, formatDuration } from '../../../domain/time';
@@ -208,7 +208,7 @@ export function FriendsSection() {
     ? [
         { ...data.me, name: data.me.displayName, isMe: true as const },
         ...data.friends.map((f) => ({ ...f, isMe: false as const })),
-      ].sort((a, b) => b.xp - a.xp)
+      ].sort((a, b) => (b.stars ?? 0) - (a.stars ?? 0) || b.xp - a.xp)
     : [];
 
   return (
@@ -307,6 +307,7 @@ export function FriendsSection() {
                 {f.isMe ? m.me(f.name) : f.name}
                 <span className="fj-board__meta">
                   {m.boardMeta(f.level, f.xp)}
+                  {` · ★ ${f.stars ?? 0} · ${t.data.chefTitles[chefTitleIndex(f.stars ?? 0)]}`}
                   {!f.isMe && f.growing > 0 && !f.helpedToday && m.needWater(f.growing)}
                   {!f.isMe && f.helpedToday && m.wateredToday}
                   {!f.isMe &&

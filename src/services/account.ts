@@ -109,6 +109,8 @@ export interface FriendSummary {
   name: string;
   xp: number;
   level: number;
+  /** Mastery stars over all recipes (chef reputation). */
+  stars?: number;
   /** Plots ready to harvest / growing plots a visitor could water. */
   ready: number;
   growing: number;
@@ -145,7 +147,7 @@ export interface Referrals {
 }
 
 export interface FriendsList {
-  me: GardenProfile & { xp: number; level: number };
+  me: GardenProfile & { xp: number; level: number; stars?: number };
   friends: FriendSummary[];
   referrals: Referrals;
   helpsLeft: number;

@@ -1070,7 +1070,13 @@
     "scarecrow": 40,
     "lantern": 30,
     "jar": 25,
-    "fence": 35
+    "fence": 35,
+    "flowers": 50,
+    "rocks": 60,
+    "barrel": 80,
+    "haybale": 90,
+    "haystack": 140,
+    "cart": 220
   },
   "recipes": {
     "com-tam": {
@@ -3018,7 +3024,7 @@
       "tiers": [
         1,
         2,
-        4
+        10
       ],
       "rewards": [
         {

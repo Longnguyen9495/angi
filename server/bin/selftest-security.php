@@ -103,7 +103,7 @@ try {
     $save($big);
     $ref = array_values(array_filter($friends->syncEvents()['events'], fn ($e) => $e['type'] === 'referral'));
     $check('F03 made-up milestones pay nothing', count($ref) === 0);
-    $pdo->prepare("INSERT INTO verified_stats (user_id, metric, value) VALUES (?, 'harvest', 5), (?, 'cook', 1), (?, 'xp', 400)")->execute([$a['id'], $a['id'], $a['id']]);
+    $pdo->prepare("INSERT INTO verified_stats (user_id, metric, value) VALUES (?, 'harvest', 5), (?, 'cook', 1), (?, 'xp', 520)")->execute([$a['id'], $a['id'], $a['id']]);
     $ref = array_values(array_filter($friends->syncEvents()['events'], fn ($e) => $e['type'] === 'referral'));
     $check('control verified milestones pay 200 xu + 90 XP', count($ref) === 4 && array_sum(array_column($ref, 'coins')) === 200 && array_sum(array_column($ref, 'xp')) === 90);
     $check('control referral events are not duplicated', count(array_filter($friends->syncEvents()['events'], fn ($e) => $e['type'] === 'referral')) === 4);

@@ -448,6 +448,9 @@ const journey = {
   },
 
   cookbook: {
+    reputation: (stars: number, title: string) => `Danh tiếng ${stars} sao · ${title}`,
+    reputationNext: (left: number, title: string) => `Còn ${left} sao để thành ${title}`,
+    reputationMax: 'Danh hiệu cao nhất!',
     collectionsTitle: 'Bộ sưu tập món',
     collectionsIntro: 'Nấu đủ mọi món trong một bộ để nhận thưởng.',
     collectionCount: (done: number, total: number) => `${done}/${total} món`,

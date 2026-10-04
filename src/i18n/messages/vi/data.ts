@@ -93,6 +93,14 @@ const data = {
       blurb: 'Đêm trăng rằm cả nhà quây quần: dim sum, cơm niêu, mì hoành thánh, bánh xèo…',
     },
   },
+  chefTitles: [
+    'Phụ bếp',
+    'Bếp nhà',
+    'Bếp làng',
+    'Đầu bếp phố',
+    'Bếp trưởng',
+    'Đại đầu bếp ba miền',
+  ],
   collections: {
     'north-broth': 'Nước dùng đất Bắc',
     'hanoi-street': 'Quà vặt Hà Nội',
@@ -314,6 +322,12 @@ const data = {
     lantern: { name: 'Đèn lồng đỏ', note: 'Sáng lên khi trời tối.' },
     jar: { name: 'Chum nước sành', note: 'Chum hứng nước mưa cạnh luống.' },
     fence: { name: 'Hàng rào tre', note: 'Rào tre bao quanh khu vườn.' },
+    flowers: { name: 'Bụi hoa dại', note: 'Hoa trắng nở bên bờ ao.' },
+    rocks: { name: 'Hòn non bộ', note: 'Vài phiến đá xếp ở góc vườn.' },
+    barrel: { name: 'Thùng gỗ', note: 'Thùng gỗ đựng lúa cạnh nhà kho.' },
+    haybale: { name: 'Kiện rơm', note: 'Rơm khô bó gọn cho mùa đông.' },
+    haystack: { name: 'Đụn rơm', note: 'Đụn rơm vàng ngoài sân chuồng.' },
+    cart: { name: 'Xe kéo gỗ', note: 'Xe chở nông sản ra chợ.' },
   },
   budgets: {
     low: { label: 'Dưới 40k', hint: 'Tiết kiệm' },

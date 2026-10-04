@@ -876,6 +876,10 @@ export interface DecorDef {
   note: string;
 }
 
+function decor(id: DecorId, price: number): DecorDef {
+  return { id, name: t.data.decor[id].name, price, note: t.data.decor[id].note };
+}
+
 export const DECOR: Record<DecorId, DecorDef> = {
   scarecrow: {
     id: 'scarecrow',
@@ -891,6 +895,12 @@ export const DECOR: Record<DecorId, DecorDef> = {
   },
   jar: { id: 'jar', name: t.data.decor.jar.name, price: 25, note: t.data.decor.jar.note },
   fence: { id: 'fence', name: t.data.decor.fence.name, price: 35, note: t.data.decor.fence.note },
+  flowers: decor('flowers', 50),
+  rocks: decor('rocks', 60),
+  barrel: decor('barrel', 80),
+  haybale: decor('haybale', 90),
+  haystack: decor('haystack', 140),
+  cart: decor('cart', 220),
 };
 
 export const DECOR_LIST: DecorDef[] = Object.values(DECOR);
@@ -935,6 +945,21 @@ export const GUESTS = {
   /** Times cooked for 1, 2 and 3 stars. */
   starAt: [1, 5, 15],
 } as const;
+
+/**
+ * The chef's reputation: every mastery star over all recipes counts (3 per recipe at most),
+ * and these totals earn a title (names in t.data.chefTitles, same order).
+ */
+export const CHEF_TITLE_AT = [0, 10, 30, 60, 120, 200] as const;
+
+export function chefTitleIndex(stars: number): number {
+  return CHEF_TITLE_AT.filter((n) => stars >= n).length - 1;
+}
+
+/** Total mastery stars over a garden's cooking counts. */
+export function reputation(cooked: Partial<Record<string, number>>): number {
+  return Object.values(cooked).reduce<number>((n, times) => n + masteryStars(times ?? 0), 0);
+}
 
 /** Mastery stars of a recipe cooked this many times (0–3). */
 export function masteryStars(times: number): 0 | 1 | 2 | 3 {

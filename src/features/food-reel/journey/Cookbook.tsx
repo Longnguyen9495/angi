@@ -1,5 +1,12 @@
 import { LockSimple, PuzzlePiece, SealCheck, Star } from '@phosphor-icons/react';
-import { RECIPE_LIST, masteryStars, recipeRegionName } from '../../../data/game';
+import {
+  CHEF_TITLE_AT,
+  RECIPE_LIST,
+  chefTitleIndex,
+  masteryStars,
+  recipeRegionName,
+  reputation,
+} from '../../../data/game';
 import { t } from '../../../i18n';
 import { useGame } from '../../../state/hooks';
 import { Collections } from './Collections';
@@ -20,6 +27,7 @@ export function Cookbook() {
         {t.journey.cookbook.title(done, pages.length)}
       </h3>
       <p className="fj-note">{t.journey.cookbook.puzzleHint(whole, pages.length)}</p>
+      <Reputation stars={reputation(state.cooked)} />
       <Collections />
       <ul className="fj-book__pages">
         {pages.map((r) => {
@@ -80,5 +88,23 @@ export function Cookbook() {
         })}
       </ul>
     </div>
+  );
+}
+
+/** The chef's reputation: stars over all recipes, the title they earn and the next one. */
+function Reputation({ stars }: { stars: number }) {
+  const i = chefTitleIndex(stars);
+  const titles = t.data.chefTitles;
+  const next = CHEF_TITLE_AT[i + 1];
+  return (
+    <p className="fj-reputation">
+      <Star size={16} weight="fill" aria-hidden="true" />{' '}
+      <strong>{t.journey.cookbook.reputation(stars, titles[i]!)}</strong>
+      <span>
+        {next === undefined
+          ? t.journey.cookbook.reputationMax
+          : t.journey.cookbook.reputationNext(next - stars, titles[i + 1]!)}
+      </span>
+    </p>
   );
 }

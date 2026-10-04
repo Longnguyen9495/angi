@@ -174,14 +174,14 @@ function play(): { steps: Step[]; last: GuestProgress; lastAt: number } {
     // Spare xu go into the farm's buildings, one level at a time.
     for (const id of UPGRADE_IDS) {
       const price = UPGRADES[id].prices[s.upgrades[id] ?? 0];
-      if (price !== undefined && s.coins > price + 150) act({ type: 'BUY_UPGRADE', id, now: at() });
+      if (price !== undefined && s.coins > price + 50) act({ type: 'BUY_UPGRADE', id, now: at() });
     }
     if (hiveStage(s, clock) === 'idle') act({ type: 'START_HIVE', now: at() });
     if (hiveStage(s, clock) === 'ready') act({ type: 'COLLECT_HIVE', now: at() });
     if (boatStage(s, clock) === 'back') act({ type: 'COLLECT_BOAT', now: at() });
     if (boatStage(s, clock) === 'docked') act({ type: 'SEND_BOAT', now: at() });
     for (const d of Object.values(DECOR)) {
-      if (!s.decor.includes(d.id) && s.coins > d.price + 80) {
+      if (!s.decor.includes(d.id) && d.price < 50 && s.coins > d.price + 150) {
         act({ type: 'BUY_DECOR', decor: d.id, now: at() });
         act({ type: 'PLACE_DECOR', decor: d.id as DecorId, x: decorX++, z: 4, rot: 0 });
       }

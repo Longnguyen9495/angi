@@ -824,6 +824,7 @@ export class AnimationManager {
     this.env.drawCrops(ctx);
     this.game.drawCrops(ctx, G.crops);
     this.env.drawPlants(ctx, (p) => this.game.onOpenPlot(p));
+    this.game.drawDecor(ctx);
     this.buildings.drawWindmill(ctx);
     this.buildings.drawChimney(ctx);
     this.particles.draw(ctx, 'smoke');

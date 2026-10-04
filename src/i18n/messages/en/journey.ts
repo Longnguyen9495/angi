@@ -447,6 +447,9 @@ const journey: Messages['journey'] = {
   },
 
   cookbook: {
+    reputation: (stars, title) => `Reputation ${stars} ${s(stars, 'star', 'stars')} · ${title}`,
+    reputationNext: (left, title) => `${left} more ${s(left, 'star', 'stars')} to become ${title}`,
+    reputationMax: 'The highest title!',
     collectionsTitle: 'Dish collections',
     collectionsIntro: 'Cook every dish of a set to claim its reward.',
     collectionCount: (done, total) => `${done}/${total} dishes`,

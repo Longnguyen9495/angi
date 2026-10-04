@@ -116,6 +116,14 @@ const data: Messages['data'] = {
         'The family gathers under the full moon: dim sum, clay-pot rice, wonton noodles, bánh xèo…',
     },
   },
+  chefTitles: [
+    'Kitchen hand',
+    'Home cook',
+    'Village cook',
+    'Street chef',
+    'Head chef',
+    'Master chef of three regions',
+  ],
   collections: {
     'north-broth': 'Broths of the North',
     'hanoi-street': 'Hanoi street food',
@@ -332,6 +340,12 @@ const data: Messages['data'] = {
     },
   },
   decor: {
+    flowers: { name: 'Wildflower bush', note: 'White blossoms by the pond.' },
+    rocks: { name: 'Rock garden', note: 'A few stones stacked in a corner of the garden.' },
+    barrel: { name: 'Wooden barrel', note: 'A rice barrel by the shed.' },
+    haybale: { name: 'Hay bale', note: 'Dry straw tied up for winter.' },
+    haystack: { name: 'Haystack', note: 'A golden stack in the yard.' },
+    cart: { name: 'Wooden cart', note: 'For taking produce to market.' },
     scarecrow: { name: 'Conical-hat scarecrow', note: 'Guards the garden in a nón lá hat.' },
     lantern: { name: 'Red lantern', note: 'Lights up after dark.' },
     jar: { name: 'Clay water jar', note: 'Catches rainwater beside the beds.' },

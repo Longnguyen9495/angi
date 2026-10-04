@@ -1,3 +1,5 @@
+import type { DecorId } from '../../../data/types';
+import { DECOR_SPOTS, decorPicture } from '../decorSpots';
 import { t } from '../../../i18n';
 import { type Assets, canvas } from '../engine/assets';
 import type { FieldDef, Vec2 } from '../engine/types';
@@ -69,6 +71,8 @@ export interface BubbleView {
 
 export interface FarmView {
   plots: PlotView[];
+  /** Garden decorations bought at the market, drawn on their spots. */
+  decor?: DecorId[];
   cow: BubbleView;
   chicken: BubbleView;
   watering: boolean;
@@ -665,6 +669,27 @@ export class FarmGameLayer {
         this.float.bite += w.dt;
         if (this.float.bite > 0.8) this.float = null;
       }
+    }
+  }
+
+  /** Decorations the guest owns, each on its spot of the painting (back to front). */
+  drawDecor(ctx: CanvasRenderingContext2D) {
+    const owned = this.view?.decor ?? [];
+    const spots = owned
+      .map((id) => ({ id, spot: DECOR_SPOTS[id] }))
+      .filter((d) => d.spot)
+      .sort((a, b) => a.spot.y - b.spot.y);
+    for (const { id, spot } of spots) {
+      const src = decorPicture(id);
+      let img = this.images.get(src);
+      if (!img) {
+        img = new Image();
+        img.src = src;
+        this.images.set(src, img);
+      }
+      if (!img.complete || img.naturalWidth === 0) continue;
+      const h = (img.naturalHeight / img.naturalWidth) * spot.w;
+      ctx.drawImage(img, spot.x - spot.w / 2, spot.y - h, spot.w, h);
     }
   }
 

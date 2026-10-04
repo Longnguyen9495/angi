@@ -67,10 +67,7 @@ export const LANDMARKS = {
 export const FOOTPRINTS: Placement[] = [...Object.values(BUILDINGS), ...Object.values(LANDMARKS)];
 
 /** Where each decoration stands until the guest moves it (grid cells). */
-export const DEFAULT_DECOR_CELLS: Record<
-  Exclude<DecorId, 'fence'>,
-  { x: number; z: number; rot: number }
-> = {
+export const DEFAULT_DECOR_CELLS: Record<PlaceableDecor, { x: number; z: number; rot: number }> = {
   scarecrow: { x: -4, z: 0, rot: 0 },
   lantern: { x: 3, z: -4, rot: 0 },
   jar: { x: 4, z: 1, rot: 1 },
@@ -88,10 +85,11 @@ export function cellIsFree(x: number, z: number, plotCount: number): boolean {
   return true;
 }
 
-export type PlaceableDecor = Exclude<DecorId, 'fence'>;
+/** Decorations with a 3D model on the island (the others show on the painted farm only). */
+export type PlaceableDecor = 'scarecrow' | 'lantern' | 'jar';
 
 export function isPlaceable(id: DecorId): id is PlaceableDecor {
-  return id !== 'fence';
+  return id === 'scarecrow' || id === 'lantern' || id === 'jar';
 }
 
 /**
