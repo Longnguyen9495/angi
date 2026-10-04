@@ -74,6 +74,48 @@ const data: Messages['data'] = {
     enoki: { name: 'Enoki', seedName: 'Enoki spawn', produceName: 'Enoki' },
     woodear: { name: 'Wood ear', seedName: 'Wood ear spawn', produceName: 'Wood ear' },
   },
+  events: {
+    'thu-ha-noi': {
+      name: 'Hanoi in autumn',
+      blurb:
+        'For the capital’s Liberation Day (10 October): guests come for phở, bún chả, bánh cuốn and Hanoi’s treats.',
+    },
+    'phu-nu-vn': {
+      name: 'Women’s Day week',
+      blurb:
+        'Cook something lovely for your mother, sister or sweetheart on Vietnamese Women’s Day (20 October).',
+    },
+    'nha-giao': {
+      name: 'Teachers’ Day',
+      blurb: 'Former pupils treat their teachers: the simple dishes of school days (20 November).',
+    },
+    'giang-sinh': {
+      name: 'Christmas & New Year',
+      blurb: 'The year-end table: fried chicken, steak, ribs and lasagna for get-togethers.',
+    },
+    'tet-dinh-mui': {
+      name: 'Lunar New Year',
+      blurb:
+        'The Tết feast and New Year breakfasts: chicken glass noodles, bún mọc, nem, bánh cuốn…',
+    },
+    'gio-to': {
+      name: 'Hùng Kings’ Day',
+      blurb: 'Remembering the country’s roots with the dishes of the Red River delta.',
+    },
+    'he-bien': {
+      name: 'Summer by the sea',
+      blurb: 'Summer and full boats: shrimp, squid, crab and seafood for sunny days.',
+    },
+    'quoc-khanh': {
+      name: 'National Day',
+      blurb: 'A tour of the three regions for the 2 September holidays.',
+    },
+    'trung-thu': {
+      name: 'Mid-Autumn Festival',
+      blurb:
+        'The family gathers under the full moon: dim sum, clay-pot rice, wonton noodles, bánh xèo…',
+    },
+  },
   collections: {
     'north-broth': 'Broths of the North',
     'hanoi-street': 'Hanoi street food',

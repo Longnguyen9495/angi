@@ -2,9 +2,18 @@ import { ChefHat, CookingPot, Drop, SealCheck, Star } from '@phosphor-icons/reac
 import { useRef } from 'react';
 import { ProduceImage } from '../../../components/ui/CropVisual';
 import { CropIcon } from '../../../components/ui/CropIcon';
-import { CHEF, CROPS, GUESTS, getRecipe, masteryStars, produceName } from '../../../data/game';
+import {
+  CHEF,
+  CROPS,
+  EVENT,
+  GUESTS,
+  getRecipe,
+  masteryStars,
+  produceName,
+} from '../../../data/game';
 import { canServe, guestPay, guestServed, todaysGuests, type Guest } from '../../../domain/guests';
 import { recipeProgress } from '../../../domain/selectors';
+import { EventBanner } from './EventBanner';
 import { canFulfill, orderDone, todaysOrders, type ChefOrder } from '../../../domain/orders';
 import { currentTime } from '../../../domain/time';
 import { flyTo } from '../../../motion/effects';
@@ -20,6 +29,7 @@ export function OrdersSection() {
   const guests = todaysGuests(state, now);
   return (
     <>
+      <EventBanner />
       <h3 className="fj-h3">{m.guestsTitle}</h3>
       <p className="fj-note">{m.guestsIntro}</p>
       {guests.length === 0 ? (
@@ -50,7 +60,7 @@ function GuestCard({ guest }: { guest: Guest }) {
   const ready = canServe(state, guest);
   const times = state.cooked[recipe.id] ?? 0;
   const stars = masteryStars(times);
-  const pay = guestPay(recipe.id, times + 1);
+  const pay = guestPay(recipe.id, times + 1, !!guest.event);
   const prog = recipeProgress(state, recipe.id);
 
   const serve = () => {
@@ -62,7 +72,9 @@ function GuestCard({ guest }: { guest: Guest }) {
   };
 
   return (
-    <li className={`fj-order fj-order--guest ${done ? 'is-done' : ''} ${ready ? 'is-ready' : ''}`}>
+    <li
+      className={`fj-order fj-order--guest${guest.event ? ' is-event' : ''} ${done ? 'is-done' : ''} ${ready ? 'is-ready' : ''}`}
+    >
       <div className="fj-order__head">
         <span className="npc__avatar fj-order__avatar" aria-hidden="true">
           <CookingPot size={26} weight="light" />
@@ -71,6 +83,7 @@ function GuestCard({ guest }: { guest: Guest }) {
           <p className="fj-order__kind">
             {guest.persona.name} · {m.guestFrom(guest.persona.from)}
           </p>
+          {guest.event && <p className="fj-order__event">{m.eventGuest(EVENT.bonusPct)}</p>}
           <p className="fj-order__line">{guest.persona.ask(recipe.name)}</p>
           <p className="fj-order__stars" aria-label={m.stars(stars)}>
             {[1, 2, 3].map((n) => (

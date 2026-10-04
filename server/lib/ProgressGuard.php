@@ -665,6 +665,27 @@ final class ProgressGuard
                 $count = $this->countClaims("order:{$m[1]}:%", fn ($k) => str_ends_with($k, ':xp')) + 1;
                 $count <= (int) $R['orders']['perDay'] || $fail('more orders than a day has');
                 $stats['order']++;
+            } elseif (preg_match('/^event:([a-z-]+):(\d+):(coin|xp)$/', $key, $m)) {
+                // An event milestone: its guest served on enough days of the event.
+                $e = $R['events'][$m[1]] ?? null;
+                $step = (int) $m[2];
+                ($e !== null && isset($e['targets'][$step], $R['event']['rewards'][$step])) || $fail('unknown event milestone');
+                ($res === $m[3] && $d === (int) $R['event']['rewards'][$step][$m[3] === 'coin' ? 'coins' : 'xp']) || $fail('event reward');
+                $slot = (int) $R['event']['slot'];
+                $days = [];
+                foreach ($this->claimKeys("guest:%:$slot:coin") as $k) {
+                    $days[explode(':', $k)[1]] = true;
+                }
+                foreach ($fresh as $f) {
+                    if (preg_match("/^guest:(\d{4}-\d{2}-\d{2}):$slot:coin$/", (string) $f['key'], $g)) {
+                        $days[$g[1]] = true;
+                    }
+                }
+                $in = count(array_filter(array_keys($days), fn ($day) => $day >= $e['from'] && $day <= $e['to']));
+                $in >= (int) $e['targets'][$step] || $fail('event milestone not reached');
+                if ($m[3] === 'coin') {
+                    $stats['earn'] += $d;
+                }
             } elseif (preg_match('/^upgrade:([a-z]+):(\d+)$/', $key, $m)) {
                 // A building's next level, for its price; levels are bought in order.
                 $prices = $R['upgrades'][$m[1]] ?? null;
@@ -693,7 +714,10 @@ final class ProgressGuard
                 // A guest served: the dish was cooked in this same moment, and pays what its
                 // ingredients sell for times payPct%, plus the mastery bonus (src/domain/guests.ts).
                 $G = $R['guests'];
-                ((int) $m[2] < (int) $G['perDay']) || $fail('no such guest');
+                // The event guest (slot event.slot) comes only while an event runs, for one of its dishes.
+                $event = self::eventOn($m[1]);
+                $isEvent = (int) $m[2] === (int) $R['event']['slot'];
+                ((int) $m[2] < (int) $G['perDay'] || ($isEvent && $event !== null)) || $fail('no such guest');
                 $this->slotDate($m[1], $at) || $fail('guest is not today');
                 $dish = null;
                 $value = 0;
@@ -704,13 +728,14 @@ final class ProgressGuard
                     }
                 }
                 $dish !== null || $fail('a guest served nothing');
+                (!$isEvent || in_array($dish, $event['recipes'], true)) || $fail('not an event dish');
                 if ($m[3] === 'xp') {
                     ($res === 'xp' && $d === (int) $G['xp']) || $fail('guest XP');
                 } else {
-                    $pay = self::guestPay($value, (int) ($new['cooked'][$dish] ?? 0));
+                    $pay = self::guestPay($value, (int) ($new['cooked'][$dish] ?? 0), $isEvent);
                     ($res === 'coin' && $d === $pay) || $fail('guest pay');
                     $count = $this->countClaims("guest:{$m[1]}:%", fn ($k) => str_ends_with($k, ':coin')) + 1;
-                    $count <= (int) $G['perDay'] || $fail('more guests than a day has');
+                    $count <= (int) $G['perDay'] + 1 || $fail('more guests than a day has');
                     $stats['earn'] += $d;
                 }
             } elseif (preg_match('/^order:(\d{4}-\d{2}-\d{2}:\d+):seed:([a-z]+)$/', $key, $m)) {
@@ -1678,11 +1703,23 @@ final class ProgressGuard
     }
 
     /** Same as guestPay() in src/domain/guests.ts: ingredients worth `$value`, cooked `$times` times. */
-    public static function guestPay(int $value, int $times): int
+    public static function guestPay(int $value, int $times, bool $event = false): int
     {
         $G = self::rules()['guests'];
         $stars = count(array_filter($G['starAt'], fn ($n) => $times >= (int) $n));
-        return intdiv($value * (int) $G['payPct'] * (100 + (int) $G['starBonusPct'][$stars]) + 5000, 10000);
+        $extra = $event ? (int) self::rules()['event']['bonusPct'] : 0;
+        return intdiv($value * (int) $G['payPct'] * (100 + (int) $G['starBonusPct'][$stars]) * (100 + $extra) + 500_000, 1_000_000);
+    }
+
+    /** Same as eventOn() in src/data/game.ts: the event running on a local date. */
+    public static function eventOn(string $date): ?array
+    {
+        foreach ((array) (self::rules()['events'] ?? []) as $e) {
+            if ($date >= $e['from'] && $date <= $e['to']) {
+                return $e;
+            }
+        }
+        return null;
     }
 
     /** Same as xpForLevel() in src/data/game.ts. */

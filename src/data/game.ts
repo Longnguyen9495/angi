@@ -545,9 +545,10 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
   goose: animal('goose', 'herbs', 'gooseegg', 1, 6, 7),
   rabbit: animal('rabbit', 'carrot', 'rabbitwool', 1, 6, 9),
   sheep: animal('sheep', 'cabbage', 'wool', 1, 10, 8),
-  // Raised for meat: a pig from the start so the first recipe (cơm tấm sườn) needs no shop,
+  // Raised for meat: a pig from the start (fed on greens, rice is wanted everywhere) so the
+  // first recipe (cơm tấm sườn) needs no shop,
   // then broilers, muscovy ducks and yellow cattle; the market sells the same meat dearer.
-  pig: animal('pig', 'rice', 'pork', 2, 1, 1),
+  pig: animal('pig', 'herbs', 'pork', 2, 1, 1),
   broiler: animal('broiler', 'rice', 'chickenmeat', 2, 1.25, 2),
   muscovy: animal('muscovy', 'bean', 'duckmeat', 2, 2, 4),
   cattle: animal('cattle', 'herbs', 'beef', 2, 3, 5),
@@ -1116,6 +1117,180 @@ export const UPGRADES: Record<UpgradeId, { prices: readonly number[] }> = {
   boat: { prices: [400, 1200] },
 };
 export const UPGRADE_IDS = Object.keys(UPGRADES) as UpgradeId[];
+
+/**
+ * Seasonal events on the Vietnamese calendar (local dates, both ends included). While one runs,
+ * a third guest comes each day for one of its dishes and pays `EVENT.bonusPct`% more; serving
+ * that guest on enough days of the event pays its milestones (`targets`, in days, with
+ * `EVENT.rewards` by step). Names and blurbs live in t.data.events. The server checks all of it.
+ */
+export type EventId =
+  | 'thu-ha-noi'
+  | 'phu-nu-vn'
+  | 'nha-giao'
+  | 'giang-sinh'
+  | 'tet-dinh-mui'
+  | 'gio-to'
+  | 'he-bien'
+  | 'quoc-khanh'
+  | 'trung-thu';
+export interface GameEvent {
+  id: EventId;
+  from: string;
+  to: string;
+  recipes: string[];
+  targets: number[];
+}
+export const EVENTS: GameEvent[] = [
+  {
+    id: 'thu-ha-noi',
+    from: '2026-10-01',
+    to: '2026-10-14',
+    recipes: [
+      'pho-bo',
+      'bun-cha',
+      'banh-cuon',
+      'bun-rieu',
+      'bun-dau-mam-tom',
+      'bun-ca-ha-noi',
+      'mien-ga',
+      'bun-moc',
+      'com-rang-dua-bo',
+      'chao-long',
+    ],
+    targets: [3, 6, 10],
+  },
+  {
+    id: 'phu-nu-vn',
+    from: '2026-10-17',
+    to: '2026-10-23',
+    recipes: [
+      'goi-cuon',
+      'goi-cuon-chay',
+      'salad-ga-nuong',
+      'banh-xeo',
+      'com-ga-hoi-an',
+      'bun-bo-hue',
+      'mi-quang',
+    ],
+    targets: [3, 6],
+  },
+  {
+    id: 'nha-giao',
+    from: '2026-11-15',
+    to: '2026-11-22',
+    recipes: [
+      'com-tam',
+      'banh-mi-thit-nuong',
+      'hu-tieu-nam-vang',
+      'chao-suon',
+      'pho-ga',
+      'bun-thit-nuong-cha-gio',
+    ],
+    targets: [3, 6],
+  },
+  {
+    id: 'giang-sinh',
+    from: '2026-12-18',
+    to: '2027-01-01',
+    recipes: [
+      'ga-ran',
+      'bit-tet-bo',
+      'suon-nuong-bbq',
+      'lasagna-bo-bam',
+      'pizza-pepperoni',
+      'mi-y-carbonara',
+      'cheeseburger-bo',
+      'salad-ca-ngu-trung',
+    ],
+    targets: [3, 7, 12],
+  },
+  {
+    id: 'tet-dinh-mui',
+    from: '2027-01-27',
+    to: '2027-02-14',
+    recipes: [
+      'mien-ga',
+      'bun-moc',
+      'nem-nuong',
+      'banh-cuon',
+      'pho-bo',
+      'com-ga-hoi-an',
+      'banh-xeo',
+      'goi-cuon',
+      'chao-vit',
+    ],
+    targets: [3, 7, 14],
+  },
+  {
+    id: 'gio-to',
+    from: '2027-04-12',
+    to: '2027-04-18',
+    recipes: ['pho-bo', 'bun-cha', 'banh-da-cua', 'bun-rieu', 'banh-cuon', 'mien-ga'],
+    targets: [3, 6],
+  },
+  {
+    id: 'he-bien',
+    from: '2027-06-01',
+    to: '2027-06-21',
+    recipes: [
+      'com-chien-hai-san',
+      'mi-xao-gion-hai-san',
+      'mi-tom-yum-hai-san',
+      'canh-chua-ca',
+      'poke-ca-hoi',
+      'spaghetti-hai-san',
+      'banh-canh-cua',
+      'com-ca-saba-nuong',
+    ],
+    targets: [3, 7, 14],
+  },
+  {
+    id: 'quoc-khanh',
+    from: '2027-08-28',
+    to: '2027-09-05',
+    recipes: [
+      'pho-bo',
+      'banh-mi-thit-nuong',
+      'com-tam',
+      'bun-bo-hue',
+      'mi-quang',
+      'banh-xeo',
+      'bun-cha',
+    ],
+    targets: [3, 6],
+  },
+  {
+    id: 'trung-thu',
+    from: '2027-09-09',
+    to: '2027-09-19',
+    recipes: [
+      'dim-sum-thap-cam',
+      'com-nieu-quang-dong',
+      'mi-hoanh-thanh-xa-xiu',
+      'com-ga-hai-nam',
+      'banh-xeo',
+      'goi-cuon',
+      'mi-vit-tiem',
+    ],
+    targets: [3, 7],
+  },
+];
+export const EVENT = {
+  /** The event guest's slot (after the everyday guests). */
+  slot: GUESTS.perDay,
+  bonusPct: 50,
+  rewards: [
+    { coins: 100, xp: 100 },
+    { coins: 200, xp: 200 },
+    { coins: 400, xp: 300 },
+  ],
+} as const;
+
+/** The event running on a local date (YYYY-MM-DD), if any. */
+export function eventOn(date: string): GameEvent | null {
+  return EVENTS.find((e) => date >= e.from && date <= e.to) ?? null;
+}
 
 /** Plots a new guest starts with. */
 export const FARM_PLOT_COUNT = 4;

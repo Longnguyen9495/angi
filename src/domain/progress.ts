@@ -1,4 +1,4 @@
-import type { UpgradeId } from '../data/game';
+import type { EventId, UpgradeId } from '../data/game';
 import type { AnimalId, CropId, DecorId, ProduceId, RecipeId, RegionId } from '../data/types';
 import { ANIMALS, CROPS, FARM_PLOT_COUNT, PRODUCE_IDS } from '../data/game';
 import { emptyQuests, type QuestState } from './quests';
@@ -109,6 +109,8 @@ export interface GuestProgress {
   decor: DecorId[];
   /** Collections whose reward was claimed. */
   collections: string[];
+  /** Seasonal events: days their guest was served, milestones claimed (steps). */
+  events: Partial<Record<EventId, { days: string[]; claimed: number[] }>>;
   /** Farm buildings upgraded with xu: level per building (missing = 0). */
   upgrades: Partial<Record<UpgradeId, number>>;
   /** Where each decoration stands on the 3D island (grid cell + quarter turns); missing = default spot. */
@@ -242,6 +244,7 @@ export function createInitialProgress(now: number): GuestProgress {
     decor: [],
     collections: [],
     upgrades: {},
+    events: {},
     decorLayout: {},
     animals: structuredClone(EMPTY_ANIMALS),
     hive: { startedAt: null, readyAt: null },

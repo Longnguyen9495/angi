@@ -5,6 +5,7 @@ import {
   FARM_PLOT_COUNT,
   MAX_PLOT_COUNT,
   PLOT_UNLOCK_LEVELS,
+  EVENTS,
   UPGRADES,
   UPGRADE_IDS,
   levelForXp,
@@ -71,6 +72,21 @@ function counts<K extends string>(v: unknown, empty: Record<K, number>): Record<
     if (n === undefined) continue;
     if (typeof n !== 'number' || !Number.isFinite(n) || n < 0) return null;
     out[k] = Math.floor(n);
+  }
+  return out;
+}
+
+function parseEvents(v: unknown): GuestProgress['events'] {
+  if (!isObject(v)) return {};
+  const out: GuestProgress['events'] = {};
+  for (const e of EVENTS) {
+    const x = v[e.id];
+    if (!isObject(x)) continue;
+    const days = isStringArray(x.days) ? [...new Set(x.days)] : [];
+    const claimed = Array.isArray(x.claimed)
+      ? [...new Set(x.claimed.filter((n): n is number => Number.isInteger(n) && n >= 0))]
+      : [];
+    out[e.id] = { days, claimed };
   }
   return out;
 }
@@ -262,6 +278,7 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
     decorLayout: isObject(raw.decorLayout) ? parseLayout(raw.decorLayout) : {},
     collections: isStringArray(raw.collections) ? [...new Set(raw.collections)] : [],
     upgrades: parseUpgrades(raw.upgrades),
+    events: parseEvents(raw.events),
     decor: isStringArray(raw.decor)
       ? (raw.decor.filter((d) => Object.hasOwn(DECOR, d)) as DecorId[])
       : [],

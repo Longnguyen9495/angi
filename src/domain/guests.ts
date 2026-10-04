@@ -1,4 +1,13 @@
-import { GUESTS, RECIPE_LIST, getRecipe, masteryStars, sellPrice } from '../data/game';
+import {
+  EVENT,
+  GUESTS,
+  RECIPE_LIST,
+  eventOn,
+  getRecipe,
+  masteryStars,
+  sellPrice,
+  type EventId,
+} from '../data/game';
 import type { RecipeId } from '../data/types';
 import { t } from '../i18n';
 import { hash, rng } from './orders';
@@ -17,6 +26,8 @@ export interface Guest {
   slot: number;
   persona: Persona;
   recipe: RecipeId;
+  /** Set for the event guest: asks for one of the event's dishes and pays its bonus. */
+  event?: EventId;
 }
 
 /**
@@ -39,6 +50,22 @@ export function todaysGuests(p: GuestProgress, now: number): Guest[] {
     const recipe = dishes.splice(Math.floor(r() * dishes.length), 1)[0]!;
     out.push({ id: `guest:${date}:${slot}`, date, slot, persona, recipe: recipe.id });
   }
+  // While an event runs, one more guest comes for one of its dishes the garden can make.
+  const event = eventOn(date);
+  const featured = event ? menu.filter((r) => event.recipes.includes(r.id)) : [];
+  if (event && featured.length > 0 && people.length > 0) {
+    const persona = people.splice(Math.floor(r() * people.length), 1)[0]!;
+    const recipe = featured[Math.floor(r() * featured.length)]!;
+    const slot = EVENT.slot;
+    out.push({
+      id: `guest:${date}:${slot}`,
+      date,
+      slot,
+      persona,
+      recipe: recipe.id,
+      event: event.id,
+    });
+  }
   return out;
 }
 
@@ -59,7 +86,15 @@ export function ingredientValue(id: RecipeId): number {
  * What a guest pays for a dish cooked for the `times`-th time (stars count that cooking):
  * payPct% of its ingredients' value, plus the mastery bonus. Integer maths, as on the server.
  */
-export function guestPay(id: RecipeId, times: number): number {
+export function guestPay(id: RecipeId, times: number, event = false): number {
   const bonus = GUESTS.starBonusPct[masteryStars(times)];
-  return Math.floor((ingredientValue(id) * GUESTS.payPct * (100 + bonus) + 5000) / 10000);
+  const extra = event ? EVENT.bonusPct : 0;
+  return Math.floor(
+    (ingredientValue(id) * GUESTS.payPct * (100 + bonus) * (100 + extra) + 500_000) / 1_000_000,
+  );
+}
+
+/** Days of an event on which its guest was served (as this garden recorded them). */
+export function eventDays(p: GuestProgress, id: EventId): string[] {
+  return p.events?.[id]?.days ?? [];
 }

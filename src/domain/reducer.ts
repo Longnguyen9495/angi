@@ -16,6 +16,9 @@ import {
   isMeat,
   GUESTS,
   UPGRADES,
+  EVENT,
+  EVENTS,
+  type EventId,
   type UpgradeId,
 } from '../data/game';
 import type { AnimalId, CropId, DecorId, Meat, ProduceId, RecipeId } from '../data/types';
@@ -114,6 +117,7 @@ export type Action =
   | { type: 'SERVE_GUEST'; guestId: string; now: number }
   | { type: 'CLAIM_COLLECTION'; id: string; now: number }
   | { type: 'BUY_UPGRADE'; id: UpgradeId; now: number }
+  | { type: 'CLAIM_EVENT'; id: EventId; step: number; now: number }
   | { type: 'BUY_DECOR'; decor: DecorId; now: number }
   | {
       type: 'CHECK_IN';
@@ -539,7 +543,11 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       ensureDay(s, action.now);
       if (!cookInto(s, guest.recipe, action.now)) return state;
       // Paid for this cooking: its stars count it.
-      const pay = guestPay(guest.recipe, s.cooked[guest.recipe] ?? 0);
+      const pay = guestPay(guest.recipe, s.cooked[guest.recipe] ?? 0, !!guest.event);
+      if (guest.event) {
+        const e = s.events[guest.event] ?? { days: [], claimed: [] };
+        s.events = { ...s.events, [guest.event]: { ...e, days: [...e.days, guest.date] } };
+      }
       post(s, `${guest.id}:coin`, 'coin', pay, 'guest', action.now);
       post(s, `${guest.id}:xp`, 'xp', GUESTS.xp, 'guest', action.now);
       s.orders = { ...s.orders, done: [...s.orders.done, guest.id] };
@@ -867,6 +875,22 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       if (!post(s, `${key}:coin`, 'coin', -price, 'market', action.now)) return state;
       post(s, `${key}:item`, `ingredient:${action.item}`, 1, 'market', action.now);
       track(s, 'buy', action.now);
+      return s;
+    }
+
+    case 'CLAIM_EVENT': {
+      const ev = EVENTS.find((e) => e.id === action.id);
+      const need = ev?.targets[action.step];
+      const reward = EVENT.rewards[action.step];
+      const log = state.events[action.id] ?? { days: [], claimed: [] };
+      if (!ev || need === undefined || !reward || log.claimed.includes(action.step)) return state;
+      if (log.days.length < need) return state;
+      const s = structuredClone(state);
+      const key = `event:${ev.id}:${action.step}`;
+      if (!post(s, `${key}:coin`, 'coin', reward.coins, 'event', action.now)) return state;
+      post(s, `${key}:xp`, 'xp', reward.xp, 'event', action.now);
+      s.events = { ...s.events, [ev.id]: { ...log, claimed: [...log.claimed, action.step] } };
+      track(s, 'earn', action.now, reward.coins);
       return s;
     }
 

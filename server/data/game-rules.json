@@ -527,6 +527,197 @@
       15
     ]
   },
+  "events": {
+    "thu-ha-noi": {
+      "id": "thu-ha-noi",
+      "from": "2026-10-01",
+      "to": "2026-10-14",
+      "recipes": [
+        "pho-bo",
+        "bun-cha",
+        "banh-cuon",
+        "bun-rieu",
+        "bun-dau-mam-tom",
+        "bun-ca-ha-noi",
+        "mien-ga",
+        "bun-moc",
+        "com-rang-dua-bo",
+        "chao-long"
+      ],
+      "targets": [
+        3,
+        6,
+        10
+      ]
+    },
+    "phu-nu-vn": {
+      "id": "phu-nu-vn",
+      "from": "2026-10-17",
+      "to": "2026-10-23",
+      "recipes": [
+        "goi-cuon",
+        "goi-cuon-chay",
+        "salad-ga-nuong",
+        "banh-xeo",
+        "com-ga-hoi-an",
+        "bun-bo-hue",
+        "mi-quang"
+      ],
+      "targets": [
+        3,
+        6
+      ]
+    },
+    "nha-giao": {
+      "id": "nha-giao",
+      "from": "2026-11-15",
+      "to": "2026-11-22",
+      "recipes": [
+        "com-tam",
+        "banh-mi-thit-nuong",
+        "hu-tieu-nam-vang",
+        "chao-suon",
+        "pho-ga",
+        "bun-thit-nuong-cha-gio"
+      ],
+      "targets": [
+        3,
+        6
+      ]
+    },
+    "giang-sinh": {
+      "id": "giang-sinh",
+      "from": "2026-12-18",
+      "to": "2027-01-01",
+      "recipes": [
+        "ga-ran",
+        "bit-tet-bo",
+        "suon-nuong-bbq",
+        "lasagna-bo-bam",
+        "pizza-pepperoni",
+        "mi-y-carbonara",
+        "cheeseburger-bo",
+        "salad-ca-ngu-trung"
+      ],
+      "targets": [
+        3,
+        7,
+        12
+      ]
+    },
+    "tet-dinh-mui": {
+      "id": "tet-dinh-mui",
+      "from": "2027-01-27",
+      "to": "2027-02-14",
+      "recipes": [
+        "mien-ga",
+        "bun-moc",
+        "nem-nuong",
+        "banh-cuon",
+        "pho-bo",
+        "com-ga-hoi-an",
+        "banh-xeo",
+        "goi-cuon",
+        "chao-vit"
+      ],
+      "targets": [
+        3,
+        7,
+        14
+      ]
+    },
+    "gio-to": {
+      "id": "gio-to",
+      "from": "2027-04-12",
+      "to": "2027-04-18",
+      "recipes": [
+        "pho-bo",
+        "bun-cha",
+        "banh-da-cua",
+        "bun-rieu",
+        "banh-cuon",
+        "mien-ga"
+      ],
+      "targets": [
+        3,
+        6
+      ]
+    },
+    "he-bien": {
+      "id": "he-bien",
+      "from": "2027-06-01",
+      "to": "2027-06-21",
+      "recipes": [
+        "com-chien-hai-san",
+        "mi-xao-gion-hai-san",
+        "mi-tom-yum-hai-san",
+        "canh-chua-ca",
+        "poke-ca-hoi",
+        "spaghetti-hai-san",
+        "banh-canh-cua",
+        "com-ca-saba-nuong"
+      ],
+      "targets": [
+        3,
+        7,
+        14
+      ]
+    },
+    "quoc-khanh": {
+      "id": "quoc-khanh",
+      "from": "2027-08-28",
+      "to": "2027-09-05",
+      "recipes": [
+        "pho-bo",
+        "banh-mi-thit-nuong",
+        "com-tam",
+        "bun-bo-hue",
+        "mi-quang",
+        "banh-xeo",
+        "bun-cha"
+      ],
+      "targets": [
+        3,
+        6
+      ]
+    },
+    "trung-thu": {
+      "id": "trung-thu",
+      "from": "2027-09-09",
+      "to": "2027-09-19",
+      "recipes": [
+        "dim-sum-thap-cam",
+        "com-nieu-quang-dong",
+        "mi-hoanh-thanh-xa-xiu",
+        "com-ga-hai-nam",
+        "banh-xeo",
+        "goi-cuon",
+        "mi-vit-tiem"
+      ],
+      "targets": [
+        3,
+        7
+      ]
+    }
+  },
+  "event": {
+    "slot": 2,
+    "bonusPct": 50,
+    "rewards": [
+      {
+        "coins": 100,
+        "xp": 100
+      },
+      {
+        "coins": 200,
+        "xp": 200
+      },
+      {
+        "coins": 400,
+        "xp": 300
+      }
+    ]
+  },
   "upgrades": {
     "well": [
       150,
@@ -729,7 +920,7 @@
       "unlockLevel": 8
     },
     "pig": {
-      "feed": "rice",
+      "feed": "herbs",
       "product": "pork",
       "yield": 2,
       "hoursMs": 3600000,

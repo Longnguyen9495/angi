@@ -53,6 +53,46 @@ const data = {
     enoki: { name: 'Nấm kim châm', seedName: 'Phôi nấm kim châm', produceName: 'Nấm kim châm' },
     woodear: { name: 'Mộc nhĩ', seedName: 'Phôi mộc nhĩ', produceName: 'Mộc nhĩ' },
   },
+  events: {
+    'thu-ha-noi': {
+      name: 'Mùa thu Hà Nội',
+      blurb:
+        'Mừng ngày Giải phóng Thủ đô 10/10: khách ghé tìm phở, bún chả, bánh cuốn và những món quà Hà Nội.',
+    },
+    'phu-nu-vn': {
+      name: 'Tuần lễ 20/10',
+      blurb: 'Nấu một món thật ngon cho mẹ, cho chị, cho người thương nhân Ngày Phụ nữ Việt Nam.',
+    },
+    'nha-giao': {
+      name: 'Tri ân 20/11',
+      blurb: 'Học trò cũ ghé quán mời thầy cô một bữa: những món giản dị của tuổi đi học.',
+    },
+    'giang-sinh': {
+      name: 'Giáng sinh & Năm mới',
+      blurb: 'Bàn tiệc cuối năm: gà rán, bít tết, sườn nướng, lasagna cho những buổi sum vầy.',
+    },
+    'tet-dinh-mui': {
+      name: 'Tết Đinh Mùi',
+      blurb: 'Mâm cỗ ngày Tết và những món ăn sáng mồng Một: miến gà, bún mọc, nem, bánh cuốn…',
+    },
+    'gio-to': {
+      name: 'Giỗ Tổ Hùng Vương',
+      blurb: 'Nhớ về cội nguồn đất Tổ với những món ăn của đồng bằng Bắc Bộ.',
+    },
+    'he-bien': {
+      name: 'Mùa hè biển',
+      blurb: 'Hè về, thuyền đầy cá: tôm, mực, cua và những món hải sản cho ngày nắng.',
+    },
+    'quoc-khanh': {
+      name: 'Mừng Quốc khánh 2/9',
+      blurb:
+        'Một vòng ba miền với phở, bánh mì, cơm tấm, bún bò, mì Quảng trong những ngày lễ lớn.',
+    },
+    'trung-thu': {
+      name: 'Tết Trung thu',
+      blurb: 'Đêm trăng rằm cả nhà quây quần: dim sum, cơm niêu, mì hoành thánh, bánh xèo…',
+    },
+  },
   collections: {
     'north-broth': 'Nước dùng đất Bắc',
     'hanoi-street': 'Quà vặt Hà Nội',

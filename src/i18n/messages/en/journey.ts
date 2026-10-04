@@ -500,6 +500,18 @@ const journey: Messages['journey'] = {
     done: 'Delivered',
     deliver: 'Deliver',
     notEnough: 'Not enough yet',
+    eventKicker: 'Event',
+    eventLeft: (days) => (days <= 0 ? 'Last day' : `${days} ${s(days, 'day', 'days')} left`),
+    eventDishes: 'Event dishes',
+    eventProgress: (n) => `Event guest served on ${n} ${s(n, 'day', 'days')}`,
+    eventMilestone: (days, coins, xp) =>
+      `${days} ${s(days, 'day', 'days')} · ${coins} ${s(coins, 'coin', 'coins')} · ${xp} XP`,
+    eventClaim: 'Claim',
+    eventClaimed: 'Claimed',
+    eventDone: (name, coins) => `${name}: +${coins} ${s(coins, 'coin', 'coins')}!`,
+    eventNone:
+      'None of the event dishes is in your kitchen yet — open more regions and the event guest will come.',
+    eventGuest: (pct) => `Event guest · pays ${pct}% more`,
     guestsTitle: "Today's guests",
     guestsIntro:
       'Guests drop by the kitchen for a dish. Cook and serve it for coins — the better you know a dish (more stars), the more they pay.',

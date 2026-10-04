@@ -18,6 +18,7 @@ import {
   levelForXp,
   UPGRADES,
   UPGRADE_IDS,
+  EVENTS,
 } from '../data/game';
 import type { AnimalId, CropId, DecorId, ProduceId } from '../data/types';
 import { canServe, guestPay, ingredientValue, todaysGuests } from './guests';
@@ -98,23 +99,7 @@ function play(): { steps: Step[]; last: GuestProgress; lastAt: number } {
       }
     }
     act({ type: 'HARVEST_ALL', now: at() });
-    // A new plot as soon as the level and the purse allow.
-    if (nextLand(s)?.affordable) act({ type: 'BUY_LAND', now: at() });
-    const thirsty = s.plots.find((p) => waterBlock(s, p, clock) === null);
-    if (thirsty) act({ type: 'WATER', plotId: thirsty.id, now: at() });
-
-    for (const plot of s.plots.filter((p) => p.crop === null)) {
-      const open = (Object.keys(CROPS) as CropId[]).filter((c) => cropAvailable(s, c));
-      // Rotate through every open crop (vegetables, fruit trees, mushrooms), buying as needed.
-      let crop: CropId | undefined = open[(tick + plot.id) % open.length];
-      if (crop && s.seeds[crop] <= 0 && s.coins >= MARKET.seed(crop))
-        act({ type: 'BUY_SEED', crop, now: at() });
-      if (crop && s.seeds[crop] <= 0) crop = open.find((c) => s.seeds[c] > 0);
-      if (crop && s.seeds[crop] > 0)
-        act({ type: 'PLANT_FROM_TRAY', crop, plotId: plot.id, now: at() });
-    }
-
-    // Guests first: their dish is fixed for the day, the bot cooks the rest with what is left.
+    // Guests first, before xu go on seeds, land and buildings: their dish is fixed for the day.
     for (const g of todaysGuests(s, clock)) {
       // Short of meat only: the butcher, then the guest.
       const short = recipeProgress(s, g.recipe).ingredients.filter((i) => i.have < i.qty);
@@ -126,6 +111,28 @@ function play(): { steps: Step[]; last: GuestProgress; lastAt: number } {
       }
       if (canServe(s, g)) act({ type: 'SERVE_GUEST', guestId: g.id, now: at() });
     }
+    // A new plot as soon as the level and the purse allow.
+    if (nextLand(s)?.affordable) act({ type: 'BUY_LAND', now: at() });
+    const thirsty = s.plots.find((p) => waterBlock(s, p, clock) === null);
+    if (thirsty) act({ type: 'WATER', plotId: thirsty.id, now: at() });
+
+    // What today's guests still need from the garden comes first, like a player would plant it.
+    const wanted = todaysGuests(s, clock)
+      .flatMap((g) => recipeProgress(s, g.recipe).ingredients)
+      .filter((i) => i.have + i.growing < i.qty && i.crop in CROPS)
+      .map((i) => i.crop as CropId)
+      .filter((c) => cropAvailable(s, c));
+    for (const plot of s.plots.filter((p) => p.crop === null)) {
+      const open = (Object.keys(CROPS) as CropId[]).filter((c) => cropAvailable(s, c));
+      // Else rotate through every open crop (vegetables, fruit trees, mushrooms), buying as needed.
+      let crop: CropId | undefined = wanted.shift() ?? open[(tick + plot.id) % open.length];
+      if (crop && s.seeds[crop] <= 0 && s.coins >= MARKET.seed(crop))
+        act({ type: 'BUY_SEED', crop, now: at() });
+      if (crop && s.seeds[crop] <= 0) crop = open.find((c) => s.seeds[c] > 0);
+      if (crop && s.seeds[crop] > 0)
+        act({ type: 'PLANT_FROM_TRAY', crop, plotId: plot.id, now: at() });
+    }
+
     for (const r of RECIPE_LIST.filter((x) => isBuiltinRecipe(x.id))) {
       // Short of meat only: buy it at the market when the purse allows.
       const short = recipeProgress(s, r.id).ingredients.filter((i) => i.have < i.qty);
@@ -153,8 +160,16 @@ function play(): { steps: Step[]; last: GuestProgress; lastAt: number } {
     for (const id of Object.keys(ANIMALS) as AnimalId[]) {
       const stage = animalStage(s, id, clock);
       if (stage === 'ready') act({ type: 'COLLECT_ANIMAL', animal: id, now: at() });
-      if (animalStage(s, id, clock) === 'hungry' && s.ingredients[ANIMALS[id].feed] > 4)
+      if (animalStage(s, id, clock) === 'hungry' && s.ingredients[ANIMALS[id].feed] > 8)
         act({ type: 'FEED_ANIMAL', animal: id, now: at() });
+    }
+    // Event milestones as soon as they are reached.
+    for (const e of EVENTS) {
+      e.targets.forEach((need, step) => {
+        const log = s.events[e.id];
+        if (log && log.days.length >= need && !log.claimed.includes(step))
+          act({ type: 'CLAIM_EVENT', id: e.id, step, now: at() });
+      });
     }
     // Spare xu go into the farm's buildings, one level at a time.
     for (const id of UPGRADE_IDS) {
@@ -349,6 +364,11 @@ function cheats(last: GuestProgress, lastAt: number) {
     }
   }
   add(
+    'an event milestone claimed before it is reached',
+    withEntry(last, 'event:giang-sinh:2:coin', 'coin', 400, at),
+    'rule',
+  );
+  add(
     'a building upgraded without paying',
     { ...structuredClone(last), upgrades: { ...last.upgrades, well: 3 } },
     'rule',
@@ -458,7 +478,10 @@ function parity() {
   );
   // What each recipe's guest pays, at every mastery step; levels across the curve.
   const guests = RECIPE_LIST.flatMap((r) =>
-    [1, 4, 5, 14, 15, 40].map((n) => [ingredientValue(r.id), n, guestPay(r.id, n)] as const),
+    [1, 4, 5, 14, 15, 40].flatMap((n) => [
+      [ingredientValue(r.id), n, guestPay(r.id, n), false] as const,
+      [ingredientValue(r.id), n, guestPay(r.id, n, true), true] as const,
+    ]),
   );
   const levels = Array.from({ length: 300 }, (_, i) => i * 97).map(
     (x) => [x, levelForXp(x)] as const,
@@ -491,6 +514,9 @@ describe('server save guard (ProgressGuard.php)', () => {
       expect(bought.some((k) => /^land:\d+:-?\d+$/.test(k))).toBe(true);
       expect(last.plots.length).toBeGreaterThan(4);
       expect(bought.some((k) => /^upgrade:[a-z]+:\d+$/.test(k))).toBe(true);
+      // The week falls in the autumn event: its guest was served and a milestone paid.
+      expect(bought.some((k) => /^guest:[\d-]+:2:coin$/.test(k))).toBe(true);
+      expect(bought.some((k) => /^event:thu-ha-noi:0:coin$/.test(k))).toBe(true);
       expect(bought.some((k) => /^guest:[\d-]+:\d:coin$/.test(k))).toBe(true);
       // The bot really played: every part of the game came into its saves.
       const families = new Set(

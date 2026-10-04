@@ -498,6 +498,17 @@ const journey = {
     done: 'Đã giao',
     deliver: 'Giao đơn',
     notEnough: 'Chưa đủ hàng',
+    eventKicker: 'Sự kiện',
+    eventLeft: (days: number) => (days <= 0 ? 'Ngày cuối' : `Còn ${days} ngày`),
+    eventDishes: 'Món của sự kiện',
+    eventProgress: (n: number) => `Đã phục vụ khách sự kiện ${n} ngày`,
+    eventMilestone: (days: number, coins: number, xp: number) =>
+      `${days} ngày · ${coins} xu · ${xp} XP`,
+    eventClaim: 'Nhận',
+    eventClaimed: 'Đã nhận',
+    eventDone: (name: string, coins: number) => `${name}: +${coins} xu!`,
+    eventNone: 'Chưa có món nào của sự kiện trong bếp bạn — mở thêm vùng để khách sự kiện ghé.',
+    eventGuest: (pct: number) => `Khách sự kiện · trả thêm ${pct}%`,
     guestsTitle: 'Thực khách hôm nay',
     guestsIntro:
       'Khách ghé bếp gọi món. Nấu và phục vụ để nhận xu — món càng thạo (nhiều sao) khách trả càng hậu.',

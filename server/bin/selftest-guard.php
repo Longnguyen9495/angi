@@ -71,8 +71,8 @@ foreach ($fixture['parity']['bites'] as [$t, $delay]) {
 foreach ($fixture['parity']['xp'] as [$ms, $xp]) {
     $check("harvestXp($ms)", ProgressGuard::harvestXp((int) $ms) === (int) $xp);
 }
-foreach ($fixture['parity']['guests'] ?? [] as [$value, $times, $pay]) {
-    $check("guestPay($value, $times)", ProgressGuard::guestPay((int) $value, (int) $times) === (int) $pay);
+foreach ($fixture['parity']['guests'] ?? [] as [$value, $times, $pay, $event]) {
+    $check("guestPay($value, $times)", ProgressGuard::guestPay((int) $value, (int) $times, (bool) $event) === (int) $pay);
 }
 foreach ($fixture['parity']['levels'] ?? [] as [$xp, $lv]) {
     $check("level($xp)", ProgressGuard::level((int) $xp) === (int) $lv);
