@@ -1903,6 +1903,25 @@
   color: var(--fr-gold);
 }
 
+.fj-order__stars,
+.fj-page__stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--fr-gold, #d7a85d);
+}
+.fj-order__stars {
+  margin-top: 6px;
+  font-size: 0.78rem;
+}
+.fj-order__stars span {
+  margin-left: 6px;
+  color: var(--fr-muted);
+}
+.fj-order--guest .fj-order__avatar {
+  background: color-mix(in srgb, var(--fr-gold, #d7a85d) 22%, transparent);
+}
+
 .fj-order__line {
   margin-top: 4px;
   font-family: var(--fr-display);

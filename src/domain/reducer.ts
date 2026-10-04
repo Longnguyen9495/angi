@@ -14,6 +14,7 @@ import {
   XP,
   harvestXp,
   isMeat,
+  GUESTS,
 } from '../data/game';
 import type { AnimalId, CropId, DecorId, Meat, ProduceId, RecipeId } from '../data/types';
 import {
@@ -46,6 +47,7 @@ import {
   recipeProgress,
   waterBlock,
 } from './selectors';
+import { canServe, guestPay, todaysGuests } from './guests';
 import { canFulfill, todaysOrders } from './orders';
 import {
   QUEST_DEFS,
@@ -105,6 +107,7 @@ export type Action =
   | { type: 'BUY_SEED'; crop: CropId; now: number }
   | { type: 'BUY_ITEM'; item: Meat; now: number }
   | { type: 'BUY_LAND'; now: number }
+  | { type: 'SERVE_GUEST'; guestId: string; now: number }
   | { type: 'BUY_DECOR'; decor: DecorId; now: number }
   | {
       type: 'CHECK_IN';
@@ -278,6 +281,26 @@ function applyUnlocks(s: GuestProgress, now: number): GuestProgress {
   }
   next.recentCropUnlock = crops[crops.length - 1] ?? next.recentCropUnlock;
   return next;
+}
+
+/**
+ * Cooks a recipe into `s` (a copy): spends its ingredients, pays its XP, counts it. All or
+ * nothing: false (and `s` must be dropped) when it cannot, or this very cooking was done.
+ */
+function cookInto(s: GuestProgress, id: RecipeId, now: number): boolean {
+  if (!hasRecipe(id) || !recipeProgress(s, id).canCook) return false;
+  const recipe = getRecipe(id);
+  const key = `cook:${recipe.id}:${now}`;
+  for (const ing of recipe.ingredients) {
+    if (!post(s, `${key}:${ing.crop}`, `ingredient:${ing.crop}`, -ing.qty, 'cook', now))
+      return false;
+  }
+  if (!post(s, `${key}:xp`, 'xp', recipe.xp, 'cook', now)) return false;
+  const first = !s.cooked[recipe.id];
+  s.cooked = { ...s.cooked, [recipe.id]: (s.cooked[recipe.id] ?? 0) + 1 };
+  track(s, 'cook', now);
+  if (first) track(s, 'newRecipe', now);
+  return true;
 }
 
 export function gameReducer(state: GuestProgress, action: Action): GuestProgress {
@@ -499,21 +522,22 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
     }
 
     case 'COOK': {
-      if (!hasRecipe(action.recipeId) || !recipeProgress(state, action.recipeId).canCook)
-        return state;
-      const recipe = getRecipe(action.recipeId);
       const s = structuredClone(state);
-      const key = `cook:${recipe.id}:${action.now}`;
-      // All or nothing: a repeat of the same cook (same key) changes nothing, counts included.
-      for (const ing of recipe.ingredients) {
-        if (!post(s, `${key}:${ing.crop}`, `ingredient:${ing.crop}`, -ing.qty, 'cook', action.now))
-          return state;
-      }
-      if (!post(s, `${key}:xp`, 'xp', recipe.xp, 'cook', action.now)) return state;
-      const first = !state.cooked[recipe.id];
-      s.cooked = { ...s.cooked, [recipe.id]: (s.cooked[recipe.id] ?? 0) + 1 };
-      track(s, 'cook', action.now);
-      if (first) track(s, 'newRecipe', action.now);
+      return cookInto(s, action.recipeId, action.now) ? s : state;
+    }
+
+    case 'SERVE_GUEST': {
+      const guest = todaysGuests(state, action.now).find((g) => g.id === action.guestId);
+      if (!guest || !canServe(state, guest)) return state;
+      const s = structuredClone(state);
+      ensureDay(s, action.now);
+      if (!cookInto(s, guest.recipe, action.now)) return state;
+      // Paid for this cooking: its stars count it.
+      const pay = guestPay(guest.recipe, s.cooked[guest.recipe] ?? 0);
+      post(s, `${guest.id}:coin`, 'coin', pay, 'guest', action.now);
+      post(s, `${guest.id}:xp`, 'xp', GUESTS.xp, 'guest', action.now);
+      s.orders = { ...s.orders, done: [...s.orders.done, guest.id] };
+      track(s, 'earn', action.now, pay);
       return s;
     }
 

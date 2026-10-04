@@ -16,6 +16,7 @@ import {
   REGIONS,
   WATERING,
   XP,
+  GUESTS,
   LAND_PRICES,
   LEVEL_CURVE,
   isBuiltinRecipe,
@@ -99,6 +100,7 @@ export function buildGameRules() {
     baseCrops: [...BASE_CROPS],
     crops,
     sell: Object.fromEntries(PRODUCE_IDS.map((id) => [id, MARKET.sell(id)])),
+    guests: { ...GUESTS },
     buy: Object.fromEntries(MEAT_FOR_SALE.map((id) => [id, MARKET.buy(id)])),
     animals: Object.fromEntries(
       Object.values(ANIMALS).map((a) => [

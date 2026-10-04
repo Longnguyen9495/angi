@@ -5,6 +5,7 @@ import { App } from '../../../App';
 import { RECIPE_LIST } from '../../../data/game';
 import { STORAGE_KEY, saveProgress } from '../../../domain/persistence';
 import { EMPTY_PRODUCE, createInitialProgress } from '../../../domain/progress';
+import { dateKey } from '../../../domain/time';
 import { mockConfig } from '../../../services/mockApi';
 import { FeedbackProvider } from '../../../state/FeedbackProvider';
 import { GameProvider } from '../../../state/GameProvider';
@@ -341,6 +342,11 @@ describe('the kitchen', () => {
         ...base,
         plots: base.plots.map((p) => ({ ...p, crop: null, plantedAt: null, readyAt: null })),
         ingredients: { ...EMPTY_PRODUCE, pork: 2, rice: 2, scallion: 1 },
+        // Today's guests already served: this is about cooking from the card.
+        orders: {
+          date: dateKey(now),
+          done: [`guest:${dateKey(now)}:0`, `guest:${dateKey(now)}:1`],
+        },
       },
       now,
     );

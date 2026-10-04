@@ -257,6 +257,12 @@ const journey: Messages['journey'] = {
         `1 ${feed} → ${qty} ${product} for your recipes after ${when}.`,
       action: 'Feed',
     },
+    guest: {
+      title: (name, dish) => `${name} is waiting for ${dish}`,
+      body: (coins) =>
+        `You have everything — cook and serve it for ${coins} ${s(coins, 'coin', 'coins')}.`,
+      action: 'Cook & serve',
+    },
     land: {
       title: (plot) => `Clear plot ${plot}`,
       body: (price) =>
@@ -486,6 +492,17 @@ const journey: Messages['journey'] = {
     done: 'Delivered',
     deliver: 'Deliver',
     notEnough: 'Not enough yet',
+    guestsTitle: "Today's guests",
+    guestsIntro:
+      'Guests drop by the kitchen for a dish. Cook and serve it for coins — the better you know a dish (more stars), the more they pay.',
+    chefTitle: 'Cô Ba’s produce orders',
+    guestFrom: (from) => `from ${from}`,
+    guestPays: (coins, xp) => `Pays ${coins} ${s(coins, 'coin', 'coins')} · +${xp} XP`,
+    stars: (n) => (n === 0 ? 'Never cooked yet' : `Mastery ${n}/3 stars`),
+    serve: 'Cook & serve',
+    served: 'Served',
+    guestThanks: (name, coins) => `${name} loved it! +${coins} ${s(coins, 'coin', 'coins')}.`,
+    noGuests: 'No guests yet today — open more regions and recipes and they will come.',
   },
 
   itemFilter: {

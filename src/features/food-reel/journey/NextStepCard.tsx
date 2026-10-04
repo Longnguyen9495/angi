@@ -10,6 +10,7 @@ import {
 import { CropIcon } from '../../../components/ui/CropIcon';
 import { ANIMALS, CROPS, animalOf, getRecipe, produceName } from '../../../data/game';
 import type { AnimalId, CropId, RecipeId } from '../../../data/types';
+import { todaysGuests } from '../../../domain/guests';
 import { dishIdsForSeed, type NextStep } from '../../../domain/nextStep';
 import { HOUR_MS, currentTime, formatDuration, slotKey } from '../../../domain/time';
 import { t } from '../../../i18n';
@@ -94,6 +95,19 @@ export function NextStepCard({
         produceName(a.product).toLowerCase(),
       );
       action = { label: m.feed.action, run: () => onAnimal(a.id, 'feed') };
+      break;
+    }
+    case 'guest': {
+      const r = getRecipe(step.recipe);
+      const name = todaysGuests(state, now).find((g) => g.id === step.guestId)?.persona.name ?? '';
+      const guestId = step.guestId;
+      icon = <CookingPot size={22} aria-hidden="true" />;
+      title = m.guest.title(name, r.name);
+      body = m.guest.body(step.pay);
+      action = {
+        label: m.guest.action,
+        run: () => dispatch({ type: 'SERVE_GUEST', guestId, now: currentTime() }),
+      };
       break;
     }
     case 'land': {

@@ -919,6 +919,27 @@ export function levelForXp(xp: number): number {
   return lv;
 }
 
+/**
+ * Guests who come to the farm kitchen for a dish (src/domain/guests.ts). Serving one cooks it
+ * and they pay `payPct`% of what its ingredients would sell for, more for a dish the guest
+ * has mastered (`starBonusPct` by stars), plus a little XP. Integers only, so the server
+ * (ProgressGuard) gets the very same price. Stars come from how often a recipe was cooked.
+ */
+export const GUESTS = {
+  perDay: 2,
+  payPct: 160,
+  /** Bonus by mastery stars 0–3, in percent. */
+  starBonusPct: [0, 0, 10, 20],
+  xp: 10,
+  /** Times cooked for 1, 2 and 3 stars. */
+  starAt: [1, 5, 15],
+} as const;
+
+/** Mastery stars of a recipe cooked this many times (0–3). */
+export function masteryStars(times: number): 0 | 1 | 2 | 3 {
+  return GUESTS.starAt.filter((n) => times >= n).length as 0 | 1 | 2 | 3;
+}
+
 /** Plots a new guest starts with. */
 export const FARM_PLOT_COUNT = 4;
 /**

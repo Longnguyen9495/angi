@@ -15,8 +15,10 @@ import {
   harvestXp,
   isBuiltinRecipe,
   isMeat,
+  levelForXp,
 } from '../data/game';
 import type { AnimalId, CropId, DecorId, ProduceId } from '../data/types';
+import { canServe, guestPay, ingredientValue, todaysGuests } from './guests';
 import { canFulfill, todaysOrders } from './orders';
 import { createInitialProgress, type GuestProgress } from './progress';
 import { badges, dailyQuests, weeklyQuests } from './quests';
@@ -110,6 +112,18 @@ function play(): { steps: Step[]; last: GuestProgress; lastAt: number } {
         act({ type: 'PLANT_FROM_TRAY', crop, plotId: plot.id, now: at() });
     }
 
+    // Guests first: their dish is fixed for the day, the bot cooks the rest with what is left.
+    for (const g of todaysGuests(s, clock)) {
+      // Short of meat only: the butcher, then the guest.
+      const short = recipeProgress(s, g.recipe).ingredients.filter((i) => i.have < i.qty);
+      if (short.length > 0 && short.every((i) => isMeat(i.crop))) {
+        for (const i of short) {
+          for (let n = i.have; n < i.qty && isMeat(i.crop) && s.coins >= MARKET.buy(i.crop); n++)
+            act({ type: 'BUY_ITEM', item: i.crop, now: at() });
+        }
+      }
+      if (canServe(s, g)) act({ type: 'SERVE_GUEST', guestId: g.id, now: at() });
+    }
     for (const r of RECIPE_LIST.filter((x) => isBuiltinRecipe(x.id))) {
       // Short of meat only: buy it at the market when the purse allows.
       const short = recipeProgress(s, r.id).ingredients.filter((i) => i.have < i.qty);
@@ -137,7 +151,7 @@ function play(): { steps: Step[]; last: GuestProgress; lastAt: number } {
     for (const id of Object.keys(ANIMALS) as AnimalId[]) {
       const stage = animalStage(s, id, clock);
       if (stage === 'ready') act({ type: 'COLLECT_ANIMAL', animal: id, now: at() });
-      if (animalStage(s, id, clock) === 'hungry' && s.ingredients[ANIMALS[id].feed] > 0)
+      if (animalStage(s, id, clock) === 'hungry' && s.ingredients[ANIMALS[id].feed] > 4)
         act({ type: 'FEED_ANIMAL', animal: id, now: at() });
     }
     if (hiveStage(s, clock) === 'idle') act({ type: 'START_HIVE', now: at() });
@@ -313,6 +327,20 @@ function cheats(last: GuestProgress, lastAt: number) {
     const cheap = withEntry(last, `land:${id}:${at}`, 'coin', -1, at);
     add('a plot cleared below its price', { ...cheap, plots: [...cheap.plots, plot] }, 'rule');
   }
+  {
+    // A guest served honestly (when one can be today), then paid 500 xu more than the dish.
+    const served = todaysGuests(last, at)
+      .filter((g) => canServe(last, g))
+      .map((g) => gameReducer(last, { type: 'SERVE_GUEST', guestId: g.id, now: at }))[0];
+    if (served) {
+      const q = structuredClone(served);
+      const e = q.ledger.find((x) => /^guest:.*:coin$/.test(x.key))!;
+      e.delta += 500;
+      e.balanceAfter += 500;
+      q.coins += 500;
+      add('a guest overpaid', q, 'rule');
+    }
+  }
   add(
     'meat bought below the market price',
     withEntry(
@@ -411,7 +439,14 @@ function parity() {
       (h) => [Math.round(h * 3_600_000), harvestXp(h)] as [number, number],
     ),
   );
-  return { casts, boats, bites, xp };
+  // What each recipe's guest pays, at every mastery step; levels across the curve.
+  const guests = RECIPE_LIST.flatMap((r) =>
+    [1, 4, 5, 14, 15, 40].map((n) => [ingredientValue(r.id), n, guestPay(r.id, n)] as const),
+  );
+  const levels = Array.from({ length: 300 }, (_, i) => i * 97).map(
+    (x) => [x, levelForXp(x)] as const,
+  );
+  return { casts, boats, bites, xp, guests, levels };
 }
 
 function phpBinary(): string | null {
@@ -438,6 +473,7 @@ describe('server save guard (ProgressGuard.php)', () => {
       expect(bought.some((k) => /^buy:[a-z]+:-?\d+:item$/.test(k))).toBe(true);
       expect(bought.some((k) => /^land:\d+:-?\d+$/.test(k))).toBe(true);
       expect(last.plots.length).toBeGreaterThan(4);
+      expect(bought.some((k) => /^guest:[\d-]+:\d:coin$/.test(k))).toBe(true);
       // The bot really played: every part of the game came into its saves.
       const families = new Set(
         steps.flatMap((st) => st.data.ledger.map((e) => e.key.split(':')[0])),

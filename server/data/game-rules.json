@@ -511,6 +511,22 @@
     "scallop": 11,
     "octopus": 12
   },
+  "guests": {
+    "perDay": 2,
+    "payPct": 160,
+    "starBonusPct": [
+      0,
+      0,
+      10,
+      20
+    ],
+    "xp": 10,
+    "starAt": [
+      1,
+      5,
+      15
+    ]
+  },
   "buy": {
     "pork": 14,
     "chickenmeat": 12,

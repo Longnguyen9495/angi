@@ -660,6 +660,30 @@ final class ProgressGuard
                 $count = $this->countClaims("order:{$m[1]}:%", fn ($k) => str_ends_with($k, ':xp')) + 1;
                 $count <= (int) $R['orders']['perDay'] || $fail('more orders than a day has');
                 $stats['order']++;
+            } elseif (preg_match('/^guest:(\d{4}-\d{2}-\d{2}):(\d+):(coin|xp)$/', $key, $m)) {
+                // A guest served: the dish was cooked in this same moment, and pays what its
+                // ingredients sell for times payPct%, plus the mastery bonus (src/domain/guests.ts).
+                $G = $R['guests'];
+                ((int) $m[2] < (int) $G['perDay']) || $fail('no such guest');
+                $this->slotDate($m[1], $at) || $fail('guest is not today');
+                $dish = null;
+                $value = 0;
+                foreach ($fresh as $f) {
+                    if (preg_match('/^cook:([a-z0-9-]+):(-?\d+):([a-z]+)$/', (string) $f['key'], $c) && (int) $c[2] === $at && $c[3] !== 'xp') {
+                        $dish = $c[1];
+                        $value += -(int) $f['delta'] * (int) ($R['sell'][$c[3]] ?? 0);
+                    }
+                }
+                $dish !== null || $fail('a guest served nothing');
+                if ($m[3] === 'xp') {
+                    ($res === 'xp' && $d === (int) $G['xp']) || $fail('guest XP');
+                } else {
+                    $pay = self::guestPay($value, (int) ($new['cooked'][$dish] ?? 0));
+                    ($res === 'coin' && $d === $pay) || $fail('guest pay');
+                    $count = $this->countClaims("guest:{$m[1]}:%", fn ($k) => str_ends_with($k, ':coin')) + 1;
+                    $count <= (int) $G['perDay'] || $fail('more guests than a day has');
+                    $stats['earn'] += $d;
+                }
             } elseif (preg_match('/^order:(\d{4}-\d{2}-\d{2}:\d+):seed:([a-z]+)$/', $key, $m)) {
                 // Paid with its order (whose XP entry checks the order as a whole), never alone.
                 (isset($byKey["order:{$m[1]}:xp"]) && $res === "seed:{$m[2]}" && $d >= 1 && $d <= (int) $R['orders']['maxSeeds'])
@@ -1615,6 +1639,14 @@ final class ProgressGuard
             $lv++;
         }
         return $lv;
+    }
+
+    /** Same as guestPay() in src/domain/guests.ts: ingredients worth `$value`, cooked `$times` times. */
+    public static function guestPay(int $value, int $times): int
+    {
+        $G = self::rules()['guests'];
+        $stars = count(array_filter($G['starAt'], fn ($n) => $times >= (int) $n));
+        return intdiv($value * (int) $G['payPct'] * (100 + (int) $G['starBonusPct'][$stars]) + 5000, 10000);
     }
 
     /** Same as xpForLevel() in src/data/game.ts. */

@@ -2,6 +2,7 @@ import { reelGameDishes } from '../features/food-reel/data/reelCatalogue';
 import { RECIPE_LIST } from '../data/game';
 import type { AnimalId, Catch, CropId, Meat, RecipeId } from '../data/types';
 import { canFulfill, todaysOrders } from './orders';
+import { canServe, guestPay, todaysGuests } from './guests';
 import type { GuestProgress } from './progress';
 import {
   produceAvailable,
@@ -38,6 +39,7 @@ export type NextStep =
   | { kind: 'fish'; catch: Catch; recipe: RecipeId; left: number }
   | { kind: 'buy'; item: Meat; recipe: RecipeId; price: number }
   | { kind: 'land'; plotId: number; price: number }
+  | { kind: 'guest'; guestId: string; recipe: RecipeId; pay: number }
   | { kind: 'plant'; crop: CropId; plotId: number }
   | { kind: 'find'; crop: CropId; recipe: RecipeId }
   | { kind: 'wait'; recipe: RecipeId; readyAt: number }
@@ -55,6 +57,13 @@ export function nextStep(p: GuestProgress, now: number): NextStep {
   const recipes = RECIPE_LIST.filter(
     (r) => recipeAvailable(p, r.id) && r.ingredients.every((i) => produceAvailable(p, i.crop)),
   ).map((r) => ({ r, prog: recipeProgress(p, r.id) }));
+
+  // A guest whose dish is ready to cook pays more than cooking it alone.
+  const guest = todaysGuests(p, now).find((g) => canServe(p, g));
+  if (guest) {
+    const pay = guestPay(guest.recipe, (p.cooked[guest.recipe] ?? 0) + 1);
+    return { kind: 'guest', guestId: guest.id, recipe: guest.recipe, pay };
+  }
 
   const cookable = recipes.filter((x) => x.prog.canCook).sort((a, b) => b.r.xp - a.r.xp)[0];
   if (cookable) return { kind: 'cook', recipe: cookable.r.id };

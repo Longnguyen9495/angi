@@ -24,13 +24,13 @@ export const ORDERS_PER_DAY = 2;
 // What Cô Ba is cooking today; one line per order, picked by the day's hash.
 const LINES: readonly string[] = t.domain.orderLines;
 
-function hash(text: string): number {
+export function hash(text: string): number {
   let h = 2166136261;
   for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 16777619);
   return h >>> 0;
 }
 
-function rng(seed: number): () => number {
+export function rng(seed: number): () => number {
   let a = seed >>> 0;
   return () => {
     a = (a + 0x6d2b79f5) >>> 0;

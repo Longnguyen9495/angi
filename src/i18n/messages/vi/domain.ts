@@ -9,6 +9,58 @@ const domain = {
     'Chợ sáng hết hàng, Cô Ba nhờ khu vườn của bạn.',
     'Nồi canh chua đang chờ, chỉ thiếu vài thứ từ vườn.',
   ],
+  /** Guests who come to the farm's kitchen for a dish; `ask` gets the dish name. */
+  guests: [
+    {
+      id: 'ba-tu',
+      name: 'Bà Tư',
+      from: 'Chợ Bà Chiểu',
+      ask: (dish: string) => `Lâu rồi chưa ăn ${dish} đúng vị, con nấu cho bà một phần nghen.`,
+    },
+    {
+      id: 'chu-hai',
+      name: 'Chú Hai xe ôm',
+      from: 'đầu hẻm',
+      ask: (dish: string) => `Chạy cả buổi sáng đói meo, cho chú một phần ${dish} cho chắc bụng.`,
+    },
+    {
+      id: 'co-lan',
+      name: 'Cô giáo Lan',
+      from: 'trường làng',
+      ask: (dish: string) => `Chiều nay cô dạy thêm, nhờ em nấu giúp cô ${dish} mang theo nhé.`,
+    },
+    {
+      id: 'anh-minh',
+      name: 'Anh Minh',
+      from: 'văn phòng trên phố',
+      ask: (dish: string) =>
+        `Cả phòng đặt ${dish} cho bữa trưa, làm giúp anh một phần thật ngon nha.`,
+    },
+    {
+      id: 'ong-bay',
+      name: 'Ông Bảy ngư dân',
+      from: 'bến cá',
+      ask: (dish: string) => `Ra khơi về mệt, ông thèm ${dish} nóng hổi.`,
+    },
+    {
+      id: 'chi-hanh',
+      name: 'Chị Hạnh',
+      from: 'gánh xôi đầu chợ',
+      ask: (dish: string) => `Bán xong gánh xôi rồi, chị muốn đổi vị với một phần ${dish}.`,
+    },
+    {
+      id: 'be-na',
+      name: 'Bé Na',
+      from: 'nhà bên',
+      ask: (dish: string) => `Mẹ cho Na tiền mua ${dish} nè, Na chờ ở đây nha!`,
+    },
+    {
+      id: 'mark',
+      name: 'Mark',
+      from: 'du khách',
+      ask: (dish: string) => `Mình nghe nói ${dish} là phải thử, bạn nấu giúp mình nhé?`,
+    },
+  ],
   recovery: {
     oldVersion: 'Dữ liệu lưu từ phiên bản cũ nên nông trại được bắt đầu lại.',
     corrupt: 'Dữ liệu lưu trên máy bị lỗi nên nông trại được bắt đầu lại.',

@@ -1,5 +1,5 @@
-import { LockSimple, PuzzlePiece, SealCheck } from '@phosphor-icons/react';
-import { RECIPE_LIST, recipeRegionName } from '../../../data/game';
+import { LockSimple, PuzzlePiece, SealCheck, Star } from '@phosphor-icons/react';
+import { RECIPE_LIST, masteryStars, recipeRegionName } from '../../../data/game';
 import { t } from '../../../i18n';
 import { useGame } from '../../../state/hooks';
 import { DishPuzzle, PUZZLE_PIECES, piecesShown } from './DishPuzzle';
@@ -23,7 +23,8 @@ export function Cookbook() {
         {pages.map((r) => {
           const n = state.cooked[r.id] ?? 0;
           const shown = piecesShown(n);
-          const cls = n === 0 ? 'is-blank' : shown === PUZZLE_PIECES ? 'is-cooked is-whole' : 'is-cooked';
+          const cls =
+            n === 0 ? 'is-blank' : shown === PUZZLE_PIECES ? 'is-cooked is-whole' : 'is-cooked';
           return (
             <li key={r.id} className={`fj-page ${cls}`}>
               <span className="fj-page__media">
@@ -35,6 +36,22 @@ export function Cookbook() {
                 )}
               </span>
               <span className="fj-page__name">{r.name}</span>
+              {n > 0 && (
+                <span
+                  className="fj-page__stars"
+                  role="img"
+                  aria-label={t.journey.orders.stars(masteryStars(n))}
+                >
+                  {[1, 2, 3].map((k) => (
+                    <Star
+                      key={k}
+                      size={13}
+                      weight={k <= masteryStars(n) ? 'fill' : 'regular'}
+                      aria-hidden="true"
+                    />
+                  ))}
+                </span>
+              )}
               <span className="fj-page__meta">
                 {recipeRegionName(r)}
                 {n > 0 ? (

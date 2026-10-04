@@ -255,6 +255,11 @@ const journey = {
         `1 ${feed} → sau ${when} có ${qty} ${product} cho công thức.`,
       action: 'Cho ăn',
     },
+    guest: {
+      title: (name: string, dish: string) => `${name} đang chờ ${dish}`,
+      body: (coins: number) => `Bạn đủ nguyên liệu — nấu và phục vụ để nhận ${coins} xu.`,
+      action: 'Nấu & phục vụ',
+    },
     land: {
       title: (plot: number) => `Khai hoang ô ${plot}`,
       body: (price: number) =>
@@ -486,6 +491,17 @@ const journey = {
     done: 'Đã giao',
     deliver: 'Giao đơn',
     notEnough: 'Chưa đủ hàng',
+    guestsTitle: 'Thực khách hôm nay',
+    guestsIntro:
+      'Khách ghé bếp gọi món. Nấu và phục vụ để nhận xu — món càng thạo (nhiều sao) khách trả càng hậu.',
+    chefTitle: 'Đơn nông sản của Cô Ba',
+    guestFrom: (from: string) => `từ ${from}`,
+    guestPays: (coins: number, xp: number) => `Trả ${coins} xu · +${xp} XP`,
+    stars: (n: number) => (n === 0 ? 'Chưa nấu lần nào' : `Thành thạo ${n}/3 sao`),
+    serve: 'Nấu & phục vụ',
+    served: 'Đã phục vụ',
+    guestThanks: (name: string, coins: number) => `${name} khen ngon! +${coins} xu.`,
+    noGuests: 'Hôm nay chưa có khách — mở thêm vùng và công thức để khách ghé.',
   },
 
   itemFilter: {
