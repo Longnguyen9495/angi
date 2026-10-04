@@ -17,13 +17,10 @@ import { formatReelPrice, REGION_LABEL } from '../data/reelCatalogue';
 import { flyImage, type FlightHandle } from '../engine/sharedTransition';
 import type { ReelDish, ReelPhase } from '../foodReel.types';
 import type { ShopeeCity } from '../data/orderLinks';
-import { FlavorProfile } from './FlavorProfile';
+import { StoryChapters } from './StoryChapters';
 import { OrderLinks } from './OrderLinks';
-import { FoodVideo } from './FoodVideo';
 import { splitName } from '../utils';
 import { SplitLines } from './SplitLines';
-
-const REGION_STORY: Record<ReelDish['region'], string> = t.reel.story.regionStory;
 
 const OPEN_MS = 700;
 const CLOSE_MS = 560;
@@ -33,9 +30,6 @@ interface FoodStoryProps {
   dish: ReelDish;
   phase: ReelPhase;
   reduced: boolean;
-  autoplay: boolean;
-  videoMuted: boolean;
-  onVideoMuted: (muted: boolean) => void;
   saved: boolean;
   onToggleSave: () => void;
   /** Whether the dish is in the Rổ quay. */
@@ -63,9 +57,6 @@ export function FoodStory({
   dish,
   phase,
   reduced,
-  autoplay,
-  videoMuted,
-  onVideoMuted,
   saved,
   onToggleSave,
   inPool,
@@ -82,7 +73,6 @@ export function FoodStory({
   const mediaRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [flying, setFlying] = useState(!reduced);
-  const [videoGate, setVideoGate] = useState(false);
   const cbs = useRef({ onOpened, onClosed, onClose });
   useEffect(() => {
     cbs.current = { onOpened, onClosed, onClose };
@@ -116,7 +106,6 @@ export function FoodStory({
       // Safety net if the browser never reports the end of the flight.
       timers.push(setTimeout(() => !finished && finish(), OPEN_MS + 250));
     }
-    timers.push(setTimeout(() => setVideoGate(true), OPEN_MS));
     return () => {
       flight?.cancel();
       timers.forEach(clearTimeout);
@@ -156,22 +145,23 @@ export function FoodStory({
   // Escape closes the story; Tab stays inside it.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.defaultPrevented || document.querySelector('.fr-youtube-layer')) return;
+      if (e.defaultPrevented) return;
       if (e.key === 'Escape' && !document.querySelector('.sheet-layer')) {
         e.preventDefault();
         cbs.current.onClose();
       }
       if (e.key === 'Tab' && scrollRef.current) {
         const items = scrollRef.current.querySelectorAll<HTMLElement>(
-          'button:not([disabled]), [href], video, [tabindex="0"]',
+          'button:not([disabled]), [href], [tabindex="0"]',
         );
         const first = items[0];
         const last = items[items.length - 1];
         if (!first || !last) return;
-        if (e.shiftKey && document.activeElement === first) {
+        const outside = !Array.from(items).includes(document.activeElement as HTMLElement);
+        if (e.shiftKey && (document.activeElement === first || outside)) {
           e.preventDefault();
           last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
+        } else if (!e.shiftKey && (document.activeElement === last || outside)) {
           e.preventDefault();
           first.focus();
         }
@@ -183,16 +173,10 @@ export function FoodStory({
 
   const closing = phase === 'closing-detail';
   const confirming = phase === 'confirming';
-  const section = {
-    initial: { opacity: 0, y: 28 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, root: scrollRef, amount: 0.2 },
-    transition: { duration: 0.6, ease: [0.2, 0.8, 0.2, 1] as const },
-  };
 
   return (
     <div
-      className={`fr-story ${closing ? 'is-closing' : ''}`}
+      className={`fr-story ${closing ? 'is-closing' : ''} ${reduced ? 'is-reduced' : ''}`}
       role="dialog"
       aria-modal="true"
       aria-labelledby="fr-story-title"
@@ -236,21 +220,20 @@ export function FoodStory({
 
         <section className="fr-story__hero">
           <div className="fr-story__media" ref={mediaRef}>
-            <FoodVideo
-              key={dish.id}
-              active={!closing}
-              dish={dish}
-              autoplay={autoplay}
-              opened={videoGate && !closing}
-              muted={videoMuted}
-              onMutedChange={onVideoMuted}
-              hidden={flying || closing}
+            <img
+              className="fr-story__poster"
+              src={dish.image}
+              alt={dish.name}
+              width={800}
+              height={800}
+              decoding="async"
+              style={{ visibility: flying || closing ? 'hidden' : 'visible' }}
             />
           </div>
           <div className="fr-story__intro">
             <m.p
               className="fr-kicker"
-              initial={{ opacity: 0, y: 8 }}
+              initial={reduced ? false : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.48, duration: 0.45 }}
             >
@@ -262,12 +245,12 @@ export function FoodStory({
               id="fr-story-title"
               className="fr-story__title"
               lines={splitName(dish.name)}
-              delay={0.48}
+              delay={reduced ? 0 : 0.48}
               tabIndex={-1}
             />
             <m.p
               className="fr-story__lede"
-              initial={{ opacity: 0, y: 12 }}
+              initial={reduced ? false : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.62, duration: 0.5 }}
             >
@@ -277,42 +260,7 @@ export function FoodStory({
           </div>
         </section>
 
-        <m.section className="fr-story__section" aria-labelledby="fr-sec-ing" {...section}>
-          <h3 id="fr-sec-ing" className="fr-story__h">
-            <span className="fr-story__h-no">01</span> {t.reel.story.ingredients}
-          </h3>
-          <ol className="fr-ingredients">
-            {dish.ingredients.map((ing, i) => (
-              <li key={ing.id} className="fr-ingredients__item">
-                <span className="fr-ingredients__no" aria-hidden="true">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <span className="fr-ingredients__name">{ing.name}</span>
-                <span className="fr-ingredients__desc">{ing.description}</span>
-              </li>
-            ))}
-          </ol>
-        </m.section>
-
-        <m.section
-          className="fr-story__section fr-story__section--split"
-          aria-labelledby="fr-sec-origin"
-          {...section}
-        >
-          <div>
-            <h3 id="fr-sec-origin" className="fr-story__h">
-              <span className="fr-story__h-no">02</span> {t.reel.story.origin}
-            </h3>
-            <p className="fr-story__origin-region">{REGION_LABEL[dish.region]}</p>
-            <p className="fr-story__text">{REGION_STORY[dish.region]}</p>
-          </div>
-          <div>
-            <h3 id="fr-sec-flavor" className="fr-story__h">
-              <span className="fr-story__h-no">03</span> {t.reel.story.flavor}
-            </h3>
-            <FlavorProfile flavor={dish.flavor} />
-          </div>
-        </m.section>
+        <StoryChapters dish={dish} reduced={reduced} scrollRef={scrollRef} />
 
         <OrderLinks
           dishName={dish.name}

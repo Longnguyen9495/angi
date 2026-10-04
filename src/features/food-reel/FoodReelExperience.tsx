@@ -79,7 +79,7 @@ export function FoodReelExperience({
 }: FoodReelExperienceProps) {
   const { state: game, dispatch: gameDispatch } = useGame();
   const { announce } = useFeedback();
-  const { reduced, saveData, autoplayVideo } = useReelMotionPrefs();
+  const { reduced, saveData } = useReelMotionPrefs();
   const { prefs, update, toggleSaved, togglePool } = useReelPrefs();
   const viewport = useViewport();
   const canHover = useCanHover();
@@ -634,9 +634,6 @@ export function FoodReelExperience({
               dish={detailDish}
               phase={phase}
               reduced={reduced}
-              autoplay={autoplayVideo}
-              videoMuted={prefs.videoMuted}
-              onVideoMuted={(videoMuted) => update({ videoMuted })}
               saved={saved}
               onToggleSave={() => toggleSaved(detailDish.id)}
               orderCity={prefs.orderCity}

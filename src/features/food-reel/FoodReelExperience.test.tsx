@@ -129,9 +129,10 @@ describe('spin → story → back', () => {
     const story = await screen.findByRole('dialog', { name: winnerName });
     await waitFor(() => expect(document.activeElement?.id).toBe('fr-story-title'));
     expect(window.location.pathname).toMatch(/^\/mon\//);
-    expect(within(story).getByText(/food story đang được hoàn thiện/i)).toBeInTheDocument();
-    expect(within(story).getByText('Thành phần')).toBeInTheDocument();
-    expect(within(story).getByText('Hồ sơ vị')).toBeInTheDocument();
+    expect(within(story).getByRole('img', { name: winnerName })).toBeInTheDocument();
+    expect(within(story).getByRole('heading', { name: /Bản sắc nguyên liệu/ })).toBeInTheDocument();
+    expect(within(story).getByText('Hồ sơ vị từ catalogue')).toBeInTheDocument();
+    expect(story.querySelector('video, iframe, .fr-youtube-trigger')).toBeNull();
     expect(within(story).queryByRole('button', { name: /phát video/i })).not.toBeInTheDocument();
 
     await user.click(within(story).getByRole('button', { name: /quay lại/i }));
@@ -168,7 +169,9 @@ describe('spin → story → back', () => {
     renderApp();
     const story = await screen.findByRole('dialog', { name: 'Bún mọc' }, { timeout: 2000 });
     // The story text is catalogue content (editable), so read it from the catalogue.
-    expect(within(story).getByText(getReelDishBySlug('bun-moc')!.story)).toBeInTheDocument();
+    expect(story.querySelector('.fr-story__lede')).toHaveTextContent(
+      getReelDishBySlug('bun-moc')!.story,
+    );
     expect(document.querySelector('[data-reel-centre]')).toHaveAccessibleName(/^Bún mọc/);
   });
 });
