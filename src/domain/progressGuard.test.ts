@@ -342,6 +342,11 @@ function cheats(last: GuestProgress, lastAt: number) {
     }
   }
   add(
+    'a collection claimed before it is finished',
+    withEntry(last, 'collection:japan:coin', 'coin', 20 * 12, at),
+    'rule',
+  );
+  add(
     'meat bought below the market price',
     withEntry(
       withEntry(last, `buy:pork:${at}:coin`, 'coin', -1, at),

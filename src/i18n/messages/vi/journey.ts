@@ -448,6 +448,13 @@ const journey = {
   },
 
   cookbook: {
+    collectionsTitle: 'Bộ sưu tập món',
+    collectionsIntro: 'Nấu đủ mọi món trong một bộ để nhận thưởng.',
+    collectionCount: (done: number, total: number) => `${done}/${total} món`,
+    collectionClaim: (coins: number, xp: number) => `Nhận ${coins} xu · ${xp} XP`,
+    collectionClaimed: 'Đã nhận thưởng',
+    collectionReward: (coins: number, xp: number) => `Thưởng ${coins} xu · ${xp} XP`,
+    collectionDone: (name: string, coins: number) => `Hoàn thành bộ “${name}”! +${coins} xu.`,
     title: (done: number, total: number) => `Sổ bếp · ${done}/${total} trang`,
     cooked: (n: number) => `Đã nấu ×${n}`,
     notCooked: ' · Chưa nấu',

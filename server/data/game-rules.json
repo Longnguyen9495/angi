@@ -527,6 +527,125 @@
       15
     ]
   },
+  "collections": {
+    "north-broth": [
+      "pho-bo",
+      "pho-ga",
+      "bun-rieu",
+      "bun-ca-ha-noi",
+      "bun-moc",
+      "mien-ga",
+      "banh-da-cua"
+    ],
+    "hanoi-street": [
+      "bun-cha",
+      "banh-cuon",
+      "bun-dau-mam-tom",
+      "com-rang-dua-bo",
+      "chao-suon",
+      "chao-long"
+    ],
+    "central": [
+      "bun-bo-hue",
+      "mi-quang",
+      "com-ga-hoi-an",
+      "nem-nuong",
+      "mien-luon-nuoc",
+      "bun-heo-quay"
+    ],
+    "saigon-rice": [
+      "com-tam",
+      "banh-xeo",
+      "bo-luc-lac",
+      "banh-mi-thit-nuong",
+      "com-ga-xoi-mo",
+      "banh-mi-chao",
+      "com-chien-hai-san"
+    ],
+    "south-noodles": [
+      "hu-tieu-nam-vang",
+      "bun-thit-nuong-cha-gio",
+      "bun-bo-nam-bo",
+      "bun-mam",
+      "bun-mang-vit",
+      "banh-canh-cua",
+      "banh-canh-gio-heo",
+      "mi-hoanh-thanh-xa-xiu",
+      "chao-vit"
+    ],
+    "rolls-veg": [
+      "goi-cuon",
+      "goi-cuon-chay",
+      "goi-cuon-thit-nuong",
+      "com-chay-thap-cam",
+      "lau-nam-chay",
+      "mi-lau-nam-chay"
+    ],
+    "japan": [
+      "ramen-tonkotsu",
+      "mi-udon-bo-tempura",
+      "com-bo-gyudon",
+      "oyakodon",
+      "com-tonkatsu",
+      "com-tempura",
+      "sushi-ca-hoi-tong-hop",
+      "com-luon-nhat",
+      "mi-soba-bo",
+      "com-ga-teriyaki",
+      "com-ca-ri-heo-chien-xu",
+      "com-ca-saba-nuong"
+    ],
+    "korea": [
+      "bibimbap",
+      "kimbap",
+      "tteokbokki",
+      "com-bo-bulgogi",
+      "mi-lanh-han-quoc",
+      "mi-tuong-den-han-quoc",
+      "mi-tron-han-quoc",
+      "mi-ramen-cay-han-quoc",
+      "mi-cay-han-quoc"
+    ],
+    "west": [
+      "pizza-pepperoni",
+      "pizza-hai-san",
+      "mi-y-carbonara",
+      "mi-y-sot-bo-bam",
+      "lasagna-bo-bam",
+      "spaghetti-hai-san",
+      "cheeseburger-bo",
+      "burger-bo-pho-mai",
+      "bit-tet-bo",
+      "suon-nuong-bbq",
+      "ga-ran"
+    ],
+    "seas-asia": [
+      "canh-chua-ca",
+      "mi-xao-gion-hai-san",
+      "mi-tom-yum-hai-san",
+      "pad-thai",
+      "ca-ri-do-thai-ga",
+      "dim-sum-thap-cam",
+      "com-nieu-quang-dong",
+      "com-ga-hai-nam",
+      "mi-bo-dai-loan",
+      "mi-vit-tiem",
+      "mi-xao-bo"
+    ],
+    "healthy": [
+      "salad-ga-nuong",
+      "salad-ca-ngu",
+      "salad-ca-ngu-trung",
+      "salad-quinoa-dau-ga",
+      "ca-hoi-ap-chao-rau-cu",
+      "com-ca-hoi-ap-chao",
+      "poke-ca-hoi"
+    ]
+  },
+  "collectionReward": {
+    "coinsPerDish": 20,
+    "xpPerDish": 25
+  },
   "buy": {
     "pork": 14,
     "chickenmeat": 12,

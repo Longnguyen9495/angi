@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { getReelGameDish } from '../features/food-reel/data/reelCatalogue';
 import { dishIdsForSeed, nextStep } from './nextStep';
 import { EMPTY_PRODUCE, createInitialProgress, type GuestProgress, EMPTY_CROPS } from './progress';
-import { HOUR_MS } from './time';
+import { HOUR_MS, dateKey } from './time';
 
 const NOON = new Date(2026, 8, 29, 12, 0, 0).getTime();
 
@@ -17,7 +17,13 @@ function bare(): GuestProgress {
 
 describe('nextStep', () => {
   it('cooks first when a recipe is complete', () => {
-    const s = { ...bare(), ingredients: { ...EMPTY_PRODUCE, pork: 2, rice: 2, scallion: 2 } };
+    const day = dateKey(NOON);
+    const s = {
+      ...bare(),
+      ingredients: { ...EMPTY_PRODUCE, pork: 2, rice: 2, scallion: 2 },
+      // Today's guests already served: cooking alone is what is left.
+      orders: { date: day, done: [`guest:${day}:0`, `guest:${day}:1`] },
+    };
     expect(nextStep(s, NOON)).toEqual({ kind: 'cook', recipe: 'com-tam' });
   });
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getDish } from '../data/dishes';
 import { reelGameDishes } from '../features/food-reel/data/reelCatalogue';
-import { CROPS, LAND_PRICES, xpForLevel } from '../data/game';
+import { CROPS, LAND_PRICES, xpForLevel, COLLECTIONS, collectionReward } from '../data/game';
 import { createInitialProgress } from './progress';
 import { dailyQuests } from './quests';
 import { gameReducer, touchStreak } from './reducer';
@@ -359,5 +359,24 @@ describe('the market', () => {
     expect(gameReducer(decorated, { type: 'BUY_DECOR', decor: 'jar', now: NOON + 14 })).toBe(
       decorated,
     );
+  });
+});
+
+describe('dish collections', () => {
+  it('pays a finished set once, and nothing before it is finished', () => {
+    const set = COLLECTIONS.find((c) => c.id === 'central')!;
+    const start = createInitialProgress(NOON);
+    const all = Object.fromEntries(set.recipes.map((id) => [id, 1]));
+    const [first, ...rest] = set.recipes;
+    const half = { ...start, cooked: Object.fromEntries(rest.map((id) => [id, 1])) };
+    expect(gameReducer(half, { type: 'CLAIM_COLLECTION', id: 'central', now: NOON })).toBe(half);
+    expect(first).toBeDefined();
+    const done = { ...start, cooked: all };
+    const s = gameReducer(done, { type: 'CLAIM_COLLECTION', id: 'central', now: NOON });
+    const reward = collectionReward(set.recipes.length);
+    expect(s.coins).toBe(done.coins + reward.coins);
+    expect(s.xp).toBe(done.xp + reward.xp);
+    expect(s.collections).toEqual(['central']);
+    expect(gameReducer(s, { type: 'CLAIM_COLLECTION', id: 'central', now: NOON + 1 })).toBe(s);
   });
 });

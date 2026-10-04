@@ -940,6 +940,169 @@ export function masteryStars(times: number): 0 | 1 | 2 | 3 {
   return GUESTS.starAt.filter((n) => times >= n).length as 0 | 1 | 2 | 3;
 }
 
+/**
+ * Collections: cook every dish of a set at least once and claim xu and XP (COLLECTION_REWARD per
+ * dish). Recipe ids are the built-in ones (com-tam, pho-bo…) or catalogue dish ids; one the
+ * catalogue no longer has is skipped. Names live in t.data.collections.
+ */
+export type CollectionId =
+  | 'north-broth'
+  | 'hanoi-street'
+  | 'central'
+  | 'saigon-rice'
+  | 'south-noodles'
+  | 'rolls-veg'
+  | 'japan'
+  | 'korea'
+  | 'west'
+  | 'seas-asia'
+  | 'healthy';
+export const COLLECTIONS: { id: CollectionId; recipes: string[] }[] = [
+  {
+    id: 'north-broth',
+    recipes: ['pho-bo', 'pho-ga', 'bun-rieu', 'bun-ca-ha-noi', 'bun-moc', 'mien-ga', 'banh-da-cua'],
+  },
+  {
+    id: 'hanoi-street',
+    recipes: [
+      'bun-cha',
+      'banh-cuon',
+      'bun-dau-mam-tom',
+      'com-rang-dua-bo',
+      'chao-suon',
+      'chao-long',
+    ],
+  },
+  {
+    id: 'central',
+    recipes: [
+      'bun-bo-hue',
+      'mi-quang',
+      'com-ga-hoi-an',
+      'nem-nuong',
+      'mien-luon-nuoc',
+      'bun-heo-quay',
+    ],
+  },
+  {
+    id: 'saigon-rice',
+    recipes: [
+      'com-tam',
+      'banh-xeo',
+      'bo-luc-lac',
+      'banh-mi-thit-nuong',
+      'com-ga-xoi-mo',
+      'banh-mi-chao',
+      'com-chien-hai-san',
+    ],
+  },
+  {
+    id: 'south-noodles',
+    recipes: [
+      'hu-tieu-nam-vang',
+      'bun-thit-nuong-cha-gio',
+      'bun-bo-nam-bo',
+      'bun-mam',
+      'bun-mang-vit',
+      'banh-canh-cua',
+      'banh-canh-gio-heo',
+      'mi-hoanh-thanh-xa-xiu',
+      'chao-vit',
+    ],
+  },
+  {
+    id: 'rolls-veg',
+    recipes: [
+      'goi-cuon',
+      'goi-cuon-chay',
+      'goi-cuon-thit-nuong',
+      'com-chay-thap-cam',
+      'lau-nam-chay',
+      'mi-lau-nam-chay',
+    ],
+  },
+  {
+    id: 'japan',
+    recipes: [
+      'ramen-tonkotsu',
+      'mi-udon-bo-tempura',
+      'com-bo-gyudon',
+      'oyakodon',
+      'com-tonkatsu',
+      'com-tempura',
+      'sushi-ca-hoi-tong-hop',
+      'com-luon-nhat',
+      'mi-soba-bo',
+      'com-ga-teriyaki',
+      'com-ca-ri-heo-chien-xu',
+      'com-ca-saba-nuong',
+    ],
+  },
+  {
+    id: 'korea',
+    recipes: [
+      'bibimbap',
+      'kimbap',
+      'tteokbokki',
+      'com-bo-bulgogi',
+      'mi-lanh-han-quoc',
+      'mi-tuong-den-han-quoc',
+      'mi-tron-han-quoc',
+      'mi-ramen-cay-han-quoc',
+      'mi-cay-han-quoc',
+    ],
+  },
+  {
+    id: 'west',
+    recipes: [
+      'pizza-pepperoni',
+      'pizza-hai-san',
+      'mi-y-carbonara',
+      'mi-y-sot-bo-bam',
+      'lasagna-bo-bam',
+      'spaghetti-hai-san',
+      'cheeseburger-bo',
+      'burger-bo-pho-mai',
+      'bit-tet-bo',
+      'suon-nuong-bbq',
+      'ga-ran',
+    ],
+  },
+  {
+    id: 'seas-asia',
+    recipes: [
+      'canh-chua-ca',
+      'mi-xao-gion-hai-san',
+      'mi-tom-yum-hai-san',
+      'pad-thai',
+      'ca-ri-do-thai-ga',
+      'dim-sum-thap-cam',
+      'com-nieu-quang-dong',
+      'com-ga-hai-nam',
+      'mi-bo-dai-loan',
+      'mi-vit-tiem',
+      'mi-xao-bo',
+    ],
+  },
+  {
+    id: 'healthy',
+    recipes: [
+      'salad-ga-nuong',
+      'salad-ca-ngu',
+      'salad-ca-ngu-trung',
+      'salad-quinoa-dau-ga',
+      'ca-hoi-ap-chao-rau-cu',
+      'com-ca-hoi-ap-chao',
+      'poke-ca-hoi',
+    ],
+  },
+];
+export const COLLECTION_REWARD = { coinsPerDish: 20, xpPerDish: 25 } as const;
+
+export function collectionReward(size: number): { coins: number; xp: number } {
+  return { coins: COLLECTION_REWARD.coinsPerDish * size, xp: COLLECTION_REWARD.xpPerDish * size };
+}
+
 /** Plots a new guest starts with. */
 export const FARM_PLOT_COUNT = 4;
 /**

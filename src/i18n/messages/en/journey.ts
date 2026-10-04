@@ -447,6 +447,14 @@ const journey: Messages['journey'] = {
   },
 
   cookbook: {
+    collectionsTitle: 'Dish collections',
+    collectionsIntro: 'Cook every dish of a set to claim its reward.',
+    collectionCount: (done, total) => `${done}/${total} dishes`,
+    collectionClaim: (coins, xp) => `Claim ${coins} ${s(coins, 'coin', 'coins')} · ${xp} XP`,
+    collectionClaimed: 'Reward claimed',
+    collectionReward: (coins, xp) => `Reward ${coins} ${s(coins, 'coin', 'coins')} · ${xp} XP`,
+    collectionDone: (name, coins) =>
+      `Collection “${name}” complete! +${coins} ${s(coins, 'coin', 'coins')}.`,
     title: (done, total) => `Cookbook · ${done}/${total} ${s(total, 'page', 'pages')}`,
     cooked: (n) => `Cooked ×${n}`,
     notCooked: ' · Not cooked yet',

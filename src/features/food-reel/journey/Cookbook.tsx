@@ -2,6 +2,7 @@ import { LockSimple, PuzzlePiece, SealCheck, Star } from '@phosphor-icons/react'
 import { RECIPE_LIST, masteryStars, recipeRegionName } from '../../../data/game';
 import { t } from '../../../i18n';
 import { useGame } from '../../../state/hooks';
+import { Collections } from './Collections';
 import { DishPuzzle, PUZZLE_PIECES, piecesShown } from './DishPuzzle';
 
 /**
@@ -19,6 +20,7 @@ export function Cookbook() {
         {t.journey.cookbook.title(done, pages.length)}
       </h3>
       <p className="fj-note">{t.journey.cookbook.puzzleHint(whole, pages.length)}</p>
+      <Collections />
       <ul className="fj-book__pages">
         {pages.map((r) => {
           const n = state.cooked[r.id] ?? 0;

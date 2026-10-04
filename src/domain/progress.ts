@@ -106,6 +106,8 @@ export interface GuestProgress {
   coins: number;
   /** Decorations bought for the garden. */
   decor: DecorId[];
+  /** Collections whose reward was claimed. */
+  collections: string[];
   /** Where each decoration stands on the 3D island (grid cell + quarter turns); missing = default spot. */
   decorLayout: Partial<Record<DecorId, DecorPlacement | null>>;
   /** Animals: fed → producing until readyAt → collect. Never sick, never lost. */
@@ -235,6 +237,7 @@ export function createInitialProgress(now: number): GuestProgress {
     recentCropUnlock: null,
     coins: 0,
     decor: [],
+    collections: [],
     decorLayout: {},
     animals: structuredClone(EMPTY_ANIMALS),
     hive: { startedAt: null, readyAt: null },

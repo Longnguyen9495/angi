@@ -47,6 +47,7 @@ import {
   recipeProgress,
   waterBlock,
 } from './selectors';
+import { collectionProgress } from './collections';
 import { canServe, guestPay, todaysGuests } from './guests';
 import { canFulfill, todaysOrders } from './orders';
 import {
@@ -108,6 +109,7 @@ export type Action =
   | { type: 'BUY_ITEM'; item: Meat; now: number }
   | { type: 'BUY_LAND'; now: number }
   | { type: 'SERVE_GUEST'; guestId: string; now: number }
+  | { type: 'CLAIM_COLLECTION'; id: string; now: number }
   | { type: 'BUY_DECOR'; decor: DecorId; now: number }
   | {
       type: 'CHECK_IN';
@@ -860,6 +862,17 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       if (!post(s, `${key}:coin`, 'coin', -price, 'market', action.now)) return state;
       post(s, `${key}:item`, `ingredient:${action.item}`, 1, 'market', action.now);
       track(s, 'buy', action.now);
+      return s;
+    }
+
+    case 'CLAIM_COLLECTION': {
+      const c = collectionProgress(state).find((x) => x.id === action.id);
+      if (!c || !c.complete || c.claimed) return state;
+      const s = structuredClone(state);
+      post(s, `collection:${c.id}:coin`, 'coin', c.reward.coins, 'collection', action.now);
+      post(s, `collection:${c.id}:xp`, 'xp', c.reward.xp, 'collection', action.now);
+      s.collections = [...s.collections, c.id];
+      track(s, 'earn', action.now, c.reward.coins);
       return s;
     }
 

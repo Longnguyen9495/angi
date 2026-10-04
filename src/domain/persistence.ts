@@ -247,6 +247,7 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
     photos: isStringArray(raw.photos) ? raw.photos : [],
     animals: parseAnimals(raw.animals),
     decorLayout: isObject(raw.decorLayout) ? parseLayout(raw.decorLayout) : {},
+    collections: isStringArray(raw.collections) ? [...new Set(raw.collections)] : [],
     decor: isStringArray(raw.decor)
       ? (raw.decor.filter((d) => Object.hasOwn(DECOR, d)) as DecorId[])
       : [],

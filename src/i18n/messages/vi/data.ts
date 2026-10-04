@@ -53,6 +53,19 @@ const data = {
     enoki: { name: 'Nấm kim châm', seedName: 'Phôi nấm kim châm', produceName: 'Nấm kim châm' },
     woodear: { name: 'Mộc nhĩ', seedName: 'Phôi mộc nhĩ', produceName: 'Mộc nhĩ' },
   },
+  collections: {
+    'north-broth': 'Nước dùng đất Bắc',
+    'hanoi-street': 'Quà vặt Hà Nội',
+    central: 'Hương vị miền Trung',
+    'saigon-rice': 'Cơm & bánh Sài Gòn',
+    'south-noodles': 'Bún, hủ tiếu Nam Bộ',
+    'rolls-veg': 'Cuốn & chay',
+    japan: 'Một vòng nước Nhật',
+    korea: 'Một vòng Hàn Quốc',
+    west: 'Bàn ăn phương Tây',
+    'seas-asia': 'Châu Á & biển cả',
+    healthy: 'Ăn lành',
+  },
   recipes: {
     'com-tam': {
       unlockNote: 'Công thức khởi đầu — mở sẵn cho mọi khách.',

@@ -74,6 +74,19 @@ const data: Messages['data'] = {
     enoki: { name: 'Enoki', seedName: 'Enoki spawn', produceName: 'Enoki' },
     woodear: { name: 'Wood ear', seedName: 'Wood ear spawn', produceName: 'Wood ear' },
   },
+  collections: {
+    'north-broth': 'Broths of the North',
+    'hanoi-street': 'Hanoi street food',
+    central: 'Flavours of Central Vietnam',
+    'saigon-rice': 'Saigon rice & bánh',
+    'south-noodles': 'Southern noodles',
+    'rolls-veg': 'Rolls & vegetarian',
+    japan: 'Around Japan',
+    korea: 'Around Korea',
+    west: 'The Western table',
+    'seas-asia': 'Asia & the sea',
+    healthy: 'Eating light',
+  },
   recipes: {
     'com-tam': {
       unlockNote: 'Starter recipe — open for every guest.',

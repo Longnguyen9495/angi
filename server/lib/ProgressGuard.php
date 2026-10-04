@@ -660,6 +660,23 @@ final class ProgressGuard
                 $count = $this->countClaims("order:{$m[1]}:%", fn ($k) => str_ends_with($k, ':xp')) + 1;
                 $count <= (int) $R['orders']['perDay'] || $fail('more orders than a day has');
                 $stats['order']++;
+            } elseif (preg_match('/^collection:([a-z-]+):(coin|xp)$/', $key, $m)) {
+                // A finished collection: every dish of the set the game still has was cooked.
+                $set = $R['collections'][$m[1]] ?? null;
+                $set !== null || $fail('unknown collection');
+                $kept = 0;
+                foreach ($set as $id) {
+                    if (isset($R['recipes'][$id]) || $this->dishExists($id)) {
+                        $kept++;
+                        ((int) ($new['cooked'][$id] ?? 0) > 0) || $fail('collection not complete');
+                    }
+                }
+                $kept > 0 || $fail('collection not complete');
+                $per = $m[2] === 'coin' ? (int) $R['collectionReward']['coinsPerDish'] : (int) $R['collectionReward']['xpPerDish'];
+                ($res === $m[2] && $d === $per * count($set)) || $fail('collection reward');
+                if ($m[2] === 'coin') {
+                    $stats['earn'] += $d;
+                }
             } elseif (preg_match('/^guest:(\d{4}-\d{2}-\d{2}):(\d+):(coin|xp)$/', $key, $m)) {
                 // A guest served: the dish was cooked in this same moment, and pays what its
                 // ingredients sell for times payPct%, plus the mastery bonus (src/domain/guests.ts).
