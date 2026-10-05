@@ -468,6 +468,44 @@
   }
 }
 
+/*
+ * Desktop: one centred reading column (cover, chapter nav and chapters share it), so the
+ * prose no longer hugs the left of a 1080px box with the right half empty.
+ */
+@media (min-width: 1000px) {
+  .fr-cover,
+  .fr-narrative {
+    max-width: calc(820px + 2 * var(--fr-gutter));
+  }
+  .fr-cover__tagline {
+    max-width: 26ch;
+    font-size: clamp(1.7rem, 3vw, 2.75rem);
+  }
+  .fr-chapter-nav {
+    justify-content: safe center;
+  }
+  /* Too little margin for the numeral here: smaller and fainter, tucked to the right. */
+  .fr-chapter-mark {
+    font-size: clamp(8rem, 13vw, 12rem);
+    opacity: 0.55;
+  }
+}
+/* Wide screens have room for the chapter numeral in the margin, clear of the text. */
+@media (min-width: 1400px) {
+  .fr-story__scroll {
+    overflow-x: hidden;
+  }
+  .fr-narrative__chapter {
+    overflow: visible;
+  }
+  .fr-chapter-mark {
+    right: auto;
+    left: calc(100% - var(--fr-gutter) + 32px);
+    font-size: clamp(8rem, 11vw, 15rem);
+    opacity: 1;
+  }
+}
+
 /* Order links sit in the hero, right under the name and description. */
 .fr-story__order .fr-order--compact {
   width: 100%;

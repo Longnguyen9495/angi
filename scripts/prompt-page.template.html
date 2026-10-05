@@ -252,9 +252,10 @@
   <body>
     <div class="wrap">
       <header class="top">
-        <h1>Food Reel Prompt Deck</h1>
+        <h1>Đặc sản Bắc – Trung – Nam · Prompt ảnh mới</h1>
         <p class="lede">
-          128 prompt tạo ảnh cho reel món ăn, cùng một khung: góc 3/4 từ trên, đồ đựng khác nhau
+          __COUNT__ prompt đặc sản mới, chia đều ba miền, thay toàn bộ danh sách prompt cũ.
+          Không thay đổi món và ảnh đã nhập. Cùng một khung: góc 3/4 từ trên, đồ đựng khác nhau
           theo từng món, nền đen #000000, ảnh vuông 1:1. Bấm <strong>Sao chép</strong> ở từng món,
           hoặc chép cả bộ một lần. Món đã chép được đánh dấu trên trình duyệt này để bạn biết mình
           đang tới đâu.
@@ -267,7 +268,7 @@
           class="search"
           type="search"
           aria-label="Tìm món"
-          placeholder="Tìm món, ví dụ: bún, phở, pizza…"
+          placeholder="Tìm món hoặc miền, ví dụ: cao lầu, Huế, miền Nam…"
           autocomplete="off"
         />
         <button id="copyAll" class="btn btn--primary" type="button">Sao chép tất cả</button>
@@ -282,7 +283,7 @@
 
     <script>
       const ITEMS = __DATA__;
-      const KEY = 'food-reel-prompts/copied-v3';
+      const KEY = 'food-reel-prompts/regional-2026-v1';
       let copied = new Set();
       try {
         copied = new Set(JSON.parse(localStorage.getItem(KEY) || '[]'));

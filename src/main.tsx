@@ -15,7 +15,14 @@ import { GameProvider } from './state/GameProvider';
 
 const root = createRoot(document.getElementById('root')!);
 
-if (window.location.pathname.replace(/\/$/, '') === '/farm-animation-test') {
+if (window.location.pathname.replace(/\/$/, '') === '/promo-demo') {
+  const { PromoDemo } = await import('./features/promo/PromoDemo');
+  root.render(
+    <StrictMode>
+      <PromoDemo />
+    </StrictMode>,
+  );
+} else if (window.location.pathname.replace(/\/$/, '') === '/farm-animation-test') {
   // Standalone animation demo of the floating farm: no catalogue, no game state.
   const { FarmAnimationTest } = await import('./features/farm-anim/FarmAnimationTest');
   root.render(

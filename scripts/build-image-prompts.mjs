@@ -1,4 +1,4 @@
-// Builds one image-generation prompt per reel dish (same template, only the dish name changes).
+// Builds the replacement prompt deck for missing regional Vietnamese dishes.
 // Output: prompts/food-reel-image-prompts.md (readable), .txt (one prompt per line)
 // and public/fake/index.html — the copy-friendly page served at http://angi.local/fake.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -6,8 +6,11 @@ import { join } from 'node:path';
 
 const root = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
 const manifest = JSON.parse(
-  readFileSync(join(root, 'public/images/food-reel/manifest.json'), 'utf8'),
+  readFileSync(join(root, 'prompts/regional-dishes.json'), 'utf8'),
 );
+if (new Set(manifest.items.map((d) => d.slug)).size !== manifest.items.length) {
+  throw new Error('Duplicate regional dish slug');
+}
 
 // Serving vessels rotate per dish so the reel doesn't look like one plate repeated.
 // Picked by a hash of the slug, so re-running the script keeps each dish's vessel stable.
@@ -42,13 +45,13 @@ const fence = '```';
 
 let md = `# ${manifest.items.length} prompt ảnh món ăn — Food Reel\n\n`;
 md +=
-  'Cùng một cấu trúc cho mọi món, chỉ thay tên món. Thứ tự và tên file gợi ý khớp với `public/images/food-reel/manifest.json`.\n\n';
+  'Danh sách thay thế: 10 đặc sản mỗi miền Bắc, Trung, Nam. Nguồn: prompts/regional-dishes.json. Chỉ thay prompt; không thay danh mục và ảnh món đã nhập.\n\n';
 let txt = '';
 const pageItems = [];
 
 manifest.items.forEach((d, i) => {
-  const p = prompt(d.name, vesselFor(d.slug));
-  const file = `${pad(d.sourceImageId)}-${d.slug}.webp`;
+  const p = prompt(`${d.name} (${d.subtitle})`, vesselFor(d.slug));
+  const file = `${pad(i + 1)}-${d.slug}.webp`;
   md += `## ${pad(i + 1)} · ${d.name}\n\nFile gợi ý: \`${file}\`\n\n${fence}text\n${p}\n${fence}\n\n`;
   txt += `${pad(i + 1)} | ${d.name} | ${p}\n`;
   pageItems.push({ no: pad(i + 1), name: d.name, sub: d.subtitle, file, prompt: p });
@@ -61,5 +64,5 @@ const template = readFileSync(join(root, 'scripts/prompt-page.template.html'), '
 // Escape "<" so dish text can never close the inline <script> early.
 const data = JSON.stringify(pageItems).replace(/</g, '\\u003c');
 mkdirSync(join(root, 'public/fake'), { recursive: true });
-writeFileSync(join(root, 'public/fake/index.html'), template.replace('__DATA__', data));
+writeFileSync(join(root, 'public/fake/index.html'), template.replace('__DATA__', data).replaceAll('__COUNT__', String(pageItems.length)));
 console.log(`Wrote ${manifest.items.length} prompts.`);

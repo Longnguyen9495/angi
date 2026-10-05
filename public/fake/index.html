@@ -1,417 +1,429 @@
 <!doctype html>
 <html lang="vi">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="robots" content="noindex" />
-<title>Food Reel Prompt Deck</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
-/>
-<style>
-  :root {
-    --bg: #f3f1ec;
-    --panel: #fbfaf7;
-    --ink: #22201c;
-    --muted: #6d675d;
-    --line: #dfdad0;
-    --accent: #1f6b52;
-    --accent-ink: #ffffff;
-    --accent-soft: #dcebe4;
-    --done: #8a8378;
-    --focus: #1f6b52;
-    --sans: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
-    --mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) {
-      --bg: #151513;
-      --panel: #1d1c19;
-      --ink: #efebe3;
-      --muted: #a39c90;
-      --line: #34322d;
-      --accent: #5fb895;
-      --accent-ink: #0f1a15;
-      --accent-soft: #1f3129;
-      --done: #7d776c;
-      --focus: #5fb895;
-      color-scheme: dark;
-    }
-  }
-  :root[data-theme='dark'] {
-    --bg: #151513;
-    --panel: #1d1c19;
-    --ink: #efebe3;
-    --muted: #a39c90;
-    --line: #34322d;
-    --accent: #5fb895;
-    --accent-ink: #0f1a15;
-    --accent-soft: #1f3129;
-    --done: #7d776c;
-    --focus: #5fb895;
-    color-scheme: dark;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-  [hidden] {
-    display: none !important;
-  }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font: 15px/1.55 var(--sans);
-    padding-inline: 16px;
-    padding-block: 0 48px;
-  }
-  .wrap {
-    max-width: 980px;
-    margin: 0 auto;
-  }
-  header.top {
-    padding-block: 32px 18px;
-    display: grid;
-    gap: 10px;
-  }
-  h1 {
-    margin: 0;
-    font-size: clamp(1.6rem, 3.2vw, 2.2rem);
-    font-weight: 700;
-    letter-spacing: -0.015em;
-    text-wrap: balance;
-  }
-  .lede {
-    margin: 0;
-    color: var(--muted);
-    max-width: 64ch;
-  }
-
-  .bar {
-    position: sticky;
-    top: env(safe-area-inset-top, 0px);
-    z-index: 5;
-    background: var(--bg);
-    padding-block: 12px;
-    border-bottom: 1px solid var(--line);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-  }
-  .search {
-    flex: 1 1 220px;
-    min-width: 0;
-    height: 42px;
-    padding: 0 14px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: var(--panel);
-    color: var(--ink);
-    font: inherit;
-  }
-  .btn {
-    height: 42px;
-    padding: 0 16px;
-    border-radius: 8px;
-    border: 1px solid var(--line);
-    background: var(--panel);
-    color: var(--ink);
-    font: 600 0.9rem/1 var(--sans);
-    cursor: pointer;
-    white-space: nowrap;
-  }
-  .btn:hover {
-    border-color: var(--muted);
-  }
-  .btn--primary {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--accent-ink);
-  }
-  .progress {
-    font: 500 0.85rem/1 var(--mono);
-    color: var(--muted);
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-  :focus-visible {
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
-  }
-
-  .list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-  }
-  .row {
-    display: grid;
-    grid-template-columns: 3.2rem minmax(0, 1fr) auto;
-    gap: 6px 14px;
-    align-items: start;
-    padding-block: 16px;
-    border-bottom: 1px solid var(--line);
-  }
-  .no {
-    font: 500 0.9rem/1.6 var(--mono);
-    color: var(--muted);
-    font-variant-numeric: tabular-nums;
-  }
-  .head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 4px 12px;
-  }
-  .name {
-    font-weight: 600;
-    font-size: 1.05rem;
-  }
-  .meta {
-    font-size: 0.82rem;
-    color: var(--muted);
-  }
-  .file {
-    font: 0.78rem/1.4 var(--mono);
-    color: var(--muted);
-  }
-  .prompt {
-    grid-column: 2 / 3;
-    margin: 6px 0 0;
-    font: 0.82rem/1.6 var(--mono);
-    color: var(--muted);
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .row.open .prompt {
-    display: block;
-  }
-  .toggle {
-    grid-column: 2 / 3;
-    justify-self: start;
-    border: 0;
-    background: none;
-    padding: 0;
-    color: var(--accent);
-    font: 600 0.8rem/1.6 var(--sans);
-    cursor: pointer;
-  }
-  .copy {
-    grid-row: 1 / span 3;
-    grid-column: 3;
-    min-width: 96px;
-  }
-  .row.done .name,
-  .row.done .no {
-    color: var(--done);
-  }
-  .row.done .copy {
-    background: var(--accent-soft);
-    border-color: transparent;
-  }
-  .empty {
-    padding-block: 32px;
-    color: var(--muted);
-  }
-  .toast {
-    position: fixed;
-    left: 50%;
-    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-    transform: translateX(-50%);
-    background: var(--ink);
-    color: var(--bg);
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    max-width: calc(100vw - 32px);
-  }
-  @media (max-width: 560px) {
-    .row {
-      grid-template-columns: 2.6rem minmax(0, 1fr);
-    }
-    .copy {
-      grid-row: auto;
-      grid-column: 2;
-      justify-self: start;
-      margin-top: 6px;
-    }
-  }
-</style>
-</head>
-<body>
-
-<div class="wrap">
-  <header class="top">
-    <h1>Food Reel Prompt Deck</h1>
-    <p class="lede">
-      128 prompt tạo ảnh cho reel món ăn, cùng một khung: góc 3/4 từ trên, đồ đựng khác nhau theo từng món,
-      nền đen #000000, ảnh vuông 1:1. Bấm <strong>Sao chép</strong> ở từng món, hoặc chép cả bộ một lần. Món đã chép
-      được đánh dấu trên trình duyệt này để bạn biết mình đang tới đâu.
-    </p>
-  </header>
-
-  <div class="bar" role="toolbar" aria-label="Công cụ">
-    <input id="q" class="search" type="search" aria-label="Tìm món" placeholder="Tìm món, ví dụ: bún, phở, pizza…" autocomplete="off" />
-    <button id="copyAll" class="btn btn--primary" type="button">Sao chép tất cả</button>
-    <button id="reset" class="btn" type="button">Xóa dấu đã chép</button>
-    <span id="progress" class="progress" aria-live="polite"></span>
-  </div>
-
-  <ol id="list" class="list"></ol>
-  <p id="empty" class="empty" hidden>Không có món nào khớp. Thử từ khóa khác.</p>
-</div>
-<div id="toast" class="toast" role="status" hidden></div>
-
-<script>
-  const ITEMS = [{"no":"094","name":"Canh kimchi kèm cơm","sub":"Kimchi jjigae • Hàn Quốc","file":"097-canh-kimchi-kem-com.webp","prompt":"Generate ONE completely original photorealistic image of Canh kimchi kèm cơm. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a speckled beige handmade ceramic bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Canh kimchi kèm cơm) and its serving vessel change."},{"no":"095","name":"Canh đậu hũ non kèm cơm","sub":"Sundubu jjigae • Hàn Quốc","file":"098-canh-dau-hu-non-kem-com.webp","prompt":"Generate ONE completely original photorealistic image of Canh đậu hũ non kèm cơm. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a hammered copper pan (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Canh đậu hũ non kèm cơm) and its serving vessel change."},{"no":"096","name":"Gà phô mai Hàn Quốc","sub":"Phần một người","file":"099-ga-pho-mai-han-quoc.webp","prompt":"Generate ONE completely original photorealistic image of Gà phô mai Hàn Quốc. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a pastel-glazed ceramic plate (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Gà phô mai Hàn Quốc) and its serving vessel change."},{"no":"097","name":"Cơm chiên kimchi","sub":"Kimchi bokkeumbap • Hàn Quốc","file":"100-com-chien-kimchi.webp","prompt":"Generate ONE completely original photorealistic image of Cơm chiên kimchi. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a rustic round wooden board (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Cơm chiên kimchi) and its serving vessel change."},{"no":"098","name":"Lẩu Thái một người","sub":"Kèm bún hoặc mì","file":"101-lau-thai-mot-nguoi.webp","prompt":"Generate ONE completely original photorealistic image of Lẩu Thái một người. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a woven bamboo basket lined with banana leaf (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Lẩu Thái một người) and its serving vessel change."},{"no":"099","name":"Lẩu sukiyaki một người","sub":"Thịt, rau & mì • Nhật Bản","file":"102-lau-sukiyaki-mot-nguoi.webp","prompt":"Generate ONE completely original photorealistic image of Lẩu sukiyaki một người. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a textured sage-green ceramic plate (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Lẩu sukiyaki một người) and its serving vessel change."},{"no":"100","name":"Cà ri Ấn Độ & naan","sub":"Cà ri gà kèm bánh naan","file":"103-ca-ri-an-do-va-naan.webp","prompt":"Generate ONE completely original photorealistic image of Cà ri Ấn Độ & naan. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a blue-and-white patterned porcelain bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Cà ri Ấn Độ & naan) and its serving vessel change."},{"no":"101","name":"Cơm biryani","sub":"Cơm gia vị & gà • Ấn Độ","file":"104-com-biryani.webp","prompt":"Generate ONE completely original photorealistic image of Cơm biryani. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on an enamel tin plate with a blue rim (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Cơm biryani) and its serving vessel change."},{"no":"102","name":"Bánh xèo Nhật","sub":"Okonomiyaki • Nhật Bản","file":"105-banh-xeo-nhat.webp","prompt":"Generate ONE completely original photorealistic image of Bánh xèo Nhật. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a white glossy porcelain plate (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh xèo Nhật) and its serving vessel change."},{"no":"103","name":"Sandwich","sub":"Phần bánh kẹp đủ bữa","file":"106-sandwich.webp","prompt":"Generate ONE completely original photorealistic image of Sandwich. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a dark wooden bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Sandwich) and its serving vessel change."},{"no":"104","name":"Bánh mì kebab","sub":"Doner kebab • Thổ Nhĩ Kỳ","file":"107-banh-mi-kebab.webp","prompt":"Generate ONE completely original photorealistic image of Bánh mì kebab. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a speckled beige handmade ceramic bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh mì kebab) and its serving vessel change."},{"no":"105","name":"Bánh cuộn gà","sub":"Chicken wrap","file":"108-banh-cuon-ga.webp","prompt":"Generate ONE completely original photorealistic image of Bánh cuộn gà. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a shallow terracotta dish (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh cuộn gà) and its serving vessel change."},{"no":"106","name":"Burrito","sub":"Cuộn cơm, đậu & thịt • Mexico","file":"109-burrito.webp","prompt":"Generate ONE completely original photorealistic image of Burrito. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a rustic round wooden board (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Burrito) and its serving vessel change."},{"no":"107","name":"Taco","sub":"Phần 3 bánh • Mexico","file":"110-taco.webp","prompt":"Generate ONE completely original photorealistic image of Taco. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a textured sage-green ceramic plate (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Taco) and its serving vessel change."},{"no":"108","name":"Quesadilla","sub":"Phô mai & gà • Mexico","file":"111-quesadilla.webp","prompt":"Generate ONE completely original photorealistic image of Quesadilla. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a blue-and-white patterned porcelain bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Quesadilla) and its serving vessel change."},{"no":"109","name":"Fish & chips","sub":"Cá chiên & khoai tây","file":"112-fish-va-chips.webp","prompt":"Generate ONE completely original photorealistic image of Fish & chips. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a glossy red lacquer tray (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Fish & chips) and its serving vessel change."},{"no":"110","name":"Gà nướng kèm khoai tây","sub":"Phần một người","file":"113-ga-nuong-kem-khoai-tay.webp","prompt":"Generate ONE completely original photorealistic image of Gà nướng kèm khoai tây. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a rectangular slate stone platter (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Gà nướng kèm khoai tây) and its serving vessel change."},{"no":"111","name":"Mac & cheese","sub":"Nui phô mai • Phần chính","file":"114-mac-va-cheese.webp","prompt":"Generate ONE completely original photorealistic image of Mac & cheese. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a woven bamboo basket lined with banana leaf (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Mac & cheese) and its serving vessel change."},{"no":"112","name":"Mì Ý pesto","sub":"Húng quế & gà • Ý","file":"115-mi-y-pesto.webp","prompt":"Generate ONE completely original photorealistic image of Mì Ý pesto. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a white glossy porcelain plate (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Mì Ý pesto) and its serving vessel change."},{"no":"113","name":"Mì Ý cá hồi","sub":"Sốt kem cá hồi • Ý","file":"116-mi-y-ca-hoi.webp","prompt":"Generate ONE completely original photorealistic image of Mì Ý cá hồi. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a glossy red lacquer tray (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Mì Ý cá hồi) and its serving vessel change."},{"no":"114","name":"Cơm risotto","sub":"Cơm Ý • Phần chính","file":"117-com-risotto.webp","prompt":"Generate ONE completely original photorealistic image of Cơm risotto. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a white glossy porcelain plate (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Cơm risotto) and its serving vessel change."},{"no":"115","name":"Gnocchi","sub":"Bánh khoai tây kiểu Ý","file":"118-gnocchi.webp","prompt":"Generate ONE completely original photorealistic image of Gnocchi. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a rustic round wooden board (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Gnocchi) and its serving vessel change."},{"no":"116","name":"Falafel kèm pita","sub":"Đậu gà, rau & bánh pita","file":"119-falafel-kem-pita.webp","prompt":"Generate ONE completely original photorealistic image of Falafel kèm pita. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a brushed stainless steel tray (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Falafel kèm pita) and its serving vessel change."},{"no":"117","name":"Nui xào bò","sub":"Nui, bò & rau • Việt Nam","file":"120-nui-xao-bo.webp","prompt":"Generate ONE completely original photorealistic image of Nui xào bò. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a rustic round wooden board (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Nui xào bò) and its serving vessel change."},{"no":"118","name":"Cháo gà","sub":"Gà xé & hành tiêu • Việt Nam","file":"121-chao-ga.webp","prompt":"Generate ONE completely original photorealistic image of Cháo gà. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a brushed stainless steel tray (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Cháo gà) and its serving vessel change."},{"no":"119","name":"Bò kho bánh mì","sub":"Bò hầm & bánh mì • Việt Nam","file":"122-bo-kho-banh-mi.webp","prompt":"Generate ONE completely original photorealistic image of Bò kho bánh mì. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a glazed brown clay pot (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bò kho bánh mì) and its serving vessel change."},{"no":"120","name":"Xôi mặn","sub":"Gà, thịt hoặc chả • Việt Nam","file":"123-xoi-man.webp","prompt":"Generate ONE completely original photorealistic image of Xôi mặn. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a hammered copper pan (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Xôi mặn) and its serving vessel change."},{"no":"121","name":"Bánh mì chảo","sub":"Trứng, pa tê & xúc xích • Việt Nam","file":"124-banh-mi-chao.webp","prompt":"Generate ONE completely original photorealistic image of Bánh mì chảo. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a cast-iron skillet (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh mì chảo) and its serving vessel change."},{"no":"122","name":"Cơm xá xíu","sub":"Thịt xá xíu & cơm • Món Hoa","file":"125-com-xa-xiu.webp","prompt":"Generate ONE completely original photorealistic image of Cơm xá xíu. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a shallow terracotta dish (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Cơm xá xíu) and its serving vessel change."},{"no":"123","name":"Cơm vịt quay","sub":"Vịt quay & cơm • Món Hoa","file":"126-com-vit-quay.webp","prompt":"Generate ONE completely original photorealistic image of Cơm vịt quay. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a glossy red lacquer tray (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Cơm vịt quay) and its serving vessel change."},{"no":"124","name":"Mì xá xíu","sub":"Mì trứng & thịt xá xíu • Món Hoa","file":"127-mi-xa-xiu.webp","prompt":"Generate ONE completely original photorealistic image of Mì xá xíu. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a dark wooden bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Mì xá xíu) and its serving vessel change."},{"no":"125","name":"Mì udon xào","sub":"Hải sản & rau • Nhật Bản","file":"128-mi-udon-xao.webp","prompt":"Generate ONE completely original photorealistic image of Mì udon xào. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a shallow terracotta dish (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Mì udon xào) and its serving vessel change."},{"no":"126","name":"Burger gà & khoai tây","sub":"Gà giòn & khoai tây • Quốc tế","file":"129-burger-ga-va-khoai-tay.webp","prompt":"Generate ONE completely original photorealistic image of Burger gà & khoai tây. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a fresh green banana leaf laid flat (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Burger gà & khoai tây) and its serving vessel change."},{"no":"127","name":"Mì Ý sốt cà chua & phô mai","sub":"Cà chua & mascarpone • Ý","file":"130-mi-y-sot-ca-chua-va-pho-mai.webp","prompt":"Generate ONE completely original photorealistic image of Mì Ý sốt cà chua & phô mai. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on an enamel tin plate with a blue rim (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Mì Ý sốt cà chua & phô mai) and its serving vessel change."},{"no":"128","name":"Miến xào","sub":"Thịt & rau • Việt Nam","file":"131-mien-xao.webp","prompt":"Generate ONE completely original photorealistic image of Miến xào. Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a rectangular slate stone platter (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Miến xào) and its serving vessel change."}];
-  const KEY = 'food-reel-prompts/copied-v3';
-  let copied = new Set();
-  try {
-    copied = new Set(JSON.parse(localStorage.getItem(KEY) || '[]'));
-  } catch (e) {}
-  const save = () => {
-    try {
-      localStorage.setItem(KEY, JSON.stringify([...copied]));
-    } catch (e) {}
-  };
-
-  const list = document.getElementById('list');
-  const progress = document.getElementById('progress');
-  const toastEl = document.getElementById('toast');
-  let toastTimer;
-  function toast(msg) {
-    toastEl.textContent = msg;
-    toastEl.hidden = false;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => (toastEl.hidden = true), 1800);
-  }
-
-  // The async Clipboard API only exists on HTTPS/localhost; http://angi.local
-  // needs the classic textarea + execCommand path.
-  function legacyCopy(text) {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.setAttribute('readonly', '');
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    let ok = false;
-    try {
-      ok = document.execCommand('copy');
-    } catch (e) {}
-    ta.remove();
-    return ok;
-  }
-
-  async function copyText(text, fallbackEl) {
-    try {
-      if (!navigator.clipboard) throw new Error('no clipboard api');
-      await navigator.clipboard.writeText(text);
-      return true;
-    } catch (e) {
-      if (legacyCopy(text)) return true;
-      if (fallbackEl) {
-        const r = document.createRange();
-        r.selectNodeContents(fallbackEl);
-        const s = getSelection();
-        s.removeAllRanges();
-        s.addRange(r);
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Food Reel Prompt Deck</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <style>
+      :root {
+        --bg: #f3f1ec;
+        --panel: #fbfaf7;
+        --ink: #22201c;
+        --muted: #6d675d;
+        --line: #dfdad0;
+        --accent: #1f6b52;
+        --accent-ink: #ffffff;
+        --accent-soft: #dcebe4;
+        --done: #8a8378;
+        --focus: #1f6b52;
+        --sans: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        --mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
       }
-      return false;
-    }
-  }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+          --bg: #151513;
+          --panel: #1d1c19;
+          --ink: #efebe3;
+          --muted: #a39c90;
+          --line: #34322d;
+          --accent: #5fb895;
+          --accent-ink: #0f1a15;
+          --accent-soft: #1f3129;
+          --done: #7d776c;
+          --focus: #5fb895;
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme='dark'] {
+        --bg: #151513;
+        --panel: #1d1c19;
+        --ink: #efebe3;
+        --muted: #a39c90;
+        --line: #34322d;
+        --accent: #5fb895;
+        --accent-ink: #0f1a15;
+        --accent-soft: #1f3129;
+        --done: #7d776c;
+        --focus: #5fb895;
+        color-scheme: dark;
+      }
 
-  function updateProgress() {
-    progress.textContent = `${copied.size}/${ITEMS.length} đã chép`;
-  }
+      * {
+        box-sizing: border-box;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font: 15px/1.55 var(--sans);
+        padding-inline: 16px;
+        padding-block: 0 48px;
+      }
+      .wrap {
+        max-width: 980px;
+        margin: 0 auto;
+      }
+      header.top {
+        padding-block: 32px 18px;
+        display: grid;
+        gap: 10px;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+        font-weight: 700;
+        letter-spacing: -0.015em;
+        text-wrap: balance;
+      }
+      .lede {
+        margin: 0;
+        color: var(--muted);
+        max-width: 64ch;
+      }
 
-  const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/gi, 'd').toLowerCase();
+      .bar {
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        z-index: 5;
+        background: var(--bg);
+        padding-block: 12px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+      .search {
+        flex: 1 1 220px;
+        min-width: 0;
+        height: 42px;
+        padding: 0 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        font: inherit;
+      }
+      .btn {
+        height: 42px;
+        padding: 0 16px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        color: var(--ink);
+        font: 600 0.9rem/1 var(--sans);
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .btn:hover {
+        border-color: var(--muted);
+      }
+      .btn--primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--accent-ink);
+      }
+      .progress {
+        font: 500 0.85rem/1 var(--mono);
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      :focus-visible {
+        outline: 2px solid var(--focus);
+        outline-offset: 2px;
+      }
 
-  function render() {
-    const frag = document.createDocumentFragment();
-    for (const it of ITEMS) {
-      const li = document.createElement('li');
-      li.className = 'row' + (copied.has(it.no) ? ' done' : '');
-      li.dataset.key = norm(`${it.name} ${it.sub} ${it.no}`);
-      li.innerHTML = `
+      .list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 3.2rem minmax(0, 1fr) auto;
+        gap: 6px 14px;
+        align-items: start;
+        padding-block: 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      .no {
+        font: 500 0.9rem/1.6 var(--mono);
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+      }
+      .head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 4px 12px;
+      }
+      .name {
+        font-weight: 600;
+        font-size: 1.05rem;
+      }
+      .meta {
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+      .file {
+        font: 0.78rem/1.4 var(--mono);
+        color: var(--muted);
+      }
+      .prompt {
+        grid-column: 2 / 3;
+        margin: 6px 0 0;
+        font: 0.82rem/1.6 var(--mono);
+        color: var(--muted);
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .row.open .prompt {
+        display: block;
+      }
+      .toggle {
+        grid-column: 2 / 3;
+        justify-self: start;
+        border: 0;
+        background: none;
+        padding: 0;
+        color: var(--accent);
+        font: 600 0.8rem/1.6 var(--sans);
+        cursor: pointer;
+      }
+      .copy {
+        grid-row: 1 / span 3;
+        grid-column: 3;
+        min-width: 96px;
+      }
+      .row.done .name,
+      .row.done .no {
+        color: var(--done);
+      }
+      .row.done .copy {
+        background: var(--accent-soft);
+        border-color: transparent;
+      }
+      .empty {
+        padding-block: 32px;
+        color: var(--muted);
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+        transform: translateX(-50%);
+        background: var(--ink);
+        color: var(--bg);
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        max-width: calc(100vw - 32px);
+      }
+      @media (max-width: 560px) {
+        .row {
+          grid-template-columns: 2.6rem minmax(0, 1fr);
+        }
+        .copy {
+          grid-row: auto;
+          grid-column: 2;
+          justify-self: start;
+          margin-top: 6px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <h1>Đặc sản Bắc – Trung – Nam · Prompt ảnh mới</h1>
+        <p class="lede">
+          30 prompt đặc sản mới, chia đều ba miền, thay toàn bộ danh sách prompt cũ.
+          Không thay đổi món và ảnh đã nhập. Cùng một khung: góc 3/4 từ trên, đồ đựng khác nhau
+          theo từng món, nền đen #000000, ảnh vuông 1:1. Bấm <strong>Sao chép</strong> ở từng món,
+          hoặc chép cả bộ một lần. Món đã chép được đánh dấu trên trình duyệt này để bạn biết mình
+          đang tới đâu.
+        </p>
+      </header>
+
+      <div class="bar" role="toolbar" aria-label="Công cụ">
+        <input
+          id="q"
+          class="search"
+          type="search"
+          aria-label="Tìm món"
+          placeholder="Tìm món hoặc miền, ví dụ: cao lầu, Huế, miền Nam…"
+          autocomplete="off"
+        />
+        <button id="copyAll" class="btn btn--primary" type="button">Sao chép tất cả</button>
+        <button id="reset" class="btn" type="button">Xóa dấu đã chép</button>
+        <span id="progress" class="progress" aria-live="polite"></span>
+      </div>
+
+      <ol id="list" class="list"></ol>
+      <p id="empty" class="empty" hidden>Không có món nào khớp. Thử từ khóa khác.</p>
+    </div>
+    <div id="toast" class="toast" role="status" hidden></div>
+
+    <script>
+      const ITEMS = [{"no":"001","name":"Chả cá Lã Vọng","sub":"Miền Bắc • Hà Nội • Cá nghệ, thì là, bún và mắm tôm","file":"001-cha-ca-la-vong.webp","prompt":"Generate ONE completely original photorealistic image of Chả cá Lã Vọng (Miền Bắc • Hà Nội • Cá nghệ, thì là, bún và mắm tôm). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a brushed stainless steel tray (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Chả cá Lã Vọng (Miền Bắc • Hà Nội • Cá nghệ, thì là, bún và mắm tôm)) and its serving vessel change."},{"no":"002","name":"Bún thang","sub":"Miền Bắc • Hà Nội • Gà xé, giò lụa, trứng thái sợi","file":"002-bun-thang.webp","prompt":"Generate ONE completely original photorealistic image of Bún thang (Miền Bắc • Hà Nội • Gà xé, giò lụa, trứng thái sợi). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a white glossy porcelain plate (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bún thang (Miền Bắc • Hà Nội • Gà xé, giò lụa, trứng thái sợi)) and its serving vessel change."},{"no":"003","name":"Bún ốc Hà Nội","sub":"Miền Bắc • Hà Nội • Ốc, cà chua và nước dùng chua thanh","file":"003-bun-oc-ha-noi.webp","prompt":"Generate ONE completely original photorealistic image of Bún ốc Hà Nội (Miền Bắc • Hà Nội • Ốc, cà chua và nước dùng chua thanh). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a pastel-glazed ceramic plate (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bún ốc Hà Nội (Miền Bắc • Hà Nội • Ốc, cà chua và nước dùng chua thanh)) and its serving vessel change."},{"no":"004","name":"Phở cuốn Ngũ Xã","sub":"Miền Bắc • Hà Nội • Bánh phở cuốn bò xào và rau thơm","file":"004-pho-cuon-ngu-xa.webp","prompt":"Generate ONE completely original photorealistic image of Phở cuốn Ngũ Xã (Miền Bắc • Hà Nội • Bánh phở cuốn bò xào và rau thơm). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a glossy red lacquer tray (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Phở cuốn Ngũ Xã (Miền Bắc • Hà Nội • Bánh phở cuốn bò xào và rau thơm)) and its serving vessel change."},{"no":"005","name":"Xôi xéo","sub":"Miền Bắc • Hà Nội • Xôi vàng, đậu xanh và hành phi","file":"005-xoi-xeo.webp","prompt":"Generate ONE completely original photorealistic image of Xôi xéo (Miền Bắc • Hà Nội • Xôi vàng, đậu xanh và hành phi). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a blue-and-white patterned porcelain bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Xôi xéo (Miền Bắc • Hà Nội • Xôi vàng, đậu xanh và hành phi)) and its serving vessel change."},{"no":"006","name":"Bánh cuốn Cao Bằng","sub":"Miền Bắc • Cao Bằng • Bánh cuốn thịt ăn với bát nước dùng xương","file":"006-banh-cuon-cao-bang.webp","prompt":"Generate ONE completely original photorealistic image of Bánh cuốn Cao Bằng (Miền Bắc • Cao Bằng • Bánh cuốn thịt ăn với bát nước dùng xương). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a fresh green banana leaf laid flat (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh cuốn Cao Bằng (Miền Bắc • Cao Bằng • Bánh cuốn thịt ăn với bát nước dùng xương)) and its serving vessel change."},{"no":"007","name":"Phở chua Lạng Sơn","sub":"Miền Bắc • Lạng Sơn • Phở trộn sốt chua ngọt, thịt quay, lạc","file":"007-pho-chua-lang-son.webp","prompt":"Generate ONE completely original photorealistic image of Phở chua Lạng Sơn (Miền Bắc • Lạng Sơn • Phở trộn sốt chua ngọt, thịt quay, lạc). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a deep matte black stoneware bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Phở chua Lạng Sơn (Miền Bắc • Lạng Sơn • Phở trộn sốt chua ngọt, thịt quay, lạc)) and its serving vessel change."},{"no":"008","name":"Bún cá cay Hải Phòng","sub":"Miền Bắc • Hải Phòng • Cá chiên, chả cá và nước dùng cay","file":"008-bun-ca-cay-hai-phong.webp","prompt":"Generate ONE completely original photorealistic image of Bún cá cay Hải Phòng (Miền Bắc • Hải Phòng • Cá chiên, chả cá và nước dùng cay). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on an enamel tin plate with a blue rim (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bún cá cay Hải Phòng (Miền Bắc • Hải Phòng • Cá chiên, chả cá và nước dùng cay)) and its serving vessel change."},{"no":"009","name":"Bánh giò Hà Nội","sub":"Miền Bắc • Hà Nội • Bánh bột gạo hình chóp, nhân thịt và mộc nhĩ","file":"009-banh-gio-ha-noi.webp","prompt":"Generate ONE completely original photorealistic image of Bánh giò Hà Nội (Miền Bắc • Hà Nội • Bánh bột gạo hình chóp, nhân thịt và mộc nhĩ). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a shallow terracotta dish (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh giò Hà Nội (Miền Bắc • Hà Nội • Bánh bột gạo hình chóp, nhân thịt và mộc nhĩ)) and its serving vessel change."},{"no":"010","name":"Bánh đúc nóng","sub":"Miền Bắc • Hà Nội • Bánh đúc mềm, thịt băm, mộc nhĩ và hành phi","file":"010-banh-duc-nong.webp","prompt":"Generate ONE completely original photorealistic image of Bánh đúc nóng (Miền Bắc • Hà Nội • Bánh đúc mềm, thịt băm, mộc nhĩ và hành phi). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a dark wooden bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh đúc nóng (Miền Bắc • Hà Nội • Bánh đúc mềm, thịt băm, mộc nhĩ và hành phi)) and its serving vessel change."},{"no":"011","name":"Cao lầu Hội An","sub":"Miền Trung • Quảng Nam • Sợi cao lầu, thịt xá xíu và bánh giòn","file":"011-cao-lau-hoi-an.webp","prompt":"Generate ONE completely original photorealistic image of Cao lầu Hội An (Miền Trung • Quảng Nam • Sợi cao lầu, thịt xá xíu và bánh giòn). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a dark wooden bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Cao lầu Hội An (Miền Trung • Quảng Nam • Sợi cao lầu, thịt xá xíu và bánh giòn)) and its serving vessel change."},{"no":"012","name":"Bún chả cá Đà Nẵng","sub":"Miền Trung • Đà Nẵng • Chả cá hấp, chiên, bí đỏ và cà chua","file":"012-bun-cha-ca-da-nang.webp","prompt":"Generate ONE completely original photorealistic image of Bún chả cá Đà Nẵng (Miền Trung • Đà Nẵng • Chả cá hấp, chiên, bí đỏ và cà chua). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on an enamel tin plate with a blue rim (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bún chả cá Đà Nẵng (Miền Trung • Đà Nẵng • Chả cá hấp, chiên, bí đỏ và cà chua)) and its serving vessel change."},{"no":"013","name":"Bánh bèo Huế","sub":"Miền Trung • Huế • Bánh bèo chén với tôm chấy và tóp mỡ","file":"013-banh-beo-hue.webp","prompt":"Generate ONE completely original photorealistic image of Bánh bèo Huế (Miền Trung • Huế • Bánh bèo chén với tôm chấy và tóp mỡ). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a deep matte black stoneware bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh bèo Huế (Miền Trung • Huế • Bánh bèo chén với tôm chấy và tóp mỡ)) and its serving vessel change."},{"no":"014","name":"Bánh nậm Huế","sub":"Miền Trung • Huế • Bánh bột gạo mỏng, tôm thịt, gói lá chuối","file":"014-banh-nam-hue.webp","prompt":"Generate ONE completely original photorealistic image of Bánh nậm Huế (Miền Trung • Huế • Bánh bột gạo mỏng, tôm thịt, gói lá chuối). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a woven bamboo basket lined with banana leaf (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh nậm Huế (Miền Trung • Huế • Bánh bột gạo mỏng, tôm thịt, gói lá chuối)) and its serving vessel change."},{"no":"015","name":"Bánh bột lọc Huế","sub":"Miền Trung • Huế • Bánh trong veo, nhân tôm và thịt ba chỉ","file":"015-banh-bot-loc-hue.webp","prompt":"Generate ONE completely original photorealistic image of Bánh bột lọc Huế (Miền Trung • Huế • Bánh trong veo, nhân tôm và thịt ba chỉ). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a dark wooden bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh bột lọc Huế (Miền Trung • Huế • Bánh trong veo, nhân tôm và thịt ba chỉ)) and its serving vessel change."},{"no":"016","name":"Cơm hến Huế","sub":"Miền Trung • Huế • Cơm, hến, rau sống, lạc rang và tóp mỡ","file":"016-com-hen-hue.webp","prompt":"Generate ONE completely original photorealistic image of Cơm hến Huế (Miền Trung • Huế • Cơm, hến, rau sống, lạc rang và tóp mỡ). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on an enamel tin plate with a blue rim (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Cơm hến Huế (Miền Trung • Huế • Cơm, hến, rau sống, lạc rang và tóp mỡ)) and its serving vessel change."},{"no":"017","name":"Bánh canh cá lóc Quảng Trị","sub":"Miền Trung • Quảng Trị • Sợi bánh canh, cá lóc và hành tiêu","file":"017-banh-canh-ca-loc-quang-tri.webp","prompt":"Generate ONE completely original photorealistic image of Bánh canh cá lóc Quảng Trị (Miền Trung • Quảng Trị • Sợi bánh canh, cá lóc và hành tiêu). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a rustic round wooden board (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh canh cá lóc Quảng Trị (Miền Trung • Quảng Trị • Sợi bánh canh, cá lóc và hành tiêu)) and its serving vessel change."},{"no":"018","name":"Bánh hỏi lòng heo Bình Định","sub":"Miền Trung • Bình Định • Bánh hỏi, lòng heo, rau sống và bát cháo","file":"018-banh-hoi-long-heo-binh-dinh.webp","prompt":"Generate ONE completely original photorealistic image of Bánh hỏi lòng heo Bình Định (Miền Trung • Bình Định • Bánh hỏi, lòng heo, rau sống và bát cháo). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a speckled beige handmade ceramic bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh hỏi lòng heo Bình Định (Miền Trung • Bình Định • Bánh hỏi, lòng heo, rau sống và bát cháo)) and its serving vessel change."},{"no":"019","name":"Bánh tráng cuốn thịt heo Đà Nẵng","sub":"Miền Trung • Đà Nẵng • Thịt heo luộc, bánh tráng, rau sống và mắm nêm","file":"019-banh-trang-cuon-thit-heo-da-nang.webp","prompt":"Generate ONE completely original photorealistic image of Bánh tráng cuốn thịt heo Đà Nẵng (Miền Trung • Đà Nẵng • Thịt heo luộc, bánh tráng, rau sống và mắm nêm). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a rectangular slate stone platter (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh tráng cuốn thịt heo Đà Nẵng (Miền Trung • Đà Nẵng • Thịt heo luộc, bánh tráng, rau sống và mắm nêm)) and its serving vessel change."},{"no":"020","name":"Súp lươn Nghệ An","sub":"Miền Trung • Nghệ An • Lươn, nghệ, rau răm, ăn kèm bánh mì","file":"020-sup-luon-nghe-an.webp","prompt":"Generate ONE completely original photorealistic image of Súp lươn Nghệ An (Miền Trung • Nghệ An • Lươn, nghệ, rau răm, ăn kèm bánh mì). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a white glossy porcelain plate (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Súp lươn Nghệ An (Miền Trung • Nghệ An • Lươn, nghệ, rau răm, ăn kèm bánh mì)) and its serving vessel change."},{"no":"021","name":"Hủ tiếu Mỹ Tho","sub":"Miền Nam • Tiền Giang • Hủ tiếu dai, tôm, thịt heo và nước dùng thanh","file":"021-hu-tieu-my-tho.webp","prompt":"Generate ONE completely original photorealistic image of Hủ tiếu Mỹ Tho (Miền Nam • Tiền Giang • Hủ tiếu dai, tôm, thịt heo và nước dùng thanh). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a speckled beige handmade ceramic bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Hủ tiếu Mỹ Tho (Miền Nam • Tiền Giang • Hủ tiếu dai, tôm, thịt heo và nước dùng thanh)) and its serving vessel change."},{"no":"022","name":"Bún nước lèo Sóc Trăng","sub":"Miền Nam • Sóc Trăng • Nước lèo mắm, cá, tôm, heo quay và rau","file":"022-bun-nuoc-leo-soc-trang.webp","prompt":"Generate ONE completely original photorealistic image of Bún nước lèo Sóc Trăng (Miền Nam • Sóc Trăng • Nước lèo mắm, cá, tôm, heo quay và rau). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a deep matte black stoneware bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bún nước lèo Sóc Trăng (Miền Nam • Sóc Trăng • Nước lèo mắm, cá, tôm, heo quay và rau)) and its serving vessel change."},{"no":"023","name":"Lẩu mắm miền Tây","sub":"Miền Nam • Đồng bằng sông Cửu Long • Mắm, cá, tôm, cà tím và rau đồng","file":"023-lau-mam-mien-tay.webp","prompt":"Generate ONE completely original photorealistic image of Lẩu mắm miền Tây (Miền Nam • Đồng bằng sông Cửu Long • Mắm, cá, tôm, cà tím và rau đồng). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a glazed brown clay pot (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Lẩu mắm miền Tây (Miền Nam • Đồng bằng sông Cửu Long • Mắm, cá, tôm, cà tím và rau đồng)) and its serving vessel change."},{"no":"024","name":"Cá lóc nướng trui","sub":"Miền Nam • Miền Tây • Cá nguyên con nướng, bánh tráng và rau sống","file":"024-ca-loc-nuong-trui.webp","prompt":"Generate ONE completely original photorealistic image of Cá lóc nướng trui (Miền Nam • Miền Tây • Cá nguyên con nướng, bánh tráng và rau sống). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on an enamel tin plate with a blue rim (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Cá lóc nướng trui (Miền Nam • Miền Tây • Cá nguyên con nướng, bánh tráng và rau sống)) and its serving vessel change."},{"no":"025","name":"Bánh khọt Vũng Tàu","sub":"Miền Nam • Bà Rịa–Vũng Tàu • Bánh nhỏ giòn, tôm, rau sống và nước mắm","file":"025-banh-khot-vung-tau.webp","prompt":"Generate ONE completely original photorealistic image of Bánh khọt Vũng Tàu (Miền Nam • Bà Rịa–Vũng Tàu • Bánh nhỏ giòn, tôm, rau sống và nước mắm). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a rectangular slate stone platter (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh khọt Vũng Tàu (Miền Nam • Bà Rịa–Vũng Tàu • Bánh nhỏ giòn, tôm, rau sống và nước mắm)) and its serving vessel change."},{"no":"026","name":"Bánh tằm bì","sub":"Miền Nam • Miền Tây • Bánh tằm, bì heo, nước cốt dừa và rau","file":"026-banh-tam-bi.webp","prompt":"Generate ONE completely original photorealistic image of Bánh tằm bì (Miền Nam • Miền Tây • Bánh tằm, bì heo, nước cốt dừa và rau). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on an enamel tin plate with a blue rim (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh tằm bì (Miền Nam • Miền Tây • Bánh tằm, bì heo, nước cốt dừa và rau)) and its serving vessel change."},{"no":"027","name":"Bánh cống Sóc Trăng","sub":"Miền Nam • Sóc Trăng • Bánh chiên đậu xanh, thịt và tôm nguyên con","file":"027-banh-cong-soc-trang.webp","prompt":"Generate ONE completely original photorealistic image of Bánh cống Sóc Trăng (Miền Nam • Sóc Trăng • Bánh chiên đậu xanh, thịt và tôm nguyên con). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a glossy red lacquer tray (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh cống Sóc Trăng (Miền Nam • Sóc Trăng • Bánh chiên đậu xanh, thịt và tôm nguyên con)) and its serving vessel change."},{"no":"028","name":"Bún kèn Phú Quốc","sub":"Miền Nam • Kiên Giang • Cá xay, cà ri, nước cốt dừa và rau sống","file":"028-bun-ken-phu-quoc.webp","prompt":"Generate ONE completely original photorealistic image of Bún kèn Phú Quốc (Miền Nam • Kiên Giang • Cá xay, cà ri, nước cốt dừa và rau sống). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a woven bamboo basket lined with banana leaf (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bún kèn Phú Quốc (Miền Nam • Kiên Giang • Cá xay, cà ri, nước cốt dừa và rau sống)) and its serving vessel change."},{"no":"029","name":"Bún quậy Phú Quốc","sub":"Miền Nam • Kiên Giang • Bún tươi, chả tôm, chả cá và nước chấm riêng","file":"029-bun-quay-phu-quoc.webp","prompt":"Generate ONE completely original photorealistic image of Bún quậy Phú Quốc (Miền Nam • Kiên Giang • Bún tươi, chả tôm, chả cá và nước chấm riêng). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a textured sage-green ceramic plate (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bún quậy Phú Quốc (Miền Nam • Kiên Giang • Bún tươi, chả tôm, chả cá và nước chấm riêng)) and its serving vessel change."},{"no":"030","name":"Bánh canh Bến Có","sub":"Miền Nam • Trà Vinh • Bánh canh gạo, thịt heo, lòng và hành","file":"030-banh-canh-ben-co.webp","prompt":"Generate ONE completely original photorealistic image of Bánh canh Bến Có (Miền Nam • Trà Vinh • Bánh canh gạo, thịt heo, lòng và hành). Create the dish from scratch — do not use, search for, copy, or reproduce any existing/reference image. Composition: 3/4 overhead view (35–45°), centered, the food served in/on a deep matte black stoneware bowl (if that vessel cannot realistically hold this dish, e.g. a soup or broth, use a bowl in the same material/style instead). The ENTIRE vessel and all food must be fully visible inside the frame — nothing cropped or cut off at any edge; leave a clear empty black margin of at least 10% on every side (top, bottom, left, right), with the dish taking about 65–70% of the frame width, perfectly centered. The food is abundant, full, colorful and highly appetizing, with ingredients clearly visible. Pure solid black background (#000000), no table, no props, no environment. Professional studio food lighting, ultra-sharp details, realistic textures, natural shadows, vivid realistic colors. Square 1:1 aspect ratio (e.g. 1024x1024), high resolution. Keep the same camera angle, framing, lighting and visual scale as the rest of the series; only the dish (Bánh canh Bến Có (Miền Nam • Trà Vinh • Bánh canh gạo, thịt heo, lòng và hành)) and its serving vessel change."}];
+      const KEY = 'food-reel-prompts/regional-2026-v1';
+      let copied = new Set();
+      try {
+        copied = new Set(JSON.parse(localStorage.getItem(KEY) || '[]'));
+      } catch (e) {}
+      const save = () => {
+        try {
+          localStorage.setItem(KEY, JSON.stringify([...copied]));
+        } catch (e) {}
+      };
+
+      const list = document.getElementById('list');
+      const progress = document.getElementById('progress');
+      const toastEl = document.getElementById('toast');
+      let toastTimer;
+      function toast(msg) {
+        toastEl.textContent = msg;
+        toastEl.hidden = false;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => (toastEl.hidden = true), 1800);
+      }
+
+      // The async Clipboard API only exists on HTTPS/localhost; http://angi.local
+      // needs the classic textarea + execCommand path.
+      function legacyCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        let ok = false;
+        try {
+          ok = document.execCommand('copy');
+        } catch (e) {}
+        ta.remove();
+        return ok;
+      }
+
+      async function copyText(text, fallbackEl) {
+        try {
+          if (!navigator.clipboard) throw new Error('no clipboard api');
+          await navigator.clipboard.writeText(text);
+          return true;
+        } catch (e) {
+          if (legacyCopy(text)) return true;
+          if (fallbackEl) {
+            const r = document.createRange();
+            r.selectNodeContents(fallbackEl);
+            const s = getSelection();
+            s.removeAllRanges();
+            s.addRange(r);
+          }
+          return false;
+        }
+      }
+
+      function updateProgress() {
+        progress.textContent = `${copied.size}/${ITEMS.length} đã chép`;
+      }
+
+      const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/gi, 'd').toLowerCase();
+
+      function render() {
+        const frag = document.createDocumentFragment();
+        for (const it of ITEMS) {
+          const li = document.createElement('li');
+          li.className = 'row' + (copied.has(it.no) ? ' done' : '');
+          li.dataset.key = norm(`${it.name} ${it.sub} ${it.no}`);
+          li.innerHTML = `
         <span class="no">${it.no}</span>
         <div class="head"><span class="name"></span><span class="meta"></span><span class="file"></span></div>
         <button class="btn copy" type="button"></button>
         <p class="prompt"></p>
         <button class="toggle" type="button" aria-expanded="false">Xem đầy đủ</button>`;
-      li.querySelector('.name').textContent = it.name;
-      li.querySelector('.meta').textContent = it.sub;
-      li.querySelector('.file').textContent = it.file;
-      li.querySelector('.prompt').textContent = it.prompt;
-      const btn = li.querySelector('.copy');
-      btn.textContent = copied.has(it.no) ? 'Đã chép' : 'Sao chép';
-      btn.setAttribute('aria-label', `Sao chép prompt ${it.name}`);
-      btn.addEventListener('click', async () => {
-        const ok = await copyText(it.prompt, li.querySelector('.prompt'));
-        li.classList.add('open');
-        if (ok) {
-          copied.add(it.no);
-          save();
-          li.classList.add('done');
-          btn.textContent = 'Đã chép';
-          toast(`Đã chép prompt ${it.no} · ${it.name}`);
-          updateProgress();
-        } else {
-          toast('Trình duyệt chặn sao chép. Prompt đã được bôi đen, nhấn Ctrl+C.');
+          li.querySelector('.name').textContent = it.name;
+          li.querySelector('.meta').textContent = it.sub;
+          li.querySelector('.file').textContent = it.file;
+          li.querySelector('.prompt').textContent = it.prompt;
+          const btn = li.querySelector('.copy');
+          btn.textContent = copied.has(it.no) ? 'Đã chép' : 'Sao chép';
+          btn.setAttribute('aria-label', `Sao chép prompt ${it.name}`);
+          btn.addEventListener('click', async () => {
+            const ok = await copyText(it.prompt, li.querySelector('.prompt'));
+            li.classList.add('open');
+            if (ok) {
+              copied.add(it.no);
+              save();
+              li.classList.add('done');
+              btn.textContent = 'Đã chép';
+              toast(`Đã chép prompt ${it.no} · ${it.name}`);
+              updateProgress();
+            } else {
+              toast('Trình duyệt chặn sao chép. Prompt đã được bôi đen, nhấn Ctrl+C.');
+            }
+          });
+          const tg = li.querySelector('.toggle');
+          tg.addEventListener('click', () => {
+            const open = li.classList.toggle('open');
+            tg.textContent = open ? 'Thu gọn' : 'Xem đầy đủ';
+            tg.setAttribute('aria-expanded', String(open));
+          });
+          frag.appendChild(li);
         }
+        list.appendChild(frag);
+        updateProgress();
+      }
+      render();
+
+      document.getElementById('q').addEventListener('input', (e) => {
+        const q = norm(e.target.value.trim());
+        let shown = 0;
+        for (const li of list.children) {
+          const hit = !q || li.dataset.key.includes(q);
+          li.hidden = !hit;
+          if (hit) shown++;
+        }
+        document.getElementById('empty').hidden = shown > 0;
       });
-      const tg = li.querySelector('.toggle');
-      tg.addEventListener('click', () => {
-        const open = li.classList.toggle('open');
-        tg.textContent = open ? 'Thu gọn' : 'Xem đầy đủ';
-        tg.setAttribute('aria-expanded', String(open));
+
+      document.getElementById('copyAll').addEventListener('click', async () => {
+        const text = ITEMS.map((it) => it.prompt).join('\n\n');
+        const ok = await copyText(text);
+        toast(
+          ok
+            ? `Đã chép cả ${ITEMS.length} prompt, mỗi prompt cách nhau một dòng trống.`
+            : 'Trình duyệt chặn sao chép. Hãy chép từng món.',
+        );
       });
-      frag.appendChild(li);
-    }
-    list.appendChild(frag);
-    updateProgress();
-  }
-  render();
 
-  document.getElementById('q').addEventListener('input', (e) => {
-    const q = norm(e.target.value.trim());
-    let shown = 0;
-    for (const li of list.children) {
-      const hit = !q || li.dataset.key.includes(q);
-      li.hidden = !hit;
-      if (hit) shown++;
-    }
-    document.getElementById('empty').hidden = shown > 0;
-  });
-
-  document.getElementById('copyAll').addEventListener('click', async () => {
-    const text = ITEMS.map((it) => it.prompt).join('\n\n');
-    const ok = await copyText(text);
-    toast(ok ? `Đã chép cả ${ITEMS.length} prompt, mỗi prompt cách nhau một dòng trống.` : 'Trình duyệt chặn sao chép. Hãy chép từng món.');
-  });
-
-  document.getElementById('reset').addEventListener('click', () => {
-    copied = new Set();
-    save();
-    for (const li of list.children) {
-      li.classList.remove('done');
-      li.querySelector('.copy').textContent = 'Sao chép';
-    }
-    updateProgress();
-    toast('Đã xóa dấu đã chép.');
-  });
-</script>
-</body>
+      document.getElementById('reset').addEventListener('click', () => {
+        copied = new Set();
+        save();
+        for (const li of list.children) {
+          li.classList.remove('done');
+          li.querySelector('.copy').textContent = 'Sao chép';
+        }
+        updateProgress();
+        toast('Đã xóa dấu đã chép.');
+      });
+    </script>
+  </body>
 </html>

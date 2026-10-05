@@ -44,3 +44,10 @@ storage/phone-check/
 
 # Cut-out run: preview images and the undo list (old image paths)
 storage/cutout-*
+
+# Promo video export (scripts/export-promo-video.mjs): frames, drafts, review stills, tool installs
+storage/promo-render/
+storage/promo-review/
+storage/promo-tools/node_modules/
+storage/promo-tools/music.*
+storage/story-*
