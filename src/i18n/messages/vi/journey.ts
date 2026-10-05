@@ -1,6 +1,16 @@
 // Vietnamese strings for the "journey" namespace (source of truth; see src/i18n/index.ts).
 // The drawer is shown to guests as "Nông trại".
 const journey = {
+  /** The farm locked for fair play (server/lib/FairPlay.php). */
+  farmLock: {
+    title: 'Nông trại đang tạm khoá',
+    auto: (until: string) =>
+      `Một số bản lưu gần đây không khớp với luật chơi, nên nông trại tạm khoá đến ${until}. Bạn vẫn quay món và đọc câu chuyện món ăn bình thường.`,
+    admin: (until: string) =>
+      `Quản trị viên đã tạm khoá nông trại của bạn đến ${until}. Bạn vẫn quay món và đọc câu chuyện món ăn bình thường.`,
+    help: 'Nếu bạn nghĩ đây là nhầm lẫn, hãy trả lời email đăng nhập để được kiểm tra lại.',
+    back: 'Về quay món',
+  },
   scene: {
     /** Hero kicker; `brand` is BRAND. */
     kicker: (brand: string) => `${brand} · Nông trại`,

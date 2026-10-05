@@ -31,6 +31,13 @@ return [
     'account.badEmail' => 'That email address does not look right.',
     'account.progressRejected' => 'This save does not match how the farm plays — the last saved farm is kept.',
 
+    // ——— Spins & fair play ———
+    'spins.noneLeft' => 'You have used all of today’s spins — buy more or come back tomorrow.',
+    'spins.signInForMore' => 'Free spins are used up — sign in to keep spinning or buy more.',
+    'spins.paymentsOff' => 'Buying spins is not open yet — check back later.',
+    'spins.tooManyOrders' => 'You have a few orders waiting for payment — pay one or let them expire first.',
+    'fairPlay.locked' => 'Your farm is locked for invalid saves until {until}.',
+
     'friends.formerFriend' => 'A former friend',
 
     // ——— Friends' gardens ———

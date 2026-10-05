@@ -3,13 +3,14 @@ import { LazyMotion, MotionConfig, domAnimation } from 'motion/react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { RecipeId } from '../../../data/types';
 import { t } from '../../../i18n';
-import { useGame } from '../../../state/hooks';
+import { useAccount, useGame } from '../../../state/hooks';
 import type { ReelDish } from '../foodReel.types';
 import { AtlasSection } from './AtlasSection';
 import { Cookbook } from './Cookbook';
 import { CookingSheet } from './CookingSheet';
 import { CurrentMeal } from './CurrentMeal';
 import { FarmGame, type PanelId } from './FarmGame';
+import { FarmLock } from './FarmLock';
 import { FriendsSection } from './FriendsSection';
 import { JourneyStats } from './JourneyStats';
 import { MealLog, MissionsSection } from './MissionsSection';
@@ -122,6 +123,7 @@ interface JourneySceneProps {
  */
 export default function JourneyScene({ onBackToReel, onOpenDish }: JourneySceneProps) {
   const { reduced } = useGame();
+  const { farmBan } = useAccount();
   const [cooking, setCooking] = useState<RecipeId | null>(null);
   // An invite link (?ban=CODE) lands on the friends panel, where the friendship is made.
   const [panel, setPanel] = useState<PanelId | null>(() =>
@@ -169,6 +171,15 @@ export default function JourneyScene({ onBackToReel, onOpenDish }: JourneySceneP
       </>
     ),
   };
+
+  // Locked for fair play: the farm waits, the reel stays open.
+  if (farmBan) {
+    return (
+      <div className="fj fj--game">
+        <FarmLock ban={farmBan} onBack={onBackToReel} />
+      </div>
+    );
+  }
 
   return (
     <MotionConfig reducedMotion={reduced ? 'always' : 'never'}>

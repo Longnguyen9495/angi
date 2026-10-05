@@ -6,6 +6,15 @@ import type { Messages } from '../../types';
 const s = (n: number, one: string, many: string) => (n === 1 ? one : many);
 
 const journey: Messages['journey'] = {
+  farmLock: {
+    title: 'Your farm is locked for now',
+    auto: (until) =>
+      `Some recent saves did not match the rules, so the farm is locked until ${until}. Spinning dishes and reading their stories work as usual.`,
+    admin: (until) =>
+      `An admin locked your farm until ${until}. Spinning dishes and reading their stories work as usual.`,
+    help: 'If you think this is a mistake, reply to your sign-in email and we will take another look.',
+    back: 'Back to the reel',
+  },
   scene: {
     kicker: (brand) => `${brand} · Farm`,
     titleLines: ['Your', 'farm'],

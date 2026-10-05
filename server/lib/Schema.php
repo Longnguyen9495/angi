@@ -13,7 +13,7 @@ require_once __DIR__ . '/bootstrap.php';
 final class Schema
 {
     /** Bump with every change below; stored in app_meta so the API checks one row per request. */
-    public const VERSION = 6;
+    public const VERSION = 7;
 
     public static function ensure(PDO $pdo): void
     {
@@ -116,6 +116,79 @@ final class Schema
         )$engine");
         self::index($pdo, 'guard_rejections', 'idx_guard_rejections_user', 'user_id, created_at');
         self::index($pdo, 'guard_rejections', 'idx_guard_rejections_at', 'created_at');
+
+        // v7: settings the admin edits (Settings.php), spins and their payment, fair-play locks.
+        $pdo->exec("CREATE TABLE IF NOT EXISTS app_settings (
+            name {$text(40)} NOT NULL PRIMARY KEY,
+            value TEXT NOT NULL,
+            updated_at $int NOT NULL
+        )$engine");
+        // Free spins used per Vietnam day, by subject: 'u:<user id>', 'g:<browser hash>', 'n:<network hash>'.
+        $pdo->exec("CREATE TABLE IF NOT EXISTS spin_usage (
+            subject {$text(48)} NOT NULL,
+            day $int NOT NULL,
+            used $int NOT NULL DEFAULT 0,
+            PRIMARY KEY (subject, day)
+        )$engine");
+        // Bought spins not used yet, and every change to them (top-up, spin, admin gift).
+        $pdo->exec("CREATE TABLE IF NOT EXISTS spin_wallets (
+            user_id $int NOT NULL PRIMARY KEY,
+            credits $int NOT NULL DEFAULT 0,
+            updated_at $int NOT NULL
+        )$engine");
+        $pdo->exec("CREATE TABLE IF NOT EXISTS spin_ledger (
+            id $id,
+            user_id $int NOT NULL,
+            delta $big NOT NULL,
+            reason {$text(12)} NOT NULL,
+            ref {$text(64)} NULL,
+            created_at $int NOT NULL
+        )$engine");
+        self::index($pdo, 'spin_ledger', 'idx_spin_ledger_user', 'user_id, created_at');
+        // A top-up: paid by bank transfer with `code` in the memo, confirmed by the admin or the
+        // bank webhook (Spins::markPaid).
+        $pdo->exec("CREATE TABLE IF NOT EXISTS spin_orders (
+            id $id,
+            code {$text(16)} NOT NULL UNIQUE,
+            user_id $int NOT NULL,
+            spins $int NOT NULL,
+            amount $big NOT NULL,
+            status {$text(10)} NOT NULL,
+            created_at $int NOT NULL,
+            paid_at $int NULL,
+            paid_via {$text(10)} NULL,
+            bank_ref {$text(64)} NULL,
+            note {$text(255)} NULL
+        )$engine");
+        self::index($pdo, 'spin_orders', 'idx_spin_orders_user', 'user_id, created_at');
+        self::index($pdo, 'spin_orders', 'idx_spin_orders_status', 'status, created_at');
+        // Farm locks (automatic from fair-play points, or by the admin) and the alerts behind them.
+        $pdo->exec("CREATE TABLE IF NOT EXISTS farm_bans (
+            id $id,
+            user_id $int NOT NULL,
+            level $int NOT NULL DEFAULT 0,
+            points $int NOT NULL DEFAULT 0,
+            reason {$text(255)} NOT NULL,
+            source {$text(10)} NOT NULL,
+            created_by {$text(60)} NULL,
+            starts_at $int NOT NULL,
+            ends_at $int NOT NULL,
+            lifted_at $int NULL,
+            lifted_by {$text(60)} NULL
+        )$engine");
+        self::index($pdo, 'farm_bans', 'idx_farm_bans_user', 'user_id, ends_at');
+        $pdo->exec("CREATE TABLE IF NOT EXISTS fair_play_alerts (
+            id $id,
+            user_id $int NOT NULL,
+            level $int NOT NULL,
+            points $int NOT NULL,
+            detail {$text(255)} NOT NULL,
+            ban_id $int NULL,
+            created_at $int NOT NULL,
+            seen_at $int NULL
+        )$engine");
+        self::index($pdo, 'fair_play_alerts', 'idx_fair_play_alerts_user', 'user_id, created_at');
+        self::index($pdo, 'fair_play_alerts', 'idx_fair_play_alerts_seen', 'seen_at, created_at');
 
         // v4: the achievement metrics added with 28 badges get their bases from each stored garden.
         require_once __DIR__ . '/ProgressGuard.php';

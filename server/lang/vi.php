@@ -35,6 +35,13 @@ return [
 
     'friends.formerFriend' => 'Một người bạn cũ',
 
+    // ——— Spins & fair play ———
+    'spins.noneLeft' => 'Bạn đã dùng hết lượt quay hôm nay — mua thêm lượt hoặc quay lại vào ngày mai nhé.',
+    'spins.signInForMore' => 'Đã hết lượt quay miễn phí — đăng nhập để quay tiếp hoặc mua thêm lượt.',
+    'spins.paymentsOff' => 'Chưa mở mua lượt quay — quay lại sau nhé.',
+    'spins.tooManyOrders' => 'Bạn đang có vài đơn chờ thanh toán — thanh toán hoặc đợi chúng hết hạn rồi tạo đơn mới nhé.',
+    'fairPlay.locked' => 'Nông trại đang tạm khoá vì bản lưu không hợp lệ, mở lại lúc {until}.',
+
     // ——— Friends' gardens ———
     'friends.notFound' => 'Không tìm thấy khu vườn có mã này.',
     'friends.ownCode' => 'Đây là mã khu vườn của chính bạn.',

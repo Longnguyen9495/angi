@@ -5,7 +5,8 @@ declare(strict_types=1);
 /*
  * Front controller for http://angi.local/api/*
  *   Public : GET /api/dishes, GET /api/health
- *   Account: /api/account/* (optional guest account; writes need X-Bepviet: 1)
+ *   Account: /api/account/* (optional guest account; writes need X-Bepviet: 1), spins included
+ *   Payment: POST /api/pay/sepay (bank webhook, Apikey header)
  *   Admin  : /api/admin/* (session + CSRF header on writes)
  * Messages follow the request language (X-Locale → ?lang= → Accept-Language → vi), see lib/Lang.php.
  */
@@ -17,6 +18,9 @@ require_once __DIR__ . '/../lib/Auth.php';
 require_once __DIR__ . '/../lib/Account.php';
 require_once __DIR__ . '/../lib/Friends.php';
 require_once __DIR__ . '/../lib/AdminUsers.php';
+require_once __DIR__ . '/../lib/Spins.php';
+require_once __DIR__ . '/../lib/FairPlay.php';
+require_once __DIR__ . '/../lib/Settings.php';
 
 require_once __DIR__ . '/../lib/ReviewService.php';
 
@@ -76,11 +80,32 @@ try {
         json_response(['ok' => true, 'dishes' => $catalogue->stats()['dishes']]);
     }
 
+    // ——— Bank webhook: a transfer whose memo names a spin order pays it ———
+    if ($path === '/pay/sepay') {
+        if ($method !== 'POST') {
+            throw new HttpError(405, 'Method not allowed.');
+        }
+        json_response(Spins::sepayWebhook(db(), read_json_body()));
+    }
+
     // ——— Guest account (email + one-time code) ———
     if ($path === '/account' || str_starts_with($path, '/account/')) {
         $account = new Account(db());
         if ($method !== 'GET') {
             Account::requireAppHeader();
+        }
+        // Spins of the reel: free per day, then bought (Spins.php). Guests too, by browser.
+        if ($path === '/account/spins' || str_starts_with($path, '/account/spins/')) {
+            $spins = new Spins(db(), $account->current());
+            if (preg_match('#^/account/spins/orders/([A-Za-z0-9]{8})$#', $path, $om) && $method === 'GET') {
+                json_response($spins->order($om[1]));
+            }
+            match ($method . ' ' . $path) {
+                'GET /account/spins' => json_response($spins->status()),
+                'POST /account/spins' => json_response($spins->use()),
+                'POST /account/spins/orders' => json_response($spins->createOrder(read_json_body()), 201),
+                default => throw new HttpError(404, __t('api.notFound')),
+            };
         }
         // Khu vườn bạn bè: routes with a garden code in the path.
         $friends = new Friends(db(), $account);
@@ -146,7 +171,31 @@ try {
         Auth::require($method !== 'GET');
 
         if ($path === '/admin/stats' && $method === 'GET') {
-            json_response($catalogue->stats());
+            $pending = (int) db()->query("SELECT COUNT(*) FROM spin_orders WHERE status = 'pending'")->fetchColumn();
+            json_response($catalogue->stats() + ['alertsUnseen' => FairPlay::unseen(db()), 'ordersPending' => $pending]);
+        }
+        // Spin allowance and price, the bank, fair-play points and locks (Settings.php).
+        if ($path === '/admin/settings') {
+            if ($method === 'GET') {
+                json_response(Settings::all(db()) + ['webhook' => (string) env('SEPAY_API_KEY', '') !== '', 'alertEmail' => (string) env('ADMIN_ALERT_EMAIL', '') !== '']);
+            }
+            if ($method === 'PUT') {
+                json_response(Settings::save(db(), read_json_body()));
+            }
+        }
+        if ($path === '/admin/orders' && $method === 'GET') {
+            json_response(Spins::adminOrders(db(), $_GET));
+        }
+        if (preg_match('#^/admin/orders/([A-Z0-9]{8})/(confirm|cancel)$#', $path, $m) && $method === 'POST') {
+            json_response($m[2] === 'confirm'
+                ? Spins::markPaid(db(), $m[1], 'admin', null, 'Xác nhận bởi ' . (string) ($_SESSION['admin'] ?? 'admin'))
+                : Spins::cancel(db(), $m[1]));
+        }
+        if ($path === '/admin/fairplay' && $method === 'GET') {
+            json_response((new FairPlay(db()))->overview($_GET));
+        }
+        if ($path === '/admin/fairplay/seen' && $method === 'POST') {
+            json_response((new FairPlay(db()))->markSeen(read_json_body()));
         }
         // Languages with a server/lang file; the editor shows translation fields for every "extra" one.
         if ($path === '/admin/locales' && $method === 'GET') {
@@ -200,12 +249,16 @@ try {
         if ($path === '/admin/users' && $method === 'GET') {
             json_response((new AdminUsers(db()))->list($_GET));
         }
-        if (preg_match('#^/admin/users/(\d+)(/(logout))?$#', $path, $m)) {
+        if (preg_match('#^/admin/users/(\d+)(/(logout|ban|unban|spins))?$#', $path, $m)) {
             $users = new AdminUsers(db());
             $uid = (int) $m[1];
+            $by = (string) ($_SESSION['admin'] ?? 'admin');
             match ($method . ' ' . ($m[3] ?? '')) {
                 'GET ' => json_response($users->get($uid)),
                 'POST logout' => json_response($users->signOut($uid)),
+                'POST ban' => json_response($users->ban($uid, read_json_body(), $by)),
+                'POST unban' => json_response($users->unban($uid, $by)),
+                'POST spins' => json_response($users->giftSpins($uid, read_json_body(), $by)),
                 'DELETE ' => json_response($users->delete($uid)),
                 default => throw new HttpError(405, __t('api.notSupported')),
             };

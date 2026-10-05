@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "Ăn gì? — Hôm nay ăn gì?",
+  "name": "Ăn gì?",
   "short_name": "Ăn gì?",
-  "description": "Hôm nay ăn gì? Quay một vòng giữa gần 100 món ngon, chốt món trong vài giây rồi tìm quán ngay.",
+  "description": "Ăn gì? Quay một vòng giữa gần 100 món ngon, chốt món trong vài giây rồi tìm quán ngay.",
   "lang": "vi",
   "dir": "ltr",
   "start_url": "/",

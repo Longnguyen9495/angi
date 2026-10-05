@@ -33,6 +33,7 @@ const account: Messages['account'] = {
     more: (n: number) => ` and ${n} more ${n === 1 ? 'update' : 'updates'}`,
   },
   toasts: {
+    farmLocked: (until) => `Your farm is locked until ${until} — new progress is not saved yet.`,
     signedIn: 'Signed in — your farm is being saved.',
     linkExpired: 'That sign-in link has expired. Send a new code from your Profile.',
     progressRefused:

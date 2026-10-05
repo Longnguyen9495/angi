@@ -222,10 +222,10 @@ final class ProgressGuard
      * Records the refusal check() threw. Called after the save's transaction rolled back (a row
      * written inside it would be undone with the save).
      */
-    public function logRejection(): void
+    public function logRejection(): bool
     {
         if ($this->refused === null) {
-            return;
+            return false;
         }
         $now = $this->nowMs !== null ? intdiv($this->nowMs, 1000) : time();
         [$code, $detail] = $this->refused;
@@ -234,6 +234,7 @@ final class ProgressGuard
         if (random_int(1, 50) === 1) {
             $this->db->prepare('DELETE FROM guard_rejections WHERE created_at < ?')->execute([$now - self::LOG_DAYS * 86400]);
         }
+        return true;
     }
 
     /** The caller's address as a short keyed hash (null from the command line). */

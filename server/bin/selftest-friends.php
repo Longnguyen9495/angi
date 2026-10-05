@@ -22,6 +22,8 @@ require_once __DIR__ . '/testkit.php';
 
 db()->exec(file_get_contents(__DIR__ . '/../sql/schema.sqlite.sql'));
 $acc = new Account(db());
+// These checks send forged saves on purpose: refusals alert but never lock the farm here.
+Settings::save(db(), ['fairPlay' => ['autoBan' => false]]);
 $fr = new Friends(db(), $acc);
 $failures = 0;
 $check = function (string $name, bool $ok) use (&$failures): void {

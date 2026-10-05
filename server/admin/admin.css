@@ -1277,3 +1277,143 @@ dialog::backdrop {
   min-width: 0;
   font-size: 0.88rem;
 }
+
+/* ——— Spins, payments & fair play ——— */
+.nav__count--alert {
+  background: rgb(224 135 108 / 22%);
+  color: var(--danger);
+}
+
+.panel__sub {
+  margin-top: 22px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.panel .grid-3 + .grid-3,
+.panel .grid-2 + .hint {
+  margin-top: 14px;
+}
+
+.badge--lock {
+  color: var(--danger);
+}
+
+.badge--level {
+  color: var(--gold);
+}
+
+.badge--lv1 {
+  color: var(--muted);
+}
+
+.badge--lv3,
+.badge--lv4 {
+  color: var(--danger);
+}
+
+.badge--order-pending {
+  color: var(--gold);
+}
+
+.badge--order-paid {
+  color: var(--leaf);
+}
+
+.badge--order-expired,
+.badge--order-cancelled {
+  color: var(--soft);
+}
+
+tr.is-unseen td:first-child {
+  box-shadow: inset 3px 0 0 var(--danger);
+}
+
+.levels {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.level-row {
+  display: grid;
+  grid-template-columns: 70px repeat(2, minmax(0, 200px)) auto;
+  align-items: start;
+  justify-content: start;
+  gap: 12px;
+}
+
+.level-row__n {
+  padding-top: 34px;
+  font-weight: 600;
+}
+
+.level-row .btn {
+  width: auto;
+  margin-top: 26px;
+}
+
+.refusals {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+}
+
+.refusals li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.past-bans {
+  margin-top: 10px;
+}
+
+.past-bans summary {
+  cursor: pointer;
+}
+
+.inline-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.inline-form input[type='text'] {
+  flex: 1 1 160px;
+  width: auto;
+}
+
+.inline-form input[type='number'],
+.inline-form select {
+  width: auto;
+  min-width: 90px;
+}
+
+@media (max-width: 720px) {
+  .level-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .level-row__n {
+    grid-column: 1 / -1;
+    padding-top: 0;
+  }
+}
+
+/* Settings forms: a field with a hint must not stretch its neighbours' inputs. */
+form.panel .grid-2,
+form.panel .grid-3 {
+  align-items: start;
+}

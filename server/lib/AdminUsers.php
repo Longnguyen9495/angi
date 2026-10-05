@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/FairPlay.php';
+require_once __DIR__ . '/Spins.php';
+
 /*
  * Admin view of guest accounts: who is using the site right now, recent
  * activity, a progress summary, and the two levers an admin needs — sign a
@@ -42,7 +45,7 @@ final class AdminUsers
         ) ?? [];
 
         $where = [];
-        $args = [$now];
+        $args = [$now, $now];
         $since = match ((string) ($query['filter'] ?? 'all')) {
             'online' => $now - self::ONLINE_WINDOW,
             'day' => $now - 86400,
@@ -64,7 +67,8 @@ final class AdminUsers
                        $active AS last_seen,
                        (SELECT COUNT(*) FROM user_sessions s WHERE s.user_id = u.id AND s.expires_at > ?) AS sessions,
                        (SELECT COUNT(*) FROM friendships f WHERE f.user_id = u.id) AS friends,
-                       g.friend_code, g.garden_name, p.updated_at AS progress_at
+                       g.friend_code, g.garden_name, p.updated_at AS progress_at,
+                       (SELECT MAX(b.ends_at) FROM farm_bans b WHERE b.user_id = u.id AND b.lifted_at IS NULL AND b.ends_at > ?) AS banned_until
                 FROM users u
                 LEFT JOIN garden_profiles g ON g.user_id = u.id
                 LEFT JOIN user_progress p ON p.user_id = u.id"
@@ -149,7 +153,42 @@ final class AdminUsers
             'received' => $this->count('SELECT COUNT(*) FROM farm_events WHERE to_user = ?', [$id]),
             'sent' => $this->count('SELECT COUNT(*) FROM farm_events WHERE from_user = ?', [$id]),
         ];
+        $user['fairPlay'] = (new FairPlay($this->db))->forUser($id);
+        $user['spins'] = Spins::userSummary($this->db, $id);
         return $user;
+    }
+
+    /** Locks the farm by hand for `hours` (1 hour to 90 days). */
+    public function ban(int $id, array $body, string $by): array
+    {
+        $this->requireExists($id);
+        $hours = (int) ($body['hours'] ?? 0);
+        if ($hours < 1 || $hours > Settings::MAX_BAN_HOURS) {
+            throw new HttpError(422, 'Thời gian khoá từ 1 giờ đến 90 ngày.');
+        }
+        $reason = trim(mb_substr((string) ($body['reason'] ?? ''), 0, 200));
+        $fp = new FairPlay($this->db);
+        $points = $fp->points($id);
+        $fp->ban($id, $hours, 'Admin: ' . ($reason !== '' ? $reason : 'khoá thủ công'), 'admin', $by, $points['level'], $points['points']);
+        return ['ok' => true, 'ban' => FairPlay::activeBan($this->db, $id)];
+    }
+
+    public function unban(int $id, string $by): array
+    {
+        $this->requireExists($id);
+        return ['ok' => true, 'lifted' => (new FairPlay($this->db))->lift($id, $by)];
+    }
+
+    /** Adds (or with a negative number, takes back) bought spins. */
+    public function giftSpins(int $id, array $body, string $by): array
+    {
+        $this->requireExists($id);
+        $n = (int) ($body['spins'] ?? 0);
+        if ($n === 0 || abs($n) > 1000) {
+            throw new HttpError(422, 'Số lượt từ -1000 đến 1000, khác 0.');
+        }
+        $credits = db_tx($this->db, fn () => Spins::credit($this->db, $id, $n, 'admin', mb_substr($by, 0, 64)));
+        return ['ok' => true, 'credits' => $credits];
     }
 
     /** Ends every session: the user is signed out on all devices (progress stays). */
@@ -191,6 +230,7 @@ final class AdminUsers
             'friendCode' => (string) ($r['friend_code'] ?? ''),
             'gardenName' => (string) ($r['garden_name'] ?? ''),
             'progressAt' => (int) ($r['progress_at'] ?? 0),
+            'bannedUntil' => isset($r['banned_until']) ? (int) $r['banned_until'] : null,
             'progress' => $p ? [
                 'xp' => $xp,
                 'level' => intdiv(max(0, $xp), self::XP_PER_LEVEL) + 1,

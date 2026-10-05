@@ -32,6 +32,8 @@ const account = {
     more: (n: number) => ` và ${n} tin khác`,
   },
   toasts: {
+    farmLocked: (until: string) =>
+      `Nông trại đang tạm khoá đến ${until} — tiến trình mới chưa được lưu.`,
     signedIn: 'Đã đăng nhập — nông trại của bạn đang được lưu.',
     linkExpired: 'Link đăng nhập đã hết hạn. Gửi mã mới trong Hồ sơ nhé.',
     progressRefused:

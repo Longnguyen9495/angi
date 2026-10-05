@@ -1,5 +1,5 @@
 {
-  "name": "hanh-trinh-bep-viet",
+  "name": "an-gi",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -20,7 +20,7 @@
     "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run check:motion && npm run build",
     "catalogue:export": "php server/bin/export-snapshot.php",
     "ai:enrich": "php server/bin/ai-enrich.php",
-    "test:server": "php server/bin/selftest.php",
+    "test:server": "php server/bin/selftest.php && php server/bin/selftest-spins.php",
     "test:account": "php server/bin/selftest-account.php && php server/bin/selftest-friends.php",
     "test:audit": "node scripts/run-vitest.mjs run src/domain/security-audit.test.ts",
     "test:audit:server": "php server/bin/selftest-security.php",
@@ -34,6 +34,7 @@
     "lucide-react": "^1.48.0",
     "motion": "^13.4.5",
     "playcanvas": "2.22.6",
+    "qrcode-generator": "^1.5.2",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "three": "^0.186.1"

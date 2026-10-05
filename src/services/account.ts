@@ -13,6 +13,15 @@ export interface AccountUser {
   createdAt: number;
   /** Opaque, stable per account: marks which account a journey on this device belongs to. */
   key?: string;
+  /** A fair-play lock in force: the farm cannot be played until then. */
+  farmBan?: FarmBan | null;
+}
+
+export interface FarmBan {
+  /** Unix seconds. */
+  until: number;
+  /** 'auto': from refused saves; 'admin': set by hand. */
+  reason: 'auto' | 'admin';
 }
 
 export interface RemoteProgress {
@@ -87,6 +96,58 @@ export const accountApi = {
   exportData: () => call<Record<string, unknown>>('GET', '/export'),
   logout: () => call<{ ok: true }>('POST', '/logout'),
   remove: () => call<{ ok: true }>('DELETE', ''),
+};
+
+/** "20:15 06/10/2026" in the visitor's language, for a lock's end (unix seconds). */
+export function formatUntil(until: number): string {
+  return new Date(until * 1000).toLocaleString(locale === 'vi' ? 'vi-VN' : locale, {
+    hour: '2-digit',
+    minute: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+}
+
+// ——— Lượt quay (server/lib/Spins.php) ———
+
+export interface SpinStatus {
+  freePerDay: number;
+  freeLeft: number;
+  /** Bought spins not used yet (signed-in accounts only). */
+  credits: number;
+  /** VND per bought spin. */
+  price: number;
+  packs: number[];
+  signedIn: boolean;
+  /** A guest whose network used its share: signing in gives the account's own spins. */
+  networkFull: boolean;
+  /** Seconds until the free spins come back (Vietnam midnight). */
+  resetIn: number;
+  /** Whether buying is open (the bank is set up). */
+  payments: boolean;
+}
+
+export interface SpinOrder {
+  code: string;
+  spins: number;
+  amount: number;
+  status: 'pending' | 'paid' | 'cancelled' | 'expired';
+  createdAt: number;
+  paidAt: number | null;
+  expiresAt: number;
+  bank: { bin: string; name: string; account: string; holder: string };
+  /** VietQR payload: any Vietnamese banking app scans it with amount and memo filled in. */
+  qr: string | null;
+  credits?: number;
+}
+
+export const spinsApi = {
+  status: () => call<SpinStatus>('GET', '/spins'),
+  /** One spin; 402 (code no_spins | sign_in) when none is left. */
+  use: () => call<SpinStatus & { used: 'free' | 'credit' }>('POST', '/spins'),
+  order: (spins: number) => call<SpinOrder>('POST', '/spins/orders', { spins }),
+  orderStatus: (code: string) => call<SpinOrder>('GET', `/spins/orders/${code}`),
 };
 
 /** "khach@example.vn" → "kh•••@example.vn" for display. */

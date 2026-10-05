@@ -11,7 +11,7 @@ const common: Messages['common'] = {
   later: 'Later',
   language: 'Language',
   chooseLanguage: 'Choose language',
-  tagline: 'What should I eat today?',
+  tagline: 'Spin a dish, find a place',
   privacyUrl: '/privacy.html',
 };
 

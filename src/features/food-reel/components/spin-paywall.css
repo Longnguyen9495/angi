@@ -1,0 +1,186 @@
+/* Out of spins (SpinPaywall): packs, then the VietQR transfer. Dark sheet, reel tokens. */
+.sp-lead {
+  margin: 0;
+  color: var(--fr-ivory);
+  line-height: 1.55;
+}
+
+.sp-h3 {
+  margin: 4px 0 0;
+  font-family: var(--fr-display);
+  font-weight: 480;
+  font-size: 1.2rem;
+}
+
+.sp-hint {
+  margin: 6px 0 0;
+  color: var(--fr-muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.sp-packs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(130px, 100%), 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.sp-pack {
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+  min-height: 84px;
+  padding: 14px;
+  border: 1px solid var(--fr-line-strong);
+  border-radius: 16px;
+  background: var(--fr-canvas-3);
+  color: var(--fr-ivory);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 160ms var(--fr-ease),
+    transform 150ms var(--fr-ease);
+}
+
+.sp-pack svg {
+  color: var(--fr-gold);
+}
+
+.sp-pack:hover:not(:disabled) {
+  border-color: var(--fr-gold);
+}
+
+.sp-pack:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.sp-pack:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}
+
+.sp-pack__n {
+  font-weight: 700;
+}
+
+.sp-pack__price {
+  color: var(--fr-muted);
+  font-size: 0.85rem;
+}
+
+.sp-error {
+  margin: 12px 0 0;
+  color: var(--fr-danger);
+  font-size: 0.9rem;
+}
+
+.sp-pay {
+  display: grid;
+  gap: 14px;
+}
+
+.sp-qr {
+  justify-self: center;
+  width: min(240px, 70vw);
+  padding: 10px;
+  border-radius: 16px;
+  /* A QR code needs its light quiet zone whatever the theme. */
+  background: #fff;
+}
+
+.sp-qr svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.sp-details {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  border: 1px solid var(--fr-line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.sp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--fr-canvas-3);
+}
+
+.sp-row dt {
+  color: var(--fr-muted);
+  font-size: 0.82rem;
+}
+
+.sp-row dd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.sp-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--fr-line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fr-gold);
+  font: 600 0.72rem/1 var(--fr-body);
+  cursor: pointer;
+  flex: none;
+}
+
+.sp-wait,
+.sp-done {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.sp-wait {
+  color: var(--fr-muted);
+  font-size: 0.9rem;
+}
+
+.sp-done {
+  color: var(--fr-leaf);
+  font-weight: 600;
+}
+
+.sp-dot {
+  width: 10px;
+  height: 10px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--fr-gold);
+  animation: sp-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes sp-pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sp-dot {
+    animation: none;
+  }
+}

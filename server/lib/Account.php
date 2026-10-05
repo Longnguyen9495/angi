@@ -8,6 +8,8 @@ require_once __DIR__ . '/RateLimit.php';
 require_once __DIR__ . '/Mailer.php';
 require_once __DIR__ . '/LoginCodeEmail.php';
 require_once __DIR__ . '/ProgressGuard.php';
+require_once __DIR__ . '/FairPlay.php';
+require_once __DIR__ . '/Spins.php';
 
 /*
  * Optional guest accounts: email + one-time code, no password. The only thing
@@ -18,7 +20,7 @@ require_once __DIR__ . '/ProgressGuard.php';
 final class Account
 {
     /** Bump when the privacy text the guest agrees to changes. */
-    public const CONSENT_VERSION = '2026-10-03';
+    public const CONSENT_VERSION = '2026-10-05';
 
     private const COOKIE = 'bepviet_guest';
     /** Binds an emailed link to the browser that asked for it (see verifyLink). */
@@ -295,12 +297,20 @@ final class Account
         }
         $clientNow = is_numeric($body['clientNow'] ?? null) ? (int) $body['clientNow'] : null;
         $uid = (int) $u['id'];
+        // A farm locked for fair play saves nothing until the lock ends (FairPlay).
+        FairPlay::requireNotBanned($this->db, $uid);
         $guard = new ProgressGuard($this->db, $uid);
         try {
             $out = $this->writeProgress($guard, $uid, $data, $json, $base, $clientNow);
         } catch (HttpError $e) {
-            // The refusal rolled the save back; its record is written after, on its own.
-            $guard->logRejection();
+            // The refusal rolled the save back; its record is written after, on its own. Then the
+            // account's fair-play points: a new level alerts the admin and may lock the farm.
+            if ($guard->logRejection()) {
+                $review = (new FairPlay($this->db))->review($uid);
+                if ($review !== null && $review['banned']) {
+                    FairPlay::requireNotBanned($this->db, $uid);
+                }
+            }
             throw $e;
         }
         if (isset($out['conflict'])) {
@@ -443,6 +453,14 @@ final class Account
             ], $this->all('SELECT entry_key, resource, delta, at_ms, saved_at FROM progress_events WHERE user_id = ? ORDER BY id DESC LIMIT 5000', [$id])),
             'refusedSaves' => array_map(fn ($r) => ['code' => $r['code'], 'detail' => $r['detail'], 'at' => (int) $r['created_at']],
                 $this->all('SELECT code, detail, created_at FROM guard_rejections WHERE user_id = ? ORDER BY id DESC LIMIT 500', [$id])),
+            'spins' => (function () use ($id) {
+                $s = Spins::userSummary($this->db, $id);
+                return $s + ['orders' => array_map(fn ($o) => [
+                    'code' => $o['code'], 'spins' => (int) $o['spins'], 'amount' => (int) $o['amount'], 'status' => $o['status'],
+                    'createdAt' => (int) $o['created_at'], 'paidAt' => $o['paid_at'] !== null ? (int) $o['paid_at'] : null,
+                ], $this->all('SELECT * FROM spin_orders WHERE user_id = ? ORDER BY id DESC LIMIT 500', [$id]))];
+            })(),
+            'farmLocks' => array_map(fn ($b) => FairPlay::publicBan($b), $this->all('SELECT * FROM farm_bans WHERE user_id = ? ORDER BY id DESC LIMIT 100', [$id])),
             'loginCodes' => array_map(fn ($c) => array_map(fn ($v) => $v === null ? null : (int) $v, $c), $this->all(
                 'SELECT created_at, expires_at, used_at FROM login_codes WHERE email = ? ORDER BY id DESC LIMIT 50',
                 [$u['email']],
@@ -479,6 +497,14 @@ final class Account
             $run('DELETE FROM verified_stats WHERE user_id = ?', [$id]);
             $run('DELETE FROM progress_events WHERE user_id = ?', [$id]);
             $run('DELETE FROM guard_rejections WHERE user_id = ?', [$id]);
+            $run('DELETE FROM fair_play_alerts WHERE user_id = ?', [$id]);
+            $run('DELETE FROM farm_bans WHERE user_id = ?', [$id]);
+            // Bought spins go with the account; paid orders stay (anonymised) as the shop's record.
+            $run('DELETE FROM spin_wallets WHERE user_id = ?', [$id]);
+            $run('DELETE FROM spin_ledger WHERE user_id = ?', [$id]);
+            $run('DELETE FROM spin_usage WHERE subject = ?', ['u:' . $id]);
+            $run("DELETE FROM spin_orders WHERE user_id = ? AND status <> 'paid'", [$id]);
+            $run('UPDATE spin_orders SET user_id = 0 WHERE user_id = ?', [$id]);
             $run('DELETE FROM garden_profiles WHERE user_id = ?', [$id]);
             $run('DELETE FROM user_progress WHERE user_id = ?', [$id]);
             $run('DELETE FROM user_sessions WHERE user_id = ?', [$id]);
@@ -516,6 +542,11 @@ final class Account
             // Opaque and stable: the app tags its local journey with it, so a journey saved to
             // one account is never uploaded into another one signed in on the same device.
             'key' => substr(secret_hash('owner|' . $u['id']), 0, 24),
+            // A fair-play lock in force: the app shows the farm as locked until then.
+            'farmBan' => (function () use ($u) {
+                $b = FairPlay::activeBan($this->db, (int) $u['id']);
+                return $b ? ['until' => $b['until'], 'reason' => $b['source'] === 'admin' ? 'admin' : 'auto'] : null;
+            })(),
         ];
     }
 

@@ -78,6 +78,8 @@ export interface AccountContextValue {
   setMarketing: (on: boolean) => Promise<void>;
   /** Fetch and apply friends' help / Cô Ba's gift now (e.g. right after watering a friend). */
   checkInbox: () => Promise<void>;
+  /** A fair-play lock in force (server/lib/FairPlay.php): the farm shows as locked until then. */
+  farmBan: import('../services/account').FarmBan | null;
   /** The friends list, refreshed with the inbox (null until loaded or signed out). */
   friends: import('../services/account').FriendsList | null;
   refreshFriends: () => Promise<void>;

@@ -9,6 +9,8 @@ import {
   accountApi,
   friendsApi,
   type AccountUser,
+  type FarmBan,
+  formatUntil,
   type FriendsList,
   type RemoteProgress,
 } from '../services/account';
@@ -76,6 +78,8 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const [sync, setSync] = useState<SyncState>('idle');
   const [lastSyncAt, setLastSyncAt] = useState<number | null>(null);
   const [friends, setFriends] = useState<FriendsList | null>(null);
+  /** A fair-play lock in force: the farm is not played and nothing is saved until it ends. */
+  const [farmBan, setFarmBan] = useState<FarmBan | null>(null);
   const [linkConfirm, setLinkConfirm] = useState<{ token: string; email: string } | null>(null);
   const [conflict, setConflict] = useState<{
     remote: GuestProgress;
@@ -254,6 +258,18 @@ export function AccountProvider({ children }: { children: ReactNode }) {
           again.current = true;
           return;
         }
+        if (e instanceof AccountError && e.status === 423 && e.body.code === 'banned') {
+          // Locked for fair play: the saved copy stays the truth, nothing more is sent until
+          // the lock ends.
+          const ban = e.body.ban as { until?: number; source?: string } | undefined;
+          const until = Number(ban?.until ?? 0);
+          setFarmBan({ until, reason: ban?.source === 'admin' ? 'admin' : 'auto' });
+          setSync('offline');
+          toast({ message: t.account.toasts.farmLocked(formatUntil(until)), tone: 'warning' });
+          const remote = await accountApi.getProgress().catch(() => null);
+          if (gen === generation.current && remote) load(remote);
+          return;
+        }
         if (e instanceof AccountError && e.status === 422 && typeof e.body.code === 'string') {
           return void (await refused(e.body.code, gen));
         }
@@ -273,7 +289,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         }
       }
     },
-    [load, refused, saved],
+    [load, refused, saved, toast],
   );
 
   const pushRef = useRef(push);
@@ -324,6 +340,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       const gen = ++generation.current;
       owner.current = u.key ?? null;
       setUser(u);
+      setFarmBan(u.farmBan ?? null);
       setStatus('signed-in');
       const remote = await accountApi.getProgress().catch(() => null);
       if (gen !== generation.current) return;
@@ -441,16 +458,28 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // The lock ends by itself: drop it on time (the next change then saves as usual).
+  useEffect(() => {
+    if (!farmBan) return;
+    const left = farmBan.until * 1000 - Date.now();
+    // setTimeout holds at most ~24 days; a longer lock is checked again then.
+    const timer = setTimeout(
+      () => setFarmBan((b) => (b !== farmBan ? b : Date.now() >= b.until * 1000 ? null : { ...b })),
+      Math.min(left + 1000, 2 ** 31 - 1),
+    );
+    return () => clearTimeout(timer);
+  }, [farmBan]);
+
   // Mirror every change, gathered into one save every few seconds.
   useEffect(() => {
-    if (status !== 'signed-in' || !ready.current || conflict) return;
+    if (status !== 'signed-in' || !ready.current || conflict || farmBan) return;
     if (skipPush.current) {
       skipPush.current = false;
       return;
     }
     const timer = setTimeout(() => void push(state), PUSH_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [state, status, conflict, push]);
+  }, [state, status, conflict, farmBan, push]);
 
   /** Signed out (or deleted): the garden on this device starts over as a guest's. */
   const leave = useCallback(() => {
@@ -462,6 +491,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     setSync('idle');
     setConflict(null);
     setFriends(null);
+    setFarmBan(null);
     // The account keeps its garden; this device must not carry it into the next account.
     startOver();
   }, [startOver]);
@@ -505,6 +535,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         leave();
       },
       checkInbox: pullEvents,
+      farmBan,
       friends,
       refreshFriends,
       setMarketing: async (on) => {
@@ -527,6 +558,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       openLink,
       leave,
       pullEvents,
+      farmBan,
       friends,
       refreshFriends,
     ],

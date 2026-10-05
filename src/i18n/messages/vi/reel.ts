@@ -1,7 +1,7 @@
 // Vietnamese strings for the "reel" namespace (source of truth; see src/i18n/index.ts).
 // The brand is passed in (`brand`) rather than imported, so this file never depends on i18n/index.
 const reel = {
-  docTitle: (brand: string) => `${brand} — Hôm nay ăn gì? Quay món, tìm quán ngay`,
+  docTitle: (brand: string) => `${brand} — Quay món, tìm quán ngay`,
   docTitleDish: (brand: string, dish: string) => `${dish} — ${brand}`,
 
   header: {
@@ -23,7 +23,7 @@ const reel = {
 
   stage: {
     label: 'Food reel',
-    headline: ['Hôm nay', 'ăn gì?'],
+    headline: ['Ăn', 'gì?'],
     subCrop: (n: number, seed: string) => `${n} món cho ${seed}`,
     subPool: (n: number) => `Rổ quay · ${n} món bạn chọn`,
     subAll: (n: number) => `${n} món · ba miền & thế giới`,
@@ -90,6 +90,43 @@ const reel = {
     label: 'Quay món',
     busy: 'Đang quay…',
     counter: (current: number, total: number) => `Món ${current} trên ${total}`,
+  },
+
+  /** Lượt quay: free per day, then bought (server/lib/Spins.php). */
+  quota: {
+    badge: (free: number, credits: number) =>
+      credits > 0
+        ? `Còn ${free} lượt miễn phí hôm nay và ${credits} lượt đã mua`
+        : `Còn ${free} lượt quay miễn phí hôm nay`,
+    title: 'Hết lượt quay hôm nay',
+    lead: (free: number, resetIn: string) =>
+      `Mỗi ngày bạn có ${free} lượt quay miễn phí — lượt mới có lại sau ${resetIn}.`,
+    networkFull:
+      'Mạng bạn đang dùng đã hết lượt miễn phí dành cho khách. Đăng nhập để dùng lượt của riêng bạn.',
+    signInLead: 'Đăng nhập (chỉ cần email) để nhận lượt miễn phí của riêng bạn và mua thêm lượt.',
+    signIn: 'Đăng nhập để quay tiếp',
+    buyTitle: 'Mua thêm lượt quay',
+    perSpin: (price: string) => `${price} / lượt — dùng dần, không hết hạn`,
+    pack: (n: number) => `${n} lượt`,
+    paymentsOff: 'Hiện chưa mở mua thêm lượt — quay lại vào ngày mai nhé.',
+    payTitle: (n: number) => `Chuyển khoản để nhận ${n} lượt`,
+    scan: 'Mở app ngân hàng và quét mã — số tiền và nội dung đã điền sẵn.',
+    qrLabel: (amount: string, memo: string) => `Mã VietQR chuyển ${amount}, nội dung ${memo}`,
+    bank: 'Ngân hàng',
+    account: 'Số tài khoản',
+    holder: 'Chủ tài khoản',
+    amount: 'Số tiền',
+    memo: 'Nội dung',
+    memoHint: 'Giữ nguyên nội dung chuyển khoản để hệ thống nhận ra đơn của bạn.',
+    copy: 'Chép',
+    copied: 'Đã chép',
+    waiting: 'Đang chờ xác nhận thanh toán — thường chỉ vài phút.',
+    paid: (n: number) => `Đã nhận thanh toán — cộng ${n} lượt quay!`,
+    expired: 'Đơn này đã hết hạn — chọn gói để tạo đơn mới nhé.',
+    otherPack: 'Chọn gói khác',
+    later: 'Để sau',
+    orderFailed: 'Chưa tạo được đơn, thử lại nhé.',
+    hours: (h: number, m: number) => (h > 0 ? `${h} giờ ${m} phút` : `${m} phút`),
   },
 
   selected: {

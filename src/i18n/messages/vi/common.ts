@@ -9,7 +9,7 @@ const common = {
   later: 'Để sau',
   language: 'Ngôn ngữ',
   chooseLanguage: 'Chọn ngôn ngữ',
-  tagline: 'Hôm nay ăn gì?',
+  tagline: 'Quay món, tìm quán ngay',
   /** Privacy page in this language (public/). */
   privacyUrl: '/quyen-rieng-tu.html',
 };

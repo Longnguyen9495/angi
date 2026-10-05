@@ -24,6 +24,8 @@ $pdo = new PDO('sqlite::memory:', null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE
 $pdo->exec('PRAGMA foreign_keys = ON');
 $pdo->exec(file_get_contents(__DIR__ . '/../sql/schema.sqlite.sql'));
 $account = new Account($pdo);
+// These checks send forged saves on purpose: refusals alert but never lock the farm here.
+Settings::save($pdo, ['fairPlay' => ['autoBan' => false]]);
 $friends = new Friends($pdo, $account);
 $pass = $fail = 0;
 $check = function (string $name, bool $ok) use (&$pass, &$fail): void {

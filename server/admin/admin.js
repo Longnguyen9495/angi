@@ -162,6 +162,8 @@
             <a href="#/dishes/new" class="${active === 'new' ? 'is-active' : ''}">Thêm món</a>
             <a href="#/ingredients" class="${active === 'ingredients' ? 'is-active' : ''}">Nguyên liệu <span class="nav__count">${n ? n.ingredients : ''}</span></a>
             <a href="#/users" class="${active === 'users' ? 'is-active' : ''}">Người dùng ${usersOnline ? `<span class="nav__count nav__count--live" title="Đang online">${usersOnline}</span>` : ''}</a>
+            <a href="#/payments" class="${active === 'payments' ? 'is-active' : ''}">Lượt quay & thanh toán ${n?.ordersPending ? `<span class="nav__count" title="Đơn chờ thanh toán">${n.ordersPending}</span>` : ''}</a>
+            <a href="#/fairplay" class="${active === 'fairplay' ? 'is-active' : ''}">Gian lận ${n?.alertsUnseen ? `<span class="nav__count nav__count--alert" title="Cảnh báo chưa xem">${n.alertsUnseen}</span>` : ''}</a>
           </nav>
           <div class="side__foot">
             <span>Đăng nhập: <strong>${esc(user)}</strong></span>
@@ -1049,7 +1051,7 @@ ${locales.extra
     return `<tr data-id="${u.id}" class="${u.online ? 'is-online' : ''}">
       <td><div class="user-cell">
         <span class="presence ${u.online ? 'presence--on' : u.lastSeen >= now - 86400 ? 'presence--day' : ''}" title="${u.online ? 'Đang online' : 'Ngoại tuyến'}"></span>
-        <div><div class="dish-name">${esc(u.email)}</div>
+        <div><div class="dish-name">${esc(u.email)}${u.bannedUntil ? ` <span class="badge badge--lock" title="Nông trại bị khoá đến ${esc(fmtUnix(u.bannedUntil))}">🔒 khoá</span>` : ''}</div>
         <div class="dish-id">${u.gardenName ? esc(u.gardenName) + ' · ' : ''}${u.friendCode ? 'Mã ' + esc(u.friendCode) : 'Chưa có mã vườn'}</div></div>
       </div></td>
       <td class="num">${p ? `Cấp ${p.level}<div class="dish-id">${p.xp} XP</div>` : '<span class="hint">—</span>'}</td>
@@ -1226,6 +1228,7 @@ ${locales.extra
                <p class="hint">Đồng bộ lần cuối ${esc(fmtUnix(u.progressAt))} · bản ${u.progressVersion} · ${(u.progressBytes / 1024).toFixed(1)} KB</p>`
             : '<p class="hint">Chưa đồng bộ tiến trình.</p>'
         }</section>
+        ${userExtras(u, now)}
         <section><h3>Tài khoản</h3><dl class="kv">
           ${kv('Tham gia', esc(fmtUnix(u.createdAt)))}
           ${kv('Vườn', u.friendCode ? `${esc(u.gardenName || '—')} · <code>${esc(u.friendCode)}</code>` : '—')}
@@ -1268,6 +1271,40 @@ ${locales.extra
     d.addEventListener('click', async (e) => {
       if (e.target === d || e.target.closest('[data-close]')) return close();
       const act = e.target.closest('[data-act]')?.dataset.act;
+      const after = (msg, kind = 'success') => {
+        toast(msg, kind);
+        close();
+        onChange();
+        setTimeout(() => showUser(u.id, onChange), 260);
+      };
+      if (act === 'ban') {
+        const hours = Number(d.querySelector('#ban-hours').value);
+        const reason = d.querySelector('#ban-reason').value.trim();
+        if (!(await confirmBox({ title: 'Khoá nông trại?', text: `${u.email} sẽ không lưu được nông trại và không tương tác vườn bạn bè trong ${hoursText(hours)}. Quay món vẫn dùng được.`, ok: 'Khoá', danger: true }))) return;
+        try {
+          await api(`/admin/users/${u.id}/ban`, { method: 'POST', body: { hours, reason } });
+          after(`Đã khoá nông trại ${hoursText(hours)}.`, 'warning');
+        } catch (err) {
+          toast(err.message, 'error');
+        }
+      }
+      if (act === 'unban') {
+        try {
+          await api(`/admin/users/${u.id}/unban`, { method: 'POST' });
+          after('Đã gỡ khoá nông trại.');
+        } catch (err) {
+          toast(err.message, 'error');
+        }
+      }
+      if (act === 'gift') {
+        const spins = Number(d.querySelector('#gift-spins').value);
+        try {
+          const r = await api(`/admin/users/${u.id}/spins`, { method: 'POST', body: { spins } });
+          after(`Đã ${spins > 0 ? 'tặng' : 'trừ'} ${Math.abs(spins)} lượt — còn ${r.credits} lượt đã mua.`);
+        } catch (err) {
+          toast(err.message, 'error');
+        }
+      }
       if (act === 'logout') {
         if (!(await confirmBox({ title: 'Đăng xuất mọi thiết bị?', text: `${u.email} sẽ phải đăng nhập lại. Tiến trình vẫn được giữ.`, ok: 'Đăng xuất' }))) return;
         try {
@@ -1294,6 +1331,375 @@ ${locales.extra
     d.showModal();
   }
 
+  // ——— Spins, payments & fair play ———
+  const vnd = (n) => `${Number(n || 0).toLocaleString('vi-VN')}đ`;
+  /** 6 → "6 giờ", 72 → "3 ngày", 30 → "1 ngày 6 giờ". */
+  const hoursText = (h) => {
+    h = Number(h || 0);
+    if (!h) return 'chỉ cảnh báo';
+    const d = Math.floor(h / 24);
+    const r = h % 24;
+    return [d ? `${d} ngày` : '', r ? `${r} giờ` : ''].filter(Boolean).join(' ');
+  };
+  const ORDER_STATUS = { pending: 'Chờ thanh toán', paid: 'Đã thanh toán', expired: 'Hết hạn', cancelled: 'Đã huỷ' };
+  const CODE_NAMES = {
+    clock: 'Đổi giờ máy',
+    owned: 'Vườn của tài khoản khác',
+    import: 'Nhập vườn quá mức',
+    gap: 'Mất lịch sử',
+    gift_debit: 'Quà gửi bạn',
+    shape: 'Dữ liệu méo',
+    rule: 'Sai luật chơi',
+    balance: 'Sửa số dư',
+    replay: 'Nhận thưởng hai lần',
+  };
+  /** Lock lengths offered in the user drawer (hours). */
+  const BAN_CHOICES = [1, 6, 24, 72, 168, 336, 720];
+
+  const levelBadge = (lv) =>
+    `<span class="badge badge--level badge--lv${Math.min(4, lv)}">Mức ${lv}</span>`;
+  const banText = (b, now) =>
+    `Khoá đến ${esc(fmtUnix(b.until))} <span class="hint">(${esc(b.source === 'admin' ? 'admin ' + (b.by || '') : 'tự động')} · còn ${esc(hoursText(Math.max(1, Math.round((b.until - now) / 3600))))})</span>`;
+
+  async function renderPayments() {
+    const my = ++renderGen;
+    invalidate();
+    const [settings] = await Promise.all([api('/admin/settings'), loadStats()]);
+    if (my !== renderGen) return;
+    const sp = settings.spins;
+    const bank = settings.bank;
+    shell(
+      'payments',
+      `
+      <div class="page-head">
+        <div><h1>Lượt quay & thanh toán</h1><p>Mỗi tài khoản (hoặc trình duyệt của khách) có số lượt quay miễn phí mỗi ngày theo giờ Việt Nam; hết lượt thì mua thêm bằng chuyển khoản VietQR. Nội dung chuyển khoản là mã đơn.</p></div>
+      </div>
+      <div class="stats" id="o-stats"></div>
+      <form class="panel" id="spin-form">
+        <h2>Lượt quay</h2>
+        <div class="grid-3">
+          <label class="field">Lượt miễn phí mỗi ngày<input type="number" min="0" max="1000" name="freePerDay" value="${esc(sp.freePerDay)}" /></label>
+          <label class="field">Giá mỗi lượt (đồng)<input type="number" min="1000" step="500" name="price" value="${esc(sp.price)}" /></label>
+          <label class="field">Các gói bán (số lượt, cách nhau dấu phẩy)<input type="text" name="packs" value="${esc(sp.packs.join(', '))}" /></label>
+          <label class="field">Trần lượt miễn phí cho khách trên một mạng/ngày<input type="number" min="0" name="guestNetworkCap" value="${esc(sp.guestNetworkCap)}" /><span class="hint">Khách chưa đăng nhập dùng chung một mạng (văn phòng, quán cà phê). 0 = không giới hạn.</span></label>
+        </div>
+        <h2 class="panel__sub">Tài khoản nhận tiền (VietQR)</h2>
+        <div class="grid-2">
+          <label class="field">Mã BIN ngân hàng (6 số)<input type="text" inputmode="numeric" name="bin" value="${esc(bank.bin)}" placeholder="970436" /><span class="hint">Ví dụ: Vietcombank 970436, Techcombank 970407, MB 970422, ACB 970416, VPBank 970432, BIDV 970418, VietinBank 970415.</span></label>
+          <label class="field">Tên ngân hàng (hiện cho khách)<input type="text" name="name" value="${esc(bank.name)}" placeholder="Vietcombank" /></label>
+          <label class="field">Số tài khoản<input type="text" name="account" value="${esc(bank.account)}" /></label>
+          <label class="field">Chủ tài khoản (không dấu)<input type="text" name="holder" value="${esc(bank.holder)}" placeholder="NGUYEN VAN A" /></label>
+        </div>
+        <p class="hint">${
+          settings.webhook
+            ? '✓ Webhook SePay đã bật (<code>SEPAY_API_KEY</code>): chuyển khoản đúng mã đơn và đủ tiền sẽ tự cộng lượt.'
+            : 'Chưa bật xác nhận tự động. Đặt <code>SEPAY_API_KEY</code> trong <code>.env</code> và trỏ webhook SePay tới <code>/api/pay/sepay</code> để tự cộng lượt — nếu không, xác nhận từng đơn ở bảng dưới.'
+        }</p>
+        <div class="form-actions"><button class="btn btn--primary" type="submit">Lưu cài đặt</button></div>
+      </form>
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="Lọc đơn" id="o-seg">
+          ${['pending', 'paid', 'expired', 'cancelled', 'all']
+            .map((k) => `<button type="button" data-s="${k}" aria-pressed="${k === 'pending'}">${k === 'all' ? 'Tất cả' : ORDER_STATUS[k]}</button>`)
+            .join('')}
+        </div>
+      </div>
+      <div id="o-list"></div>`,
+    );
+
+    document.getElementById('spin-form').onsubmit = async (e) => {
+      e.preventDefault();
+      const f = new FormData(e.target);
+      try {
+        await api('/admin/settings', {
+          method: 'PUT',
+          body: {
+            spins: {
+              freePerDay: Number(f.get('freePerDay')),
+              price: Number(f.get('price')),
+              packs: String(f.get('packs')).split(/[^0-9]+/).filter(Boolean).map(Number),
+              guestNetworkCap: Number(f.get('guestNetworkCap')),
+            },
+            bank: { bin: f.get('bin'), name: f.get('name'), account: f.get('account'), holder: f.get('holder') },
+          },
+        });
+        toast('Đã lưu cài đặt lượt quay.', 'success');
+        renderPayments();
+      } catch (err) {
+        toast(err.message, 'error');
+      }
+    };
+
+    let status = 'pending';
+    const list = document.getElementById('o-list');
+    const load = async () => {
+      const data = await api(`/admin/orders?status=${status}`);
+      const s = data.summary;
+      const stat = (k, label) =>
+        `<div class="stat"><span class="stat__label">${label}</span><span class="stat__value">${s[k]?.n ?? 0}</span><span class="stat__note">${vnd(s[k]?.amount ?? 0)}</span></div>`;
+      document.getElementById('o-stats').innerHTML =
+        stat('pending', 'Chờ thanh toán') + stat('paid', 'Đã thanh toán') + stat('expired', 'Hết hạn');
+      list.innerHTML = data.items.length
+        ? `<div class="table-wrap"><table class="users">
+            <thead><tr><th>Mã đơn</th><th>Người mua</th><th class="num">Lượt</th><th class="num">Số tiền</th><th>Trạng thái</th><th>Tạo lúc</th><th></th></tr></thead>
+            <tbody>${data.items
+              .map(
+                (o) => `<tr data-code="${esc(o.code)}">
+                  <td><code>${esc(o.code)}</code></td>
+                  <td>${o.userId ? `<a href="#/users" data-user="${o.userId}">${esc(o.email)}</a>` : '<span class="hint">(tài khoản đã xoá)</span>'}</td>
+                  <td class="num">${o.spins}</td>
+                  <td class="num">${vnd(o.amount)}</td>
+                  <td><span class="badge badge--order-${esc(o.status)}">${esc(ORDER_STATUS[o.status] || o.status)}</span>${
+                    o.paidAt ? `<div class="hint">${esc(fmtUnix(o.paidAt))} · ${esc(o.paidVia === 'sepay' ? 'SePay' : 'admin')}${o.bankRef ? ' · ' + esc(o.bankRef) : ''}</div>` : ''
+                  }</td>
+                  <td class="hint">${esc(fmtUnix(o.createdAt))}</td>
+                  <td><div class="row-actions">${
+                    o.status === 'paid' || o.status === 'cancelled'
+                      ? ''
+                      : `<button type="button" class="btn btn--sm btn--primary" data-act="confirm">Đã nhận tiền</button>
+                         <button type="button" class="btn btn--sm" data-act="cancel">Huỷ</button>`
+                  }</div></td>
+                </tr>`,
+              )
+              .join('')}</tbody></table></div>`
+        : '<p class="empty">Không có đơn nào.</p>';
+    };
+    document.getElementById('o-seg').addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-s]');
+      if (!b) return;
+      status = b.dataset.s;
+      document.querySelectorAll('#o-seg button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      load().catch((err) => toast(err.message, 'error'));
+    });
+    list.addEventListener('click', async (e) => {
+      const link = e.target.closest('a[data-user]');
+      if (link) {
+        e.preventDefault();
+        return showUser(Number(link.dataset.user), load);
+      }
+      const btn = e.target.closest('button[data-act]');
+      if (!btn) return;
+      const code = btn.closest('tr').dataset.code;
+      const confirmPay = btn.dataset.act === 'confirm';
+      if (
+        !(await confirmBox(
+          confirmPay
+            ? { title: `Xác nhận đơn ${code}?`, text: 'Chỉ xác nhận khi tài khoản ngân hàng đã nhận đủ tiền với nội dung là mã đơn này. Lượt quay sẽ được cộng ngay.', ok: 'Đã nhận tiền' }
+            : { title: `Huỷ đơn ${code}?`, text: 'Khách sẽ không nhận được lượt cho đơn này.', ok: 'Huỷ đơn', danger: true },
+        ))
+      )
+        return;
+      try {
+        const r = await api(`/admin/orders/${code}/${btn.dataset.act}`, { method: 'POST' });
+        toast(confirmPay ? (r.credited ? `Đã cộng lượt cho đơn ${code}.` : `Đơn ${code} đã được thanh toán trước đó.`) : `Đã huỷ đơn ${code}.`, confirmPay ? 'success' : 'warning');
+        load();
+      } catch (err) {
+        toast(err.message, 'error');
+      }
+    });
+    await load();
+  }
+
+  async function renderFairPlay() {
+    const my = ++renderGen;
+    invalidate();
+    const [data] = await Promise.all([api('/admin/fairplay'), loadStats()]);
+    if (my !== renderGen) return;
+    const fp = data.settings;
+    const now = data.now;
+    shell(
+      'fairplay',
+      `
+      <div class="page-head">
+        <div><h1>Gian lận</h1><p>Mỗi bản lưu bị từ chối cộng điểm theo loại vi phạm (cùng loại và lý do trong một giờ chỉ tính một lần). Điểm cộng dồn trong ${fp.windowDays} ngày; chạm mức mới thì báo ở đây${data.settings.autoBan ? ' và tự khoá nông trại theo thời hạn của mức đó' : ''}. Khi bị khoá, tài khoản vẫn quay món được nhưng không lưu được nông trại và không tương tác vườn bạn bè.</p></div>
+        <button type="button" class="btn btn--sm" id="fp-seen" ${data.unseen ? '' : 'disabled'}>Đánh dấu đã xem (${data.unseen})</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="stat__label">Cảnh báo chưa xem</span><span class="stat__value">${data.unseen}</span><span class="stat__note">${data.alerts.length} cảnh báo gần nhất</span></div>
+        <div class="stat"><span class="stat__label">Đang bị khoá</span><span class="stat__value">${data.bans.length}</span><span class="stat__note">Tài khoản không chơi được nông trại</span></div>
+        <div class="stat"><span class="stat__label">Bản lưu bị từ chối</span><span class="stat__value">${data.refusedWeek.reduce((a, r) => a + r.n, 0)}</span><span class="stat__note">7 ngày qua · ${esc(data.refusedWeek.map((r) => `${CODE_NAMES[r.code] || r.code} ${r.n}`).join(' · ') || 'không có')}</span></div>
+      </div>
+      <div class="panel">
+        <h2>Cảnh báo</h2>
+        ${
+          data.alerts.length
+            ? `<div class="table-wrap"><table class="users">
+              <thead><tr><th>Tài khoản</th><th>Mức</th><th class="num">Điểm</th><th>Vi phạm</th><th>Trạng thái</th><th>Lúc</th><th></th></tr></thead>
+              <tbody>${data.alerts
+                .map(
+                  (a) => `<tr data-id="${a.userId}" class="${a.seen ? '' : 'is-unseen'}">
+                    <td><div class="dish-name">${esc(a.email)}</div><div class="dish-id">${a.garden ? esc(a.garden) + ' · ' : ''}${a.code ? 'Mã ' + esc(a.code) : ''}</div></td>
+                    <td>${levelBadge(a.level)}</td>
+                    <td class="num">${a.points}</td>
+                    <td>${esc(a.detail)}</td>
+                    <td>${a.activeBan ? `<span class="badge badge--lock">🔒 ${esc(fmtUnix(a.activeBan.until))}</span>` : a.banned ? '<span class="hint">Đã hết khoá</span>' : '<span class="hint">Chỉ cảnh báo</span>'}</td>
+                    <td class="hint">${esc(ago(a.at, now))}</td>
+                    <td><div class="row-actions"><button type="button" class="btn btn--sm" data-act="view">Chi tiết</button></div></td>
+                  </tr>`,
+                )
+                .join('')}</tbody></table></div>`
+            : '<p class="empty">Chưa có cảnh báo nào.</p>'
+        }
+      </div>
+      <div class="panel">
+        <h2>Đang bị khoá (${data.bans.length})</h2>
+        ${
+          data.bans.length
+            ? `<ul class="sessions">${data.bans
+                .map(
+                  (b) => `<li data-id="${b.userId}"><span class="presence"></span><span><strong>${esc(b.email)}</strong> · ${banText(b, now)}<br /><span class="hint">${esc(b.reason)}</span></span>
+                    <span class="row-actions"><button type="button" class="btn btn--sm" data-act="view">Chi tiết</button><button type="button" class="btn btn--sm" data-act="unban">Gỡ khoá</button></span></li>`,
+                )
+                .join('')}</ul>`
+            : '<p class="hint">Không có tài khoản nào đang bị khoá.</p>'
+        }
+      </div>
+      <form class="panel" id="fp-form">
+        <h2>Mức xử lý</h2>
+        <p class="hint">Mỗi mức: đạt bao nhiêu điểm thì báo, và khoá nông trại bao lâu (0 = chỉ cảnh báo). Tối đa 90 ngày.</p>
+        <div class="levels" id="fp-levels">${fp.levels
+          .map(
+            (l, i) => `<div class="level-row">
+              <span class="level-row__n">Mức ${i + 1}</span>
+              <label class="field">Từ điểm<input type="number" min="1" name="lp" value="${l.points}" /></label>
+              <label class="field">Khoá (giờ)<input type="number" min="0" max="2160" name="lh" value="${l.hours}" /><span class="hint" data-h>${esc(hoursText(l.hours))}</span></label>
+              <button type="button" class="btn btn--sm" data-act="drop" aria-label="Bỏ mức ${i + 1}">✕</button>
+            </div>`,
+          )
+          .join('')}</div>
+        <button type="button" class="btn btn--sm" id="fp-add">+ Thêm mức</button>
+        <h2 class="panel__sub">Điểm cho mỗi loại vi phạm</h2>
+        <div class="grid-3">${Object.entries(fp.weights)
+          .map(
+            ([code, w]) => `<label class="field">${esc(CODE_NAMES[code] || code)} <code>${esc(code)}</code><input type="number" min="0" max="50" name="w:${esc(code)}" value="${w}" /></label>`,
+          )
+          .join('')}</div>
+        <div class="grid-3">
+          <label class="field">Cộng dồn điểm trong (ngày)<input type="number" min="1" max="90" name="windowDays" value="${fp.windowDays}" /></label>
+          <label class="check"><input type="checkbox" name="autoBan" ${fp.autoBan ? 'checked' : ''} /> Tự động khoá khi chạm mức có thời hạn</label>
+        </div>
+        <div class="form-actions"><button class="btn btn--primary" type="submit">Lưu mức xử lý</button></div>
+      </form>`,
+    );
+
+    const levels = document.getElementById('fp-levels');
+    const renumber = () =>
+      levels.querySelectorAll('.level-row__n').forEach((el, i) => (el.textContent = `Mức ${i + 1}`));
+    levels.addEventListener('input', (e) => {
+      if (e.target.name === 'lh') e.target.parentElement.querySelector('[data-h]').textContent = hoursText(e.target.value);
+    });
+    levels.addEventListener('click', (e) => {
+      if (e.target.closest('[data-act="drop"]') && levels.children.length > 1) {
+        e.target.closest('.level-row').remove();
+        renumber();
+      }
+    });
+    document.getElementById('fp-add').onclick = () => {
+      const last = levels.lastElementChild;
+      const row = last.cloneNode(true);
+      const lp = row.querySelector('[name="lp"]');
+      lp.value = Number(last.querySelector('[name="lp"]').value || 0) * 2 || 1;
+      levels.appendChild(row);
+      renumber();
+    };
+    document.getElementById('fp-form').onsubmit = async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const weights = {};
+      form.querySelectorAll('input[name^="w:"]').forEach((i) => (weights[i.name.slice(2)] = Number(i.value)));
+      const body = {
+        fairPlay: {
+          weights,
+          windowDays: Number(form.windowDays.value),
+          autoBan: form.autoBan.checked,
+          levels: [...levels.querySelectorAll('.level-row')].map((r) => ({
+            points: Number(r.querySelector('[name="lp"]').value),
+            hours: Number(r.querySelector('[name="lh"]').value),
+          })),
+        },
+      };
+      try {
+        await api('/admin/settings', { method: 'PUT', body });
+        toast('Đã lưu mức xử lý.', 'success');
+        renderFairPlay();
+      } catch (err) {
+        toast(err.message, 'error');
+      }
+    };
+    document.getElementById('fp-seen').onclick = async () => {
+      try {
+        await api('/admin/fairplay/seen', { method: 'POST', body: { all: true } });
+        renderFairPlay();
+      } catch (err) {
+        toast(err.message, 'error');
+      }
+    };
+    document.getElementById('main').addEventListener('click', async (e) => {
+      const btn = e.target.closest('[data-act="view"], [data-act="unban"]');
+      const holder = btn?.closest('[data-id]');
+      if (!btn || !holder) return;
+      const id = Number(holder.dataset.id);
+      if (btn.dataset.act === 'view') return showUser(id, renderFairPlay);
+      if (!(await confirmBox({ title: 'Gỡ khoá nông trại?', text: 'Tài khoản chơi và lưu nông trại lại được ngay.', ok: 'Gỡ khoá' }))) return;
+      try {
+        await api(`/admin/users/${id}/unban`, { method: 'POST' });
+        toast('Đã gỡ khoá.', 'success');
+        renderFairPlay();
+      } catch (err) {
+        toast(err.message, 'error');
+      }
+    });
+  }
+
+  /** The fair-play and spins sections of the user drawer. */
+  function userExtras(u, now) {
+    const fp = u.fairPlay;
+    const sp = u.spins;
+    const kv = (k, v) => `<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`;
+    return `
+      <section><h3>Gian lận</h3><dl class="kv">
+        ${kv('Điểm vi phạm', `${fp.points} <span class="hint">(${fp.windowDays} ngày qua${fp.level ? ' · mức ' + fp.level : ''})</span>`)}
+        ${kv('Nông trại', fp.ban ? `<span class="badge badge--lock">🔒</span> ${banText(fp.ban, now)}` : 'Đang mở')}
+      </dl>
+      ${
+        fp.refusals.length
+          ? `<ul class="refusals">${fp.refusals
+              .slice(0, 10)
+              .map((r) => `<li><span class="badge">${esc(CODE_NAMES[r.code] || r.code)}</span> <span>${esc(r.detail)}</span> <span class="hint">${esc(ago(r.at, now))}</span></li>`)
+              .join('')}</ul>`
+          : '<p class="hint">Không có bản lưu nào bị từ chối gần đây.</p>'
+      }
+      ${
+        fp.bans.length
+          ? `<details class="past-bans"><summary class="hint">Lịch sử khoá (${fp.bans.length})</summary><ul class="refusals">${fp.bans
+              .map((b) => `<li><span>${esc(fmtUnix(b.since))} → ${esc(fmtUnix(b.until))}</span> <span class="hint">${esc(b.reason)}${b.liftedAt ? ` · gỡ bởi ${esc(b.liftedBy || '')} lúc ${esc(fmtUnix(b.liftedAt))}` : ''}</span></li>`)
+              .join('')}</ul></details>`
+          : ''
+      }
+      <div class="inline-form">
+        <select id="ban-hours" aria-label="Thời gian khoá">${BAN_CHOICES.map((h) => `<option value="${h}"${h === 24 ? ' selected' : ''}>${esc(hoursText(h))}</option>`).join('')}</select>
+        <input type="text" id="ban-reason" maxlength="200" placeholder="Lý do (không bắt buộc)" aria-label="Lý do khoá" />
+        <button type="button" class="btn btn--sm btn--danger" data-act="ban">Khoá nông trại</button>
+        ${fp.ban ? '<button type="button" class="btn btn--sm" data-act="unban">Gỡ khoá</button>' : ''}
+      </div></section>
+      <section><h3>Lượt quay</h3><dl class="kv">
+        ${kv('Lượt đã mua còn lại', sp.credits)}
+        ${kv('Miễn phí đã dùng hôm nay', sp.freeUsedToday)}
+        ${kv('Đã thanh toán', `${sp.ordersPaid} đơn · ${vnd(sp.amountPaid)}`)}
+      </dl>
+      ${
+        sp.ledger.length
+          ? `<details class="past-bans"><summary class="hint">Biến động gần đây</summary><ul class="refusals">${sp.ledger
+              .map((l) => `<li><strong>${l.delta > 0 ? '+' : ''}${l.delta}</strong> <span>${esc({ topup: 'Nạp', spin: 'Quay', admin: 'Admin' }[l.reason] || l.reason)}${l.ref ? ' · ' + esc(l.ref) : ''}</span> <span class="hint">${esc(ago(l.at, now))}</span></li>`)
+              .join('')}</ul></details>`
+          : ''
+      }
+      <div class="inline-form">
+        <input type="number" id="gift-spins" min="-1000" max="1000" value="5" aria-label="Số lượt" />
+        <button type="button" class="btn btn--sm" data-act="gift">Tặng / trừ lượt</button>
+      </div></section>`;
+  }
+
   // ——— Router ———
   async function route() {
     if (!user) return renderLogin();
@@ -1306,6 +1712,8 @@ ${locales.extra
       else if (hash.startsWith('/dishes/')) await renderEditor(decodeURIComponent(hash.slice(8)));
       else if (hash === '/ingredients') await renderIngredients();
       else if (hash === '/users') await renderUsers();
+      else if (hash === '/payments') await renderPayments();
+      else if (hash === '/fairplay') await renderFairPlay();
       else await renderHome();
       window.scrollTo(0, 0);
     } catch (err) {

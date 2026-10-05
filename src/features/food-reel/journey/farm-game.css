@@ -1368,3 +1368,62 @@ html[data-motion='reduced'] .fg-panel-backdrop {
   animation: none !important;
   transition: none !important;
 }
+
+/* ——— Farm locked for fair play (FarmLock) ——— */
+.fg-lock {
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  background: radial-gradient(120% 80% at 50% 0%, rgb(255 211 107 / 10%), transparent 60%), #1b140d;
+}
+
+.fg-lock__card {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  width: min(420px, 100%);
+  padding: 28px 22px;
+  border: 1px solid var(--fg-edge);
+  border-radius: 22px;
+  background: var(--fg-glass-strong);
+  text-align: center;
+  line-height: 1.55;
+}
+
+.fg-lock__card p {
+  margin: 0;
+}
+
+.fg-lock__icon {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgb(255 211 107 / 14%);
+  color: var(--fg-gold);
+}
+
+.fg-lock__title {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.fg-lock__help {
+  font-size: 0.85rem;
+  opacity: 0.72;
+}
+
+.fg-lock__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--fg-gold);
+  color: #2a1d0c !important;
+  font-weight: 700;
+}

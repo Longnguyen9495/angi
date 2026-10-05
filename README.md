@@ -47,6 +47,24 @@ Link từng món (`/mon/<slug>`) có ảnh xem trước riêng: nginx gửi `/mo
 - Bạn vườn cần tài khoản: mã khu vườn 6 ký tự, ghé đảo của bạn, tưới giúp 1 ô/bạn/ngày (tối đa 5 bạn), quà hạt của Cô Ba mỗi ngày.
   API `/api/account/garden|friends|events` (`server/lib/Friends.php`); sau khi pull chạy lại `php server/bin/migrate.php`.
 
+## Lượt quay & thanh toán
+
+- Mỗi ngày (giờ Việt Nam) có `freePerDay` lượt quay miễn phí (mặc định 5) — đếm trên máy chủ theo tài khoản, hoặc theo
+  cookie trình duyệt + mạng khi chưa đăng nhập (`server/lib/Spins.php`, API `/api/account/spins`). Hết lượt thì app mở
+  màn mua lượt (mặc định 5.000đ/lượt, gói 1/5/10/20); mua cần đăng nhập.
+- Thanh toán bằng chuyển khoản VietQR: mỗi đơn có mã `AGxxxxxx` làm nội dung chuyển khoản. Đơn được xác nhận ở trang
+  admin **Lượt quay & thanh toán** (nút "Đã nhận tiền"), hoặc tự động qua webhook SePay `POST /api/pay/sepay` khi đặt
+  `SEPAY_API_KEY` trong `.env`. Tài khoản nhận tiền, giá, số lượt miễn phí và các gói chỉnh trong admin.
+
+## Gian lận: cảnh báo & khoá nông trại
+
+- Mỗi bản lưu bị `ProgressGuard` từ chối cộng điểm theo loại (đổi giờ máy = 0, sửa số dư/nhận thưởng hai lần = 3…), cộng
+  dồn trong 7 ngày (`server/lib/FairPlay.php`). Chạm mức mới → cảnh báo ở admin **Gian lận** (và email tới
+  `ADMIN_ALERT_EMAIL` nếu đặt); mức có thời hạn tự khoá nông trại (mặc định: 3 điểm cảnh báo, 6 điểm khoá 6 giờ,
+  12 điểm 3 ngày, 24 điểm 14 ngày). Khi bị khoá, tài khoản vẫn quay món nhưng không lưu nông trại, không tưới/hái/tặng
+  vườn bạn; app hiện "Nông trại đang tạm khoá đến …". Admin chỉnh mức, gỡ khoá hoặc khoá tay trong chi tiết người dùng.
+- Sau khi pull: `php server/bin/migrate.php` (schema v7). Kiểm tra: `php server/bin/selftest-spins.php`.
+
 ## Ngôn ngữ / i18n
 
 Tiếng Việt là ngôn ngữ gốc và là bản dự phòng ở mọi lớp; tên thương hiệu “Ăn gì?” không dịch. Thêm một ngôn ngữ (ví dụ `ja`):

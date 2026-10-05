@@ -1,6 +1,9 @@
 import { LazyMotion, MotionConfig, domAnimation, m } from 'motion/react';
 import {
+  Suspense,
+  lazy,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useReducer,
@@ -13,7 +16,9 @@ import {
 import { level } from '../../domain/selectors';
 import { slotKey, currentTime } from '../../domain/time';
 import { confirmCommand, isAbortError } from '../../services/mockApi';
+import { AccountContext, UiContext } from '../../state/context';
 import { useFeedback, useGame } from '../../state/hooks';
+import { useSpinQuota } from './hooks/useSpinQuota';
 import { AboutPanel, BootScreen, SavedPanel } from './components/InfoPanels';
 import { ExperienceHeader } from './components/ExperienceHeader';
 import { IngredientOrbit, IngredientRail } from './components/IngredientOrbit';
@@ -52,6 +57,8 @@ import { BRAND, t } from '../../i18n';
 // Story and epilogue load after the reel is on screen (preloaded when idle).
 const loadStory = () => import('./components/FoodStory');
 const loadEpilogue = () => import('./components/ChosenEpilogue');
+// Out of spins: loaded only when the allowance runs out (it brings the QR encoder).
+const SpinPaywall = lazy(() => import('./components/SpinPaywall'));
 
 const UNLOCK_MS = 700;
 const ORBIT_DWELL_MS = 180;
@@ -79,7 +86,12 @@ export function FoodReelExperience({
   spinRequest = null,
 }: FoodReelExperienceProps) {
   const { state: game, dispatch: gameDispatch } = useGame();
-  const { announce } = useFeedback();
+  const { announce, toast } = useFeedback();
+  // Optional here: the reel also runs without the account layer (tests, previews).
+  const account = useContext(AccountContext);
+  const ui = useContext(UiContext);
+  const quota = useSpinQuota(account?.user?.key ?? null);
+  const takeSpin = quota.take;
   const { reduced, saveData } = useReelMotionPrefs();
   const { prefs, update, toggleSaved, togglePool } = useReelPrefs();
   const viewport = useViewport();
@@ -229,8 +241,10 @@ export function FoodReelExperience({
   // ——— Spin ———
   const spin = useCallback(() => {
     if (!isInteractive(phaseRef.current)) return;
+    // Out of spins for today: the paywall opens instead.
+    if (!takeSpin()) return;
     send({ type: 'SPIN', seed: randomSeed() });
-  }, []);
+  }, [takeSpin]);
 
   // A spin requested together with a view change runs one commit later, so the
   // reducer that plans it already spins over the new view.
@@ -613,7 +627,16 @@ export function FoodReelExperience({
               {showDock && (
                 <footer className="fr-dock">
                   <SceneCounter current={mod(center, view.count) + 1} total={view.count} />
-                  <SpinControl ref={spinRef} busy={busy} onSpin={spin} />
+                  <SpinControl
+                    ref={spinRef}
+                    busy={busy}
+                    onSpin={spin}
+                    quota={
+                      quota.status
+                        ? { free: quota.status.freeLeft, credits: quota.status.credits }
+                        : null
+                    }
+                  />
                   <div className="fr-dock__side">
                     <PoolSwitch
                       pooled={view.pooled}
@@ -671,6 +694,7 @@ export function FoodReelExperience({
               orderCity={prefs.orderCity}
               onOrderCity={(orderCity) => update({ orderCity })}
               onSpinAgain={() => {
+                if (!takeSpin()) return;
                 send({ type: 'RESET' });
                 send({ type: 'SPIN', seed: randomSeed() });
               }}
@@ -699,6 +723,23 @@ export function FoodReelExperience({
             }}
           />
           <AboutPanel open={panel === 'about'} onClose={() => setPanel(null)} />
+          {quota.blocked && (
+            <Suspense fallback={null}>
+              <SpinPaywall
+                status={quota.status}
+                block={quota.blocked}
+                onClose={quota.close}
+                onSignIn={() => {
+                  quota.close();
+                  ui?.openAccount();
+                }}
+                onPaid={(n) => {
+                  void quota.refresh();
+                  toast({ message: t.reel.quota.paid(n), tone: 'success' });
+                }}
+              />
+            </Suspense>
+          )}
         </div>
       </LazyMotion>
     </MotionConfig>

@@ -361,6 +361,7 @@ final class Friends
     public function water(string $code, array $body): array
     {
         $u = $this->account->requireUser();
+        FairPlay::requireNotBanned($this->db, (int) $u['id']);
         $me = (int) $u['id'];
         $plotId = (int) ($body['plotId'] ?? 0);
         db_tx($this->db, function () use ($me, $code, $plotId) {
@@ -394,6 +395,7 @@ final class Friends
     public function steal(string $code, array $body): array
     {
         $u = $this->account->requireUser();
+        FairPlay::requireNotBanned($this->db, (int) $u['id']);
         $me = (int) $u['id'];
         $plotId = (int) ($body['plotId'] ?? 0);
         $crop = db_tx($this->db, function () use ($me, $code, $plotId) {
@@ -431,6 +433,7 @@ final class Friends
     public function gift(string $code, array $body): array
     {
         $u = $this->account->requireUser();
+        FairPlay::requireNotBanned($this->db, (int) $u['id']);
         $me = (int) $u['id'];
         $crop = (string) ($body['crop'] ?? '');
         if (!isset(ProgressGuard::rules()['crops'][$crop])) {

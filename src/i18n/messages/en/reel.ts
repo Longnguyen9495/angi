@@ -4,7 +4,7 @@ import type { Messages } from '../../types';
 const dishes = (n: number) => (n === 1 ? '1 dish' : `${n} dishes`);
 
 const reel: Messages['reel'] = {
-  docTitle: (brand) => `${brand} — What to eat today? Spin a dish, find a place`,
+  docTitle: (brand) => `${brand} — Spin a dish, find a place`,
   docTitleDish: (brand, dish) => `${dish} — ${brand}`,
 
   header: {
@@ -24,7 +24,7 @@ const reel: Messages['reel'] = {
 
   stage: {
     label: 'Food reel',
-    headline: ['What to eat', 'today?'],
+    headline: ['What to', 'eat?'],
     subCrop: (n, seed) => `${dishes(n)} for the ${seed}`,
     subPool: (n) => `Spin basket · ${n} you picked`,
     subAll: (n) => `${dishes(n)} · three regions & the world`,
@@ -84,6 +84,40 @@ const reel: Messages['reel'] = {
     itemDetails: (subtitle, region, price) => ` — ${subtitle}, ${region}, about ${price}.`,
     itemOpen: 'Press to read the dish’s story',
     itemCentre: 'Press to bring this dish to the centre',
+  },
+
+  quota: {
+    badge: (free, credits) =>
+      credits > 0
+        ? `${free} free spins left today and ${credits} bought`
+        : `${free} free spins left today`,
+    title: 'No spins left today',
+    lead: (free, resetIn) => `You get ${free} free spins a day — new ones in ${resetIn}.`,
+    networkFull: 'This network has used the free spins for guests. Sign in to use your own.',
+    signInLead: 'Sign in (just an email) to get your own free spins and buy more.',
+    signIn: 'Sign in to keep spinning',
+    buyTitle: 'Buy more spins',
+    perSpin: (price) => `${price} per spin — use them any time, they never expire`,
+    pack: (n) => (n === 1 ? '1 spin' : `${n} spins`),
+    paymentsOff: 'Buying spins is not open yet — come back tomorrow.',
+    payTitle: (n) => `Transfer to get ${n === 1 ? '1 spin' : `${n} spins`}`,
+    scan: 'Open your banking app and scan — amount and message are filled in.',
+    qrLabel: (amount, memo) => `VietQR code for ${amount}, message ${memo}`,
+    bank: 'Bank',
+    account: 'Account number',
+    holder: 'Account holder',
+    amount: 'Amount',
+    memo: 'Message',
+    memoHint: 'Keep the transfer message as is so we can match your order.',
+    copy: 'Copy',
+    copied: 'Copied',
+    waiting: 'Waiting for the payment — usually a few minutes.',
+    paid: (n) => `Payment received — ${n === 1 ? '1 spin' : `${n} spins`} added!`,
+    expired: 'This order has expired — pick a pack to make a new one.',
+    otherPack: 'Pick another pack',
+    later: 'Later',
+    orderFailed: 'Could not create the order, try again.',
+    hours: (h, m) => (h > 0 ? `${h}h ${m}m` : `${m} min`),
   },
 
   spin: {
