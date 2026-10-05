@@ -1,5 +1,10 @@
 import type { ReelDish } from '../foodReel.types';
 import { STORIES_EAST_ASIA } from './stories/east-asia';
+import { STORIES_MORE_ASIA } from './stories/more-asia';
+import { STORIES_MORE_CENTRAL } from './stories/more-central';
+import { STORIES_MORE_NORTH } from './stories/more-north';
+import { STORIES_MORE_SOUTH } from './stories/more-south';
+import { STORIES_MORE_WEST } from './stories/more-west';
 import { STORIES_NORTH_CENTRAL } from './stories/north-central';
 import { STORIES_SOUTH } from './stories/south';
 import type { DishStory, StoryMilestone, StorySymbol } from './stories/types';
@@ -36,6 +41,11 @@ export const CURATED_STORIES: Readonly<Record<string, DishStory>> = {
   ...STORIES_SOUTH,
   ...STORIES_EAST_ASIA,
   ...STORIES_WORLD,
+  ...STORIES_MORE_NORTH,
+  ...STORIES_MORE_CENTRAL,
+  ...STORIES_MORE_SOUTH,
+  ...STORIES_MORE_ASIA,
+  ...STORIES_MORE_WEST,
 };
 
 /**
@@ -45,8 +55,11 @@ export const CURATED_STORIES: Readonly<Record<string, DishStory>> = {
 export const STORY_ALIASES: Readonly<Record<string, string>> = {
   'banh-mi-thit-nuong-2': 'banh-mi-thit-nuong',
   'bun-bo-hue-2': 'bun-bo-hue',
+  'bun-mam-2': 'bun-mam',
   'com-chay-thap-cam-2': 'com-chay-thap-cam',
+  'hu-tieu-nam-vang-2': 'hu-tieu-nam-vang',
   'lau-nam-chay-2': 'lau-nam-chay',
+  'mi-y-sot-bo-bam-2': 'mi-y-sot-bo-bam',
   'pizza-hai-san-2': 'pizza-hai-san',
 };
 
