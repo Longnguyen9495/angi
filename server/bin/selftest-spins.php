@@ -42,6 +42,8 @@ $status = function (callable $fn): array {
 $browser = fn (string $id) => $_COOKIE['angi_spins'] = str_pad($id, 32, '0');
 
 // ——— Free spins ———
+// Pinned so the counts below don't follow the shipped default.
+Settings::save($pdo, ['spins' => ['freePerDay' => 5]]);
 $browser('a');
 $guest = new Spins($pdo, null);
 $check('guest starts with the daily allowance', $guest->status()['freeLeft'] === 5);

@@ -16,7 +16,7 @@ final class Settings
     public const DEFAULTS = [
         'spins' => [
             // Free spins per Vietnam day, per account (or per browser for guests).
-            'freePerDay' => 5,
+            'freePerDay' => 30,
             // VND per bought spin.
             'price' => 5000,
             // Packs offered in the app (spins per pack).
