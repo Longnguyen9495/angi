@@ -76,11 +76,11 @@ const MOBILE_CAPTION = 34;
 
 /**
  * Vertical space taken by the chrome on phones, mirroring reel.responsive.css:
- * header + two-line headline on top; ingredient rail + dock (spin + Rổ switch) at the bottom.
+ * header + one-line headline on top; ingredient rail + dock (spin + Rổ switch) at the bottom.
  */
 function mobileBands(width: number, height: number) {
   const headlineFont = Math.min(width * 0.155, height * 0.082, 83);
-  const top = 68 + 1.8 * headlineFont + 30;
+  const top = 68 + 0.9 * headlineFont + 30;
   const dock = 136;
   const rail = height < MOBILE_COMPACT_HEIGHT ? 0 : 82;
   return { top, bottom: dock + rail + MOBILE_CAPTION };

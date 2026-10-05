@@ -120,8 +120,17 @@
     top: calc(68px + env(safe-area-inset-top));
   }
 
+  /* One line, as on desktop: "Ăn gì?" split over two lines read as a staircase. */
   .fr-headline__title {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.26em;
     font-size: min(15.5vw, 8.2vh, 5.2rem);
+    white-space: nowrap;
+  }
+
+  .fr-headline__title .fr-line + .fr-line .fr-line__inner {
+    padding-left: 0;
   }
 
   .fr-headline__sub {
