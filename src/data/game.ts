@@ -1320,12 +1320,17 @@ export function eventOn(date: string): GameEvent | null {
 /** Plots a new guest starts with. */
 export const FARM_PLOT_COUNT = 4;
 /**
- * One more plot can be cleared at each of these levels (4 → 12), for the xu in LAND_PRICES:
- * a goal to save towards, and somewhere for the market's xu to go.
+ * One more plot can be cleared at each of these levels (4 → 20), for the xu in LAND_PRICES:
+ * a goal to save towards, and somewhere for the market's xu to go. The last eight (from 26)
+ * open the two grass columns by the pond, about one a week for an everyday player.
  */
-export const PLOT_UNLOCK_LEVELS = [2, 3, 5, 7, 10, 13, 17, 22] as const;
+export const PLOT_UNLOCK_LEVELS = [
+  2, 3, 5, 7, 10, 13, 17, 22, 26, 30, 34, 38, 42, 47, 52, 58,
+] as const;
 /** What clearing each of those plots costs, in the same order. */
-export const LAND_PRICES = [30, 60, 120, 200, 320, 480, 700, 1000] as const;
+export const LAND_PRICES = [
+  30, 60, 120, 200, 320, 480, 700, 1000, 1300, 1700, 2200, 2800, 3500, 4300, 5200, 6200,
+] as const;
 export const MAX_PLOT_COUNT = FARM_PLOT_COUNT + PLOT_UNLOCK_LEVELS.length;
 
 export const BUDGET_OPTIONS: { id: BudgetId | 'any'; label: string; hint: string }[] = (
