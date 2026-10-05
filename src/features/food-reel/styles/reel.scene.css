@@ -209,10 +209,13 @@
   padding-left: 0.3em;
 }
 
+/* The mask reaches past the tight line box so Vietnamese marks (Ă, ì) and
+   descenders (g) aren't clipped; the negative margins keep the spacing. */
 .fr-line {
   display: block;
   overflow: hidden;
-  padding-bottom: 0.06em;
+  padding: 0.22em 0 0.26em;
+  margin: -0.22em 0 -0.2em;
 }
 
 .fr-line__inner {
