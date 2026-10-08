@@ -21,6 +21,7 @@ require_once __DIR__ . '/../lib/AdminUsers.php';
 require_once __DIR__ . '/../lib/Spins.php';
 require_once __DIR__ . '/../lib/FairPlay.php';
 require_once __DIR__ . '/../lib/Settings.php';
+require_once __DIR__ . '/../lib/Sky.php';
 
 require_once __DIR__ . '/../lib/ReviewService.php';
 
@@ -104,6 +105,17 @@ try {
                 'GET /account/spins' => json_response($spins->status()),
                 'POST /account/spins' => json_response($spins->use()),
                 'POST /account/spins/orders' => json_response($spins->createOrder(read_json_body()), 201),
+                default => throw new HttpError(404, __t('api.notFound')),
+            };
+        }
+        // Vườn Mây (Sky.php): status for anyone, bugs and stars for a signed-in garden.
+        if ($path === '/account/sky' || str_starts_with($path, '/account/sky/')) {
+            $sky = new Sky(db(), $account);
+            match ($method . ' ' . $path) {
+                'GET /account/sky' => json_response($sky->status()),
+                'GET /account/sky/bugs' => json_response($sky->bugs()),
+                'POST /account/sky/star-up' => json_response($sky->starUp(read_json_body())),
+                'POST /account/sky/tier-up' => json_response($sky->tierUp(read_json_body())),
                 default => throw new HttpError(404, __t('api.notFound')),
             };
         }

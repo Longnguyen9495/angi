@@ -26,6 +26,15 @@ return [
     'account.badProgress' => 'The farm data is not valid.',
     'account.progressTooLarge' => 'The farm data is too large.',
     'account.progressConflict' => 'Your farm was changed on another device.',
+
+    // ——— Cloud Garden ———
+    'sky.off' => 'The Cloud Garden is not open yet.',
+    'sky.busy' => 'That was quick — wait a moment and try again.',
+    'sky.locked' => 'The Cloud Garden opens at level 12.',
+    'sky.noPot' => 'That pot was not found.',
+    'sky.maxStars' => 'This pot already has 5 stars.',
+    'sky.notEnough' => 'Not enough bugs, coins or items.',
+    'sky.cannotTierUp' => 'You need a 5-star pot and an empty 0-star pot of the same set.',
     'account.notSignedIn' => 'You are not signed in.',
     'account.badRequest' => 'Invalid request.',
     'account.badEmail' => 'That email address does not look right.',

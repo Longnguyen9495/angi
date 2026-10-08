@@ -28,6 +28,15 @@ return [
     'account.badProgress' => 'Dữ liệu nông trại không hợp lệ.',
     'account.progressTooLarge' => 'Dữ liệu nông trại quá lớn.',
     'account.progressConflict' => 'Nông trại đã thay đổi ở máy khác.',
+
+    // ——— Vườn Mây ———
+    'sky.off' => 'Vườn Mây chưa mở.',
+    'sky.busy' => 'Bạn thao tác hơi nhanh, đợi một chút rồi thử lại nhé.',
+    'sky.locked' => 'Vườn Mây mở từ cấp 12.',
+    'sky.noPot' => 'Không tìm thấy chậu này.',
+    'sky.maxStars' => 'Chậu đã đủ 5 sao.',
+    'sky.notEnough' => 'Chưa đủ bọ, xu hoặc vật phẩm.',
+    'sky.cannotTierUp' => 'Cần chậu 5 sao và một chậu 0 sao cùng bộ, chưa trồng gì.',
     'account.notSignedIn' => 'Bạn chưa đăng nhập.',
     'account.badRequest' => 'Yêu cầu không hợp lệ.',
     'account.badEmail' => 'Email chưa đúng định dạng.',

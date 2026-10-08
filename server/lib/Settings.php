@@ -50,6 +50,12 @@ final class Settings
             // Off: levels only alert, the admin locks by hand.
             'autoBan' => true,
         ],
+        'sky' => [
+            // Vườn Mây (plans/vuon-may.md): off until the team turns it on for players.
+            'enabled' => false,
+            // A guest's sky branch brought into an account (Q5): off until the policy is approved.
+            'guestImport' => false,
+        ],
     ];
 
     /** Longest lock, automatic or by hand: 90 days. */
@@ -170,6 +176,10 @@ final class Settings
                     return $levels ?: $d['levels'];
                 })(),
                 'autoBan' => (bool) ($v['autoBan'] ?? $d['autoBan']),
+            ],
+            'sky' => [
+                'enabled' => (bool) ($v['enabled'] ?? $d['enabled']),
+                'guestImport' => (bool) ($v['guestImport'] ?? $d['guestImport']),
             ],
         };
     }
