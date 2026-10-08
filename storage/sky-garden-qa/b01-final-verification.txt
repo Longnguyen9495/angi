@@ -1,0 +1,15 @@
+Initial byte-string comparison: FAIL (line endings)
+Table matches report after CRLF normalization: PASS
+Simulation exit: 0
+Stash unchanged: PASS
+Git diff --check: 0
+Final status:
+ M plans/vuon-may.md
+?? plans/backlog-trien-khai-tuan-tu.md
+?? plans/sky-sim-90-bao-cao.md
+?? storage/sky-garden-qa/
+Artifacts:
+sim-90-baseline.json
+sim-90-exit.txt
+sim-90-run.log
+sim-90.txt

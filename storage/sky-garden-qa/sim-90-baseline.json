@@ -1,0 +1,13 @@
+{
+  "start": "2026-10-08T13:44:58.350Z",
+  "end": "2026-10-08T13:54:13.371Z",
+  "command": "npm run sky:sim",
+  "SIM_DAYS": 90,
+  "TZ": "Asia/Ho_Chi_Minh",
+  "seed": 20261008,
+  "node": "v24.18.0",
+  "commit": "07ff96c0e1c5f3b56bdcd730f1274c55c1a54d7c",
+  "exitCode": 0,
+  "signal": null,
+  "error": null
+}

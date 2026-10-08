@@ -1,0 +1,146 @@
+[
+  {
+    "id": "three-20261008",
+    "profile": "three",
+    "seed": 20261008,
+    "repeat": false,
+    "exit": 0,
+    "seconds": 320.524
+  },
+  {
+    "id": "three-20261008-repeat",
+    "profile": "three",
+    "seed": 20261008,
+    "repeat": true,
+    "exit": 0,
+    "seconds": 299.462
+  },
+  {
+    "id": "three-20261009",
+    "profile": "three",
+    "seed": 20261009,
+    "repeat": false,
+    "exit": 0,
+    "seconds": 301.246
+  },
+  {
+    "id": "three-20261009-repeat",
+    "profile": "three",
+    "seed": 20261009,
+    "repeat": true,
+    "exit": 0,
+    "seconds": 298.483
+  },
+  {
+    "id": "three-20261010",
+    "profile": "three",
+    "seed": 20261010,
+    "repeat": false,
+    "exit": 0,
+    "seconds": 298.537
+  },
+  {
+    "id": "three-20261010-repeat",
+    "profile": "three",
+    "seed": 20261010,
+    "repeat": true,
+    "exit": 0,
+    "seconds": 297.81
+  },
+  {
+    "id": "one-20261008",
+    "profile": "one",
+    "seed": 20261008,
+    "repeat": false,
+    "exit": 1,
+    "seconds": 76.03
+  },
+  {
+    "id": "one-20261008-repeat",
+    "profile": "one",
+    "seed": 20261008,
+    "repeat": true,
+    "exit": 1,
+    "seconds": 76.47
+  },
+  {
+    "id": "one-20261009",
+    "profile": "one",
+    "seed": 20261009,
+    "repeat": false,
+    "exit": 1,
+    "seconds": 75.578
+  },
+  {
+    "id": "one-20261009-repeat",
+    "profile": "one",
+    "seed": 20261009,
+    "repeat": true,
+    "exit": 1,
+    "seconds": 75.655
+  },
+  {
+    "id": "one-20261010",
+    "profile": "one",
+    "seed": 20261010,
+    "repeat": false,
+    "exit": 1,
+    "seconds": 75.671
+  },
+  {
+    "id": "one-20261010-repeat",
+    "profile": "one",
+    "seed": 20261010,
+    "repeat": true,
+    "exit": 1,
+    "seconds": 75.353
+  },
+  {
+    "id": "six-20261008",
+    "profile": "six",
+    "seed": 20261008,
+    "repeat": false,
+    "exit": 1,
+    "seconds": 586.377
+  },
+  {
+    "id": "six-20261008-repeat",
+    "profile": "six",
+    "seed": 20261008,
+    "repeat": true,
+    "exit": 1,
+    "seconds": 621.441
+  },
+  {
+    "id": "six-20261009",
+    "profile": "six",
+    "seed": 20261009,
+    "repeat": false,
+    "exit": 3221225794,
+    "seconds": 0.01
+  },
+  {
+    "id": "six-20261009-repeat",
+    "profile": "six",
+    "seed": 20261009,
+    "repeat": true,
+    "exit": 3221225794,
+    "seconds": 0.008
+  },
+  {
+    "id": "six-20261010",
+    "profile": "six",
+    "seed": 20261010,
+    "repeat": false,
+    "exit": 3221225794,
+    "seconds": 0.011
+  },
+  {
+    "id": "six-20261010-repeat",
+    "profile": "six",
+    "seed": 20261010,
+    "repeat": true,
+    "exit": 3221225794,
+    "seconds": 0.007
+  }
+]

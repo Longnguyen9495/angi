@@ -1,0 +1,2 @@
+90 daily rows identical: true
+exit: 0

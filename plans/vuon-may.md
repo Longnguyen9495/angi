@@ -41,9 +41,20 @@ riêng khỏi kho nông trại; hoa hồng thay dâu tây; thưởng xu của ch
 ở tầng 4; mầm đậu thần cấp 10 là nút trên nông trại, chưa có hình mầm.
 
 **VIỆC CÒN DỞ (làm tiếp từ đây):**
-1. Mô phỏng 90 ngày đã chạy một lần (2026-10-08, ~5 phút): **qua cả 4 kiểm tra, kể cả lên tầng 5 trong 90
-   ngày**, nhưng bảng số liệu bị runner nuốt. Nay bảng ghi ra `storage/sky-garden-qa/sim-90.txt`: chạy lại
-   `npm run sky:sim`, chép bảng vào đây, xem tốc độ tầng 5–10 và chỉnh `FLOORS`/`DAILY_SKY`/khinh khí cầu nếu cần.
+0. **Mô phỏng B02 xong, B03 đang dở (08/10/2026):** đọc phần "Bàn giao cuối ngày" trong [tiến độ B03](sky-sim-b03-tien-do.md) và [backlog B01–B42](backlog-trien-khai-tuan-tu.md). Code trên nhánh `wip/sky-sim-b03`.
+1. **B01 đã thu baseline mới (08/10/2026), không sửa kinh tế:** [báo cáo và bản bảng](sky-sim-90-bao-cao.md),
+   [bảng gốc](../storage/sky-garden-qa/sim-90.txt), [log](../storage/sky-garden-qa/sim-90-run.log),
+   [exit 0](../storage/sky-garden-qa/sim-90-exit.txt), [metadata](../storage/sky-garden-qa/sim-90-baseline.json).
+   Lệnh `npm run sky:sim`, SIM_DAYS=90/TZ=Asia/Ho_Chi_Minh, seed 20261008, Node v24.18.0/npm 11.16.0,
+   commit 07ff96c; **1 file, 4/4 test PASS**, Vitest 544.99 giây. T1–T9 mở ngày
+   **1/4/9/18/27/40/55/72/90; T10 chưa đạt**. T5 ngày 27 nằm trong mục tiêu 20–30 chỉ cho hồ sơ này.
+   Cuối ngày 90: cấp 58, 9 tầng, 48 chậu, **1 xu**, 2030 bọ tồn kho, 0 gem. Bảng có 19 dòng lấy mẫu.
+   **Chưa chứng nhận cân bằng:** cột thu xu/XP mây bằng 0 ở các dòng ngày 14 trở đi không đáng tin do
+   [ledger cắt ở 1000 entry](../src/domain/ledger.ts:94) trong khi
+   [simulator đếm theo cursor độ dài](../src/domain/skySim.test.ts:100); assertion cap/thu nhập có thể qua
+   do thiếu số đo. B02 tiếp theo sửa thống kê, xuất đủ ngày/tài nguyên/nguồn–sink và kiểm thử tái lập trước
+   B03–B05 đánh giá; chưa sửa luật gameplay. Không chạy server HMAC/DB/hai tài khoản/máy thật trong B01,
+   không bật sky, không push/deploy, stash giữ nguyên. Runner không mất bảng ở lượt này nên không sửa code.
 2. G5 còn thiếu: **tưới giúp trên mây** (cần guard tính thời gian chín có lượt tưới của bạn, như `friendWaters`
    của nông trại); thử 2 tài khoản trên 2 máy.
 3. G6: nhiệm vụ/thành tựu mây (§5.8), sự kiện Tết/Trung Thu, trang trí mây, cộng hưởng 2/4/6, trợ thủ; vẽ hình
