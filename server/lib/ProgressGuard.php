@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/Schema.php';
 require_once __DIR__ . '/RateLimit.php';
+require_once __DIR__ . '/SkyGuard.php';
 
 /*
  * Checks a saved garden against the copy the server already holds, so a guest can only gain
@@ -29,6 +30,8 @@ require_once __DIR__ . '/RateLimit.php';
  */
 final class ProgressGuard
 {
+    use SkyGuard;
+
     /** Device clock drift allowed between two saves. */
     private const SKEW_MS = 10 * 60 * 1000;
     /** How far past the device's "now" an entry may be dated. */
@@ -188,8 +191,8 @@ final class ProgressGuard
         // Per-day tallies (clock drift, XP) are only read for today.
         if (random_int(1, 20) === 1) {
             $today = intdiv($now, 86400);
-            $this->db->prepare("DELETE FROM verified_stats WHERE user_id = ? AND (metric LIKE 'drift:%' OR metric LIKE 'xpday:%') AND metric NOT IN (?, ?)")
-                ->execute([$this->user, "drift:$today", "xpday:$today"]);
+            $this->db->prepare("DELETE FROM verified_stats WHERE user_id = ? AND (metric LIKE 'drift:%' OR metric LIKE 'xpday:%' OR metric LIKE 'sky%:%') AND metric NOT IN (?, ?, ?, ?, ?)")
+                ->execute([$this->user, "drift:$today", "xpday:$today", "skyxp:$today", "skyharvest:$today", "skydew:$today"]);
         }
         $this->log($c['fresh'] ?? [], $now);
         foreach (array_chunk($c['settle'], 100) as $ids) {
@@ -286,6 +289,9 @@ final class ProgressGuard
         if (is_array($p['reminder'] ?? null)) {
             $p['reminder']['at'] = $move($p['reminder']['at'] ?? null);
         }
+        if (is_array($p['sky'] ?? null)) {
+            $p['sky'] = self::shiftSky($p['sky'], $delta);
+        }
         return $p;
     }
 
@@ -299,6 +305,10 @@ final class ProgressGuard
                 ['import:' . $this->user => [3, 7 * 86400]] + ($replacing ? ['import-replace:' . $this->user => [2, 7 * 86400]] : []),
                 __t('account.progressRejected'),
             );
+        }
+        if (!empty($new['sky'])) {
+            // Vườn Mây is played on an account only, and bringing a guest's in is still off (Q5).
+            $this->reject('import', 'a garden with a sky branch cannot be imported');
         }
         $xp = (int) $new['xp'];
         $items = array_sum(array_map('intval', $new['ingredients']));
@@ -454,6 +464,7 @@ final class ProgressGuard
                 $resources[] = "$kind:$id";
             }
         }
+        $resources = array_merge($resources, self::skyResources($old, $new));
         foreach (array_unique($resources) as $res) {
             if ($res === 'stamp') {
                 continue;
@@ -486,6 +497,7 @@ final class ProgressGuard
         }
         $out = $this->entries($ctx, $fresh, $new['ledger']);
         $this->stateFits($ctx, $fresh, $out);
+        $sky = $out['sky'];
 
         $gained = 0;
         foreach ($fresh as $e) {
@@ -508,6 +520,16 @@ final class ProgressGuard
             }
         }
         $out['stats']['xp'] = $earned;
+        // Vườn Mây day tallies (sky XP cap, harvests for the daily cloud seed, dew made).
+        if ($sky['xp'] > 0) {
+            $out['stats'][self::dayKey('skyxp', $ctx['serverMs'])] = $sky['xp'];
+        }
+        if ($sky['harvests']) {
+            $out['stats'][self::dayKey('skyharvest', $ctx['serverMs'])] = count($sky['harvests']);
+        }
+        if ($this->skyDew > 0) {
+            $out['stats'][self::dayKey('skydew', $ctx['serverMs'])] = $this->skyDew;
+        }
         $out['streak'] = (int) ($new['streak']['count'] ?? 0);
         $out['claims'] = array_values(array_merge(
             array_map(fn ($e) => (string) $e['key'], array_filter($fresh, [self::class, 'claimable'])),
@@ -580,6 +602,7 @@ final class ProgressGuard
             }
         }
 
+        $sky = $this->skyEntries($ctx, $fresh, $byKey);
         $events = $this->events($fresh);
         $catches = [];
         $catchKeys = [];
@@ -931,6 +954,8 @@ final class ProgressGuard
                 $price = $R['decor'][$m[1]] ?? null;
                 ($price !== null && $d === -(int) $price && $res === 'coin') || $fail('decoration price');
                 $decor[] = $m[1];
+            } elseif (self::isSkyKey($key)) {
+                // Vườn Mây: checked by skyEntries() above.
             } elseif ($d > 0) {
                 $fail('nothing in the game pays this');
             }
@@ -949,6 +974,7 @@ final class ProgressGuard
             'stamps' => $stamps,
             'decor' => $decor,
             'lands' => $lands,
+            'sky' => $sky,
         ];
         foreach (array_keys((array) ($R['upgrades'] ?? [])) as $id) {
             $gained = $up($id, $new) - $up($id, $old);
@@ -1164,6 +1190,8 @@ final class ProgressGuard
             $this->reject('rule', 'streak grew faster than days passed');
         }
 
+        $this->skyState($ctx, $fresh, $out['sky']);
+
         // Seeds sent to friends: until the garden saves the debit, they still count against it.
         $owed = [];
         $st = $this->db->prepare("SELECT id, crop FROM farm_events WHERE from_user = ? AND type = 'present' AND settled_at IS NULL");
@@ -1218,7 +1246,7 @@ final class ProgressGuard
         is_array($p['ledger'] ?? null) && array_is_list($p['ledger']) && count($p['ledger']) <= self::MAX_LEDGER || $bad('ledger');
         foreach ($p['ledger'] as $e) {
             (is_array($e) && is_string($e['key'] ?? null) && strlen($e['key']) <= 160
-                && is_string($e['resource'] ?? null) && preg_match('/^(xp|coin|stamp|seed:[a-z]+|ingredient:[a-z]+)$/', $e['resource'])
+                && is_string($e['resource'] ?? null) && preg_match('/^(xp|coin|stamp|seed:[a-z]+|ingredient:[a-z]+|skyseed:[a-z]+|bug:[a-z]+|skyitem:[a-z]+|skygood:[a-z_]+|pot:[a-z_]+)$/', $e['resource'])
                 && $num($e['delta'] ?? null) && abs($e['delta']) <= 1_000_000
                 && $num($e['at'] ?? null) && $time($e['at'])
                 && is_string($e['reason'] ?? '') ) || $bad('ledger entry');
@@ -1268,6 +1296,7 @@ final class ProgressGuard
         (is_array($streak) && $int($streak['count'] ?? 0, 0, 100_000)) || $bad('streak');
         (is_array($p['history'] ?? []) && count($p['history'] ?? []) <= 60) || $bad('history');
         (is_array($p['photos'] ?? []) && count($p['photos'] ?? []) <= 2000) || $bad('photos');
+        $this->skyShape($p['sky'] ?? null);
     }
 
     // ——— Helpers ———
@@ -1354,7 +1383,9 @@ final class ProgressGuard
         }
         $k = $e['key'];
         return (int) ($e['delta'] ?? 0) > 0 || ($e['resource'] ?? '') === 'stamp'
-            || preg_match('/^(friend|present|checkin|plant|seed|xp:choose|badge|quest|chest):/', $k) === 1;
+            || preg_match('/^(friend|present|checkin|plant|seed|xp:choose|badge|quest|chest):/', $k) === 1
+            // Vườn Mây: openings, plantings and balloon boxes count once (some move no balance).
+            || preg_match('/^sky:(floor|plant|balloon):/', $k) === 1;
     }
 
     /** Which of these keys were already paid to this garden. */
@@ -1737,6 +1768,9 @@ final class ProgressGuard
             return (int) ($p['coins'] ?? 0);
         }
         [$kind, $id] = array_pad(explode(':', $res, 2), 2, '');
+        if (in_array($kind, ['skyseed', 'bug', 'skyitem', 'skygood', 'pot'], true)) {
+            return self::skyBalance($p, $kind, $id);
+        }
         $field = $kind === 'seed' ? 'seeds' : 'ingredients';
         return (int) ($p[$field][$id] ?? 0);
     }

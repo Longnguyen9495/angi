@@ -368,7 +368,7 @@ export function skyXpLeft(sky: SkyState, now: number): number {
 
 /** Same mixing as the pond's draw (selectors.ts / ProgressGuard::unit). */
 export function unit(at: number, salt: number): number {
-  let h = (at + Math.imul(salt, 0x9e3779b1)) | 0;
+  let h = (Math.floor(at) + salt * 0x9e3779b1) | 0;
   h = Math.imul(h ^ (h >>> 16), 0x45d9f3b);
   h = Math.imul(h ^ (h >>> 16), 0x45d9f3b);
   return ((h ^ (h >>> 16)) >>> 0) / 4294967296;

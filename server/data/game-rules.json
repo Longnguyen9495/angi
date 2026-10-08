@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "levelCurve": {
     "base": 100,
     "step": 20
@@ -3379,5 +3379,1063 @@
     "maxXp": 30,
     "maxSeeds": 2,
     "maxWater": 1
+  },
+  "sky": {
+    "level": 12,
+    "xpPerDay": 150,
+    "freeSlots": 3,
+    "floors": [
+      {
+        "level": 12,
+        "coins": 0,
+        "cloudseed": 0,
+        "dew": 0,
+        "slots": [
+          60,
+          100,
+          160
+        ]
+      },
+      {
+        "level": 15,
+        "coins": 400,
+        "cloudseed": 2,
+        "dew": 0,
+        "slots": [
+          90,
+          150,
+          240
+        ]
+      },
+      {
+        "level": 19,
+        "coins": 900,
+        "cloudseed": 4,
+        "dew": 1,
+        "slots": [
+          120,
+          200,
+          320
+        ]
+      },
+      {
+        "level": 24,
+        "coins": 1600,
+        "cloudseed": 6,
+        "dew": 2,
+        "slots": [
+          150,
+          250,
+          400
+        ]
+      },
+      {
+        "level": 29,
+        "coins": 2500,
+        "cloudseed": 8,
+        "dew": 3,
+        "slots": [
+          180,
+          300,
+          480
+        ]
+      },
+      {
+        "level": 35,
+        "coins": 3600,
+        "cloudseed": 10,
+        "dew": 4,
+        "slots": [
+          210,
+          350,
+          560
+        ]
+      },
+      {
+        "level": 41,
+        "coins": 5000,
+        "cloudseed": 12,
+        "dew": 6,
+        "slots": [
+          240,
+          400,
+          640
+        ]
+      },
+      {
+        "level": 47,
+        "coins": 6500,
+        "cloudseed": 15,
+        "dew": 8,
+        "slots": [
+          270,
+          450,
+          720
+        ]
+      },
+      {
+        "level": 54,
+        "coins": 8500,
+        "cloudseed": 18,
+        "dew": 10,
+        "slots": [
+          300,
+          500,
+          800
+        ]
+      },
+      {
+        "level": 60,
+        "coins": 11000,
+        "cloudseed": 22,
+        "dew": 12,
+        "slots": [
+          330,
+          550,
+          880
+        ]
+      }
+    ],
+    "items": [
+      "cloudseed",
+      "dew",
+      "gem",
+      "clover",
+      "shard"
+    ],
+    "goods": {
+      "jasmine_bud": 6,
+      "mint_leaf": 5,
+      "kumquat": 7,
+      "lotus_seed": 9,
+      "lotus_flower": 10,
+      "rose": 8,
+      "tea_leaf": 9,
+      "coffee_bean": 10,
+      "chrysanthemum": 12,
+      "pepper": 14,
+      "orchid": 30,
+      "peach_branch": 40,
+      "apricot_branch": 40,
+      "vanilla": 46,
+      "saffron": 60,
+      "dried_jasmine": 22,
+      "jasmine_honey_tea": 70,
+      "kumquat_mint_honey": 48,
+      "lotus_sweet_soup": 52,
+      "rose_jam": 42,
+      "lotus_tea": 50,
+      "chrysanthemum_tea": 44,
+      "coffee_milk": 49,
+      "tet_basket": 220
+    },
+    "crops": {
+      "jasmine": {
+        "floor": 1,
+        "seed": 15,
+        "growMs": 2700000,
+        "yield": [
+          {
+            "good": "jasmine_bud",
+            "qty": 3
+          }
+        ]
+      },
+      "mint": {
+        "floor": 1,
+        "seed": 12,
+        "growMs": 1800000,
+        "yield": [
+          {
+            "good": "mint_leaf",
+            "qty": 3
+          }
+        ]
+      },
+      "kumquat": {
+        "floor": 1,
+        "seed": 22,
+        "growMs": 7200000,
+        "yield": [
+          {
+            "good": "kumquat",
+            "qty": 4
+          }
+        ]
+      },
+      "lotus": {
+        "floor": 2,
+        "seed": 24,
+        "growMs": 10800000,
+        "yield": [
+          {
+            "good": "lotus_seed",
+            "qty": 2
+          },
+          {
+            "good": "lotus_flower",
+            "qty": 1
+          }
+        ]
+      },
+      "rose": {
+        "floor": 2,
+        "seed": 26,
+        "growMs": 9000000,
+        "yield": [
+          {
+            "good": "rose",
+            "qty": 4
+          }
+        ]
+      },
+      "tea": {
+        "floor": 3,
+        "seed": 22,
+        "growMs": 14400000,
+        "yield": [
+          {
+            "good": "tea_leaf",
+            "qty": 3
+          }
+        ]
+      },
+      "coffee": {
+        "floor": 3,
+        "seed": 26,
+        "growMs": 21600000,
+        "yield": [
+          {
+            "good": "coffee_bean",
+            "qty": 3
+          }
+        ]
+      },
+      "chrysanthemum": {
+        "floor": 4,
+        "seed": 30,
+        "growMs": 10800000,
+        "yield": [
+          {
+            "good": "chrysanthemum",
+            "qty": 3
+          }
+        ]
+      },
+      "pepper": {
+        "floor": 4,
+        "seed": 36,
+        "growMs": 18000000,
+        "yield": [
+          {
+            "good": "pepper",
+            "qty": 3
+          }
+        ]
+      },
+      "orchid": {
+        "floor": 5,
+        "seed": 52,
+        "growMs": 28800000,
+        "yield": [
+          {
+            "good": "orchid",
+            "qty": 2
+          }
+        ]
+      },
+      "peach": {
+        "floor": 6,
+        "seed": 34,
+        "growMs": 36000000,
+        "yield": [
+          {
+            "good": "peach_branch",
+            "qty": 1
+          }
+        ]
+      },
+      "apricot": {
+        "floor": 6,
+        "seed": 34,
+        "growMs": 36000000,
+        "yield": [
+          {
+            "good": "apricot_branch",
+            "qty": 1
+          }
+        ]
+      },
+      "vanilla": {
+        "floor": 7,
+        "seed": 82,
+        "growMs": 43200000,
+        "yield": [
+          {
+            "good": "vanilla",
+            "qty": 2
+          }
+        ]
+      },
+      "saffron": {
+        "floor": 8,
+        "seed": 104,
+        "growMs": 57600000,
+        "yield": [
+          {
+            "good": "saffron",
+            "qty": 2
+          }
+        ]
+      },
+      "beanstalk": {
+        "floor": 10,
+        "seed": 400,
+        "growMs": 86400000,
+        "yield": [
+          {
+            "item": "cloudseed",
+            "qty": 1
+          }
+        ]
+      }
+    },
+    "bugs": {
+      "ladybug": {
+        "id": "ladybug",
+        "cls": "common",
+        "weight": 30
+      },
+      "bee": {
+        "id": "bee",
+        "cls": "common",
+        "weight": 25
+      },
+      "caterpillar": {
+        "id": "caterpillar",
+        "cls": "common",
+        "weight": 25
+      },
+      "butterfly": {
+        "id": "butterfly",
+        "cls": "rare",
+        "weight": 12
+      },
+      "dragonfly": {
+        "id": "dragonfly",
+        "cls": "rare",
+        "weight": 8
+      },
+      "firefly": {
+        "id": "firefly",
+        "cls": "firefly",
+        "weight": 4,
+        "night": true
+      },
+      "goldbeetle": {
+        "id": "goldbeetle",
+        "cls": "gold",
+        "weight": 1
+      }
+    },
+    "bugOrder": [
+      "ladybug",
+      "bee",
+      "caterpillar",
+      "butterfly",
+      "dragonfly",
+      "firefly",
+      "goldbeetle"
+    ],
+    "bugRoll": {
+      "stages": [
+        0.2,
+        0.45,
+        0.7
+      ],
+      "baseBp": 2500,
+      "capBp": 8500
+    },
+    "machines": {
+      "tea": {
+        "id": "tea",
+        "floor": 1,
+        "slots": 1
+      },
+      "pot": {
+        "id": "pot",
+        "floor": 2,
+        "slots": 1
+      },
+      "still": {
+        "id": "still",
+        "floor": 3,
+        "slots": 1
+      },
+      "phin": {
+        "id": "phin",
+        "floor": 3,
+        "slots": 1
+      }
+    },
+    "recipes": {
+      "dried_jasmine": {
+        "machine": "tea",
+        "inputs": [
+          {
+            "res": "skygood:jasmine_bud",
+            "qty": 3
+          }
+        ],
+        "out": {
+          "res": "skygood:dried_jasmine",
+          "qty": 1
+        },
+        "ms": 1200000,
+        "xp": 2,
+        "perDay": null,
+        "floor": 0
+      },
+      "jasmine_honey_tea": {
+        "machine": "tea",
+        "inputs": [
+          {
+            "res": "skygood:dried_jasmine",
+            "qty": 2
+          },
+          {
+            "res": "ingredient:honey",
+            "qty": 1
+          }
+        ],
+        "out": {
+          "res": "skygood:jasmine_honey_tea",
+          "qty": 1
+        },
+        "ms": 2400000,
+        "xp": 5,
+        "perDay": null,
+        "floor": 0
+      },
+      "kumquat_mint_honey": {
+        "machine": "tea",
+        "inputs": [
+          {
+            "res": "skygood:kumquat",
+            "qty": 2
+          },
+          {
+            "res": "skygood:mint_leaf",
+            "qty": 2
+          },
+          {
+            "res": "ingredient:honey",
+            "qty": 1
+          }
+        ],
+        "out": {
+          "res": "skygood:kumquat_mint_honey",
+          "qty": 1
+        },
+        "ms": 1800000,
+        "xp": 4,
+        "perDay": null,
+        "floor": 0
+      },
+      "lotus_tea": {
+        "machine": "tea",
+        "inputs": [
+          {
+            "res": "skygood:lotus_flower",
+            "qty": 2
+          },
+          {
+            "res": "skygood:tea_leaf",
+            "qty": 2
+          }
+        ],
+        "out": {
+          "res": "skygood:lotus_tea",
+          "qty": 1
+        },
+        "ms": 3600000,
+        "xp": 5,
+        "perDay": null,
+        "floor": 3
+      },
+      "chrysanthemum_tea": {
+        "machine": "tea",
+        "inputs": [
+          {
+            "res": "skygood:chrysanthemum",
+            "qty": 2
+          },
+          {
+            "res": "skygood:tea_leaf",
+            "qty": 1
+          }
+        ],
+        "out": {
+          "res": "skygood:chrysanthemum_tea",
+          "qty": 1
+        },
+        "ms": 2700000,
+        "xp": 4,
+        "perDay": null,
+        "floor": 4
+      },
+      "lotus_sweet_soup": {
+        "machine": "pot",
+        "inputs": [
+          {
+            "res": "skygood:lotus_seed",
+            "qty": 3
+          },
+          {
+            "res": "ingredient:honey",
+            "qty": 1
+          }
+        ],
+        "out": {
+          "res": "skygood:lotus_sweet_soup",
+          "qty": 1
+        },
+        "ms": 3600000,
+        "xp": 5,
+        "perDay": null,
+        "floor": 0
+      },
+      "rose_jam": {
+        "machine": "pot",
+        "inputs": [
+          {
+            "res": "skygood:rose",
+            "qty": 4
+          }
+        ],
+        "out": {
+          "res": "skygood:rose_jam",
+          "qty": 1
+        },
+        "ms": 3600000,
+        "xp": 4,
+        "perDay": null,
+        "floor": 0
+      },
+      "dew_jasmine": {
+        "machine": "still",
+        "inputs": [
+          {
+            "res": "skygood:jasmine_bud",
+            "qty": 3
+          }
+        ],
+        "out": {
+          "res": "skyitem:dew",
+          "qty": 1
+        },
+        "ms": 28800000,
+        "xp": 0,
+        "perDay": 2,
+        "floor": 0
+      },
+      "dew_lotus": {
+        "machine": "still",
+        "inputs": [
+          {
+            "res": "skygood:lotus_flower",
+            "qty": 2
+          }
+        ],
+        "out": {
+          "res": "skyitem:dew",
+          "qty": 1
+        },
+        "ms": 28800000,
+        "xp": 0,
+        "perDay": 2,
+        "floor": 0
+      },
+      "coffee_milk": {
+        "machine": "phin",
+        "inputs": [
+          {
+            "res": "skygood:coffee_bean",
+            "qty": 3
+          },
+          {
+            "res": "ingredient:milk",
+            "qty": 1
+          }
+        ],
+        "out": {
+          "res": "skygood:coffee_milk",
+          "qty": 1
+        },
+        "ms": 1800000,
+        "xp": 5,
+        "perDay": null,
+        "floor": 0
+      },
+      "tet_basket": {
+        "machine": "pot",
+        "inputs": [
+          {
+            "res": "skygood:peach_branch",
+            "qty": 1
+          },
+          {
+            "res": "skygood:apricot_branch",
+            "qty": 1
+          },
+          {
+            "res": "skygood:rose_jam",
+            "qty": 2
+          }
+        ],
+        "out": {
+          "res": "skygood:tet_basket",
+          "qty": 1
+        },
+        "ms": 7200000,
+        "xp": 10,
+        "perDay": null,
+        "floor": 6
+      }
+    },
+    "dewPerDay": 2,
+    "pots": {
+      "pumpkin": {
+        "set": "produce",
+        "tier": 2
+      },
+      "corn": {
+        "set": "produce",
+        "tier": 2
+      },
+      "cabbage": {
+        "set": "produce",
+        "tier": 2
+      },
+      "eggplant": {
+        "set": "produce",
+        "tier": 2
+      },
+      "watermelon": {
+        "set": "produce",
+        "tier": 2
+      },
+      "red_apple": {
+        "set": "produce",
+        "tier": 2
+      },
+      "pho_bowl": {
+        "set": "table",
+        "tier": 3
+      },
+      "teapot": {
+        "set": "table",
+        "tier": 3
+      },
+      "banh_chung": {
+        "set": "table",
+        "tier": 3
+      },
+      "bamboo_basket": {
+        "set": "market",
+        "tier": 1
+      },
+      "bamboo": {
+        "set": "market",
+        "tier": 1
+      },
+      "coconut": {
+        "set": "sea",
+        "tier": 2
+      },
+      "crab": {
+        "set": "sea",
+        "tier": 2
+      },
+      "porcelain_fish": {
+        "set": "sea",
+        "tier": 2
+      },
+      "seashell": {
+        "set": "sea",
+        "tier": 2
+      },
+      "mooncake": {
+        "set": "festival",
+        "tier": 4
+      },
+      "golden_dragon": {
+        "set": "festival",
+        "tier": 4
+      },
+      "peach_blossom": {
+        "set": "festival",
+        "tier": 4
+      },
+      "lotus": {
+        "set": "festival",
+        "tier": 4
+      },
+      "redfruit": {
+        "set": "spare",
+        "tier": 2
+      }
+    },
+    "sets": {
+      "clay": {
+        "pots": [],
+        "complete": false,
+        "baseTier": 0
+      },
+      "produce": {
+        "pots": [
+          "pumpkin",
+          "corn",
+          "cabbage",
+          "eggplant",
+          "watermelon",
+          "red_apple"
+        ],
+        "complete": true,
+        "baseTier": 2
+      },
+      "table": {
+        "pots": [
+          "pho_bowl",
+          "teapot",
+          "banh_chung"
+        ],
+        "complete": false,
+        "baseTier": 3
+      },
+      "market": {
+        "pots": [
+          "bamboo_basket",
+          "bamboo"
+        ],
+        "complete": false,
+        "baseTier": 1
+      },
+      "sea": {
+        "pots": [
+          "coconut",
+          "crab",
+          "porcelain_fish",
+          "seashell"
+        ],
+        "complete": false,
+        "baseTier": 2
+      },
+      "festival": {
+        "pots": [
+          "mooncake",
+          "golden_dragon",
+          "peach_blossom",
+          "lotus"
+        ],
+        "complete": false,
+        "baseTier": 4
+      },
+      "spare": {
+        "pots": [
+          "redfruit"
+        ],
+        "complete": false,
+        "baseTier": 2
+      }
+    },
+    "potPrices": {
+      "bamboo_basket": {
+        "currency": "coin",
+        "price": 120,
+        "floor": 1
+      },
+      "bamboo": {
+        "currency": "coin",
+        "price": 150,
+        "floor": 1
+      },
+      "redfruit": {
+        "currency": "coin",
+        "price": 180,
+        "floor": 1
+      },
+      "pumpkin": {
+        "currency": "coin",
+        "price": 400,
+        "floor": 2
+      },
+      "corn": {
+        "currency": "coin",
+        "price": 450,
+        "floor": 2
+      },
+      "cabbage": {
+        "currency": "coin",
+        "price": 500,
+        "floor": 2
+      },
+      "eggplant": {
+        "currency": "coin",
+        "price": 550,
+        "floor": 2
+      },
+      "watermelon": {
+        "currency": "gem",
+        "price": 3,
+        "floor": 3
+      },
+      "red_apple": {
+        "currency": "gem",
+        "price": 3,
+        "floor": 3
+      },
+      "coconut": {
+        "currency": "gem",
+        "price": 4,
+        "floor": 4
+      },
+      "crab": {
+        "currency": "gem",
+        "price": 4,
+        "floor": 4
+      },
+      "porcelain_fish": {
+        "currency": "gem",
+        "price": 4,
+        "floor": 5
+      },
+      "seashell": {
+        "currency": "gem",
+        "price": 4,
+        "floor": 5
+      },
+      "pho_bowl": {
+        "currency": "gem",
+        "price": 6,
+        "floor": 6
+      },
+      "teapot": {
+        "currency": "gem",
+        "price": 6,
+        "floor": 6
+      },
+      "banh_chung": {
+        "currency": "gem",
+        "price": 6,
+        "floor": 7
+      }
+    },
+    "starters": [
+      "bamboo_basket",
+      "bamboo",
+      "redfruit"
+    ],
+    "shardsPerPot": 10,
+    "shardPots": [
+      "pho_bowl",
+      "teapot",
+      "banh_chung"
+    ],
+    "setStats": {
+      "clay": {
+        "time": 200,
+        "xp": 0,
+        "bug": 0,
+        "coin": 0
+      },
+      "produce": {
+        "time": 600,
+        "xp": 600,
+        "bug": 0,
+        "coin": 0
+      },
+      "table": {
+        "time": 0,
+        "xp": 600,
+        "bug": 0,
+        "coin": 1000
+      },
+      "market": {
+        "time": 0,
+        "xp": 0,
+        "bug": 0,
+        "coin": 800
+      },
+      "sea": {
+        "time": 400,
+        "xp": 0,
+        "bug": 1200,
+        "coin": 0
+      },
+      "festival": {
+        "time": 800,
+        "xp": 1000,
+        "bug": 0,
+        "coin": 1000
+      },
+      "spare": {
+        "time": 400,
+        "xp": 400,
+        "bug": 0,
+        "coin": 0
+      }
+    },
+    "setMain": {
+      "clay": "time",
+      "produce": "time",
+      "table": "xp",
+      "market": "coin",
+      "sea": "bug",
+      "festival": "xp",
+      "spare": "time"
+    },
+    "tierMul": [
+      100,
+      130,
+      170,
+      220,
+      300
+    ],
+    "starStep": 20,
+    "floorStep": 3,
+    "statCap": {
+      "time": 5000,
+      "xp": 10000,
+      "bug": 6000,
+      "coin": 10000
+    },
+    "produceVegTime": 2,
+    "comboMax": 1500,
+    "starSteps": [
+      {
+        "common": 3,
+        "rare": 0,
+        "firefly": 0,
+        "coins": 50,
+        "rateBp": 10000
+      },
+      {
+        "common": 5,
+        "rare": 0,
+        "firefly": 0,
+        "coins": 120,
+        "rateBp": 8500
+      },
+      {
+        "common": 6,
+        "rare": 1,
+        "firefly": 0,
+        "coins": 300,
+        "rateBp": 7000
+      },
+      {
+        "common": 8,
+        "rare": 2,
+        "firefly": 0,
+        "coins": 700,
+        "rateBp": 5500
+      },
+      {
+        "common": 10,
+        "rare": 3,
+        "firefly": 1,
+        "coins": 1500,
+        "rateBp": 4000
+      }
+    ],
+    "starLuck": {
+      "failBp": 1000,
+      "cloverBp": 1500,
+      "sureTry": 5,
+      "jumpBp": 500
+    },
+    "tierUp": {
+      "goldbeetle": 1
+    },
+    "maxTier": 4,
+    "tutorial": {
+      "place": {
+        "seeds": {
+          "crop": "jasmine",
+          "qty": 3
+        },
+        "items": {},
+        "pot": null
+      },
+      "harvest": {
+        "seeds": null,
+        "items": {
+          "cloudseed": 1
+        },
+        "pot": null
+      },
+      "bug": {
+        "seeds": null,
+        "items": {
+          "cloudseed": 1
+        },
+        "pot": null
+      },
+      "dried": {
+        "seeds": null,
+        "items": {
+          "dew": 1
+        },
+        "pot": null
+      },
+      "floor2": {
+        "seeds": null,
+        "items": {
+          "cloudseed": 2
+        },
+        "pot": "pumpkin"
+      },
+      "mix01": {
+        "seeds": null,
+        "items": {
+          "cloudseed": 2
+        },
+        "pot": null
+      }
+    },
+    "tutorialHoney": 1,
+    "daily": {
+      "harvests": 3,
+      "cloudseed": 1
+    },
+    "setReward": {
+      "gem": 3,
+      "coins": 500
+    },
+    "balloon": {
+      "floor": 5,
+      "boxes": 6,
+      "boxXp": 6,
+      "coins": 300,
+      "cloudseed": 2,
+      "shards": 1,
+      "streakDays": 7,
+      "streakGem": 1,
+      "goods": [
+        "jasmine_bud",
+        "mint_leaf",
+        "kumquat",
+        "lotus_seed",
+        "rose",
+        "tea_leaf",
+        "coffee_bean",
+        "chrysanthemum",
+        "dried_jasmine",
+        "rose_jam",
+        "lotus_sweet_soup",
+        "jasmine_honey_tea"
+      ]
+    }
   }
 }

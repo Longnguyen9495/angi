@@ -177,6 +177,8 @@ export function skyReducer(state: GuestProgress, action: SkyAction): GuestProgre
       if (lv < def.level) return state;
       const { s, sky } = draft(state, now);
       const key = `sky:floor:${n}`;
+      // Evidence of the opening for the server, even for the free first floor.
+      if (!post(s, `${key}:open`, 'coin', 0, 'sky:floor', now)) return state;
       if (def.coins > 0 && !post(s, `${key}:coin`, 'coin', -def.coins, 'sky:floor', now))
         return state;
       if (
