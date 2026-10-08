@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { lazy, useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '../../i18n';
 import { PLACEHOLDERS } from './art';
 import type { BugKind } from './demo';
@@ -17,6 +17,16 @@ const BUGS: BugKind[] = ['ladybug', 'bee', 'butterfly', 'firefly'];
 type Motion = 'auto' | 'on' | 'off';
 
 export function SkyGardenTest() {
+  // ?game=1: the real game on a made-up garden (SkySandbox).
+  if (new URLSearchParams(window.location.search).has('game')) return <SkySandboxPage />;
+  return <MotionDemo />;
+}
+
+const SkySandboxPage = lazy(() =>
+  import('./game/SkySandbox').then((m) => ({ default: m.SkySandbox })),
+);
+
+function MotionDemo() {
   const d = t.sky.demo;
   const p = d.panel;
   const host = useRef<HTMLDivElement>(null);

@@ -3,6 +3,7 @@ import { parseProgress } from '../domain/persistence';
 import { createInitialProgress, type GuestProgress } from '../domain/progress';
 import { isTrivial, reconcile, summarize } from '../domain/sync';
 import { CROPS } from '../data/game';
+import { BUGS, type BugId } from '../data/skyEconomy';
 import type { CropId } from '../data/types';
 import {
   AccountError,
@@ -153,6 +154,11 @@ export function AccountProvider({ children }: { children: ReactNode }) {
           from: e.from,
           coins: e.coins,
           xp: e.xp,
+          pot: e.type === 'skycaught' && e.crop ? e.crop : undefined,
+          bug:
+            e.type === 'skyhelp' && e.crop && Object.hasOwn(BUGS, e.crop)
+              ? (e.crop as BugId)
+              : undefined,
         },
         now,
       });
@@ -166,6 +172,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       if (e.type === 'present' && crop)
         lines.push(t.account.friendEvents.present(e.from, CROPS[crop].seedName.toLowerCase()));
       if (e.type === 'thanks') lines.push(t.account.friendEvents.thanks(e.from));
+      if (e.type === 'skycaught') lines.push(t.sky.game.friend.caughtForYou(e.from));
       if (e.type === 'referral')
         lines.push(t.account.friendEvents.referral(e.from, e.coins ?? 0, e.xp ?? 0));
     }
@@ -296,6 +303,30 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     pushRef.current = push;
   });
+
+  /** See AccountContextValue.serverOp. */
+  const serverOp = useCallback(
+    async <T extends { data: unknown; version: number }>(
+      run: (baseVersion: number) => Promise<T>,
+    ): Promise<T> => {
+      if (!ready.current) throw new AccountError(t.account.api.offline, 0);
+      const idle = async () => {
+        while (pushing.current) await new Promise((r) => setTimeout(r, 100));
+      };
+      // The server works on its saved copy: it must hold this device's garden first.
+      await idle();
+      await pushRef.current(stateRef.current);
+      await idle();
+      const gen = generation.current;
+      const r = await run(version.current);
+      if (gen === generation.current) {
+        load({ data: r.data, version: r.version, updatedAt: null });
+        saved();
+      }
+      return r;
+    },
+    [load, saved],
+  );
 
   /** Friends list for badges and the social quests; also adds a friend from an invite link. */
   const refreshFriends = useCallback(async () => {
@@ -541,6 +572,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       setMarketing: async (on) => {
         setUser(await accountApi.setMarketing(on));
       },
+      serverOp,
     }),
     [
       status,
@@ -561,6 +593,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       farmBan,
       friends,
       refreshFriends,
+      serverOp,
     ],
   );
 

@@ -1,3 +1,4 @@
+import type { BugId } from '../../data/skyEconomy';
 import type { PotId } from '../../data/skyGarden';
 import type { CropId } from '../../data/types';
 import type { MachineKind, MachinePhase } from './art';
@@ -8,7 +9,8 @@ import type { MachineKind, MachinePhase } from './art';
  * every cycle is sped up so a short look shows plants grow, ripen and get picked.
  */
 
-export type BugKind = 'ladybug' | 'bee' | 'butterfly' | 'firefly';
+/** Every bug of the game (src/data/skyEconomy.ts); the demo sends four of them. */
+export type BugKind = BugId;
 
 /** Growth stages, as the farm sprites name them. */
 export const STAGES = ['sprout', 'young', 'flowering', 'ready'] as const;
@@ -22,8 +24,10 @@ export interface DemoPlant {
 }
 
 export interface DemoSlot {
-  pot: PotId;
+  pot: PotId | null;
   plant: DemoPlant | null;
+  /** Not bought yet (the game): drawn with a lock. */
+  locked?: boolean;
 }
 
 export interface DemoMachine {
@@ -36,7 +40,7 @@ export interface DemoMachine {
 
 export interface DemoFloor {
   slots: DemoSlot[];
-  machine: DemoMachine;
+  machine: DemoMachine | null;
 }
 
 /** Crops with all four stage sprites in public/images/farm-items (the real sky plants come later). */

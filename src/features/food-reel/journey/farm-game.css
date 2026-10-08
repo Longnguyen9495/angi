@@ -276,6 +276,17 @@
   text-align: left;
 }
 
+/* Vườn Mây: the way up, next to the cans (shut until the level). */
+.fg-chip--skyup {
+  gap: 6px;
+  color: #fff;
+  background: linear-gradient(135deg, rgb(120 196 255 / 92%), rgb(170 140 255 / 92%));
+}
+
+.fg-chip--skyup:disabled {
+  opacity: 0.7;
+}
+
 /* The Vườn Mây demo entry is a link (another page), drawn like the buttons. */
 .fg-menu a {
   box-sizing: border-box;

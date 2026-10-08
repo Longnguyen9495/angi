@@ -79,7 +79,8 @@ import { HOUR_MS, currentTime, formatDuration, slotKey } from '../../../domain/t
 import { t } from '../../../i18n';
 import { claimableCount } from '../../../domain/quests';
 import { ranchBadge } from '../../ranch/badge';
-import { SKY_DEMO_PATH, showSkyDemoEntry } from '../../sky-garden/entry';
+import { SKY_DEMO_PATH, showSkyDemoEntry, skyEnabled } from '../../sky-garden/entry';
+import { SKY_LEVEL, SKY_SPROUT_LEVEL } from '../../../data/skyEconomy';
 import { useAccount, useFeedback, useGame, useUi } from '../../../state/hooks';
 import { NextStepCard } from './NextStepCard';
 import { Atmosphere } from './Atmosphere';
@@ -90,6 +91,8 @@ const g = t.journey.game;
 
 // The living painted farm (loaded on its own; the HUD is usable before it arrives).
 const FarmScene = lazy(() => import('../../farm-anim/FarmScene'));
+/** Vườn Mây (src/features/sky-garden/game): loaded the first time the guest climbs up. */
+const SkyGame = lazy(() => import('../../sky-garden/game/SkyGame'));
 
 /** Below this scene width a plot's card docks above the tray instead of floating on the plot. */
 const DOCK_CARD_BELOW = 720;
@@ -207,6 +210,16 @@ export function FarmGame({
   const [cam, setCam] = useState<CameraView>({ canPan: false, side: 'field' });
   const [panned, setPanned] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [skyOpen, setSkyOpen] = useState(false);
+  // Vườn Mây shows once the admin switched it on (on local copies always, for testing).
+  const [skyOn, setSkyOn] = useState(() => showSkyDemoEntry());
+  useEffect(() => {
+    let live = true;
+    void skyEnabled().then((on) => live && on && setSkyOn(true));
+    return () => {
+      live = false;
+    };
+  }, []);
   const [questOpen, setQuestOpen] = useState(true);
   // The plot whose card is open on the scene; `harvested` after a harvest from the card.
   const [plotCard, setPlotCardState] = useState<PlotCardState | null>(null);
@@ -903,6 +916,17 @@ export function FarmGame({
           <Drop size={18} weight="fill" aria-hidden="true" />
           <span aria-hidden="true">{cans}</span>
         </span>
+        {skyOn && lv.level >= SKY_SPROUT_LEVEL && (
+          <button
+            type="button"
+            className="fg-chip fg-chip--skyup"
+            onClick={() => setSkyOpen(true)}
+            disabled={lv.level < SKY_LEVEL}
+          >
+            <Cloud size={18} weight="fill" aria-hidden="true" />
+            <span>{lv.level < SKY_LEVEL ? t.sky.game.enterAt(SKY_LEVEL) : t.sky.game.enter}</span>
+          </button>
+        )}
         <button
           type="button"
           className="fg-round"
@@ -1119,6 +1143,11 @@ export function FarmGame({
         onPlant={(id) => plantAt(id)}
         onWater={waterAt}
       />
+      {skyOpen && (
+        <Suspense fallback={null}>
+          <SkyGame onClose={() => setSkyOpen(false)} />
+        </Suspense>
+      )}
     </div>
   );
 }

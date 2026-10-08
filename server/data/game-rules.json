@@ -3774,7 +3774,7 @@
       },
       "phin": {
         "id": "phin",
-        "floor": 3,
+        "floor": 4,
         "slots": 1
       }
     },
@@ -4407,7 +4407,8 @@
     "tutorialHoney": 1,
     "daily": {
       "harvests": 3,
-      "cloudseed": 1
+      "cloudseed": 1,
+      "fromFloor": 3
     },
     "setReward": {
       "gem": 3,

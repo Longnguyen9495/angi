@@ -675,6 +675,21 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
         track(s, 'steal', action.now);
       } else if (ev.type === 'present' && ev.crop) {
         post(s, `${key}:seed`, `seed:${ev.crop}`, 1, 'friend:present', action.now);
+      } else if (ev.type === 'skyhelp' && ev.bug && s.sky) {
+        // We caught a bug in a friend's cloud garden: a ladybug for our store.
+        post(s, `${key}:bug`, `bug:${ev.bug}`, 1, 'friend:skyhelp', action.now);
+      } else if (ev.type === 'skycaught') {
+        // A friend caught the bug on one of our pots: catch it here, as our own tap would. Not
+        // revealed to us yet: leave the event for a later sync.
+        const plant = ev.pot ? s.sky?.pots[ev.pot]?.plant : undefined;
+        const stage = ev.plotId ?? -1;
+        const live = !!plant && plant.cycle === ev.cycle;
+        if (live && plant.bugs[stage] === undefined) return state;
+        let next = s;
+        if (live && plant.bugs[stage] && !plant.caught.includes(stage))
+          next = skyReducer(s, { type: 'SKY_CATCH', uid: ev.pot!, stage, now: action.now });
+        post(next, `${key}:seen`, 'xp', 0, 'friend:skycaught', action.now);
+        return next;
       } else if (ev.type === 'referral' && ((ev.coins ?? 0) > 0 || (ev.xp ?? 0) > 0)) {
         if ((ev.coins ?? 0) > 0)
           post(s, `${key}:coin`, 'coin', Math.floor(ev.coins!), 'friend:referral', action.now);

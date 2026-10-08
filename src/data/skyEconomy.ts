@@ -364,7 +364,8 @@ export const MACHINES: Record<MachineId, MachineDef> = {
   tea: { id: 'tea', floor: 1, slots: 1 },
   pot: { id: 'pot', floor: 2, slots: 1 },
   still: { id: 'still', floor: 3, slots: 1 },
-  phin: { id: 'phin', floor: 3, slots: 1 },
+  // One machine at the head of each of the first four floors.
+  phin: { id: 'phin', floor: 4, slots: 1 },
 };
 export const MACHINE_IDS = Object.keys(MACHINES) as MachineId[];
 
@@ -557,7 +558,11 @@ export const TUTORIAL: TutorialReward[] = [
 export const TUTORIAL_HONEY = 1;
 
 /** From floor 4 on: one cloud seed a local day after the third sky harvest of the day (§0.4). */
-export const DAILY_SKY = { harvests: 3, cloudseed: 1 } as const;
+/**
+ * The day's third harvest brings a cloud seed once floor 3 is open: after the tutorial's six,
+ * this is what opens floor 4 and up (§0.4), with the balloon from floor 5.
+ */
+export const DAILY_SKY = { harvests: 3, cloudseed: 1, fromFloor: 3 } as const;
 
 // ——— Sets (§5.5) ———
 

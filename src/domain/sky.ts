@@ -316,11 +316,16 @@ export function bugsOn(p: SkyPlant): { stage: number; bug: BugId }[] {
   return out;
 }
 
-/** Checks reached by `now` but not yet revealed: what to ask the server for. */
+/**
+ * Checks reached by `now` but not yet revealed: what to ask the server for. Like the server
+ * (Sky::reached), a check that came before the plant ripened counts even when the player only
+ * comes back after it ripened: the bug is still there to catch before the harvest.
+ */
 export function pendingChecks(p: SkyPlant, now: number): number[] {
   const out: number[] = [];
   for (let i = 0; i < BUG_ROLL.stages.length; i++) {
-    if (p.bugs[i] === undefined && now >= bugCheckAt(p, i) && now < p.readyAt) out.push(i);
+    const at = bugCheckAt(p, i);
+    if (p.bugs[i] === undefined && now >= at && at < p.readyAt) out.push(i);
   }
   return out;
 }

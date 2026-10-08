@@ -13,3 +13,14 @@ export function showSkyDemoEntry(
 ): boolean {
   return dev || LOCAL_HOSTS.has(host);
 }
+
+/** Whether Vườn Mây is switched on (server Settings → sky.enabled), asked once per page. */
+let statusPromise: Promise<boolean> | null = null;
+
+export function skyEnabled(): Promise<boolean> {
+  statusPromise ??= import('../../services/account')
+    .then(({ skyApi }) => skyApi.status())
+    .then((s) => s.enabled)
+    .catch(() => false);
+  return statusPromise;
+}

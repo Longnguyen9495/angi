@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/Account.php';
 require_once __DIR__ . '/ProgressGuard.php';
+require_once __DIR__ . '/Sky.php';
 
 /*
  * Khu vườn bạn bè. Friends find each other by a 6-character garden code (no
@@ -33,7 +34,15 @@ final class Friends
     private const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     /** Seeds Cô Ba may gift: the crops every garden has from day one. */
     private const GIFT_CROPS = ['rice', 'herbs', 'chili', 'scallion', 'bean', 'tomato'];
-    private const EVENT_TYPES = ['water', 'gift', 'helped', 'stolen', 'stole', 'present', 'thanks', 'referral'];
+    private const EVENT_TYPES = ['water', 'gift', 'helped', 'stolen', 'stole', 'present', 'thanks', 'referral', 'skyhelp', 'skycaught'];
+    /**
+     * Vườn Mây (plans/vuon-may.md §13.2): bugs a gardener may catch in friends' cloud gardens
+     * per day, and catches one cloud garden may receive per day. The helper gets a ladybug
+     * (a fixed common bug, never a copy of a rare one); the owner's bug is caught for them.
+     */
+    public const SKY_HELPS_PER_DAY = 5;
+    public const SKY_HELPED_PER_DAY = 5;
+    public const SKY_HELP_BUG = 'ladybug';
     /** Mời bạn mới: an account this young that makes its first friend counts as invited by them. */
     private const REFERRAL_WINDOW = 7 * 86400;
     /** Newcomers one garden can ever be paid for (counted for life, see referral_log). */
@@ -139,12 +148,13 @@ final class Friends
                 'stealable' => count(array_filter($plots, fn ($p) => self::canSteal($p, $nowMs, $picked))),
                 'stoleToday' => in_array($fid, $stole, true),
                 'giftedToday' => in_array($fid, $gifted, true),
+                'skyScore' => Sky::score($data),
                 'updatedAt' => $r['updated_at'] !== null ? (int) $r['updated_at'] : null,
             ];
         }, $rows);
         $myData = self::decode($this->one('SELECT data FROM user_progress WHERE user_id = ?', [$me])['data'] ?? null);
         return [
-            'me' => $this->publicProfile($mine) + ['xp' => self::xp($myData), 'level' => self::level(self::xp($myData)), 'stars' => self::stars($myData)],
+            'me' => $this->publicProfile($mine) + ['xp' => self::xp($myData), 'level' => self::level(self::xp($myData)), 'stars' => self::stars($myData), 'skyScore' => Sky::score($myData)],
             'friends' => $friends,
             'referrals' => $this->referrals($me),
             'helpsLeft' => max(0, self::HELPS_PER_DAY - count($helped)),
@@ -354,7 +364,95 @@ final class Friends
             'giftedToday' => in_array($fid, $gifted, true),
             'giftsLeft' => max(0, self::GIFTS_PER_DAY - count($gifted)),
             'stealGraceMin' => intdiv(self::STEAL_GRACE_MS, 60000),
+            'sky' => Sky::friendView($fid, $data, (int) ($f['client_offset'] ?? 0), $this->skyHelped($fid)),
+            'skyHelpsLeft' => max(0, self::SKY_HELPS_PER_DAY - $this->count("SELECT COUNT(*) FROM farm_events WHERE to_user = ? AND type = 'skyhelp' AND day = ?", [$me, $day])),
         ];
+    }
+
+    /**
+     * Catch a common bug sitting on a pot in a friend's Vườn Mây (G5, §13.2): a check the
+     * server has reached, rolled a common bug, that the owner has not caught and no friend has
+     * caught yet. Five catches a day for the helper (in all gardens), five received a day for
+     * the owner. The helper's ladybug and the owner's catch come as events, paid by each one's
+     * next save like the farm's.
+     */
+    public function skyCatch(string $code, array $body): array
+    {
+        $u = $this->account->requireUser();
+        FairPlay::requireNotBanned($this->db, (int) $u['id']);
+        if (!Settings::get($this->db, 'sky')['enabled']) {
+            throw new HttpError(403, __t('sky.off'), ['code' => 'SKY_OFF']);
+        }
+        $me = (int) $u['id'];
+        $potUid = (string) ($body['uid'] ?? '');
+        $stage = (int) ($body['stage'] ?? -1);
+        if (preg_match('/^[a-z_]{1,16}\.\d{1,3}$/', $potUid) !== 1 || $stage < 0 || $stage > 2) {
+            throw new HttpError(422, __t('sky.noBug'));
+        }
+        db_tx($this->db, function () use ($me, $code, $potUid, $stage) {
+            $f = $this->friendByCode($me, $code);
+            $fid = (int) $f['user_id'];
+            $this->lockUsers($me, $fid);
+            $mine = self::decode($this->one('SELECT data FROM user_progress WHERE user_id = ?', [$me])['data'] ?? null);
+            if (!is_array($mine['sky'] ?? null)) {
+                throw new HttpError(403, __t('sky.needGarden'));
+            }
+            $data = self::decode($f['data']);
+            $sky = is_array($data['sky'] ?? null) ? $data['sky'] : [];
+            $pl = $sky['pots'][$potUid]['plant'] ?? null;
+            $now = time();
+            $hit = null;
+            foreach (Sky::reached($fid, $sky, (int) ($f['client_offset'] ?? 0), $now * 1000) as $b) {
+                if ($b['uid'] === $potUid && $b['stage'] === $stage) {
+                    $hit = $b;
+                }
+            }
+            if ($hit === null || $hit['bug'] === null || !is_array($pl)
+                || in_array($stage, (array) ($pl['caught'] ?? []), true)
+                || (SkyRules::R()['bugs'][$hit['bug']]['cls'] ?? '') !== 'common'
+                || !self::onShelf($sky, $potUid)) {
+                throw new HttpError(422, __t('sky.noBug'));
+            }
+            $cycle = (int) $hit['cycle'];
+            if ($this->one('SELECT 1 AS x FROM farm_events WHERE uniq = ?', ["skycaught:$fid:$potUid:$cycle:$stage"])) {
+                throw new HttpError(429, __t('sky.caughtAlready'));
+            }
+            $day = self::day($now);
+            if ($this->count("SELECT COUNT(*) FROM farm_events WHERE to_user = ? AND type = 'skyhelp' AND day = ?", [$me, $day]) >= self::SKY_HELPS_PER_DAY) {
+                throw new HttpError(429, __t('sky.helpLimit', ['max' => self::SKY_HELPS_PER_DAY]));
+            }
+            if ($this->count("SELECT COUNT(*) FROM farm_events WHERE to_user = ? AND type = 'skycaught' AND day = ?", [$fid, $day]) >= self::SKY_HELPED_PER_DAY) {
+                throw new HttpError(429, __t('sky.helpedLimit', ['max' => self::SKY_HELPED_PER_DAY]));
+            }
+            // Owner's event: the pot (crop column), the check (plot_id) and the planting (cycle).
+            $this->insertEvent($fid, $me, 'skycaught', $stage, $potUid, $day, "skycaught:$fid:$potUid:$cycle:$stage", $now, $cycle);
+            $this->insertEvent($me, $fid, 'skyhelp', $stage, self::SKY_HELP_BUG, $day, "skyhelp:$me:$fid:$potUid:$cycle:$stage", $now, $cycle);
+        });
+        return ['ok' => true, 'bug' => self::SKY_HELP_BUG] + $this->visit($code);
+    }
+
+    /** Whether a pot stands on a shelf (pots in the store grow nothing). */
+    private static function onShelf(array $sky, string $potUid): bool
+    {
+        foreach ((array) ($sky['slots'] ?? []) as $row) {
+            if (in_array($potUid, (array) $row, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** "uid:cycle:stage" of the bugs friends caught in a cloud garden (the last two days). */
+    private function skyHelped(int $owner): array
+    {
+        $out = [];
+        foreach ($this->all(
+            "SELECT crop, plot_id, cycle FROM farm_events WHERE to_user = ? AND type = 'skycaught' AND created_at >= ?",
+            [$owner, time() - 2 * 86400],
+        ) as $r) {
+            $out["{$r['crop']}:{$r['cycle']}:{$r['plot_id']}"] = true;
+        }
+        return $out;
     }
 
     /** Water one growing plot in a friend's garden: once per friend per day, five friends a day. */
@@ -663,7 +761,7 @@ final class Friends
     private function friendByCode(int $me, string $code): array
     {
         $f = $this->one(
-            'SELECT g.user_id, g.friend_code, g.garden_name, p.data, p.updated_at
+            'SELECT g.user_id, g.friend_code, g.garden_name, p.data, p.updated_at, p.client_offset
              FROM garden_profiles g
              JOIN friendships f ON f.friend_id = g.user_id AND f.user_id = ?
              LEFT JOIN user_progress p ON p.user_id = g.user_id

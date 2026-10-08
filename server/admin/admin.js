@@ -163,6 +163,7 @@
             <a href="#/ingredients" class="${active === 'ingredients' ? 'is-active' : ''}">Nguyên liệu <span class="nav__count">${n ? n.ingredients : ''}</span></a>
             <a href="#/users" class="${active === 'users' ? 'is-active' : ''}">Người dùng ${usersOnline ? `<span class="nav__count nav__count--live" title="Đang online">${usersOnline}</span>` : ''}</a>
             <a href="#/payments" class="${active === 'payments' ? 'is-active' : ''}">Lượt quay & thanh toán ${n?.ordersPending ? `<span class="nav__count" title="Đơn chờ thanh toán">${n.ordersPending}</span>` : ''}</a>
+            <a href="#/sky" class="${active === 'sky' ? 'is-active' : ''}">Vườn Mây</a>
             <a href="#/fairplay" class="${active === 'fairplay' ? 'is-active' : ''}">Gian lận ${n?.alertsUnseen ? `<span class="nav__count nav__count--alert" title="Cảnh báo chưa xem">${n.alertsUnseen}</span>` : ''}</a>
           </nav>
           <div class="side__foot">
@@ -1700,6 +1701,44 @@ ${locales.extra
       </div></section>`;
   }
 
+  // ——— Vườn Mây (plans/vuon-may.md §0.3): the switch for the cloud garden ———
+  async function renderSky() {
+    const my = ++renderGen;
+    invalidate();
+    const [settings] = await Promise.all([api('/admin/settings'), loadStats()]);
+    if (my !== renderGen) return;
+    const sky = settings.sky;
+    shell(
+      'sky',
+      `
+      <div class="page-head">
+        <div><h1>Vườn Mây</h1><p>Chế độ trồng cây trên tầng mây, mở từ cấp 12 cho người đã đăng nhập. Khi tắt, nút "Lên mây" ẩn với người chơi và máy chủ từ chối mọi thao tác nâng sao, nâng phẩm; vườn đã có vẫn được giữ trong bản lưu.</p></div>
+      </div>
+      <form class="panel" id="sky-form">
+        <h2>Bật chế độ</h2>
+        <label class="check"><input type="checkbox" name="enabled" ${sky.enabled ? 'checked' : ''} /> Mở Vườn Mây cho người chơi</label>
+        <p class="hint">Hình chậu và cây hiện là bản thử nghiệm (chưa xác nhận quyền thương mại). Chỉ bật trên bản phát hành khi bộ hình chính thức đã được duyệt.</p>
+        <h2 class="panel__sub">Nhập vườn của khách</h2>
+        <label class="check"><input type="checkbox" name="guestImport" disabled /> Cho khách mang Vườn Mây vào tài khoản</label>
+        <p class="hint">Đang khoá: chờ duyệt chính sách nhập dữ liệu (câu hỏi Q5 trong plan). Hiện Vườn Mây chỉ chơi được khi đã đăng nhập.</p>
+        <div class="form-actions"><button class="btn btn--primary" type="submit">Lưu cài đặt</button></div>
+      </form>`,
+    );
+    document.getElementById('sky-form').onsubmit = async (e) => {
+      e.preventDefault();
+      try {
+        await api('/admin/settings', {
+          method: 'PUT',
+          body: { sky: { enabled: e.target.enabled.checked, guestImport: false } },
+        });
+        toast('Đã lưu cài đặt Vườn Mây.', 'success');
+        renderSky();
+      } catch (err) {
+        toast(err.message, 'error');
+      }
+    };
+  }
+
   // ——— Router ———
   async function route() {
     if (!user) return renderLogin();
@@ -1714,6 +1753,7 @@ ${locales.extra
       else if (hash === '/users') await renderUsers();
       else if (hash === '/payments') await renderPayments();
       else if (hash === '/fairplay') await renderFairPlay();
+      else if (hash === '/sky') await renderSky();
       else await renderHome();
       window.scrollTo(0, 0);
     } catch (err) {

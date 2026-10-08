@@ -879,7 +879,7 @@ final class ProgressGuard
                         }
                     }
                 }
-            } elseif (preg_match('/^friend:e(\d+):(xp|seed|item|coin|seen)$/', $key, $m)) {
+            } elseif (preg_match('/^friend:e(\d+):(xp|seed|item|coin|seen|bug)$/', $key, $m)) {
                 $ev = $events[(int) $m[1]] ?? null;
                 ($ev !== null && (int) $ev['to_user'] === $this->user) || $fail('no such event for this garden');
                 $this->friendReward($ev, $m[2], $res, $d) || $fail('not what this event gives');
@@ -1466,7 +1466,10 @@ final class ProgressGuard
                 return $ms !== null && (($part === 'coin' && $res === 'coin' && $d === $ms['coins'])
                     || ($part === 'xp' && $res === 'xp' && $d === $ms['xp']));
             })(),
-            'stolen', 'thanks' => $part === 'seen' && $d === 0,
+            // Vườn Mây (Friends::skyCatch): the helper's ladybug. The owner's bug is caught by the
+            // owner's own sky:bug entry; that event only needs marking seen.
+            'skyhelp' => $part === 'bug' && $res === "bug:{$ev['crop']}" && $d === 1,
+            'stolen', 'thanks', 'skycaught' => $part === 'seen' && $d === 0,
             default => false,
         };
     }

@@ -1,4 +1,4 @@
-import { POTS, PLANT_FIT, type PotDef } from '../../data/skyGarden';
+import { POTS, PLANT_FIT, type PotDef, type PotId } from '../../data/skyGarden';
 import { cropSprite, BEE_SPRITE } from '../../data/sprites';
 import type { CropId } from '../../data/types';
 import type { Assets } from '../farm-anim/engine/assets';
@@ -9,7 +9,10 @@ import { drawBent, easeOut, smooth, type World } from '../farm-anim/engine/world
 import { SkySystem, type SkyPart } from '../farm-anim/systems/SkySystem';
 import {
   drawBeanstalk,
+  drawBeetle,
   drawBubble,
+  drawCaterpillar,
+  drawDragonfly,
   drawFirefly,
   drawLadybug,
   drawMachine,
@@ -18,6 +21,8 @@ import {
   platformImage,
   stampDraft,
   villageImage,
+  type MachineKind,
+  type MachinePhase,
 } from './art';
 import {
   createDemo,
@@ -63,7 +68,32 @@ export interface SkyStats {
   shape: FocusShape;
 }
 
+/**
+ * What the game shows (controlled mode): per floor its six slots and its machine. A plant's
+ * `progress` (0..1, ≥ 1 ripe) picks its picture; `sprite` is the farm picture it borrows.
+ */
+export interface SceneView {
+  floors: {
+    slots: {
+      pot: PotId | null;
+      locked: boolean;
+      plant: { sprite: CropId; progress: number } | null;
+      bugs: { stage: number; bug: BugKind }[];
+    }[];
+    machine: { kind: MachineKind; phase: MachinePhase } | null;
+  }[];
+}
+
+/** Taps the game handles (controlled mode); the scene only animates. */
+export interface SceneControl {
+  onSlot: (floor: number, slot: number) => void;
+  onBug: (floor: number, slot: number, stage: number) => void;
+  onMachine: (floor: number) => void;
+}
+
 export interface SkySceneOptions {
+  /** The game drives the scene (setView) and handles taps; without it the scene plays the demo. */
+  control?: SceneControl;
   onStats?: (s: SkyStats) => void;
   onCaught?: (kind: BugKind, total: number) => void;
   onHarvest?: (total: number) => void;
@@ -124,6 +154,9 @@ interface Bug {
   kind: BugKind;
   floor: number;
   slot: number;
+  /** Controlled mode: `floor:slot:stage` of the game's bug, and its check. */
+  key?: string;
+  stage?: number;
   state: 'fly' | 'perched' | 'caught' | 'leave';
   t0: number;
   /** Start of the flight (content px when it began). */
@@ -161,6 +194,8 @@ export class SkyScene {
   private world: World;
 
   private floors: DemoFloor[];
+  /** Plants that left the shelves since the last view (picked): their burst is drawn next frame. */
+  private picked: [number, number, CropId][] = [];
   private lastStage = new Map<string, Stage | 'empty'>();
   private replant = new Map<string, number>();
   private bugs: Bug[] = [];
@@ -222,7 +257,7 @@ export class SkyScene {
       view: [0, 0, 0, 0],
       rand: this.rand,
     };
-    this.floors = createDemo(0, this.rand);
+    this.floors = opts.control ? [] : createDemo(0, this.rand);
     const r = rng(7);
     this.skyClouds = Array.from({ length: 6 }, (_, i) => ({
       src: `/farm-anim/cloud-${(i % 4) + 1}.webp`,
@@ -257,6 +292,75 @@ export class SkyScene {
     this.canvas.removeEventListener('pointercancel', this.onCancel);
     this.canvas.removeEventListener('wheel', this.onWheel);
     document.removeEventListener('visibilitychange', this.onVisibility);
+  }
+
+  // ——— The game's view (controlled mode) ———
+
+  /** Plants, pots, locks, machines and bugs as the game holds them. */
+  setView(view: SceneView) {
+    const LONG = 1e9;
+    const before = this.floors.length;
+    this.floors = view.floors.map((f, fi) => ({
+      machine: f.machine
+        ? { kind: f.machine.kind, phase: f.machine.phase, since: 0, run: LONG }
+        : null,
+      slots: f.slots.map((s, si) => {
+        const old = this.floors[fi]?.slots[si];
+        if (old?.plant && !s.plant) this.picked.push([fi, si, old.plant.crop]);
+        return {
+          pot: s.pot,
+          locked: s.locked,
+          // Progress held still between views: plantedAt so that stageOf() reads it.
+          plant: s.plant
+            ? {
+                crop: s.plant.sprite,
+                plantedAt: this.t - Math.min(1.05, s.plant.progress) * LONG,
+                grow: LONG,
+              }
+            : null,
+        };
+      }),
+    }));
+    // Bugs: new ones fly in, the ones the game no longer has fly off (unless being caught).
+    const want = new Map<string, { fi: number; si: number; stage: number; bug: BugKind }>();
+    view.floors.forEach((f, fi) =>
+      f.slots.forEach((s, si) =>
+        s.bugs.forEach((b) =>
+          want.set(`${fi}:${si}:${b.stage}`, { fi, si, stage: b.stage, bug: b.bug }),
+        ),
+      ),
+    );
+    for (const b of this.bugs) {
+      if (b.key && !want.has(b.key) && b.state !== 'caught' && b.state !== 'leave') {
+        b.state = 'leave';
+        b.t0 = this.t;
+      }
+    }
+    for (const [key, w] of want) {
+      if (this.bugs.some((b) => b.key === key && b.state !== 'leave')) continue;
+      const leftSide = this.rand() < 0.5;
+      this.bugs.push({
+        kind: w.bug,
+        floor: w.fi,
+        slot: w.si,
+        key,
+        stage: w.stage,
+        // A bug already there when the garden opens just sits on its plant.
+        state: this.reduced || before === 0 ? 'perched' : 'fly',
+        t0: this.t,
+        from: {
+          x: this.scroll.x + (leftSide ? -40 : this.w + 40),
+          y: this.scroll.y + this.h * (0.15 + this.rand() * 0.5),
+        },
+        perch: { x: -0.08 + w.stage * 0.08, y: -0.12 - this.rand() * 0.12 },
+        seed: this.rand() * 10,
+      });
+    }
+    if (this.floors.length !== before) this.retarget(false);
+  }
+
+  get floorCount(): number {
+    return this.floors.length;
   }
 
   // ——— Controls (demo panel) ———
@@ -397,7 +501,10 @@ export class SkyScene {
     let scrollTo = { x: 0, y: 0 };
     if (next.mode === 'overview') {
       const bottom = Math.max(0, next.height - this.h);
-      scrollTo = { x: 0, y: first ? bottom : Math.min(bottom, this.overviewY ?? this.scroll.y) };
+      // From the foot of the tower the first time, and when it grows taller than the screen (the
+      // game hands its floors over after the scene is made).
+      const foot = first || (this.layout.mode === 'overview' && this.layout.pan === 'none');
+      scrollTo = { x: 0, y: foot ? bottom : Math.min(bottom, this.overviewY ?? this.scroll.y) };
       if (animate) this.overviewY = null;
     }
     if (animate && !first && !this.reduced) {
@@ -595,8 +702,10 @@ export class SkyScene {
   private tap(p: { x: number; y: number }) {
     if (this.from || (this.intro && this.introK() < 1)) return;
     const bug = this.bugAt(p);
+    const control = this.opts.control;
     if (bug) {
       this.catchBug(bug);
+      if (control && bug.stage !== undefined) control.onBug(bug.floor, bug.slot, bug.stage);
       return;
     }
     if (this.mode === 'overview') {
@@ -606,14 +715,20 @@ export class SkyScene {
       return;
     }
     const fi = this.focus ?? 0;
+    if (!this.floors[fi]) return;
     const floor = this.lf(fi);
     const m = floor.machine;
-    if (p.x >= m.x && p.x <= m.x + m.w && p.y >= m.y && p.y <= m.y + m.h) {
-      this.tapMachine(fi);
+    if (this.df(fi).machine && p.x >= m.x && p.x <= m.x + m.w && p.y >= m.y && p.y <= m.y + m.h) {
+      if (control) control.onMachine(fi);
+      else this.tapMachine(fi);
       return;
     }
     const si = slotAt(this.layout, fi, p.x, p.y);
     if (si === null) return;
+    if (control) {
+      control.onSlot(fi, si);
+      return;
+    }
     const slot = this.df(fi).slots[si]!;
     const r = floor.slots[si]!;
     if (!slot.plant) {
@@ -679,6 +794,7 @@ export class SkyScene {
   private tapMachine(fi: number) {
     const m = this.df(fi).machine;
     const r = this.lf(fi).machine;
+    if (!m) return;
     if (m.phase === 'done') {
       m.phase = 'idle';
       m.since = this.t;
@@ -752,13 +868,33 @@ export class SkyScene {
 
     // Load the pots of the floors near the view only (§0.8: art by floor).
     for (const fi of this.visibleFloors(this.h)) {
-      for (const s of this.df(fi).slots) this.potImage(POTS[s.pot], this.layout.cell);
+      for (const s of this.df(fi).slots) if (s.pot) this.potImage(POTS[s.pot], this.layout.cell);
     }
+    // Plants the game picked: the same burst a tap on a ripe plant gives in the demo.
+    for (const [fi, si, crop] of this.picked.splice(0)) {
+      const r = this.floors[fi] ? this.lf(fi).slots[si] : null;
+      if (!r) continue;
+      this.burst('harvest', r.x + r.w / 2, r.y + r.h * 0.2, 10);
+      const icon = this.img(cropSprite(crop, 'produce'));
+      if (!this.reduced && icon)
+        this.particles.spawn(
+          'reward',
+          r.x + r.w / 2,
+          r.y,
+          0,
+          -60,
+          1.1,
+          Math.max(18, r.w * 0.3),
+          1e9,
+          icon,
+        );
+    }
+    const demo = !this.opts.control;
 
     this.floors.forEach((f, fi) => {
-      stepMachine(f.machine, this.t);
+      if (demo && f.machine) stepMachine(f.machine, this.t);
       const mr = this.lf(fi).machine;
-      if (f.machine.phase === 'run' && !this.reduced && this.rand() < dt * 2.2) {
+      if (f.machine?.phase === 'run' && !this.reduced && this.rand() < dt * 2.2) {
         this.particles.spawn(
           'smoke',
           mr.x + mr.w * 0.5,
@@ -772,7 +908,7 @@ export class SkyScene {
       f.slots.forEach((s, si) => {
         const key = `${fi}:${si}`;
         const due = this.replant.get(key);
-        if (!s.plant && due !== undefined && this.t >= due) {
+        if (demo && !s.plant && due !== undefined && this.t >= due) {
           this.replant.delete(key);
           s.plant = { crop: pickCrop(this.rand), plantedAt: this.t, grow: 40 + this.rand() * 40 };
         }
@@ -788,7 +924,7 @@ export class SkyScene {
 
     // Bugs: new ones now and then, perched ones leave after a while if nobody catches them.
     this.nextBug -= dt;
-    if (this.nextBug <= 0) {
+    if (demo && this.nextBug <= 0) {
       this.nextBug = 6 + this.rand() * 6;
       if (this.bugs.filter((b) => b.state === 'fly' || b.state === 'perched').length < MAX_BUGS)
         this.spawnBug();
@@ -797,11 +933,11 @@ export class SkyScene {
       if (b.state === 'fly' && this.t - b.t0 >= 2.2) {
         b.state = 'perched';
         b.t0 = this.t;
-      } else if (b.state === 'perched' && this.t - b.t0 > 30) {
+      } else if (demo && b.state === 'perched' && this.t - b.t0 > 30) {
         b.state = 'leave';
         b.t0 = this.t;
       }
-      const plant = this.df(b.floor).slots[b.slot]!.plant;
+      const plant = this.floors[b.floor]?.slots[b.slot]?.plant;
       if (b.state === 'perched' && !plant) b.state = 'leave';
     }
     this.bugs = this.bugs.filter(
@@ -816,11 +952,12 @@ export class SkyScene {
 
   /** Where a bug is now (content px). */
   private bugPos(b: Bug): { x: number; y: number } {
-    const r = this.lf(b.floor).slots[b.slot]!;
-    const pot = POTS[this.df(b.floor).slots[b.slot]!.pot];
+    const r = this.floors[b.floor] ? this.lf(b.floor).slots[b.slot]! : { x: 0, y: 0, w: 0, h: 0 };
+    const potId = this.floors[b.floor]?.slots[b.slot]?.pot;
+    const anchor = potId ? POTS[potId].anchor : { cx: 0.5, cy: 0.33 };
     const perch = {
-      x: r.x + r.w * (pot.anchor.cx + b.perch.x),
-      y: r.y + r.h * (pot.anchor.cy + b.perch.y),
+      x: r.x + r.w * (anchor.cx + b.perch.x),
+      y: r.y + r.h * (anchor.cy + b.perch.y),
     };
     const bob = this.reduced ? 0 : Math.sin(this.t * 3 + b.seed) * 1.5;
     if (b.state === 'perched') return { x: perch.x, y: perch.y + bob };
@@ -1080,10 +1217,12 @@ export class SkyScene {
     }
     this.drawHanging(c, lf.platform, fi);
 
-    drawMachine(c, df.machine.kind, lf.machine, df.machine.phase, this.t);
-    if (this.draftMarks) stampDraft(c, lf.machine.x, lf.machine.y, this.opts.labels.draft);
+    if (df.machine) {
+      drawMachine(c, df.machine.kind, lf.machine, df.machine.phase, this.t);
+      if (this.draftMarks) stampDraft(c, lf.machine.x, lf.machine.y, this.opts.labels.draft);
+    }
     drawSign(c, lf.sign, fi + 1);
-    if (df.machine.phase === 'done') {
+    if (df.machine?.phase === 'done') {
       const bob = this.reduced ? 0 : Math.sin(this.t * 2.4 + fi) * 3;
       const r = Math.max(10, lf.machine.w * 0.16);
       drawBubble(
@@ -1103,6 +1242,10 @@ export class SkyScene {
 
     df.slots.forEach((s, si) => {
       const r = lf.slots[si]!;
+      if (!s.pot) {
+        this.drawEmptySlot(c, r, !!s.locked);
+        return;
+      }
       const def = POTS[s.pot];
       const pot = this.potImage(def, r.w);
       if (pot) c.drawImage(pot, r.x, r.y, r.w, r.h);
@@ -1115,6 +1258,34 @@ export class SkyScene {
       }
       if (s.plant) this.drawPlant(c, r, def, s.plant.crop, stageOf(s.plant, this.t), fi * 6 + si);
     });
+  }
+
+  /** A slot without a pot: a soft ring with a plus, or a lock when it is not bought yet. */
+  private drawEmptySlot(c: CanvasRenderingContext2D, r: Rect, locked: boolean) {
+    const cx = r.x + r.w / 2;
+    const cy = r.y + r.h * 0.72;
+    c.save();
+    c.globalAlpha *= locked ? 0.55 : 0.8;
+    c.strokeStyle = 'rgba(255,255,255,0.9)';
+    c.lineWidth = Math.max(1.5, r.w * 0.02);
+    c.setLineDash([r.w * 0.05, r.w * 0.04]);
+    c.beginPath();
+    c.ellipse(cx, cy, r.w * 0.3, r.h * 0.12, 0, 0, Math.PI * 2);
+    c.stroke();
+    c.setLineDash([]);
+    c.fillStyle = 'rgba(255,255,255,0.95)';
+    const s = r.w * 0.09;
+    if (locked) {
+      // A small padlock.
+      c.fillRect(cx - s, cy - s * 0.6, s * 2, s * 1.5);
+      c.beginPath();
+      c.arc(cx, cy - s * 0.6, s * 0.7, Math.PI, 0);
+      c.stroke();
+    } else {
+      c.fillRect(cx - s, cy - s * 0.18, s * 2, s * 0.36);
+      c.fillRect(cx - s * 0.18, cy - s, s * 0.36, s * 2);
+    }
+    c.restore();
   }
 
   private drawPlant(
@@ -1162,6 +1333,9 @@ export class SkyScene {
         : Math.floor(this.t * (b.state === 'perched' ? 4 : 18) + b.seed) % 2;
       if (b.kind === 'ladybug') drawLadybug(c, p.x, p.y, s, flap);
       else if (b.kind === 'firefly') drawFirefly(c, p.x, p.y, s * 0.35, this.t + b.seed);
+      else if (b.kind === 'caterpillar') drawCaterpillar(c, p.x, p.y, s, this.t + b.seed);
+      else if (b.kind === 'dragonfly') drawDragonfly(c, p.x, p.y, s, flap);
+      else if (b.kind === 'goldbeetle') drawBeetle(c, p.x, p.y, s, flap);
       else {
         const im = this.img(b.kind === 'bee' ? BEE_SPRITE : BUTTERFLY);
         if (im) {

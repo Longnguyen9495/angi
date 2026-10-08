@@ -63,9 +63,18 @@ final class Sky
         if ($sky === null) {
             return ['bugs' => $out, 'serverNow' => (int) floor(microtime(true) * 1000)];
         }
-        $R = ProgressGuard::rules();
-        $offset = (int) ($row['client_offset'] ?? 0);
         $serverNow = (int) floor(microtime(true) * 1000);
+        return ['bugs' => self::reached($uid, $sky, (int) ($row['client_offset'] ?? 0), $serverNow), 'serverNow' => $serverNow];
+    }
+
+    /**
+     * The bugs of every check a garden's stored plantings have reached by `$serverNow`: what
+     * its owner is shown (bugs()) and what a friend may help catch (Friends::skyCatch()).
+     */
+    public static function reached(int $uid, array $sky, int $offset, int $serverNow): array
+    {
+        $R = ProgressGuard::rules();
+        $out = [];
         foreach ((array) ($sky['pots'] ?? []) as $potUid => $pot) {
             $pl = is_array($pot['plant'] ?? null) ? $pot['plant'] : null;
             if ($pl === null) {
@@ -89,7 +98,87 @@ final class Sky
                 ];
             }
         }
-        return ['bugs' => $out, 'serverNow' => $serverNow];
+        return $out;
+    }
+
+    /**
+     * A friend's Vườn Mây, read-only (G5, plans/vuon-may.md §15.3): floors, the placed pots
+     * with their tier, stars and planting, and the bugs sitting on them now. No ledger, no
+     * rolls of checks not reached, nothing of the stored pots off the shelves.
+     * `$helped`: "uid:cycle:stage" of bugs a friend has already caught here.
+     */
+    public static function friendView(int $owner, array $data, int $offset, array $helped): ?array
+    {
+        $sky = is_array($data['sky'] ?? null) ? $data['sky'] : null;
+        if ($sky === null) {
+            return null;
+        }
+        $serverNow = (int) floor(microtime(true) * 1000);
+        $R = SkyRules::R();
+        $bugs = [];
+        foreach (self::reached($owner, $sky, $offset, $serverNow) as $b) {
+            $pl = $sky['pots'][$b['uid']]['plant'] ?? null;
+            if ($b['bug'] === null || !is_array($pl) || in_array($b['stage'], (array) ($pl['caught'] ?? []), true)) {
+                continue;
+            }
+            $key = "{$b['uid']}:{$b['cycle']}:{$b['stage']}";
+            $bugs[$b['uid']][] = [
+                'stage' => $b['stage'],
+                'cycle' => $b['cycle'],
+                'bug' => $b['bug'],
+                // Friends only catch common bugs, once per bug (§13.2).
+                'catchable' => ($R['bugs'][$b['bug']]['cls'] ?? '') === 'common' && !isset($helped[$key]),
+            ];
+        }
+        $floors = [];
+        $score = 0;
+        foreach ((array) ($sky['slots'] ?? []) as $f => $row) {
+            $slots = [];
+            foreach ((array) $row as $i => $potUid) {
+                $pot = is_string($potUid) ? ($sky['pots'][$potUid] ?? null) : null;
+                if (!is_array($pot)) {
+                    $slots[] = null;
+                    continue;
+                }
+                $pl = is_array($pot['plant'] ?? null) ? $pot['plant'] : null;
+                $tier = (int) ($pot['tier'] ?? 0);
+                $stars = (int) ($pot['stars'] ?? 0);
+                $score += 10 * ($tier + 1) + $stars;
+                $slots[] = [
+                    'uid' => (string) $potUid,
+                    'pot' => (string) ($pot['pot'] ?? ''),
+                    'tier' => $tier,
+                    'stars' => $stars,
+                    'plant' => $pl === null ? null : [
+                        'seed' => $pl['seed'],
+                        'plantedAt' => (int) $pl['plantedAt'] - $offset,
+                        'readyAt' => (int) $pl['readyAt'] - $offset,
+                    ],
+                    'bugs' => $bugs[(string) $potUid] ?? [],
+                ];
+            }
+            $floors[] = $slots;
+        }
+        return ['floors' => $floors, 'score' => $score, 'serverNow' => $serverNow];
+    }
+
+    /** Điểm vườn (§12.2): Σ 10 × (tier + 1) + stars over the pots on the shelves. */
+    public static function score(array $data): ?int
+    {
+        $sky = is_array($data['sky'] ?? null) ? $data['sky'] : null;
+        if ($sky === null) {
+            return null;
+        }
+        $n = 0;
+        foreach ((array) ($sky['slots'] ?? []) as $row) {
+            foreach ((array) $row as $potUid) {
+                $pot = is_string($potUid) ? ($sky['pots'][$potUid] ?? null) : null;
+                if (is_array($pot)) {
+                    $n += 10 * ((int) ($pot['tier'] ?? 0) + 1) + (int) ($pot['stars'] ?? 0);
+                }
+            }
+        }
+        return $n;
     }
 
     public function starUp(array $body): array

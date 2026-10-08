@@ -378,7 +378,7 @@ trait SkyGuard
                 $ok || $fail('not this step\'s reward');
                 $this->skyStepDone($m[1], $ctx, $fresh) || $fail('step not done');
             } elseif (preg_match('/^sky:daily:(\d{4}-\d{2}-\d{2})$/', $key, $m)) {
-                ($res === 'skyitem:cloudseed' && $d === (int) $S['daily']['cloudseed'] && $floorsNew >= 4) || $fail('daily cloud seed');
+                ($res === 'skyitem:cloudseed' && $d === (int) $S['daily']['cloudseed'] && $floorsNew >= (int) $S['daily']['fromFloor']) || $fail('daily cloud seed');
                 $this->slotDate($m[1], $at) || $fail('not today');
                 $n = $this->counted(self::dayKey('skyharvest', $ctx['serverMs'])) + count($ev['harvests']);
                 $n >= (int) $S['daily']['harvests'] || $fail('not enough harvests today');

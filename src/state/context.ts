@@ -83,6 +83,14 @@ export interface AccountContextValue {
   /** The friends list, refreshed with the inbox (null until loaded or signed out). */
   friends: import('../services/account').FriendsList | null;
   refreshFriends: () => Promise<void>;
+  /**
+   * An operation the server applies to the saved garden itself (Vườn Mây stars and tiers):
+   * saves what is pending first, runs `run` with the saved version, then loads the garden the
+   * server answers with. Throws when signed out or offline.
+   */
+  serverOp: <T extends { data: unknown; version: number }>(
+    run: (baseVersion: number) => Promise<T>,
+  ) => Promise<T>;
 }
 
 export const AccountContext = createContext<AccountContextValue | null>(null);

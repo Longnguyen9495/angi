@@ -35,6 +35,11 @@ const v = t.journey.visit;
 import { FriendFarm } from './FriendFarm';
 
 const FriendIsland = lazy(() => import('../../garden3d/FriendIsland'));
+const FriendSky = lazy(() =>
+  import('../../sky-garden/game/FriendSky').then((x) => ({ default: x.FriendSky })),
+);
+/** Bugs a visitor may catch in friends' cloud gardens per day (server/lib/Friends.php). */
+const SKY_HELPS_PER_DAY = 5;
 /** The old 3D island stays reachable with ?visit=3d while the 2D farm is new. */
 const VISIT_3D =
   typeof location !== 'undefined' && new URLSearchParams(location.search).get('visit') === '3d';
@@ -318,6 +323,7 @@ export function FriendsSection() {
                     data.stealsLeft > 0 &&
                     m.ripe(f.stealable)}
                   {!f.isMe && f.giftedToday && m.giftedToday}
+                  {typeof f.skyScore === 'number' && t.sky.game.friend.scoreShort(f.skyScore)}
                 </span>
               </span>
               {!f.isMe && (
@@ -464,6 +470,10 @@ function feedText(i: FeedItem): string {
       return f.gift(crop?.seedName.toLowerCase() ?? '');
     case 'referral':
       return f.referral(i.name, i.coins ?? 0, i.xp ?? 0);
+    case 'skyhelp':
+      return t.sky.game.friend.feedHelp(i.name);
+    case 'skycaught':
+      return t.sky.game.friend.caughtForYou(i.name);
   }
 }
 
@@ -605,6 +615,8 @@ function FriendVisit({
   const [busy, setBusy] = useState(false);
   /** The plot we just watered (their snapshot only updates once they open the app). */
   const [helped, setHelped] = useState<number | null>(null);
+  /** Their farm, or their Vườn Mây (when they have one). */
+  const [tab, setTab] = useState<'farm' | 'sky'>('farm');
 
   useEffect(() => {
     let alive = true;
@@ -673,6 +685,28 @@ function FriendVisit({
     }
   };
 
+  const catchBug = async (uid: string, stage: number) => {
+    if (!garden || busy) return;
+    setBusy(true);
+    try {
+      const g = await friendsApi.skyCatch(code, uid, stage);
+      setGarden(g);
+      toast({
+        message: t.sky.game.friend.caught(t.sky.bugs[g.bug], g.name),
+        tone: 'reward',
+      });
+      onHelped();
+    } catch (e) {
+      toast({
+        message: e instanceof AccountError ? e.message : t.sky.game.friend.failed,
+        tone: 'warning',
+      });
+    } finally {
+      setBusy(false);
+    }
+  };
+  const onSky = tab === 'sky' && !!garden?.sky;
+
   return (
     <Sheet
       open
@@ -690,7 +724,35 @@ function FriendVisit({
       fullOnMobile
     >
       {error && <p className="fj-note">{error}</p>}
-      {garden && !VISIT_3D && (
+      {garden?.sky && (
+        <div className="fj-chips" role="tablist" aria-label={t.sky.name}>
+          {(['farm', 'sky'] as const).map((id) => (
+            <button
+              key={id}
+              type="button"
+              role="tab"
+              aria-selected={tab === id}
+              className="fj-market__tab"
+              onClick={() => setTab(id)}
+            >
+              {id === 'farm' ? t.sky.game.friend.farmTab : t.sky.game.friend.skyTab}
+            </button>
+          ))}
+        </div>
+      )}
+      {garden && onSky && (
+        <Suspense fallback={<p className="fj-note">{v.loading}</p>}>
+          <FriendSky
+            sky={garden.sky}
+            now={now}
+            helpsLeft={garden.skyHelpsLeft ?? 0}
+            helpsMax={SKY_HELPS_PER_DAY}
+            busy={busy}
+            onCatch={(uid, stage) => void catchBug(uid, stage)}
+          />
+        </Suspense>
+      )}
+      {garden && !onSky && !VISIT_3D && (
         <FriendFarm
           garden={garden}
           now={now}
@@ -705,7 +767,7 @@ function FriendVisit({
           }}
         />
       )}
-      {garden && VISIT_3D && canUseWebGL() && (
+      {garden && !onSky && VISIT_3D && canUseWebGL() && (
         <Suspense fallback={<div className="g3d-loading">{v.flying}</div>}>
           <FriendIsland
             garden={garden}
@@ -721,10 +783,10 @@ function FriendVisit({
           />
         </Suspense>
       )}
-      {garden && canPick && garden.plots.some((p) => p.stealable) && (
+      {garden && !onSky && canPick && garden.plots.some((p) => p.stealable) && (
         <p className="fj-note">{v.stealRule(garden.stealsLeft, garden.stealGraceMin)}</p>
       )}
-      {garden && (
+      {garden && !onSky && (
         <ul className="fj-visit__plots" aria-label={v.plotsLabel}>
           {plots.map((p) => {
             const stage = plotStage(p, now);

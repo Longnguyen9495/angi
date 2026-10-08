@@ -8,7 +8,7 @@ import type { Rect } from './layout';
  * nobody mistakes it for final art. Static parts are painted once into offscreen canvases.
  */
 
-export type MachineKind = 'tea' | 'pot' | 'dew';
+export type MachineKind = 'tea' | 'pot' | 'dew' | 'phin';
 
 /**
  * What still has to be drawn, for the demo panel and the hand-over report (§0.7 art table).
@@ -232,6 +232,27 @@ export function drawMachine(
     c.fill();
     c.fillStyle = '#c99a2e';
     c.fillRect(cx - w * 0.04, y + h * 0.26, w * 0.08, h * 0.08);
+  } else if (kind === 'phin') {
+    // A coffee filter on a glass: dark drops when running.
+    c.fillStyle = 'rgba(220,240,255,0.75)';
+    c.fillRect(cx - w * 0.2, y + h * 0.52, w * 0.4, h * 0.38);
+    c.fillStyle = '#5a3216';
+    c.fillRect(
+      cx - w * 0.18,
+      y + h * (phase === 'idle' ? 0.86 : 0.7),
+      w * 0.36,
+      h * (phase === 'idle' ? 0.04 : 0.2),
+    );
+    gloss(c, '#c9ced6', '#7b828e', cx, y + h * 0.42, w * 0.26, h * 0.12);
+    c.fillStyle = '#9aa1ad';
+    c.fillRect(cx - w * 0.22, y + h * 0.28, w * 0.44, h * 0.12);
+    if (phase === 'run') {
+      const k = (t * 1.4) % 1;
+      c.fillStyle = '#3a1f0c';
+      c.beginPath();
+      c.arc(cx, y + h * (0.55 + k * 0.12), w * 0.025, 0, Math.PI * 2);
+      c.fill();
+    }
   } else {
     // Glass still: a round flask with a coil, drops when running.
     c.globalAlpha = 0.85;
@@ -467,4 +488,86 @@ export function shade(hex: string, amount: number) {
   const g = f((n >> 8) & 255);
   const b = f(n & 255);
   return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+}
+
+/** A green caterpillar inching along (stand-in). */
+export function drawCaterpillar(
+  c: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  s: number,
+  t: number,
+) {
+  const n = 5;
+  for (let i = n - 1; i >= 0; i--) {
+    const k = i / (n - 1);
+    const bob = Math.sin(t * 6 - i * 0.9) * s * 0.06;
+    c.fillStyle = i === 0 ? '#5aa83a' : i % 2 ? '#86cf4f' : '#74c046';
+    c.beginPath();
+    c.arc(x - s * 0.4 + k * s * 0.8, y + bob, s * (i === 0 ? 0.2 : 0.17), 0, Math.PI * 2);
+    c.fill();
+  }
+  c.fillStyle = '#1d1d24';
+  c.beginPath();
+  c.arc(x - s * 0.46, y - s * 0.05, s * 0.04, 0, Math.PI * 2);
+  c.fill();
+}
+
+/** A dragonfly: long body, four glassy wings (stand-in). */
+export function drawDragonfly(
+  c: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  s: number,
+  frame: number,
+) {
+  c.save();
+  c.translate(x, y);
+  c.fillStyle = 'rgba(200,235,255,0.6)';
+  const spread = frame ? 0.25 : 0.05;
+  for (const side of [-1, 1]) {
+    for (const off of [-0.08, 0.12]) {
+      c.beginPath();
+      c.ellipse(side * s * 0.32, off * s, s * 0.34, s * 0.08, side * spread, 0, Math.PI * 2);
+      c.fill();
+    }
+  }
+  c.fillStyle = '#2f7fc1';
+  c.fillRect(-s * 0.04, -s * 0.2, s * 0.08, s * 0.7);
+  c.beginPath();
+  c.arc(0, -s * 0.24, s * 0.09, 0, Math.PI * 2);
+  c.fill();
+  c.restore();
+}
+
+/** The gold beetle: a ladybug's shape in gold, with a glint. */
+export function drawBeetle(
+  c: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  s: number,
+  frame: number,
+) {
+  c.save();
+  c.translate(x, y);
+  const open = frame ? s * 0.06 : 0;
+  c.fillStyle = '#3a2a08';
+  c.beginPath();
+  c.arc(0, -s * 0.42, s * 0.2, 0, Math.PI * 2);
+  c.fill();
+  for (const side of [-1, 1]) {
+    const g = c.createLinearGradient(side * s * 0.4, -s * 0.4, 0, s * 0.4);
+    g.addColorStop(0, '#fff3b0');
+    g.addColorStop(0.5, '#f2c230');
+    g.addColorStop(1, '#a8740c');
+    c.fillStyle = g;
+    c.beginPath();
+    c.ellipse(side * (s * 0.2 + open), 0, s * 0.22, s * 0.38, side * 0.15, 0, Math.PI * 2);
+    c.fill();
+  }
+  c.fillStyle = 'rgba(255,255,255,0.9)';
+  c.beginPath();
+  c.arc(-s * 0.12, -s * 0.18, s * 0.06, 0, Math.PI * 2);
+  c.fill();
+  c.restore();
 }

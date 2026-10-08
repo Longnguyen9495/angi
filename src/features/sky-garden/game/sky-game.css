@@ -1,0 +1,404 @@
+/* ——— Vườn Mây in the game ———
+   Full screen over the farm (the demo's .sg-* bar and canvas), a dock of actions at the bottom,
+   the game's sheets in the dark variant. Tap targets at least 44 px (§14). */
+
+.sk-root {
+  z-index: 60;
+}
+
+.sk-root--gate {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  background: linear-gradient(#7cc4f2, #d8f0ff);
+  font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+}
+
+.sk-gate {
+  display: grid;
+  gap: 12px;
+  width: min(420px, 100%);
+  padding: 22px 20px;
+  border-radius: 20px;
+  background: rgb(30 22 14 / 86%);
+  color: #fff4d6;
+  text-align: center;
+}
+
+.sk-gate h2 {
+  margin: 0;
+  color: #ffd36b;
+  font-size: 20px;
+}
+
+.sk-gate p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgb(255 244 214 / 80%);
+}
+
+.sk-dock {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: safe center;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sk-dock .sg-btn {
+  flex: none;
+  padding: 0 12px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.sk-root .sg-hint {
+  bottom: calc(max(10px, env(safe-area-inset-bottom)) + 56px);
+}
+
+.sk-btn {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid rgb(255 211 107 / 55%);
+  border-radius: 12px;
+  background: linear-gradient(#ffe39a, #f2b84a);
+  color: #4a2a08;
+  font:
+    600 14px 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  cursor: pointer;
+}
+
+.sk-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.sk-btn--ghost {
+  background: rgb(255 244 214 / 10%);
+  color: inherit;
+  border-color: rgb(255 244 214 / 22%);
+}
+
+.sk-btn--small {
+  min-height: 40px;
+  padding: 0 12px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.sk-sheet {
+  display: grid;
+  gap: 10px;
+}
+
+.sk-sheet h3 {
+  margin: 6px 0 0;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.sk-note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  opacity: 0.8;
+}
+
+.sk-status {
+  margin: 0;
+  font-size: 15px;
+}
+
+.sk-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sk-pothead {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.sk-pothead > div {
+  display: grid;
+  gap: 2px;
+}
+
+.sk-pothead small,
+.sk-combo {
+  font-size: 12.5px;
+  opacity: 0.8;
+}
+
+.sk-combo {
+  color: #ffd36b;
+  opacity: 1;
+}
+
+.sk-stars {
+  color: #ffd36b;
+  letter-spacing: 2px;
+}
+
+.sk-potimg {
+  flex: none;
+  object-fit: contain;
+}
+
+.sk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
+}
+
+.sk-card {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  min-height: 44px;
+  padding: 8px 6px;
+  border: 1px solid rgb(255 244 214 / 16%);
+  border-radius: 12px;
+  background: rgb(255 244 214 / 6%);
+  color: inherit;
+  font:
+    500 12.5px 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  text-align: center;
+  cursor: pointer;
+}
+
+.sk-card small {
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+.sk-card.is-on {
+  border-color: #ffd36b;
+  background: rgb(255 211 107 / 18%);
+}
+
+.sk-card:disabled {
+  opacity: 0.45;
+}
+
+.sk-list {
+  display: grid;
+  gap: 6px;
+}
+
+.sk-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+  padding: 6px 12px;
+  border: 1px solid rgb(255 244 214 / 16%);
+  border-radius: 12px;
+  background: rgb(255 244 214 / 6%);
+  color: inherit;
+  font:
+    500 13.5px 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sk-item:disabled {
+  opacity: 0.45;
+}
+
+.sk-recipe {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgb(255 244 214 / 10%);
+}
+
+.sk-recipe > div {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  min-width: 0;
+}
+
+.sk-recipe small {
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.sk-needs {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.sk-needs li {
+  color: #ffb59a;
+}
+
+.sk-needs li.ok {
+  color: #9be59b;
+}
+
+.sk-check {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13.5px;
+}
+
+.sk-meter {
+  height: 6px;
+  border-radius: 99px;
+  background: rgb(255 244 214 / 14%);
+  overflow: hidden;
+}
+
+.sk-meter span {
+  display: block;
+  height: 100%;
+  background: #8fd65a;
+  transform-origin: left;
+}
+
+.sk-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+}
+
+.sk-tabs button {
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid rgb(255 244 214 / 16%);
+  border-radius: 99px;
+  background: none;
+  color: inherit;
+  font:
+    500 13px 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.sk-tabs button.is-on {
+  border-color: #ffd36b;
+  color: #ffd36b;
+}
+
+.sk-counts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.sk-counts li {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sk-set {
+  display: grid;
+  gap: 6px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgb(255 244 214 / 10%);
+}
+
+.sk-set h3 small {
+  margin-left: 6px;
+  text-transform: none;
+}
+
+.sk-setrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sk-floorbuy {
+  display: grid;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgb(255 211 107 / 8%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-meter span {
+    transition: none;
+  }
+}
+
+/* Sandbox toasts (/sky-garden-test?game=1 has no toast layer of the app). */
+.sk-toasts {
+  position: fixed;
+  top: 64px;
+  left: 50%;
+  z-index: 80;
+  display: grid;
+  gap: 6px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.sk-toasts p {
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: rgb(30 22 14 / 88%);
+  color: #fff4d6;
+  font:
+    500 13px 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+}
+
+/* A friend's Vườn Mây while visiting (FriendSky). */
+.sk-fpots {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sk-fpot {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.sk-fpot > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.sk-fpot small {
+  font-size: 12.5px;
+  opacity: 0.8;
+}

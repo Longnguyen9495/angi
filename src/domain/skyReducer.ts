@@ -397,8 +397,8 @@ export function skyReducer(state: GuestProgress, action: SkyAction): GuestProgre
         sky.day = { ...sky.day, harvests: sky.day.harvests + 1 };
         tutorial(s, sky, 'harvest', now);
       }
-      // From floor 4: the day's third harvest brings a cloud seed.
-      if (sky.floors >= 4 && sky.day.harvests >= DAILY_SKY.harvests) {
+      // Once floor 3 is open: the day's third harvest brings a cloud seed.
+      if (sky.floors >= DAILY_SKY.fromFloor && sky.day.harvests >= DAILY_SKY.harvests) {
         post(
           s,
           `sky:daily:${sky.day.date}`,

@@ -113,7 +113,8 @@ export function layoutOverview(viewW: number, viewH: number, floorCount: number)
   const x0 = left + g + stalkW * 0.55;
   const right = left + towerW - g;
   const cell = (right - x0 - machineW) / SLOTS_PER_FLOOR;
-  const groundH = clamp(viewH * 0.16, 80, 200);
+  // Tall enough that the hint and the action bar at the foot cover village, not floor 1.
+  const groundH = clamp(viewH * 0.18, 120, 200);
   const skyTop = clamp(viewH * 0.12, 56, 140);
   // On a tall phone a few floors would huddle at the bottom under an empty sky: spread them up
   // to fill the screen, but never further apart than a floor and a half.

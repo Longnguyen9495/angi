@@ -204,3 +204,40 @@ describe('Vườn Mây play', () => {
     expect(run(p, { type: 'SKY_OPEN_FLOOR', now: T0 }).sky!.floors).toBe(1);
   });
 });
+
+describe('Vườn Mây with friends (G5)', () => {
+  it('takes a friend’s catch on our pot once revealed, and a ladybug for our own help', () => {
+    let now = T0;
+    let p = run(player(), { type: 'SKY_OPEN_FLOOR', now });
+    const [a] = Object.keys(p.sky!.pots);
+    p = run(
+      p,
+      { type: 'SKY_PLACE_POT', uid: a!, floor: 0, slot: 0, now },
+      { type: 'SKY_PLANT', uid: a!, seed: { kind: 'sky', id: 'jasmine' }, now },
+    );
+    now = bugCheckAt(p.sky!.pots[a!]!.plant!, 0) + 1000;
+    const caught: Action = {
+      type: 'FRIEND_EVENT',
+      event: { id: 'e7', type: 'skycaught', pot: a!, plotId: 0, cycle: 0, from: 'Bình' },
+      now,
+    };
+    // Not revealed to us yet: left for a later sync.
+    expect(gameReducer(p, caught)).toBe(p);
+    p = revealAll(p, now);
+    p = run(p, caught);
+    expect(p.sky!.pots[a!]!.plant!.caught).toEqual([0]);
+    expect(p.sky!.bugs.ladybug).toBe(1);
+    expect(p.ledger.some((e) => e.key === 'friend:e7:seen')).toBe(true);
+    // Applied once.
+    expect(run(p, caught)).toBe(p);
+
+    const help: Action = {
+      type: 'FRIEND_EVENT',
+      event: { id: 'e8', type: 'skyhelp', bug: 'ladybug', plotId: 1, cycle: 0, from: 'Bình' },
+      now,
+    };
+    p = run(p, help);
+    expect(p.sky!.bugs.ladybug).toBe(2);
+    expect(run(p, help)).toBe(p);
+  });
+});

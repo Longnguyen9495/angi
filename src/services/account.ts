@@ -4,6 +4,7 @@
  * Every request carries X-Locale so server errors and the login email come
  * back in the visitor's language.
  */
+import type { BugId } from '../data/skyEconomy';
 import type { FriendEventType } from '../domain/progress';
 import { locale, t } from '../i18n';
 
@@ -98,6 +99,49 @@ export const accountApi = {
   remove: () => call<{ ok: true }>('DELETE', ''),
 };
 
+/** Vườn Mây on the server (server/lib/Sky.php). */
+export interface SkyStatus {
+  enabled: boolean;
+  level: number;
+}
+export interface SkyReveal {
+  uid: string;
+  cycle: number;
+  stage: number;
+  bug: BugId | null;
+}
+/** A star or tier operation: the garden as the server left it (load it), and how it went. */
+export interface SkyOpResult {
+  result: 'success' | 'fail' | 'repeat';
+  jumped?: boolean;
+  stars?: number;
+  tier?: number;
+  data: unknown;
+  version: number;
+}
+
+export const skyApi = {
+  status: () => call<SkyStatus>('GET', '/sky'),
+  /** The bugs of checks already reached, for the plantings the server holds. */
+  bugs: () => call<{ bugs: SkyReveal[]; serverNow: number }>('GET', '/sky/bugs'),
+  starUp: (uid: string, clover: boolean, opId: string, baseVersion: number) =>
+    call<SkyOpResult>('POST', '/sky/star-up', {
+      uid,
+      clover,
+      opId,
+      baseVersion,
+      clientNow: Date.now(),
+    }),
+  tierUp: (uid: string, feed: string, opId: string, baseVersion: number) =>
+    call<SkyOpResult>('POST', '/sky/tier-up', {
+      uid,
+      feed,
+      opId,
+      baseVersion,
+      clientNow: Date.now(),
+    }),
+};
+
 /** "20:15 06/10/2026" in the visitor's language, for a lock's end (unix seconds). */
 export function formatUntil(until: number): string {
   return new Date(until * 1000).toLocaleString(locale === 'vi' ? 'vi-VN' : locale, {
@@ -180,6 +224,8 @@ export interface FriendSummary {
   stealable: number;
   stoleToday: boolean;
   giftedToday: boolean;
+  /** Điểm vườn of the friend's Vườn Mây (null: no cloud garden yet). */
+  skyScore?: number | null;
   updatedAt: number | null;
 }
 
@@ -208,7 +254,7 @@ export interface Referrals {
 }
 
 export interface FriendsList {
-  me: GardenProfile & { xp: number; level: number; stars?: number };
+  me: GardenProfile & { xp: number; level: number; stars?: number; skyScore?: number | null };
   friends: FriendSummary[];
   referrals: Referrals;
   helpsLeft: number;
@@ -250,6 +296,33 @@ export interface FriendGarden {
   giftsLeft: number;
   /** Minutes a plot must be ripe before it can be picked. */
   stealGraceMin: number;
+  /** The friend's Vườn Mây, read-only (null: none yet), and our bug catches left today. */
+  sky?: FriendSky | null;
+  skyHelpsLeft?: number;
+}
+
+/** A bug sitting on a friend's cloud pot: `catchable` when we may catch it for them. */
+export interface FriendSkyBug {
+  stage: number;
+  cycle: number;
+  bug: BugId;
+  catchable: boolean;
+}
+
+export interface FriendSkyPot {
+  uid: string;
+  pot: string;
+  tier: number;
+  stars: number;
+  plant: { seed: { kind: 'sky' | 'farm'; id: string }; plantedAt: number; readyAt: number } | null;
+  bugs: FriendSkyBug[];
+}
+
+/** A friend's Vườn Mây (server/lib/Sky.php friendView): six slots per floor, times in server ms. */
+export interface FriendSky {
+  floors: (FriendSkyPot | null)[][];
+  score: number;
+  serverNow: number;
 }
 
 export interface FeedItem {
@@ -290,6 +363,12 @@ export const friendsApi = {
   add: (code: string) => call<FriendsList>('POST', '/friends', { code }),
   remove: (code: string) => call<FriendsList>('DELETE', `/friends/${encodeURIComponent(code)}`),
   visit: (code: string) => call<FriendGarden>('GET', `/friends/${encodeURIComponent(code)}/garden`),
+  skyCatch: (code: string, uid: string, stage: number) =>
+    call<FriendGarden & { ok: true; bug: BugId }>(
+      'POST',
+      `/friends/${encodeURIComponent(code)}/skycatch`,
+      { uid, stage },
+    ),
   water: (code: string, plotId: number) =>
     call<FriendGarden & { ok: true }>('POST', `/friends/${encodeURIComponent(code)}/water`, {
       plotId,

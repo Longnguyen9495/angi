@@ -121,7 +121,7 @@ try {
         }
         // Khu vườn bạn bè: routes with a garden code in the path.
         $friends = new Friends(db(), $account);
-        if (preg_match('#^/account/friends/([A-Za-z0-9]{6})(/(garden|water|steal|gift|thanks))?$#', $path, $fm)) {
+        if (preg_match('#^/account/friends/([A-Za-z0-9]{6})(/(garden|water|steal|gift|thanks|skycatch))?$#', $path, $fm)) {
             $code = $fm[1];
             match ($method . ' ' . ($fm[3] ?? '')) {
                 'GET garden' => json_response($friends->visit($code)),
@@ -129,6 +129,7 @@ try {
                 'POST steal' => json_response($friends->steal($code, read_json_body())),
                 'POST gift' => json_response($friends->gift($code, read_json_body())),
                 'POST thanks' => json_response($friends->thanks($code)),
+                'POST skycatch' => json_response($friends->skyCatch($code, read_json_body())),
                 'DELETE ' => json_response($friends->remove($code)),
                 default => throw new HttpError(404, __t('api.notFound')),
             };

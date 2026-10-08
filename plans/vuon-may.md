@@ -7,7 +7,55 @@ chợ). Vườn Mây là tầng chơi thứ hai, xếp **chậu sưu tầm** lê
 
 ## Trạng thái (2026-10-08)
 
-**G0 và G1 đã có code, chờ người dùng duyệt trên điện thoại thật.** Chưa bắt đầu G2.
+### Cập nhật lượt 4 (2026-10-08 tối): G2–G5 đã có code, sau công tắc `sky.enabled` (mặc định TẮT)
+
+Chưa cổng nào được đánh dấu "đạt": tất cả mới qua test tự động và ảnh chụp headless, **chưa thử trên máy thật,
+chưa thử 2 tài khoản trên 2 máy**.
+
+**Đã có code:**
+- **G2–G4 (lõi):** bảng kinh tế `src/data/skyEconomy.ts`; nhánh `sky` trong bản lưu (`src/domain/sky.ts`,
+  `skyReducer.ts`, ledger `src/domain/ledger.ts`); guard `server/lib/SkyGuard.php`; server `server/lib/Sky.php`
+  (lộ bọ HMAC, nâng sao, thăng bậc có `opId`); game thật `src/features/sky-garden/game/` (cổng cấp/đăng nhập,
+  chào mừng, cảnh điều khiển, các sheet ô/chậu/máy/kho/cửa hàng/bộ sưu tập/khinh khí cầu); nút "Lên mây" trong
+  nông trại (thấy từ cấp 10, mở cấp 12). 4 máy, 11 công thức, khinh khí cầu (tầng 5), thưởng đủ bộ, chậu mảnh.
+- **Admin:** trang "Vườn Mây" trong `/admin` bật/tắt `sky.enabled`; ô nhập vườn khách bị khóa (chờ Q5).
+- **G5 (một phần):** thăm Vườn Mây của bạn (tab trong màn thăm vườn, chỉ xem); bắt bọ giúp chỉ bọ thường, mỗi
+  bọ một lần, 5 lượt/ngày cho người giúp và 5 lượt/ngày cho vườn được giúp (`Friends::skyCatch`, sự kiện
+  `skyhelp`/`skycaught`, người giúp nhận 1 bọ rùa qua bản lưu); Điểm vườn §12.2 trên bảng bạn bè.
+- **Sandbox QA:** `/sky-garden-test?game=1` (thêm `&preset=rich` cho vườn 5 tầng) chạy game thật trên dữ liệu
+  giả, không cần API; ảnh chụp `node scripts/sky-garden/game-shots.mjs` → `storage/sky-garden-qa/game-*.png`.
+- **Mô phỏng:** `src/domain/skySim.test.ts` (bot chơi qua reducer thật, 3 lần/ngày). `npm test` chạy 21 ngày;
+  `npm run sky:sim` chạy 90 ngày và in bảng. Mô phỏng đã tìm ra và sửa 2 lỗi kẹt tiến trình:
+  1. Client chỉ hỏi bọ khi cây chưa chín → ai quay lại sau khi chín không bao giờ thấy bọ (kể cả bọ rùa hướng
+     dẫn cho Hạt Mây). Đã sửa `pendingChecks` cho khớp server.
+  2. Hạt Mây hằng ngày chỉ có khi đã có tầng 4, mà mở tầng 4 cần 6 Hạt Mây → không ai lên được tầng 4. Nay bắt
+     đầu từ khi có tầng 3 (`DAILY_SKY.fromFloor`, guard đọc từ game-rules.json).
+  Kết quả 21 ngày: tầng 2 ngày 4, tầng 3 ngày 9, tầng 4 trong 3 tuần (FARM_XP 260/ngày, xu nông trại 220/ngày).
+- **Prompt vẽ:** `prompts/sky-garden-prompts.md` (chậu thiếu theo bộ, Đất nung, 15 cây × 4 giai đoạn, 4 máy,
+  7 bọ), kèm điều kiện quyền Q6.
+- **Test:** `selftest-sky.php`, `selftest-sky-friends.php` (trong `npm run test:server`), `sky.test.ts`,
+  `skyGuard.test.ts`, `skySim.test.ts`, i18n vi/en.
+
+**Khác với §0 (đã chọn khi code, cần người dùng xem lại):** Vườn Mây bắt buộc tài khoản; kho hàng mây tách
+riêng khỏi kho nông trại; hoa hồng thay dâu tây; thưởng xu của chậu tính lúc thu; bọ không làm chậm cây; máy phin
+ở tầng 4; mầm đậu thần cấp 10 là nút trên nông trại, chưa có hình mầm.
+
+**VIỆC CÒN DỞ (làm tiếp từ đây):**
+1. Chạy `npm run sky:sim` (90 ngày, mất vài phút) và ghi bảng kết quả vào đây; xem tầng 5+ có lên được trong
+   mùa không, chỉnh `FLOORS`/`DAILY_SKY`/khinh khí cầu nếu chậm quá.
+2. G5 còn thiếu: **tưới giúp trên mây** (cần guard tính thời gian chín có lượt tưới của bạn, như `friendWaters`
+   của nông trại); thử 2 tài khoản trên 2 máy.
+3. G6: nhiệm vụ/thành tựu mây (§5.8), sự kiện Tết/Trung Thu, trang trí mây, cộng hưởng 2/4/6, trợ thủ; vẽ hình
+   theo `prompts/sky-garden-prompts.md` sau khi chốt quyền Q6.
+4. Thử trên điện thoại thật (Android + iPhone): FPS ≥ 30, chốt Q4 (1×6 hay 2×3).
+5. Kệ mây trong ảnh sheet còn thấy đường nối ở bản desktop phóng to (ảnh `game-1366x768-5-tap.png`).
+6. Lỗi eslint/prettier có sẵn, không thuộc Vườn Mây: `DishPuzzle.tsx`, `export-promo-video.mjs`,
+   `build-image-prompts.mjs`.
+7. Trước khi bật `sky.enabled` trên production: đặt `SKY_SECRET` trong `.env` server, chạy `npm run test:server`.
+
+### Lượt 1–3
+
+**G0 và G1 đã có code, chờ người dùng duyệt trên điện thoại thật.**
 
 - **G0, ảnh chậu:** `npm run sky:pots` (`scripts/sky-garden/prepare-pots.mjs`) xử lý 20 chậu ở
   `assets/sky-garden/pots/`:
