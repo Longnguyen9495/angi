@@ -41,8 +41,9 @@ riêng khỏi kho nông trại; hoa hồng thay dâu tây; thưởng xu của ch
 ở tầng 4; mầm đậu thần cấp 10 là nút trên nông trại, chưa có hình mầm.
 
 **VIỆC CÒN DỞ (làm tiếp từ đây):**
-1. Chạy `npm run sky:sim` (90 ngày, mất vài phút) và ghi bảng kết quả vào đây; xem tầng 5+ có lên được trong
-   mùa không, chỉnh `FLOORS`/`DAILY_SKY`/khinh khí cầu nếu chậm quá.
+1. Mô phỏng 90 ngày đã chạy một lần (2026-10-08, ~5 phút): **qua cả 4 kiểm tra, kể cả lên tầng 5 trong 90
+   ngày**, nhưng bảng số liệu bị runner nuốt. Nay bảng ghi ra `storage/sky-garden-qa/sim-90.txt`: chạy lại
+   `npm run sky:sim`, chép bảng vào đây, xem tốc độ tầng 5–10 và chỉnh `FLOORS`/`DAILY_SKY`/khinh khí cầu nếu cần.
 2. G5 còn thiếu: **tưới giúp trên mây** (cần guard tính thời gian chín có lượt tưới của bạn, như `friendWaters`
    của nông trại); thử 2 tài khoản trên 2 máy.
 3. G6: nhiệm vụ/thành tựu mây (§5.8), sự kiện Tết/Trung Thu, trang trí mây, cộng hưởng 2/4/6, trợ thủ; vẽ hình
