@@ -51,16 +51,20 @@ chiếu với code ngày 2026-10-08. Số nào ghi "mô phỏng chỉnh" là s�
 | D9 | Mua bán giữa người chơi, trộm trên mây | Không làm | §5.7, §17.6 |
 | D10 | Phong cách hình | Chậu men bóng viền vàng (theo 4 chậu đã có) là trung tâm. Bố cục theo `6.png`, không theo phong cách chibi của `6.png` (§0.7) | chưa có |
 
-**Chờ người dùng chốt** (đang để mặc định ở cột 3):
+**Quyết định triển khai đề xuất (2026-10-08):** Q1–Q4 được **chốt làm mặc định kỹ thuật** để G0/G1 có thể triển khai, **không phải xác nhận cá nhân của người dùng**. Q5 chỉ là chính sách đề xuất, phải duyệt trước G2; Q6 **chưa xác minh quyền sử dụng**, không được tự suy đoán.
 
-| # | Câu hỏi | Mặc định đang dùng |
-|---|---|---|
-| Q1 | Tên khu | "Vườn Mây" |
-| Q2 | Cấp mở | 12 (mầm đậu hiện từ cấp 10) |
-| Q3 | Bậc của bộ Nông Sản (4 chậu đã có) | Ngọc |
-| Q4 | Bố cục trên điện thoại | 2 hàng × 3 chậu mỗi tầng (§0.7). Phương án khác: 1 hàng 6 chậu như `6.png`, chậu nhỏ khoảng 50 px |
-| Q5 | Khách chưa đăng nhập rồi đăng nhập | Giữ chậu, cây, bọ thường; sao về ★0, bọ hiếm và Mây Ngọc về 0 (§0.2) |
-| Q6 | Xác nhận quyền dùng 4 chậu và `5.png`, `6.png` | Coi là của người dùng |
+| # | Câu hỏi | Quyết định / trạng thái | Điều kiện nghiệm thu |
+|---|---|---|---|
+| Q1 | Tên khu | **Mặc định kỹ thuật: Vườn Mây** | Hiển thị đúng ở vi/en, route và điều hướng; tên có thể đổi trước phát hành |
+| Q2 | Cấp mở | **Mặc định kỹ thuật: cấp 12**, mầm đậu xuất hiện cấp 10 | Cấp 10–11 thấy teaser nhưng không vào gameplay; cấp 12 mở đúng một lần |
+| Q3 | Bậc của bộ Nông Sản (4 chậu đã có) | **Mặc định kỹ thuật: Ngọc** | Registry, shop và giao diện hiển thị nhất quán; không tự cấp chậu hiếm khi tạo tài khoản |
+| Q4 | Bố cục trên điện thoại | **Chốt mặc định kỹ thuật: 2 hàng × 3 chậu/tầng** ở viewport <600 CSS px; từ 600 px trở lên ưu tiên 1 hàng × 6 nếu đủ diện tích | 360/390/430 px: đủ 6 ô, không tràn ngang, vùng chạm ≥44 px, bọ không đè hitbox cây; 3 ô khóa hiển thị rõ; kiểm tra thiết bị thật G1 |
+| Q5 | Khách chưa đăng nhập rồi đăng nhập | **CHỜ DUYỆT CHÍNH SÁCH:** đề xuất giữ chậu/cây/bọ thường, reset sao/luck và loại vật phẩm hiếm theo §0.2 | Trước G2 phải có xác nhận người dùng, thông báo trước import, kiểm thử không mất tài sản ngoài phạm vi thông báo; nếu chưa duyệt thì chặn nhập Vườn Mây thay vì âm thầm xóa |
+| Q6 | Quyền dùng 4 chậu, `5.png`, `6.png` | **CHƯA XÁC MINH**. 4 chậu dùng nội bộ để dựng thử; `5.png` và `6.png` chỉ là tham khảo bố cục, không đưa nguyên ảnh vào sản phẩm | Trước phát hành cần xác nhận quyền sở hữu/giấy phép từng asset bằng văn bản; asset không rõ quyền phải thay bằng bản gốc có quyền dùng |
+
+**Chi tiết Q4:** Giữ **6 ô logic/tầng** ở mọi màn hình; chỉ đổi cách trình bày, không đổi công thức đủ bộ 6 chậu. Trên điện thoại 360–599 px xếp grid 3 cột × 2 hàng; chiều rộng ô = (viewport − safe-area − lề − dải đậu − khoảng cách cột) / 3; co artwork trong ô chứ không giảm hitbox dưới 44 px. Trên tablet/desktop ≥600 px chỉ dùng hàng ngang 6 chậu nếu mỗi ô ≥72 px và máy/biển tầng không che chậu; nếu không đủ thì tự fallback 2×3. **Không dùng 1×6 ở điện thoại** vì chậu quá nhỏ, khó thao tác và không thể hiện được chi tiết men vàng. G1 phải có screenshot cả 360, 390, 430, 768 và 1366 px để duyệt.
+
+**Cổng quyết định:** G0/G1 có thể dùng Q1–Q4 ở trạng thái mặc định kỹ thuật. **Không đánh dấu hoàn thành điều kiện “người dùng chốt Q1–Q6” ở §0.3/§0.10.5** cho tới khi Q5 được duyệt và Q6 có chứng cứ. G2 không được chạy import tài sản Vườn Mây thật nếu Q5 chưa duyệt; không phát hành asset nếu Q6 chưa xác minh.
 
 ### 0.2 Lưu dữ liệu và chống gian lận (hướng A)
 
