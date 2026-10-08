@@ -244,6 +244,73 @@ thức và đơn" của rau dưới đất.
   - Guard đếm theo `dayKey('skyxp', …)` có sẵn.
 - **XP của cây rau trồng trên mây** cũng tính vào trần 150.
 
+### 0.10 Tiêu chí nghiệm thu và hợp đồng trạng thái
+
+**Mục tiêu:** các cổng G0–G6 ở §0.3 là điều kiện phát hành, không chỉ là danh sách tính năng. Chỉ đánh dấu hoàn thành khi có bằng chứng kiểm thử (test/log/video, commit, thiết bị). Không thay thế các quy tắc đã chốt ở §0.1–§0.9.
+
+**State machine chuẩn**
+
+| Đối tượng | Trạng thái hợp lệ | Quy tắc chuyển và từ chối |
+|---|---|---|
+| Ô tầng | `locked → empty → occupied` | chỉ mở khi đủ tầng, cấp, xu và vật phẩm; chậu không thể ở hai ô |
+| Chậu | `inventory ↔ placed`, kèm `plant=null/active/ready` | không di chuyển/cất nếu cây chưa thu hoặc chưa hủy theo luật; thao tác thất bại không thay đổi bản lưu |
+| Cây | `empty → growing → ready → harvested(empty)` | snapshot chỉ số lúc trồng; tưới và bọ chỉ tác động khi growing; thu đúng một lần, dựa trên giờ server |
+| Bọ | `absent → perched → caught/expired` | chỉ bắt khi đang đậu; không bắt lặp; bọ chưa bắt hết hạn khi thu hoặc theo mốc được chốt |
+| Máy | `idle → running → ready → claimed(idle)` | trừ nguyên liệu một lần khi start; nhận đầu ra một lần khi claim; `jobId` duy nhất |
+| Nâng sao/bậc | `idle → pending → success/failure → idle` | chỉ server chốt; retry cùng `opId` trả lại kết quả cũ; lỗi mạng không được tung lại |
+
+**Hợp đồng API và đồng bộ tối thiểu**
+
+- `PUT /account/progress` vẫn là đường lưu bản chung theo §0.2; mỗi lần ghi có `baseVersion` và kiểm tra `ProgressGuard`. Phản hồi 409 phải tải bản mới, replay **chỉ** các thao tác hợp lệ chưa xác nhận, kiểm tra lại nguồn lực và hiển thị xung đột nếu không thể replay; tuyệt đối không ghi đè mù.
+- `POST /account/sky/star-up` và `/tier-up`: request chứa `potUid`, `opId`, `baseVersion` (và `useClover` khi phù hợp); server kiểm tra đăng nhập, quyền sở hữu, version, điều kiện, chi phí; transaction khóa bản lưu, ghi kết quả và idempotency key trong cùng giao dịch. Cùng `opId` + cùng payload trả cùng kết quả; cùng `opId` + payload khác trả lỗi.
+- Mã lỗi có thể phân biệt: `UNAUTHORIZED`, `STALE_VERSION`, `INVALID_STATE`, `INSUFFICIENT_RESOURCES`, `RATE_LIMITED`, `OP_ID_CONFLICT`; UI dịch vi/en và không làm mất trạng thái đã xác nhận.
+- Giới hạn tần suất nâng sao và bắt bọ; không tin `readyAt`, `statsAtPlant`, `cycleNo`, số dư, `skySeed` hay kết quả RNG do client gửi. Guard phải đối chiếu với tiến trình trước và các nguồn tài nguyên hợp lệ.
+- **Điểm cần giải quyết trước G2:** §0.2 đang lưu `skySeed` trong bản progress trả về client, vì vậy hash tất định có thể bị đoán. Chốt một trong hai phương án: (A) server giữ secret riêng và xác minh HMAC qua endpoint, hoặc (B) chấp nhận RNG công khai cho bọ thường nhưng **không** dùng RNG đó để phát thưởng hiếm/có giá trị; thưởng hiếm phải do server xác nhận. Không tuyên bố chống đoán seed khi seed được trả cho client.
+- Với khách, xác nhận trước khi import về việc reset sao, bọ hiếm và Mây Ngọc (§0.2/Q5); không reset im lặng. Mọi migration phải có backup và test mở bản lưu cũ.
+
+### 0.11 Tiêu chí nghiệm thu asset chậu và cảnh
+
+- **Nguồn:** asset có `assetId`, tên, phiên bản, quyền sử dụng được xác nhận, file gốc; không dùng ảnh moodboard/tổng hợp làm asset runtime. Bộ 20 chậu tách từ ảnh tổng hợp phải được kiểm tra **từng file**, không mặc định đã đạt chất lượng.
+- **Alpha:** PNG nguồn RGBA nền trong suốt thật; không có mảng đen/trắng nền, viền răng cưa/halo đen, phần thừa từ chậu cạnh bên hoặc vật thể bị cắt. Kiểm tra trên nền sáng, tối và nền mây game.
+- **Hình:** toàn bộ thân, quai, đế và miệng đất nằm trong khung, có lề an toàn; không biến dạng, không ghép chồng từ chậu khác. Tất cả cùng góc nhìn 3/4, ánh sáng, tỷ lệ thị giác và điểm neo miệng đất nhất quán.
+- **Kích thước:** giữ file gốc độ phân giải cao; xuất WebP 256px (@1x) và 512px (@2x) như §7.1, không upscale ảnh nguồn nhỏ để giả tăng chi tiết. Asset không đủ nét phải render lại riêng.
+- **Điểm neo:** `pots.json` có `cx,cy,rx` theo hệ tọa độ xác định; preview cây giai đoạn 0–3 đặt đúng trong đất, không xuyên mép chậu. Tối thiểu kiểm tra thủ công trên 4 chậu gốc và toàn bộ chậu mới trước khi bật.
+- **Tối ưu:** ảnh lazy-load, có kích thước khai báo tránh nhảy layout; ghi tổng byte tải ban đầu và thời gian mở cảnh trên thiết bị kiểm thử. Không duyệt chỉ dựa vào screenshot desktop.
+- **Bằng chứng:** contact sheet từng chậu có ID, preview cây và ảnh chụp trong cảnh thật; bảng pass/fail cho alpha, crop, anchor, độ nét, quyền sử dụng. Asset fail không được đưa vào registry sản phẩm.
+
+### 0.12 Kiểm thử kinh tế, bảo mật và khả năng phục hồi
+
+**Bộ hồ sơ mô phỏng tối thiểu:** (1) mới chơi, (2) 1 lần/ngày, (3) 3 lần/ngày, (4) bỏ game 7–14 ngày rồi quay lại, (5) chỉ chơi dưới đất, (6) không bạn bè/không sự kiện, (7) người chơi nhiều tài nguyên, (8) hai thiết bị cùng tài khoản. Chạy ít nhất 90 ngày mô phỏng với nhiều seed; lưu cấu hình và kết quả để tái lập.
+
+**Các bất biến phải luôn đúng:**
+
+1. Xu, XP, kho, hạt, bọ, chậu, sản phẩm máy không âm; chậu UID không trùng và không nằm nhiều ô; không có vật phẩm tự sinh không có nguồn.
+2. Không nhận thưởng hai lần khi bấm liên tiếp, retry, mất mạng, tải lại trang, 409 hoặc hai thiết bị.
+3. Người chơi không cần bọ ngẫu nhiên, sự kiện hoặc bạn bè để nhận đủ Hạt Mây/Sương Mai mở tầng 2–3. Test ledger tuần tự: sau 2 mốc đầu có 2 Hạt Mây; trả 2 để mở tầng 2; thưởng mở tầng 2 nhận 2; hoàn thành MIX01 nhận 2; có 4 để mở tầng 3. Sương Mai có từ nhài sấy trước tầng 3.
+4. Không có chu trình mua/trồng/chế biến/bán cho lợi nhuận không giới hạn; kiểm tra quy tắc 1,35× §0.4 và mọi đường nhận thưởng đơn.
+5. Không vượt trần 150 XP/ngày từ Vườn Mây kể cả nhiều thao tác cùng lúc; trần reset theo ngày chuẩn được xác định và test qua ranh giới ngày.
+6. Mọi mốc tầng và máy đều có ít nhất một đường đạt được từ tài nguyên đã mở; không có phụ thuộc vòng hoặc soft-lock do kho đầy/hàng chờ đầy.
+7. Không tin thời gian thiết bị; test chỉnh đồng hồ, timezone, offline, refresh, reconnect, xung đột phiên bản và dữ liệu lỗi.
+8. Phép nâng sao/thăng bậc và thưởng hiếm không thể được client tự sửa; có test gửi lại `opId`, đổi payload, race và rollback.
+
+**Chỉ tiêu cân bằng cần xác nhận qua mô phỏng, không phải cam kết sẵn:** hồ sơ 3 lần/ngày mở tầng 5 trong khoảng ngày 20–30 như §0.3; đường đến tầng 10 không phụ thuộc sự kiện; xu có đủ nguồn và sink, không ép người chơi chờ vô lý. Nếu không đạt, sửa dữ liệu và chạy lại trước khi triển khai tiếp.
+
+### 0.13 Definition of Done theo giai đoạn
+
+| Giai đoạn | Bắt buộc có | Bằng chứng |
+|---|---|---|
+| G0 | Q1–Q6 được chốt; quyền asset; registry ID, nguồn nguyên liệu MIX01, bảng số liệu và dependency graph; 4 chậu gốc qua §0.11 | checklist ký duyệt + preview asset + test registry |
+| G1 | demo 3 tầng, cây/bọ/máy và chuyển cảnh, mobile 360/390/430, giảm chuyển động; **không ghi tiến trình thật** | video mobile, log FPS (≥30 trên máy Android tầm trung ghi model), không lỗi console |
+| G2 | vòng đất → mây → kho → MIX01; nguồn mở T2/T3; guard, đồng bộ, guest import, XP cap, i18n; không nhân thưởng | test unit/integration + E2E hai thiết bị + mô phỏng đường mở tầng |
+| G3 | nâng sao/bậc server idempotent, hiệu ứng xếp, máy mới, bộ sưu tập, mô phỏng ≥90 ngày | báo cáo RNG/retry/race, số liệu cân bằng, test chỉ số bp |
+| G4 | đơn và chế biến liên khu, nguồn hàng có truy vết để tính bonus xu, tầng 6–10 không kẹt | test nguồn/sink, đơn quá hạn, không thưởng lặp |
+| G5 | thăm bạn, giúp bắt bọ/tưới có quota hai phía, dữ liệu công khai tối thiểu | test hai tài khoản, giới hạn giúp, bảo mật dữ liệu |
+| G6 | bộ chậu/cây đủ số lượng, sự kiện, trợ thủ nếu được duyệt, tối ưu hiệu năng | kiểm định từng asset + test cân bằng + duyệt release |
+
+**Điều kiện chung trước khi bật production:** `npm test`, `npm run check:motion`, i18n, kiểm thử bảo mật/guard, backup và phương án rollback đều đạt; feature flag `skyGarden` mặc định tắt cho tới khi được duyệt. Có người chịu trách nhiệm ghi nhận lỗi, theo dõi telemetry và rollback khi xuất hiện nhân tài nguyên hoặc mất tiến trình.
+
+---
+
 ### 0.6 Hiệu ứng xếp chậu (D4)
 
 Một tầng cần đủ 6 ô mở và 6 chậu. Hệ thống xét lần lượt từ trên xuống và áp **hiệu ứng đầu tiên thỏa**:
