@@ -5,9 +5,14 @@ nông trại "Ăn gì?". Nông trại dưới đất giữ nguyên lối chơi k
 chợ). Vườn Mây là tầng chơi thứ hai, xếp **chậu sưu tầm** lên từng tầng mây. Hai khu dùng chung kinh tế
 (xu, XP, cấp, kho) và đổ sản phẩm vào nhau.
 
-**Ghi chú hoàn thiện tài liệu:** giữ định hướng và các bảng dự thảo ban đầu; §12–§16 bổ sung quy tắc vận hành, xử lý phụ thuộc mở khóa, mobile, offline/bảo mật và nghiệm thu. Khi mô tả rút gọn ở §1–§10 khác phần bổ sung, ưu tiên đặc tả chi tiết §12–§16. Các con số mới là đề xuất thử nghiệm, chưa được duyệt hoặc mô phỏng; không có tra cứu web hay kiểm chứng mã trong lượt bổ sung này.
+**Cách đọc file (cập nhật 2026-10-08, lượt 3):** **§0 "Đặc tả chốt" là bản chuẩn để code theo.** Khi §0 khác
+bất kỳ mục nào phía sau, làm theo §0. §1–§17 giữ lại làm phụ lục: lý do, phương án đã cân nhắc, quy tắc chi
+tiết. Chỗ nào bị §0 thay thế đều có ghi chú "→ §0.x" ngay tại chỗ. §12–§16 (quy tắc vận hành, mobile, offline,
+nghiệm thu) và §17 (định hướng V2) vẫn còn hiệu lực ở những điểm §0 không nói tới.
 
-Art gốc của người dùng (theo mô tả bản kế hoạch ban đầu, chưa kiểm tra ảnh/giấy phép trong lượt này; PNG 1254×1254, nền trong suốt):
+Art gốc của người dùng (đã kiểm tra file thật ngày 2026-10-08: 4 chậu là PNG 1254×1254 RGBA, nền trong suốt;
+moodboard là PNG 941×1672 RGB không có kênh alpha; quyền sử dụng: người dùng tự vẽ hoặc đặt vẽ, cần họ xác nhận
+bằng văn bản trước khi phát hành):
 
 | File | Chậu | Ghi chú |
 |---|---|---|
@@ -16,9 +21,358 @@ Art gốc của người dùng (theo mô tả bản kế hoạch ban đầu, ch�
 | `3.png` | Chậu Bắp Cải | lá cải ngọc bích, ngọc trai, đế lá |
 | `4.png` | Chậu Cà Tím | tím, hoa tím viền vàng, đế tầng |
 | `5.png` (941×1672) | Moodboard "kệ chậu" | khoảng 60 chậu theo món Việt: phở gà trống, bánh mì, bánh chưng, cà phê phin, dừa, thanh long, cua, bánh trung thu, ấm trà, dưa hấu, chè, nón lá, cá sứ, mái đình, giỏ tre… |
+| `6.png` (1024×1536) | Ảnh mẫu bố cục màn Vườn Mây | tháp 6 tầng mây nhiều màu, đậu thần dọc bên trái, mỗi tầng một máy ở đầu trái, 6 chậu/tầng, bong bóng trên cây, cờ từng tầng, làng và chợ ở chân tháp. **Chỉ dùng làm mẫu bố cục**, xem chỗ cần đổi ở §0.7 |
 
 Cả 4 chậu đều có miệng đất lộ ra (chỗ trồng cây), cùng phối cảnh 3/4 và cùng ánh vàng lấp lánh, nên ghép
 thành một bộ được ngay.
+
+---
+
+## 0. Đặc tả chốt (bản để code theo)
+
+Mục này gộp các quyết định từ §1–§17, sửa các chỗ mâu thuẫn và điền số liệu còn thiếu. Mọi số liệu đã đối
+chiếu với code ngày 2026-10-08. Số nào ghi "mô phỏng chỉnh" là số khởi điểm, chạy `scripts/sim/sky-economy.mjs`
+ở G3 xong mới chốt hẳn.
+
+### 0.1 Bảng quyết định
+
+**Đã chốt** (theo đề xuất trong plan; người dùng muốn đổi thì sửa ở bảng này trước):
+
+| # | Chủ đề | Chốt | Thay cho |
+|---|---|---|---|
+| D1 | Cách lưu dữ liệu | **Hướng A:** Vườn Mây nằm trong bản lưu chung, lưu qua `PUT /account/progress` như nông trại, guard soát. Server chỉ tự ghi ở 2 thao tác: nâng sao và thăng bậc (§0.2) | §15.1 (server nắm mọi thao tác) |
+| D2 | Số ô mỗi tầng | 6 (khớp ảnh mẫu `6.png` và 6 chậu/bộ) | §10 câu 4 |
+| D3 | Tưới | Dùng đúng luật nông trại hiện có (§0.5) | §12.1 (10%/chu kỳ) |
+| D4 | Hiệu ứng xếp chậu | Một bảng 4 hiệu ứng, mỗi tầng áp **một** hiệu ứng theo thứ tự ưu tiên cố định (§0.6). Cộng hưởng 2/4/6 của §17.3 hoãn đến G6 | §5.4, §17.3 |
+| D5 | Bonus xu của chậu | Tắt đến G4 (kho chung không biết món nào trồng ở chậu nào). Từ G2 chỉ áp `time`, `xp`, `bug` | §4.2 cột `coin` |
+| D6 | XP từ Vườn Mây | Trần **150 XP/ngày** (§0.5) | chưa có |
+| D7 | Lộ trình | Một lộ trình duy nhất G0–G6 (§0.3) | §9, §16.1, §17.7 |
+| D8 | Tiền nạp | Không có ở v1. Mây Ngọc chỉ kiếm bằng chơi | §8, §10 câu 3 |
+| D9 | Mua bán giữa người chơi, trộm trên mây | Không làm | §5.7, §17.6 |
+| D10 | Phong cách hình | Chậu men bóng viền vàng (theo 4 chậu đã có) là trung tâm. Bố cục theo `6.png`, không theo phong cách chibi của `6.png` (§0.7) | chưa có |
+
+**Chờ người dùng chốt** (đang để mặc định ở cột 3):
+
+| # | Câu hỏi | Mặc định đang dùng |
+|---|---|---|
+| Q1 | Tên khu | "Vườn Mây" |
+| Q2 | Cấp mở | 12 (mầm đậu hiện từ cấp 10) |
+| Q3 | Bậc của bộ Nông Sản (4 chậu đã có) | Ngọc |
+| Q4 | Bố cục trên điện thoại | 2 hàng × 3 chậu mỗi tầng (§0.7). Phương án khác: 1 hàng 6 chậu như `6.png`, chậu nhỏ khoảng 50 px |
+| Q5 | Khách chưa đăng nhập rồi đăng nhập | Giữ chậu, cây, bọ thường; sao về ★0, bọ hiếm và Mây Ngọc về 0 (§0.2) |
+| Q6 | Xác nhận quyền dùng 4 chậu và `5.png`, `6.png` | Coi là của người dùng |
+
+### 0.2 Lưu dữ liệu và chống gian lận (hướng A)
+
+**Vì sao không làm như §15:** nông trại đang lưu cả bản lưu một lần (`PUT /account/progress`, khóa theo
+`version`, ghi chồng trả 409, `server/lib/Account.php:281-338`), rồi `ProgressGuard` soát phần thay đổi. Nếu
+Vườn Mây cho server nắm từng thao tác mà xu, XP, kho vẫn nằm trong bản lưu chung, thì xu có hai nơi giữ số dư.
+Đó là chỗ dễ nhân đôi tiền nhất. Muốn làm §15 thì phải chuyển cả ví sang server trước, việc đó tách thành dự án
+riêng.
+
+**Cách làm:**
+
+1. Nhánh `sky` nằm trong `GuestProgress` và đi cùng bản lưu. Thêm field bằng giá trị mặc định trong
+   `parseProgress`, **không** tăng `SCHEMA_VERSION` (đang là 2).
+2. `ProgressGuard::shape()` thêm kiểm tra nhánh `sky`:
+   - Chỉ nhận ID có trong danh sách luật.
+   - Tối đa 10 tầng; mỗi tầng mua thêm 0–3 ô; bậc chậu 0–4; sao 0–5.
+   - Mỗi `uid` chậu là duy nhất và chỉ nằm ở một ô.
+   - Mọi số là số nguyên không âm.
+3. `ProgressGuard::diff()` thêm luật cho từng thay đổi:
+
+   | Thay đổi | Guard đòi |
+   |---|---|
+   | Thêm chậu | Có dòng ledger `pot:<potId>` +1 và nguồn hợp lệ: mua (trừ xu đúng giá), quà mở tầng, thưởng đã nhận |
+   | Trồng | Trừ đúng 1 hạt `skyseed:<id>` hoặc `seed:<veg>`. `readyAt − plantedAt` ≥ thời gian gốc × (1 − `timeBp` đã chụp lúc trồng) × hệ số tưới hợp lệ |
+   | Thu | Đã đến `readyAt` theo giờ server (dùng độ lệch giờ hiện có). Sản lượng đúng bảng. XP đúng `harvestXp` × hệ số XP, không vượt trần ngày |
+   | Bọ | Mỗi con bọ mới vào túi phải khớp kết quả tung của đúng chu kỳ (công thức dưới) và chưa ai bắt |
+   | Sao, bậc, `luck` | **Client không được đổi.** Chỉ server ghi (bước 4). Guard so với bản trước: khác là từ chối |
+   | Máy | Trừ nguyên liệu lúc bắt đầu. Nhận sản phẩm sau đủ thời gian. Mỗi `jobId` nhận một lần |
+   | Mở tầng, mua ô | Đủ cấp, trừ đúng xu và vật phẩm, theo thứ tự |
+
+4. **Nâng sao và thăng bậc do server làm.**
+   - Client gọi `POST /account/sky/star-up` với body `{ potUid, useClover, opId, baseVersion }`.
+   - Trước khi gọi, client đẩy hết thay đổi đang chờ lưu, để `baseVersion` đúng bằng bản trên server.
+   - Server mở giao dịch:
+     - Khóa dòng `user_progress`, kiểm tra `version`, kiểm tra nguyên liệu trong bản đã xác minh.
+     - Tung bằng `random_int`, áp kết quả, ghi dòng ledger `sky:starup`, tăng `version`.
+     - Lưu `opId` vào `progress_claims` (khóa `starup:<opId>`).
+   - Server trả về `{ result, version, patch }`; client áp `patch`.
+   - Gửi lại cùng `opId` thì nhận đúng kết quả cũ, không tung lại.
+   - `POST /account/sky/tier-up` làm y hệt nhưng không ngẫu nhiên.
+   - Đây là hai chỗ duy nhất server tự ghi vào bản lưu; endpoint `rebase` hiện có là tiền lệ.
+5. **Tung bọ tất định, không phụ thuộc thời gian.**
+   - Công thức: `roll = hash(skySeed, potUid, cycleNo, stageIndex)`.
+   - `skySeed` do server cấp lúc mở tầng 1, ghi một lần và không đổi được (guard chặn). `cycleNo` là số thứ tự
+     lần trồng của chậu đó, tăng 1 mỗi lần trồng.
+   - Người chơi không "quay lại" kết quả được bằng cách đổi giờ trồng hay đổi cây. Đoán trước chỉ biết lần trồng
+     thứ _n_ có bọ gì, mà không đổi được.
+   - Đom đóm: nếu ra đom đóm nhưng mốc lớn rơi vào ban ngày (6h–18h, giờ UTC+7) thì đổi thành bọ thường có trọng
+     số cao nhất. Canh giờ trồng để mốc rơi vào ban đêm là lối chơi hợp lệ.
+6. **Khách chưa đăng nhập** chơi đầy đủ:
+   - Nâng sao tung tại máy, có pity, `skySeed` sinh tại máy.
+   - Khi đăng nhập và nhập bản lưu khách (đường `import()` hiện có): giữ chậu, cây đang trồng và bọ thường;
+     sao về ★0, `luck` về 0, bọ hiếm, đom đóm, bọ hung vàng và Mây Ngọc về 0; cấp lại `skySeed` từ server.
+     Hiện thông báo trước khi nhập (Q5).
+7. **Trang thăm vườn bạn:** `Friends.php` (đoạn đọc vườn bạn, khoảng dòng 320) đọc thêm `data.sky` và chỉ xuất
+   các field đã kiểm tra: tầng, chậu đang đặt (potId, bậc, sao), giai đoạn cây, bọ đang đậu. **Không** thêm cột
+   `sky_summary` như §6.4. Không xuất `skySeed`, ledger hay `luck`.
+8. Tăng `GAME_RULES_VERSION` từ 1 lên 2 (đã kiểm tra giá trị hiện tại là 1). Tách luật mới thành
+   `buildGameRules().sky`, rồi chạy lại `scripts/export-game-rules.mjs`.
+
+### 0.3 Lộ trình duy nhất
+
+Thay cho §9, §16.1 và §17.7. Mỗi giai đoạn bật bằng cờ `skyGarden` trong `app_settings` (bảng đã có), tắt mặc
+định trên production đến khi qua cổng.
+
+| GĐ | Phạm vi | Cổng hoàn thành |
+|---|---|---|
+| **G0. Chuẩn bị** | Người dùng chốt Q1–Q6 · `scripts/sky-garden/prepare-pots.mjs` xử lý 4 chậu (§0.7) · danh sách ID và số liệu G2 (§0.4) đưa vào `src/data/skyGarden.ts` · `prompts/sky-garden-prompts.md` · phác bố cục điện thoại 360/390/430 px | 4 chậu webp có điểm neo đúng khi xem thử · bảng §0.4 không còn ô trống |
+| **G1. Demo chuyển động** | Route `/sky-garden-test` (như `/farm-animation-test`): 3 tầng, 4 chậu thật + chậu tạm, cây lắc, bọ bay tới, đậu, bị bắt, bong bóng chín, máy chạy, ngày/đêm, cảnh leo đậu thần lần đầu. Dữ liệu giả, **không đụng bản lưu** | Người dùng duyệt trên điện thoại thật · ≥ 30 fps trên Android tầm trung (ghi rõ máy) |
+| **G2. Lát cắt chơi thật** | Mầm đậu ở cấp 10, mở cấp 12 · tầng 1–3, mua ô · 5 cây (§0.4), trồng cây rau dưới đất trong chậu · tưới chung · bọ · thu, thu cả tầng · bộ Đất nung (3 chậu tặng + shop) và 4 chậu Nông Sản · máy **Bếp trà** với nhài sấy và **MIX01** (cần mật ong từ tổ ong dưới đất) · chuỗi hướng dẫn cho đủ Hạt Mây, Sương Mai để mở tầng 2–3 · trần XP · guard, i18n vi/en, test | Ma trận §16.2, các dòng: hướng dẫn, vòng cây, kinh tế (phần G2), offline, đồng bộ, gian lận (không gồm nâng sao), dữ liệu cũ, mobile/i18n · tài khoản mới chơi đất → mây → thu → nấu MIX01 không bị kẹt |
+| **G3. Chậu có chiều sâu** | Nâng sao, thăng bậc qua server · hiệu ứng xếp chậu · gợi ý xếp · sổ tay chậu, bộ sưu tập · máy **Nồi chè** (MIX04, mứt dâu), máy chưng sương · mô phỏng kinh tế 90 ngày · mở tầng 4–5 | Dòng "Chậu/bộ" và "Nâng cấp" của §16.2 · mô phỏng: không kẹt, không vòng lời vô hạn, tầng 5 rơi vào ngày 20–30 với hồ sơ 3 lần/ngày |
+| **G4. Chế biến và đơn** | Phin cà phê (MIX07 cà phê sữa, nước tắc), cây T3–T5 · cú đưa thư nhận hàng mây · khinh khí cầu (từ tầng 5) · bật bonus xu (D5) bằng cách ghi lô hàng · mở tầng 6–10 khi mô phỏng xác nhận đủ nguồn | Chuỗi trồng → máy → đơn → Hạt Mây → mở tầng chạy trong mô phỏng |
+| **G5. Bạn bè** | Thăm Vườn Mây của bạn · bắt bọ giúp (chỉ bọ thường, quota hai phía §13.2) · tưới giúp · bảng Điểm vườn · `farm_events` loại `sky_catch` | Thử 2 tài khoản trên 2 máy · dòng "Xã hội" của §16.2 |
+| **G6. Nội dung** | Đủ 36 chậu, 15 cây, nhiệm vụ và thành tựu mây, sự kiện Tết/Trung Thu, trang trí mây, xem xét cộng hưởng 2/4/6 (§17.3) và trợ thủ (§17.4) | Mỗi đợt nội dung qua lại mô phỏng |
+
+Mỗi giai đoạn chạy `npm test`, `npm run check:motion`, test i18n, xuất lại `game-rules.json` và thử trên điện
+thoại thật. Phải sao lưu DB trước mỗi lần deploy (theo quy trình deploy hiện có).
+
+### 0.4 Số liệu cho G2
+
+**Tầng và ô** (tầng 4–10 giữ bảng §4.1, mô phỏng chỉnh):
+
+| Tầng | Cấp | Xu | Hạt Mây | Sương Mai | Ô có sẵn | Giá ô 4/5/6 |
+|---|---|---|---|---|---|---|
+| 1 | 12 | 0 | 0 | 0 | 3 | 60 / 100 / 160 |
+| 2 | 15 | 400 | 2 | 0 | 3 | 90 / 150 / 240 |
+| 3 | 19 | 900 | 4 | 1 | 3 | 130 / 220 / 350 |
+
+**Nguồn vật phẩm mở tầng chắc chắn ở G2:**
+
+| Mốc hướng dẫn (nhận một lần) | Thưởng |
+|---|---|
+| Đặt chậu đầu tiên | 3 hạt nhài |
+| Thu cây mây đầu tiên | 1 Hạt Mây |
+| Bắt con bọ đầu tiên | 1 Hạt Mây |
+| Làm xong nhài sấy đầu tiên | 1 Sương Mai |
+| Mở tầng 2 | 2 Hạt Mây + 1 chậu Đất nung |
+| Nấu xong MIX01 đầu tiên | 2 Hạt Mây |
+
+Tổng là 6 Hạt Mây và 1 Sương Mai, vừa đủ mở tầng 2 (2 Hạt Mây) và tầng 3 (4 Hạt Mây + 1 Sương Mai), không cần
+bạn bè, sự kiện hay bọ hiếm. Thứ tự: thu cây và bắt bọ lần đầu cho 2 Hạt Mây, mở tầng 2; mở tầng 2 trả 2 Hạt
+Mây, nấu MIX01 trả thêm 2, cộng Sương Mai từ nhài sấy là đủ tầng 3.
+
+Hai chỗ có thể kẹt và cách xử lý:
+- **Bọ đầu tiên là ngẫu nhiên:** lần trồng đầu tiên (`cycleNo = 0` của chậu đầu tiên) luôn có một bọ rùa ở mốc
+  giai đoạn 1, đặt cố định, không qua tung.
+- **MIX01 cần mật ong:** tổ ong mở từ cấp 6 nên đa số người chơi đã có mật. Nếu lúc làm xong nhài sấy đầu tiên
+  mà kho không có mật ong, mốc đó tặng thêm 1 mật ong. Từ tầng 4 trở đi nguồn đến từ nhiệm vụ ngày (1 Hạt Mây/ngày) và máy chưng sương
+(G3).
+
+**Hạt trồng** dùng khóa `skyseed:<id>`. Đây là loại riêng, không phải "Hạt Mây" `skyitem:cloudseed` (tránh
+nhầm như §15.3 đã cảnh báo).
+
+**5 cây G2.** XP tính bằng `harvestXp(giờ)` hiện có ([game.ts:241](../src/data/game.ts)). Giá đặt cao hơn rau
+cùng cấp một chút (rau cấp 12 bán 5 xu/cái):
+
+| Cây | Mở | Giá hạt | Thời gian | Sản lượng | Giá bán/cái | XP |
+|---|---|---|---|---|---|---|
+| Hoa nhài `jasmine` | T1 | 15 | 45 ph | 3 nụ nhài | 6 | 3 |
+| Bạc hà `mint` | T1 | 12 | 30 ph | 3 lá bạc hà | 5 | 3 |
+| Tắc `kumquat` | T1 | 22 | 2 g | 4 trái tắc | 7 | 5 |
+| Sen `lotus` | T2 | 24 | 3 g | 2 hạt sen + 1 hoa sen | 9 / 10 | 7 |
+| Dâu tây `strawberry` | T2 | 26 | 2 g 30 | 4 dâu | 8 | 6 |
+
+Lãi mỗi lần trồng chỉ khoảng 3–6 xu. Giá trị thật nằm ở công thức và Hạt Mây, giống ý "trồng để làm XP, công
+thức và đơn" của rau dưới đất.
+
+**Máy G2–G3.** Mỗi máy mới mở phải có ít nhất một công thức làm được ngay bằng nguồn sẵn có (§12.3):
+
+| Máy | Mở | Công thức | Thời gian | Giá bán | XP |
+|---|---|---|---|---|---|
+| Bếp trà | T1 | 3 nụ nhài → 1 nhài sấy | 20 ph | 22 | 2 |
+| Bếp trà | T1 | **MIX01:** 2 nhài sấy + 1 mật ong → 1 trà nhài mật ong | 40 ph | 70 | 5 |
+| Bếp trà | T1 | **MIX02:** 2 trái tắc + 2 lá bạc hà + 1 mật ong → 1 nước tắc bạc hà mật ong | 30 ph | 48 | 4 |
+| Nồi chè | T2 | **MIX04:** 3 hạt sen + 1 mật ong → 1 chè sen mật ong | 1 g | 52 | 5 |
+| Nồi chè | T2 | 4 dâu → 1 mứt dâu | 1 g | 42 | 4 |
+| Máy chưng sương | T3 | 3 hoa bất kỳ (nụ nhài, hoa sen) → 1 Sương Mai | 8 g | không bán | 0 |
+
+- **Luật chống vòng lời:** giá bán thành phẩm ≤ 1,35 × tổng giá bán nguyên liệu. Mật ong không mua được ở chợ
+  (`MARKET.buy` chỉ bán thịt), nên không có vòng mua → nấu → bán. Test `skyGarden.test.ts` duyệt mọi công thức
+  để giữ luật này.
+- **MIX07** (cà phê sữa) dùng được `milk` có sẵn trong code. Để ở G4 vì cây cà phê mở tầng 3.
+
+**Chậu G2:**
+- 3 chậu Đất nung tặng khi mở tầng 1.
+- Shop Đất nung 80–150 xu, 6 mẫu.
+- 4 chậu Nông Sản giá 400 / 450 / 500 / 550 xu, mở ở tầng 2. Chưa có Mây Ngọc ở G2 nên tạm bán bằng xu. Từ G3,
+  chậu Nông Sản thứ 5, 6 mới cần Mây Ngọc.
+
+### 0.5 Luật chốt cho vòng cây
+
+- **Tưới (D3):** dùng y luật `WATERING` của nông trại ([game.ts:849](../src/data/game.ts)):
+  - Ngân sách chung: 3 lượt/ngày, cộng 1 lượt sau mỗi lần check-in bữa ăn thật. Tưới dưới đất hay trên mây
+    đều trừ chung.
+  - Mỗi lượt giảm 25% thời gian **còn lại**.
+  - Mỗi chậu cách nhau tối thiểu 1 giờ giữa hai lần tưới.
+  - Không tưới cây đã chín.
+- **Bọ:**
+  - Tung ở 3 mốc chuyển giai đoạn, chỉ khi chưa có bọ đang đậu.
+  - Xác suất có bọ: 25% + chỉ số `bug`, tối đa 85%.
+  - Loại bọ theo trọng số trong bảng §4.4 (là trọng số, không phải xác suất).
+  - Bọ còn đậu đến mốc tiếp theo làm chậm cây 10% thời gian còn lại, tối đa một lần mỗi chu kỳ.
+  - Thu hoạch thì bọ chưa bắt bay mất, có thông báo.
+- **Chỉ số hiệu lực của một chậu** tính bằng điểm cơ bản (bp, 1% = 100 bp), toàn số nguyên:
+  ```
+  base     = chỉ số của mẫu chậu ở bậc gốc của bộ (bảng §4.2)
+  tierMul  = TIER_MUL[bậc hiện tại] / TIER_MUL[bậc gốc của bộ]  với TIER_MUL = [100, 130, 170, 220, 300]
+  starMul  = 100 + 20 × sao
+  floorMul = 100 + 3 × (tầng − 1)
+  stat     = floor(base × tierMul × starMul × floorMul / 1 000 000) + combo của tầng (§0.6)
+  stat     = min(stat, trần)          trần: time 5000, xp 10000, bug 6000
+  ```
+  - Ví dụ: chậu Bí Ngô (Nông Sản, bậc gốc Ngọc, `time` 600 bp) ★0 ở tầng 1 cho 600 bp = 6%. Lên ★5, thăng
+    Hoàng kim, đặt ở tầng 3 thì được 600 × 220/170 × 200/100 × 106/100 ≈ 1646 bp = 16,5%.
+  - Cây rau dưới đất trồng trong chậu Nông Sản: nhân đôi phần `time` của **chính chậu** trước khi cộng combo.
+  - Chỉ số được chụp lại lúc trồng (`statsAtPlant`); đổi chậu hay xếp lại tầng không làm đổi cây đang lớn.
+- **Trần XP từ mây (D6):** tổng XP từ thu cây mây, máy, nhiệm vụ mây và khinh khí cầu tối đa 150 XP/ngày (UTC+7).
+  - Quá trần thì vẫn nhận vật phẩm nhưng XP = 0. UI hiện "XP trên mây hôm nay: 120/150".
+  - Lý do: người chơi đều đặn kiếm khoảng 450 XP/ngày ở dưới đất. Ước tính 18 chậu × 4 vòng/ngày × 5 XP = 360 XP
+    từ mây sẽ đẩy nhanh mọi mốc cấp (`PLOT_UNLOCK_LEVELS`) lên gần gấp đôi.
+  - Guard đếm theo `dayKey('skyxp', …)` có sẵn.
+- **XP của cây rau trồng trên mây** cũng tính vào trần 150.
+
+### 0.6 Hiệu ứng xếp chậu (D4)
+
+Một tầng cần đủ 6 ô mở và 6 chậu. Hệ thống xét lần lượt từ trên xuống và áp **hiệu ứng đầu tiên thỏa**:
+
+| Ưu tiên | Tên | Điều kiện | Hiệu ứng (G3) |
+|---|---|---|---|
+| 1 | Đủ bộ | 6 mẫu chậu **khác nhau** của cùng một bộ | +1500 bp chỉ số chính của bộ |
+| 2 | Bách hóa | 6 chậu thuộc 6 bộ khác nhau | +800 bp `time`, `xp`, `bug` |
+| 3 | Dát vàng | 6 chậu bậc Hoàng kim trở lên | +1000 bp `time` |
+| 4 | Ba đôi | đúng 3 bộ, mỗi bộ 2 chậu | +600 bp `xp` (phần +6% xu bật ở G4) |
+
+- "Chỉ số chính của bộ" ghi trong dữ liệu: Đất nung `time`, Nông Sản `time`, Bàn Ăn Việt `xp`, Chợ Quê `xp`
+  (đổi sang `coin` ở G4), Biển `bug`, Lễ Tết `xp`.
+- Tầng đang có hiệu ứng hiện cờ hiệu ứng ở đầu tầng.
+- Màn "Gợi ý xếp" chỉ ra hiệu ứng gần đạt nhất với số chậu đang có.
+
+### 0.7 Hình ảnh theo ảnh mẫu `6.png`
+
+**Giữ từ ảnh mẫu:**
+- Tháp tầng cuộn dọc, chân tháp là làng và chợ nối xuống nông trại.
+- Đậu thần dọc bên trái.
+- Mỗi tầng một máy ở đầu trái.
+- Mỗi tầng một màu mây: tầng thấp xanh và trắng, cao dần sang tím, hồng, vàng.
+- Bong bóng trên cây.
+- Cờ ở từng tầng.
+
+**Đổi so với ảnh mẫu:**
+
+| Ảnh mẫu | Vườn Mây | Lý do |
+|---|---|---|
+| Phong cách chibi, cây có mặt, mèo, quái vật nhỏ | Chậu men bóng viền vàng là trung tâm, cây vẽ thật như sprite nông trại, không có mặt | Ăn khớp với 4 chậu đã có và tranh nông trại |
+| Thanh trên cùng: vàng + kim cương + tim | Xu + cấp/XP. Mây Ngọc chỉ hiện khi đã có. **Không có tim** | Game chỉ có xu và XP (D8). Tim là loại tiền riêng của Khu Vườn Trên Mây |
+| Tầng chỉ là dải mây | Dải mây có **mép tre hoặc gỗ** và họa tiết Việt (đèn lồng, men lam) | Khác nhận diện của game VNG (§11) |
+| Máy là sinh vật lạ | Máy là đồ bếp Việt: bếp trà, nồi chè, phin, máy chưng sương | Hợp thương hiệu "Ăn gì?" |
+| Chữ in sẵn trên hình | Mọi chữ là giao diện thật, có tiếng Việt và tiếng Anh qua `t` | i18n |
+| Thanh nút riêng (Bản đồ, Tưới, Hạt giống, Thu hoạch, Khám phá) | Dùng ngăn có sẵn của `FarmGame` (kho, đơn, nhiệm vụ, bạn bè). Trên mây thêm 4 nút: Khay hạt · Tưới (hiện số lượt còn lại) · Thu cả tầng · Xuống đất | Không làm bộ nút thứ hai |
+| 6 tầng trong một màn hình | Mặc định 3–4 tầng, có nút "Xem cả tháp" (thu nhỏ, chạm tầng để phóng to lại) | Chậu đủ to để chạm |
+
+**Bố cục theo bề ngang màn hình (Q4):**
+
+- **Dưới 600 px (điện thoại):**
+  - Đậu thần là dải 40 px sát mép trái.
+  - Mỗi tầng gồm dải đầu tầng cao 56 px (máy nhỏ + biển số tầng + cờ hiệu ứng), bên dưới là 2 hàng × 3 chậu.
+  - Ô chậu khoảng 100 px trên máy 390 px: (390 − 2×16 lề − 40 đậu) / 3 ≈ 106 px.
+- **Từ 600 px trở lên (máy tính bảng, máy tính):** như `6.png`, gồm cột trái khoảng 24% (đậu thần + máy) và
+  6 chậu một hàng, ô chậu ≥ 72 px.
+- Mọi vùng chạm ≥ 44 × 44 px.
+- Bọ có vùng chạm riêng, nằm trên cây; chạm bọ không kích hoạt thao tác với cây.
+
+**Lớp art cần vẽ** (tách lớp, không cắt từ `6.png`):
+
+| Tên file (`public/images/sky-garden/`) | Kích thước nguồn | Ghi chú |
+|---|---|---|
+| `sky/{dawn,day,dusk,night}.webp` | 1080×1920 | nền trời, đổi theo giờ và độ cao |
+| `shelf/floor-{1..10}.webp` | 1200×240, giãn ngang được (9-slice) | dải mây + mép tre/gỗ, mỗi tầng một màu |
+| `beanstalk/{tile,base,top}.webp` | 160×512 lặp dọc | thân đậu, gốc mọc từ đảo, ngọn |
+| `ui/floor-sign.webp`, `ui/combo-flag-{1..4}.webp` | 128×128 | biển số tầng, cờ 4 hiệu ứng |
+| `machine/{tea,pot,phin,dew}-{idle,run,done}.webp` | 384×384 | 3 trạng thái mỗi máy |
+| `bubble/{ready,bug,done}.webp` | 128×128 | bong bóng chín, có bọ, máy xong |
+| `pots/<potId>@{1x,2x}.webp` + `pots.json` | 256 / 512 | điểm neo miệng chậu `{cx, cy, rx}` |
+| `plants/<id>-{0..3}.webp` | 384×384, gốc cây ở đáy ảnh | 4 giai đoạn |
+| `bugs/<id>-{a,b}.webp` | 96×96 | 2 khung đập cánh |
+
+### 0.8 Gắn vào app
+
+- **Lối vào:**
+  - Nút "Lên mây" trong `journey/FarmGame.tsx`. `SkyScene` tải lazy trong một chunk riêng, không làm nặng ngăn
+    Nông trại.
+  - Mầm đậu thần là một điểm trên tranh đảo (thêm vào `decorSpots.ts`).
+  - Chuyển cảnh: camera kéo lên 0,6 giây. Khi bật giảm chuyển động thì chỉ mờ dần.
+- **Thư mục và file mới:**
+  - Cảnh: `src/features/sky-garden/` (dùng lại `farm-anim/engine` và các system `Sky`, `Cloud`, `Particle`,
+    `Wind`).
+  - Giao diện: `journey/SkyGarden.tsx`, `PotTray.tsx`, `PotSheet.tsx`, `MachinesSection.tsx`.
+  - Demo: `/sky-garden-test` đăng ký ở `src/main.tsx` như `/farm-animation-test`.
+- **Kho:** `StoragePanel` thêm tab "Trên mây" cho hạt mây, bọ, vật phẩm mở tầng. Sản phẩm mây và thành phẩm máy
+  nằm chung `ingredients`, thêm giá vào bảng `sell` của luật (guard chỉ nhận nguyên liệu có giá bán).
+- **Thăm bạn:** `FriendFarm.tsx` thêm tab "Vườn Mây" chỉ xem; G5 mới có bắt bọ giúp.
+- **i18n:**
+  - Namespace mới `src/i18n/messages/{vi,en}/sky.ts` cho giao diện.
+  - Tên chậu, cây, bọ, máy vào `t.data`.
+  - Lỗi server vào `server/lang/{vi,en}.php`.
+- **Theo dõi** (tối thiểu, không dữ liệu cá nhân): tỉ lệ người cấp 12 lên mây, ngày mở từng tầng, số MIX đã
+  nấu, tỉ lệ quay lại nông trại sau khi lên mây, số lần guard từ chối thao tác `sky`.
+
+### 0.9 Mô hình dữ liệu chốt
+
+Thay cho §6.1, gộp các field mà §15.3 yêu cầu:
+
+```ts
+interface SkyGarden {
+  skySeed: string | null;                 // server cấp lúc mở tầng 1; client không đổi được
+  floors: number;                         // 0 = chưa mở
+  slotsBought: number[];                  // [tầng] -> 0..3
+  slots: (string | null)[][];             // [tầng][ô 0..5] -> potUid
+  pots: Record<string, SkyPot>;
+  seeds: Partial<Record<SkyCropId, number>>;
+  bugs: Partial<Record<BugId, number>>;
+  items: Partial<Record<SkyItemId, number>>;    // cloudseed, dew, gem, clover
+  machines: Partial<Record<MachineId, { slots: number; jobs: MachineJob[] }>>;
+  tutorialClaimed: SkyTutorialStep[];
+  setsClaimed: PotSetId[];
+  xpDay: { day: string; xp: number };     // trần D6
+  introSeen: boolean;
+}
+interface SkyPot {
+  uid: string;          // `${potId}-${n}`, n tăng dần theo từng mẫu
+  potId: PotId;
+  tier: 0 | 1 | 2 | 3 | 4;
+  stars: 0 | 1 | 2 | 3 | 4 | 5;  // chỉ server đổi (tài khoản)
+  luck: number;                   // pity, chỉ server đổi (tài khoản)
+  tries: number;                  // số lần thử ở mốc sao hiện tại
+  cycles: number;                 // số lần đã trồng = cycleNo kế tiếp
+  plant: SkyPlant | null;
+}
+interface SkyPlant {
+  crop: SkyCropId | VegId;
+  cycleNo: number;
+  plantedAt: number; readyAt: number; wateredAt: number | null;
+  statsAtPlant: { timeBp: number; xpBp: number; bugBp: number };
+  stagesRolled: number;           // 0..3
+  bug: BugId | null;
+  slowed: boolean;                // đã bị bọ làm chậm trong chu kỳ này
+}
+interface MachineJob { jobId: string; recipe: RecipeId; startedAt: number; readyAt: number }
+```
+
+Tài nguyên ledger mới: `skyseed:<id>`, `bug:<id>`, `skyitem:<id>`, `pot:<potId>`. Sản phẩm dùng `ingredient:<id>`
+có sẵn.
 
 ---
 
@@ -130,7 +484,8 @@ Nông trại ──nông sản──▶ chợ / nấu món ──xu, XP──▶
 | 10 | 60 | 11 000 | 22 | 12 | Cổng "Cung Mây" (trang trí đỉnh) |
 
 Cấp 12 (khoảng ngày 4-5 với người chơi đều) là lúc ô đất dưới nông trại đã mở được nửa, đúng lúc cần mục
-tiêu mới. Bảng trên là số khởi điểm. Chạy mô phỏng ở P3 rồi chỉnh lại.
+tiêu mới. Bảng trên là số khởi điểm. Chạy mô phỏng ở P3 rồi chỉnh lại. **→ §0.4:** giá ô, nguồn Hạt Mây và
+Sương Mai cho tầng 1–3 đã chốt ở đó.
 
 **Vật phẩm mở tầng** (tên riêng của mình, không dùng "lọ mây"/"nước thánh"):
 
@@ -158,7 +513,7 @@ do `ParticleSystem` vẽ.
 | Chỉ số | Ý nghĩa | Trần tổng |
 |---|---|---|
 | `time` | Giảm % thời gian chín của cây trong chậu | 50% |
-| `coin` | Cộng % xu khi bán hoặc giao sản phẩm của cây đó | 100% |
+| `coin` | Cộng % xu khi bán hoặc giao sản phẩm của cây đó (**→ §0.1 D5:** tắt đến G4) | 100% |
 | `xp` | Cộng % XP khi thu hoạch | 100% |
 | `bug` | Cộng % tỉ lệ bọ xuất hiện | 60% |
 
@@ -239,6 +594,9 @@ ghé vườn buổi tối.
 Tái dùng mẫu "bắt đầu → chờ → thu" của tổ ong và thuyền (`START/COLLECT_HIVE`). Mỗi máy có 1 hàng chờ, nâng
 cấp thêm 1-2 ô.
 
+**→ §0.4:** bảng dưới là bản đầu. Lò sao trà ở đây cần lá trà (tầng 3) nên tầng 1 không làm được gì. §0.4 đổi
+thành "Bếp trà" với nhài sấy, MIX01, MIX02, và chốt giá, thời gian, XP.
+
 | Máy | Mở | Công thức (ví dụ) |
 |---|---|---|
 | Lò sao trà | T1 | 3 nụ nhài + 1 lá trà → Trà nhài (40 ph). 2 hoa sen + 2 lá trà → Trà sen (1 g) |
@@ -285,7 +643,7 @@ và bộ, để bài toán cân bằng gọn.
    sang ô khác hoặc tầng khác), hoặc cất về kho (cây đang trồng phải thu hoặc bỏ trước).
 2. **Trồng:** kéo hạt mây (hoặc hạt rau) vào chậu. Dùng lại `seedDrag` / `SeedTray`.
 3. **Tưới:** dùng chung 3 lượt tưới/ngày của giếng (`WATERING`). Không thêm lượt riêng, để người chơi phải
-   chọn tưới dưới đất hay trên mây.
+   chọn tưới dưới đất hay trên mây. (Luật đầy đủ: **→ §0.5**.)
 4. **Bọ:** bọ bay tới (hoạt cảnh), đậu trên cây, có chấm "!" nhẹ. Chạm thì bọ vào túi bọ, có hiệu ứng vợt.
 5. **Thu hoạch:** chạm cây chín, hoặc "Thu cả tầng". Sản phẩm bay vào kho, cộng xu (nếu là hoa cảnh bán ngay)
    hoặc vào `ingredients`.
@@ -325,7 +683,7 @@ Tính theo **từng tầng**, cộng thêm vào mọi chậu của tầng đó:
 | 3 cặp, mỗi cặp 2 chậu cùng bộ | +6% xu, +6% XP | "Ba đôi" |
 | 6 chậu cùng **bậc** Hoàng kim trở lên | +10% `time` | "Dát vàng" |
 
-Một tầng chỉ áp hiệu ứng mạnh nhất. Tầng nào đang có hiệu ứng thì hiện dải ruy băng trên mép tầng. Thêm màn
+Một tầng chỉ áp hiệu ứng mạnh nhất (**→ §0.6:** đổi thành thứ tự ưu tiên cố định, tính bằng bp). Tầng nào đang có hiệu ứng thì hiện dải ruy băng trên mép tầng. Thêm màn
 "Gợi ý xếp" chỉ cách đạt hiệu ứng từ số chậu đang có (người chơi game gốc phải tự lập "công thức", ở đây
 game gợi ý luôn).
 
@@ -356,6 +714,9 @@ game gợi ý luôn).
 - **Không trộm trên mây.** Vườn mây là chỗ khoe chậu. Trộm đã có ở nông trại.
 - **Bảng xếp hạng bạn bè** theo "Điểm vườn" = tổng (bậc × sao) của các chậu đang đặt.
 
+**→ §0.3 G5:** bắt bọ giúp chỉ cho bọ thường, có quota hai phía theo §13.2. Điểm vườn dùng công thức của §12.2,
+vì `bậc × sao` cho mọi chậu ★0 điểm 0.
+
 ### 5.8 Nhiệm vụ và thành tựu mới
 
 Thêm vào `quests.ts`, tách từng mục để ship độc lập:
@@ -369,6 +730,8 @@ Thêm vào `quests.ts`, tách từng mục để ship độc lập:
 ## 6. Dữ liệu và luật
 
 ### 6.1 `GuestProgress`: thêm nhánh `sky` (mặc định rỗng, không tăng `SCHEMA_VERSION`)
+
+**→ §0.9:** bản chốt có thêm `skySeed`, `cycles`/`cycleNo`, `statsAtPlant`, `slowed`, `items`, `xpDay`, job máy.
 
 ```ts
 interface SkyGarden {
@@ -412,7 +775,8 @@ Sương Mai, Mây Ngọc, sản phẩm mây), `pot:*` (mua/nhận chậu). Kho h
 ### 6.3 Ngẫu nhiên và chống gian lận (quan trọng nhất)
 
 Game gốc có hai chỗ may rủi: **bọ xuất hiện** và **nâng sao**. Nếu client tự tung xúc xắc thì sửa
-localStorage là có chậu ★5. Cách xử lý:
+localStorage là có chậu ★5. Cách xử lý (**→ §0.2:** công thức bọ đổi `plantedAt` thành `cycleNo` để không quay
+lại được kết quả bằng cách đổi giờ trồng; nâng sao có `opId` chống gửi lặp):
 
 - **Bọ:** tung **tất định** bằng `hash(userSeed, potUid, plantedAt, rollIndex)`. `ProgressGuard` tính lại được
   y hệt khi replay ledger nên không cần gọi server. Người chơi đoán trước được thì cũng chỉ biết "cây này sẽ có
@@ -432,7 +796,8 @@ localStorage là có chậu ★5. Cách xử lý:
 
 - `POST /account/sky/star-up`, `POST /account/sky/tier-up` (tier-up không ngẫu nhiên nhưng nên khóa server
   cho chắc).
-- Tóm tắt vườn công khai (`garden_profiles`): thêm `sky_summary` JSON (tầng, chậu đang đặt, sao, bọ đang
+- (**→ §0.2 bước 7:** bỏ cột mới; `Friends.php` đọc thẳng `user_progress.data.sky` như cách đang đọc ô đất.)
+  Tóm tắt vườn công khai (`garden_profiles`): thêm `sky_summary` JSON (tầng, chậu đang đặt, sao, bọ đang
   đậu) để bạn bè xem và bắt bọ giúp. Thêm route `/account/friends/CODE/catch`.
 - `farm_events` thêm loại `sky_catch` để báo "X đã bắt giúp bạn 1 bọ rùa".
 - Chuỗi server mới vào `server/lang/{vi,en}.php`.
@@ -466,7 +831,8 @@ Script mới `scripts/sky-garden/prepare-pots.mjs` (sharp, chạy được nhi�
 - Nền: dùng lại `SkySystem` + `CloudSystem`, thêm lớp **kệ mây** cho mỗi tầng (một dải mây dày có mép gỗ
   hoặc dây leo, cảm hứng từ kệ gỗ trong `5.png`). Cần 1 sprite kệ dùng lặp, 2 sprite mép trái/phải, 1 sprite
   thân đậu thần chạy dọc.
-- Mỗi tầng cao khoảng 38% chiều cao màn hình điện thoại, nên thấy được gần 3 tầng một lúc.
+- Mỗi tầng cao khoảng 38% chiều cao màn hình điện thoại, nên thấy được gần 3 tầng một lúc. (**→ §0.7:** bố cục
+  theo ảnh mẫu `6.png`, kích thước theo bề ngang màn hình và danh sách lớp art đã chốt ở đó.)
 - Bầu trời đổi theo độ cao: tầng thấp xanh nhạt, tầng cao ửng hồng và vàng, tầng 10 có sao.
 - Đêm (18h-6h): bầu trời tối, đom đóm phát sáng, đèn lồng mây sáng.
 
@@ -518,6 +884,9 @@ Theo quy ước hiện có: không dùng SVG animation (`npm run check:motion`),
 
 ## 9. Lộ trình
 
+> **→ §0.3:** đã thay bằng lộ trình duy nhất G0–G6. Bảng dưới giữ để đối chiếu. P0 ≈ G0, P1 ≈ G1, P2 ≈ G2
+> (thêm máy đầu và MIX01), P3 ≈ G3, P4 ≈ G4, P5 ≈ G5, P6 ≈ G6.
+
 Làm theo thứ tự. Mỗi phần ship được riêng. Theo cách đã làm với nông trại: **demo chuyển động trước, chưa có
 lối chơi**, người dùng duyệt rồi mới làm tiếp.
 
@@ -560,6 +929,9 @@ prompts/sky-garden-prompts.md
 
 ## 10. Câu hỏi cần chốt trước P2
 
+> **→ §0.1:** câu 4 đã chốt (6 ô). Câu 2, 3 chốt theo đề xuất (D3/D8, pity §5.3). Câu 1, 5, 6 chuyển thành
+> Q1–Q3, kèm Q4–Q6 mới.
+
 1. **Tên khu:** "Vườn Mây" (đề xuất), "Khu vườn trên mây" (dễ nhầm với game của VNG), hay tên khác?
 2. **Thất bại khi nâng sao:** dùng cách nhẹ tay ở §5.3 (đề xuất), hay khắt khe như game gốc (mất hết)?
 3. **Tiền nạp Mây Ngọc:** để sau v1 (đề xuất), hay làm ngay theo đường VietQR của lượt quay?
@@ -588,7 +960,8 @@ Các quy tắc dưới đây là **đề xuất riêng để triển khai**, kh�
 
 - Ô khóa → ô mở trống → chậu rỗng → cây đang lớn → cây chín → chậu rỗng. Bọ là trạng thái phụ, không phải bước bắt buộc. Một lần trồng tiêu đúng 1 hạt; cây mây mặc định thu một lần rồi trồng lại, không tự tái sinh. Cây đất chỉ nhận nhóm rau được cho phép, không tự mang cơ chế cây lâu năm lên mây.
 - Mỗi chu kỳ có định danh duy nhất, thời điểm bắt đầu, thời lượng hiệu lực, mốc chuyển giai đoạn, sản lượng và XP cố định theo bảng luật. Trồng thất bại không mất hạt; thu thành công đồng thời trả sản phẩm/XP, tăng thống kê và xóa cây. Không vừa cộng xu vừa nhập cùng sản phẩm vào kho: hoa bán ngay phải có chế độ riêng và xác nhận rõ trong dữ liệu; MVP đưa mọi sản phẩm vào kho.
-- Tưới là tùy chọn, cây vẫn chín và không héo nếu không chăm. Đề xuất giảm 10% thời gian **còn lại** tại lúc tưới, tối đa một lần/chu kỳ, không tưới cây đã chín. Dùng chung ngân sách nước thật của giếng, không hard-code thêm 3 lượt nếu luật hiện hành khác. Tưới giúp không tạo ngân sách nước thứ hai hoặc giảm thời gian lần nữa.
+- (**→ §0.5 D3:** bỏ phương án 10% dưới đây, dùng y luật `WATERING` của nông trại: 25% thời gian còn lại, ngân
+  sách chung 3 lượt/ngày + 1 sau bữa thật, mỗi chậu cách 1 giờ.) Tưới là tùy chọn, cây vẫn chín và không héo nếu không chăm. Đề xuất giảm 10% thời gian **còn lại** tại lúc tưới, tối đa một lần/chu kỳ, không tưới cây đã chín. Dùng chung ngân sách nước thật của giếng, không hard-code thêm 3 lượt nếu luật hiện hành khác. Tưới giúp không tạo ngân sách nước thứ hai hoặc giảm thời gian lần nữa.
 - Bọ được xét tại ba mốc chuyển giai đoạn, chỉ khi chưa có bọ. Bảng §4.4 là **trọng số loại**, không phải các xác suất độc lập vì tổng vượt 100%. Xác suất có bọ gốc đề xuất 25%/mốc; chỉ số bọ cộng điểm phần trăm, chặn ở 85%. Sau đó chuẩn hóa trọng số loại đủ điều kiện; đom đóm xét giờ game UTC+7, không xét giờ thiết bị.
 - Bọ còn ở mốc tiếp theo làm chậm đúng một lần/chu kỳ: cộng 10% thời gian còn lại tại mốc đó, ghi dấu đã áp dụng. Bắt ngay trước mốc tránh chậm. Bọ còn trên cây chín vẫn bắt được nhưng không tự phát sinh thêm; thu hoạch bỏ bọ chưa bắt, có thông báo ngắn. Không có tác vụ chạy nền liên tục để tích lũy bọ vô hạn.
 - Khi đổi vị trí, mang theo cây và bọ nhưng không tính lại thời lượng/sản lượng chu kỳ đang chạy. Không cất, thăng bậc hay nâng sao chậu có cây; bỏ cây cần xác nhận, không hoàn hạt, không trả thưởng. Hai ô có chậu đổi chỗ nguyên tử, không nhân bản chậu khi kéo thả lỗi.
@@ -643,6 +1016,11 @@ Các quy tắc dưới đây là **đề xuất riêng để triển khai**, kh�
 
 ### 15.1 Ranh giới tin cậy
 
+> **→ §0.2 (D1):** chọn hướng A. Mọi thao tác vẫn đi qua bản lưu chung + `ProgressGuard`, chỉ nâng sao và thăng
+> bậc do server ghi (có `opId`, khóa `version`). Yêu cầu "server nắm mọi thao tác" dưới đây chỉ làm khi đã
+> chuyển cả ví xu sang server, tách thành dự án riêng. Các yêu cầu khác của §15 (giờ server, UTC+7, khách là
+> sandbox, parser chặt, không lộ seed) vẫn áp dụng.
+
 Thiết kế replay ledger ở §6.3 là hướng tích hợp ban đầu, **không đủ chứng minh chống gian lận**. Hash dùng thời điểm trồng/UID do client chọn có thể bị thử nhiều seed hoặc rollback; sửa thời gian, cắt ledger và snapshot giả vẫn là rủi ro. Đối chiếu [kiểm toán gian lận](kiem-toan-gian-lan-game.md) và [kế hoạch sửa bảo mật](sua-bao-mat-va-gian-lan.md); các tài liệu có mốc khảo sát khác nhau, lượt này không kiểm chứng lại mã hay xác nhận mọi lỗi đã sửa.
 
 - Tài khoản online: server giữ trạng thái mây chuẩn hoặc xác minh chuyển trạng thái đầy đủ từ bản chuẩn, không nhận số dư/chậu/thời gian do client tự khai làm sự thật. Mọi thao tác kinh tế dùng giờ server, định danh chu kỳ do server cấp, revision và khóa chống lặp bền vững độc lập ledger hiển thị.
@@ -669,6 +1047,8 @@ Thiết kế replay ledger ở §6.3 là hướng tích hợp ban đầu, **khô
 ## 16. Phạm vi MVP, nghiệm thu và cổng phát hành
 
 ### 16.1 Điều chỉnh thứ tự để mỗi giai đoạn chơi được
+
+> **→ §0.3:** đã gộp vào lộ trình G0–G6. Ma trận §16.2 bên dưới vẫn là cổng nghiệm thu bắt buộc.
 
 Giữ P0–P6 làm tên giai đoạn, nhưng chỉnh phụ thuộc thay vì mở hết tầng trước khi có nguồn tài nguyên:
 
@@ -750,11 +1130,17 @@ Nguồn tham khảo lối chơi (liên kết giữ từ bản gốc, chưa đư�
 | MIX09 | nguyên liệu món tráng miệng có sẵn, cần xác minh | cúc vàng | món hương cúc | T4 |
 | MIX10 | nguyên liệu bánh có sẵn, cần xác minh | vani | bánh vani | T7 |
 
+**Đã đối chiếu code (2026-10-08):** `honey` (tổ ong, 2 mật mỗi 5 giờ, bán 12 xu) và `milk` đều có sẵn, nên MIX01,
+MIX02, MIX04 và MIX07 đủ nguyên liệu dưới đất. Mật ong không mua được ở chợ. **→ §0.4:** MIX01 và MIX02 ở Bếp
+trà (T1), MIX04 ở Nồi chè (T2), MIX07 để G4.
+
 **Chưa đưa MIX03, MIX05–MIX10 vào runtime** cho tới khi có nguyên liệu hợp lệ, sản lượng, thời gian, chi phí, giá bán, XP, nguồn hạt và đường mở khóa; không tự tạo nguyên liệu đất chưa tồn tại. Mỗi công thức có `recipeId`, `rulesVersion`, `requiredUnlocks`, `inputs[]`, `outputs[]`, `durationSeconds`, `coinCost`, `xpReward`, `sellPrice`, `dailyLimit` (nếu có), `source/sink` và test chống vòng lặp lợi nhuận vô hạn. Bản MVP ưu tiên MIX01, MIX02, MIX04 sau khi xác minh mật ong và sản phẩm tương ứng.
 
 **Sửa phụ thuộc mở khóa:** Lò sao trà T1 phải có công thức T1 không cần lá trà T3; nguồn Hạt Mây mở T2 và Sương Mai mở T3 phải đến từ chuỗi hướng dẫn/nhiệm vụ thường trực trước khi yêu cầu tiêu; Máy chưng sương T3 chỉ là nguồn bổ sung sau khi mở. Hạt Mây từ cây đậu thần T10 dùng đổi chậu/vật phẩm cuối game, không được coi là nguồn mở tầng trước T10.
 
 ### 17.3 Chậu, cộng hưởng và preset
+
+> **→ §0.6 (D4):** G2–G5 dùng một bảng 4 hiệu ứng, theo thứ tự ưu tiên. Cộng hưởng 2/4/6 và preset để G6.
 
 - Giữ 36 mẫu ban đầu, 5 bậc và ★0–★5; các mẫu và chỉ số khai báo bằng registry có phiên bản. Chậu có UID server, bộ, bậc, sao, trạng thái đặt, khóa thao tác và lịch sử nâng cấp tối thiểu.
 - **Cộng hưởng bậc thang:** 2/4/6 chậu cùng bộ trên một tầng có thể kích hoạt hiệu ứng tăng dần; bảng số % là dữ liệu cân bằng, chưa chốt. Hiệu ứng 6 chậu không cộng trùng hiệu ứng 2 và 4 trừ khi registry ghi rõ.
@@ -798,6 +1184,8 @@ Nguồn tham khảo lối chơi (liên kết giữ từ bản gốc, chưa đư�
 
 ### 17.7 Lộ trình triển khai và cổng nghiệm thu V2
 
+> **→ §0.3:** đã gộp vào G0–G6. V0 ≈ G0, V1 ≈ G1 + G2, V2 ≈ G2 + phần đầu G3, V3 ≈ G3–G4, V4 ≈ G5–G6.
+
 | Giai đoạn | Phạm vi bắt buộc | Cổng hoàn thành |
 |---|---|---|
 | V0 — Chốt đặc tả | audit code/asset, registry hạt–vật phẩm–chậu, công thức đầu game, đường mở T2/T3, wireframe mobile, chính sách khách | không còn phụ thuộc vòng, có nguồn thường trực và bảng cân bằng đầy đủ cho nội dung định triển khai |
@@ -810,12 +1198,17 @@ Nguồn tham khảo lối chơi (liên kết giữ từ bản gốc, chưa đư�
 
 ### 17.8 Danh sách quyết định cần chốt trước khi code
 
-- [ ] Xác minh file art 1–5 và quyền sử dụng; chốt style guide, kích thước/anchor.
-- [ ] Đối chiếu registry nguyên liệu đất hiện tại; chọn công thức hỗn hợp đầu tiên có đủ nguyên liệu thật.
-- [ ] Chốt nguồn Hạt Mây/Sương Mai trước T2/T3 và quà hướng dẫn chỉ nhận một lần.
-- [ ] Chốt kinh tế hạt, sản lượng, giá, XP, thời gian, giới hạn kho, giới hạn ngày.
-- [ ] Chốt thứ tự hiệu ứng chậu, công thức 2/4/6, trần cộng hưởng và hành vi preset khi có cây.
-- [ ] Chốt cách xác minh trạng thái online/server, guest sandbox và RNG bọ/nâng sao.
-- [ ] Duyệt wireframe desktop/mobile, tương tác thay drag, giảm chuyển động và âm thanh.
-- [ ] Chạy mô phỏng ≥90 ngày và kiểm thử ma trận §16 trước khi bật kinh tế chung.
+Cập nhật 2026-10-08 theo §0:
+
+- [~] Xác minh file art 1–6 và quyền sử dụng; chốt style guide, kích thước/anchor. File và kích thước đã kiểm
+  tra. Style và lớp art chốt ở §0.7. **Còn thiếu:** người dùng xác nhận quyền (Q6).
+- [x] Đối chiếu registry nguyên liệu đất hiện tại; chọn công thức hỗn hợp đầu tiên có đủ nguyên liệu thật:
+  MIX01 (mật ong), §0.4.
+- [x] Chốt nguồn Hạt Mây/Sương Mai trước T2/T3 và quà hướng dẫn chỉ nhận một lần: §0.4.
+- [~] Chốt kinh tế hạt, sản lượng, giá, XP, thời gian, giới hạn ngày: xong cho G2 (§0.4, §0.5). Tầng 4–10 chờ mô
+  phỏng ở G3.
+- [x] Chốt thứ tự hiệu ứng chậu và trần: §0.6. Cộng hưởng 2/4/6 và preset hoãn đến G6.
+- [x] Chốt cách xác minh online/server, khách và RNG bọ/nâng sao: §0.2. Chính sách khách khi đăng nhập chờ Q5.
+- [ ] Duyệt wireframe desktop/mobile (bố cục §0.7, chờ Q4), tương tác thay kéo thả, giảm chuyển động và âm thanh.
+- [ ] Chạy mô phỏng ≥90 ngày và kiểm thử ma trận §16 trước khi bật kinh tế chung (G3).
 
