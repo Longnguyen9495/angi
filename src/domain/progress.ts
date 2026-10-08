@@ -2,6 +2,9 @@ import type { EventId, UpgradeId } from '../data/game';
 import type { AnimalId, CropId, DecorId, ProduceId, RecipeId, RegionId } from '../data/types';
 import { ANIMALS, CROPS, FARM_PLOT_COUNT, PRODUCE_IDS } from '../data/game';
 import type { DecorSlots } from '../data/decorSlots';
+import type { BugId, SkyCropId, SkyGoodId, SkyItemId } from '../data/skyEconomy';
+import type { PotId } from '../data/skyGarden';
+import type { SkyState } from './sky';
 import { emptyQuests, type QuestState } from './quests';
 import { DEFAULT_FILTERS, type Filters } from './recommend';
 import { HOUR_MS, dateKey } from './time';
@@ -60,7 +63,18 @@ export interface CheckInRecord {
   at: number;
 }
 
-export type Resource = `seed:${CropId}` | `ingredient:${ProduceId}` | 'xp' | 'stamp' | 'coin';
+export type Resource =
+  | `seed:${CropId}`
+  | `ingredient:${ProduceId}`
+  | 'xp'
+  | 'stamp'
+  | 'coin'
+  // Vườn Mây (src/domain/sky.ts)
+  | `skyseed:${SkyCropId}`
+  | `bug:${BugId}`
+  | `skyitem:${SkyItemId}`
+  | `skygood:${SkyGoodId}`
+  | `pot:${PotId}`;
 
 /** Append-only reward ledger entry. `key` doubles as the idempotency key. */
 export interface LedgerEntry {
@@ -135,6 +149,8 @@ export interface GuestProgress {
    * only on this device. A journey that belongs to one account is never uploaded to another.
    */
   owner?: string | null;
+  /** Vườn Mây (src/domain/sky.ts): absent until its first floor is opened. */
+  sky?: SkyState;
 }
 
 export interface DecorPlacement {

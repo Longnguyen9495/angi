@@ -22,6 +22,7 @@ import {
 } from './progress';
 import { emptyQuests, type QuestState, type Tally } from './quests';
 import { DEFAULT_FILTERS } from './recommend';
+import { parseSky } from './sky';
 
 export const STORAGE_KEY = 'hanh-trinh-bep-viet/guest';
 /**
@@ -314,6 +315,8 @@ export function parseProgress(raw: unknown, now: number): GuestProgress | null {
     grown: isStringArray(raw.grown)
       ? ([...new Set(raw.grown)].filter((c) => Object.hasOwn(EMPTY_CROPS, c)) as CropId[])
       : [],
+    // Vườn Mây: absent until its first floor opens.
+    sky: parseSky(raw.sky, now),
     unlockedCrops: isStringArray(raw.unlockedCrops)
       ? (raw.unlockedCrops.filter((c) => Object.hasOwn(EMPTY_CROPS, c)) as CropId[])
       : [],

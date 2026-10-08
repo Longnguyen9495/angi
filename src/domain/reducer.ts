@@ -36,10 +36,8 @@ import {
   type CheckInOutcome,
   type FriendEvent,
   type GuestProgress,
-  type LedgerEntry,
   type EffectsQuality,
   type MotionPref,
-  type Resource,
 } from './progress';
 import type { Filters } from './recommend';
 import {
@@ -74,6 +72,8 @@ import {
   type QuestReward,
 } from './quests';
 import { HOUR_MS, dateKey, daysBetween, slotKey } from './time';
+import { post } from './ledger';
+import { isSkyAction, skyReducer, type SkyAction } from './skyReducer';
 
 /** Timers fire a little early or late; a catch this close to the bite still counts. */
 const BITE_SLACK_MS = 250;
@@ -151,65 +151,13 @@ export type Action =
   | { type: 'SET_SIMULATE_FAILURE'; value: boolean }
   /** This journey is now saved to that account (see GuestProgress.owner). */
   | { type: 'SET_OWNER'; owner: string | null }
-  | { type: 'RESET'; now: number };
+  | { type: 'RESET'; now: number }
+  /** Vườn Mây (src/domain/skyReducer.ts). */
+  | SkyAction;
 
-/**
- * Entries kept on the device. The server keeps every one-time reward for good
- * (server/lib/ProgressGuard.php checks each save against them), so this is just the window
- * a save is checked in; it holds far more than a day of play between two saves.
- */
-export const LEDGER_LIMIT = 1000;
+export { LEDGER_LIMIT } from './ledger';
 /** Minutes after choosing a dish when the in-page check-in reminder fires. */
 export const REMINDER_DELAY_MS = 45 * 60 * 1000;
-
-function hasKey(s: GuestProgress, key: string): boolean {
-  return s.ledger.some((e) => e.key === key);
-}
-
-function balance(s: GuestProgress, resource: Resource): number {
-  if (resource === 'xp') return s.xp;
-  if (resource === 'coin') return s.coins;
-  if (resource === 'stamp') return s.stamps.discovered.length + s.stamps.eaten.length;
-  const [kind, id] = resource.split(':') as ['seed' | 'ingredient', string];
-  return kind === 'seed' ? s.seeds[id as CropId] : s.ingredients[id as ProduceId];
-}
-
-/**
- * Applies a resource change through the ledger. Returns false (and changes
- * nothing) when the idempotency key was already used or the balance would go
- * negative — double taps and retries can never pay out twice.
- */
-function post(
-  s: GuestProgress,
-  key: string,
-  resource: Resource,
-  delta: number,
-  reason: string,
-  now: number,
-): boolean {
-  if (hasKey(s, key)) return false;
-  if (resource !== 'stamp') {
-    const next = balance(s, resource) + delta;
-    if (next < 0) return false;
-    if (resource === 'xp') s.xp = next;
-    else if (resource === 'coin') s.coins = next;
-    else {
-      const [kind, id] = resource.split(':') as ['seed' | 'ingredient', string];
-      if (kind === 'seed') s.seeds[id as CropId] = next;
-      else s.ingredients[id as ProduceId] = next;
-    }
-  }
-  const entry: LedgerEntry = {
-    key,
-    resource,
-    delta,
-    balanceAfter: balance(s, resource),
-    reason,
-    at: now,
-  };
-  s.ledger = [...s.ledger, entry].slice(-LEDGER_LIMIT);
-  return true;
-}
 
 function ensureDay(s: GuestProgress, now: number) {
   const today = dateKey(now);
@@ -331,6 +279,7 @@ export function gameReducer(state: GuestProgress, action: Action): GuestProgress
 }
 
 function baseReducer(state: GuestProgress, action: Action): GuestProgress {
+  if (isSkyAction(action)) return skyReducer(state, action);
   switch (action.type) {
     case 'SET_FILTERS':
       return { ...state, filters: action.filters };
