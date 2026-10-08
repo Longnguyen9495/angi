@@ -21,6 +21,7 @@ bằng văn bản trước khi phát hành):
 | `3.png` | Chậu Bắp Cải | lá cải ngọc bích, ngọc trai, đế lá |
 | `4.png` | Chậu Cà Tím | tím, hoa tím viền vàng, đế tầng |
 | `5.png` (941×1672) | Moodboard "kệ chậu" | khoảng 60 chậu theo món Việt: phở gà trống, bánh mì, bánh chưng, cà phê phin, dừa, thanh long, cua, bánh trung thu, ấm trà, dưa hấu, chè, nón lá, cá sứ, mái đình, giỏ tre… |
+| `vuon_may_20_chau_fixed/` (20 file, 282–390 px) | Bộ 20 chậu mẫu | nhận 2026-10-08. Tên file 01–09 lệch so với hình; phần đất có lỗ; độ phân giải chỉ đủ @1x. Chi tiết và ID mới ở §0.14 |
 | `6.png` (1024×1536) | Ảnh mẫu bố cục màn Vườn Mây | tháp 6 tầng mây nhiều màu, đậu thần dọc bên trái, mỗi tầng một máy ở đầu trái, 6 chậu/tầng, bong bóng trên cây, cờ từng tầng, làng và chợ ở chân tháp. **Chỉ dùng làm mẫu bố cục**, xem chỗ cần đổi ở §0.7 |
 
 Cả 4 chậu đều có miệng đất lộ ra (chỗ trồng cây), cùng phối cảnh 3/4 và cùng ánh vàng lấp lánh, nên ghép
@@ -60,11 +61,12 @@ chiếu với code ngày 2026-10-08. Số nào ghi "mô phỏng chỉnh" là s�
 | Q3 | Bậc của bộ Nông Sản (4 chậu đã có) | **Mặc định kỹ thuật: Ngọc** | Registry, shop và giao diện hiển thị nhất quán; không tự cấp chậu hiếm khi tạo tài khoản |
 | Q4 | Bố cục trên điện thoại | **Chờ kiểm chứng G1:** toàn cảnh 1×6 chậu/tầng như ảnh tham chiếu, chạm tầng để phóng to tương tác; 2×3 là phương án dự phòng khi không đủ kích thước chạm | Thử 360/390/430 px trên thiết bị thật: toàn cảnh không tràn, 6 chậu nhìn rõ; khi tương tác hitbox ≥44 px, bọ không đè hitbox cây; chọn phương án dựa trên test, không khóa cứng trước G1 |
 | Q5 | Khách chưa đăng nhập rồi đăng nhập | **CHỜ DUYỆT CHÍNH SÁCH:** đề xuất giữ chậu/cây/bọ thường, reset sao/luck và loại vật phẩm hiếm theo §0.2 | Trước G2 phải có xác nhận người dùng, thông báo trước import, kiểm thử không mất tài sản ngoài phạm vi thông báo; nếu chưa duyệt thì chặn nhập Vườn Mây thay vì âm thầm xóa |
-| Q6 | Quyền dùng 4 chậu, `5.png`, `6.png` | **CHƯA XÁC MINH**. 4 chậu dùng nội bộ để dựng thử; `5.png` và `6.png` chỉ là tham khảo bố cục, không đưa nguyên ảnh vào sản phẩm | Trước phát hành cần xác nhận quyền sở hữu/giấy phép từng asset bằng văn bản; asset không rõ quyền phải thay bằng bản gốc có quyền dùng |
+| Q6 | Quyền dùng 4 chậu, bộ 20 chậu, `5.png`, `6.png` | **CHƯA XÁC MINH**. 4 chậu và bộ 20 chậu dùng nội bộ để dựng thử; `5.png` và `6.png` chỉ là tham khảo bố cục, không đưa nguyên ảnh vào sản phẩm | Trước phát hành cần xác nhận quyền sở hữu/giấy phép từng asset bằng văn bản; asset không rõ quyền phải thay bằng bản gốc có quyền dùng |
+| Q7 | Bộ 20 chậu: hình file 01 là quả gì; bảng ID mới và cách xếp bộ ở §0.14 | **CHỜ NGƯỜI DÙNG:** mặc định kỹ thuật là chậu quả đỏ để dự phòng, Nông Sản dùng táo đỏ | G0 chép ảnh theo ID mới; nếu người dùng đổi cách xếp thì sửa bảng §0.14 và registry trước G1 |
 
 **Chi tiết Q4 (thay thế quyết định 2×3 cũ):** Giữ **6 ô logic/tầng** ở mọi màn hình. Chế độ **toàn cảnh** ưu tiên 1 hàng 6 chậu giống ảnh tham chiếu để thấy nhiều tầng, nhưng đây là chế độ quan sát, không bắt người dùng chạm vào chậu ~50 px để thao tác chính. Chạm vào một tầng mở **chế độ tương tác phóng to tầng** (camera zoom hoặc panel chi tiết), bảo đảm vùng chạm mỗi chậu/bọ/nút ≥44×44 CSS px, có nút quay lại toàn cảnh và giữ vị trí cuộn. Nếu test 360/390/430 px không đạt khả năng đọc hoặc hiệu năng, dùng **2×3** trong chế độ tương tác hoặc toàn cảnh theo quyết định G1. Trên desktop ưu tiên 1×6 nếu đủ chỗ. Không thay đổi số chậu, bộ 6, trạng thái cây hay logic game khi đổi chế độ. G1 phải lưu screenshot/video ở 360, 390, 430, 768, 1366 px và có người duyệt kết quả trước khi chốt layout.
 
-**Cổng quyết định:** G0/G1 có thể dùng Q1–Q4 ở trạng thái mặc định kỹ thuật. **Không đánh dấu hoàn thành điều kiện “người dùng chốt Q1–Q6” ở §0.3/§0.10.5** cho tới khi Q5 được duyệt và Q6 có chứng cứ. G2 không được chạy import tài sản Vườn Mây thật nếu Q5 chưa duyệt; không phát hành asset nếu Q6 chưa xác minh.
+**Cổng quyết định:** G0/G1 có thể dùng Q1–Q4 ở trạng thái mặc định kỹ thuật. **Không đánh dấu hoàn thành điều kiện “người dùng chốt Q1–Q6” ở §0.3/§0.15.5** cho tới khi Q5 được duyệt và Q6 có chứng cứ. G2 không được chạy import tài sản Vườn Mây thật nếu Q5 chưa duyệt; không phát hành asset nếu Q6 chưa xác minh.
 
 ### 0.2 Lưu dữ liệu và chống gian lận (hướng A)
 
@@ -106,22 +108,36 @@ riêng.
    - Gửi lại cùng `opId` thì nhận đúng kết quả cũ, không tung lại.
    - `POST /account/sky/tier-up` làm y hệt nhưng không ngẫu nhiên.
    - Đây là hai chỗ duy nhất server tự ghi vào bản lưu; endpoint `rebase` hiện có là tiền lệ.
-5. **Tung bọ tất định, không phụ thuộc thời gian.**
-   - Công thức: `roll = hash(skySeed, potUid, cycleNo, stageIndex)`.
-   - `skySeed` do server cấp lúc mở tầng 1, ghi một lần và không đổi được (guard chặn). `cycleNo` là số thứ tự
-     lần trồng của chậu đó, tăng 1 mỗi lần trồng.
-   - Người chơi không "quay lại" kết quả được bằng cách đổi giờ trồng hay đổi cây. Đoán trước chỉ biết lần trồng
-     thứ _n_ có bọ gì, mà không đổi được.
+5. **Tung bọ bằng khóa bí mật của server, chỉ lộ mốc đã qua** (sửa lượt 4, theo cảnh báo ở §0.10).
+   - Bản cũ đặt `skySeed` trong bản lưu nên máy người chơi đọc được. Kết hợp với việc bỏ cây giữa chừng (§12.1),
+     người chơi có thể xem trước lần trồng nào ra đom đóm hay bọ hung vàng, rồi trồng xong bỏ liên tục để tới lượt
+     đó. Vì vậy `skySeed` **không nằm trong bản lưu nữa**.
+   - Công thức: `roll = HMAC_SHA256(SKY_SECRET, userId · potUid · cycleNo · stageIndex)`. `SKY_SECRET` nằm trong
+     `.env` của server, không bao giờ gửi xuống client. `cycleNo` là số thứ tự lần trồng của chậu đó, tăng 1 mỗi
+     lần trồng.
+   - Client hỏi `GET /account/sky/bugs`. Server trả kết quả **chỉ cho những mốc giai đoạn đã qua theo giờ
+     server** của các cây đang trồng, mỗi mốc gồm `{ potUid, cycleNo, stageIndex, bug | null }`. Mốc chưa tới thì
+     không trả.
+   - Client gọi khi mở Vườn Mây và khi một mốc vừa qua: gom một lần mỗi 30 giây, tối đa 20 lần mỗi phút.
+   - Guard tính lại cùng HMAC để xác minh mọi con bọ trong bản lưu.
+   - Kết quả: không ai biết trước tương lai, đổi giờ trồng hay đổi cây không thay đổi được kết quả. Bỏ cây rồi
+     trồng lại chỉ tốn hạt và phải chờ thật.
+   - Mất mạng thì bọ của các mốc đã qua hiện ra khi có mạng lại. Cây vẫn lớn bình thường. Bọ làm chậm chỉ tính
+     khi bọ đã hiện ra (đã được server trả).
+   - Bọ đầu tiên của hướng dẫn (§0.4) là cố định, không qua HMAC.
    - Đom đóm: nếu ra đom đóm nhưng mốc lớn rơi vào ban ngày (6h–18h, giờ UTC+7) thì đổi thành bọ thường có trọng
      số cao nhất. Canh giờ trồng để mốc rơi vào ban đêm là lối chơi hợp lệ.
+   - Khách chưa đăng nhập: dùng khóa sinh ngẫu nhiên tại máy. Kết quả này không được tin, nên khi khách đăng nhập
+     thì bọ hiếm bị đưa về 0 (bước 6).
 6. **Khách chưa đăng nhập** chơi đầy đủ:
-   - Nâng sao tung tại máy, có pity, `skySeed` sinh tại máy.
+   - Nâng sao và bọ tung tại máy, có pity, bằng khóa `guestSkyKey` sinh tại máy. Khóa này chỉ có ở bản lưu khách
+     và bị xóa khi nhập vào tài khoản.
    - Khi đăng nhập và nhập bản lưu khách (đường `import()` hiện có): giữ chậu, cây đang trồng và bọ thường;
-     sao về ★0, `luck` về 0, bọ hiếm, đom đóm, bọ hung vàng và Mây Ngọc về 0; cấp lại `skySeed` từ server.
+     sao về ★0, `luck` về 0, bọ hiếm, đom đóm, bọ hung vàng và Mây Ngọc về 0; từ đó bọ do server tung (bước 5).
      Hiện thông báo trước khi nhập (Q5).
 7. **Trang thăm vườn bạn:** `Friends.php` (đoạn đọc vườn bạn, khoảng dòng 320) đọc thêm `data.sky` và chỉ xuất
    các field đã kiểm tra: tầng, chậu đang đặt (potId, bậc, sao), giai đoạn cây, bọ đang đậu. **Không** thêm cột
-   `sky_summary` như §6.4. Không xuất `skySeed`, ledger hay `luck`.
+   `sky_summary` như §6.4. Không xuất ledger, `luck` hay kết quả bọ của mốc chưa tới.
 8. Tăng `GAME_RULES_VERSION` từ 1 lên 2 (đã kiểm tra giá trị hiện tại là 1). Tách luật mới thành
    `buildGameRules().sky`, rồi chạy lại `scripts/export-game-rules.mjs`.
 
@@ -248,73 +264,6 @@ thức và đơn" của rau dưới đất.
   - Guard đếm theo `dayKey('skyxp', …)` có sẵn.
 - **XP của cây rau trồng trên mây** cũng tính vào trần 150.
 
-### 0.10 Tiêu chí nghiệm thu và hợp đồng trạng thái
-
-**Mục tiêu:** các cổng G0–G6 ở §0.3 là điều kiện phát hành, không chỉ là danh sách tính năng. Chỉ đánh dấu hoàn thành khi có bằng chứng kiểm thử (test/log/video, commit, thiết bị). Không thay thế các quy tắc đã chốt ở §0.1–§0.9.
-
-**State machine chuẩn**
-
-| Đối tượng | Trạng thái hợp lệ | Quy tắc chuyển và từ chối |
-|---|---|---|
-| Ô tầng | `locked → empty → occupied` | chỉ mở khi đủ tầng, cấp, xu và vật phẩm; chậu không thể ở hai ô |
-| Chậu | `inventory ↔ placed`, kèm `plant=null/active/ready` | không di chuyển/cất nếu cây chưa thu hoặc chưa hủy theo luật; thao tác thất bại không thay đổi bản lưu |
-| Cây | `empty → growing → ready → harvested(empty)` | snapshot chỉ số lúc trồng; tưới và bọ chỉ tác động khi growing; thu đúng một lần, dựa trên giờ server |
-| Bọ | `absent → perched → caught/expired` | chỉ bắt khi đang đậu; không bắt lặp; bọ chưa bắt hết hạn khi thu hoặc theo mốc được chốt |
-| Máy | `idle → running → ready → claimed(idle)` | trừ nguyên liệu một lần khi start; nhận đầu ra một lần khi claim; `jobId` duy nhất |
-| Nâng sao/bậc | `idle → pending → success/failure → idle` | chỉ server chốt; retry cùng `opId` trả lại kết quả cũ; lỗi mạng không được tung lại |
-
-**Hợp đồng API và đồng bộ tối thiểu**
-
-- `PUT /account/progress` vẫn là đường lưu bản chung theo §0.2; mỗi lần ghi có `baseVersion` và kiểm tra `ProgressGuard`. Phản hồi 409 phải tải bản mới, replay **chỉ** các thao tác hợp lệ chưa xác nhận, kiểm tra lại nguồn lực và hiển thị xung đột nếu không thể replay; tuyệt đối không ghi đè mù.
-- `POST /account/sky/star-up` và `/tier-up`: request chứa `potUid`, `opId`, `baseVersion` (và `useClover` khi phù hợp); server kiểm tra đăng nhập, quyền sở hữu, version, điều kiện, chi phí; transaction khóa bản lưu, ghi kết quả và idempotency key trong cùng giao dịch. Cùng `opId` + cùng payload trả cùng kết quả; cùng `opId` + payload khác trả lỗi.
-- Mã lỗi có thể phân biệt: `UNAUTHORIZED`, `STALE_VERSION`, `INVALID_STATE`, `INSUFFICIENT_RESOURCES`, `RATE_LIMITED`, `OP_ID_CONFLICT`; UI dịch vi/en và không làm mất trạng thái đã xác nhận.
-- Giới hạn tần suất nâng sao và bắt bọ; không tin `readyAt`, `statsAtPlant`, `cycleNo`, số dư, `skySeed` hay kết quả RNG do client gửi. Guard phải đối chiếu với tiến trình trước và các nguồn tài nguyên hợp lệ.
-- **Điểm cần giải quyết trước G2:** §0.2 đang lưu `skySeed` trong bản progress trả về client, vì vậy hash tất định có thể bị đoán. Chốt một trong hai phương án: (A) server giữ secret riêng và xác minh HMAC qua endpoint, hoặc (B) chấp nhận RNG công khai cho bọ thường nhưng **không** dùng RNG đó để phát thưởng hiếm/có giá trị; thưởng hiếm phải do server xác nhận. Không tuyên bố chống đoán seed khi seed được trả cho client.
-- Với khách, xác nhận trước khi import về việc reset sao, bọ hiếm và Mây Ngọc (§0.2/Q5); không reset im lặng. Mọi migration phải có backup và test mở bản lưu cũ.
-
-### 0.11 Tiêu chí nghiệm thu asset chậu và cảnh
-
-- **Nguồn:** asset có `assetId`, tên, phiên bản, quyền sử dụng được xác nhận, file gốc; không dùng ảnh moodboard/tổng hợp làm asset runtime. Bộ 20 chậu tách từ ảnh tổng hợp phải được kiểm tra **từng file**, không mặc định đã đạt chất lượng.
-- **Alpha:** PNG nguồn RGBA nền trong suốt thật; không có mảng đen/trắng nền, viền răng cưa/halo đen, phần thừa từ chậu cạnh bên hoặc vật thể bị cắt. Kiểm tra trên nền sáng, tối và nền mây game.
-- **Hình:** toàn bộ thân, quai, đế và miệng đất nằm trong khung, có lề an toàn; không biến dạng, không ghép chồng từ chậu khác. Tất cả cùng góc nhìn 3/4, ánh sáng, tỷ lệ thị giác và điểm neo miệng đất nhất quán.
-- **Kích thước:** giữ file gốc độ phân giải cao; xuất WebP 256px (@1x) và 512px (@2x) như §7.1, không upscale ảnh nguồn nhỏ để giả tăng chi tiết. Asset không đủ nét phải render lại riêng.
-- **Điểm neo:** `pots.json` có `cx,cy,rx` theo hệ tọa độ xác định; preview cây giai đoạn 0–3 đặt đúng trong đất, không xuyên mép chậu. Tối thiểu kiểm tra thủ công trên 4 chậu gốc và toàn bộ chậu mới trước khi bật.
-- **Tối ưu:** ảnh lazy-load, có kích thước khai báo tránh nhảy layout; ghi tổng byte tải ban đầu và thời gian mở cảnh trên thiết bị kiểm thử. Không duyệt chỉ dựa vào screenshot desktop.
-- **Bằng chứng:** contact sheet từng chậu có ID, preview cây và ảnh chụp trong cảnh thật; bảng pass/fail cho alpha, crop, anchor, độ nét, quyền sử dụng. Asset fail không được đưa vào registry sản phẩm.
-
-### 0.12 Kiểm thử kinh tế, bảo mật và khả năng phục hồi
-
-**Bộ hồ sơ mô phỏng tối thiểu:** (1) mới chơi, (2) 1 lần/ngày, (3) 3 lần/ngày, (4) bỏ game 7–14 ngày rồi quay lại, (5) chỉ chơi dưới đất, (6) không bạn bè/không sự kiện, (7) người chơi nhiều tài nguyên, (8) hai thiết bị cùng tài khoản. Chạy ít nhất 90 ngày mô phỏng với nhiều seed; lưu cấu hình và kết quả để tái lập.
-
-**Các bất biến phải luôn đúng:**
-
-1. Xu, XP, kho, hạt, bọ, chậu, sản phẩm máy không âm; chậu UID không trùng và không nằm nhiều ô; không có vật phẩm tự sinh không có nguồn.
-2. Không nhận thưởng hai lần khi bấm liên tiếp, retry, mất mạng, tải lại trang, 409 hoặc hai thiết bị.
-3. Người chơi không cần bọ ngẫu nhiên, sự kiện hoặc bạn bè để nhận đủ Hạt Mây/Sương Mai mở tầng 2–3. Test ledger tuần tự: sau 2 mốc đầu có 2 Hạt Mây; trả 2 để mở tầng 2; thưởng mở tầng 2 nhận 2; hoàn thành MIX01 nhận 2; có 4 để mở tầng 3. Sương Mai có từ nhài sấy trước tầng 3.
-4. Không có chu trình mua/trồng/chế biến/bán cho lợi nhuận không giới hạn; kiểm tra quy tắc 1,35× §0.4 và mọi đường nhận thưởng đơn.
-5. Không vượt trần 150 XP/ngày từ Vườn Mây kể cả nhiều thao tác cùng lúc; trần reset theo ngày chuẩn được xác định và test qua ranh giới ngày.
-6. Mọi mốc tầng và máy đều có ít nhất một đường đạt được từ tài nguyên đã mở; không có phụ thuộc vòng hoặc soft-lock do kho đầy/hàng chờ đầy.
-7. Không tin thời gian thiết bị; test chỉnh đồng hồ, timezone, offline, refresh, reconnect, xung đột phiên bản và dữ liệu lỗi.
-8. Phép nâng sao/thăng bậc và thưởng hiếm không thể được client tự sửa; có test gửi lại `opId`, đổi payload, race và rollback.
-
-**Chỉ tiêu cân bằng cần xác nhận qua mô phỏng, không phải cam kết sẵn:** hồ sơ 3 lần/ngày mở tầng 5 trong khoảng ngày 20–30 như §0.3; đường đến tầng 10 không phụ thuộc sự kiện; xu có đủ nguồn và sink, không ép người chơi chờ vô lý. Nếu không đạt, sửa dữ liệu và chạy lại trước khi triển khai tiếp.
-
-### 0.13 Definition of Done theo giai đoạn
-
-| Giai đoạn | Bắt buộc có | Bằng chứng |
-|---|---|---|
-| G0 | Q1–Q6 được chốt; quyền asset; registry ID, nguồn nguyên liệu MIX01, bảng số liệu và dependency graph; 4 chậu gốc qua §0.11 | checklist ký duyệt + preview asset + test registry |
-| G1 | demo 3 tầng, cây/bọ/máy và chuyển cảnh, mobile 360/390/430, giảm chuyển động; **không ghi tiến trình thật** | video mobile, log FPS (≥30 trên máy Android tầm trung ghi model), không lỗi console |
-| G2 | vòng đất → mây → kho → MIX01; nguồn mở T2/T3; guard, đồng bộ, guest import, XP cap, i18n; không nhân thưởng | test unit/integration + E2E hai thiết bị + mô phỏng đường mở tầng |
-| G3 | nâng sao/bậc server idempotent, hiệu ứng xếp, máy mới, bộ sưu tập, mô phỏng ≥90 ngày | báo cáo RNG/retry/race, số liệu cân bằng, test chỉ số bp |
-| G4 | đơn và chế biến liên khu, nguồn hàng có truy vết để tính bonus xu, tầng 6–10 không kẹt | test nguồn/sink, đơn quá hạn, không thưởng lặp |
-| G5 | thăm bạn, giúp bắt bọ/tưới có quota hai phía, dữ liệu công khai tối thiểu | test hai tài khoản, giới hạn giúp, bảo mật dữ liệu |
-| G6 | bộ chậu/cây đủ số lượng, sự kiện, trợ thủ nếu được duyệt, tối ưu hiệu năng | kiểm định từng asset + test cân bằng + duyệt release |
-
-**Điều kiện chung trước khi bật production:** `npm test`, `npm run check:motion`, i18n, kiểm thử bảo mật/guard, backup và phương án rollback đều đạt; feature flag `skyGarden` mặc định tắt cho tới khi được duyệt. Có người chịu trách nhiệm ghi nhận lỗi, theo dõi telemetry và rollback khi xuất hiện nhân tài nguyên hoặc mất tiến trình.
-
----
-
 ### 0.6 Hiệu ứng xếp chậu (D4)
 
 Một tầng cần đủ 6 ô mở và 6 chậu. Hệ thống xét lần lượt từ trên xuống và áp **hiệu ứng đầu tiên thỏa**:
@@ -353,7 +302,7 @@ Một tầng cần đủ 6 ô mở và 6 chậu. Hệ thống xét lần lượt
 | Thanh nút riêng (Bản đồ, Tưới, Hạt giống, Thu hoạch, Khám phá) | Dùng ngăn có sẵn của `FarmGame` (kho, đơn, nhiệm vụ, bạn bè). Trên mây thêm 4 nút: Khay hạt · Tưới (hiện số lượt còn lại) · Thu cả tầng · Xuống đất | Không làm bộ nút thứ hai |
 | 6 tầng trong một màn hình | Mặc định 3–4 tầng, có nút "Xem cả tháp" (thu nhỏ, chạm tầng để phóng to lại) | Chậu đủ to để chạm |
 
-**Bố cục theo bề ngang màn hình (Q4):**
+**Bố cục theo bề ngang màn hình (Q4).** **→ §0.1 Q4 (cập nhật 269dbec–f965e7e):** điện thoại giờ có hai chế độ: *toàn cảnh* 1×6 chậu/tầng giống `6.png` (chỉ để xem và chọn tầng), và *tương tác* khi chạm vào một tầng (phóng to, vùng chạm ≥ 44 px). Bố cục 2×3 dưới đây là phương án dự phòng cho chế độ tương tác; chọn bằng thử nghiệm ở G1 (§18.4).
 
 - **Dưới 600 px (điện thoại):**
   - Đậu thần là dải 40 px sát mép trái.
@@ -406,7 +355,7 @@ Thay cho §6.1, gộp các field mà §15.3 yêu cầu:
 
 ```ts
 interface SkyGarden {
-  skySeed: string | null;                 // server cấp lúc mở tầng 1; client không đổi được
+  guestSkyKey?: string;                   // chỉ bản lưu khách; tài khoản dùng SKY_SECRET trên server (§0.2 bước 5)
   floors: number;                         // 0 = chưa mở
   slotsBought: number[];                  // [tầng] -> 0..3
   slots: (string | null)[][];             // [tầng][ô 0..5] -> potUid
@@ -445,13 +394,153 @@ interface MachineJob { jobId: string; recipe: RecipeId; startedAt: number; ready
 Tài nguyên ledger mới: `skyseed:<id>`, `bug:<id>`, `skyitem:<id>`, `pot:<potId>`. Sản phẩm dùng `ingredient:<id>`
 có sẵn.
 
+### 0.10 Tiêu chí nghiệm thu và hợp đồng trạng thái
+
+**Mục tiêu:** các cổng G0–G6 ở §0.3 là điều kiện phát hành, không chỉ là danh sách tính năng. Chỉ đánh dấu hoàn thành khi có bằng chứng kiểm thử (test/log/video, commit, thiết bị). Không thay thế các quy tắc đã chốt ở §0.1–§0.9.
+
+**State machine chuẩn**
+
+| Đối tượng | Trạng thái hợp lệ | Quy tắc chuyển và từ chối |
+|---|---|---|
+| Ô tầng | `locked → empty → occupied` | chỉ mở khi đủ tầng, cấp, xu và vật phẩm; chậu không thể ở hai ô |
+| Chậu | `inventory ↔ placed`, kèm `plant=null/active/ready` | không di chuyển/cất nếu cây chưa thu hoặc chưa hủy theo luật; thao tác thất bại không thay đổi bản lưu |
+| Cây | `empty → growing → ready → harvested(empty)` | snapshot chỉ số lúc trồng; tưới và bọ chỉ tác động khi growing; thu đúng một lần, dựa trên giờ server |
+| Bọ | `absent → perched → caught/expired` | chỉ bắt khi đang đậu; không bắt lặp; bọ chưa bắt hết hạn khi thu hoặc theo mốc được chốt |
+| Máy | `idle → running → ready → claimed(idle)` | trừ nguyên liệu một lần khi start; nhận đầu ra một lần khi claim; `jobId` duy nhất |
+| Nâng sao/bậc | `idle → pending → success/failure → idle` | chỉ server chốt; retry cùng `opId` trả lại kết quả cũ; lỗi mạng không được tung lại |
+
+**Hợp đồng API và đồng bộ tối thiểu**
+
+- `PUT /account/progress` vẫn là đường lưu bản chung theo §0.2; mỗi lần ghi có `baseVersion` và kiểm tra `ProgressGuard`. Phản hồi 409 phải tải bản mới, replay **chỉ** các thao tác hợp lệ chưa xác nhận, kiểm tra lại nguồn lực và hiển thị xung đột nếu không thể replay; tuyệt đối không ghi đè mù.
+  - **Đối chiếu code (lượt 4):** client hiện **không có hàng đợi thao tác để replay**. Khi gặp 409, `reconcile()` ([sync.ts:49](../src/domain/sync.ts)) so ledger hai bản rồi chọn `push` / `pull` / `same` / `ask`; trường hợp `ask` thì `AccountSheet` hỏi người chơi giữ bản nào. Vườn Mây **dùng nguyên cơ chế này**, không làm hàng đợi replay riêng (giữ hướng A, D1). Ledger đã ghi mọi thao tác `sky` nên `reconcile()` nhận biết được bản nào đi trước.
+  - Sau khi nâng sao hoặc thăng bậc, server đã tăng `version`. Client áp `patch` và cập nhật `baseVersion` ngay. Nếu trong lúc chờ phản hồi người chơi thao tác thêm, thì lần lưu sau có thể gặp 409; khi đó `reconcile()` thấy bản server có dòng ledger `sky:starup` mà máy chưa có, nên kéo bản server về. Để tránh mất thao tác, **khóa thao tác Vườn Mây trong lúc chờ phản hồi nâng sao** (thường dưới 1 giây).
+- `POST /account/sky/star-up` và `/tier-up`: request chứa `potUid`, `opId`, `baseVersion` (và `useClover` khi phù hợp); server kiểm tra đăng nhập, quyền sở hữu, version, điều kiện, chi phí; transaction khóa bản lưu, ghi kết quả và idempotency key trong cùng giao dịch. Cùng `opId` + cùng payload trả cùng kết quả; cùng `opId` + payload khác trả lỗi.
+- Mã lỗi có thể phân biệt: `UNAUTHORIZED`, `STALE_VERSION`, `INVALID_STATE`, `INSUFFICIENT_RESOURCES`, `RATE_LIMITED`, `OP_ID_CONFLICT`; UI dịch vi/en và không làm mất trạng thái đã xác nhận.
+  - Cách trả lỗi theo đúng mẫu hiện có: `throw new HttpError(status, __t('sky.<khóa>'), ['code' => 'STALE_VERSION', …])` ([bootstrap.php:108](../server/lib/bootstrap.php)). Mã HTTP lần lượt: 401, 409, 422, 422, 429, 409. Chuỗi thông báo thêm vào `server/lang/{vi,en}.php`; client đọc trường `code`, không dựa vào nội dung chữ.
+- Giới hạn tần suất nâng sao và bắt bọ; không tin `readyAt`, `statsAtPlant`, `cycleNo`, số dư hay kết quả bọ và nâng sao do client gửi. Guard phải đối chiếu với tiến trình trước và các nguồn tài nguyên hợp lệ.
+- ~~**Điểm cần giải quyết trước G2:** §0.2 đang lưu `skySeed` trong bản progress trả về client, vì vậy hash tất định có thể bị đoán.~~ **Đã chốt phương án (A), lượt 4:** `SKY_SECRET` chỉ nằm trên server; `GET /account/sky/bugs` chỉ trả kết quả của các mốc đã qua theo giờ server; guard xác minh lại bằng HMAC. Chi tiết ở §0.2 bước 5. `skySeed` đã bỏ khỏi bản lưu (§0.9).
+- Với khách, xác nhận trước khi import về việc reset sao, bọ hiếm và Mây Ngọc (§0.2/Q5); không reset im lặng. Mọi migration phải có backup và test mở bản lưu cũ.
+
+### 0.11 Tiêu chí nghiệm thu asset chậu và cảnh
+
+- **Nguồn:** asset có `assetId`, tên, phiên bản, quyền sử dụng được xác nhận, file gốc; không dùng ảnh moodboard/tổng hợp làm asset runtime. Bộ 20 chậu tách từ ảnh tổng hợp phải được kiểm tra **từng file**, không mặc định đã đạt chất lượng.
+  - Bộ 20 chậu đã nhận ngày 2026-10-08. Kết quả kiểm tra ở §0.14.
+- **Alpha:** PNG nguồn RGBA nền trong suốt thật; không có mảng đen/trắng nền, viền răng cưa/halo đen, phần thừa từ chậu cạnh bên hoặc vật thể bị cắt. Kiểm tra trên nền sáng, tối và nền mây game.
+- **Hình:** toàn bộ thân, quai, đế và miệng đất nằm trong khung, có lề an toàn; không biến dạng, không ghép chồng từ chậu khác. Tất cả cùng góc nhìn 3/4, ánh sáng, tỷ lệ thị giác và điểm neo miệng đất nhất quán.
+- **Kích thước:** giữ file gốc độ phân giải cao; xuất WebP 256px (@1x) và 512px (@2x) như §7.1, không upscale ảnh nguồn nhỏ để giả tăng chi tiết. Asset không đủ nét phải render lại riêng.
+- **Điểm neo:** `pots.json` có `cx,cy,rx` theo hệ tọa độ xác định; preview cây giai đoạn 0–3 đặt đúng trong đất, không xuyên mép chậu. Tối thiểu kiểm tra thủ công trên 4 chậu gốc và toàn bộ chậu mới trước khi bật.
+- **Tối ưu:** ảnh lazy-load, có kích thước khai báo tránh nhảy layout; ghi tổng byte tải ban đầu và thời gian mở cảnh trên thiết bị kiểm thử. Không duyệt chỉ dựa vào screenshot desktop.
+- **Bằng chứng:** contact sheet từng chậu có ID, preview cây và ảnh chụp trong cảnh thật; bảng pass/fail cho alpha, crop, anchor, độ nét, quyền sử dụng. Asset fail không được đưa vào registry sản phẩm.
+
+### 0.12 Kiểm thử kinh tế, bảo mật và khả năng phục hồi
+
+**Bộ hồ sơ mô phỏng tối thiểu:** (1) mới chơi, (2) 1 lần/ngày, (3) 3 lần/ngày, (4) bỏ game 7–14 ngày rồi quay lại, (5) chỉ chơi dưới đất, (6) không bạn bè/không sự kiện, (7) người chơi nhiều tài nguyên, (8) hai thiết bị cùng tài khoản. Chạy ít nhất 90 ngày mô phỏng với nhiều seed; lưu cấu hình và kết quả để tái lập.
+
+**Các bất biến phải luôn đúng:**
+
+1. Xu, XP, kho, hạt, bọ, chậu, sản phẩm máy không âm; chậu UID không trùng và không nằm nhiều ô; không có vật phẩm tự sinh không có nguồn.
+2. Không nhận thưởng hai lần khi bấm liên tiếp, retry, mất mạng, tải lại trang, 409 hoặc hai thiết bị.
+3. Người chơi không cần bọ ngẫu nhiên, sự kiện hoặc bạn bè để nhận đủ Hạt Mây/Sương Mai mở tầng 2–3. Test ledger tuần tự: sau 2 mốc đầu có 2 Hạt Mây; trả 2 để mở tầng 2; thưởng mở tầng 2 nhận 2; hoàn thành MIX01 nhận 2; có 4 để mở tầng 3. Sương Mai có từ nhài sấy trước tầng 3.
+4. Không có chu trình mua/trồng/chế biến/bán cho lợi nhuận không giới hạn; kiểm tra quy tắc 1,35× §0.4 và mọi đường nhận thưởng đơn.
+5. Không vượt trần 150 XP/ngày từ Vườn Mây kể cả nhiều thao tác cùng lúc; trần reset theo ngày chuẩn được xác định và test qua ranh giới ngày.
+6. Mọi mốc tầng và máy đều có ít nhất một đường đạt được từ tài nguyên đã mở; không có phụ thuộc vòng hoặc soft-lock do kho đầy/hàng chờ đầy.
+7. Không tin thời gian thiết bị; test chỉnh đồng hồ, timezone, offline, refresh, reconnect, xung đột phiên bản và dữ liệu lỗi.
+8. Phép nâng sao/thăng bậc và thưởng hiếm không thể được client tự sửa; có test gửi lại `opId`, đổi payload, race và rollback.
+
+**Chỉ tiêu cân bằng cần xác nhận qua mô phỏng, không phải cam kết sẵn:** hồ sơ 3 lần/ngày mở tầng 5 trong khoảng ngày 20–30 như §0.3; đường đến tầng 10 không phụ thuộc sự kiện; xu có đủ nguồn và sink, không ép người chơi chờ vô lý. Nếu không đạt, sửa dữ liệu và chạy lại trước khi triển khai tiếp.
+
+### 0.13 Definition of Done theo giai đoạn
+
+| Giai đoạn | Bắt buộc có | Bằng chứng |
+|---|---|---|
+| G0 | Q1–Q6 được chốt; quyền asset; registry ID, nguồn nguyên liệu MIX01, bảng số liệu và dependency graph; 4 chậu gốc qua §0.11 | checklist ký duyệt + preview asset + test registry |
+| G1 | demo 3 tầng, cây/bọ/máy và chuyển cảnh, mobile 360/390/430, giảm chuyển động; **không ghi tiến trình thật** | video mobile, log FPS (≥30 trên máy Android tầm trung ghi model), không lỗi console |
+| G2 | vòng đất → mây → kho → MIX01; nguồn mở T2/T3; guard, đồng bộ, guest import, XP cap, i18n; không nhân thưởng | test unit/integration + E2E hai thiết bị + mô phỏng đường mở tầng |
+| G3 | nâng sao/bậc server idempotent, hiệu ứng xếp, máy mới, bộ sưu tập, mô phỏng ≥90 ngày | báo cáo RNG/retry/race, số liệu cân bằng, test chỉ số bp |
+| G4 | đơn và chế biến liên khu, nguồn hàng có truy vết để tính bonus xu, tầng 6–10 không kẹt | test nguồn/sink, đơn quá hạn, không thưởng lặp |
+| G5 | thăm bạn, giúp bắt bọ/tưới có quota hai phía, dữ liệu công khai tối thiểu | test hai tài khoản, giới hạn giúp, bảo mật dữ liệu |
+| G6 | bộ chậu/cây đủ số lượng, sự kiện, trợ thủ nếu được duyệt, tối ưu hiệu năng | kiểm định từng asset + test cân bằng + duyệt release |
+
+**Điều kiện chung trước khi bật production (§0.13):** `npm test`, `npm run check:motion`, i18n, kiểm thử bảo mật/guard, backup và phương án rollback đều đạt; feature flag `skyGarden` mặc định tắt cho tới khi được duyệt. Có người chịu trách nhiệm ghi nhận lỗi, theo dõi telemetry và rollback khi xuất hiện nhân tài nguyên hoặc mất tiến trình.
+
+### 0.14 Bộ 20 chậu mẫu (kiểm tra ngày 2026-10-08)
+
+Nguồn: thư mục `vuon_may_20_chau_fixed` người dùng gửi, gồm 20 file PNG RGBA tên `01_bi_ngo.png` đến
+`20_hoa_dao.png`. Kiểm tra bằng sharp: kích thước, kênh alpha, lỗ trong suốt bên trong chậu (vùng trong suốt
+không thông ra mép ảnh), vật thể chạm mép ảnh, quầng tối ở viền. Ảnh xem thử dán trên nền sáng và nền trời.
+
+**Kết quả chung:**
+
+| Tiêu chí §0.11 | Kết quả | Ghi chú |
+|---|---|---|
+| Nền trong suốt thật | **Đạt** | Cả 20 file RGBA, 45–68% diện tích trong suốt, không còn mảng nền |
+| Không bị cắt mép | **Đạt** | Không file nào có điểm ảnh chạm mép, đều có lề |
+| Đồng bộ phong cách | **Đạt** | Cùng góc 3/4, men bóng viền vàng, hoa trắng, miệng đất lộ rõ; khớp 4 chậu gốc |
+| **Tên file khớp hình** | **Không đạt** | File 01–09 bị lệch tên (bảng dưới) |
+| **Phần đất kín** | **Không đạt** | Cả 20 file có lỗ trong suốt nằm trong phần đất, 99–1429 px mỗi file. Trên nền sáng thấy rõ đốm trắng lốm đốm trong đất. Nguyên nhân: lúc tách nền đen, các hạt đất màu sẫm bị xóa nhầm |
+| Viền | Tạm đạt | Mỗi file khoảng 900–1700 px bán trong suốt màu gần đen ở viền. Phần lớn là nét viền vẽ chủ ý. Trên nền trời nhìn ổn, cần xem lại trên nền tối (cảnh đêm) |
+| **Độ phân giải** | **Chưa đủ cho bản phát hành** | Ảnh 282–390 px, phần chậu thực tế rộng 246–354 px. Đủ cho @1x 256 px. **Không đủ cho @2x 512 px** và không được phóng to (§0.11). Ô chậu trên điện thoại khoảng 106 CSS px × mật độ điểm ảnh 3 = cần khoảng 320 px, nên hình hơi mềm trên iPhone |
+
+**Đối chiếu tên file với hình thật:**
+
+| File | Tên file nói | Hình thật là | ID đề xuất |
+|---|---|---|---|
+| `01_bi_ngo.png` | bí ngô | **chậu đỏ có chùm quả đỏ tròn** (cà chua bi hoặc anh đào, cần người dùng xác nhận) | `redfruit` (tạm) |
+| `02_bap.png` | bắp | **bí ngô** | `pumpkin` |
+| `03_bap_cai.png` | bắp cải | **bắp** | `corn` |
+| `04_ca_tim.png` | cà tím | **bát sứ men lam vẽ gà trống** (bát phở gà) | `pho_bowl` |
+| `05_hoa_sen.png` | hoa sen | **bắp cải** | `cabbage` |
+| `06_dau_tay.png` | dâu tây | **giỏ tre đan** | `bamboo_basket` |
+| `07_bat_pho_ga.png` | bát phở gà | **cà tím** | `eggplant` |
+| `08_gio_tre.png` | giỏ tre | **ấm trà sứ hoa trắng** | `teapot` |
+| `09_am_tra.png` | ấm trà | **hoa sen** | `lotus` |
+| `10_dua_hau.png` – `20_hoa_dao.png` | dưa hấu, cua đỏ, bánh chưng, bánh trung thu, dừa tươi, rồng vàng, cá sứ, tre xanh, vỏ sò, táo đỏ, hoa đào | **khớp** | `watermelon`, `crab`, `banh_chung`, `mooncake`, `coconut`, `golden_dragon`, `porcelain_fish`, `bamboo`, `seashell`, `red_apple`, `peach_blossom` |
+
+Hệ quả: tên "dâu tây" không có hình nào. Bộ này **không có chậu dâu tây**, thay vào đó có chậu quả đỏ ở file 01.
+
+Bốn chậu Nông Sản (bí ngô, bắp, bắp cải, cà tím) có cả bản 1254 px (`1.png`–`4.png`) lẫn bản nhỏ trong bộ 20,
+hai bản vẽ hơi khác nhau. **Dùng bản 1254 px**, bỏ bản nhỏ để chỉ có một hình cho mỗi chậu.
+
+**Xếp 20 chậu vào bộ** (thay danh mục §4.2; phần còn thiếu phải vẽ thêm):
+
+| Bộ | Đã có | Còn thiếu (đề xuất) |
+|---|---|---|
+| Đất nung (khởi đầu) | 0/6 | **cả 6 chậu**. G2 cần ít nhất 3 chậu để tặng khi mở tầng 1 (§0.4) |
+| Nông Sản | **6/6**: bí ngô, bắp, bắp cải, cà tím (bản 1254 px), dưa hấu, táo đỏ | — (bỏ Thanh Long) |
+| Bàn Ăn Việt | 3/6: bát phở gà, ấm trà, bánh chưng | bánh mì, phin cà phê, chén chè |
+| Chợ Quê | 2/6: giỏ tre, tre xanh | nón lá, gánh hàng, thúng gạo, chum tương |
+| Biển Miền Trung | 4/6: dừa tươi, cua đỏ, cá sứ, vỏ sò | mực nang, thuyền thúng |
+| Lễ Tết | 4/6: bánh trung thu, rồng vàng, hoa đào, hoa sen | đèn ông sao, lì xì |
+| Dự phòng | chậu quả đỏ (file 01) | tùy người dùng: thay táo đỏ trong Nông Sản, hoặc làm chậu thưởng sự kiện |
+
+Tổng có 19 chậu xếp vào bộ, 1 dự phòng. Còn thiếu 17 chậu để đủ 36.
+
+**Việc cần làm ở G0:**
+
+1. Người dùng xác nhận hình file 01 là quả gì, và đồng ý bảng ID và bảng xếp bộ ở trên (Q7).
+2. Chép ảnh gốc vào `assets/sky-garden/pots/` **theo ID mới**, không giữ tên file cũ để tránh nhầm. Ghi nguồn
+   vào bảng ảnh ở đầu file.
+3. `prepare-pots.mjs` thêm bước **vá lỗ trong đất**:
+   - Tìm vùng trong suốt không thông ra mép ảnh.
+   - Tô lại bằng màu trung bình của các điểm ảnh đục xung quanh, lặp lan dần từ ngoài vào.
+   - Ghi số điểm đã vá vào báo cáo. Sau khi vá, số lỗ phải về 0.
+   - Cách này chỉ là vá tạm. Bản phát hành nên xin lại file có nền tách sạch.
+4. Xin bản xuất lại **≥ 1024 px** cho 16 chậu chưa có bản lớn trước khi phát hành (G2). Cho G1 (demo) và chạy
+   thử G2 thì dùng bản hiện tại ở @1x 256 px là đủ.
+5. Làm bảng xem thử (mỗi chậu kèm ID, cây giai đoạn 0–3 cắm vào miệng chậu, nền sáng, tối và nền trời) theo
+   §0.11, kèm bảng đạt/không đạt.
+6. Vẽ bộ Đất nung (ít nhất 3 chậu) trước G2. Nếu chưa kịp thì G2 tạm dùng giỏ tre và tre xanh (Chợ Quê, bậc Sứ)
+   làm chậu tặng.
+
 ---
 
-### 0.10 Tiêu chí nghiệm thu bổ sung (bắt buộc trước khi triển khai G2+)
+### 0.15 Tiêu chí nghiệm thu bổ sung (bắt buộc trước khi triển khai G2+)
+
+> Mục này được thêm ở commit 269dbec với số 0.10, trùng với §0.10 đã có, nên đổi số thành 0.15 (các tham chiếu §0.10.x cũ nay là §0.15.x).
 
 **Phạm vi:** Các mục dưới đây là *cổng kiểm thử*, không khẳng định hệ thống hiện đã đạt. Áp dụng cùng §0.2–§0.9 và §16; khi xung đột, ưu tiên quy tắc bảo toàn tài sản/đồng bộ ở mục này. Mỗi ca kiểm thử lưu: mã ca, dữ liệu đầu vào, thao tác, kết quả mong đợi, kết quả thực tế, thiết bị/phiên bản, bằng chứng và người duyệt. Không tự đánh dấu PASS nếu chưa chạy.
 
-#### 0.10.1 Tiến trình và kinh tế không kẹt (P0)
+#### 0.15.1 Tiến trình và kinh tế không kẹt (P0)
 
 - **Tuyến hướng dẫn:** 1 Hạt Mây (thu đầu) + 1 (bắt bọ đầu) = 2; trả 2 để mở tầng 2 → số dư 0; thưởng mở tầng 2 +2 → số dư 2; hoàn thành MIX01 +2 → số dư 4; trả 4 mở tầng 3 → số dư 0. Sương Mai +1 từ nhài sấy đầu tiên và trả 1 khi mở tầng 3. Mỗi thưởng chỉ nhận một lần, dù bấm nhanh/reload/gửi lặp.
 - Người chơi mới ở cấp mở khu, kho không có mật ong, vẫn hoàn thành MIX01 bằng đường hỗ trợ 1 mật ong quy định tại §0.4. Không yêu cầu bọ hiếm, bạn bè, quảng cáo, nạp tiền hoặc sự kiện.
@@ -459,17 +548,17 @@ có sẵn.
 - Không có công thức mở ở tầng T nhưng toàn bộ đầu vào chỉ xuất hiện từ tầng lớn hơn T; mọi máy mới mở có ít nhất một công thức làm được ngay.
 - Mỗi giao dịch có bảng nguồn/đích tài nguyên, mức trần và đường kiếm lại. Mô phỏng 90 ngày với tối thiểu 3 kiểu chơi: 1 lần/ngày, 3 lần/ngày, 6 lần/ngày; chạy nhiều seed cố định, xuất báo cáo ngày mở tầng, tồn kho, số dư xu/XP và số lần kẹt. **PASS:** không âm kho/tiền, không nhân thưởng, không vòng chế biến mua-bán tạo lời vô hạn; các mốc tiến trình mục tiêu §0.3 phải được đo và nếu lệch phải điều chỉnh hoặc duyệt lại, không tự coi là đạt.
 
-#### 0.10.2 State machine, đồng bộ và chống gian lận (P0)
+#### 0.15.2 State machine, đồng bộ và chống gian lận (P0)
 
 - **Cây:** EMPTY → GROWING → READY → HARVESTED/EMPTY; BUG_PRESENT là trạng thái phụ, không được xuất hiện nếu không có cây hợp lệ. **Máy:** IDLE → RUNNING → READY → CLAIMED/IDLE. **Nâng sao:** IDLE → PENDING → RESOLVED hoặc REJECTED; client không tự quyết kết quả tài khoản đã đăng nhập.
 - Mỗi thao tác ghi rõ precondition, thay đổi kho/xu/XP, thời điểm server, revision, idempotency key và lỗi có thể trả về. Gửi lại cùng `opId` phải nhận cùng kết quả; gửi cùng `opId` với payload khác phải bị từ chối.
 - Với `PUT /account/progress` và endpoint nâng sao/thăng bậc: mô phỏng hai tab/hai thiết bị, thao tác đồng thời, phản hồi 409, mất mạng sau khi server đã commit nhưng trước khi client nhận, reload khi còn pending. **PASS:** không mất chậu/cây đã xác nhận, không nhân đôi vật phẩm, không ghi đè kết quả server bằng snapshot cũ; giao diện có thể tải lại bản chuẩn và thử lại thao tác hợp lệ.
-- **RNG bọ:** không coi `skySeed` nằm trong bản lưu client là bí mật. Trước G2 phải chọn một trong hai cơ chế và ghi rõ vào §0.2: (A) server xác minh roll bằng HMAC với secret chỉ server giữ, không xuất secret; hoặc (B) server chốt/ghi nhận roll theo từng chu kỳ. Nếu vẫn dùng hash với seed client đọc được, phải chứng minh bằng test rằng người chơi không thể chọn/đổi kết quả có lợi qua reset, import, rollback, clone UID, chỉnh cycle hoặc gửi bản lưu giả; nếu không chứng minh được thì **BLOCK G2**.
+- **RNG bọ** (**đã giải quyết:** chọn cơ chế (A), xem §0.2 bước 5; `skySeed` đã bỏ khỏi bản lưu, server giữ `SKY_SECRET` và chỉ trả bọ của mốc đã qua): không coi `skySeed` nằm trong bản lưu client là bí mật. Trước G2 phải chọn một trong hai cơ chế và ghi rõ vào §0.2: (A) server xác minh roll bằng HMAC với secret chỉ server giữ, không xuất secret; hoặc (B) server chốt/ghi nhận roll theo từng chu kỳ. Nếu vẫn dùng hash với seed client đọc được, phải chứng minh bằng test rằng người chơi không thể chọn/đổi kết quả có lợi qua reset, import, rollback, clone UID, chỉnh cycle hoặc gửi bản lưu giả; nếu không chứng minh được thì **BLOCK G2**.
 - Kiểm thử sửa trực tiếp `stars`, `luck`, `readyAt`, `cycleNo`, `statsAtPlant`, `xpDay`, `items`, `jobs`, số lượt tưới và UID; thay đổi trái luật phải bị từ chối. Thời gian chín, trần XP/ngày, bọ và quota dùng mốc giờ server.
 - Tài khoản khách → đăng nhập phải có màn xác nhận rõ tài sản nào giữ/mất theo Q5; test import lặp, hủy import, mất mạng và trùng UID. Không xóa tài sản khách trước khi server xác nhận nhập thành công.
 - Mỗi API mới có bảng contract gồm endpoint, auth, request/response ví dụ, mã lỗi 400/401/403/409/422/429/500, rate limit, idempotency và rollback; test contract ở cả client và server. Không log secret, seed server hoặc dữ liệu nhạy cảm.
 
-#### 0.10.3 Tiêu chí asset chậu và hình ảnh (P1; bắt buộc từ G0/G1)
+#### 0.15.3 Tiêu chí asset chậu và hình ảnh (P1; bắt buộc từ G0/G1)
 
 - **Nguồn chuẩn:** một file riêng cho mỗi chậu; PNG RGBA thật, nền ngoài chậu alpha = 0; không có ô đen/trắng giả nền, chữ, watermark, vật thể lạ hoặc chi tiết chậu bên cạnh. Không dùng crop ô từ ảnh kệ tổng hợp làm asset chính nếu bị mất viền/quai/hoa.
 - **Không cắt:** toàn bộ chậu, quai, lá, hoa và đế nằm trong khung, cách biên ít nhất 5% cạnh ngắn (trừ trường hợp được duyệt riêng). Vật thể chính chỉ gồm đúng một chậu; vùng đất trống nhìn thấy và không bị cây/trang trí che hết.
@@ -478,7 +567,7 @@ có sẵn.
 - **Điểm neo:** `pots.json` có `potId`, `source`, `anchor {cx,cy,rx}`, `bounds`, `scale`, `assetVersion`; kiểm thử cây giai đoạn 0–3 cắm đúng giữa đất, không lơ lửng hoặc che quá mức miệng chậu.
 - **Bằng chứng duyệt:** xuất contact sheet 20 chậu trên nền caro, nền trắng, nền tối và một preview 6 chậu/tầng mobile. Người duyệt xác nhận từng chậu PASS/REWORK; chỉ ảnh PASS mới đưa vào registry sản xuất. Xác minh giấy phép/quyền dùng trước phát hành.
 
-#### 0.10.4 UX, mobile, accessibility và hiệu năng (P1)
+#### 0.15.4 UX, mobile, accessibility và hiệu năng (P1)
 
 - Test thực tế ít nhất các viewport 360×800, 390×844, 430×932 và desktop 1366×768; không tràn ngang, không che nút Xuống đất, kho, máy hoặc popup; 3 ô khóa và 3 ô mở ở tầng 1 hiển thị phân biệt rõ.
 - Mỗi ô tương tác chính có vùng chạm ≥44×44 CSS px; bọ có hitbox riêng, chạm bọ không thu hoạch cây; có thao tác chạm để đặt/đổi chậu thay cho chỉ drag-and-drop.
@@ -486,13 +575,15 @@ có sẵn.
 - Tôn trọng `prefers-reduced-motion`, âm thanh mặc định không tự phát trái chính sách trình duyệt; dừng animation khi tab ẩn. Lỗi tải sprite có fallback và không làm mất quyền thao tác.
 - **Ngân sách khởi điểm cần đo ở G1:** ≥30 FPS khi cuộn 3 tầng trên một thiết bị Android tầm trung ghi rõ model; thời gian từ chạm chuyển khu đến có thể thao tác ≤3 giây trên mạng 4G ổn định; ảnh không tải ngoài viewport nếu không cần. Ghi kết quả đo thực tế (thiết bị, mạng, thời gian, fps, dung lượng JS/asset) và điều chỉnh ngân sách nếu có lý do; không tuyên bố PASS bằng giả định.
 
-#### 0.10.5 Cổng hoàn thành từng giai đoạn (Definition of Done)
+#### 0.15.5 Cổng hoàn thành từng giai đoạn (Definition of Done)
+
+> Cùng mục đích với bảng §0.13. Khi hai bảng khác nhau, lấy điều kiện **chặt hơn** của từng giai đoạn.
 
 | Giai đoạn | Bắt buộc để PASS | Bằng chứng |
 |---|---|---|
 | G0 | Q1–Q6 đã có quyết định; registry ID hợp lệ; nguồn/giấy phép ảnh rõ; 4 chậu gốc đạt tiêu chí; mockup 360/390/430 px; luồng Hạt Mây/Sương Mai đã kiểm thử | checklist ký duyệt, contact sheet, test tiến trình |
-| G1 | Demo 3 tầng chạy không đụng bản lưu; chuyển cảnh, chậu, cây, bọ, máy và ngày/đêm xem được; fallback và reduced motion; đạt đo mobile §0.10.4 | video/ảnh chụp trên thiết bị thật, log FPS |
-| G2 | Có ít nhất một vòng đất → mây → thu → MIX01 → sử dụng thành phẩm; guard chống sửa dữ liệu; xử lý 409/2 thiết bị; RNG đạt §0.10.2; không kẹt tầng 2–3 | test tự động client/server, video luồng, log từ chối gian lận |
+| G1 | Demo 3 tầng chạy không đụng bản lưu; chuyển cảnh, chậu, cây, bọ, máy và ngày/đêm xem được; fallback và reduced motion; đạt đo mobile §0.15.4 | video/ảnh chụp trên thiết bị thật, log FPS |
+| G2 | Có ít nhất một vòng đất → mây → thu → MIX01 → sử dụng thành phẩm; guard chống sửa dữ liệu; xử lý 409/2 thiết bị; RNG đạt §0.15.2; không kẹt tầng 2–3 | test tự động client/server, video luồng, log từ chối gian lận |
 | G3 | Nâng sao/thăng bậc idempotent, pity và trần chỉ số đúng; mô phỏng 90 ngày; cộng hưởng chọn đúng ưu tiên; bộ sưu tập và máy không nhân tài nguyên | test xác suất/biên, báo cáo mô phỏng |
 | G4 | Máy/đơn có ledger truy vết, hoàn thành chỉ nhận một lần, bonus xu không cộng lặp; tầng 6–10 có nguồn tài nguyên hợp lệ | test giao dịch, báo cáo cân bằng |
 | G5 | Hai tài khoản trên hai thiết bị thăm/tưới/bắt bọ đúng quota; dữ liệu công khai không lộ seed, ledger hay dữ liệu riêng | test API/quyền, video kiểm thử |
@@ -644,6 +735,8 @@ do `ParticleSystem` vẽ.
 | `bug` | Cộng % tỉ lệ bọ xuất hiện | 60% |
 
 **Danh mục chậu**, 6 bộ × 6 chậu = 36 chậu ở bản đầu. 6 chậu một bộ khớp với 6 ô một tầng.
+(**→ §0.14:** đã có bộ 20 chậu; cách xếp bộ cập nhật ở đó: Nông Sản đủ 6, bỏ Thanh Long, thêm táo đỏ; hoa sen
+và rồng vàng vào Lễ Tết.)
 
 | Bộ | Chậu | Bậc gốc | Nguồn art |
 |---|---|---|---|
@@ -857,7 +950,7 @@ Thêm vào `quests.ts`, tách từng mục để ship độc lập:
 
 ### 6.1 `GuestProgress`: thêm nhánh `sky` (mặc định rỗng, không tăng `SCHEMA_VERSION`)
 
-**→ §0.9:** bản chốt có thêm `skySeed`, `cycles`/`cycleNo`, `statsAtPlant`, `slowed`, `items`, `xpDay`, job máy.
+**→ §0.9:** bản chốt có thêm `guestSkyKey` (chỉ khách), `cycles`/`cycleNo`, `statsAtPlant`, `slowed`, `items`, `xpDay`, job máy.
 
 ```ts
 interface SkyGarden {
@@ -1361,9 +1454,9 @@ Cập nhật 2026-10-08 theo §0:
 | Cây trồng | 4 giai đoạn cho cây thử, trạng thái chín | sprite độc lập đặt tại điểm neo đất | G1 |
 | Bọ và hiệu ứng | bọ bay/đậu/bắt, lấp lánh, bong bóng chín, thu hoạch | sprite/animation riêng, không làm thay đổi dữ liệu khi chỉ chạy hiệu ứng | G1 |
 | Máy và trợ thủ | máy ở đầu tầng, nhân vật/đồ trang trí | asset riêng, có z-index và hitbox | G1 demo, gameplay sau |
-| HUD | avatar, XP, xu, kho, cửa hàng, nhiệm vụ, tưới, hạt, thu hoạch | icon riêng; chữ/số render động bằng code và i18n | G1 |
+| HUD | avatar, XP, xu, kho, cửa hàng, nhiệm vụ, tưới, hạt, thu hoạch | icon riêng; chữ/số render động bằng code và i18n. **Theo §0.7:** không làm bộ nút thứ hai; kho, đơn, nhiệm vụ, bạn bè dùng ngăn có sẵn của `FarmGame`; trên mây chỉ thêm 4 nút Khay hạt, Tưới, Thu cả tầng, Xuống đất; không có tim/kim cương | G1 |
 
-**Cấu trúc file gợi ý** (xác minh convention repo trước khi tạo): `public/images/sky-garden/{backgrounds,platforms,beanstalk,pots,plants,bugs,machines,effects,ui}/`; registry ở `src/data/skyGardenAssets.ts` hoặc module tương ứng. Không đổi đường dẫn hiện có nếu đã có asset chuẩn.
+**Cấu trúc file gợi ý** (xác minh convention repo trước khi tạo): `public/images/sky-garden/{backgrounds,platforms,beanstalk,pots,plants,bugs,machines,effects,ui}/`; registry ở `src/data/skyGardenAssets.ts` hoặc module tương ứng (prompt triển khai đang đặt dữ liệu tĩnh chậu ở `src/data/skyGarden.ts`, ảnh ở `public/images/sky-garden/pots/` + `pots.json`; giữ một nơi duy nhất, không tạo cả hai). Không đổi đường dẫn hiện có nếu đã có asset chuẩn.
 
 ### 18.3 Hợp đồng sprite, điểm neo và phân lớp
 
@@ -1382,7 +1475,7 @@ Cập nhật 2026-10-08 theo §0:
 
 ### 18.5 Quy trình triển khai theo lát cắt
 
-- **G0 – Asset audit:** đánh dấu trên ảnh tham chiếu từng nhóm đối tượng, lập manifest (asset ID, có sẵn/cần dựng lại, bản quyền, độ phân giải, alpha, anchor). Duyệt 4 chậu thật theo §0.10.3; không dùng các crop lỗi của ảnh kệ làm nguồn chính.
+- **G0 – Asset audit:** đánh dấu trên ảnh tham chiếu từng nhóm đối tượng, lập manifest (asset ID, có sẵn/cần dựng lại, bản quyền, độ phân giải, alpha, anchor). Duyệt 4 chậu thật theo §0.15.3; không dùng các crop lỗi của ảnh kệ làm nguồn chính.
 - **G1a – Scene không gameplay:** dựng background + đậu thần + 3 tầng + 6 slot/tầng + 4 chậu thật/chậu placeholder; hỗ trợ cuộn và chuyển overview/focus trên mobile.
 - **G1b – Motion:** cây 4 giai đoạn, bọ, bong bóng chín, máy và hiệu ứng; HUD bằng dữ liệu demo, không ghi vào `/account/progress`.
 - **G1c – Chốt layout:** test máy thật và đo hiệu năng, duyệt Q4, sửa z-index/hitbox/anchor, ghi video/ảnh và bảng PASS/REWORK. Chỉ sau đó mới nối gameplay thật G2.
@@ -1394,6 +1487,6 @@ Cập nhật 2026-10-08 theo §0:
 - [ ] Cây đứng đúng vùng đất ở cả 4 giai đoạn; không lơ lửng, không xuyên viền trước; bọ đậu đúng cây và bắt bọ không thu hoạch nhầm.
 - [ ] Đổi overview ↔ focus và cuộn không làm thay đổi UID/slot/trạng thái demo; trở về đúng tầng đang xem.
 - [ ] HUD động không chứa số tiền/XP cố định trong ảnh; chữ vi/en không bị cắt, nút không che chậu ở viewport đã chốt.
-- [ ] Chế độ focus đạt vùng chạm ≥44 px, overview không tràn ngang; thử thiết bị thật và đạt cổng FPS G1 ở §0.10.4.
+- [ ] Chế độ focus đạt vùng chạm ≥44 px, overview không tràn ngang; thử thiết bị thật và đạt cổng FPS G1 ở §0.15.4.
 - [ ] Không ghi dữ liệu demo vào tài khoản; thiếu asset có fallback; có reduced motion; quyền sử dụng asset được xác minh trước phát hành.
 
