@@ -11,12 +11,9 @@ File này có hai prompt, dán nguyên văn vào một phiên Claude Code mới 
 
 G3–G6 chưa viết prompt. Viết sau khi G2 chạy thật và có số liệu thật.
 
-**Trước khi dán prompt A, người dùng cần làm:**
-
-- Đặt 4 chậu bản lớn (bí ngô, bắp, bắp cải, cà tím, mỗi file PNG 1254×1254) và ảnh mẫu bố cục `6.png` vào
-  `C:\Users\thanh\Desktop\vuon_may_hd\`, đặt tên `pumpkin.png`, `corn.png`, `cabbage.png`, `eggplant.png`,
-  `layout-reference.png`.
-- Hiện các ảnh này chỉ nằm trong thư mục tạm của phiên chat, có thể mất bất cứ lúc nào.
+**Ảnh nguồn đã nằm trong repo** (lượt 5): `assets/sky-garden/pots/<id>.png` (20 chậu theo ID),
+`assets/sky-garden/source/` (bộ 20 nguyên bản), `assets/sky-garden/reference/` (ảnh tham chiếu, không phát hành).
+Xem `assets/sky-garden/README.md`. Câu trả lời Q1–Q7 của người dùng ở §0.1 của plan.
 
 ---
 
@@ -39,13 +36,14 @@ tức chuẩn bị ảnh chậu và làm một trang demo CHUYỂN ĐỘNG, KHÔ
 - scripts/farm-anim/prepare.mjs: cách dùng sharp để xuất webp và file json mô tả.
 - src/data/sprites.ts: cropSprite(crop, stage) và ảnh cây trong public/images/farm-items/.
 
-NGUỒN ẢNH:
-- Bộ 20 chậu: C:\Users\thanh\Desktop\vuon_may_20_chau_fixed\ (PNG RGBA 282–390 px).
-  CHÚ Ý: tên file 01–09 KHÔNG khớp hình bên trong. Dùng bảng "Đối chiếu tên file" ở §0.14, không tin tên
-  file. File 01 là chậu quả đỏ, ID tạm "redfruit".
-- 4 chậu bản lớn và ảnh mẫu bố cục: C:\Users\thanh\Desktop\vuon_may_hd\ (pumpkin, corn, cabbage, eggplant,
-  layout-reference). Với 4 chậu này dùng bản lớn, bỏ bản nhỏ trong bộ 20.
-- Nếu thư mục nào không có, dừng lại và báo; không tự vẽ thay.
+NGUỒN ẢNH (đã có trong repo, đọc assets/sky-garden/README.md):
+- assets/sky-garden/pots/<id>.png: 20 chậu đã đặt tên theo ID. 4 chậu Nông Sản là bản 1254 px; 16 chậu
+  còn lại 282–390 px, phần đất có lỗ trong suốt.
+- assets/sky-garden/source/vuon_may_20_chau_fixed/: bộ 20 nguyên bản, tên file 01–09 SAI so với hình,
+  chỉ để đối chiếu, không đọc trong pipeline.
+- assets/sky-garden/reference/: ảnh tham chiếu bố cục, KHÔNG đưa vào game (Q6).
+- Quyền ảnh (Q6): chỉ dùng thử nghiệm. Bộ chưa đủ 6 chậu để trạng thái chưa hoàn thiện, không tự vẽ
+  hay tạo asset giả để lấp chỗ trống (Q7).
 
 QUY TẮC BẮT BUỘC:
 1. G1 là demo: dữ liệu giả, KHÔNG import và KHÔNG ghi GuestProgress, reducer, persistence, sync hay gọi API.
@@ -65,7 +63,8 @@ QUY TẮC BẮT BUỘC:
 
 VIỆC CẦN LÀM (theo thứ tự, xong bước nào báo bước đó):
 
-1. Chép ảnh gốc vào assets/sky-garden/pots/<id>.png, đặt tên theo ID mới ở §0.14:
+1. (ĐÃ LÀM ở lượt 5, chỉ kiểm tra lại: đủ 20 file, đúng ID, README đúng.) Chép ảnh gốc vào
+   assets/sky-garden/pots/<id>.png, đặt tên theo ID mới ở §0.14:
    - 4 chậu Nông Sản (pumpkin, corn, cabbage, eggplant) lấy từ thư mục bản lớn vuon_may_hd.
    - Bỏ 4 file trùng chủ đề trong bộ 20: 02_bap, 03_bap_cai, 05_hoa_sen, 07_bat_pho_ga. Theo §0.14, đây
      chính là bí ngô, bắp, bắp cải, cà tím bản nhỏ.
@@ -168,10 +167,15 @@ app "Ăn gì?". Nhiệm vụ: giai đoạn G2 của "Vườn Mây", tức lát c
   FriendFarm.tsx, farm-anim/decorSpots.ts.
 
 QUYẾT ĐỊNH ĐÃ CHỐT (sửa theo câu trả lời của người dùng):
-- Q1 tên khu: "Vườn Mây".  Q2 cấp mở: 12, mầm đậu hiện từ cấp 10.
-- Q3 bộ Nông Sản: bậc Ngọc.  Q4 điện thoại: 2 hàng × 3 chậu.
-- Q5 khách đăng nhập: giữ chậu, cây, bọ thường; sao, luck, bọ hiếm, Mây Ngọc về 0; hỏi trước khi nhập.
-- Q6 quyền ảnh: đã xác nhận.  Q7 chậu file 01: [tên quả]; xếp bộ theo §0.14.
+- Q1 tên khu: "Vườn Mây" (đã chốt).  Q2 cấp mở: 12, mầm đậu từ cấp 10 (đã chốt).
+- Q3 bộ Nông Sản: bậc Ngọc (đã chốt).
+- Q4 điện thoại: toàn cảnh 1×6, chạm tầng phóng to để thao tác, kéo ngang khi cần; 2×3 dự phòng.
+  [Sửa theo kết quả duyệt demo G1.]
+- Q5 khách đăng nhập: giữ chậu, cây, bọ thường; sao, luck, bọ hiếm, Mây Ngọc về 0; màn xác nhận chi tiết
+  có nút hủy. CHƯA BẬT nhập dữ liệu thật: làm sau cờ riêng, mặc định tắt. [Sửa khi chính sách được duyệt.]
+- Q6 quyền ảnh: chỉ dùng thử nghiệm; trước khi phát hành phải có xác nhận quyền thương mại từng file.
+- Q7: file 01 là Chậu Quả Đỏ (redfruit, dự phòng); xếp bộ theo §0.14; bộ chưa đủ 6 có cờ chưa hoàn thiện.
+- Bộ Đất nung: cần ít nhất 3 chậu thiết kế mới trước G2. [Đã có chưa?]
 
 PHẠM VI G2 (§0.3): mầm đậu cấp 10, mở cấp 12; tầng 1–3 và mua ô (§0.4); 5 cây mây (§0.4) + cây rau dưới
 đất trồng được trong chậu; tưới theo luật WATERING chung (§0.5); bọ (§0.2 bước 5, §0.5); thu, thu cả

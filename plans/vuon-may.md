@@ -52,19 +52,21 @@ chiếu với code ngày 2026-10-08. Số nào ghi "mô phỏng chỉnh" là s�
 | D9 | Mua bán giữa người chơi, trộm trên mây | Không làm | §5.7, §17.6 |
 | D10 | Phong cách hình | Chậu men bóng viền vàng (theo 4 chậu đã có) là trung tâm. Bố cục theo `6.png`, không theo phong cách chibi của `6.png` (§0.7) | chưa có |
 
-**Quyết định triển khai đề xuất (2026-10-08):** Q1–Q4 được **chốt làm mặc định kỹ thuật** để G0/G1 có thể triển khai, **không phải xác nhận cá nhân của người dùng**. Q5 chỉ là chính sách đề xuất, phải duyệt trước G2; Q6 **chưa xác minh quyền sử dụng**, không được tự suy đoán.
+**Người dùng trả lời ngày 2026-10-08 (lượt 5).** Q1, Q2, Q3, Q7 đã chốt. Q4 chọn hướng, chốt cuối sau demo G1. Q5 tạm giữ nhưng **chưa bật nhập dữ liệu thật**. Q6 chỉ cho phép **dùng thử nghiệm**, chưa phải quyền thương mại.
 
-| # | Câu hỏi | Quyết định / trạng thái | Điều kiện nghiệm thu |
+| # | Câu hỏi | Quyết định của người dùng | Điều kiện nghiệm thu |
 |---|---|---|---|
-| Q1 | Tên khu | **Mặc định kỹ thuật: Vườn Mây** | Hiển thị đúng ở vi/en, route và điều hướng; tên có thể đổi trước phát hành |
-| Q2 | Cấp mở | **Mặc định kỹ thuật: cấp 12**, mầm đậu xuất hiện cấp 10 | Cấp 10–11 thấy teaser nhưng không vào gameplay; cấp 12 mở đúng một lần |
-| Q3 | Bậc của bộ Nông Sản (4 chậu đã có) | **Mặc định kỹ thuật: Ngọc** | Registry, shop và giao diện hiển thị nhất quán; không tự cấp chậu hiếm khi tạo tài khoản |
-| Q4 | Bố cục trên điện thoại | **Chờ kiểm chứng G1:** toàn cảnh 1×6 chậu/tầng như ảnh tham chiếu, chạm tầng để phóng to tương tác; 2×3 là phương án dự phòng khi không đủ kích thước chạm | Thử 360/390/430 px trên thiết bị thật: toàn cảnh không tràn, 6 chậu nhìn rõ; khi tương tác hitbox ≥44 px, bọ không đè hitbox cây; chọn phương án dựa trên test, không khóa cứng trước G1 |
-| Q5 | Khách chưa đăng nhập rồi đăng nhập | **CHỜ DUYỆT CHÍNH SÁCH:** đề xuất giữ chậu/cây/bọ thường, reset sao/luck và loại vật phẩm hiếm theo §0.2 | Trước G2 phải có xác nhận người dùng, thông báo trước import, kiểm thử không mất tài sản ngoài phạm vi thông báo; nếu chưa duyệt thì chặn nhập Vườn Mây thay vì âm thầm xóa |
-| Q6 | Quyền dùng 4 chậu, bộ 20 chậu, `5.png`, `6.png` | **CHƯA XÁC MINH**. 4 chậu và bộ 20 chậu dùng nội bộ để dựng thử; `5.png` và `6.png` chỉ là tham khảo bố cục, không đưa nguyên ảnh vào sản phẩm | Trước phát hành cần xác nhận quyền sở hữu/giấy phép từng asset bằng văn bản; asset không rõ quyền phải thay bằng bản gốc có quyền dùng |
-| Q7 | Bộ 20 chậu: hình file 01 là quả gì; bảng ID mới và cách xếp bộ ở §0.14 | **CHỜ NGƯỜI DÙNG:** mặc định kỹ thuật là chậu quả đỏ để dự phòng, Nông Sản dùng táo đỏ | G0 chép ảnh theo ID mới; nếu người dùng đổi cách xếp thì sửa bảng §0.14 và registry trước G1 |
+| Q1 | Tên khu | **Đã chốt: Vườn Mây** | Hiển thị đúng ở vi/en, route và điều hướng |
+| Q2 | Cấp mở | **Đã chốt: cấp 12**, mầm đậu thần xuất hiện từ cấp 10 | Cấp 10–11 thấy mầm nhưng không vào gameplay; cấp 12 mở đúng một lần |
+| Q3 | Bậc của bộ Nông Sản | **Đã chốt: Ngọc (hạng 3/5).** Hoàng kim dành cho các bộ cao cấp mở sau | Registry, shop và giao diện hiển thị nhất quán; không tự cấp chậu hiếm khi tạo tài khoản |
+| Q4 | Bố cục trên điện thoại | **Đã chọn hướng, chốt cuối sau demo G1:** toàn cảnh 1 hàng 6 chậu nằm ngang như ảnh tham chiếu; chạm vào tầng thì phóng to để trồng, tưới, bắt bọ, thu hoạch; được kéo ngang trong chế độ phóng to. 2×3 chỉ là dự phòng khi thử trên điện thoại không đạt | Thử 360/390/430 px trên máy thật: toàn cảnh không tràn; khi phóng to, vùng chạm ≥44 px, bọ không đè vùng chạm cây |
+| Q5 | Khách chưa đăng nhập rồi đăng nhập | **Tạm giữ chính sách:** giữ chậu, cây, bọ thường; sao chậu về 0, bọ hiếm và Mây Ngọc về 0. **Bắt buộc** thông báo chi tiết trước khi nhập, người chơi chọn xác nhận hoặc hủy. **Chưa bật nhập dữ liệu thật** cho tới khi chính sách được duyệt chính thức | Màn xác nhận liệt kê đúng thứ giữ và thứ mất; hủy thì không đổi gì; khi chưa duyệt, G2 chặn nhập Vườn Mây của khách (cờ riêng, mặc định tắt) |
+| Q6 | Quyền dùng ảnh | **Chỉ dùng thử nghiệm.** 4 chậu gốc và bộ 20 chậu được cung cấp để phát triển thử nghiệm, **không** mặc định là có quyền thương mại. `5.png`, `6.png` chỉ là tham chiếu, không lấy nguyên ảnh hay cắt nhân vật, giao diện từ đó vào game. Asset mới phải có nguồn và quyền rõ | Trước phát hành: xác nhận quyền thương mại cho từng file; ghi ở `assets/sky-garden/README.md` |
+| Q7 | Chậu file 01 và cách xếp bộ | **Đã chốt.** File 01 là **Chậu Quả Đỏ**, ID `redfruit` giữ ổn định, tên hiển thị đổi được sau; là mẫu dự phòng. Bảng xếp bộ ở §0.14 là cấu hình khởi đầu: 6 chậu/bộ, không đổi ID hay chuyển chậu giữa các bộ khi chưa có yêu cầu. Bộ chưa đủ 6 để trạng thái **chưa hoàn thiện**, không tạo asset giả để phát hành | Registry có cờ `complete` cho từng bộ; hiệu ứng "Đủ bộ" và thưởng đủ bộ chỉ bật cho bộ hoàn thiện |
 
 **Chi tiết Q4 (thay thế quyết định 2×3 cũ):** Giữ **6 ô logic/tầng** ở mọi màn hình. Chế độ **toàn cảnh** ưu tiên 1 hàng 6 chậu giống ảnh tham chiếu để thấy nhiều tầng, nhưng đây là chế độ quan sát, không bắt người dùng chạm vào chậu ~50 px để thao tác chính. Chạm vào một tầng mở **chế độ tương tác phóng to tầng** (camera zoom hoặc panel chi tiết), bảo đảm vùng chạm mỗi chậu/bọ/nút ≥44×44 CSS px, có nút quay lại toàn cảnh và giữ vị trí cuộn. Nếu test 360/390/430 px không đạt khả năng đọc hoặc hiệu năng, dùng **2×3** trong chế độ tương tác hoặc toàn cảnh theo quyết định G1. Trên desktop ưu tiên 1×6 nếu đủ chỗ. Không thay đổi số chậu, bộ 6, trạng thái cây hay logic game khi đổi chế độ. G1 phải lưu screenshot/video ở 360, 390, 430, 768, 1366 px và có người duyệt kết quả trước khi chốt layout.
+
+**Nguyên tắc triển khai (người dùng, lượt 5):** làm G0 → G1 → kiểm thử và duyệt hình ảnh, bố cục → mới bắt đầu G2. Không tự đánh dấu hoàn thành tiêu chí chưa được kiểm chứng. Chỉ cần hoàn thiện 3 tầng demo trước, chưa cần asset cho đủ 10 tầng.
 
 **Cổng quyết định:** G0/G1 có thể dùng Q1–Q4 ở trạng thái mặc định kỹ thuật. **Không đánh dấu hoàn thành điều kiện “người dùng chốt Q1–Q6” ở §0.3/§0.15.5** cho tới khi Q5 được duyệt và Q6 có chứng cứ. G2 không được chạy import tài sản Vườn Mây thật nếu Q5 chưa duyệt; không phát hành asset nếu Q6 chưa xác minh.
 
@@ -517,9 +519,12 @@ Tổng có 19 chậu xếp vào bộ, 1 dự phòng. Còn thiếu 17 chậu đ�
 
 **Việc cần làm ở G0:**
 
-1. Người dùng xác nhận hình file 01 là quả gì, và đồng ý bảng ID và bảng xếp bộ ở trên (Q7).
-2. Chép ảnh gốc vào `assets/sky-garden/pots/` **theo ID mới**, không giữ tên file cũ để tránh nhầm. Ghi nguồn
-   vào bảng ảnh ở đầu file.
+1. ~~Người dùng xác nhận hình file 01 là quả gì, và đồng ý bảng ID và bảng xếp bộ ở trên (Q7).~~ **Xong (lượt 5):**
+   file 01 là Chậu Quả Đỏ (`redfruit`); bảng xếp bộ được duyệt làm cấu hình khởi đầu.
+2. ~~Chép ảnh gốc vào `assets/sky-garden/pots/` theo ID mới.~~ **Xong (lượt 5):** `assets/sky-garden/pots/` có 20
+   file theo ID (4 chậu Nông Sản bản 1254 px + 16 file từ bộ 20); bộ 20 nguyên bản giữ ở
+   `assets/sky-garden/source/vuon_may_20_chau_fixed/`; `5.png`, `6.png` ở `assets/sky-garden/reference/`
+   (chỉ tham khảo). Nguồn và quyền ghi ở `assets/sky-garden/README.md`.
 3. `prepare-pots.mjs` thêm bước **vá lỗ trong đất**:
    - Tìm vùng trong suốt không thông ra mép ảnh.
    - Tô lại bằng màu trung bình của các điểm ảnh đục xung quanh, lặp lan dần từ ngoài vào.
@@ -529,8 +534,12 @@ Tổng có 19 chậu xếp vào bộ, 1 dự phòng. Còn thiếu 17 chậu đ�
    thử G2 thì dùng bản hiện tại ở @1x 256 px là đủ.
 5. Làm bảng xem thử (mỗi chậu kèm ID, cây giai đoạn 0–3 cắm vào miệng chậu, nền sáng, tối và nền trời) theo
    §0.11, kèm bảng đạt/không đạt.
-6. Vẽ bộ Đất nung (ít nhất 3 chậu) trước G2. Nếu chưa kịp thì G2 tạm dùng giỏ tre và tre xanh (Chợ Quê, bậc Sứ)
-   làm chậu tặng.
+6. Thiết kế bộ Đất nung, **ít nhất 3 chậu khởi đầu**, hình thức đơn giản hơn chậu Ngọc. Đây là điều kiện trước G2
+   (người dùng, lượt 5). Giỏ tre và tre xanh chỉ được dùng thay trong demo G1 và môi trường thử, không phát hành.
+7. Thứ tự làm asset (người dùng, lượt 5): (a) render lại từng chậu của bộ 20 độc lập ở ≥ 1024×1024, nền trong
+   suốt, miệng đất rõ, không mất viền hay dính chậu bên cạnh; (b) cây mây, bọ, máy, tầng mây, đậu thần, hiệu ứng
+   dựng riêng theo cùng phong cách. G1 được dùng placeholder nhưng phải đánh dấu rõ là tạm; chỉ cần đủ cho
+   3 tầng demo.
 
 ---
 
