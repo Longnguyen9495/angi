@@ -711,3 +711,111 @@ Nguồn tham khảo lối chơi (liên kết giữ từ bản gốc, chưa đư�
 [Vietnamnet: giới thiệu KVTM](https://vietnamnet.vn/gioi-thieu-game-khu-vuon-tren-may-tren-zingme-i346005.html) ·
 [Google Play: Khu Vườn Trên Mây](https://play.google.com/store/apps/details?id=vn.kvtm.js&hl=en_US) ·
 [khuvuontrenmay.wordpress.com](https://khuvuontrenmay.wordpress.com/2014/09/18/sky-garden/)
+
+
+---
+
+## 17. Định hướng V2 — hiện đại hóa gameplay và kết nối sâu với Ăn gì? (2026-10-08)
+
+**Trạng thái:** đặc tả đề xuất để triển khai theo giai đoạn, chưa xác nhận đã có trong code. Mục này bổ sung §1–§16; quy tắc bảo mật, thời gian, tính nguyên tử và nghiệm thu ở §12–§16 vẫn là bắt buộc. Khi có xung đột về phạm vi/phụ thuộc, dùng lộ trình §17.7; khi có xung đột về an toàn dữ liệu, dùng §15. Không coi các đề xuất mới là cơ chế đã được xác minh từ game Zing.
+
+### 17.1 Tầm nhìn và nguyên tắc sản phẩm
+
+- **Dưới đất trồng để nấu, trên mây trồng để sưu tầm và làm nguyên liệu đặc biệt.** Hai khu chia sẻ tài khoản, cấp, xu, XP và kho chuẩn, nhưng có mục tiêu chơi riêng.
+- Giữ tinh thần hoài niệm: tầng mây, cây đậu thần, chậu quý, bọ, nâng chậu, phối chậu, thăm bạn. Không sao chép asset, UI, tên thương mại hay số liệu độc quyền của Zing.
+- Người chơi có lý do qua lại hai khu nhờ công thức hỗn hợp và đơn hàng; không bắt người chơi lên mây để hoàn thành các công thức/nhiệm vụ lõi dưới đất.
+- Ưu tiên thao tác chạm trên mobile, phản hồi rõ, thời gian thực không làm cây chết; không khóa tiến trình bằng sự kiện, bạn bè hoặc giờ đăng nhập.
+- Thiết kế dữ liệu mở rộng theo registry, không hardcode giới hạn nội dung vào hệ thống ngoài giới hạn phiên bản/lưu trữ được khai báo.
+
+### 17.2 Vòng lặp kết nối hai chiều và hợp đồng công thức
+
+1. Thu nông sản đất và nguyên liệu mây → nhập kho chung qua ledger/server chuẩn.
+2. Chọn công thức trong máy/chế biến; kiểm tra đã mở, đủ nguyên liệu, hàng chờ, chi phí và thời gian.
+3. Trừ nguyên liệu **một lần** khi bắt đầu; hoàn thành theo giờ server; nhận sản phẩm **một lần**.
+4. Dùng thành phẩm cho nấu món, bán NPC hoặc đơn cú/khinh khí cầu; thưởng chốt theo phiên bản luật và không nhân đôi XP/xu.
+5. Thành quả giúp mua hạt/chậu, nâng cấp và mở tầng; luôn có đường kiếm vật phẩm thường trực không cần bạn bè/sự kiện.
+
+**Bảng công thức hỗn hợp khởi tạo để cân bằng, không phải giá trị đã duyệt** (định danh và tên đầu vào phải ánh xạ registry thật trước khi code):
+
+| Mã dự thảo | Đầu vào từ đất | Đầu vào từ mây | Đầu ra | Điều kiện |
+|---|---|---|---|---|
+| MIX01 | mật ong | nụ nhài | trà nhài mật ong | T1; không cần cây trà T3 |
+| MIX02 | mật ong | bạc hà, tắc | nước tắc bạc hà mật ong | T1 |
+| MIX03 | nguyên liệu bánh có sẵn, cần xác minh | dâu | bánh dâu | T2 |
+| MIX04 | mật ong | hạt sen | chè sen mật ong | T2 |
+| MIX05 | nguyên liệu bánh có sẵn, cần xác minh | hoa sen | bánh hương sen | T2 |
+| MIX06 | nguyên liệu nước uống có sẵn, cần xác minh | lá trà, nhài | trà nhài | T3 |
+| MIX07 | sữa hoặc nguyên liệu thay thế, cần xác minh | cà phê | cà phê sữa | T3 |
+| MIX08 | nguyên liệu món mặn có sẵn, cần xác minh | tiêu | phiên bản món có tiêu | T4 |
+| MIX09 | nguyên liệu món tráng miệng có sẵn, cần xác minh | cúc vàng | món hương cúc | T4 |
+| MIX10 | nguyên liệu bánh có sẵn, cần xác minh | vani | bánh vani | T7 |
+
+**Chưa đưa MIX03, MIX05–MIX10 vào runtime** cho tới khi có nguyên liệu hợp lệ, sản lượng, thời gian, chi phí, giá bán, XP, nguồn hạt và đường mở khóa; không tự tạo nguyên liệu đất chưa tồn tại. Mỗi công thức có `recipeId`, `rulesVersion`, `requiredUnlocks`, `inputs[]`, `outputs[]`, `durationSeconds`, `coinCost`, `xpReward`, `sellPrice`, `dailyLimit` (nếu có), `source/sink` và test chống vòng lặp lợi nhuận vô hạn. Bản MVP ưu tiên MIX01, MIX02, MIX04 sau khi xác minh mật ong và sản phẩm tương ứng.
+
+**Sửa phụ thuộc mở khóa:** Lò sao trà T1 phải có công thức T1 không cần lá trà T3; nguồn Hạt Mây mở T2 và Sương Mai mở T3 phải đến từ chuỗi hướng dẫn/nhiệm vụ thường trực trước khi yêu cầu tiêu; Máy chưng sương T3 chỉ là nguồn bổ sung sau khi mở. Hạt Mây từ cây đậu thần T10 dùng đổi chậu/vật phẩm cuối game, không được coi là nguồn mở tầng trước T10.
+
+### 17.3 Chậu, cộng hưởng và preset
+
+- Giữ 36 mẫu ban đầu, 5 bậc và ★0–★5; các mẫu và chỉ số khai báo bằng registry có phiên bản. Chậu có UID server, bộ, bậc, sao, trạng thái đặt, khóa thao tác và lịch sử nâng cấp tối thiểu.
+- **Cộng hưởng bậc thang:** 2/4/6 chậu cùng bộ trên một tầng có thể kích hoạt hiệu ứng tăng dần; bảng số % là dữ liệu cân bằng, chưa chốt. Hiệu ứng 6 chậu không cộng trùng hiệu ứng 2 và 4 trừ khi registry ghi rõ.
+- **Cộng hưởng hỗn hợp:** phối Nông Sản + Bàn Ăn Việt hoặc bộ khác để ưu tiên XP/đơn/chế biến; bonus chỉ áp lên hoạt động có nguồn gốc xác minh được. Không nhân đôi thưởng khi chuyển qua kho chung.
+- **Quy tắc giải hiệu ứng:** xét chậu hợp lệ đang đặt, chọn một hiệu ứng theo thứ tự ưu tiên định nghĩa trong registry (hoặc hiệu ứng có điểm ưu tiên cao nhất), sau đó áp trần chỉ số ở §4.2; UI hiển thị hiệu ứng đang hoạt động, lý do và dự báo khi đổi chậu. Không cộng đồng thời công thức §5.4 và công thức V2 nếu không có quy tắc kết hợp tường minh.
+- **Preset:** lưu tối đa 3 bố cục tham khảo mỗi tài khoản, áp dụng bằng thao tác giao dịch nguyên tử; kiểm tra UID, quyền sở hữu, ô mở, cây đang trồng và revision. Nếu có cây đang trồng ở vị trí cần chuyển mà luật không cho phép, từ chối toàn bộ preset, không chuyển nửa chừng.
+- Sổ tay chậu hiển thị nguồn nhận, số mẫu đã sở hữu, chỉ số gốc/hiệu lực, xác suất nâng, pity, giá và vật liệu; không lộ seed RNG.
+
+### 17.4 Trợ thủ Vườn Mây — mở sau MVP
+
+| Trợ thủ dự kiến | Vai trò | Rào chắn kinh tế |
+|---|---|---|
+| Chim Sẻ Mây | báo bọ xuất hiện | không tạo thêm bọ |
+| Ong Thợ | hỗ trợ thu hoa/mật | quota ngày, không nhân tài nguyên |
+| Sóc Nhỏ | tự nhận sản phẩm đã chín khi người chơi cho phép | một claim server/chu kỳ, cooldown |
+| Hạc Giấy | giảm thời gian giao một số đơn | có trần, không sửa thưởng đã chốt |
+
+- MVP chỉ có nhân vật hướng dẫn mang tính hình ảnh; **không có tự động hóa kinh tế**.
+- Sau MVP, trợ thủ có `helperId`, cấp, kỹ năng, cooldown, quota, trạng thái kích hoạt, và lịch sử claim; hành động phải kiểm tra quyền, revision, giờ server và idempotency như §15.
+- Trợ thủ không thay thế hoàn toàn tương tác trồng/thu, không tạo thêm nguồn bọ hiếm hay vật phẩm mở tầng bắt buộc. Không mở thương mại tiền thật trong V2.
+
+### 17.5 Visual Specification & UX
+
+**Hướng mỹ thuật:** 2D vẽ tay đồng nhất với `farm-anim`, phối cảnh 3/4, chậu là tâm điểm; tầng mây có chiều sâu bằng nhiều lớp nhưng không quay lại 3D. Màu và chất liệu lấy cảm hứng Việt Nam, không sao chép giao diện game gốc.
+
+- **Cấu trúc cảnh:** nền trời/parallax nhẹ, mây xa, cây đậu thần, nền từng tầng, 6 vị trí logic, chậu, cây, bọ, hiệu ứng, lớp UI. Mỗi tầng có điểm neo ô và thứ tự vẽ/hit-test khai báo rõ, không tính hitbox từ viền sáng.
+- **Tỉ lệ và responsive:** desktop có thể xếp 6 ô theo một hàng nếu đủ vùng chạm; mobile dùng 2×3 như §14. Không chốt kích thước pixel sprite trước khi thử trên 360/390/430 px và máy thật. Luôn giữ ô chạm ≥44 CSS px.
+- **Các trạng thái hình ảnh bắt buộc:** ô khóa/mở, chậu rỗng/đang trồng/chín, 4 giai đoạn cây, có bọ, được tưới, thiếu nguyên liệu, máy đang chạy/chờ nhận, hiệu ứng bộ hoạt động.
+- **Hoạt ảnh:** lên mây lần đầu, chuyển cảnh nhanh, đặt/đổi chậu, cây lớn, bọ tới/bắt bọ, thu hoạch, nâng sao thành công/thất bại, mở tầng, giao đơn. Mỗi hoạt ảnh có điều kiện bắt đầu/kết thúc, cách hủy khi chuyển cảnh, giới hạn hạt và phản hồi tĩnh khi bật giảm chuyển động.
+- **Âm thanh:** tùy chọn bật/tắt nhạc/SFX độc lập, không tự phát âm thanh trước tương tác cho phép; trạng thái mute lưu riêng khỏi kinh tế.
+- **Khả năng truy cập/hiệu năng:** phần tử DOM tương đương cho ô Canvas, không phụ thuộc chỉ vào màu, chỉ vẽ tầng gần viewport, lazy-load art, dừng animation khi tab ẩn; kiểm thử máy Android tầm trung và iPhone thật, ghi fps/thời gian tương tác thay vì giả định đạt.
+
+**Art pipeline:** mỗi asset có mã, phiên bản, chủ sở hữu/giấy phép, kích thước, nền trong suốt, điểm neo, vùng chạm, các trạng thái, quy tắc bóng/ánh sáng, và kiểm tra không cắt chậu/cây ở mọi tỉ lệ. Bốn chậu mẫu và moodboard ở đầu file phải được kiểm tra file thực và quyền sử dụng trước khi đưa vào build.
+
+### 17.6 Xã hội, nội dung dài hạn và chống lạm dụng
+
+- Thăm vườn, tưới/bắt bọ giúp và xem bộ sưu tập là trọng tâm xã hội; không thêm trộm trên mây, giao dịch trực tiếp hay bảng tin mua bán ở V2.
+- Mọi thưởng giúp bạn có quota hai phía và thao tác nguyên tử theo §13/§15; không cho tài khoản phụ nhân bọ hiếm. Bảng xếp hạng chỉ dùng dữ liệu server xác minh, công khai tối thiểu.
+- Sự kiện, bộ chậu theo mùa và thành tựu không được là nguồn duy nhất của tài nguyên mở tầng. Chậu sự kiện đã sở hữu không biến mất sau mùa; nội dung giới hạn có đường thay thế hợp lý.
+- Theo dõi retention theo cohort (D1/D7/D30), tỉ lệ vào mây, tỉ lệ quay lại đất sau mây, số công thức hỗn hợp đã chế biến, mốc kẹt tầng, tỉ lệ nâng sao, độ trễ và lỗi thao tác. Chỉ thu telemetry tối thiểu, không ghi bí mật hoặc dữ liệu cá nhân không cần thiết.
+
+### 17.7 Lộ trình triển khai và cổng nghiệm thu V2
+
+| Giai đoạn | Phạm vi bắt buộc | Cổng hoàn thành |
+|---|---|---|
+| V0 — Chốt đặc tả | audit code/asset, registry hạt–vật phẩm–chậu, công thức đầu game, đường mở T2/T3, wireframe mobile, chính sách khách | không còn phụ thuộc vòng, có nguồn thường trực và bảng cân bằng đầy đủ cho nội dung định triển khai |
+| V1 — Vertical slice | 1 tầng, 3 chậu, 3 cây, trồng/tưới/bọ/thu, chuyển cảnh, kho chung, **ít nhất một công thức hỗn hợp khả dụng** | người chơi đi đất → mây → thu → chế biến/dùng sản phẩm dưới đất; mobile thật thao tác được; server xác minh kinh tế hoặc chạy sandbox cách ly |
+| V2 — MVP | tầng 1–3, mua ô/chậu, tutorial, máy đầu game, nhiệm vụ, nguồn Hạt Mây/Sương Mai chắc chắn, đồng bộ online | qua ma trận §16, retry/race không nhân thưởng, bản lưu cũ không mất dữ liệu |
+| V3 — Chiều sâu | nâng sao/thăng bậc, công thức xếp, bộ sưu tập, preset, máy/đơn lớn; mở tầng 4–5 khi đủ nguồn | mô phỏng nhiều seed/hồ sơ ≥90 ngày, không kẹt và không vòng lời vô hạn |
+| V4 — Mở rộng | trợ thủ, bạn bè/quota, sự kiện, mở tầng 6–10, bổ sung 36 chậu/15 cây | kiểm thử chống lạm dụng, art/mobile/performance và vận hành đạt cổng §16 |
+
+**Không triển khai đồng thời tất cả hệ thống.** V1 phải là lát cắt chơi thật, không chỉ mockup. Mỗi giai đoạn có feature flag, test reducer/parser/guard/API, kiểm thử lỗi mạng/đổi tài khoản/hai thiết bị, dữ liệu demo tách khỏi tài khoản thật. Không đổi schema/version luật chỉ vì tài liệu ghi con số; xác minh mã hiện tại trước khi migration.
+
+### 17.8 Danh sách quyết định cần chốt trước khi code
+
+- [ ] Xác minh file art 1–5 và quyền sử dụng; chốt style guide, kích thước/anchor.
+- [ ] Đối chiếu registry nguyên liệu đất hiện tại; chọn công thức hỗn hợp đầu tiên có đủ nguyên liệu thật.
+- [ ] Chốt nguồn Hạt Mây/Sương Mai trước T2/T3 và quà hướng dẫn chỉ nhận một lần.
+- [ ] Chốt kinh tế hạt, sản lượng, giá, XP, thời gian, giới hạn kho, giới hạn ngày.
+- [ ] Chốt thứ tự hiệu ứng chậu, công thức 2/4/6, trần cộng hưởng và hành vi preset khi có cây.
+- [ ] Chốt cách xác minh trạng thái online/server, guest sandbox và RNG bọ/nâng sao.
+- [ ] Duyệt wireframe desktop/mobile, tương tác thay drag, giảm chuyển động và âm thanh.
+- [ ] Chạy mô phỏng ≥90 ngày và kiểm thử ma trận §16 trước khi bật kinh tế chung.
+
