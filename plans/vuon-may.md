@@ -443,6 +443,61 @@ có sẵn.
 
 ---
 
+### 0.10 Tiêu chí nghiệm thu bổ sung (bắt buộc trước khi triển khai G2+)
+
+**Phạm vi:** Các mục dưới đây là *cổng kiểm thử*, không khẳng định hệ thống hiện đã đạt. Áp dụng cùng §0.2–§0.9 và §16; khi xung đột, ưu tiên quy tắc bảo toàn tài sản/đồng bộ ở mục này. Mỗi ca kiểm thử lưu: mã ca, dữ liệu đầu vào, thao tác, kết quả mong đợi, kết quả thực tế, thiết bị/phiên bản, bằng chứng và người duyệt. Không tự đánh dấu PASS nếu chưa chạy.
+
+#### 0.10.1 Tiến trình và kinh tế không kẹt (P0)
+
+- **Tuyến hướng dẫn:** 1 Hạt Mây (thu đầu) + 1 (bắt bọ đầu) = 2; trả 2 để mở tầng 2 → số dư 0; thưởng mở tầng 2 +2 → số dư 2; hoàn thành MIX01 +2 → số dư 4; trả 4 mở tầng 3 → số dư 0. Sương Mai +1 từ nhài sấy đầu tiên và trả 1 khi mở tầng 3. Mỗi thưởng chỉ nhận một lần, dù bấm nhanh/reload/gửi lặp.
+- Người chơi mới ở cấp mở khu, kho không có mật ong, vẫn hoàn thành MIX01 bằng đường hỗ trợ 1 mật ong quy định tại §0.4. Không yêu cầu bọ hiếm, bạn bè, quảng cáo, nạp tiền hoặc sự kiện.
+- Viết test tự động cho thứ tự nhiệm vụ khác nhau, người chơi thu hoạch nhưng chưa bắt bọ, nhận thưởng rồi thoát, trồng lại, mua ô sớm và kho gần đầy. Nếu thiếu điều kiện, UI phải báo chính xác vật phẩm và nguồn kiếm.
+- Không có công thức mở ở tầng T nhưng toàn bộ đầu vào chỉ xuất hiện từ tầng lớn hơn T; mọi máy mới mở có ít nhất một công thức làm được ngay.
+- Mỗi giao dịch có bảng nguồn/đích tài nguyên, mức trần và đường kiếm lại. Mô phỏng 90 ngày với tối thiểu 3 kiểu chơi: 1 lần/ngày, 3 lần/ngày, 6 lần/ngày; chạy nhiều seed cố định, xuất báo cáo ngày mở tầng, tồn kho, số dư xu/XP và số lần kẹt. **PASS:** không âm kho/tiền, không nhân thưởng, không vòng chế biến mua-bán tạo lời vô hạn; các mốc tiến trình mục tiêu §0.3 phải được đo và nếu lệch phải điều chỉnh hoặc duyệt lại, không tự coi là đạt.
+
+#### 0.10.2 State machine, đồng bộ và chống gian lận (P0)
+
+- **Cây:** EMPTY → GROWING → READY → HARVESTED/EMPTY; BUG_PRESENT là trạng thái phụ, không được xuất hiện nếu không có cây hợp lệ. **Máy:** IDLE → RUNNING → READY → CLAIMED/IDLE. **Nâng sao:** IDLE → PENDING → RESOLVED hoặc REJECTED; client không tự quyết kết quả tài khoản đã đăng nhập.
+- Mỗi thao tác ghi rõ precondition, thay đổi kho/xu/XP, thời điểm server, revision, idempotency key và lỗi có thể trả về. Gửi lại cùng `opId` phải nhận cùng kết quả; gửi cùng `opId` với payload khác phải bị từ chối.
+- Với `PUT /account/progress` và endpoint nâng sao/thăng bậc: mô phỏng hai tab/hai thiết bị, thao tác đồng thời, phản hồi 409, mất mạng sau khi server đã commit nhưng trước khi client nhận, reload khi còn pending. **PASS:** không mất chậu/cây đã xác nhận, không nhân đôi vật phẩm, không ghi đè kết quả server bằng snapshot cũ; giao diện có thể tải lại bản chuẩn và thử lại thao tác hợp lệ.
+- **RNG bọ:** không coi `skySeed` nằm trong bản lưu client là bí mật. Trước G2 phải chọn một trong hai cơ chế và ghi rõ vào §0.2: (A) server xác minh roll bằng HMAC với secret chỉ server giữ, không xuất secret; hoặc (B) server chốt/ghi nhận roll theo từng chu kỳ. Nếu vẫn dùng hash với seed client đọc được, phải chứng minh bằng test rằng người chơi không thể chọn/đổi kết quả có lợi qua reset, import, rollback, clone UID, chỉnh cycle hoặc gửi bản lưu giả; nếu không chứng minh được thì **BLOCK G2**.
+- Kiểm thử sửa trực tiếp `stars`, `luck`, `readyAt`, `cycleNo`, `statsAtPlant`, `xpDay`, `items`, `jobs`, số lượt tưới và UID; thay đổi trái luật phải bị từ chối. Thời gian chín, trần XP/ngày, bọ và quota dùng mốc giờ server.
+- Tài khoản khách → đăng nhập phải có màn xác nhận rõ tài sản nào giữ/mất theo Q5; test import lặp, hủy import, mất mạng và trùng UID. Không xóa tài sản khách trước khi server xác nhận nhập thành công.
+- Mỗi API mới có bảng contract gồm endpoint, auth, request/response ví dụ, mã lỗi 400/401/403/409/422/429/500, rate limit, idempotency và rollback; test contract ở cả client và server. Không log secret, seed server hoặc dữ liệu nhạy cảm.
+
+#### 0.10.3 Tiêu chí asset chậu và hình ảnh (P1; bắt buộc từ G0/G1)
+
+- **Nguồn chuẩn:** một file riêng cho mỗi chậu; PNG RGBA thật, nền ngoài chậu alpha = 0; không có ô đen/trắng giả nền, chữ, watermark, vật thể lạ hoặc chi tiết chậu bên cạnh. Không dùng crop ô từ ảnh kệ tổng hợp làm asset chính nếu bị mất viền/quai/hoa.
+- **Không cắt:** toàn bộ chậu, quai, lá, hoa và đế nằm trong khung, cách biên ít nhất 5% cạnh ngắn (trừ trường hợp được duyệt riêng). Vật thể chính chỉ gồm đúng một chậu; vùng đất trống nhìn thấy và không bị cây/trang trí che hết.
+- **Độ phân giải:** nguồn ưu tiên ≥1024×1024 px, xuất WebP 256/512 px từ nguồn; file nguồn nhỏ hơn chuẩn phải được đánh dấu cần render lại, không upscale rồi ghi là ảnh gốc độ phân giải cao. Alpha không viền đen/trắng, không halo màu lạ trên nền sáng/tối.
+- **Đồng nhất:** góc nhìn 3/4, tỷ lệ miệng/chiều cao, hướng ánh sáng, độ bóng men và độ dày viền vàng tương thích 4 chậu gốc; thử ghép ít nhất 6 chậu cạnh nhau trên nền mây thật.
+- **Điểm neo:** `pots.json` có `potId`, `source`, `anchor {cx,cy,rx}`, `bounds`, `scale`, `assetVersion`; kiểm thử cây giai đoạn 0–3 cắm đúng giữa đất, không lơ lửng hoặc che quá mức miệng chậu.
+- **Bằng chứng duyệt:** xuất contact sheet 20 chậu trên nền caro, nền trắng, nền tối và một preview 6 chậu/tầng mobile. Người duyệt xác nhận từng chậu PASS/REWORK; chỉ ảnh PASS mới đưa vào registry sản xuất. Xác minh giấy phép/quyền dùng trước phát hành.
+
+#### 0.10.4 UX, mobile, accessibility và hiệu năng (P1)
+
+- Test thực tế ít nhất các viewport 360×800, 390×844, 430×932 và desktop 1366×768; không tràn ngang, không che nút Xuống đất, kho, máy hoặc popup; 3 ô khóa và 3 ô mở ở tầng 1 hiển thị phân biệt rõ.
+- Mỗi ô tương tác chính có vùng chạm ≥44×44 CSS px; bọ có hitbox riêng, chạm bọ không thu hoạch cây; có thao tác chạm để đặt/đổi chậu thay cho chỉ drag-and-drop.
+- UI thể hiện trạng thái đang lưu/đã lưu/lỗi, thời gian còn lại, thiếu nguyên liệu, số lượt tưới, giới hạn XP, tỷ lệ nâng sao và hiệu ứng chậu. Không chỉ dùng màu để báo trạng thái; thông báo hỗ trợ vi/en.
+- Tôn trọng `prefers-reduced-motion`, âm thanh mặc định không tự phát trái chính sách trình duyệt; dừng animation khi tab ẩn. Lỗi tải sprite có fallback và không làm mất quyền thao tác.
+- **Ngân sách khởi điểm cần đo ở G1:** ≥30 FPS khi cuộn 3 tầng trên một thiết bị Android tầm trung ghi rõ model; thời gian từ chạm chuyển khu đến có thể thao tác ≤3 giây trên mạng 4G ổn định; ảnh không tải ngoài viewport nếu không cần. Ghi kết quả đo thực tế (thiết bị, mạng, thời gian, fps, dung lượng JS/asset) và điều chỉnh ngân sách nếu có lý do; không tuyên bố PASS bằng giả định.
+
+#### 0.10.5 Cổng hoàn thành từng giai đoạn (Definition of Done)
+
+| Giai đoạn | Bắt buộc để PASS | Bằng chứng |
+|---|---|---|
+| G0 | Q1–Q6 đã có quyết định; registry ID hợp lệ; nguồn/giấy phép ảnh rõ; 4 chậu gốc đạt tiêu chí; mockup 360/390/430 px; luồng Hạt Mây/Sương Mai đã kiểm thử | checklist ký duyệt, contact sheet, test tiến trình |
+| G1 | Demo 3 tầng chạy không đụng bản lưu; chuyển cảnh, chậu, cây, bọ, máy và ngày/đêm xem được; fallback và reduced motion; đạt đo mobile §0.10.4 | video/ảnh chụp trên thiết bị thật, log FPS |
+| G2 | Có ít nhất một vòng đất → mây → thu → MIX01 → sử dụng thành phẩm; guard chống sửa dữ liệu; xử lý 409/2 thiết bị; RNG đạt §0.10.2; không kẹt tầng 2–3 | test tự động client/server, video luồng, log từ chối gian lận |
+| G3 | Nâng sao/thăng bậc idempotent, pity và trần chỉ số đúng; mô phỏng 90 ngày; cộng hưởng chọn đúng ưu tiên; bộ sưu tập và máy không nhân tài nguyên | test xác suất/biên, báo cáo mô phỏng |
+| G4 | Máy/đơn có ledger truy vết, hoàn thành chỉ nhận một lần, bonus xu không cộng lặp; tầng 6–10 có nguồn tài nguyên hợp lệ | test giao dịch, báo cáo cân bằng |
+| G5 | Hai tài khoản trên hai thiết bị thăm/tưới/bắt bọ đúng quota; dữ liệu công khai không lộ seed, ledger hay dữ liệu riêng | test API/quyền, video kiểm thử |
+| G6 | Nội dung 36 chậu/15 cây qua kiểm tra asset và registry; nhiệm vụ/sự kiện có nguồn thưởng thay thế; không phá kinh tế cũ | contact sheet, kiểm thử hồi quy, mô phỏng |
+
+**Điều kiện chung trước khi bật production:** `npm test`, `npm run check:motion`, kiểm tra i18n và xuất `game-rules.json` đều PASS; không có lỗi P0/P1 chưa xử lý; có kế hoạch sao lưu, rollback, feature flag tắt khẩn cấp, kiểm tra dữ liệu cũ và người duyệt ghi nhận. Nếu thiếu bằng chứng, trạng thái là **CHƯA KIỂM THỬ**, không phải PASS.
+
+---
+
 ## 1. Khu Vườn Trên Mây (game gốc) chơi thế nào
 
 Bảng dưới là tổng hợp tham khảo đã có trong tài liệu, kèm danh sách liên kết ở cuối file; **lượt bổ sung này không truy cập hoặc xác minh các nguồn web đó**. Không coi bảng là đặc tả chính thức cho mọi phiên bản ZingMe/ZingPlay/mobile. **Không** chép tên riêng, hình hay số liệu của họ (xem §11).
