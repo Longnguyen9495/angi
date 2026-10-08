@@ -6,9 +6,9 @@ chợ). Vườn Mây là tầng chơi thứ hai, xếp **chậu sưu tầm** lê
 (xu, XP, cấp, kho) và đổ sản phẩm vào nhau.
 
 **Cách đọc file (cập nhật 2026-10-08, lượt 3):** **§0 "Đặc tả chốt" là bản chuẩn để code theo.** Khi §0 khác
-bất kỳ mục nào phía sau, làm theo §0. §1–§17 giữ lại làm phụ lục: lý do, phương án đã cân nhắc, quy tắc chi
+bất kỳ mục nào phía sau, làm theo §0. §1–§18 giữ lại làm phụ lục: lý do, phương án đã cân nhắc, quy tắc chi
 tiết. Chỗ nào bị §0 thay thế đều có ghi chú "→ §0.x" ngay tại chỗ. §12–§16 (quy tắc vận hành, mobile, offline,
-nghiệm thu) và §17 (định hướng V2) vẫn còn hiệu lực ở những điểm §0 không nói tới.
+nghiệm thu) và §17 (định hướng V2) và §18 (kiến trúc asset/scene) vẫn còn hiệu lực ở những điểm §0 không nói tới.
 
 Art gốc của người dùng (đã kiểm tra file thật ngày 2026-10-08: 4 chậu là PNG 1254×1254 RGBA, nền trong suốt;
 moodboard là PNG 941×1672 RGB không có kênh alpha; quyền sử dụng: người dùng tự vẽ hoặc đặt vẽ, cần họ xác nhận
@@ -58,11 +58,11 @@ chiếu với code ngày 2026-10-08. Số nào ghi "mô phỏng chỉnh" là s�
 | Q1 | Tên khu | **Mặc định kỹ thuật: Vườn Mây** | Hiển thị đúng ở vi/en, route và điều hướng; tên có thể đổi trước phát hành |
 | Q2 | Cấp mở | **Mặc định kỹ thuật: cấp 12**, mầm đậu xuất hiện cấp 10 | Cấp 10–11 thấy teaser nhưng không vào gameplay; cấp 12 mở đúng một lần |
 | Q3 | Bậc của bộ Nông Sản (4 chậu đã có) | **Mặc định kỹ thuật: Ngọc** | Registry, shop và giao diện hiển thị nhất quán; không tự cấp chậu hiếm khi tạo tài khoản |
-| Q4 | Bố cục trên điện thoại | **Chốt mặc định kỹ thuật: 2 hàng × 3 chậu/tầng** ở viewport <600 CSS px; từ 600 px trở lên ưu tiên 1 hàng × 6 nếu đủ diện tích | 360/390/430 px: đủ 6 ô, không tràn ngang, vùng chạm ≥44 px, bọ không đè hitbox cây; 3 ô khóa hiển thị rõ; kiểm tra thiết bị thật G1 |
+| Q4 | Bố cục trên điện thoại | **Chờ kiểm chứng G1:** toàn cảnh 1×6 chậu/tầng như ảnh tham chiếu, chạm tầng để phóng to tương tác; 2×3 là phương án dự phòng khi không đủ kích thước chạm | Thử 360/390/430 px trên thiết bị thật: toàn cảnh không tràn, 6 chậu nhìn rõ; khi tương tác hitbox ≥44 px, bọ không đè hitbox cây; chọn phương án dựa trên test, không khóa cứng trước G1 |
 | Q5 | Khách chưa đăng nhập rồi đăng nhập | **CHỜ DUYỆT CHÍNH SÁCH:** đề xuất giữ chậu/cây/bọ thường, reset sao/luck và loại vật phẩm hiếm theo §0.2 | Trước G2 phải có xác nhận người dùng, thông báo trước import, kiểm thử không mất tài sản ngoài phạm vi thông báo; nếu chưa duyệt thì chặn nhập Vườn Mây thay vì âm thầm xóa |
 | Q6 | Quyền dùng 4 chậu, `5.png`, `6.png` | **CHƯA XÁC MINH**. 4 chậu dùng nội bộ để dựng thử; `5.png` và `6.png` chỉ là tham khảo bố cục, không đưa nguyên ảnh vào sản phẩm | Trước phát hành cần xác nhận quyền sở hữu/giấy phép từng asset bằng văn bản; asset không rõ quyền phải thay bằng bản gốc có quyền dùng |
 
-**Chi tiết Q4:** Giữ **6 ô logic/tầng** ở mọi màn hình; chỉ đổi cách trình bày, không đổi công thức đủ bộ 6 chậu. Trên điện thoại 360–599 px xếp grid 3 cột × 2 hàng; chiều rộng ô = (viewport − safe-area − lề − dải đậu − khoảng cách cột) / 3; co artwork trong ô chứ không giảm hitbox dưới 44 px. Trên tablet/desktop ≥600 px chỉ dùng hàng ngang 6 chậu nếu mỗi ô ≥72 px và máy/biển tầng không che chậu; nếu không đủ thì tự fallback 2×3. **Không dùng 1×6 ở điện thoại** vì chậu quá nhỏ, khó thao tác và không thể hiện được chi tiết men vàng. G1 phải có screenshot cả 360, 390, 430, 768 và 1366 px để duyệt.
+**Chi tiết Q4 (thay thế quyết định 2×3 cũ):** Giữ **6 ô logic/tầng** ở mọi màn hình. Chế độ **toàn cảnh** ưu tiên 1 hàng 6 chậu giống ảnh tham chiếu để thấy nhiều tầng, nhưng đây là chế độ quan sát, không bắt người dùng chạm vào chậu ~50 px để thao tác chính. Chạm vào một tầng mở **chế độ tương tác phóng to tầng** (camera zoom hoặc panel chi tiết), bảo đảm vùng chạm mỗi chậu/bọ/nút ≥44×44 CSS px, có nút quay lại toàn cảnh và giữ vị trí cuộn. Nếu test 360/390/430 px không đạt khả năng đọc hoặc hiệu năng, dùng **2×3** trong chế độ tương tác hoặc toàn cảnh theo quyết định G1. Trên desktop ưu tiên 1×6 nếu đủ chỗ. Không thay đổi số chậu, bộ 6, trạng thái cây hay logic game khi đổi chế độ. G1 phải lưu screenshot/video ở 360, 390, 430, 768, 1366 px và có người duyệt kết quả trước khi chốt layout.
 
 **Cổng quyết định:** G0/G1 có thể dùng Q1–Q4 ở trạng thái mặc định kỹ thuật. **Không đánh dấu hoàn thành điều kiện “người dùng chốt Q1–Q6” ở §0.3/§0.10.5** cho tới khi Q5 được duyệt và Q6 có chứng cứ. G2 không được chạy import tài sản Vườn Mây thật nếu Q5 chưa duyệt; không phát hành asset nếu Q6 chưa xác minh.
 
@@ -1337,4 +1337,63 @@ Cập nhật 2026-10-08 theo §0:
 - [x] Chốt cách xác minh online/server, khách và RNG bọ/nâng sao: §0.2. Chính sách khách khi đăng nhập chờ Q5.
 - [ ] Duyệt wireframe desktop/mobile (bố cục §0.7, chờ Q4), tương tác thay kéo thả, giảm chuyển động và âm thanh.
 - [ ] Chạy mô phỏng ≥90 ngày và kiểm thử ma trận §16 trước khi bật kinh tế chung (G3).
+
+
+
+## 18. Asset Decomposition & Scene Architecture — dựng game từ ảnh tham chiếu (2026-10-08)
+
+> **Trạng thái:** đặc tả triển khai cho G0–G1, không khẳng định đã tách asset hoặc đã có code. Ảnh chụp màn hình người dùng cung cấp là **visual reference** để phân tích bố cục, không phải sprite sheet có thể dùng ngay. §0 vẫn ưu tiên về luật gameplay và lưu dữ liệu; quyết định Q4 cập nhật tại §0.1 là cổng chốt responsive.
+
+### 18.1 Nguyên tắc tách và dựng lại
+
+- **Không crop cả vùng màn hình rồi dùng như asset game:** vật thể đang chồng lên nhau; ảnh cắt có thể dính cây/chậu khác, mất viền, bóng hoặc chi tiết bị che. Chỉ cắt trực tiếp các phần thật sự nguyên vẹn, còn lại phải **vẽ/render lại độc lập** theo style guide, không bịa ra phần bị che rồi coi là ảnh gốc.
+- Giữ **đồ họa nguyên bản có quyền sử dụng**; ảnh tham chiếu lấy cảm hứng bố cục/game feel, không sao chép trực tiếp nhân vật, icon, UI thương hiệu, số liệu hay tài sản có bản quyền của Zing để phát hành. Q6 và bằng chứng quyền asset là cổng bắt buộc.
+- Mỗi đối tượng tương tác là sprite/instance độc lập, dữ liệu logic tách khỏi ảnh. Không bake tên, số xu/XP, số tầng hoặc trạng thái cây vào background.
+
+### 18.2 Danh mục asset và độ ưu tiên
+
+| Nhóm | Asset độc lập cần có | Cách dựng | Ưu tiên |
+|---|---|---|---|
+| Background | trời, mây xa, núi, làng/chợ chân tháp | lớp parallax, không có UI hay chậu dính vào nền | G1 |
+| Tầng mây | platform màu xanh/tím/trắng/hồng, biến thể khóa/mở, cờ tầng | 1 platform có vùng đặt 6 ô, skin theo tầng | G1 |
+| Cây đậu thần | thân, nhánh/lá, đỉnh, trang trí | chia đoạn để lặp chiều cao không lộ mối nối | G1 |
+| Chậu | 4 chậu nguồn + chậu tạm; sau đó bộ sưu tập | PNG RGBA/WebP alpha, đất và miệng chậu rõ | G0–G1 |
+| Cây trồng | 4 giai đoạn cho cây thử, trạng thái chín | sprite độc lập đặt tại điểm neo đất | G1 |
+| Bọ và hiệu ứng | bọ bay/đậu/bắt, lấp lánh, bong bóng chín, thu hoạch | sprite/animation riêng, không làm thay đổi dữ liệu khi chỉ chạy hiệu ứng | G1 |
+| Máy và trợ thủ | máy ở đầu tầng, nhân vật/đồ trang trí | asset riêng, có z-index và hitbox | G1 demo, gameplay sau |
+| HUD | avatar, XP, xu, kho, cửa hàng, nhiệm vụ, tưới, hạt, thu hoạch | icon riêng; chữ/số render động bằng code và i18n | G1 |
+
+**Cấu trúc file gợi ý** (xác minh convention repo trước khi tạo): `public/images/sky-garden/{backgrounds,platforms,beanstalk,pots,plants,bugs,machines,effects,ui}/`; registry ở `src/data/skyGardenAssets.ts` hoặc module tương ứng. Không đổi đường dẫn hiện có nếu đã có asset chuẩn.
+
+### 18.3 Hợp đồng sprite, điểm neo và phân lớp
+
+- Registry mỗi asset có: `assetId`, `sourcePath`, `displaySize`, `bounds`, `pivot`, `zLayer`, `variants`, `licenseStatus`, `assetVersion`. Chậu thêm `soilAnchor {x,y,rx,ry}` theo tọa độ chuẩn hóa [0..1], `potHitbox`; cây có `rootAnchor`, `growthStage` và `plantHitbox`.
+- Thứ tự vẽ đề xuất: **sky far → landscape → beanstalk behind → cloud platform → pot back/soil → plant → pot front (nếu asset tách được) → bug/effect → HUD**. Nếu chậu chỉ có một sprite, phải test occlusion để cây mọc từ đất thay vì nổi phía trước thành chậu.
+- World scene có **6 slot ID cố định mỗi tầng**, tọa độ world độc lập viewport. Camera/viewport quyết định vị trí hiển thị; đổi zoom/layout không sửa `slotId`, UID chậu, tiến trình cây hoặc logic bộ chậu.
+- Hitbox dùng tọa độ world được biến đổi qua camera, không dựa trên pixel sáng hay vùng alpha; chạm bọ phải ưu tiên hitbox bọ, không kích hoạt thu hoạch chậu bên dưới. Các nút thao tác chính cần vùng chạm ≥44 CSS px trong chế độ tương tác.
+- Tải ảnh theo vùng nhìn thấy; giữ nguồn art chất lượng cao, xuất phiên bản WebP phù hợp DPI. Nếu thiếu sprite thì hiển thị placeholder, không crash scene.
+
+### 18.4 Hai chế độ camera / mobile (liên kết Q4)
+
+1. **Toàn cảnh (overview):** giữ cảm giác tháp mây nhiều tầng và 1×6 chậu/tầng như ảnh người dùng. Có cuộn dọc, zoom/pan hợp lý; chỉ thao tác chọn tầng hoặc điều hướng, không yêu cầu bắt bọ/chạm chậu nhỏ.
+2. **Tương tác tầng (focus):** chạm tầng → phóng to tầng hoặc mở panel chi tiết, đủ 6 slot và các nút trồng/tưới/thu; giữ thứ tự slot, cho phép 1×6 có pan ngang hoặc 2×3 nếu test khả dụng tốt hơn. Có nút trở về overview và bảo toàn vị trí cuộn.
+3. **Desktop/tablet:** ưu tiên 1×6 nếu ô đủ lớn; điều khiển chuột và chạm có cùng kết quả. Không gắn cố định chiều cao tầng theo pixel của ảnh mẫu.
+4. **Quyết định cuối Q4 ở G1:** đo 360×800, 390×844, 430×932, 768 px và 1366 px; chụp overview/focus, ghi kích thước hitbox, tỷ lệ chậu nhìn thấy, FPS, lỗi che khuất; người dùng duyệt 1×6 focus hay 2×3 focus. Không thay đổi Q4 từ trạng thái chờ kiểm chứng thành “đã duyệt” nếu chưa có test.
+
+### 18.5 Quy trình triển khai theo lát cắt
+
+- **G0 – Asset audit:** đánh dấu trên ảnh tham chiếu từng nhóm đối tượng, lập manifest (asset ID, có sẵn/cần dựng lại, bản quyền, độ phân giải, alpha, anchor). Duyệt 4 chậu thật theo §0.10.3; không dùng các crop lỗi của ảnh kệ làm nguồn chính.
+- **G1a – Scene không gameplay:** dựng background + đậu thần + 3 tầng + 6 slot/tầng + 4 chậu thật/chậu placeholder; hỗ trợ cuộn và chuyển overview/focus trên mobile.
+- **G1b – Motion:** cây 4 giai đoạn, bọ, bong bóng chín, máy và hiệu ứng; HUD bằng dữ liệu demo, không ghi vào `/account/progress`.
+- **G1c – Chốt layout:** test máy thật và đo hiệu năng, duyệt Q4, sửa z-index/hitbox/anchor, ghi video/ảnh và bảng PASS/REWORK. Chỉ sau đó mới nối gameplay thật G2.
+
+### 18.6 Tiêu chí nghiệm thu riêng cho scene
+
+- [ ] Có asset manifest và danh sách rõ **crop được / phải dựng lại / chưa có quyền**; không đưa nguyên ảnh màn hình vào làm scene sản xuất.
+- [ ] 3 tầng demo có đủ 6 vị trí logic/tầng; ít nhất 4 chậu nguồn render đúng, không mất viền/quai, không dính chậu khác, nền alpha thật.
+- [ ] Cây đứng đúng vùng đất ở cả 4 giai đoạn; không lơ lửng, không xuyên viền trước; bọ đậu đúng cây và bắt bọ không thu hoạch nhầm.
+- [ ] Đổi overview ↔ focus và cuộn không làm thay đổi UID/slot/trạng thái demo; trở về đúng tầng đang xem.
+- [ ] HUD động không chứa số tiền/XP cố định trong ảnh; chữ vi/en không bị cắt, nút không che chậu ở viewport đã chốt.
+- [ ] Chế độ focus đạt vùng chạm ≥44 px, overview không tràn ngang; thử thiết bị thật và đạt cổng FPS G1 ở §0.10.4.
+- [ ] Không ghi dữ liệu demo vào tài khoản; thiếu asset có fallback; có reduced motion; quyền sử dụng asset được xác minh trước phát hành.
 
