@@ -5,6 +5,43 @@ nông trại "Ăn gì?". Nông trại dưới đất giữ nguyên lối chơi k
 chợ). Vườn Mây là tầng chơi thứ hai, xếp **chậu sưu tầm** lên từng tầng mây. Hai khu dùng chung kinh tế
 (xu, XP, cấp, kho) và đổ sản phẩm vào nhau.
 
+## Trạng thái (2026-10-08)
+
+**G0 và G1 đã có code, chờ người dùng duyệt trên điện thoại thật.** Chưa bắt đầu G2.
+
+- **G0, ảnh chậu:** `npm run sky:pots` (`scripts/sky-garden/prepare-pots.mjs`) xử lý 20 chậu ở
+  `assets/sky-garden/pots/`:
+  - Vá lỗ trong đất, chỉ những lỗ nằm trong miệng chậu. Khoảng trống trong quai và giữa ống tre được giữ lại.
+  - Cắt viền, xuất `public/images/sky-garden/pots/<id>@1x.webp` (256 px). Chỉ 4 chậu bản lớn có thêm `@2x`,
+    không phóng to ảnh nhỏ.
+  - Xuất bóng đen cho bộ sưu tập.
+  - Tự tìm điểm cắm cây trong miệng chậu, ghi vào `src/data/skyGardenPots.json`; muốn chỉnh tay thì sửa
+    `assets/sky-garden/pots.anchors.json`.
+  - `npm run sky:qa` xuất ảnh soát chậu ra `storage/sky-garden-qa/contact-{light,dark,sky}.png`.
+  - Dữ liệu tĩnh nằm ở `src/data/skyGarden.ts`: ID, bộ, bậc gốc, cờ `complete` (chỉ bộ Nông Sản đủ 6).
+- **G1, demo chuyển động:** route `/sky-garden-test` (`src/features/sky-garden/`). Không đụng bản lưu, reducer
+  hay API.
+  - 3 tầng × 6 chậu thật, cây lắc theo gió, cây lớn và chín, bong bóng chín.
+  - Bọ (bọ rùa, ong, bướm, đom đóm ban đêm) bay tới, đậu, chạm để bắt.
+  - Mỗi tầng một máy chạy vòng idle → run → done.
+  - 4 mốc giờ trong ngày; ban đêm có đom đóm và đèn ở biển số tầng.
+  - Cảnh leo đậu thần: bản đầy đủ chạy lần đầu, các lần sau bản nhanh.
+  - Bố cục theo Q4: xem cả tháp 1×6; chạm tầng để phóng to, chọn được 1×6 kéo ngang hoặc 2×3.
+  - Có chế độ giảm chuyển động. Hình tạm có dấu "tạm".
+  - Bảng điều khiển demo dùng để so sánh bố cục và hiện cỡ ô chậu.
+- **Kiểm tra đã chạy:**
+  - typecheck, eslint, prettier, `check:motion`, `vite build` (demo là chunk riêng 37 kB, 13 kB gzip) đều qua.
+  - Test mới: `src/data/skyGarden.test.ts`, `src/features/sky-garden/layout.test.ts` và test i18n qua.
+  - Ảnh chụp `node scripts/sky-garden/shots.mjs` ở 360/390/430/768/1366 px, ra `storage/sky-garden-qa/shot-*.png`.
+    Ô chậu ở chế độ cả tháp 44–53 px trên điện thoại (chỉ để xem). Khi phóng to: 96–113 px (1×6) và 99–122 px
+    (2×3), đều ≥ 44 px.
+- **Chưa đo trên máy thật.** FPS 20–26 trong bảng ảnh chụp là trình duyệt headless vẽ bằng CPU, không dùng để
+  đánh giá cổng ≥ 30 fps ở §0.15.4.
+- **Hình tạm còn phải vẽ** (§0.7): kệ tầng mây, thân đậu thần, 3 máy, làng chân tháp, bọ rùa, đom đóm, bong bóng,
+  biển số tầng. Đang mượn ảnh cây, ong, bướm, mây và bầu trời của nông trại.
+- **Lỗi có sẵn, không thuộc Vườn Mây:** `src/features/food-reel/data/dishStories.test.ts` lỗi 63 test, kể cả trên
+  bản sạch ở commit `afcd519`.
+
 **Cách đọc file (cập nhật 2026-10-08, lượt 3):** **§0 "Đặc tả chốt" là bản chuẩn để code theo.** Khi §0 khác
 bất kỳ mục nào phía sau, làm theo §0. §1–§18 giữ lại làm phụ lục: lý do, phương án đã cân nhắc, quy tắc chi
 tiết. Chỗ nào bị §0 thay thế đều có ghi chú "→ §0.x" ngay tại chỗ. §12–§16 (quy tắc vận hành, mobile, offline,

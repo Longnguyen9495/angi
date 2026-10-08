@@ -1,0 +1,253 @@
+/* ——— Vườn Mây motion demo (/sky-garden-test) ———
+   The canvas fills the screen; a slim game bar on top, actions at the bottom, and the demo
+   panel on the right (a bottom sheet on phones), in the farm showcase's dark glass. */
+
+.sg-root {
+  --sg-ink: #fff4d6;
+  --sg-muted: rgb(255 244 214 / 70%);
+  --sg-glass: rgb(30 22 14 / 84%);
+  --sg-edge: rgb(255 244 214 / 16%);
+  --sg-gold: #ffd36b;
+  --sg-pink: #ff2d7a;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #8fc8f0;
+  font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+  color: var(--sg-ink);
+}
+
+.sg-scene {
+  position: absolute;
+  inset: 0;
+}
+
+.sg-canvas {
+  display: block;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sg-bar {
+  position: absolute;
+  top: max(10px, env(safe-area-inset-top));
+  left: 12px;
+  right: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.sg-bar__title,
+.sg-bar__chip {
+  padding: 6px 12px;
+  border: 1px solid var(--sg-edge);
+  border-radius: 999px;
+  background: var(--sg-glass);
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.sg-bar__title {
+  color: var(--sg-gold);
+  font-size: 15px;
+}
+
+.sg-hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(max(12px, env(safe-area-inset-bottom)) + 58px);
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: rgb(30 22 14 / 62%);
+  font-size: 12.5px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.sg-actions {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.sg-btn {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid rgb(255 211 107 / 55%);
+  border-radius: 14px;
+  background: linear-gradient(#ffe39a, #f2b84a);
+  color: #4a2a08;
+  font:
+    600 14px/44px 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sg-btn--ghost {
+  background: var(--sg-glass);
+  color: var(--sg-ink);
+  border-color: var(--sg-edge);
+}
+
+/* Under the game bar, so it never covers its chips on a narrow phone. */
+.sg-panel-toggle {
+  position: absolute;
+  top: calc(max(10px, env(safe-area-inset-top)) + 44px);
+  right: 12px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--sg-edge);
+  border-radius: 999px;
+  background: var(--sg-glass);
+  color: var(--sg-ink);
+  font:
+    600 13px 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  cursor: pointer;
+}
+
+.sg-panel {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(330px, calc(100vw - 24px));
+  overflow-y: auto;
+  padding: 14px 16px 16px;
+  border: 1px solid var(--sg-edge);
+  border-radius: 16px;
+  background: var(--sg-glass);
+  box-shadow: 0 12px 40px rgb(0 0 0 / 35%);
+}
+
+.sg-panel h1 {
+  margin: 0;
+  font-size: 16px;
+  color: var(--sg-gold);
+}
+
+.sg-panel h2 {
+  margin: 6px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sg-muted);
+}
+
+.sg-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sg-panel__x {
+  border: 0;
+  background: none;
+  color: var(--sg-muted);
+  font:
+    500 13px 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  cursor: pointer;
+}
+
+.sg-panel__note,
+.sg-panel__stats {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--sg-muted);
+}
+
+.sg-panel__stats .is-ok {
+  color: #9be59b;
+}
+
+.sg-panel__stats .is-small {
+  color: #ffb36b;
+}
+
+.sg-panel__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sg-chip {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--sg-edge);
+  border-radius: 10px;
+  background: rgb(255 244 214 / 8%);
+  color: var(--sg-ink);
+  font:
+    500 13px 'Be Vietnam Pro',
+    system-ui,
+    sans-serif;
+  cursor: pointer;
+}
+
+.sg-chip.is-on {
+  border-color: var(--sg-gold);
+  background: rgb(255 211 107 / 22%);
+  color: var(--sg-gold);
+}
+
+.sg-panel__check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.sg-panel__list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--sg-muted);
+}
+
+/* Phones: the panel is a bottom sheet over the lower half, the actions move above it. */
+@media (max-width: 599px) {
+  .sg-panel {
+    top: auto;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    width: auto;
+    max-height: 46vh;
+  }
+
+  .sg-root.has-panel .sg-actions,
+  .sg-root.has-panel .sg-hint {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sg-btn,
+  .sg-chip {
+    transition: none;
+  }
+}

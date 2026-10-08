@@ -22,6 +22,14 @@ if (window.location.pathname.replace(/\/$/, '') === '/promo-demo') {
       <PromoDemo />
     </StrictMode>,
   );
+} else if (window.location.pathname.replace(/\/$/, '') === '/sky-garden-test') {
+  // Vườn Mây motion demo (G1): made-up garden, no catalogue, no game state.
+  const { SkyGardenTest } = await import('./features/sky-garden/SkyGardenTest');
+  root.render(
+    <StrictMode>
+      <SkyGardenTest />
+    </StrictMode>,
+  );
 } else if (window.location.pathname.replace(/\/$/, '') === '/farm-animation-test') {
   // Standalone animation demo of the floating farm: no catalogue, no game state.
   const { FarmAnimationTest } = await import('./features/farm-anim/FarmAnimationTest');
