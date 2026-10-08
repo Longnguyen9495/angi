@@ -1,3 +1,4 @@
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { levelForXp, xpForLevel } from '../data/game';
 import {
@@ -16,7 +17,7 @@ import {
   type SkyCropId,
   type SkyGoodId,
 } from '../data/skyEconomy';
-import { POTS, POT_SETS, type PotId, type PotSetId } from '../data/skyGarden';
+import { POT_SETS, type PotId, type PotSetId } from '../data/skyGarden';
 import { createInitialProgress, type GuestProgress } from './progress';
 import { gameReducer, type Action } from './reducer';
 import { balloonBoxes, cropOpen, pendingChecks, slotCount, type SkyState } from './sky';
@@ -259,15 +260,20 @@ describe('Vườn Mây 90-day simulation', () => {
   const DAYS = Number(process.env.SIM_DAYS ?? (process.env.SIM_REPORT ? 90 : 21));
   const { rows, end } = simulate(DAYS, 20261008);
   if (process.env.SIM_REPORT) {
-    console.table(rows.filter((r) => r.day <= 7 || r.day % 7 === 0 || r.day === 90));
-    console.log(
-      'floors opened on day:',
-      FLOORS.map((_, i) => rows.find((r) => r.floors > i)?.day ?? '—').join(' / '),
-      '· pots:',
-      Object.values(end.sky?.pots ?? {})
-        .map((x) => x.pot)
-        .filter((x) => Object.hasOwn(POTS, x)).length,
-    );
+    // A file as well as the console: the runner may swallow a test's console output.
+    const shown = rows.filter((r) => r.day <= 7 || r.day % 7 === 0 || r.day === DAYS);
+    const head = Object.keys(shown[0]!).join('\t');
+    const opened = FLOORS.map((_, i) => rows.find((r) => r.floors > i)?.day ?? '—').join(' / ');
+    const report = [
+      head,
+      ...shown.map((r) => Object.values(r).join('\t')),
+      '',
+      `floors opened on day: ${opened}`,
+      `pots: ${Object.keys(end.sky?.pots ?? {}).length}`,
+    ].join('\n');
+    mkdirSync('storage/sky-garden-qa', { recursive: true });
+    writeFileSync(`storage/sky-garden-qa/sim-${DAYS}.txt`, report + '\n');
+    console.log(report);
   }
 
   it('opens floors 1–3 in the first days, without friends or rare bugs (§0.4)', () => {
