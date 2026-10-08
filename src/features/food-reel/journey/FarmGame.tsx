@@ -79,6 +79,7 @@ import { HOUR_MS, currentTime, formatDuration, slotKey } from '../../../domain/t
 import { t } from '../../../i18n';
 import { claimableCount } from '../../../domain/quests';
 import { ranchBadge } from '../../ranch/badge';
+import { SKY_DEMO_PATH, showSkyDemoEntry } from '../../sky-garden/entry';
 import { useAccount, useFeedback, useGame, useUi } from '../../../state/hooks';
 import { NextStepCard } from './NextStepCard';
 import { Atmosphere } from './Atmosphere';
@@ -929,6 +930,11 @@ export function FarmGame({
                 </button>
               </li>
             ))}
+            {showSkyDemoEntry() && (
+              <li>
+                <a href={SKY_DEMO_PATH}>{t.sky.demo.menuEntry}</a>
+              </li>
+            )}
           </ul>
         )}
       </header>

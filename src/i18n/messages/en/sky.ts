@@ -55,6 +55,7 @@ const sky: Messages['sky'] = {
   },
   demo: {
     title: 'Cloud Garden · motion demo',
+    menuEntry: 'Cloud Garden (demo)',
     note: 'Demo: made-up data, nothing is saved. Art marked "draft" will be redrawn.',
     draft: 'draft',
     loading: 'Building the Cloud Garden…',

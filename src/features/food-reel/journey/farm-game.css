@@ -263,7 +263,8 @@
   animation: fg-pop 160ms ease-out;
 }
 
-.fg-menu button {
+.fg-menu button,
+.fg-menu a {
   width: 100%;
   min-height: 44px;
   padding: 0 14px;
@@ -275,7 +276,15 @@
   text-align: left;
 }
 
-.fg-menu button {
+/* The Vườn Mây demo entry is a link (another page), drawn like the buttons. */
+.fg-menu a {
+  box-sizing: border-box;
+  color: inherit;
+  text-decoration: none;
+}
+
+.fg-menu button,
+.fg-menu a {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -294,7 +303,8 @@
   font-size: 12px;
 }
 
-.fg-menu button:hover {
+.fg-menu button:hover,
+.fg-menu a:hover {
   background: rgb(255 255 255 / 8%);
 }
 

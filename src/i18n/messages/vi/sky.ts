@@ -54,6 +54,8 @@ export default {
   /** Trang demo chuyển động (G1): dữ liệu giả, không lưu gì. */
   demo: {
     title: 'Vườn Mây · demo chuyển động',
+    /** Mục trong menu ⋯ của nông trại (chỉ hiện khi chạy dev hoặc trên máy local). */
+    menuEntry: 'Vườn Mây (demo)',
     note: 'Bản demo: dữ liệu giả, không lưu tiến độ. Hình đánh dấu "tạm" sẽ được vẽ lại.',
     draft: 'tạm',
     loading: 'Đang dựng Vườn Mây…',
