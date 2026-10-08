@@ -102,7 +102,9 @@ export default {
         bubble: 'Bong bóng chín, máy xong',
         sign: 'Biển số tầng',
       },
-      borrowed: 'Mượn tạm từ nông trại: ảnh cây, ong, bướm, mây, bầu trời.',
+      borrowed: 'Mượn tạm từ nông trại: ảnh cây, ong, mây, bầu trời.',
+      testArt:
+        'Ảnh thử nghiệm từ bảng sprite v1, chưa có quyền phát hành: kệ mây, thân đậu, bướm, chim, cầu vồng, bong bóng hoa treo.',
     },
   },
 };

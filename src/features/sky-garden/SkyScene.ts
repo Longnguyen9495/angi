@@ -94,6 +94,32 @@ const DRAG_PX = 8;
 const MAX_BUGS = 4;
 const INTRO_KEY = 'sky-garden/intro-seen';
 
+/**
+ * Test art cut from the sprite sheet (scripts/sky-garden/prepare-sheet.mjs): cloud shelves by
+ * floor colour, the beanstalk in three parts, butterfly, bird, rainbow and the flower bubbles that
+ * hang under the floors. Not cleared for release yet (§0.14, Q6).
+ */
+const SHEET = '/images/sky-garden/sheet/';
+const SHELVES = ['shelf-sky', 'shelf-purple', 'shelf-green', 'shelf-pink', 'shelf-blue'].map(
+  (n) => `${SHEET}${n}.webp`,
+);
+const STALK = {
+  top: `${SHEET}beanstalk-top.webp`,
+  tile: `${SHEET}beanstalk-tile.webp`,
+  base: `${SHEET}beanstalk-base.webp`,
+};
+const BUBBLES = Array.from({ length: 7 }, (_, i) => `${SHEET}bubble-${i + 1}.webp`);
+const BUTTERFLY = `${SHEET}butterfly.webp`;
+const BIRD = `${SHEET}bird.webp`;
+const RAINBOW = `${SHEET}rainbow.webp`;
+/** Shelf picture height, in platform heights; where its cloud top sits, as a share of it. */
+const SHELF_H = 2.15;
+const SHELF_TOP = 0.36;
+/** Shelf ends kept unstretched, as a share of the picture width; the middle repeats. */
+const SHELF_CAP = 0.14;
+/** Beanstalk drawn this many times the stalk column's width (its leaves spread out). */
+const STALK_W = 1.7;
+
 interface Bug {
   kind: BugKind;
   floor: number;
@@ -855,9 +881,11 @@ export class SkyScene {
     }
 
     const grown = intro?.kind === 'full' ? smooth(k / 0.45) : 1;
-    drawBeanstalk(c, l.stalk, this.t, this.reduced ? 0 : this.wind.at(l.stalk.x) * 0.3, grown);
-    if (this.draftMarks)
-      stampDraft(c, l.stalk.x, l.stalk.y + l.stalk.h - 40, this.opts.labels.draft);
+    if (!this.drawStalkArt(c, l.stalk, grown)) {
+      drawBeanstalk(c, l.stalk, this.t, this.reduced ? 0 : this.wind.at(l.stalk.x) * 0.3, grown);
+      if (this.draftMarks)
+        stampDraft(c, l.stalk.x, l.stalk.y + l.stalk.h - 40, this.opts.labels.draft);
+    }
 
     const visible = this.visibleFloors();
     for (const fi of visible) {
@@ -882,6 +910,118 @@ export class SkyScene {
     }
     if (this.part === 'night') this.drawNightGlow(c, visible);
     if (intro) this.drawIntro(c, intro, k);
+  }
+
+  /**
+   * A floor's cloud shelf from the sheet: drawn at its own aspect by height, ends kept, the middle
+   * repeated across the floor's width (so the flowers are never stretched). False until loaded.
+   */
+  private drawShelf(c: CanvasRenderingContext2D, r: Rect, fi: number): boolean {
+    const im = this.img(SHELVES[fi % SHELVES.length]!);
+    if (!im) return false;
+    const H = r.h * SHELF_H;
+    const s = H / im.height;
+    const top = r.y - H * SHELF_TOP;
+    const x0 = r.x - r.h * 0.3;
+    const w = r.w + r.h * 0.6;
+    const capSrc = Math.round(im.width * SHELF_CAP);
+    const capW = Math.min(capSrc * s, w / 2);
+    c.drawImage(im, 0, 0, capSrc, im.height, x0, top, capW, H);
+    c.drawImage(im, im.width - capSrc, 0, capSrc, im.height, x0 + w - capW, top, capW, H);
+    const midSrc = im.width - capSrc * 2;
+    const end = x0 + w - capW;
+    // Each repeat overlaps the last by a pixel, so no hairline shows between them.
+    for (let x = x0 + capW - 1; x < end - 0.5;) {
+      const dw = Math.min(midSrc * s, end - x + 1);
+      c.drawImage(im, capSrc, 0, dw / s, im.height, x, top, dw, H);
+      x += dw - 1;
+    }
+    return true;
+  }
+
+  /**
+   * The beanstalk from the sheet: the base on the ground, the seamless stretch repeated up the
+   * tower, the top above it; `grown` (intro) reveals it from the ground up. False until loaded.
+   */
+  private drawStalkArt(c: CanvasRenderingContext2D, r: Rect, grown: number): boolean {
+    const top = this.img(STALK.top);
+    const tile = this.img(STALK.tile);
+    const base = this.img(STALK.base);
+    if (!top || !tile || !base) return false;
+    const w = r.w * STALK_W;
+    const s = w / tile.width;
+    const x = r.x + r.w / 2 - w / 2;
+    const bottom = r.y + r.h;
+    const reveal = bottom - r.h * grown;
+    c.save();
+    c.beginPath();
+    c.rect(x - 10, reveal, w + 20, bottom - reveal + 10);
+    c.clip();
+    // A slow lean with the wind, from the root up.
+    const lean = this.reduced ? 0 : this.wind.at(r.x) * 0.012;
+    c.translate(x, bottom);
+    c.transform(1, 0, -lean, 1, 0, 0);
+    const bh = base.height * s;
+    c.drawImage(base, 0, -bh, w, bh);
+    const th = tile.height * s;
+    const topH = top.height * s;
+    let y = -bh;
+    const ceiling = -r.h + topH;
+    while (y > ceiling) {
+      c.drawImage(tile, 0, y - th, w, th + 0.5);
+      y -= th;
+    }
+    c.drawImage(top, 0, y - topH + 1, w, topH);
+    c.restore();
+    return true;
+  }
+
+  /** Flower bubbles hanging under a floor on a thin cord, swaying (decor, §4.7). */
+  private drawHanging(c: CanvasRenderingContext2D, r: Rect, fi: number) {
+    const size = Math.max(16, r.h * 1.05);
+    for (const [k, at] of [0.32, 0.74].entries()) {
+      const im = this.img(BUBBLES[(fi * 2 + k) % BUBBLES.length]!);
+      if (!im) continue;
+      const hx = r.x + r.w * at;
+      const hy = r.y + r.h * 0.85;
+      const len = size * 0.55;
+      const sway = this.reduced ? 0 : Math.sin(this.t * 1.1 + fi * 1.7 + k * 2.3) * 0.12;
+      c.save();
+      c.translate(hx, hy);
+      c.rotate(sway);
+      c.strokeStyle = 'rgba(255,255,255,0.75)';
+      c.lineWidth = 1;
+      c.beginPath();
+      c.moveTo(0, 0);
+      c.lineTo(0, len);
+      c.stroke();
+      const bw = size * (im.width / im.height);
+      c.drawImage(im, -bw / 2, len, bw, size);
+      c.restore();
+    }
+  }
+
+  /** Daytime extras in the sky: a rainbow up high and, now and then, a bird crossing. */
+  private drawSkyLife(c: CanvasRenderingContext2D) {
+    if (this.part === 'night') return;
+    const { w, h } = this;
+    const rainbow = this.img(RAINBOW);
+    if (rainbow) {
+      const rw = Math.min(160, w * 0.28);
+      const rh = (rainbow.height / rainbow.width) * rw;
+      c.globalAlpha = 0.9;
+      c.drawImage(rainbow, w - rw - 14, h * 0.12 - this.scroll.y * 0.05, rw, rh);
+      c.globalAlpha = 1;
+    }
+    const bird = this.img(BIRD);
+    if (bird && !this.reduced) {
+      const k = (this.t % 26) / 9;
+      if (k < 1) {
+        const bw = Math.min(46, w * 0.09);
+        const bh = (bird.height / bird.width) * bw;
+        c.drawImage(bird, -bw + (w + bw * 2) * k, h * 0.22 + Math.sin(this.t * 3) * 6, bw, bh);
+      }
+    }
   }
 
   private drawSky(c: CanvasRenderingContext2D) {
@@ -924,19 +1064,21 @@ export class SkyScene {
       c.restore();
       c.globalAlpha = 1;
     }
+    this.drawSkyLife(c);
   }
 
   private drawFloor(c: CanvasRenderingContext2D, fi: number) {
     const lf = this.lf(fi);
     const df = this.df(fi);
     const pb = platformBox(lf.platform);
-    if (lf.shelf) {
-      const sb = platformBox(lf.shelf);
-      c.drawImage(platformImage(lf.shelf.w, lf.shelf.h, fi, this.dpr), sb.x, sb.y, sb.w, sb.h);
+    for (const r of lf.shelf ? [lf.shelf, lf.platform] : [lf.platform]) {
+      if (this.drawShelf(c, r, fi)) continue;
+      const b = platformBox(r);
+      c.drawImage(platformImage(r.w, r.h, fi, this.dpr), b.x, b.y, b.w, b.h);
+      if (this.draftMarks && fi === 0)
+        stampDraft(c, pb.x + pb.w - 60, pb.y + pb.h * 0.6, this.opts.labels.draft);
     }
-    c.drawImage(platformImage(lf.platform.w, lf.platform.h, fi, this.dpr), pb.x, pb.y, pb.w, pb.h);
-    if (this.draftMarks && fi === 0)
-      stampDraft(c, pb.x + pb.w - 60, pb.y + pb.h * 0.6, this.opts.labels.draft);
+    this.drawHanging(c, lf.platform, fi);
 
     drawMachine(c, df.machine.kind, lf.machine, df.machine.phase, this.t);
     if (this.draftMarks) stampDraft(c, lf.machine.x, lf.machine.y, this.opts.labels.draft);
@@ -1021,7 +1163,7 @@ export class SkyScene {
       if (b.kind === 'ladybug') drawLadybug(c, p.x, p.y, s, flap);
       else if (b.kind === 'firefly') drawFirefly(c, p.x, p.y, s * 0.35, this.t + b.seed);
       else {
-        const im = this.img(b.kind === 'bee' ? BEE_SPRITE : '/farm-anim/fx-butterfly-1.webp');
+        const im = this.img(b.kind === 'bee' ? BEE_SPRITE : BUTTERFLY);
         if (im) {
           const sx = flap ? 0.55 : 1;
           c.save();

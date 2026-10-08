@@ -40,6 +40,25 @@ Bộ 20 chậu y như người dùng gửi ngày 2026-10-08, giữ nguyên tên 
 (bảng ở §0.14). Bốn file `02_bap`, `03_bap_cai`, `05_hoa_sen`, `07_bat_pho_ga` là bản nhỏ của bí ngô, bắp, bắp
 cải, cà tím; không dùng vì đã có bản lớn.
 
+## `source/sprite-sheet-v1.png`: bảng sprite thử nghiệm
+
+Người dùng gửi ngày 2026-10-08 (1536×1024). Cùng các món với ảnh mẫu bố cục, nên **chỉ dùng thử nghiệm**, phải
+xác nhận nguồn hoặc vẽ lại trước khi phát hành (Q6). `npm run sky:sheet` (`scripts/sky-garden/prepare-sheet.mjs`)
+cắt ra `public/images/sky-garden/sheet/`: 5 kệ mây, thân đậu (ngọn, đoạn lặp, gốc), 7 bong bóng hoa, bướm, chim,
+cầu vồng, hoa, lá, sao, mây.
+
+Lỗi của file gốc và cách xử lý trong script:
+
+- Vật không đục hẳn (alpha tối đa khoảng 251) và quầng màu mờ quanh vật: alpha dưới 80 bỏ, trên 200 thành đục.
+- Các món dính nhau qua quầng sáng: cắt theo khung khai báo tay, chỉ giữ thân chính của mỗi món.
+- Hoa của kệ dưới vẽ đè lên đáy kệ trên: tô lại bằng màu mây hai bên.
+- Hoa trên mặt kệ bị che bởi kệ trên: phủ một bông hoa nguyên vẹn lên chỗ đó.
+- Thân đậu có cờ in cố định: dùng đoạn không cờ để lặp, hòa trộn chỗ nối.
+- Ảnh nhỏ (kệ khoảng 600 px, bong bóng khoảng 60 px): đủ cho demo, bản phát hành cần ảnh lớn hơn.
+
+Không dùng: 20 chậu nhỏ (đã có bản nét hơn), cây có mặt giống Plants vs. Zombies, tim và kim cương, mèo, 6 máy
+kiểu chibi (chờ người dùng quyết định).
+
 ## `reference/`: chỉ để tham khảo, KHÔNG đưa vào game
 
 - `pot-shelf-moodboard.png`: kệ khoảng 60 chậu món Việt, ý tưởng cho các bộ chậu.

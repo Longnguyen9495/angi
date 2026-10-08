@@ -10,17 +10,12 @@ import type { Rect } from './layout';
 
 export type MachineKind = 'tea' | 'pot' | 'dew';
 
-/** What still has to be drawn, for the demo panel and the hand-over report (§0.7 art table). */
-export const PLACEHOLDERS = [
-  'shelf',
-  'beanstalk',
-  'machine',
-  'village',
-  'ladybug',
-  'firefly',
-  'bubble',
-  'sign',
-] as const;
+/**
+ * What still has to be drawn, for the demo panel and the hand-over report (§0.7 art table).
+ * The shelves and the beanstalk come from the test sprite sheet now; their Canvas versions here
+ * are only drawn until those pictures load.
+ */
+export const PLACEHOLDERS = ['machine', 'village', 'ladybug', 'firefly', 'bubble', 'sign'] as const;
 export type PlaceholderId = (typeof PLACEHOLDERS)[number];
 
 /** Cloud colour per floor, low → high: white-blue, lavender, mint, pink, gold… (§0.7). */

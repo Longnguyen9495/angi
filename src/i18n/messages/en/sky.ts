@@ -103,7 +103,9 @@ const sky: Messages['sky'] = {
         bubble: 'Ripe and machine-done bubbles',
         sign: 'Floor number plate',
       },
-      borrowed: 'Borrowed from the farm for now: crop pictures, bee, butterfly, clouds, sky.',
+      borrowed: 'Borrowed from the farm for now: crop pictures, bee, clouds, sky.',
+      testArt:
+        'Test art from sprite sheet v1, not cleared for release: cloud shelves, beanstalk, butterfly, bird, rainbow, hanging flower bubbles.',
     },
   },
 };

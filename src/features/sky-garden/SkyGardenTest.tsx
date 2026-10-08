@@ -229,6 +229,7 @@ export function SkyGardenTest() {
             ))}
           </ul>
           <p className="sg-panel__note">{p.borrowed}</p>
+          <p className="sg-panel__note">{p.testArt}</p>
         </aside>
       )}
     </div>
