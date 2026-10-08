@@ -17,6 +17,8 @@
     "assets:farm-items": "node scripts/farm-items/cut.mjs && node scripts/farm-items/cut.mjs --publish",
     "rules:export": "node scripts/export-game-rules.mjs",
     "check:motion": "node scripts/check-no-svg-animation.mjs",
+    "sky:pots": "node scripts/sky-garden/prepare-pots.mjs",
+    "sky:qa": "node scripts/sky-garden/contact-sheet.mjs",
     "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run check:motion && npm run build",
     "catalogue:export": "php server/bin/export-snapshot.php",
     "ai:enrich": "php server/bin/ai-enrich.php",

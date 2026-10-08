@@ -1,0 +1,287 @@
+{
+  "note": "Written by scripts/sky-garden/prepare-pots.mjs. Anchor: soil ellipse in 0..1 of the square image.",
+  "size1x": 256,
+  "size2x": 512,
+  "pots": [
+    {
+      "id": "bamboo",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.506,
+        "cy": 0.309,
+        "rx": 0.174,
+        "ry": 0.051
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 45,
+      "openingsKept": 297,
+      "sourcePx": "286x231"
+    },
+    {
+      "id": "bamboo_basket",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.502,
+        "cy": 0.34,
+        "rx": 0.24,
+        "ry": 0.07
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 214,
+      "openingsKept": 93,
+      "sourcePx": "272x188"
+    },
+    {
+      "id": "banh_chung",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.527,
+        "cy": 0.309,
+        "rx": 0.176,
+        "ry": 0.051
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 47,
+      "openingsKept": 255,
+      "sourcePx": "275x207"
+    },
+    {
+      "id": "cabbage",
+      "has2x": true,
+      "anchor": {
+        "cx": 0.518,
+        "cy": 0.316,
+        "rx": 0.217,
+        "ry": 0.047
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 0,
+      "openingsKept": 0,
+      "sourcePx": "1137x949"
+    },
+    {
+      "id": "coconut",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.518,
+        "cy": 0.41,
+        "rx": 0.166,
+        "ry": 0.051
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 68,
+      "openingsKept": 86,
+      "sourcePx": "294x237"
+    },
+    {
+      "id": "corn",
+      "has2x": true,
+      "anchor": {
+        "cx": 0.531,
+        "cy": 0.307,
+        "rx": 0.219,
+        "ry": 0.053
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 0,
+      "openingsKept": 0,
+      "sourcePx": "1196x947"
+    },
+    {
+      "id": "crab",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.502,
+        "cy": 0.348,
+        "rx": 0.135,
+        "ry": 0.051
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 128,
+      "openingsKept": 238,
+      "sourcePx": "291x211"
+    },
+    {
+      "id": "eggplant",
+      "has2x": true,
+      "anchor": {
+        "cx": 0.498,
+        "cy": 0.289,
+        "rx": 0.229,
+        "ry": 0.055
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 0,
+      "openingsKept": 0,
+      "sourcePx": "1132x1033"
+    },
+    {
+      "id": "golden_dragon",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.486,
+        "cy": 0.303,
+        "rx": 0.189,
+        "ry": 0.061
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 80,
+      "openingsKept": 19,
+      "sourcePx": "281x221"
+    },
+    {
+      "id": "lotus",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.506,
+        "cy": 0.381,
+        "rx": 0.193,
+        "ry": 0.049
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 686,
+      "openingsKept": 214,
+      "sourcePx": "354x220"
+    },
+    {
+      "id": "mooncake",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.51,
+        "cy": 0.297,
+        "rx": 0.217,
+        "ry": 0.066
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 101,
+      "openingsKept": 0,
+      "sourcePx": "263x206"
+    },
+    {
+      "id": "peach_blossom",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.51,
+        "cy": 0.35,
+        "rx": 0.182,
+        "ry": 0.053
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 426,
+      "openingsKept": 82,
+      "sourcePx": "308x214"
+    },
+    {
+      "id": "pho_bowl",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.484,
+        "cy": 0.342,
+        "rx": 0.195,
+        "ry": 0.049
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 473,
+      "openingsKept": 163,
+      "sourcePx": "279x188"
+    },
+    {
+      "id": "porcelain_fish",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.496,
+        "cy": 0.303,
+        "rx": 0.145,
+        "ry": 0.037
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 175,
+      "openingsKept": 15,
+      "sourcePx": "291x199"
+    },
+    {
+      "id": "pumpkin",
+      "has2x": true,
+      "anchor": {
+        "cx": 0.49,
+        "cy": 0.344,
+        "rx": 0.189,
+        "ry": 0.051
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 0,
+      "openingsKept": 14734,
+      "sourcePx": "1202x903"
+    },
+    {
+      "id": "red_apple",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.496,
+        "cy": 0.365,
+        "rx": 0.16,
+        "ry": 0.057
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 199,
+      "openingsKept": 180,
+      "sourcePx": "278x240"
+    },
+    {
+      "id": "redfruit",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.49,
+        "cy": 0.32,
+        "rx": 0.178,
+        "ry": 0.043
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 156,
+      "openingsKept": 214,
+      "sourcePx": "277x203"
+    },
+    {
+      "id": "seashell",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.484,
+        "cy": 0.34,
+        "rx": 0.18,
+        "ry": 0.051
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 522,
+      "openingsKept": 10,
+      "sourcePx": "282x215"
+    },
+    {
+      "id": "teapot",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.479,
+        "cy": 0.348,
+        "rx": 0.158,
+        "ry": 0.043
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 529,
+      "openingsKept": 900,
+      "sourcePx": "319x184"
+    },
+    {
+      "id": "watermelon",
+      "has2x": false,
+      "anchor": {
+        "cx": 0.506,
+        "cy": 0.311,
+        "rx": 0.193,
+        "ry": 0.049
+      },
+      "anchorFrom": "auto",
+      "holesFilled": 515,
+      "openingsKept": 210,
+      "sourcePx": "282x198"
+    }
+  ]
+}
