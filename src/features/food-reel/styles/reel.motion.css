@@ -307,11 +307,19 @@
   }
   70% {
     opacity: 1;
-    transform: translateY(92px) rotate(160deg) scale(0.8);
+    transform: translate(
+        calc(var(--d, 0) * var(--gap, 0px) * -0.6),
+        calc(var(--fall, 96px) - var(--lift, 0px))
+      )
+      rotate(160deg) scale(0.8);
   }
   100% {
     opacity: 0;
-    transform: translateY(110px) rotate(200deg) scale(0.5);
+    transform: translate(
+        calc(var(--d, 0) * var(--gap, 0px) * -0.7),
+        calc(var(--fall, 96px) + 18px - var(--lift, 0px))
+      )
+      rotate(200deg) scale(0.5);
   }
 }
 

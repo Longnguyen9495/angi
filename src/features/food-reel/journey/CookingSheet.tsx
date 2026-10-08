@@ -66,9 +66,6 @@ function CookingScene({
   const dish = getReelDish(recipe.dishId);
   const canCook = recipeProgress(state, recipeId).canCook;
   const cooked = state.cooked[recipeId] ?? 0;
-  const drops = recipe.ingredients.flatMap((i) =>
-    Array.from({ length: i.qty }, (_, k) => ({ crop: i.crop, key: `${i.crop}-${k}` })),
-  );
   const plan = cookPlan(recipe);
   const startedAt = useRef(0);
   const [elapsed, setElapsed] = useState(0);
@@ -114,17 +111,20 @@ function CookingScene({
     >
       <div className="fj-cook__stage" aria-hidden="true">
         <div className="fj-cook__drops">
-          {drops.map((d, i) => (
+          {recipe.ingredients.map((d, i) => (
             <span
-              key={d.key}
+              key={d.crop}
               className="fj-cook__drop"
-              style={{ '--i': i, '--n': drops.length } as CSSProperties}
+              style={{ '--i': i, '--n': recipe.ingredients.length } as CSSProperties}
             >
-              <ProduceImage crop={d.crop} size={54} />
+              <ProduceImage crop={d.crop} size={48} />
+              {d.qty > 1 && <b className="fj-cook__badge">×{d.qty}</b>}
             </span>
           ))}
         </div>
+        <span className="fj-cook__halo" />
         <span className="fj-cook__glow" />
+        <span className="fj-cook__hob" />
         <div className="fj-cook__pot">
           <span className="fj-cook__lid" />
           <span className="fj-cook__body" />
@@ -163,16 +163,29 @@ function CookingScene({
       {step === 'prep' && (
         <>
           <ul className="fj-cook__list" aria-label={m.ingredients}>
-            {recipe.ingredients.map((i) => (
-              <li key={i.crop}>
-                <ProduceImage crop={i.crop} size={30} />
-                {produceName(i.crop)} ×{i.qty}
-                <span className="fj-cook__have">{m.have(state.ingredients[i.crop])}</span>
-              </li>
-            ))}
+            {recipe.ingredients.map((i) => {
+              const have = state.ingredients[i.crop] ?? 0;
+              return (
+                <li key={i.crop} className="fj-cook__item" data-short={have < i.qty || undefined}>
+                  <span className="fj-cook__thumb">
+                    <ProduceImage crop={i.crop} size={36} />
+                  </span>
+                  <span className="fj-cook__name">{produceName(i.crop)}</span>
+                  <span className="fj-cook__qty">×{i.qty}</span>
+                  <span className="fj-cook__have">{m.have(have)}</span>
+                </li>
+              );
+            })}
           </ul>
-          <p className="fj-note">{m.plan(plan.stages.length, Math.ceil(plan.totalMs / 1000))}</p>
-          <button type="button" className="fr-cta" onClick={start} aria-disabled={!canCook}>
+          <p className="fj-note fj-cook__plan">
+            {m.plan(plan.stages.length, Math.ceil(plan.totalMs / 1000))}
+          </p>
+          <button
+            type="button"
+            className="fr-cta fj-cook__start"
+            onClick={start}
+            aria-disabled={!canCook}
+          >
             <CookingPot aria-hidden="true" size={18} />
             {canCook ? m.start : m.notEnough}
           </button>

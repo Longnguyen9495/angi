@@ -967,7 +967,7 @@
     color 200ms var(--fr-ease);
 }
 
-.fr-pool__opt:hover:not(:disabled),
+.fr-pool__opt:hover:not(:disabled):not([aria-pressed='true']):not(.fr-pool__opt--crop),
 .fr-pool__edit:hover:not(:disabled) {
   color: var(--fr-ivory);
 }

@@ -224,12 +224,12 @@ try {
         }
         // Photo only → AI identifies the dish and fills the blanks (form reviews it).
         if ($path === '/admin/ai/identify' && $method === 'POST') {
-            set_time_limit(180);
+            set_time_limit(300);
             json_response((new AiEnricher($catalogue))->identifyUpload($_FILES['image'] ?? [], $_POST));
         }
         // Photo only → finished dish, no typing (bulk upload).
         if ($path === '/admin/dishes/quick' && $method === 'POST') {
-            set_time_limit(180);
+            set_time_limit(300);
             json_response((new AiEnricher($catalogue))->quickCreate($_FILES['image'] ?? []), 201);
         }
         if (preg_match('#^/admin/dishes/([a-z0-9-]+)(/(image|video|ai))?$#', $path, $m)) {
@@ -253,7 +253,7 @@ try {
                 json_response(['src' => Images::storeVideo($_FILES['video'] ?? [], $id)]);
             }
             if ($action === 'ai' && $method === 'POST') {
-                set_time_limit(180);
+                set_time_limit(300);
                 $mode = ($_GET['mode'] ?? '') === 'fill' ? 'fill' : 'rewrite';
                 json_response((new AiEnricher($catalogue))->enrichOne($id, $mode));
             }

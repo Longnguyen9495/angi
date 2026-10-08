@@ -179,12 +179,14 @@ TXT;
         if (!is_string($content)) {
             throw new RuntimeException('AI không trả nội dung.');
         }
+        $data = self::decodeAnswer($content);
+        if ($data === null) {
+            $finish = (string) ($envelope['choices'][0]['finish_reason'] ?? '');
+            self::logProvider("bad JSON (finish=$finish)", $content);
+            throw new RuntimeException($finish === 'length' ? 'AI trả lời bị cắt ngang.' : 'AI trả về JSON không hợp lệ.');
+        }
         if (preg_match('/\{.*\}/s', $content, $m)) {
             $content = $m[0];
-        }
-        $data = json_decode($content, true);
-        if (!is_array($data)) {
-            throw new RuntimeException('AI trả về JSON không hợp lệ.');
         }
 
         $ingredients = [];
@@ -340,19 +342,25 @@ Giới thiệu: " . ($dish['story'] ?? '');
     /** Sends one request and returns the parsed answer (HTTP-friendly errors). */
     private function ask(array $dish, bool $identify): array
     {
-        $ch = $this->curlHandle($this->buildRequest($dish, $this->catalogue->listIngredients(), $identify));
-        $body = (string) curl_exec($ch);
-        $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $err = curl_error($ch);
-        if ($err !== '') {
-            // The raw cURL text can carry hosts and addresses: it goes to the log, not the admin.
-            self::logProvider('transport', $err);
-            throw new HttpError(502, 'Không gọi được AI, hãy thử lại sau.');
-        }
-        try {
-            return $this->parse($body, $status);
-        } catch (RuntimeException $e) {
-            throw new HttpError(502, $e->getMessage());
+        $request = $this->buildRequest($dish, $this->catalogue->listIngredients(), $identify);
+        // A model answer that is cut off or malformed now and then usually comes back fine the second time.
+        for ($attempt = 1; ; $attempt++) {
+            $ch = $this->curlHandle($request);
+            $body = (string) curl_exec($ch);
+            $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $err = curl_error($ch);
+            if ($err !== '') {
+                // The raw cURL text can carry hosts and addresses: it goes to the log, not the admin.
+                self::logProvider('transport', $err);
+                throw new HttpError(502, 'Không gọi được AI, hãy thử lại sau.');
+            }
+            try {
+                return $this->parse($body, $status);
+            } catch (RuntimeException $e) {
+                if ($attempt >= 2 || $status !== 200) {
+                    throw new HttpError(502, $e->getMessage());
+                }
+            }
         }
     }
 
@@ -414,6 +422,17 @@ Giới thiệu: " . ($dish['story'] ?? '');
         $p['ingredients'] = array_map(fn ($i) => !empty($i['library']) ? ['id' => $i['id']] : $i, $p['ingredients']);
         $p['ai'] = ['model' => $result['model'], 'raw' => $result['raw']];
         return $this->catalogue->saveDish($p, null, 'ai');
+    }
+
+    /** The JSON object in a model answer, forgiving code fences and trailing commas; null when unreadable. */
+    private static function decodeAnswer(string $content): ?array
+    {
+        $text = preg_match('/\{.*\}/s', $content, $m) ? $m[0] : $content;
+        $data = json_decode($text, true);
+        if (!is_array($data)) {
+            $data = json_decode(preg_replace('/,\s*([}\]])/', '$1', $text) ?? '', true);
+        }
+        return is_array($data) ? $data : null;
     }
 
     /** Maps a public URL (/images/…, /uploads/…) to its file on disk. */
