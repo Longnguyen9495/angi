@@ -102,6 +102,13 @@
   border-color: var(--sg-edge);
 }
 
+/* A helper's gathered taps (§17.4): sky blue, so it reads as a shortcut, not a new action. */
+.sg-btn--helper {
+  background: linear-gradient(#d9f3ff, #8fd3f4);
+  border-color: rgb(143 211 244 / 70%);
+  color: #0d3a52;
+}
+
 /* Under the game bar, so it never covers its chips on a narrow phone. */
 .sg-panel-toggle {
   position: absolute;

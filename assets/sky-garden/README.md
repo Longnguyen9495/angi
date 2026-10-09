@@ -43,6 +43,11 @@ Hình sinh theo [prompts/sky-garden-playground-100.md](../../prompts/sky-garden-
   chrysanthemum pepper orchid peach apricot vanilla saffron beanstalk`).
 - Bọ: `bug-<bọ>-a.png` (cánh lên), `bug-<bọ>-b.png` (cánh xuống).
 - Máy: `machine-tea.png`, `machine-pot.png`, `machine-still.png`, `machine-phin.png`.
+- Trang trí: `decor-bird.png`, `decor-rainbow.png`, `decor-cloud_pillar.png`, `decor-swing.png`,
+  `decor-cloud_lantern.png`, `decor-paper_cranes.png`.
+- Mầm đậu trên nông trại: `bean-sprout-farm.png`.
+
+Chậu mới (102 chậu, ID trong `ALL_POT_IDS` của `src/data/skyGarden.ts`) đặt vào `pots/<id>.png` rồi chạy `npm run sky:pots`.
 
 Chạy `npm run sky:art`. Script cắt mọi giai đoạn của một cây (hai khung của một bọ) bằng cùng một khung, nên giữ
 nguyên tỉ lệ và đường đáy như lúc vẽ, rồi ghi WebP vào `public/images/sky-garden/{plants,bugs,machines}/` và danh

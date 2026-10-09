@@ -6,6 +6,8 @@
  *   <plant>-sprout.png, <plant>-young.png, <plant>-flowering.png, <plant>-ready.png
  *   bug-<bug>-a.png, bug-<bug>-b.png          (wing-flap frames)
  *   machine-<machine>.png                     (tea, pot, still, phin)
+ *   decor-<decor>.png                         (cloud decorations, §4.7)
+ *   bean-sprout-farm.png                      (the magic bean sprout on the farm)
  *
  * A picture without real transparency (a painted checkerboard, a flat background) is refused:
  * the game must not show a box round a plant. A plant is used only once all four stages are
@@ -43,8 +45,9 @@ const STAGES = ['sprout', 'young', 'flowering', 'ready'];
 const BUGS = ['ladybug', 'bee', 'caterpillar', 'butterfly', 'dragonfly', 'firefly', 'goldbeetle'];
 const FRAMES = ['a', 'b'];
 const MACHINES = ['tea', 'pot', 'still', 'phin'];
+const DECOR = ['bird', 'rainbow', 'cloud_pillar', 'swing', 'cloud_lantern', 'paper_cranes'];
 
-const SIZE = { plants: 256, bugs: 128, machines: 256 };
+const SIZE = { plants: 256, bugs: 128, machines: 256, decor: 256, sprout: 128 };
 const QUALITY = 88;
 /** Alpha below this is background. */
 const ALPHA_CUT = 24;
@@ -150,9 +153,9 @@ async function group(names, report) {
 
 async function main() {
   if (!fs.existsSync(SRC)) fs.mkdirSync(SRC, { recursive: true });
-  const manifest = { plants: [], bugs: [], machines: [] };
+  const manifest = { plants: [], bugs: [], machines: [], decor: [], beanSprout: false };
   const report = [];
-  for (const dir of ['plants', 'bugs', 'machines'])
+  for (const dir of ['plants', 'bugs', 'machines', 'decor'])
     fs.mkdirSync(path.join(OUT, dir), { recursive: true });
 
   for (const p of PLANTS) {
@@ -183,11 +186,23 @@ async function main() {
     await write(g.files[0], g.box, SIZE.machines, true, path.join(OUT, 'machines', `${m}.webp`));
     manifest.machines.push(m);
   }
+  for (const d of DECOR) {
+    const g = await group([`decor-${d}`], report);
+    if (!g) continue;
+    await write(g.files[0], g.box, SIZE.decor, true, path.join(OUT, 'decor', `${d}.webp`));
+    manifest.decor.push(d);
+  }
+  const sprout = await group(['bean-sprout-farm'], report);
+  if (sprout) {
+    await write(sprout.files[0], sprout.box, SIZE.sprout, true, path.join(OUT, 'bean-sprout.webp'));
+    manifest.beanSprout = true;
+  }
 
   fs.writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2) + '\n');
   console.log(
     `Vườn Mây art: ${manifest.plants.length}/${PLANTS.length} plants, ${manifest.bugs.length}/${BUGS.length} bugs, ` +
-      `${manifest.machines.length}/${MACHINES.length} machines`,
+      `${manifest.machines.length}/${MACHINES.length} machines, ${manifest.decor.length}/${DECOR.length} decorations, ` +
+      `bean sprout ${manifest.beanSprout ? 'yes' : 'no'}`,
   );
   for (const line of report) console.log(line);
 }

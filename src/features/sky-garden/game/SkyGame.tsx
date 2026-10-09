@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  BALLOON,
   BUGS,
   EVENT_POTS,
+  MACHINE_IDS,
   SKY_GOOD_PRICE,
+  SKY_HELPERS,
   SKY_LEVEL,
   SKY_XP_PER_DAY,
   type BugId,
@@ -10,7 +13,7 @@ import {
 import { EVENTS } from '../../../data/game';
 import type { Action } from '../../../domain/reducer';
 import { level, waterLeft } from '../../../domain/selectors';
-import { pendingChecks, skyDay } from '../../../domain/sky';
+import { bugsOn, pendingChecks, skyDay } from '../../../domain/sky';
 import { currentTime } from '../../../domain/time';
 import { t } from '../../../i18n';
 import { AccountError, skyApi, type SkyOpResult, type SkyReveal } from '../../../services/account';
@@ -27,7 +30,7 @@ import {
   type SkySheet,
   type SkySheetCtx,
 } from './sheets';
-import { buildView, machineOfFloor } from './view';
+import { buildView, machineOfFloor, machinePhase, skyDecor } from './view';
 import '../sky-garden.css';
 import './sky-game.css';
 
@@ -175,7 +178,8 @@ export default function SkyGame({
     };
   }, [hasSky, dispatch, toast]);
 
-  const view = useMemo(() => (sky ? buildView(sky, now) : null), [sky, now]);
+  const decor = useMemo(() => skyDecor(state), [state]);
+  const view = useMemo(() => (sky ? buildView(sky, now, decor) : null), [sky, now, decor]);
   useEffect(() => {
     if (view) scene.current?.setView(view);
   }, [view]);
@@ -304,6 +308,32 @@ export default function SkyGame({
       return p && now >= p.readyAt;
     });
 
+  // Helpers (§17.4): taps the guest could make one by one, gathered once a floor is reached.
+  const helper = (id: keyof typeof SKY_HELPERS) => sky.floors >= SKY_HELPERS[id].floors;
+  const ripe = (f: number) =>
+    (sky.slots[f] ?? []).some((u) => {
+      const p = u ? sky.pots[u]?.plant : null;
+      return !!p && now >= p.readyAt;
+    });
+  const ripeFloors = Array.from({ length: sky.floors }, (_, f) => f).filter(ripe);
+  const doneMachines = MACHINE_IDS.filter((m) => machinePhase(sky, m, now) === 'done');
+  const bugFloor = Array.from({ length: sky.floors }, (_, f) => f).find((f) =>
+    (sky.slots[f] ?? []).some((u) => {
+      const p = u ? sky.pots[u]?.plant : null;
+      return !!p && bugsOn(p).length > 0;
+    }),
+  );
+  const helpers = {
+    sparrow: helper('sparrow') && bugFloor !== undefined && focus !== bugFloor,
+    bee: helper('bee') && doneMachines.length > 0,
+    squirrel: helper('squirrel') && ripeFloors.length > 1,
+    crane: helper('crane') && !!sky.balloon,
+  };
+  const batch = (actions: ((now: number) => Action)[]) => {
+    const t0 = currentTime();
+    actions.forEach((a, i) => act(a(t0 + i)));
+  };
+
   return (
     <div className="sk-root sg-root" role="dialog" aria-label={t.sky.name}>
       <div className="sg-scene" ref={host}>
@@ -347,6 +377,62 @@ export default function SkyGame({
             onClick={() => act({ type: 'SKY_HARVEST_FLOOR', floor: focus!, now: currentTime() })}
           >
             {g.bar.harvestFloor}
+          </button>
+        )}
+        {helpers.sparrow && (
+          <button
+            type="button"
+            className="sg-btn sg-btn--helper"
+            onClick={() => scene.current?.setMode('focus', bugFloor)}
+          >
+            {g.helpers.sparrow(bugFloor! + 1)}
+          </button>
+        )}
+        {helpers.bee && (
+          <button
+            type="button"
+            className="sg-btn sg-btn--helper"
+            onClick={() =>
+              batch(
+                doneMachines.map((machine) => (n) => ({
+                  type: 'SKY_COLLECT_JOB',
+                  machine,
+                  now: n,
+                })),
+              )
+            }
+          >
+            {g.helpers.bee(doneMachines.length)}
+          </button>
+        )}
+        {helpers.squirrel && (
+          <button
+            type="button"
+            className="sg-btn sg-btn--helper"
+            onClick={() =>
+              batch(
+                ripeFloors.map((floor) => (n) => ({ type: 'SKY_HARVEST_FLOOR', floor, now: n })),
+              )
+            }
+          >
+            {g.helpers.squirrel}
+          </button>
+        )}
+        {helpers.crane && (
+          <button
+            type="button"
+            className="sg-btn sg-btn--helper"
+            onClick={() =>
+              batch(
+                Array.from({ length: BALLOON.boxes }, (_, box) => (n) => ({
+                  type: 'SKY_PACK_BOX',
+                  box,
+                  now: n,
+                })),
+              )
+            }
+          >
+            {g.helpers.crane}
           </button>
         )}
         <button type="button" className="sg-btn" onClick={() => setSheet({ kind: 'store' })}>

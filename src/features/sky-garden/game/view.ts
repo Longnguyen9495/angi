@@ -1,9 +1,11 @@
 import { CROPS } from '../../../data/game';
-import { MACHINES, SKY_CROPS, type MachineId } from '../../../data/skyEconomy';
+import { MACHINES, SKY_CROPS, SKY_DECOR, type MachineId } from '../../../data/skyEconomy';
 import { SLOTS_PER_FLOOR } from '../../../data/skyGarden';
 import type { CropId } from '../../../data/types';
 import { bugsOn, slotCount, type SeedRef, type SkyPlant, type SkyState } from '../../../domain/sky';
+import type { GuestProgress } from '../../../domain/progress';
 import type { MachineKind, MachinePhase } from '../art';
+import { skyDecorSprite } from '../skyArt';
 import type { SceneView } from '../SkyScene';
 
 /*
@@ -41,12 +43,25 @@ export function machinePhase(sky: SkyState, m: MachineId, now: number): MachineP
   return jobs.length ? 'run' : 'idle';
 }
 
-export function buildView(sky: SkyState, now: number): SceneView {
+/** The cloud decorations earned (§4.7) that have a picture, in the order they stand. */
+export function skyDecor(p: GuestProgress): string[] {
+  const sky = p.sky;
+  if (!sky) return [];
+  const trips = p.quests.total.skyTrip ?? 0;
+  return SKY_DECOR.filter(
+    (d) =>
+      sky.floors >= (d.floors ?? 0) && sky.sets.length >= (d.sets ?? 0) && trips >= (d.trips ?? 0),
+  ).flatMap((d) => skyDecorSprite(d.id) ?? []);
+}
+
+/** `decor`: pictures of the decorations earned, one per floor from the bottom. */
+export function buildView(sky: SkyState, now: number, decor: string[] = []): SceneView {
   return {
     floors: Array.from({ length: sky.floors }, (_, f) => {
       const open = slotCount(sky, f);
       const m = machineOfFloor(f);
       return {
+        decor: decor[f] ?? null,
         machine: m ? { kind: MACHINE_ART[m], phase: machinePhase(sky, m, now) } : null,
         slots: Array.from({ length: SLOTS_PER_FLOOR }, (_, i) => {
           const uid = sky.slots[f]?.[i] ?? null;

@@ -1,6 +1,6 @@
 import type { EventId } from './game';
 import type { CropId } from './types';
-import { POT_SETS, POTS, type PotId, type PotSetId, type PotTier } from './skyGarden';
+import { POT_SETS, POTS, potDrawn, type PotId, type PotSetId, type PotTier } from './skyGarden';
 
 /*
  * Vườn Mây economy (plans/vuon-may.md §0.4–§0.6, §4, §5): floors, sky plants and their goods,
@@ -242,10 +242,13 @@ export const FREE_SLOTS = 3;
 // ——— Pots: prices, starters ———
 
 /**
- * Pots given when floor 1 opens. Stand-ins until the clay set is drawn (§0.14 step 6): the two
- * market pots and the spare red-fruit pot. Not for release with these.
+ * Pots given when floor 1 opens: three clay pots once the clay set is drawn (§0.14 step 6);
+ * until then the two market pots and the spare red-fruit pot stand in.
  */
-export const STARTER_POTS: PotId[] = ['bamboo_basket', 'bamboo', 'redfruit'];
+const CLAY_STARTERS: PotId[] = ['clay_jar', 'clay_basin', 'clay_lotus_rim'];
+export const STARTER_POTS: PotId[] = CLAY_STARTERS.every(potDrawn)
+  ? CLAY_STARTERS
+  : ['bamboo_basket', 'bamboo', 'redfruit'];
 
 export type PotCurrency = 'coin' | 'gem';
 export interface PotPrice {
@@ -256,7 +259,7 @@ export interface PotPrice {
 }
 
 /** What the cloud shop sells (sets for xu from G2, for Mây Ngọc from G3). Festival pots: sets/events only. */
-export const POT_PRICES: Partial<Record<PotId, PotPrice>> = {
+const ALL_POT_PRICES: Partial<Record<PotId, PotPrice>> = {
   bamboo_basket: { currency: 'coin', price: 120, floor: 1 },
   bamboo: { currency: 'coin', price: 150, floor: 1 },
   redfruit: { currency: 'coin', price: 180, floor: 1 },
@@ -273,16 +276,137 @@ export const POT_PRICES: Partial<Record<PotId, PotPrice>> = {
   pho_bowl: { currency: 'gem', price: 6, floor: 6 },
   teapot: { currency: 'gem', price: 6, floor: 6 },
   banh_chung: { currency: 'gem', price: 6, floor: 7 },
+  // The rest of the 102 (on sale once drawn; see POT_PRICES below).
+  clay_jar: { currency: 'coin', price: 80, floor: 1 },
+  clay_basin: { currency: 'coin', price: 90, floor: 1 },
+  clay_lotus_rim: { currency: 'coin', price: 100, floor: 1 },
+  clay_ring: { currency: 'coin', price: 110, floor: 1 },
+  clay_handles: { currency: 'coin', price: 120, floor: 1 },
+  clay_square: { currency: 'coin', price: 130, floor: 1 },
+  non_la: { currency: 'coin', price: 200, floor: 2 },
+  shoulder_pole: { currency: 'coin', price: 220, floor: 2 },
+  rice_basket: { currency: 'coin', price: 240, floor: 2 },
+  sauce_jar: { currency: 'coin', price: 260, floor: 2 },
+  phin: { currency: 'coin', price: 320, floor: 2 },
+  egg_coffee: { currency: 'coin', price: 340, floor: 2 },
+  sugarcane: { currency: 'coin', price: 360, floor: 2 },
+  iced_tea: { currency: 'coin', price: 380, floor: 2 },
+  soy_milk: { currency: 'coin', price: 400, floor: 2 },
+  avocado_smoothie: { currency: 'coin', price: 420, floor: 2 },
+  banh_mi: { currency: 'coin', price: 420, floor: 3 },
+  banh_trang: { currency: 'coin', price: 440, floor: 3 },
+  xoi_la: { currency: 'coin', price: 460, floor: 3 },
+  banh_bao: { currency: 'coin', price: 480, floor: 3 },
+  goi_cuon: { currency: 'coin', price: 500, floor: 3 },
+  sweet_potato: { currency: 'coin', price: 520, floor: 3 },
+  dragon_fruit: { currency: 'coin', price: 650, floor: 3 },
+  mango: { currency: 'coin', price: 700, floor: 3 },
+  durian: { currency: 'coin', price: 750, floor: 3 },
+  rambutan: { currency: 'coin', price: 800, floor: 3 },
+  mangosteen: { currency: 'gem', price: 3, floor: 4 },
+  pomelo: { currency: 'gem', price: 3, floor: 4 },
+  rice_cooker: { currency: 'coin', price: 600, floor: 4 },
+  clay_stove: { currency: 'coin', price: 650, floor: 4 },
+  mortar: { currency: 'coin', price: 700, floor: 4 },
+  copper_tray: { currency: 'coin', price: 750, floor: 4 },
+  rice_sieve: { currency: 'coin', price: 800, floor: 4 },
+  fish_sauce: { currency: 'coin', price: 850, floor: 4 },
+  com_tam: { currency: 'coin', price: 950, floor: 4 },
+  xoi_gac: { currency: 'coin', price: 1000, floor: 4 },
+  com_lam: { currency: 'coin', price: 1050, floor: 4 },
+  com_nieu: { currency: 'coin', price: 1100, floor: 4 },
+  banh_cuon: { currency: 'coin', price: 1150, floor: 4 },
+  com_hen: { currency: 'coin', price: 1200, floor: 4 },
+  cuttlefish: { currency: 'gem', price: 4, floor: 5 },
+  basket_boat: { currency: 'gem', price: 4, floor: 5 },
+  village_gate: { currency: 'coin', price: 900, floor: 5 },
+  thatched_house: { currency: 'coin', price: 950, floor: 5 },
+  water_wheel: { currency: 'coin', price: 1000, floor: 5 },
+  straw_stack: { currency: 'coin', price: 1050, floor: 5 },
+  village_well: { currency: 'coin', price: 1100, floor: 5 },
+  banyan: { currency: 'coin', price: 1150, floor: 5 },
+  hydrangea: { currency: 'coin', price: 1300, floor: 5 },
+  wild_sunflower: { currency: 'coin', price: 1350, floor: 5 },
+  mimosa: { currency: 'coin', price: 1400, floor: 5 },
+  lavender: { currency: 'coin', price: 1450, floor: 5 },
+  strawberry: { currency: 'gem', price: 4, floor: 6 },
+  pine_cone: { currency: 'gem', price: 4, floor: 6 },
+  bun_bo_hue: { currency: 'gem', price: 5, floor: 6 },
+  bun_cha: { currency: 'gem', price: 5, floor: 6 },
+  mi_quang: { currency: 'gem', price: 5, floor: 6 },
+  hu_tieu: { currency: 'gem', price: 5, floor: 6 },
+  cao_lau: { currency: 'gem', price: 5, floor: 6 },
+  banh_canh: { currency: 'gem', price: 5, floor: 6 },
+  banh_xeo: { currency: 'gem', price: 6, floor: 7 },
+  spring_rolls: { currency: 'gem', price: 6, floor: 7 },
+  canh_chua: { currency: 'gem', price: 6, floor: 7 },
+  che_ba_mau: { currency: 'gem', price: 6, floor: 7 },
+  banh_flan: { currency: 'gem', price: 6, floor: 7 },
+  banh_bo: { currency: 'gem', price: 6, floor: 7 },
+  banh_da_lon: { currency: 'gem', price: 6, floor: 7 },
+  che_troi_nuoc: { currency: 'gem', price: 6, floor: 7 },
+  kem_dua: { currency: 'gem', price: 6, floor: 7 },
+  star_lantern: { currency: 'gem', price: 7, floor: 8 },
+  rattle_drum: { currency: 'gem', price: 7, floor: 8 },
+  pinwheel: { currency: 'gem', price: 7, floor: 8 },
+  kite: { currency: 'gem', price: 7, floor: 8 },
+  spinning_top: { currency: 'gem', price: 7, floor: 8 },
+  marbles: { currency: 'gem', price: 7, floor: 8 },
+  cloud_palace: { currency: 'gem', price: 9, floor: 10 },
+  rainbow: { currency: 'gem', price: 9, floor: 10 },
+  crescent_moon: { currency: 'gem', price: 9, floor: 10 },
+  shooting_star: { currency: 'gem', price: 9, floor: 10 },
+  paper_crane: { currency: 'gem', price: 9, floor: 10 },
+  sky_gem: { currency: 'gem', price: 12, floor: 10 },
 };
+/** On sale: the priced pots that are drawn (a pot without its picture is not in the game). */
+export const POT_PRICES: Partial<Record<PotId, PotPrice>> = Object.fromEntries(
+  Object.entries(ALL_POT_PRICES).filter(([id]) => potDrawn(id as PotId)),
+);
 
 /**
  * Festival pots (§5.6, `EVENTS`): an event's last milestone gives these to a guest with a cloud
  * garden, claimed then or later once the garden is there. Never on sale.
  */
-export const EVENT_POTS: Partial<Record<EventId, PotId[]>> = {
-  'tet-dinh-mui': ['peach_blossom', 'golden_dragon'],
-  'trung-thu': ['mooncake'],
+const ALL_EVENT_POTS: Partial<Record<EventId, PotId[]>> = {
+  'tet-dinh-mui': ['peach_blossom', 'golden_dragon', 'li_xi'],
+  'trung-thu': ['mooncake', 'lantern'],
   'quoc-khanh': ['lotus'],
+};
+/** The drawn ones only; an event whose pots are all undrawn gives none. */
+export const EVENT_POTS: Partial<Record<EventId, PotId[]>> = Object.fromEntries(
+  Object.entries(ALL_EVENT_POTS)
+    .map(([ev, pots]) => [ev, pots!.filter(potDrawn)] as const)
+    .filter(([, pots]) => pots.length > 0),
+);
+
+/**
+ * Cloud decorations (§4.7): to look at only, never a stat, never bought. Each comes with a
+ * milestone (floors open, sets completed, full balloon trips) and stands at the right end of a
+ * floor, the lowest floors first. Shown only once its picture is drawn (skyArt.ts).
+ */
+export type SkyDecorId =
+  'bird' | 'rainbow' | 'cloud_pillar' | 'swing' | 'cloud_lantern' | 'paper_cranes';
+export const SKY_DECOR: { id: SkyDecorId; floors?: number; sets?: number; trips?: number }[] = [
+  { id: 'bird', floors: 2 },
+  { id: 'rainbow', floors: 3 },
+  { id: 'cloud_pillar', floors: 5 },
+  { id: 'swing', floors: 7 },
+  { id: 'cloud_lantern', sets: 1 },
+  { id: 'paper_cranes', trips: 10 },
+];
+
+/**
+ * Helpers (§17.4), opened by floors: each gathers taps the guest could make one by one (find the
+ * bugs, take out the machines, pick the tower, pack the balloon). They never act on their own and
+ * never make anything, so the economy and the server checks stay as they are.
+ */
+export type SkyHelperId = 'sparrow' | 'bee' | 'squirrel' | 'crane';
+export const SKY_HELPERS: Record<SkyHelperId, { floors: number }> = {
+  sparrow: { floors: 2 },
+  bee: { floors: 4 },
+  squirrel: { floors: 6 },
+  crane: { floors: 8 },
 };
 
 /** Balloon shards: this many make one pot of the table set (§5.6). */
@@ -303,6 +427,17 @@ export const SET_STATS: Record<PotSetId, Partial<Stats>> = {
   market: { coin: 800 },
   sea: { bug: 1200, time: 400 },
   festival: { coin: 1000, xp: 1000, time: 800 },
+  orchard: { xp: 800, time: 400 },
+  drinks: { xp: 600 },
+  street: { coin: 600, bug: 400 },
+  noodle: { xp: 1000, coin: 600 },
+  rice: { time: 700, coin: 400 },
+  sweets: { coin: 1100, time: 400 },
+  kitchen: { time: 500, xp: 300 },
+  dalat: { bug: 1000, xp: 400 },
+  village: { coin: 500, time: 300 },
+  toys: { bug: 800, xp: 800 },
+  palace: { time: 900, xp: 900, coin: 900 },
   spare: { time: 400, xp: 400 },
 };
 /** The stat a set's "Đủ bộ" floor effect raises (§0.6). */
@@ -313,6 +448,17 @@ export const SET_MAIN: Record<PotSetId, StatId> = {
   market: 'coin',
   sea: 'bug',
   festival: 'xp',
+  orchard: 'xp',
+  drinks: 'xp',
+  street: 'coin',
+  noodle: 'xp',
+  rice: 'time',
+  sweets: 'coin',
+  kitchen: 'time',
+  dalat: 'bug',
+  village: 'coin',
+  toys: 'bug',
+  palace: 'xp',
   spare: 'time',
 };
 /** ×100 per tier: a pot raised a tier gains TIER_MUL[t] / TIER_MUL[base]. */

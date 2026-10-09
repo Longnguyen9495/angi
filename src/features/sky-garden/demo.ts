@@ -43,6 +43,8 @@ export interface DemoMachine {
 export interface DemoFloor {
   slots: DemoSlot[];
   machine: DemoMachine | null;
+  /** A cloud decoration's picture at the floor's right end (the game only). */
+  decor?: string | null;
 }
 
 /** Crops with all four stage sprites in public/images/farm-items (the real sky plants come later). */

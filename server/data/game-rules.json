@@ -4825,6 +4825,61 @@
         "complete": false,
         "baseTier": 4
       },
+      "orchard": {
+        "pots": [],
+        "complete": false,
+        "baseTier": 2
+      },
+      "drinks": {
+        "pots": [],
+        "complete": false,
+        "baseTier": 1
+      },
+      "street": {
+        "pots": [],
+        "complete": false,
+        "baseTier": 1
+      },
+      "noodle": {
+        "pots": [],
+        "complete": false,
+        "baseTier": 3
+      },
+      "rice": {
+        "pots": [],
+        "complete": false,
+        "baseTier": 2
+      },
+      "sweets": {
+        "pots": [],
+        "complete": false,
+        "baseTier": 3
+      },
+      "kitchen": {
+        "pots": [],
+        "complete": false,
+        "baseTier": 1
+      },
+      "dalat": {
+        "pots": [],
+        "complete": false,
+        "baseTier": 2
+      },
+      "village": {
+        "pots": [],
+        "complete": false,
+        "baseTier": 1
+      },
+      "toys": {
+        "pots": [],
+        "complete": false,
+        "baseTier": 3
+      },
+      "palace": {
+        "pots": [],
+        "complete": false,
+        "baseTier": 4
+      },
       "spare": {
         "pots": [
           "redfruit"
@@ -4975,6 +5030,72 @@
         "bug": 0,
         "coin": 1000
       },
+      "orchard": {
+        "time": 400,
+        "xp": 800,
+        "bug": 0,
+        "coin": 0
+      },
+      "drinks": {
+        "time": 0,
+        "xp": 600,
+        "bug": 0,
+        "coin": 0
+      },
+      "street": {
+        "time": 0,
+        "xp": 0,
+        "bug": 400,
+        "coin": 600
+      },
+      "noodle": {
+        "time": 0,
+        "xp": 1000,
+        "bug": 0,
+        "coin": 600
+      },
+      "rice": {
+        "time": 700,
+        "xp": 0,
+        "bug": 0,
+        "coin": 400
+      },
+      "sweets": {
+        "time": 400,
+        "xp": 0,
+        "bug": 0,
+        "coin": 1100
+      },
+      "kitchen": {
+        "time": 500,
+        "xp": 300,
+        "bug": 0,
+        "coin": 0
+      },
+      "dalat": {
+        "time": 0,
+        "xp": 400,
+        "bug": 1000,
+        "coin": 0
+      },
+      "village": {
+        "time": 300,
+        "xp": 0,
+        "bug": 0,
+        "coin": 500
+      },
+      "toys": {
+        "time": 0,
+        "xp": 800,
+        "bug": 800,
+        "coin": 0
+      },
+      "palace": {
+        "time": 900,
+        "xp": 900,
+        "bug": 0,
+        "coin": 900
+      },
       "spare": {
         "time": 400,
         "xp": 400,
@@ -4989,6 +5110,17 @@
       "market": "coin",
       "sea": "bug",
       "festival": "xp",
+      "orchard": "xp",
+      "drinks": "xp",
+      "street": "coin",
+      "noodle": "xp",
+      "rice": "time",
+      "sweets": "coin",
+      "kitchen": "time",
+      "dalat": "bug",
+      "village": "coin",
+      "toys": "bug",
+      "palace": "xp",
       "spare": "time"
     },
     "tierMul": [

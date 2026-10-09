@@ -1,5 +1,7 @@
 {
   "plants": [],
   "bugs": [],
-  "machines": []
+  "machines": [],
+  "decor": [],
+  "beanSprout": false
 }

@@ -7,6 +7,27 @@ chợ). Vườn Mây là tầng chơi thứ hai, xếp **chậu sưu tầm** lê
 
 ## Trạng thái (cập nhật 2026-10-09)
 
+### Cập nhật lượt 7 (2026-10-09 đêm): đủ 102 chậu trong dữ liệu, trang trí mây, mầm đậu, trợ thủ
+
+Người dùng duyệt hết các đề xuất ở lượt 6 ("mình duyệt hết"). Vẫn chưa cổng nào "đạt" (chưa thử máy thật).
+
+- **102 chậu, 17 bộ trong dữ liệu** (`ALL_POT_IDS`, `POT_SETS[].planned` trong `skyGarden.ts`): thêm 11 bộ (Trái Cây
+  Miệt Vườn, Cà Phê & Nước, Quà Vặt Phố, Bún Phở Ba Miền, Cơm & Xôi, Chè & Bánh Ngọt, Bếp Nhà, Hoa Đà Lạt, Làng
+  Quê, Đồ Chơi Tuổi Thơ, Cung Mây) và chậu còn thiếu của 6 bộ cũ, có tên vi/en, giá (`ALL_POT_PRICES`), chỉ số bộ
+  (`SET_STATS`, `SET_MAIN`). **Chậu chỉ có trong game khi đã có hình** (`manifestHas` sau `npm run sky:pots`): cửa
+  hàng, chậu sự kiện (đèn lồng → Trung Thu, lì xì → Tết), chậu khởi đầu (3 chậu đất nung thay giỏ tre/chậu tre/Quả
+  Đỏ khi đủ hình) và luật xuất cho server đều lọc theo đó; bộ chỉ "đủ" khi đủ 6 hình. Hiện vẫn 20 chậu như cũ.
+- **Trang trí mây (§4.7):** 6 món (chim, cầu vồng, cột mây, xích đu, đèn lồng mây, hạc giấy), mở theo mốc (tầng 2/3/5/7,
+  đủ 1 bộ, 10 chuyến khinh khí cầu), đứng ở mép phải tầng, chỉ để ngắm, không mua, không lưu, không chỉ số. Chỉ
+  hiện khi có hình `decor-<id>.png` (`npm run sky:art`).
+- **Mầm đậu thần:** nút "Lên mây" ở nông trại dùng hình `bean-sprout-farm.png` khi có, chưa có thì giữ icon mây.
+- **Trợ thủ (§17.4), bản không đụng kinh tế:** Chim Sẻ Mây (tầng 2) báo tầng có bọ và phóng tới; Ong Thợ (tầng 4) lấy
+  mọi mẻ máy đã xong; Sóc Nhỏ (tầng 6) thu cả tháp; Hạc Giấy (tầng 8) đóng mọi thùng khinh khí cầu đóng được. Mỗi nút
+  gửi lần lượt các lệnh người chơi vẫn tự làm, không tự chạy, không tạo thêm gì, nên guard giữ nguyên. Hình trợ thủ
+  chưa có: hiện là nút chữ màu xanh trời ở thanh dưới.
+- **Test:** `skyGarden.test.ts` (102 chậu kế hoạch, mỗi chậu một lần, đủ tên); test Vườn Mây, nhiệm vụ, i18n và
+  `npm run test:server` qua. Ảnh chụp `game-390x844-3-overview.png` thấy nút Chim Sẻ Mây.
+
 ### Cập nhật lượt 6 (2026-10-09 tối): nguồn Mây Ngọc, nhiệm vụ tháng/quý, đường nhập hình mới
 
 Vẫn chưa cổng nào "đạt" (chưa thử máy thật, chưa thử 2 tài khoản). **Cần người dùng xem lại** hai lựa chọn số liệu

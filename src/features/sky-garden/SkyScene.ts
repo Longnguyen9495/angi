@@ -84,6 +84,8 @@ export interface SceneView {
       bugs: { stage: number; bug: BugKind }[];
     }[];
     machine: { kind: MachineKind; phase: MachinePhase } | null;
+    /** A cloud decoration's picture for the floor's right end (§4.7), or none. */
+    decor?: string | null;
   }[];
 }
 
@@ -306,6 +308,7 @@ export class SkyScene {
     const LONG = 1e9;
     const before = this.floors.length;
     this.floors = view.floors.map((f, fi) => ({
+      decor: f.decor ?? null,
       machine: f.machine
         ? { kind: f.machine.kind, phase: f.machine.phase, since: 0, run: LONG }
         : null,
@@ -1260,6 +1263,15 @@ export class SkyScene {
         stampDraft(c, pb.x + pb.w - 60, pb.y + pb.h * 0.6, this.opts.labels.draft);
     }
     this.drawHanging(c, lf.platform, fi);
+    if (df.decor) {
+      // Standing on the cloud at the floor's right end, behind the pots.
+      const im = this.img(df.decor);
+      if (im) {
+        const s = this.layout.cell * 0.85;
+        const pr = lf.platform;
+        c.drawImage(im, pr.x + pr.w - s * 0.7, pr.y - s * 0.88, s, s);
+      }
+    }
 
     if (df.machine) {
       const own = skyMachineSprite(df.machine.kind);

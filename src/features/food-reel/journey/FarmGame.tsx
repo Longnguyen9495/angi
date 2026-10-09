@@ -80,6 +80,7 @@ import { t } from '../../../i18n';
 import { claimableCount } from '../../../domain/quests';
 import { ranchBadge } from '../../ranch/badge';
 import { SKY_DEMO_PATH, showSkyDemoEntry, skyEnabled } from '../../sky-garden/entry';
+import { beanSproutSprite } from '../../sky-garden/skyArt';
 import { SKY_LEVEL, SKY_SPROUT_LEVEL } from '../../../data/skyEconomy';
 import { useAccount, useFeedback, useGame, useUi } from '../../../state/hooks';
 import { NextStepCard } from './NextStepCard';
@@ -923,7 +924,11 @@ export function FarmGame({
             onClick={() => setSkyOpen(true)}
             disabled={lv.level < SKY_LEVEL}
           >
-            <Cloud size={18} weight="fill" aria-hidden="true" />
+            {beanSproutSprite() ? (
+              <img src={beanSproutSprite()!} alt="" width={22} height={22} aria-hidden="true" />
+            ) : (
+              <Cloud size={18} weight="fill" aria-hidden="true" />
+            )}
             <span>{lv.level < SKY_LEVEL ? t.sky.game.enterAt(SKY_LEVEL) : t.sky.game.enter}</span>
           </button>
         )}

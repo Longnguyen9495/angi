@@ -4,7 +4,15 @@ import { describe, expect, it } from 'vitest';
 import { t } from '../i18n';
 import { DEMO_CROPS, STAGES } from '../features/sky-garden/demo';
 import { cropSprite } from './sprites';
-import { POT_IDS, POT_SETS, POTS, SET_SIZE, manifestHas, type PotSetId } from './skyGarden';
+import {
+  ALL_POT_IDS,
+  POT_IDS,
+  POT_SETS,
+  POTS,
+  SET_SIZE,
+  manifestHas,
+  type PotSetId,
+} from './skyGarden';
 
 const PUBLIC = join(process.cwd(), 'public');
 
@@ -12,6 +20,19 @@ describe('Vườn Mây pots', () => {
   it('lists every pot once, in exactly one set', () => {
     expect(new Set(POT_IDS).size).toBe(POT_IDS.length);
     expect(POT_IDS).toHaveLength(20);
+  });
+
+  it('plans 17 sets of six (102 pots) plus the spare, each pot once, every one named', () => {
+    const planned = POT_SETS.flatMap((s) => s.planned);
+    expect(new Set(planned).size).toBe(planned.length);
+    expect([...planned].sort()).toEqual([...ALL_POT_IDS].sort());
+    expect(POT_SETS.filter((s) => s.id !== 'spare')).toHaveLength(17);
+    for (const s of POT_SETS) {
+      if (s.id !== 'spare') expect(s.planned, s.id).toHaveLength(SET_SIZE);
+      // Only drawn pots are in the game.
+      expect(s.pots.every((p) => s.planned.includes(p) && manifestHas(p)), s.id).toBe(true);
+    }
+    for (const id of ALL_POT_IDS) expect(t.sky.pots[id], id).toBeTruthy();
   });
 
   it('has the processed picture, a soil anchor and a name for every pot', () => {
