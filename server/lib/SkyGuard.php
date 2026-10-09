@@ -251,7 +251,7 @@ trait SkyGuard
             $at = (int) $e['at'];
             $fail = fn (string $why) => $this->reject('rule', "$key: $why");
 
-            if (preg_match('/^sky:floor:(\d+):(open|coin|cloudseed|dew)$/', $key, $m)) {
+            if (preg_match('/^sky:floor:(\d+):(open|coin|cloudseed|dew|gem)$/', $key, $m)) {
                 $f = $S['floors'][(int) $m[1] - 1] ?? null;
                 $f !== null || $fail('no such floor');
                 $level >= (int) $f['level'] || $fail('floor above the level');
@@ -260,8 +260,11 @@ trait SkyGuard
                     'coin' => ['coin', -(int) $f['coins']],
                     'cloudseed' => ['skyitem:cloudseed', -(int) $f['cloudseed']],
                     'dew' => ['skyitem:dew', -(int) $f['dew']],
+                    'gem' => ['skyitem:gem', (int) ($f['gem'] ?? 0)],
                 };
                 ($res === $want[0] && $d === $want[1]) || $fail('floor price');
+                // The gem comes with the opening, in the same save (a floor opens once).
+                ($m[2] !== 'gem' || ($d > 0 && isset($byKey["sky:floor:{$m[1]}:open"]))) || $fail('floor gem without its opening');
                 if ($m[2] === 'open') {
                     $ev['floor'][(int) $m[1]] = true;
                 }

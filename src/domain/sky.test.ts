@@ -20,6 +20,7 @@ import {
   potBase,
   potMax,
   potStats,
+  resonance,
   skyStage,
   type SkyState,
 } from './sky';
@@ -79,6 +80,40 @@ describe('Vườn Mây economy tables', () => {
   });
 });
 
+describe('resonance (§17.3)', () => {
+  it("adds to the set's main stat for 2 and 4 pots of a set, never on top of a floor effect", () => {
+    let p = run(player(29, 20000), { type: 'SKY_OPEN_FLOOR', now: T0 });
+    const sky = p.sky!;
+    const add = (pot: 'pumpkin' | 'corn' | 'cabbage' | 'eggplant', i: number) => {
+      const uid = `${pot}.${90 + i}`;
+      sky.pots[uid] = { uid, pot, tier: 2, stars: 0, luck: 0, tries: 0, cycles: 0, plant: null };
+      return uid;
+    };
+    const a = add('pumpkin', 0);
+    const b = add('corn', 1);
+    const c = add('cabbage', 2);
+    const d = add('eggplant', 3);
+    p = { ...p, sky: { ...sky } };
+    const at = (uid: string, slot: number) => {
+      p = run(p, { type: 'SKY_PLACE_POT', uid, floor: 0, slot, now: T0 });
+    };
+    at(a, 0);
+    const alone = potStats(p.sky!, a).time;
+    expect(resonance(p.sky!, a)).toBe(0);
+    at(b, 1);
+    expect(resonance(p.sky!, a)).toBe(2);
+    expect(potStats(p.sky!, a).time).toBe(alone + 300);
+    at(c, 2);
+    expect(resonance(p.sky!, a)).toBe(2);
+    // A fourth produce pot on a bought slot: the higher step, still no floor effect.
+    p = { ...p, sky: { ...p.sky!, bought: [3] } };
+    at(d, 3);
+    expect(floorCombo(p.sky!, 0)).toBeNull();
+    expect(resonance(p.sky!, d)).toBe(4);
+    expect(potStats(p.sky!, a).time).toBe(alone + 700);
+  });
+});
+
 describe('Vườn Mây play', () => {
   it('stays shut below the level, opens floor 1 with the starter pots at level 12', () => {
     const low = run(player(SKY_LEVEL - 1), { type: 'SKY_OPEN_FLOOR', now: T0 });
@@ -135,6 +170,9 @@ describe('Vườn Mây play', () => {
     expect(p.sky!.floors).toBe(3);
     expect(p.sky!.items.cloudseed ?? 0).toBe(0);
     expect(p.sky!.items.dew ?? 0).toBe(0);
+    // Floor 3 is the first to give Mây Ngọc, the steady source the 90-day sim was missing.
+    expect(p.sky!.items.gem ?? 0).toBe(FLOORS[2]!.gem);
+    expect(FLOORS[2]!.gem).toBeGreaterThan(0);
     // Every reward once: replaying the steps pays nothing more.
     const keys = p.ledger.map((e) => e.key);
     expect(new Set(keys).size).toBe(keys.length);

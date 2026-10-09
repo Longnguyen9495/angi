@@ -34,6 +34,23 @@ thương mại. Trước khi phát hành phải có xác nhận quyền cho từ
 
 16 file từ bộ 20 đều có lỗ trong suốt ở phần đất (vá tạm trong `prepare-pots.mjs`). Bản phát hành cần render lại.
 
+## `art/`: cây, bọ, máy vẽ riêng từng hình
+
+Hình sinh theo [prompts/sky-garden-playground-100.md](../../prompts/sky-garden-playground-100.md) hoặc
+`prompts/sky-garden-chatgpt.txt`, đặt phẳng trong thư mục này, đúng tên file:
+
+- Cây: `<cây>-sprout.png`, `-young`, `-flowering`, `-ready` (cây: `jasmine mint kumquat lotus rose tea coffee
+  chrysanthemum pepper orchid peach apricot vanilla saffron beanstalk`).
+- Bọ: `bug-<bọ>-a.png` (cánh lên), `bug-<bọ>-b.png` (cánh xuống).
+- Máy: `machine-tea.png`, `machine-pot.png`, `machine-still.png`, `machine-phin.png`.
+
+Chạy `npm run sky:art`. Script cắt mọi giai đoạn của một cây (hai khung của một bọ) bằng cùng một khung, nên giữ
+nguyên tỉ lệ và đường đáy như lúc vẽ, rồi ghi WebP vào `public/images/sky-garden/{plants,bugs,machines}/` và danh
+sách vào `src/data/skyGardenArt.json`. Cây chỉ được dùng khi đủ 4 giai đoạn, bọ khi đủ 2 khung. Ảnh không trong suốt
+thật (nền ô caro vẽ giả, nền phẳng) bị từ chối. Thiếu hình thì cảnh vẫn dùng sprite rau và hình vẽ canvas như cũ.
+
+Mỗi file nhập vào phải ghi nguồn (công cụ, tài khoản, ngày, ảnh mẫu đã dùng) ở đây trước khi phát hành (Q6).
+
 ## `source/vuon_may_20_chau_fixed/`
 
 Bộ 20 chậu y như người dùng gửi ngày 2026-10-08, giữ nguyên tên để đối chiếu. **Tên file 01–09 không khớp hình**

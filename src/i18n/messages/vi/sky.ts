@@ -192,6 +192,7 @@ export default {
       set: (name: string) => `Bộ ${name}`,
       noStats: 'Chậu này chưa cộng chỉ số nào.',
       combo: (name: string) => `Hiệu ứng tầng: ${name}`,
+      resonance: (n: number) => `Cộng hưởng: ${n} chậu cùng bộ trên tầng`,
     },
     star: {
       title: (name: string) => `Nâng sao · ${name}`,
@@ -254,6 +255,7 @@ export default {
       needCoins: (n: number) => `${n} xu`,
       needCloud: (n: number) => `${n} Hạt Mây`,
       needDew: (n: number) => `${n} Sương Mai`,
+      gemReward: (n: number) => `Mở tầng được tặng ${n} Mây Ngọc.`,
       open: 'Mở tầng',
       allOpen: 'Đã mở đủ 10 tầng.',
       seeds: 'Hạt giống',

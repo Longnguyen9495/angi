@@ -1,3 +1,4 @@
+import type { SkyCropId } from '../../data/skyEconomy';
 import { POTS, PLANT_FIT, type PotDef, type PotId } from '../../data/skyGarden';
 import { cropSprite, BEE_SPRITE } from '../../data/sprites';
 import type { CropId } from '../../data/types';
@@ -34,6 +35,7 @@ import {
   type DemoFloor,
   type Stage,
 } from './demo';
+import { skyBugSprite, skyMachineSprite, skyPlantSprite } from './skyArt';
 import {
   floorAt,
   layoutFocus,
@@ -70,14 +72,15 @@ export interface SkyStats {
 
 /**
  * What the game shows (controlled mode): per floor its six slots and its machine. A plant's
- * `progress` (0..1, ≥ 1 ripe) picks its picture; `sprite` is the farm picture it borrows.
+ * `progress` (0..1, ≥ 1 ripe) picks its picture; `sprite` is the farm picture it borrows
+ * until the sky plant `sky` has its own (skyArt.ts).
  */
 export interface SceneView {
   floors: {
     slots: {
       pot: PotId | null;
       locked: boolean;
-      plant: { sprite: CropId; progress: number } | null;
+      plant: { sprite: CropId; progress: number; sky?: SkyCropId } | null;
       bugs: { stage: number; bug: BugKind }[];
     }[];
     machine: { kind: MachineKind; phase: MachinePhase } | null;
@@ -316,6 +319,7 @@ export class SkyScene {
           plant: s.plant
             ? {
                 crop: s.plant.sprite,
+                sky: s.plant.sky,
                 plantedAt: this.t - Math.min(1.05, s.plant.progress) * LONG,
                 grow: LONG,
               }
@@ -1258,7 +1262,17 @@ export class SkyScene {
     this.drawHanging(c, lf.platform, fi);
 
     if (df.machine) {
-      drawMachine(c, df.machine.kind, lf.machine, df.machine.phase, this.t);
+      const own = skyMachineSprite(df.machine.kind);
+      const im = own ? this.img(own) : null;
+      if (im) {
+        // Its own picture, standing on the shelf: as wide as the box allows, bottom on the floor.
+        const m = lf.machine;
+        const k = Math.min(m.w / im.width, m.h / im.height);
+        const w = im.width * k;
+        const h = im.height * k;
+        const bob = df.machine.phase === 'run' && !this.reduced ? Math.sin(this.t * 6) * 1.2 : 0;
+        c.drawImage(im, m.x + (m.w - w) / 2, m.y + m.h - h + bob, w, h);
+      } else if (!own) drawMachine(c, df.machine.kind, lf.machine, df.machine.phase, this.t);
       if (this.draftMarks) stampDraft(c, lf.machine.x, lf.machine.y, this.opts.labels.draft);
     }
     drawSign(c, lf.sign, fi + 1);
@@ -1296,7 +1310,7 @@ export class SkyScene {
         c.ellipse(r.x + r.w / 2, r.y + r.h * 0.6, r.w * 0.38, r.h * 0.3, 0, 0, Math.PI * 2);
         c.fill();
       }
-      if (s.plant) this.drawPlant(c, r, def, s.plant.crop, stageOf(s.plant, this.t), fi * 6 + si);
+      if (s.plant) this.drawPlant(c, r, def, s.plant, stageOf(s.plant, this.t), fi * 6 + si);
     });
   }
 
@@ -1332,11 +1346,13 @@ export class SkyScene {
     c: CanvasRenderingContext2D,
     r: Rect,
     def: PotDef,
-    crop: CropId,
+    plant: { crop: CropId; sky?: SkyCropId },
     stage: Stage,
     seed: number,
   ) {
-    const im = this.img(cropSprite(crop, stage));
+    const crop = plant.crop;
+    const own = plant.sky ? skyPlantSprite(plant.sky, stage) : null;
+    const im = this.img(own ?? cropSprite(crop, stage));
     if (!im) return;
     const a = def.anchor;
     const pw = a.rx * 2 * r.w * PLANT_FIT.width;
@@ -1371,7 +1387,11 @@ export class SkyScene {
       const flap = this.reduced
         ? 0
         : Math.floor(this.t * (b.state === 'perched' ? 4 : 18) + b.seed) % 2;
-      if (b.kind === 'ladybug') drawLadybug(c, p.x, p.y, s, flap);
+      const own = skyBugSprite(b.kind, flap);
+      const pic = own ? this.img(own) : null;
+      if (own) {
+        if (pic) c.drawImage(pic, p.x - s / 2, p.y - s / 2, s, s);
+      } else if (b.kind === 'ladybug') drawLadybug(c, p.x, p.y, s, flap);
       else if (b.kind === 'firefly') drawFirefly(c, p.x, p.y, s * 0.35, this.t + b.seed);
       else if (b.kind === 'caterpillar') drawCaterpillar(c, p.x, p.y, s, this.t + b.seed);
       else if (b.kind === 'dragonfly') drawDragonfly(c, p.x, p.y, s, flap);

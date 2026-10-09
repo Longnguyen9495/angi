@@ -175,6 +175,63 @@ try {
     $wrong['sky']['serial'] = 6;
     $wrong['ledger'][] = ['key' => 'sky:event:tet-dinh-mui:mooncake', 'resource' => 'pot:mooncake', 'delta' => 1, 'balanceAfter' => 1, 'reason' => 'sky:pot', 'at' => $now + 7000];
     $check('a pot that is not the event\'s refused', $status(fn () => $acc->putProgress(['data' => $wrong, 'baseVersion' => $version, 'clientNow' => $now + 7000])) === 422);
+
+    // Floor 3 gives Mây Ngọc with its opening (the steady gem source), in the same save only.
+    $stock = $fest;
+    $stock['sky']['items'] = ['cloudseed' => 4, 'dew' => 1];
+    db()->prepare('UPDATE user_progress SET data = ?, version = version + 1 WHERE user_id = ?')->execute([json_encode($stock), $uid]);
+    $version++;
+    $F3 = SkyRules::R()['floors'][2];
+    $at = $now + 8000;
+    $open = $stock;
+    $coins = $open['coins'];
+    $open['coins'] -= (int) $F3['coins'];
+    $open['sky']['floors'] = 3;
+    $open['sky']['bought'][] = 0;
+    $open['sky']['slots'][] = [null, null, null, null, null, null];
+    $open['sky']['items'] = ['cloudseed' => 0, 'dew' => 0, 'gem' => (int) $F3['gem']];
+    $floorEntry = fn (string $part, string $res, int $d, int $after) => ['key' => "sky:floor:3:$part", 'resource' => $res, 'delta' => $d, 'balanceAfter' => $after, 'reason' => 'sky:floor', 'at' => $at];
+    $open['ledger'][] = $floorEntry('open', 'coin', 0, $coins);
+    $open['ledger'][] = $floorEntry('coin', 'coin', -(int) $F3['coins'], $open['coins']);
+    $open['ledger'][] = $floorEntry('cloudseed', 'skyitem:cloudseed', -4, 0);
+    $open['ledger'][] = $floorEntry('dew', 'skyitem:dew', -1, 0);
+    $greedy = $open;
+    $greedy['sky']['items']['gem'] = 9;
+    $greedy['ledger'][] = $floorEntry('gem', 'skyitem:gem', 9, 9);
+    $check('more floor gems than the table refused', $status(fn () => $acc->putProgress(['data' => $greedy, 'baseVersion' => $version, 'clientNow' => $at])) === 422);
+    $open['ledger'][] = $floorEntry('gem', 'skyitem:gem', (int) $F3['gem'], (int) $F3['gem']);
+    $ok = $status(fn () => $acc->putProgress(['data' => $open, 'baseVersion' => $version, 'clientNow' => $at]));
+    $check('floor 3 opens with its Mây Ngọc', $ok === 0 && (int) $F3['gem'] > 0, "status $ok");
+    $version++;
+
+    // A monthly sky quest pays its Mây Ngọc, keyed by the month's first day.
+    $quest = function (array $data, string $date, string $id, int $at, bool $gem = true): array {
+        $r = ProgressGuard::rules()['quests'][$id];
+        $data['xp'] += $r['xp'];
+        $data['coins'] += $r['coins'];
+        $data['ledger'][] = ['key' => "quest:$date:$id", 'resource' => 'xp', 'delta' => $r['xp'], 'balanceAfter' => $data['xp'], 'reason' => "quest:$id", 'at' => $at];
+        $data['ledger'][] = ['key' => "quest:$date:$id:coin", 'resource' => 'coin', 'delta' => $r['coins'], 'balanceAfter' => $data['coins'], 'reason' => "quest:$id", 'at' => $at];
+        if ($gem) {
+            $n = max(1, (int) $r['gems']);
+            $data['sky']['items']['gem'] = ($data['sky']['items']['gem'] ?? 0) + $n;
+            $data['ledger'][] = ['key' => "quest:$date:$id:gem", 'resource' => 'skyitem:gem', 'delta' => $n, 'balanceAfter' => $data['sky']['items']['gem'], 'reason' => "quest:$id", 'at' => $at];
+        }
+        return $data;
+    };
+    $at = $now + 9000;
+    $first = gmdate('Y-m-01', intdiv($at, 1000));
+    $notFirst = gmdate('Y-m-02', intdiv($at, 1000));
+    $check('a monthly quest keyed by another day refused', $status(fn () => $acc->putProgress(['data' => $quest($open, $notFirst, 'm-sky-star', $at), 'baseVersion' => $version, 'clientNow' => $at])) === 422);
+    $check('Mây Ngọc on a quest that pays none refused', $status(fn () => $acc->putProgress(['data' => $quest($open, $first, 'm-cook', $at), 'baseVersion' => $version, 'clientNow' => $at])) === 422);
+    $fourth = $open;
+    foreach (['m-sky-star', 'm-sky-bug', 'm-sky-harvest', 'm-cook'] as $id) {
+        $fourth = $quest($fourth, $first, $id, $at, $id !== 'm-cook');
+    }
+    $check('more monthly quests than a month has refused', $status(fn () => $acc->putProgress(['data' => $fourth, 'baseVersion' => $version, 'clientNow' => $at])) === 422);
+    $paid = $quest($open, $first, 'm-sky-star', $at);
+    $ok = $status(fn () => $acc->putProgress(['data' => $paid, 'baseVersion' => $version, 'clientNow' => $at]));
+    $check('a monthly sky quest pays its Mây Ngọc', $ok === 0, "status $ok");
+    $version++;
 } finally {
     @unlink($tmp);
 }

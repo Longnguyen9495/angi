@@ -18,6 +18,7 @@
     "rules:export": "node scripts/export-game-rules.mjs",
     "check:motion": "node scripts/check-no-svg-animation.mjs",
     "sky:pots": "node scripts/sky-garden/prepare-pots.mjs",
+    "sky:art": "node scripts/sky-garden/prepare-art.mjs",
     "sky:qa": "node scripts/sky-garden/contact-sheet.mjs",
     "sky:sim": "node scripts/sky-garden/sim.mjs",
     "sky:sheet": "node scripts/sky-garden/prepare-sheet.mjs",

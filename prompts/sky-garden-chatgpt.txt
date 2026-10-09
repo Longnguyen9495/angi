@@ -1,0 +1,77 @@
+You are making the art for "Vườn Mây" (Cloud Garden), a cozy vertical cloud-garden game: a tower of cloud shelves beside a giant beanstalk, decorative pots on each shelf, plants growing in them, bugs to catch, small workshop machines.
+
+THE 4 ATTACHED IMAGES ARE STYLE REFERENCES
+1 = screen layout, 2 = pot ideas (pots shaped like Vietnamese dishes and produce), 3 = one finished pot that sets the exact rendering quality, 4 = cloud shelves, beanstalk and small decorations.
+Match their look: bright glossy casual-game art, rich colours, smooth rounded shapes, gold trim, soft highlights. Draw NEW original designs, never copy an object from the references.
+
+HOW WE WORK (very important)
+- Every reply makes exactly ONE image = ONE asset from the list below, in list order, starting with A01. Never put several assets in one image, never make a sprite sheet, never crop from a bigger image.
+- Real transparent background (PNG with alpha), except the two sky backgrounds.
+- Under each image write one line: the code and the file name, e.g. "A01 pot-clay_jar.png".
+- When I write "tiếp", make the next asset. When I write a code (e.g. "C15"), make that one. When I write "sửa: ...", redo the last image with that change and keep everything else.
+- Keep every image consistent with the ones already approved in this chat.
+
+RULES FOR EVERY IMAGE
+- 3/4 view from about 20 degrees above, light from the upper left, no cast shadow on the ground.
+- No glow, halo or sparkle particles outside the object's outline (a few small highlights ON the object are fine), so it cuts out cleanly.
+- No text, letters or numbers. No faces or eyes on pots, plants, machines or bugs (only the 4 helpers in group H may have gentle natural animal faces).
+- One object, centered, 4% empty margin. Square 1024x1024 (bugs, icons and effects can be smaller but still square).
+- POTS: the soil in the mouth is an opaque dark-brown ellipse, completely filled, clearly visible from above. Small white flowers and leaves tucked at the base. The pot body shows the theme; the rim, neck and foot show the set's tier material:
+  clay = glossy terracotta with a thin gold rim; porcelain = white Bát Tràng porcelain with cobalt-blue patterns; jade = pale celadon glaze with thin gold edges; gold = red lacquer with gold-leaf trim; legendary = black-and-red lacquer inlaid with mother-of-pearl.
+  All pots at the same scale so they line up on a shelf.
+- PLANTS: no pot, no soil; the stem base sits exactly at the bottom-center of the image. The 4 stages of a plant at the same scale and baseline: sprout = two first leaves; young = small leafy plant; flowering = in bloom, no ripe produce; ready = the harvest look given.
+
+THE LIST
+
+A. POTS (file pot-<id>.png), 17 sets of 6
+Set 1 Clay (clay): A01 clay_jar round-bellied jar (chum) · A02 clay_basin wide shallow basin · A03 clay_lotus_rim lotus-petal rim · A04 clay_ring tall cylinder with incised rings · A05 clay_handles two small loop handles · A06 clay_square square with a pressed tile pattern
+Set 2 Produce (jade): A07 pumpkin · A08 corn (ear in its husk) · A09 cabbage · A10 eggplant · A11 watermelon · A12 red_apple
+Set 3 Village Market (porcelain): A13 bamboo_basket · A14 bamboo (green segments) · A15 non_la (upside-down conical hat) · A16 shoulder_pole (two baskets on a pole, soil in both) · A17 rice_basket (basket of rice grains) · A18 sauce_jar (brown soybean-sauce jar)
+Set 4 Central Coast (jade): A19 coconut (half green coconut) · A20 crab (hugging the pot, no face) · A21 porcelain_fish (blue-white fish) · A22 seashell (scallop) · A23 cuttlefish (body shape, no face) · A24 basket_boat (round woven thúng chai)
+Set 5 Vietnamese Table (gold): A25 pho_bowl (rooster bowl, chopsticks) · A26 teapot (lotus teapot) · A27 banh_chung (dong leaves, bamboo string) · A28 banh_xeo (tray with folded bánh xèo) · A29 spring_rolls (chả giò platter) · A30 canh_chua (clay soup pot, pineapple and tomato)
+Set 6 Festival (legendary): A31 mooncake · A32 golden_dragon (friendly dragon wrapped round) · A33 peach_blossom · A34 lotus (pink petals form the pot) · A35 lantern (red silk) · A36 li_xi (red envelopes and firecrackers)
+Set 7 Mekong Orchard (jade): A37 dragon_fruit · A38 mango · A39 durian · A40 rambutan · A41 mangosteen · A42 pomelo
+Set 8 Coffee & Drinks (porcelain, the cup or glass is the pot): A43 phin (phin on a cup) · A44 egg_coffee · A45 sugarcane (juice glass with cane sticks) · A46 iced_tea · A47 soy_milk (glass bottle) · A48 avocado_smoothie
+Set 9 Street Snacks (porcelain): A49 banh_mi (loaf split open) · A50 banh_trang (grilled rice paper on a tiny grill) · A51 xoi_la (sticky rice in banana leaf) · A52 banh_bao (bun opened at top) · A53 goi_cuon (plate of fresh rolls) · A54 sweet_potato (roasted, half in paper)
+Set 10 Noodles of Three Regions (gold, different bowl shapes): A55 bun_bo_hue (red chili-oil pattern) · A56 bun_cha (tiny grill) · A57 mi_quang (wide turmeric bowl, rice cracker) · A58 hu_tieu (with shrimp) · A59 cao_lau (painted lanterns) · A60 banh_canh (crab claw on rim)
+Set 11 Rice & Sticky Rice (jade): A61 com_tam (broken rice plate) · A62 xoi_gac (red sticky rice in leaf cup) · A63 com_lam (bamboo tube) · A64 com_nieu (black clay rice pot) · A65 banh_cuon (steamer with cloth) · A66 com_hen (Huế clam rice bowl)
+Set 12 Sweets (gold): A67 che_ba_mau (layered glass) · A68 banh_flan · A69 banh_bo (honeycomb cake) · A70 banh_da_lon (layered pandan cake) · A71 che_troi_nuoc (rice balls in ginger syrup) · A72 kem_dua (coconut ice cream in shell bowl)
+Set 13 Home Kitchen (porcelain): A73 rice_cooker (retro, flower pattern) · A74 clay_stove (bếp lò) · A75 mortar (stone, wooden pestle) · A76 copper_tray (brass mâm) · A77 rice_sieve (stacked bamboo baskets) · A78 fish_sauce (jar with wooden lid)
+Set 14 Đà Lạt Flowers (jade): A79 hydrangea · A80 wild_sunflower (dã quỳ) · A81 mimosa · A82 lavender · A83 strawberry (basket) · A84 pine_cone
+Set 15 Countryside Village (porcelain): A85 village_gate (tiled roof) · A86 thatched_house (roof opening as mouth) · A87 water_wheel (bamboo) · A88 straw_stack · A89 village_well (stone) · A90 banyan (hollow trunk, aerial roots)
+Set 16 Childhood Toys (gold): A91 star_lantern (đèn ông sao) · A92 rattle_drum (trống bỏi) · A93 pinwheel · A94 kite · A95 spinning_top · A96 marbles (glass jar)
+Set 17 Cloud Palace (legendary, pastel cloud accents): A97 cloud_palace (golden roofs) · A98 rainbow · A99 crescent_moon · A100 shooting_star · A101 paper_crane · A102 sky_gem (jade cloud-shaped gem)
+
+B. PLANTS (file <plant>-<stage>.png; 4 images per plant in order sprout, young, flowering, ready)
+B01–B04 jasmine [white star-shaped flowers] · B05–B08 mint [lush serrated leaves] · B09–B12 kumquat [glossy orange kumquats] · B13–B16 lotus rising from a water ring [pink flower and seed pod] · B17–B20 rose [deep red roses] · B21–B24 tea [light-green shoots] · B25–B28 coffee [red cherries] · B29–B32 chrysanthemum [round golden flowers] · B33–B36 pepper on a stake [green and red peppercorn spikes] · B37–B40 orchid with stick [white-pink spray] · B41–B44 peach bonsai [pink blossoms] · B45–B48 apricot bonsai [yellow mai flowers] · B49–B52 vanilla on a stake [flowers and long green pods] · B53–B56 saffron [purple crocus, red threads] · B57–B60 beanstalk sapling [holds one pale-blue cloud seed pod]
+
+C. BUGS (natural shapes, no cartoon faces; -a wings up, -b wings down, same size and position)
+C01–C02 bug-ladybug-a/b · C03–C04 bug-bee-a/b · C05–C06 bug-caterpillar-a/b (b slightly arched) · C07–C08 bug-butterfly-a/b (yellow) · C09–C10 bug-dragonfly-a/b (teal, clear wings) · C11–C12 bug-firefly-a/b (small glow on the tail allowed) · C13–C14 bug-goldbeetle-a/b (shiny gold scarab)
+
+D. MACHINES AND ORDERS (on a small cloud base, no faces)
+D01 machine-tea (charcoal tea stove, round kettle, bamboo tray of drying jasmine) · D02 machine-pot (copper sweet-soup pot on a brick stove) · D03 machine-still (glass and brass dew still, copper coil) · D04 machine-phin (stand with three dripping phin filters) · D05 machine-tet_box (red-gold gift box workshop) · D06 balloon (hot-air balloon, Vietnamese silk patterns) · D07 crate-empty · D08 crate-filled · D09 crate-packed (closed, rope, gold seal) · D10 owl-mail (natural brown owl with letter bag) · D11 bean-sprout-farm (small magic bean sprout beside a stone)
+
+E. SCENE (shelf pieces: left end, mid piece that tiles seamlessly left-right, right end; all shelves the same size, only the colour changes)
+E01–E03 shelf-blue-left/mid/right (pink and white flowers) · E04–E06 shelf-purple-* (pink flowers) · E07–E09 shelf-mint-* (white flowers) · E10–E12 shelf-pink-* (red flowers) · E13–E15 shelf-gold-* (yellow flowers)
+E16 beanstalk-base (thick root on a cloud) · E17 beanstalk-tile (stem with big leaves, tiles seamlessly top-bottom, no flags) · E18 beanstalk-top (curling tip)
+E19 slot-locked (grey cloud cushion with a gold padlock) · E20 slot-empty (faint dashed cloud ring) · E21 floor-banner (blank sky-blue pennant) · E22 palace-gate (cloud gate with golden roofs for the top floor)
+E23 sky-day · E24 sky-dusk · E25 sky-night (tall backgrounds, NOT transparent, tile top-bottom) · E26 far-clouds · E27 far-hills (misty hills with a village and market far below; both tile left-right)
+
+F. DECORATIONS
+F01 decor-rainbow · F02 decor-cloud_pillar · F03 decor-swing (hanging from a beanstalk leaf) · F04 decor-cloud_lantern · F05 decor-paper_cranes · F06 decor-bird (natural blue bird) · F07–F13 hang-1 … hang-7 (round flower bunches on a short vine string: pink, white, yellow, blue, purple, red, orange)
+
+H. HELPERS (gentle natural animal faces allowed, not chibi)
+H01 helper-sparrow (cloud-white wing tips) · H02 helper-bee (holding a honey pot) · H03 helper-squirrel (holding a bamboo basket) · H04 helper-crane (living paper crane)
+
+I. ICONS (no frame, readable at 32 px)
+I01 icon-cloudseed (cloud-shaped seed with a sprout) · I02 icon-dew (dew bottle) · I03 icon-gem (jade cloud gem) · I04 icon-clover · I05 icon-shard (celadon shard)
+I06–I20 good-jasmine_bud, mint_leaf, kumquat, lotus_seed, lotus_flower, rose, tea_leaf, coffee_bean, chrysanthemum, pepper, orchid, peach_branch, apricot_branch, vanilla, saffron
+I21–I29 good-dried_jasmine, jasmine_honey_tea, kumquat_mint_honey, lotus_sweet_soup, rose_jam, lotus_tea, chrysanthemum_tea, coffee_milk, tet_basket
+I30–I34 tier-0 … tier-4 (thin round frames: terracotta, porcelain, jade, red-gold lacquer, black lacquer with mother-of-pearl)
+I35–I51 set- badges (round medallion with a tiny emblem): clay, produce, market, sea, table, festival, orchard, drinks, street, noodle, rice, sweets, kitchen, dalat, village, toys, palace
+I52–I67 hud-: tower, harvest-all, store, shop, collection, balloon, down, water, seed, net, quest, friends, star-full, star-empty, coin, xp
+
+J. EFFECTS
+J01 fx-poof (cloud dust) · J02 fx-sparkle (gold burst) · J03 fx-star · J04 fx-ripe (ready bubble) · J05 fx-net (net swish) · J06 fx-smoke (soft grey puff) · J07 fx-ribbon (tiles left-right) · J08 fx-leaf
+
+Start now with A01.

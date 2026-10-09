@@ -7,6 +7,46 @@ chợ). Vườn Mây là tầng chơi thứ hai, xếp **chậu sưu tầm** lê
 
 ## Trạng thái (cập nhật 2026-10-09)
 
+### Cập nhật lượt 6 (2026-10-09 tối): nguồn Mây Ngọc, nhiệm vụ tháng/quý, đường nhập hình mới
+
+Vẫn chưa cổng nào "đạt" (chưa thử máy thật, chưa thử 2 tài khoản). **Cần người dùng xem lại** hai lựa chọn số liệu
+dưới đây (Claude chọn để gỡ việc "cả mùa 0 Mây Ngọc").
+
+- **Nguồn Mây Ngọc thường trực, thưởng mở tầng:** `FLOORS[].gem` = 0, 0, 1, 2, 2, 3, 3, 4, 4, 5 (tầng 1–10, tổng
+  24). Khóa sổ `sky:floor:<n>:gem`, chỉ hợp lệ cùng lượt lưu với `sky:floor:<n>:open` và đúng số trong bảng
+  (`SkyGuard`). Cửa hàng ghi "Mở tầng được tặng n Mây Ngọc". Theo ngày mở tầng của mô phỏng (3/4/9/18/27/39/54/66/78)
+  thì ngày 39 có 8 viên, đủ 2 chậu Nông Sản giá Mây Ngọc (6 viên) để đủ bộ (+3 viên); ngày 78 có 19 viên.
+- **Nhiệm vụ tháng và quý** (cho cả nông trại và Vườn Mây): mỗi tháng rút 3, mỗi quý rút 2, từ `MONTHLY_POOL` /
+  `QUARTERLY_POOL` trong `src/domain/quests.ts`. Nhiệm vụ mây tháng trả 2–3 Mây Ngọc (bắt 120 bọ, thu 60 cây, nâng
+  sao 8 lần, 6 chuyến khinh khí cầu), quý trả 5–6 (400 bọ, 25 lần nâng sao, 18 chuyến). Khóa sổ
+  `quest:<ngày đầu tháng/quý>:<id>` (+ `:coin`, `:gem`, `:seed:i`). Server (`ProgressGuard`): ngày khóa phải là
+  ngày đầu tháng (hoặc đầu quý: 1/1, 1/4, 1/7, 1/10) và lúc nhận nằm trong kỳ (±1 ngày múi giờ); không quá 3 (2) nhiệm
+  vụ mỗi kỳ; `:gem` chỉ đúng số của nhiệm vụ. Luật xuất trong `game-rules.json` (`period`, `monthlyCount`,
+  `quarterlyCount`). Màn nhiệm vụ có thêm "Tháng này", "Quý này". Bản lưu cũ không có các trường này thì bắt đầu mới.
+- **Đường nhập hình mới:** `npm run sky:art` (`scripts/sky-garden/prepare-art.mjs`) đọc `assets/sky-garden/art/`,
+  ghi `public/images/sky-garden/{plants,bugs,machines}/` và `src/data/skyGardenArt.json`. Cảnh (`skyArt.ts`) dùng
+  hình riêng khi cây đủ 4 giai đoạn, bọ đủ 2 khung, máy có hình; thiếu thì giữ sprite rau và hình canvas. Ảnh không
+  trong suốt thật bị từ chối. Đã thử với ảnh giả rồi xóa; danh sách hiện rỗng.
+- **Prompt vẽ:** `prompts/sky-garden-playground.md`, `prompts/sky-garden-playground-100.md` (102 chậu trong 17 bộ và
+  mọi vật phẩm), `prompts/sky-garden-chatgpt.txt` (một hình mỗi lượt). 11 bộ chậu mới chỉ
+  có trong prompt; ID mới thêm vào `skyGarden.ts` khi có đủ hình.
+- **Test:** `quests.test.ts` (5 test tháng/quý), `sky.test.ts` (Mây Ngọc khi mở tầng 3), `selftest-sky.php` (6
+  kiểm tra: mở tầng 3 có Mây Ngọc, Mây Ngọc quá bảng bị từ chối, nhiệm vụ tháng sai ngày / trả Mây Ngọc sai / quá 3
+  nhiệm vụ bị từ chối, nhiệm vụ tháng hợp lệ qua). `npm run test:server` qua hết; `npm test` chỉ còn 63 lỗi
+  `dishStories.test.ts` có sẵn trên main.
+- **Cộng hưởng (§17.3), số Claude chọn:** tầng không có hiệu ứng tầng nào thì chậu cùng bộ cộng vào chỉ số chính
+  của bộ: 2 chậu +300 bp, 4 chậu +700 bp (`RESONANCE` trong `skyEconomy.ts`, `resonance()` trong `sky.ts`). 6 chậu
+  đủ bộ vẫn là hiệu ứng "Đủ bộ" (+1500), không cộng dồn. Không vượt +1500 nên `potMax` và guard giữ nguyên. Sheet
+  chậu ghi "Cộng hưởng: n chậu cùng bộ trên tầng". Test trong `sky.test.ts`.
+- **Sau khi người dùng bảo "làm nốt" (2026-10-09), Claude đi theo đề xuất, chưa xác nhận từng mục:** Q5 giữ khóa
+  (bắt buộc tài khoản); giữ giá tầng 10 (mở khoảng ngày 91); giữ các điểm khác §0 ở lượt 4. Q6 vẫn mở. Trợ thủ (§17.4),
+  trang trí mây, mầm đậu, 11 bộ chậu mới chờ hình.
+- **Mô phỏng 90 ngày chạy một lần ở cuối lượt** (`npm run sky:sim`, 4/4 kiểm tra đạt; bảng ở
+  `storage/sky-garden-qa/sim-90.txt`). Mở tầng vào ngày 1 / 4 / 9 / 17 / 25 / 37 / 50 / 61 / 74 / **85** (trước:
+  tầng 10 chưa mở trong 90 ngày; cộng hưởng làm cây chín nhanh hơn). Mây Ngọc: 1 viên ngày 14, 8 ngày 42, 15 ngày 63,
+  24 ngày 90 (trước: 0 cả mùa). Bot không nhận nhiệm vụ và không mua chậu giá Mây Ngọc, nên số Mây Ngọc thật của
+  người chơi cao hơn và được tiêu đi. Ngày 90: cấp 58, 60 chậu, 11 chuyến khinh khí cầu.
+
 ### Cập nhật lượt 5 (2026-10-09): tưới giúp, nhiệm vụ/thành tựu mây, chậu sự kiện, cân bằng tầng 8–10
 
 Vẫn chưa cổng nào "đạt": chưa thử trên máy thật, chưa thử 2 tài khoản trên 2 máy.

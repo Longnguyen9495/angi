@@ -193,6 +193,7 @@ const sky: Messages['sky'] = {
       set: (name: string) => `${name} set`,
       noStats: 'This pot adds nothing yet.',
       combo: (name: string) => `Floor effect: ${name}`,
+      resonance: (n: number) => `Resonance: ${n} pots of one set on this floor`,
     },
     star: {
       title: (name: string) => `Add a star · ${name}`,
@@ -255,6 +256,7 @@ const sky: Messages['sky'] = {
       needCoins: (n: number) => `${n} coins`,
       needCloud: (n: number) => `${n} Cloud Seeds`,
       needDew: (n: number) => (n === 1 ? '1 Dew Flask' : `${n} Dew Flasks`),
+      gemReward: (n: number) => `Opening it gives ${n} Cloud Jade.`,
       open: 'Open floor',
       allOpen: 'All 10 floors are open.',
       seeds: 'Seeds',

@@ -1,4 +1,4 @@
-import type { BugId } from '../../data/skyEconomy';
+import type { BugId, SkyCropId } from '../../data/skyEconomy';
 import type { PotId } from '../../data/skyGarden';
 import type { CropId } from '../../data/types';
 import type { MachineKind, MachinePhase } from './art';
@@ -18,6 +18,8 @@ export type Stage = (typeof STAGES)[number];
 
 export interface DemoPlant {
   crop: CropId;
+  /** The sky plant it stands for, drawn with its own pictures once they exist (skyArt.ts). */
+  sky?: SkyCropId;
   plantedAt: number;
   /** Seconds from planting to ripe (sped up for the demo). */
   grow: number;

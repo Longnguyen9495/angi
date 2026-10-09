@@ -5,13 +5,21 @@ import { parseProgress } from './persistence';
 import {
   ACHIEVEMENTS,
   DAILY_COUNT,
+  MONTHLY_COUNT,
+  QUARTERLY_COUNT,
   QUEST_DEFS,
   WEEKLY_COUNT,
   badgeReward,
   badges,
   claimableCount,
   dailyQuests,
+  daysLeftIn,
+  monthKey,
+  periodQuests,
+  quarterKey,
+  questPeriod,
   questsFor,
+  setSkyQuests,
   weekKey,
   weeklyQuests,
 } from './quests';
@@ -79,6 +87,78 @@ describe('daily and weekly quests', () => {
     s = gameReducer(s, { type: 'SELL', crop: 'herbs', now: monday });
     expect(s.quests.weekTally.harvest ?? 0).toBe(0);
     expect(s.quests.total.harvest).toBe(1);
+  });
+});
+
+describe('monthly and quarterly quests', () => {
+  it('names a month and a quarter by their first day, and counts the days left', () => {
+    expect(monthKey(NOON)).toBe('2026-09-01');
+    expect(quarterKey(NOON)).toBe('2026-07-01');
+    expect(quarterKey(new Date(2026, 9, 9, 12).getTime())).toBe('2026-10-01');
+    expect(daysLeftIn('month', NOON)).toBe(2);
+    expect(daysLeftIn('quarter', NOON)).toBe(2);
+    expect(daysLeftIn('month', new Date(2026, 9, 9, 12).getTime())).toBe(23);
+  });
+
+  it('draws them once per period, each id saying its period', () => {
+    const s = fresh();
+    const month = periodQuests(s, 'month', NOON).map((v) => v.def.id);
+    const quarter = periodQuests(s, 'quarter', NOON).map((v) => v.def.id);
+    expect(month).toHaveLength(MONTHLY_COUNT);
+    expect(quarter).toHaveLength(QUARTERLY_COUNT);
+    expect(month.every((id) => questPeriod(id) === 'month')).toBe(true);
+    expect(quarter.every((id) => questPeriod(id) === 'quarter')).toBe(true);
+    expect(periodQuests(s, 'month', NOON + 1 * DAY).map((v) => v.def.id)).toEqual(month);
+    // Thursday 1 October: a new month and a new quarter, with their tallies at zero.
+    const next = questsFor(s, NOON + 2 * DAY);
+    expect(next.month).toBe('2026-10-01');
+    expect(next.quarter).toBe('2026-10-01');
+  });
+
+  it('counts across the month and pays once, keyed by its first day', () => {
+    let s = fresh();
+    const id = periodQuests(s, 'month', NOON)[0]!.def.id;
+    const def = QUEST_DEFS[id]!;
+    s = { ...s, quests: questsFor(s, NOON) };
+    s = {
+      ...s,
+      quests: { ...s.quests, monthTally: { [def.metric]: def.target } },
+    };
+    const xp = s.xp;
+    s = gameReducer(s, { type: 'CLAIM_QUEST', id, now: NOON });
+    expect(s.xp).toBe(xp + def.reward.xp);
+    expect(s.ledger.some((e) => e.key === `quest:2026-09-01:${id}`)).toBe(true);
+    expect(gameReducer(s, { type: 'CLAIM_QUEST', id, now: NOON + 1 })).toBe(s);
+  });
+
+  it('pays Mây Ngọc for sky quests into the cloud garden', () => {
+    setSkyQuests(true);
+    try {
+      const sky = Object.values(QUEST_DEFS).filter((d) => d.reward.gems > 0);
+      expect(sky.length).toBeGreaterThan(0);
+      expect(sky.every((d) => d.metric.startsWith('sky'))).toBe(true);
+      expect(
+        sky.every((d) => questPeriod(d.id) === 'month' || questPeriod(d.id) === 'quarter'),
+      ).toBe(true);
+    } finally {
+      setSkyQuests(false);
+    }
+  });
+
+  it('survives a save, and an older save without them starts them fresh', () => {
+    let s = fresh();
+    s = { ...s, quests: questsFor(s, NOON) };
+    s = { ...s, quests: { ...s.quests, monthTally: { cook: 3 }, quarterTally: { cook: 3 } } };
+    const back = parseProgress(JSON.parse(JSON.stringify(s)), NOON)!;
+    expect(back.quests.monthTally.cook).toBe(3);
+    expect(back.quests.monthly).toEqual(s.quests.monthly);
+    const old = JSON.parse(JSON.stringify(s));
+    delete old.quests.month;
+    delete old.quests.monthly;
+    delete old.quests.quarterTally;
+    const fromOld = parseProgress(old, NOON)!;
+    expect(fromOld.quests.month).toBe('2026-09-01');
+    expect(fromOld.quests.quarterTally).toEqual({});
   });
 });
 

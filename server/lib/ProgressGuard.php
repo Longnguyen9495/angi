@@ -819,24 +819,35 @@ final class ProgressGuard
             } elseif (preg_match('/^unlock:crop:([a-z]+)$/', $key, $m)) {
                 $def = $R['crops'][$m[1]] ?? null;
                 ($def && $d === 1 && $res === "seed:{$m[1]}" && (int) $def['unlockLevel'] > 1 && (int) $def['unlockLevel'] <= $level) || $fail('crop not unlocked');
-            } elseif (preg_match('/^quest:(\d{4}-\d{2}-\d{2}):([a-z0-9-]+)(:coin|:seed:(\d+))?$/', $key, $m)) {
+            } elseif (preg_match('/^quest:(\d{4}-\d{2}-\d{2}):([a-z0-9-]+)(:coin|:gem|:seed:(\d+))?$/', $key, $m)) {
                 $q = $R['quests'][$m[2]] ?? null;
                 $q !== null || $fail('unknown quest');
                 $this->rewardPart($m[3] ?? '', $m[4] ?? null, $res, $d, $q, $level) || $fail('not this quest\'s reward');
                 (($m[3] ?? '') === '' || isset($byKey["quest:{$m[1]}:{$m[2]}"])) || $fail('reward part without its quest');
-                // A daily quest is the device's today; a weekly one is keyed by the week's Monday.
-                $q['weekly']
-                    ? ($this->isMonday($m[1]) && $this->inWeek($m[1], $at)) || $fail('quest week is not now')
-                    : $this->slotDate($m[1], $at, 1.2) || $fail('quest day is not now');
+                // A daily quest is the device's today; a weekly one is keyed by the week's Monday,
+                // a monthly or quarterly one by the first day of its month or quarter.
+                $period = self::questPeriod($q);
+                match ($period) {
+                    'week' => ($this->isMonday($m[1]) && $this->inWeek($m[1], $at)) || $fail('quest week is not now'),
+                    'month', 'quarter' => $this->inPeriod($m[1], $period, $at) || $fail("quest $period is not now"),
+                    default => $this->slotDate($m[1], $at, 1.2) || $fail('quest day is not now'),
+                };
                 if (($m[3] ?? '') === '') {
+                    $samePeriod = fn (string $id) => isset($R['quests'][$id]) && self::questPeriod($R['quests'][$id]) === $period;
                     $same = $this->countClaims("quest:{$m[1]}:%", fn ($k) => preg_match('/^quest:[0-9-]+:[a-z0-9-]+$/', $k) === 1
-                        && (($R['quests'][explode(':', $k)[2]]['weekly'] ?? false) === $q['weekly']));
+                        && $samePeriod(explode(':', $k)[2]));
                     foreach ($fresh as $f) {
-                        if (preg_match("/^quest:{$m[1]}:([a-z0-9-]+)$/", (string) $f['key'], $mm) && (($R['quests'][$mm[1]]['weekly'] ?? false) === $q['weekly'])) {
+                        if (preg_match("/^quest:{$m[1]}:([a-z0-9-]+)$/", (string) $f['key'], $mm) && $samePeriod($mm[1])) {
                             $same++;
                         }
                     }
-                    $same <= ($q['weekly'] ? (int) $R['weeklyCount'] : (int) $R['dailyCount']) || $fail('more quests than the period has');
+                    $count = match ($period) {
+                        'week' => (int) $R['weeklyCount'],
+                        'month' => (int) ($R['monthlyCount'] ?? 0),
+                        'quarter' => (int) ($R['quarterlyCount'] ?? 0),
+                        default => (int) $R['dailyCount'],
+                    };
+                    $same <= $count || $fail('more quests than the period has');
                 }
             } elseif (preg_match('/^badge:([a-z]+):(\d+)(:coin|:seed:(\d+))?$/', $key, $m)) {
                 $b = $R['badges'][$m[1]] ?? null;
@@ -1353,6 +1364,26 @@ final class ProgressGuard
         return $t !== false && gmdate('N', $t) === '1';
     }
 
+    /** A quest's period: `period` in the rules, or the older `weekly` flag. */
+    private static function questPeriod(array $q): string
+    {
+        return is_string($q['period'] ?? null) ? $q['period'] : (($q['weekly'] ?? false) ? 'week' : 'day');
+    }
+
+    /**
+     * `$first` is the first day of a month (or of a quarter: January, April, July, October) and
+     * `at` falls in it, give or take a day for the device's time zone.
+     */
+    private function inPeriod(string $first, string $period, int $at): bool
+    {
+        $t = strtotime($first . ' 12:00:00 UTC');
+        if ($t === false || gmdate('j', $t) !== '1' || ($period === 'quarter' && (int) gmdate('n', $t) % 3 !== 1)) {
+            return false;
+        }
+        $end = strtotime($first . ' 12:00:00 UTC +' . ($period === 'quarter' ? 3 : 1) . ' month');
+        return $end !== false && $at >= $t * 1000 - 1.2 * 86_400_000 && $at <= $end * 1000 + 0.7 * 86_400_000;
+    }
+
     /** `at` falls in the week starting on that Monday (on any device's time zone). */
     private function inWeek(string $monday, int $at): bool
     {
@@ -1716,6 +1747,9 @@ final class ProgressGuard
         }
         if ($part === ':coin') {
             return $res === 'coin' && $d === (int) $reward['coins'] && $d > 0;
+        }
+        if ($part === ':gem') {
+            return $res === 'skyitem:gem' && $d === (int) ($reward['gems'] ?? 0) && $d > 0;
         }
         return (int) $i < (int) $reward['seeds'] && $d === 1 && str_starts_with($res, 'seed:') && $this->available(self::sub($res, 'seed'), $level);
     }

@@ -56,7 +56,11 @@ export function buildView(sky: SkyState, now: number): SceneView {
             pot: pot?.pot ?? null,
             locked: i >= open,
             plant: plant
-              ? { sprite: seedSprite(plant.seed), progress: plantProgress(plant, now) }
+              ? {
+                  sprite: seedSprite(plant.seed),
+                  progress: plantProgress(plant, now),
+                  sky: plant.seed.kind === 'sky' ? plant.seed.id : undefined,
+                }
               : null,
             // A bug still on a ripe plant can be caught until it is picked (§12.1).
             bugs: plant ? bugsOn(plant) : [],

@@ -67,8 +67,11 @@ import {
   STREAK_CHESTS,
   badgeReward,
   badges,
+  periodOf,
+  questPeriod,
   questsFor,
   track,
+  withClaimed,
   type QuestReward,
 } from './quests';
 import { HOUR_MS, dateKey, daysBetween, slotKey } from './time';
@@ -173,6 +176,8 @@ function ensureDay(s: GuestProgress, now: number) {
 function grant(s: GuestProgress, key: string, r: QuestReward, reason: string, now: number) {
   if (!post(s, key, 'xp', r.xp, reason, now)) return false;
   if (r.coins > 0) post(s, `${key}:coin`, 'coin', r.coins, reason, now);
+  // Mây Ngọc lives in the cloud garden: only sky quests pay it, drawn once there is one.
+  if (r.gems > 0 && s.sky) post(s, `${key}:gem`, 'skyitem:gem', r.gems, reason, now);
   const crops = (Object.keys(CROPS) as CropId[]).filter((c) => cropAvailable(s, c));
   let h = 0;
   for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
@@ -740,19 +745,16 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       const qs = questsFor(state, action.now);
       const def = QUEST_DEFS[action.id];
       if (!def) return state;
-      const weekly = qs.weekly.includes(def.id);
-      if (!weekly && !qs.daily.includes(def.id)) return state;
-      const tally = weekly ? qs.weekTally : qs.day;
-      const claimed = weekly ? qs.weekClaimed : qs.claimed;
+      const period = questPeriod(def.id);
+      const { ids, tally, claimed, date } = periodOf(qs, period);
+      if (!ids.includes(def.id)) return state;
       if (claimed.includes(def.id) || (tally[def.metric] ?? 0) < def.target) return state;
       const s = structuredClone(state);
       s.quests = qs;
-      const key = `quest:${weekly ? qs.week : qs.date}:${def.id}`;
+      const key = `quest:${date}:${def.id}`;
       if (!grant(s, key, def.reward, `quest:${def.id}`, action.now)) return state;
-      s.quests = weekly
-        ? { ...s.quests, weekClaimed: [...s.quests.weekClaimed, def.id] }
-        : { ...s.quests, claimed: [...s.quests.claimed, def.id] };
-      if (!weekly && s.quests.daily.every((id) => s.quests.claimed.includes(id))) {
+      s.quests = withClaimed(s.quests, period, def.id);
+      if (period === 'day' && s.quests.daily.every((id) => s.quests.claimed.includes(id))) {
         track(s, 'allDaily', action.now);
       }
       return s;

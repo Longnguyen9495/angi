@@ -194,6 +194,7 @@ export function skyReducer(state: GuestProgress, action: SkyAction): GuestProgre
         return state;
       if (def.dew > 0 && !post(s, `${key}:dew`, 'skyitem:dew', -def.dew, 'sky:floor', now))
         return state;
+      if (def.gem > 0) post(s, `${key}:gem`, 'skyitem:gem', def.gem, 'sky:floor', now);
       sky.floors = n;
       ensureRows(sky);
       if (n === 1) {

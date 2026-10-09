@@ -32,6 +32,7 @@ import {
   balloonBoxes,
   cropOpen,
   floorCombo,
+  resonance,
   nextFloor,
   ownsSet,
   potPlace,
@@ -172,7 +173,13 @@ export function SlotSheet({ ctx, floor, slot }: { ctx: Ctx; floor: number; slot:
             {g().pot.tierStars(tierName(pot), pot.stars)}
           </small>
           <StatsLine stats={plant ? plant.stats : potStats(sky, pot.uid)} />
-          {combo && <small className="sk-combo">{g().pot.combo(t.sky.combos[combo])}</small>}
+          {combo ? (
+            <small className="sk-combo">{g().pot.combo(t.sky.combos[combo])}</small>
+          ) : (
+            resonance(sky, pot.uid) > 0 && (
+              <small className="sk-combo">{g().pot.resonance(resonance(sky, pot.uid))}</small>
+            )
+          )}
         </div>
       </div>
     );
@@ -737,6 +744,7 @@ export function ShopSheet({ ctx, level }: { ctx: Ctx; level: number }) {
               )}
               {def.dew > 0 && <li className={dew >= def.dew ? 'ok' : ''}>{s.needDew(def.dew)}</li>}
             </ul>
+            {def.gem > 0 && <p className="sk-note">{s.gemReward(def.gem)}</p>}
             <button
               type="button"
               className="sk-btn"

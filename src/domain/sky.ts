@@ -12,6 +12,7 @@ import {
   MACHINES,
   MAX_FLOORS,
   PRODUCE_VEG_TIME,
+  RESONANCE,
   SET_MAIN,
   SET_STATS,
   SKY_CROPS,
@@ -246,8 +247,24 @@ export function comboBonus(combo: ComboId | null, pot: PotId): Stats {
 }
 
 /**
- * A pot's stats where it stands: base × stars × floor, plus its floor's effect, each held to its
- * cap (bp). `veg`: a farm vegetable is planted (a produce pot's own time bonus counts twice).
+ * How many pots of this pot's set stand on its floor, as a resonance step (4 or 2, 0 for none):
+ * only on a floor without a floor effect, which always wins (§0.6, §17.3).
+ */
+export function resonance(sky: SkyState, uid: string): number {
+  const place = potPlace(sky, uid);
+  const p = sky.pots[uid];
+  if (!place || !p || floorCombo(sky, place[0]) !== null) return 0;
+  const set = POTS[p.pot].set;
+  const same = (sky.slots[place[0]] ?? []).filter(
+    (u) => !!u && !!sky.pots[u] && POTS[sky.pots[u]!.pot].set === set,
+  ).length;
+  return RESONANCE.find((r) => same >= r.count)?.count ?? 0;
+}
+
+/**
+ * A pot's stats where it stands: base × stars × floor, plus its floor's effect (or its set's
+ * resonance), each held to its cap (bp). `veg`: a farm vegetable is planted (a produce pot's own
+ * time bonus counts twice).
  */
 export function potStats(sky: SkyState, uid: string, veg = false): Stats {
   const p = sky.pots[uid];
@@ -258,7 +275,9 @@ export function potStats(sky: SkyState, uid: string, veg = false): Stats {
   const base = potBase(p.pot, p.tier);
   const star = 100 + STAR_STEP * p.stars;
   const fl = 100 + FLOOR_STEP * floor;
-  const combo = place ? comboBonus(floorCombo(sky, floor), p.pot) : out;
+  const combo = place ? comboBonus(floorCombo(sky, floor), p.pot) : { ...out };
+  const step = resonance(sky, uid);
+  if (step) combo[SET_MAIN[POTS[p.pot].set]] += RESONANCE.find((r) => r.count === step)!.main;
   for (const k of STATS) {
     let v = Math.floor((base[k] * star * fl) / 10000);
     if (k === 'time' && veg && POTS[p.pot].set === 'produce') v *= PRODUCE_VEG_TIME;

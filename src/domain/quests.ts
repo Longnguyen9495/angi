@@ -7,7 +7,8 @@ import { produceAvailable, recipeAvailable } from './selectors';
 import { dateKey } from './time';
 
 /*
- * Quests: daily ones drawn from a pool each day, weekly ones drawn each week, long-term
+ * Quests: daily ones drawn from a pool each day, weekly ones each week, monthly and quarterly
+ * ones (bigger goals; the sky ones pay Mây Ngọc) each month and quarter, long-term
  * achievements in tiers, and a chest at streak milestones. Every action the game counts
  * goes through one tally (`track` in the reducer); a finished quest waits for the guest
  * to claim it, so the reward is something they see and tap.
@@ -67,7 +68,12 @@ export interface QuestReward {
   seeds: number;
   /** Extra watering-can refills for today. */
   water: number;
+  /** Mây Ngọc (only on Vườn Mây quests, so the guest has a cloud garden to hold it). */
+  gems: number;
 }
+
+/** How long a quest's list lasts; the id says it too (d-, w-, m-, q-). */
+export type QuestPeriod = 'day' | 'week' | 'month' | 'quarter';
 
 export interface QuestDef {
   id: string;
@@ -93,6 +99,15 @@ export interface QuestState {
   /** Claimed today / this week. */
   claimed: string[];
   weekClaimed: string[];
+  /** This month's and this quarter's quests, named by their first day ("2026-10-01"). */
+  month: string;
+  monthly: string[];
+  monthTally: Tally;
+  monthClaimed: string[];
+  quarter: string;
+  quarterly: string[];
+  quarterTally: Tally;
+  quarterClaimed: string[];
   /** Achievement id → highest tier claimed (1-based; 0 = none). */
   badges: Record<string, number>;
   /** A streak chest waiting to be opened. */
@@ -101,11 +116,12 @@ export interface QuestState {
   social: boolean;
 }
 
-const R = (xp: number, coins = 0, seeds = 0, water = 0): QuestReward => ({
+const R = (xp: number, coins = 0, seeds = 0, water = 0, gems = 0): QuestReward => ({
   xp,
   coins,
   seeds,
   water,
+  gems,
 });
 
 const q = t.data.quests;
@@ -207,8 +223,56 @@ const WEEKLY_POOL: QuestDef[] = [
   { id: 'w-sky-help', metric: 'skyHelp', target: 10, reward: R(50, 20), when: skyOn },
 ];
 
+/**
+ * A month's quests: bigger runs of the same jobs. The sky ones pay Mây Ngọc, which the 90-day
+ * simulation found no steady source of.
+ */
+const MONTHLY_POOL: QuestDef[] = [
+  { id: 'm-cook', metric: 'cook', target: 20, reward: R(150, 80, 4) },
+  { id: 'm-checkin', metric: 'checkin', target: 20, reward: R(150, 60, 3, 3) },
+  { id: 'm-harvest', metric: 'harvest', target: 100, reward: R(120, 80, 4) },
+  { id: 'm-order', metric: 'order', target: 20, reward: R(140, 90, 3) },
+  { id: 'm-all-daily', metric: 'allDaily', target: 10, reward: R(180, 100, 5, 3) },
+  { id: 'm-help', metric: 'help', target: 15, reward: R(120, 50, 0, 3) },
+  { id: 'm-sky-bug', metric: 'skyBug', target: 120, reward: R(120, 80, 0, 0, 2), when: skyOn },
+  {
+    id: 'm-sky-harvest',
+    metric: 'skyHarvest',
+    target: 60,
+    reward: R(120, 80, 0, 0, 2),
+    when: skyOn,
+  },
+  { id: 'm-sky-star', metric: 'skyStar', target: 8, reward: R(150, 100, 0, 0, 3), when: skyOn },
+  {
+    id: 'm-sky-trip',
+    metric: 'skyTrip',
+    target: 6,
+    reward: R(150, 100, 0, 0, 3),
+    when: skyBalloon,
+  },
+];
+
+/** A quarter's quests: a season's worth of play. */
+const QUARTERLY_POOL: QuestDef[] = [
+  { id: 'q-cook', metric: 'cook', target: 60, reward: R(400, 250, 8) },
+  { id: 'q-checkin', metric: 'checkin', target: 60, reward: R(400, 200, 6, 5) },
+  { id: 'q-all-daily', metric: 'allDaily', target: 30, reward: R(450, 250, 8, 5) },
+  { id: 'q-earn', metric: 'earn', target: 3000, reward: R(350, 0, 10) },
+  { id: 'q-sky-bug', metric: 'skyBug', target: 400, reward: R(350, 250, 0, 0, 5), when: skyOn },
+  { id: 'q-sky-star', metric: 'skyStar', target: 25, reward: R(400, 300, 0, 0, 6), when: skyOn },
+  {
+    id: 'q-sky-trip',
+    metric: 'skyTrip',
+    target: 18,
+    reward: R(400, 300, 0, 0, 6),
+    when: skyBalloon,
+  },
+];
+
 export const DAILY_COUNT = 5;
 export const WEEKLY_COUNT = 4;
+export const MONTHLY_COUNT = 3;
+export const QUARTERLY_COUNT = 2;
 
 function lv(p: GuestProgress): number {
   return levelForXp(p.xp);
@@ -361,8 +425,16 @@ export const STREAK_CHESTS: Record<number, QuestReward> = {
 };
 
 export const QUEST_DEFS: Record<string, QuestDef> = Object.fromEntries(
-  [CORE, ...DAILY_POOL, ...WEEKLY_POOL].map((d) => [d.id, d]),
+  [CORE, ...DAILY_POOL, ...WEEKLY_POOL, ...MONTHLY_POOL, ...QUARTERLY_POOL].map((d) => [d.id, d]),
 );
+
+/** The period a quest belongs to, from its id. */
+export function questPeriod(id: string): QuestPeriod {
+  if (id.startsWith('w-')) return 'week';
+  if (id.startsWith('m-')) return 'month';
+  if (id.startsWith('q-')) return 'quarter';
+  return 'day';
+}
 
 export function questTitle(def: QuestDef): string {
   return q.metric[def.metric](def.target);
@@ -377,6 +449,27 @@ export function weekKey(now: number): string {
   const d = new Date(now);
   const back = (d.getDay() + 6) % 7;
   return dateKey(new Date(d.getFullYear(), d.getMonth(), d.getDate() - back, 12).getTime());
+}
+
+/** First day of the local month ("2026-10-01"). */
+export function monthKey(now: number): string {
+  const d = new Date(now);
+  return dateKey(new Date(d.getFullYear(), d.getMonth(), 1, 12).getTime());
+}
+
+/** First day of the local quarter (January, April, July or October). */
+export function quarterKey(now: number): string {
+  const d = new Date(now);
+  return dateKey(new Date(d.getFullYear(), d.getMonth() - (d.getMonth() % 3), 1, 12).getTime());
+}
+
+/** Days left in this month or quarter, today included. */
+export function daysLeftIn(period: 'month' | 'quarter', now: number): number {
+  const d = new Date(now);
+  const first = period === 'month' ? d.getMonth() : d.getMonth() - (d.getMonth() % 3);
+  const end = new Date(d.getFullYear(), first + (period === 'month' ? 1 : 3), 1);
+  const today = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  return Math.round((end.getTime() - today.getTime()) / 86_400_000);
 }
 
 function hash(text: string): number {
@@ -448,6 +541,14 @@ export function emptyQuests(now: number): QuestState {
     total: {},
     claimed: [],
     weekClaimed: [],
+    month: monthKey(now),
+    monthly: [],
+    monthTally: {},
+    monthClaimed: [],
+    quarter: quarterKey(now),
+    quarterly: [],
+    quarterTally: {},
+    quarterClaimed: [],
     badges: {},
     chest: null,
     social: false,
@@ -480,7 +581,60 @@ export function questsFor(p: GuestProgress, now: number): QuestState {
       weekClaimed: qs.week === week ? qs.weekClaimed : [],
     };
   }
+  const month = monthKey(now);
+  if (qs.month !== month || qs.monthly.length === 0) {
+    qs = {
+      ...qs,
+      month,
+      monthly: draw(p, MONTHLY_POOL, MONTHLY_COUNT, `monthly:${month}`, now),
+      monthTally: qs.month === month ? qs.monthTally : {},
+      monthClaimed: qs.month === month ? qs.monthClaimed : [],
+    };
+  }
+  const quarter = quarterKey(now);
+  if (qs.quarter !== quarter || qs.quarterly.length === 0) {
+    qs = {
+      ...qs,
+      quarter,
+      quarterly: draw(p, QUARTERLY_POOL, QUARTERLY_COUNT, `quarterly:${quarter}`, now),
+      quarterTally: qs.quarter === quarter ? qs.quarterTally : {},
+      quarterClaimed: qs.quarter === quarter ? qs.quarterClaimed : [],
+    };
+  }
   return qs;
+}
+
+/** A period's list, tally and claimed ids, and the date its claims are keyed by. */
+export function periodOf(qs: QuestState, period: QuestPeriod) {
+  switch (period) {
+    case 'day':
+      return { ids: qs.daily, tally: qs.day, claimed: qs.claimed, date: qs.date };
+    case 'week':
+      return { ids: qs.weekly, tally: qs.weekTally, claimed: qs.weekClaimed, date: qs.week };
+    case 'month':
+      return { ids: qs.monthly, tally: qs.monthTally, claimed: qs.monthClaimed, date: qs.month };
+    case 'quarter':
+      return {
+        ids: qs.quarterly,
+        tally: qs.quarterTally,
+        claimed: qs.quarterClaimed,
+        date: qs.quarter,
+      };
+  }
+}
+
+/** The quest state with `id` added to its period's claimed list. */
+export function withClaimed(qs: QuestState, period: QuestPeriod, id: string): QuestState {
+  switch (period) {
+    case 'day':
+      return { ...qs, claimed: [...qs.claimed, id] };
+    case 'week':
+      return { ...qs, weekClaimed: [...qs.weekClaimed, id] };
+    case 'month':
+      return { ...qs, monthClaimed: [...qs.monthClaimed, id] };
+    case 'quarter':
+      return { ...qs, quarterClaimed: [...qs.quarterClaimed, id] };
+  }
 }
 
 /** Counts an action toward today's and this week's quests and the achievements (into a copy). */
@@ -491,7 +645,14 @@ export function track(s: GuestProgress, metric: QuestMetric, now: number, n = 1)
     ...t,
     [metric]: (t[metric] ?? 0) + n,
   });
-  s.quests = { ...qs, day: add(qs.day), weekTally: add(qs.weekTally), total: add(qs.total) };
+  s.quests = {
+    ...qs,
+    day: add(qs.day),
+    weekTally: add(qs.weekTally),
+    monthTally: add(qs.monthTally),
+    quarterTally: add(qs.quarterTally),
+    total: add(qs.total),
+  };
 }
 
 export type QuestStatus = 'open' | 'ready' | 'claimed';
@@ -521,10 +682,13 @@ export function dailyQuests(p: GuestProgress, now: number): QuestView[] {
 }
 
 export function weeklyQuests(p: GuestProgress, now: number): QuestView[] {
-  const qs = questsFor(p, now);
-  return qs.weekly.flatMap((id) =>
-    QUEST_DEFS[id] ? [view(QUEST_DEFS[id], qs.weekTally, qs.weekClaimed)] : [],
-  );
+  return periodQuests(p, 'week', now);
+}
+
+/** A period's quests (day, week, month or quarter). */
+export function periodQuests(p: GuestProgress, period: QuestPeriod, now: number): QuestView[] {
+  const { ids, tally, claimed } = periodOf(questsFor(p, now), period);
+  return ids.flatMap((id) => (QUEST_DEFS[id] ? [view(QUEST_DEFS[id], tally, claimed)] : []));
 }
 
 export interface BadgeView {
@@ -551,6 +715,8 @@ export function claimableCount(p: GuestProgress, now: number): number {
   return (
     dailyQuests(p, now).filter((v) => v.status === 'ready').length +
     weeklyQuests(p, now).filter((v) => v.status === 'ready').length +
+    periodQuests(p, 'month', now).filter((v) => v.status === 'ready').length +
+    periodQuests(p, 'quarter', now).filter((v) => v.status === 'ready').length +
     badges(p).filter((b) => b.ready).length +
     (p.quests.chest ? 1 : 0)
   );

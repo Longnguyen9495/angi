@@ -70,10 +70,13 @@ import { ORDERS_PER_DAY, dailyOrders } from './orders';
 import {
   ACHIEVEMENTS,
   DAILY_COUNT,
+  MONTHLY_COUNT,
+  QUARTERLY_COUNT,
   QUEST_DEFS,
   STREAK_CHESTS,
   WEEKLY_COUNT,
   badgeReward,
+  questPeriod,
 } from './quests';
 
 /*
@@ -207,11 +210,19 @@ export function buildGameRules() {
     quests: Object.fromEntries(
       Object.values(QUEST_DEFS).map((q) => [
         q.id,
-        { metric: q.metric, target: q.target, weekly: q.id.startsWith('w-'), ...q.reward },
+        {
+          metric: q.metric,
+          target: q.target,
+          weekly: q.id.startsWith('w-'),
+          period: questPeriod(q.id),
+          ...q.reward,
+        },
       ]),
     ),
     dailyCount: DAILY_COUNT,
     weeklyCount: WEEKLY_COUNT,
+    monthlyCount: MONTHLY_COUNT,
+    quarterlyCount: QUARTERLY_COUNT,
     badges: Object.fromEntries(
       ACHIEVEMENTS.map((a) => {
         const metric = BADGE_METRIC[a.id];

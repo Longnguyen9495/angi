@@ -8,6 +8,8 @@ import {
   badgeTitle,
   badges,
   dailyQuests,
+  daysLeftIn,
+  periodQuests,
   weeklyQuests,
   type AchievementGroup,
   type BadgeView,
@@ -27,6 +29,7 @@ function rewardParts(r: QuestReward): string[] {
     r.coins > 0 ? m.reward.coins(r.coins) : '',
     r.seeds > 0 ? m.reward.seeds(r.seeds) : '',
     r.water > 0 ? m.reward.water(r.water) : '',
+    r.gems > 0 ? m.reward.gems(r.gems) : '',
   ].filter(Boolean);
 }
 
@@ -36,7 +39,8 @@ function daysLeftInWeek(now: number): number {
 }
 
 /**
- * Quests: the streak chest, today's quests, this week's, and the achievements. A finished
+ * Quests: the streak chest, today's quests, this week's, this month's and this quarter's,
+ * and the achievements. A finished
  * quest waits for a tap on "Nhận" so the reward is seen, not silently added.
  */
 export function MissionsSection() {
@@ -110,6 +114,26 @@ export function MissionsSection() {
           <p className="fj-note">{m.weeklyNote(daysLeftInWeek(now))}</p>
         </div>
         <QuestList list={weeklyQuests(state, now)} onClaim={claim} />
+      </section>
+
+      <section aria-labelledby="fj-q-monthly">
+        <div className="fj-quests__head">
+          <h3 className="fj-h3" id="fj-q-monthly">
+            {m.monthly}
+          </h3>
+          <p className="fj-note">{m.periodNote(daysLeftIn('month', now))}</p>
+        </div>
+        <QuestList list={periodQuests(state, 'month', now)} onClaim={claim} />
+      </section>
+
+      <section aria-labelledby="fj-q-quarterly">
+        <div className="fj-quests__head">
+          <h3 className="fj-h3" id="fj-q-quarterly">
+            {m.quarterly}
+          </h3>
+          <p className="fj-note">{m.periodNote(daysLeftIn('quarter', now))}</p>
+        </div>
+        <QuestList list={periodQuests(state, 'quarter', now)} onClaim={claim} />
       </section>
 
       <BadgeShelves list={badges(state)} onClaim={claimBadge} />

@@ -210,6 +210,8 @@ export interface FloorDef {
   coins: number;
   cloudseed: number;
   dew: number;
+  /** Mây Ngọc given when the floor opens: the steady source of gems (the sim found none). */
+  gem: number;
   /** Slots 4, 5 and 6 of this floor, for xu (slots 1–3 come with the floor). */
   slots: [number, number, number];
 }
@@ -222,16 +224,16 @@ const slotPrices = (n: number): [number, number, number] => {
 
 /** §4.1 / §0.4. Floor 1 is free and comes with the starter pots. */
 export const FLOORS: FloorDef[] = [
-  { level: 12, coins: 0, cloudseed: 0, dew: 0 },
-  { level: 15, coins: 400, cloudseed: 2, dew: 0 },
-  { level: 19, coins: 900, cloudseed: 4, dew: 1 },
-  { level: 24, coins: 1600, cloudseed: 6, dew: 2 },
-  { level: 29, coins: 2500, cloudseed: 8, dew: 3 },
-  { level: 35, coins: 3600, cloudseed: 10, dew: 4 },
-  { level: 41, coins: 5000, cloudseed: 12, dew: 6 },
-  { level: 45, coins: 5500, cloudseed: 15, dew: 8 },
-  { level: 50, coins: 6500, cloudseed: 18, dew: 10 },
-  { level: 55, coins: 6000, cloudseed: 22, dew: 12 },
+  { level: 12, coins: 0, cloudseed: 0, dew: 0, gem: 0 },
+  { level: 15, coins: 400, cloudseed: 2, dew: 0, gem: 0 },
+  { level: 19, coins: 900, cloudseed: 4, dew: 1, gem: 1 },
+  { level: 24, coins: 1600, cloudseed: 6, dew: 2, gem: 2 },
+  { level: 29, coins: 2500, cloudseed: 8, dew: 3, gem: 2 },
+  { level: 35, coins: 3600, cloudseed: 10, dew: 4, gem: 3 },
+  { level: 41, coins: 5000, cloudseed: 12, dew: 6, gem: 3 },
+  { level: 45, coins: 5500, cloudseed: 15, dew: 8, gem: 4 },
+  { level: 50, coins: 6500, cloudseed: 18, dew: 10, gem: 4 },
+  { level: 55, coins: 6000, cloudseed: 22, dew: 12, gem: 5 },
 ].map((f, i) => ({ ...f, slots: slotPrices(i + 1) }));
 export const MAX_FLOORS = FLOORS.length;
 /** Slots a floor has before any is bought. */
@@ -329,6 +331,16 @@ export interface ComboDef {
   /** fullSet: added to the set's main stat instead of `bonus`. */
   main?: number;
 }
+/**
+ * Resonance (§17.3): on a floor with none of the effects below, pots of one set add to that
+ * set's main stat, 4 of them more than 2. Six of a complete set is the full-set effect instead,
+ * never both. Highest count first; never above the full set's 1500, the most potMax allows.
+ */
+export const RESONANCE: readonly { count: number; main: number }[] = [
+  { count: 4, main: 700 },
+  { count: 2, main: 300 },
+];
+
 /** Checked in this order; a floor takes the first that fits (§0.6). */
 export const COMBOS: ComboDef[] = [
   { id: 'fullSet', bonus: {}, main: 1500 },
