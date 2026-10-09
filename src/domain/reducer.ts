@@ -68,7 +68,7 @@ import {
   badgeReward,
   badges,
   questsFor,
-  type QuestMetric,
+  track,
   type QuestReward,
 } from './quests';
 import { HOUR_MS, dateKey, daysBetween, slotKey } from './time';
@@ -164,17 +164,6 @@ function ensureDay(s: GuestProgress, now: number) {
   if (s.water.date !== today) s.water = { date: today, used: 0, bonus: 0 };
   if (s.fishing.date !== today) s.fishing = { date: today, used: 0 };
   if (s.orders.date !== today) s.orders = { date: today, done: [] };
-}
-
-/** Counts an action toward today's and this week's quests and the achievements. */
-function track(s: GuestProgress, metric: QuestMetric, now: number, n = 1) {
-  if (n <= 0) return;
-  const qs = questsFor(s, now);
-  const add = (t: Partial<Record<QuestMetric, number>>) => ({
-    ...t,
-    [metric]: (t[metric] ?? 0) + n,
-  });
-  s.quests = { ...qs, day: add(qs.day), weekTally: add(qs.weekTally), total: add(qs.total) };
 }
 
 /**
@@ -678,6 +667,7 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       } else if (ev.type === 'skyhelp' && ev.bug && s.sky) {
         // We caught a bug in a friend's cloud garden: a ladybug for our store.
         post(s, `${key}:bug`, `bug:${ev.bug}`, 1, 'friend:skyhelp', action.now);
+        track(s, 'skyHelp', action.now);
       } else if (ev.type === 'skycaught') {
         // A friend caught the bug on one of our pots: catch it here, as our own tap would. Not
         // revealed to us yet: leave the event for a later sync.
@@ -690,6 +680,20 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
           next = skyReducer(s, { type: 'SKY_CATCH', uid: ev.pot!, stage, now: action.now });
         post(next, `${key}:seen`, 'xp', 0, 'friend:skycaught', action.now);
         return next;
+      } else if (ev.type === 'skywater') {
+        // A friend watered one of our cloud pots: the same planting, still growing, ripens
+        // sooner as our own watering would, without using our water.
+        const plant = ev.pot ? s.sky?.pots[ev.pot]?.plant : undefined;
+        if (plant && plant.cycle === ev.cycle && plant.readyAt > action.now) {
+          plant.readyAt =
+            action.now + Math.round((plant.readyAt - action.now) * (1 - WATERING.cut));
+          plant.wateredAt = action.now;
+        }
+        post(s, `${key}:xp`, 'xp', XP.friendHelp, 'friend:skywater', action.now);
+      } else if (ev.type === 'skywatered') {
+        // We watered a pot in a friend's cloud garden.
+        post(s, `${key}:xp`, 'xp', XP.friendHelp, 'friend:skywatered', action.now);
+        track(s, 'help', action.now);
       } else if (ev.type === 'referral' && ((ev.coins ?? 0) > 0 || (ev.xp ?? 0) > 0)) {
         if ((ev.coins ?? 0) > 0)
           post(s, `${key}:coin`, 'coin', Math.floor(ev.coins!), 'friend:referral', action.now);
@@ -900,6 +904,9 @@ function baseReducer(state: GuestProgress, action: Action): GuestProgress {
       post(s, `${key}:xp`, 'xp', reward.xp, 'event', action.now);
       s.events = { ...s.events, [ev.id]: { ...log, claimed: [...log.claimed, action.step] } };
       track(s, 'earn', action.now, reward.coins);
+      // The last milestone also brings the event's festival pots to a cloud garden.
+      if (s.sky && action.step === ev.targets.length - 1)
+        return skyReducer(s, { type: 'SKY_EVENT_POTS', event: ev.id, now: action.now });
       return s;
     }
 

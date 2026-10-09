@@ -11,6 +11,7 @@ import {
   type BugId,
 } from '../data/skyEconomy';
 import { createInitialProgress, type GuestProgress } from './progress';
+import { badges, dailyQuests, setSkyQuests, starPots, weeklyQuests } from './quests';
 import { gameReducer, type Action } from './reducer';
 import {
   bugCheckAt,
@@ -239,5 +240,120 @@ describe('Vườn Mây with friends (G5)', () => {
     p = run(p, help);
     expect(p.sky!.bugs.ladybug).toBe(2);
     expect(run(p, help)).toBe(p);
+  });
+
+  it('ripens our pot sooner when a friend waters it, only that planting, once', () => {
+    let now = T0;
+    let p = run(player(), { type: 'SKY_OPEN_FLOOR', now });
+    const [a] = Object.keys(p.sky!.pots);
+    p = run(
+      p,
+      { type: 'SKY_PLACE_POT', uid: a!, floor: 0, slot: 0, now },
+      { type: 'SKY_PLANT', uid: a!, seed: { kind: 'sky', id: 'jasmine' }, now },
+    );
+    now += 10 * MIN;
+    const before = p.sky!.pots[a!]!.plant!.readyAt;
+    const xp = p.xp;
+    const water: Action = {
+      type: 'FRIEND_EVENT',
+      event: { id: 'e9', type: 'skywater', pot: a!, cycle: 0, from: 'Bình' },
+      now,
+    };
+    p = run(p, water);
+    const plant = p.sky!.pots[a!]!.plant!;
+    expect(plant.readyAt).toBe(now + Math.round((before - now) * 0.75));
+    expect(plant.wateredAt).toBe(now);
+    expect(p.xp).toBeGreaterThan(xp);
+    expect(run(p, water)).toBe(p);
+
+    // An event for an earlier planting pays the XP but leaves this one alone.
+    const stale: Action = {
+      type: 'FRIEND_EVENT',
+      event: { id: 'e10', type: 'skywater', pot: a!, cycle: 5, from: 'Bình' },
+      now,
+    };
+    const q = run(p, stale);
+    expect(q.sky!.pots[a!]!.plant!.readyAt).toBe(plant.readyAt);
+    expect(q.ledger.some((e) => e.key === 'friend:e10:xp')).toBe(true);
+
+    const helped: Action = {
+      type: 'FRIEND_EVENT',
+      event: { id: 'e11', type: 'skywatered', pot: a!, cycle: 0, from: 'Bình' },
+      now,
+    };
+    const r = run(q, helped);
+    expect(r.xp).toBeGreaterThan(q.xp);
+    expect(run(r, helped)).toBe(r);
+  });
+});
+
+describe('Vườn Mây quests and achievements (§5.8)', () => {
+  it('draws sky quests only with a cloud garden and the switch on', () => {
+    const drawn = (p: GuestProgress) =>
+      Array.from({ length: 40 }, (_, d) => [
+        ...dailyQuests(p, T0 + d * 86_400_000),
+        ...weeklyQuests(p, T0 + d * 7 * 86_400_000),
+      ]).flatMap((list) => list.map((v) => v.def.id));
+    const sky = run(player(), { type: 'SKY_OPEN_FLOOR', now: T0 });
+    try {
+      setSkyQuests(false);
+      expect(drawn(sky).filter((id) => id.includes('-sky-'))).toEqual([]);
+      setSkyQuests(true);
+      expect(drawn(player()).filter((id) => id.includes('-sky-'))).toEqual([]);
+      const ids = drawn(sky);
+      expect(ids).toContain('d-sky-bug');
+      // No machine below its floor, no balloon below floor 5.
+      expect(ids).not.toContain('d-sky-box');
+      expect(ids).not.toContain('w-sky-trip');
+    } finally {
+      setSkyQuests(false);
+    }
+  });
+
+  it('counts catches, harvests and star-ups toward the quests', () => {
+    let now = T0;
+    let p = run(player(), { type: 'SKY_OPEN_FLOOR', now });
+    const [a] = Object.keys(p.sky!.pots);
+    p = run(
+      p,
+      { type: 'SKY_PLACE_POT', uid: a!, floor: 0, slot: 0, now },
+      { type: 'SKY_PLANT', uid: a!, seed: { kind: 'sky', id: 'jasmine' }, now },
+    );
+    now = bugCheckAt(p.sky!.pots[a!]!.plant!, 0) + 1000;
+    p = revealAll(p, now);
+    p = run(p, { type: 'SKY_CATCH', uid: a!, stage: 0, now });
+    now = p.sky!.pots[a!]!.plant!.readyAt + 1000;
+    p = run(p, { type: 'SKY_HARVEST', uid: a!, now }, { type: 'SKY_STARRED', now });
+    expect(p.quests.total).toMatchObject({ skyBug: 1, skyHarvest: 1, skyStar: 1 });
+  });
+
+  it('shows the sky shelf of achievements only with a cloud garden', () => {
+    expect(badges(player()).some((b) => b.def.group === 'sky')).toBe(false);
+    const p = run(player(), { type: 'SKY_OPEN_FLOOR', now: T0 });
+    const climb = badges(p).find((b) => b.def.id === 'skyclimber')!;
+    expect(climb.value).toBe(1);
+    expect(starPots(p)).toBe(0);
+  });
+});
+
+describe('Vườn Mây festival pots (EVENT_POTS)', () => {
+  it('gives an event’s pots once its last milestone is claimed, and only once', () => {
+    let p = run(player(), { type: 'SKY_OPEN_FLOOR', now: T0 });
+    const give: Action = { type: 'SKY_EVENT_POTS', event: 'tet-dinh-mui', now: T0 };
+    // Not finished: nothing.
+    expect(run(p, give)).toBe(p);
+    p = { ...p, events: { ...p.events, 'tet-dinh-mui': { days: [], claimed: [0, 1, 2] } } };
+    const q = run(p, give);
+    const kinds = Object.values(q.sky!.pots).map((x) => x.pot);
+    expect(kinds).toContain('peach_blossom');
+    expect(kinds).toContain('golden_dragon');
+    expect(q.sky!.events).toEqual(['tet-dinh-mui']);
+    expect(run(q, give)).toBe(q);
+    // An event without festival pots gives none.
+    const r = run(
+      { ...q, events: { ...q.events, 'thu-ha-noi': { days: [], claimed: [0, 1, 2] } } },
+      { type: 'SKY_EVENT_POTS', event: 'thu-ha-noi', now: T0 },
+    );
+    expect(Object.keys(r.sky!.pots)).toHaveLength(Object.keys(q.sky!.pots).length);
   });
 });

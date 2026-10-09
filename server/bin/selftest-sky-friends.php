@@ -193,10 +193,57 @@ try {
     $check('the owner gets a skycaught event per catch', count($own) === Friends::SKY_HELPED_PER_DAY
         && $own[0]['crop'] === $u0 && $own[0]['plotId'] === $s0 && $own[0]['cycle'] === 0);
 
+    // Watering B's cloud pots (§5.7). Before any friend waters, a planting that ripens as soon as
+    // one friend's watering would allow is refused; after it, the same save passes.
+    $bGarden = $garden('guest-b', 6);
+    $bUids = array_keys($bGarden['sky']['pots']);
+    $pl0 = $bGarden['sky']['pots'][$bUids[0]]['plant'];
+    $grow = SkyRules::plantGrowMs(SkyRules::growMs($pl0['seed'], ProgressGuard::rules()), 0);
+    $cut = 1 - (float) ProgressGuard::rules()['watering']['cut'];
+    $soon = $pl0['plantedAt'] + (int) ($grow * ($cut + $cut ** 2) / 2);
+    $early = $bGarden;
+    $early['sky']['pots'][$bUids[0]]['plant']['readyAt'] = $soon;
+    $as($b);
+    $check('ripening as if a friend watered, before one did, refused', $status(fn () => $acc->putProgress(['data' => $early, 'baseVersion' => 1, 'clientNow' => $now + 500])) === 422);
+
+    $as($a);
+    $v = $fr->visit($bCode);
+    $check('growing pots are waterable', ($v['sky']['floors'][0][0]['waterable'] ?? null) === true && $v['skyWatersLeft'] === Friends::SKY_WATERS_PER_DAY);
+    $r = $fr->skyWater($bCode, ['uid' => $bUids[0]]);
+    $check('a friend waters a cloud pot', $r['ok'] === true && $r['sky']['floors'][0][0]['waterable'] === false && $r['skyWatersLeft'] === Friends::SKY_WATERS_PER_DAY - 1);
+    $as($d);
+    $check('one friend\'s watering per planting', $status(fn () => $fr->skyWater($bCode, ['uid' => $bUids[0]])) === 429);
+    $as($c);
+    $check('a waterer without a cloud garden is refused', $status(fn () => $fr->skyWater($bCode, ['uid' => $bUids[1]])) === 403);
+    $as($a);
+    $check('a pot that is not there cannot be watered', $status(fn () => $fr->skyWater($bCode, ['uid' => 'corn.99'])) === 422);
+    for ($i = 1; $i < Friends::SKY_WATERS_PER_DAY; $i++) {
+        $fr->skyWater($bCode, ['uid' => $bUids[$i]]);
+    }
+    $check('five waterings a day for the helper', $status(fn () => $fr->skyWater($bCode, ['uid' => $bUids[5]])) === 429);
+    $wev = array_values(array_filter($fr->events()['events'], fn ($e) => $e['type'] === 'skywatered'));
+    $check('the helper gets a skywatered event per watering', count($wev) === Friends::SKY_WATERS_PER_DAY);
+
+    $as($b);
+    $own = array_values(array_filter($fr->events()['events'], fn ($e) => $e['type'] === 'skywater'));
+    $check('the owner gets a skywater event naming the pot and planting', count($own) === Friends::SKY_WATERS_PER_DAY
+        && $own[0]['crop'] === $bUids[0] && $own[0]['cycle'] === 0);
+    $xp = (int) ProgressGuard::rules()['xp']['friendHelp'];
+    $watered = $early;
+    $watered['xp'] += $xp;
+    $watered['sky']['pots'][$bUids[0]]['plant']['wateredAt'] = $now + 500;
+    $watered['ledger'][] = ['key' => "friend:{$own[0]['id']}:xp", 'resource' => 'xp', 'delta' => $xp, 'balanceAfter' => $watered['xp'], 'reason' => 'friend:skywater', 'at' => $now + 500];
+    $ok = $status(fn () => $acc->putProgress(['data' => $watered, 'baseVersion' => 1, 'clientNow' => $now + 500]));
+    $check('the owner\'s save with the friend\'s watering passes', $ok === 0, "status $ok");
+    $twoCuts = $watered;
+    $twoCuts['sky']['pots'][$bUids[1]]['plant']['readyAt'] = $bGarden['sky']['pots'][$bUids[1]]['plant']['plantedAt'] + (int) ($grow * $cut ** 3);
+    $check('more cuts than the friends\' waterings refused', $status(fn () => $acc->putProgress(['data' => $twoCuts, 'baseVersion' => 2, 'clientNow' => $now + 600])) === 422);
+
     Settings::save(db(), ['sky' => ['enabled' => false]]);
     Settings::reset();
     $as($d);
     $check('no catching while Vườn Mây is off', $status(fn () => $fr->skyCatch($bCode, ['uid' => $catchable[5][0], 'stage' => $catchable[5][1]])) === 403);
+    $check('no watering while Vườn Mây is off', $status(fn () => $fr->skyWater($bCode, ['uid' => $bUids[5]])) === 403);
 } finally {
     @unlink($tmp);
 }

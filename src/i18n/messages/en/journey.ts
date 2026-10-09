@@ -536,6 +536,7 @@ const journey: Messages['journey'] = {
       `${days} ${s(days, 'day', 'days')} · ${coins} ${s(coins, 'coin', 'coins')} · ${xp} XP`,
     eventClaim: 'Claim',
     eventClaimed: 'Claimed',
+    eventPots: (pots) => `The last milestone also gives your cloud garden: ${pots}.`,
     eventDone: (name, coins) => `${name}: +${coins} ${s(coins, 'coin', 'coins')}!`,
     eventNone:
       'None of the event dishes is in your kitchen yet — open more regions and the event guest will come.',
@@ -652,6 +653,7 @@ const journey: Messages['journey'] = {
       garden: 'Garden',
       ranch: 'Ranch & market',
       social: 'Friends & the farm',
+      sky: 'Cloud garden',
     },
     maxed: 'Top tier reached',
     badgeProgress: (have, need) => `${have}/${need}`,

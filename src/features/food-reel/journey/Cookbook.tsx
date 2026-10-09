@@ -10,7 +10,8 @@ import {
 import { t } from '../../../i18n';
 import { useGame } from '../../../state/hooks';
 import { Collections } from './Collections';
-import { DishPuzzle, PUZZLE_PIECES, piecesShown } from './DishPuzzle';
+import { DishPuzzle } from './DishPuzzle';
+import { PUZZLE_PIECES, piecesShown } from './puzzle';
 
 /**
  * Sổ bếp: one page per recipe. The first cook opens the page; each cook after

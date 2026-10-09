@@ -1,10 +1,11 @@
-import { CROPS, harvestXp, MARKET } from '../data/game';
+import { CROPS, harvestXp, MARKET, type EventId } from '../data/game';
 import {
   BALLOON,
   BALLOON_GOODS,
   BUGS,
   BUG_ROLL,
   COMBOS,
+  EVENT_POTS,
   FLOORS,
   FLOOR_STEP,
   FREE_SLOTS,
@@ -115,6 +116,8 @@ export interface SkyState {
   jobs: Partial<Record<MachineId, SkyJob[]>>;
   tutorial: TutorialStep[];
   sets: PotSetId[];
+  /** Events whose festival pots were given (EVENT_POTS), so they are given once. */
+  events?: EventId[];
   /** Local-day tallies: sky XP (capped), sky harvests, dew made. */
   day: { date: string; xp: number; harvests: number; dew: number };
   balloon: SkyBalloon | null;
@@ -137,6 +140,7 @@ export function emptySky(now: number): SkyState {
     jobs: {},
     tutorial: [],
     sets: [],
+    events: [],
     day: { date: dateKey(now), xp: 0, harvests: 0, dew: 0 },
     balloon: null,
     balloonStreak: { count: 0, last: null },
@@ -506,6 +510,9 @@ export function parseSky(raw: unknown, now: number): SkyState | undefined {
     jobs,
     tutorial: Array.isArray(raw.tutorial)
       ? (raw.tutorial.filter((t) => TUTORIAL.some((x) => x.step === t)) as TutorialStep[])
+      : [],
+    events: Array.isArray(raw.events)
+      ? (raw.events.filter((x) => typeof x === 'string' && x in EVENT_POTS) as EventId[])
       : [],
     sets: Array.isArray(raw.sets)
       ? (raw.sets.filter((x) => POT_SETS.some((s) => s.id === x)) as PotSetId[])

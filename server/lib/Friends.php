@@ -34,7 +34,7 @@ final class Friends
     private const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     /** Seeds Cô Ba may gift: the crops every garden has from day one. */
     private const GIFT_CROPS = ['rice', 'herbs', 'chili', 'scallion', 'bean', 'tomato'];
-    private const EVENT_TYPES = ['water', 'gift', 'helped', 'stolen', 'stole', 'present', 'thanks', 'referral', 'skyhelp', 'skycaught'];
+    private const EVENT_TYPES = ['water', 'gift', 'helped', 'stolen', 'stole', 'present', 'thanks', 'referral', 'skyhelp', 'skycaught', 'skywater', 'skywatered'];
     /**
      * Vườn Mây (plans/vuon-may.md §13.2): bugs a gardener may catch in friends' cloud gardens
      * per day, and catches one cloud garden may receive per day. The helper gets a ladybug
@@ -43,6 +43,11 @@ final class Friends
     public const SKY_HELPS_PER_DAY = 5;
     public const SKY_HELPED_PER_DAY = 5;
     public const SKY_HELP_BUG = 'ladybug';
+    /**
+     * Watering in friends' cloud gardens (§5.7, "như dưới đất"): five a day for the helper, and
+     * each planting of a pot takes one friend's watering at most (the guard counts it).
+     */
+    public const SKY_WATERS_PER_DAY = 5;
     /** Mời bạn mới: an account this young that makes its first friend counts as invited by them. */
     private const REFERRAL_WINDOW = 7 * 86400;
     /** Newcomers one garden can ever be paid for (counted for life, see referral_log). */
@@ -364,8 +369,9 @@ final class Friends
             'giftedToday' => in_array($fid, $gifted, true),
             'giftsLeft' => max(0, self::GIFTS_PER_DAY - count($gifted)),
             'stealGraceMin' => intdiv(self::STEAL_GRACE_MS, 60000),
-            'sky' => Sky::friendView($fid, $data, (int) ($f['client_offset'] ?? 0), $this->skyHelped($fid)),
+            'sky' => Sky::friendView($fid, $data, (int) ($f['client_offset'] ?? 0), $this->skyHelped($fid), $this->skyWatered($fid)),
             'skyHelpsLeft' => max(0, self::SKY_HELPS_PER_DAY - $this->count("SELECT COUNT(*) FROM farm_events WHERE to_user = ? AND type = 'skyhelp' AND day = ?", [$me, $day])),
+            'skyWatersLeft' => max(0, self::SKY_WATERS_PER_DAY - $this->count("SELECT COUNT(*) FROM farm_events WHERE to_user = ? AND type = 'skywatered' AND day = ?", [$me, $day])),
         ];
     }
 
@@ -429,6 +435,67 @@ final class Friends
             $this->insertEvent($me, $fid, 'skyhelp', $stage, self::SKY_HELP_BUG, $day, "skyhelp:$me:$fid:$potUid:$cycle:$stage", $now, $cycle);
         });
         return ['ok' => true, 'bug' => self::SKY_HELP_BUG] + $this->visit($code);
+    }
+
+    /**
+     * Water a growing pot in a friend's Vườn Mây (G5, §5.7): like the farm's, it takes a quarter
+     * of the time left, never on a ripe plant or within an hour of the last watering. One friend's
+     * watering per planting (by anyone), five a day for the helper. The owner's cut and both XP
+     * rewards come as events, paid by each one's next save.
+     */
+    public function skyWater(string $code, array $body): array
+    {
+        $u = $this->account->requireUser();
+        FairPlay::requireNotBanned($this->db, (int) $u['id']);
+        if (!Settings::get($this->db, 'sky')['enabled']) {
+            throw new HttpError(403, __t('sky.off'), ['code' => 'SKY_OFF']);
+        }
+        $me = (int) $u['id'];
+        $potUid = (string) ($body['uid'] ?? '');
+        if (preg_match('/^[a-z_]{1,16}\.\d{1,3}$/', $potUid) !== 1) {
+            throw new HttpError(422, __t('sky.noWater'));
+        }
+        db_tx($this->db, function () use ($me, $code, $potUid) {
+            $f = $this->friendByCode($me, $code);
+            $fid = (int) $f['user_id'];
+            $this->lockUsers($me, $fid);
+            $mine = self::decode($this->one('SELECT data FROM user_progress WHERE user_id = ?', [$me])['data'] ?? null);
+            if (!is_array($mine['sky'] ?? null)) {
+                throw new HttpError(403, __t('sky.needGarden'));
+            }
+            $sky = self::decode($f['data'])['sky'] ?? null;
+            $pl = is_array($sky) ? ($sky['pots'][$potUid]['plant'] ?? null) : null;
+            $now = time();
+            if (!is_array($pl) || !self::onShelf($sky, $potUid)
+                || !Sky::canWater($pl, (int) ($f['client_offset'] ?? 0), $now * 1000)) {
+                throw new HttpError(422, __t('sky.noWater'));
+            }
+            $cycle = (int) ($pl['cycle'] ?? 0);
+            if ($this->one('SELECT 1 AS x FROM farm_events WHERE uniq = ?', ["skywater:$fid:$potUid:$cycle"])) {
+                throw new HttpError(429, __t('sky.wateredAlready'));
+            }
+            $day = self::day($now);
+            if ($this->count("SELECT COUNT(*) FROM farm_events WHERE to_user = ? AND type = 'skywatered' AND day = ?", [$me, $day]) >= self::SKY_WATERS_PER_DAY) {
+                throw new HttpError(429, __t('sky.waterLimit', ['max' => self::SKY_WATERS_PER_DAY]));
+            }
+            // Owner's event: the pot (crop column) and the planting (cycle), like skycaught.
+            $this->insertEvent($fid, $me, 'skywater', null, $potUid, $day, "skywater:$fid:$potUid:$cycle", $now, $cycle);
+            $this->insertEvent($me, $fid, 'skywatered', null, $potUid, $day, "skywatered:$me:$fid:$potUid:$cycle", $now, $cycle);
+        });
+        return ['ok' => true] + $this->visit($code);
+    }
+
+    /** "uid:cycle" of the cloud plantings a friend has watered (the last week). */
+    private function skyWatered(int $owner): array
+    {
+        $out = [];
+        foreach ($this->all(
+            "SELECT crop, cycle FROM farm_events WHERE to_user = ? AND type = 'skywater' AND created_at >= ?",
+            [$owner, time() - 7 * 86400],
+        ) as $r) {
+            $out["{$r['crop']}:{$r['cycle']}"] = true;
+        }
+        return $out;
     }
 
     /** Whether a pot stands on a shelf (pots in the store grow nothing). */

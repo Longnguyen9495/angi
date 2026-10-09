@@ -299,6 +299,8 @@ export interface FriendGarden {
   /** The friend's Vườn Mây, read-only (null: none yet), and our bug catches left today. */
   sky?: FriendSky | null;
   skyHelpsLeft?: number;
+  /** Our waterings left today in friends' cloud gardens. */
+  skyWatersLeft?: number;
 }
 
 /** A bug sitting on a friend's cloud pot: `catchable` when we may catch it for them. */
@@ -316,6 +318,8 @@ export interface FriendSkyPot {
   stars: number;
   plant: { seed: { kind: 'sky' | 'farm'; id: string }; plantedAt: number; readyAt: number } | null;
   bugs: FriendSkyBug[];
+  /** We may water it for them (growing, not watered this hour, no friend's watering yet). */
+  waterable?: boolean;
 }
 
 /** A friend's Vườn Mây (server/lib/Sky.php friendView): six slots per floor, times in server ms. */
@@ -369,6 +373,10 @@ export const friendsApi = {
       `/friends/${encodeURIComponent(code)}/skycatch`,
       { uid, stage },
     ),
+  skyWater: (code: string, uid: string) =>
+    call<FriendGarden & { ok: true }>('POST', `/friends/${encodeURIComponent(code)}/skywater`, {
+      uid,
+    }),
   water: (code: string, plotId: number) =>
     call<FriendGarden & { ok: true }>('POST', `/friends/${encodeURIComponent(code)}/water`, {
       plotId,

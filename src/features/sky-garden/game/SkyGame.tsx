@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   BUGS,
+  EVENT_POTS,
   SKY_GOOD_PRICE,
   SKY_LEVEL,
   SKY_XP_PER_DAY,
   type BugId,
 } from '../../../data/skyEconomy';
+import { EVENTS } from '../../../data/game';
 import type { Action } from '../../../domain/reducer';
 import { level, waterLeft } from '../../../domain/selectors';
 import { pendingChecks, skyDay } from '../../../domain/sky';
@@ -110,6 +112,18 @@ export default function SkyGame({
   // The scene: created once the garden is up there (not again on every change of it), fed the
   // view on every change.
   const hasSky = !!sky;
+
+  // Festival pots of events finished before there was a cloud garden (or on another device).
+  useEffect(() => {
+    if (!hasSky) return;
+    const s = stateRef.current;
+    for (const ev of EVENTS) {
+      if (!EVENT_POTS[ev.id] || s.sky?.events?.includes(ev.id)) continue;
+      if (!s.events[ev.id]?.claimed.includes(ev.targets.length - 1)) continue;
+      dispatch({ type: 'SKY_EVENT_POTS', event: ev.id, now: currentTime() });
+      toast({ message: g.toasts.eventPots, tone: 'reward' });
+    }
+  }, [hasSky, dispatch, g, toast]);
   useEffect(() => {
     if (!hasSky || !canvas.current || scene.current) return;
     const s = new SkyScene(canvas.current, {
@@ -199,6 +213,7 @@ export default function SkyGame({
       setBusy(true);
       try {
         const r = await account.serverOp((base) => api.starUp(uid, clover, opId(), base));
+        if (r.result === 'success') dispatch({ type: 'SKY_STARRED', now: Date.now() });
         const stars = r.stars ?? 0;
         toast({
           message:
@@ -215,7 +230,7 @@ export default function SkyGame({
         setBusy(false);
       }
     },
-    [account, api, g, toast],
+    [account, api, dispatch, g, toast],
   );
 
   const onTier = useCallback(

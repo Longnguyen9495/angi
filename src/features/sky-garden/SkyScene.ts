@@ -147,6 +147,8 @@ const SHELF_H = 2.15;
 const SHELF_TOP = 0.36;
 /** Shelf ends kept unstretched, as a share of the picture width; the middle repeats. */
 const SHELF_CAP = 0.14;
+/** Share of the shelf's middle where one repeat overlaps the next (the cut runs through it). */
+const SHELF_OVERLAP = 0.2;
 /** Beanstalk drawn this many times the stalk column's width (its leaves spread out). */
 const STALK_W = 1.7;
 
@@ -1051,7 +1053,10 @@ export class SkyScene {
 
   /**
    * A floor's cloud shelf from the sheet: drawn at its own aspect by height, ends kept, the middle
-   * repeated across the floor's width (so the flowers are never stretched). False until loaded.
+   * repeated across the floor's width. The repeats join along a cut through their overlap (see
+   * shelfTile), and the ends meet the middle where the picture itself does, so no seam and no
+   * see-through double shows; the middle is stretched a little at most, to fit whole repeats.
+   * False until loaded.
    */
   private drawShelf(c: CanvasRenderingContext2D, r: Rect, fi: number): boolean {
     const im = this.img(SHELVES[fi % SHELVES.length]!);
@@ -1061,20 +1066,55 @@ export class SkyScene {
     const top = r.y - H * SHELF_TOP;
     const x0 = r.x - r.h * 0.3;
     const w = r.w + r.h * 0.6;
-    const capSrc = Math.round(im.width * SHELF_CAP);
-    const capW = Math.min(capSrc * s, w / 2);
-    c.drawImage(im, 0, 0, capSrc, im.height, x0, top, capW, H);
-    c.drawImage(im, im.width - capSrc, 0, capSrc, im.height, x0 + w - capW, top, capW, H);
-    const midSrc = im.width - capSrc * 2;
-    const end = x0 + w - capW;
-    // Each repeat overlaps the last by a pixel, so no hairline shows between them.
-    for (let x = x0 + capW - 1; x < end - 0.5;) {
-      const dw = Math.min(midSrc * s, end - x + 1);
-      c.drawImage(im, capSrc, 0, dw / s, im.height, x, top, dw, H);
-      x += dw - 1;
-    }
+    const cap = Math.round(im.width * SHELF_CAP);
+    const mid = im.width - cap * 2;
+    const capW = Math.min(cap * s, w / 2);
+    c.drawImage(im, 0, 0, cap, im.height, x0, top, capW, H);
+    c.drawImage(im, im.width - cap, 0, cap, im.height, x0 + w - capW, top, capW, H);
+    const span = w - capW * 2;
+    if (span <= 0) return true;
+    const tile = this.shelfTile(im, cap, mid);
+    // The middle as: its first part as drawn, n joined repeats, its last `k` columns as drawn
+    // (so both ends meet the caps as in the picture). n is what fits best; the rest is a stretch.
+    const k = tile ? mid - tile.width : 0;
+    const step = mid - k;
+    const n = tile ? Math.max(0, Math.round((span / s - mid) / step)) : 0;
+    const sx = span / ((n * step + mid) * s);
+    let x = x0 + capW;
+    // Each piece overlaps the last by a pixel, so no hairline shows between them.
+    const piece = (src: CanvasImageSource, from: number, cols: number) => {
+      if (cols <= 0) return;
+      const dw = cols * s * sx;
+      c.drawImage(src, from, 0, cols, im.height, x - 0.5, top, dw + 1, H);
+      x += dw;
+    };
+    piece(im, cap, step);
+    for (let i = 0; i < n; i++) piece(tile!, 0, step);
+    piece(im, cap + step, k);
     return true;
   }
+
+  /**
+   * The shelf's middle as a tile that joins itself (built once per picture): its last
+   * SHELF_OVERLAP share laid over its first, cut along the path down the overlap where the two
+   * differ least (image quilting), so clouds run on and a flower is never shown twice. Placed
+   * after the middle's first part (or after another tile), its first columns continue what came
+   * before. Null where a canvas can't be read (tests, old browsers): the middle is then stretched.
+   */
+  private shelfTile(im: HTMLImageElement, cap: number, mid: number): HTMLCanvasElement | null {
+    const got = this.shelfTiles.get(im);
+    if (got !== undefined) return got;
+    let out: HTMLCanvasElement | null;
+    try {
+      out = buildShelfTile(im, cap, mid, Math.max(4, Math.round(mid * SHELF_OVERLAP)));
+    } catch {
+      out = null;
+    }
+    this.shelfTiles.set(im, out);
+    return out;
+  }
+
+  private shelfTiles = new Map<HTMLImageElement, HTMLCanvasElement | null>();
 
   /**
    * The beanstalk from the sheet: the base on the ground, the seamless stretch repeated up the
@@ -1413,4 +1453,80 @@ export class SkyScene {
     c.restore();
     c.globalAlpha = 1;
   }
+}
+
+/**
+ * The shelf's middle (`mid` columns from `cap`) as a tile that joins itself: its last `k`
+ * columns laid over its first `k`, each row cut where a path from top to bottom (moving at most a
+ * column per row) crosses the least difference between the two. Left of the cut is the end of the
+ * middle (continuing the piece before), right of it the start (running on into the rest).
+ */
+function buildShelfTile(
+  im: HTMLImageElement,
+  cap: number,
+  mid: number,
+  k: number,
+): HTMLCanvasElement | null {
+  const h = im.height;
+  const step = mid - k;
+  if (step <= k) return null;
+  const src = document.createElement('canvas');
+  src.width = mid;
+  src.height = h;
+  const g = src.getContext('2d', { willReadFrequently: true });
+  if (!g) return null;
+  g.drawImage(im, cap, 0, mid, h, 0, 0, mid, h);
+  const px = g.getImageData(0, 0, mid, h).data;
+  // How much the end and the start differ at each point of the overlap (colour by alpha, and alpha).
+  const cost = new Float32Array(k * h);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < k; x++) {
+      const a = (y * mid + step + x) * 4;
+      const b = (y * mid + x) * 4;
+      const aa = px[a + 3]! / 255;
+      const ab = px[b + 3]! / 255;
+      let e = (255 * (aa - ab)) ** 2;
+      for (let ch = 0; ch < 3; ch++) e += (px[a + ch]! * aa - px[b + ch]! * ab) ** 2;
+      const up =
+        y === 0
+          ? 0
+          : Math.min(
+              cost[(y - 1) * k + x]!,
+              x > 0 ? cost[(y - 1) * k + x - 1]! : Infinity,
+              x < k - 1 ? cost[(y - 1) * k + x + 1]! : Infinity,
+            );
+      cost[y * k + x] = e + up;
+    }
+  }
+  // The cheapest path, from the bottom row back up.
+  const cut = new Int32Array(h);
+  let best = 0;
+  for (let x = 1; x < k; x++) if (cost[(h - 1) * k + x]! < cost[(h - 1) * k + best]!) best = x;
+  cut[h - 1] = best;
+  for (let y = h - 2; y >= 0; y--) {
+    const x = cut[y + 1]!;
+    let pick = x;
+    for (const n of [x - 1, x + 1])
+      if (n >= 0 && n < k && cost[y * k + n]! < cost[y * k + pick]!) pick = n;
+    cut[y] = pick;
+  }
+  const out = document.createElement('canvas');
+  out.width = step;
+  out.height = h;
+  const o = out.getContext('2d');
+  if (!o) return null;
+  const img = o.createImageData(step, h);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < step; x++) {
+      const from = x < cut[y]! ? step + x : x;
+      const s = (y * mid + from) * 4;
+      const d = (y * step + x) * 4;
+      img.data[d] = px[s]!;
+      img.data[d + 1] = px[s + 1]!;
+      img.data[d + 2] = px[s + 2]!;
+      img.data[d + 3] = px[s + 3]!;
+    }
+  }
+  o.putImageData(img, 0, 0);
+  return out;
 }

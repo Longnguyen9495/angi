@@ -307,6 +307,16 @@ const data: Messages['data'] = {
       newRecipe: (n) => (n === 1 ? 'Cook a new recipe' : `Cook ${n} new recipes`),
       allDaily: (n) => `Finish all daily quests on ${n} days`,
       decor: (n) => `Buy ${n} ${n === 1 ? 'decoration' : 'decorations'}`,
+      skyBug: (n) => `Catch ${n} bugs in your cloud garden`,
+      skyHarvest: (n) => `Harvest ${n} cloud plants`,
+      skyJob: (n) => `Run the cloud machines ${n} ${n === 1 ? 'time' : 'times'}`,
+      skyBox: (n) => (n === 1 ? 'Pack a balloon box' : `Pack ${n} balloon boxes`),
+      skyTrip: (n) =>
+        n === 1 ? 'Send the balloon off full' : `Send the balloon off full ${n} times`,
+      skyStar: (n) => `Raise a pot's stars ${n} ${n === 1 ? 'time' : 'times'}`,
+      skyHelp: (n) => `Catch ${n} bugs in friends' cloud gardens`,
+      skyGold: (n) => (n === 1 ? 'Catch a gold beetle' : `Catch ${n} gold beetles`),
+      skyFirefly: (n) => `Catch ${n} fireflies`,
     },
     badges: {
       farmer: { name: 'Farmer', goal: (n) => `Harvest ${n} plots` },
@@ -337,6 +347,20 @@ const data: Messages['data'] = {
       decorator: { name: 'Nicely decorated', goal: (n) => `Own ${n} decorations` },
       level: { name: 'Levelling up', goal: (n) => `Reach level ${n}` },
       diligent: { name: 'Diligent', goal: (n) => `Finish all daily quests on ${n} days` },
+      skyclimber: { name: 'Cloud climber', goal: (n) => `Open floor ${n} of the cloud garden` },
+      starpot: {
+        name: 'Five-star pot',
+        goal: (n) => (n === 1 ? 'Have a ★5 pot' : `Have ${n} ★5 pots`),
+      },
+      collector: {
+        name: 'Collector',
+        goal: (n) => (n === 1 ? 'Complete a pot set' : `Complete ${n} pot sets`),
+      },
+      goldhunter: {
+        name: 'Gold hunter',
+        goal: (n) => (n === 1 ? 'Catch a gold beetle' : `Catch ${n} gold beetles`),
+      },
+      fireflies: { name: 'Firefly nights', goal: (n) => `Catch ${n} fireflies` },
     },
   },
   decor: {

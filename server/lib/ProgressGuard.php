@@ -603,6 +603,9 @@ final class ProgressGuard
         }
 
         $sky = $this->skyEntries($ctx, $fresh, $byKey);
+        // Rare bugs caught in this save, for the sky achievements (verified_stats).
+        $stats['skyGold'] = $sky['gold'] ?? 0;
+        $stats['skyFirefly'] = $sky['firefly'] ?? 0;
         $events = $this->events($fresh);
         $catches = [];
         $catchKeys = [];
@@ -742,18 +745,7 @@ final class ProgressGuard
                 $step = (int) $m[2];
                 ($e !== null && isset($e['targets'][$step], $R['event']['rewards'][$step])) || $fail('unknown event milestone');
                 ($res === $m[3] && $d === (int) $R['event']['rewards'][$step][$m[3] === 'coin' ? 'coins' : 'xp']) || $fail('event reward');
-                $slot = (int) $R['event']['slot'];
-                $days = [];
-                foreach ($this->claimKeys("guest:%:$slot:coin") as $k) {
-                    $days[explode(':', $k)[1]] = true;
-                }
-                foreach ($fresh as $f) {
-                    if (preg_match("/^guest:(\d{4}-\d{2}-\d{2}):$slot:coin$/", (string) $f['key'], $g)) {
-                        $days[$g[1]] = true;
-                    }
-                }
-                $in = count(array_filter(array_keys($days), fn ($day) => $day >= $e['from'] && $day <= $e['to']));
-                $in >= (int) $e['targets'][$step] || $fail('event milestone not reached');
+                $this->eventDaysServed($e, $fresh) >= (int) $e['targets'][$step] || $fail('event milestone not reached');
                 if ($m[3] === 'coin') {
                     $stats['earn'] += $d;
                 }
@@ -884,7 +876,7 @@ final class ProgressGuard
                 ($ev !== null && (int) $ev['to_user'] === $this->user) || $fail('no such event for this garden');
                 $this->friendReward($ev, $m[2], $res, $d) || $fail('not what this event gives');
                 $deliver[] = (int) $m[1];
-                if ($ev['type'] === 'helped' && $m[2] === 'xp') {
+                if (in_array($ev['type'], ['helped', 'skywatered'], true) && $m[2] === 'xp') {
                     $stats['help']++;
                 }
                 if ($ev['type'] === 'stole' && $m[2] === 'item') {
@@ -1456,7 +1448,7 @@ final class ProgressGuard
     {
         $xp = $this->r['xp'];
         return match ($ev['type']) {
-            'water', 'helped' => $part === 'xp' && $res === 'xp' && $d === (int) $xp['friendHelp'],
+            'water', 'helped', 'skywater', 'skywatered' => $part === 'xp' && $res === 'xp' && $d === (int) $xp['friendHelp'],
             'gift', 'present' => $part === 'seed' && $res === "seed:{$ev['crop']}" && $d === 1,
             'stole' => ($part === 'item' && $res === "ingredient:{$ev['crop']}" && $d === 1)
                 || ($part === 'xp' && $res === 'xp' && $d === (int) $xp['steal']),
@@ -1566,8 +1558,30 @@ final class ProgressGuard
             )))),
             'water' => min((int) ($new['quests']['total']['water'] ?? 0), $this->baseStat('water') + 15 * ($this->accountDays() + 1)),
             'allDaily' => $this->fullQuestDays($fresh),
+            // Vườn Mây (§5.8): floors open, pots that reached ★5 (★5 now, or raised a tier since,
+            // which only a ★5 pot can be), complete sets claimed. Stars and tiers are the server's.
+            'skyFloors' => (int) ($new['sky']['floors'] ?? 0),
+            'skyStar5' => count(array_filter((array) ($new['sky']['pots'] ?? []), fn ($p) => is_array($p)
+                && ((int) ($p['stars'] ?? 0) >= 5 || (int) ($p['tier'] ?? 0) > (int) (SkyRules::R()['pots'][$p['pot'] ?? '']['tier'] ?? 99)))),
+            'skySets' => count((array) ($new['sky']['sets'] ?? [])),
             default => $this->baseStat($metric) + $this->counted($metric) + (int) ($stats[$metric] ?? 0),
         };
+    }
+
+    /** Days within an event its guest was served (earlier saves and this one): what its milestones need. */
+    private function eventDaysServed(array $e, array $fresh): int
+    {
+        $slot = (int) $this->r['event']['slot'];
+        $days = [];
+        foreach ($this->claimKeys("guest:%:$slot:coin") as $k) {
+            $days[explode(':', $k)[1]] = true;
+        }
+        foreach ($fresh as $f) {
+            if (preg_match("/^guest:(\d{4}-\d{2}-\d{2}):$slot:coin$/", (string) $f['key'], $g)) {
+                $days[$g[1]] = true;
+            }
+        }
+        return count(array_filter(array_keys($days), fn ($day) => $day >= $e['from'] && $day <= $e['to']));
     }
 
     /** verified_stats increments for one metric. */

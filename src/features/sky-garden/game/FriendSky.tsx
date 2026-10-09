@@ -26,15 +26,21 @@ export function FriendSky({
   now,
   helpsLeft,
   helpsMax,
+  watersLeft,
+  watersMax,
   busy,
   onCatch,
+  onWater,
 }: {
   sky: FriendSkyData | null | undefined;
   now: number;
   helpsLeft: number;
   helpsMax: number;
+  watersLeft: number;
+  watersMax: number;
   busy: boolean;
   onCatch: (uid: string, stage: number) => void;
+  onWater: (uid: string) => void;
 }) {
   if (!sky) return <p className="fj-note">{f().none}</p>;
   const pot = (p: FriendSkyPot) => {
@@ -58,8 +64,18 @@ export function FriendSky({
                 ? f().growing(cropName(pl.seed), formatDuration(pl.readyAt - now))
                 : f().ripe(cropName(pl.seed))}
           </small>
-          {p.bugs.length > 0 && (
+          {(p.bugs.length > 0 || (p.waterable && !!pl && pl.readyAt > now)) && (
             <div className="sk-row">
+              {p.waterable && !!pl && pl.readyAt > now && (
+                <button
+                  type="button"
+                  className="sk-btn sk-btn--small"
+                  disabled={busy || watersLeft <= 0}
+                  onClick={() => onWater(p.uid)}
+                >
+                  {f().water}
+                </button>
+              )}
               {p.bugs.map((b) =>
                 b.catchable ? (
                   <button
@@ -87,6 +103,7 @@ export function FriendSky({
     <div className="sk-sheet sk-friend">
       <p className="sk-status">{f().score(sky.score)}</p>
       <p className="sk-note">{f().rule(helpsLeft, helpsMax)}</p>
+      <p className="sk-note">{f().waterRule(watersLeft, watersMax)}</p>
       {sky.floors
         .map((row, i) => ({ row, i }))
         .reverse()

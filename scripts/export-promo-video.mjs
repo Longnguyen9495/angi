@@ -1,3 +1,5 @@
+/* Code inside page.evaluate() runs in the browser: its globals are the page's. */
+/* global window, document, innerWidth, innerHeight */
 import { createRequire } from 'node:module';
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -28,9 +30,12 @@ const TIMEWEB = readFileSync(require.resolve('timeweb/dist/timeweb.js'), 'utf8')
 
 const SITE = (process.argv[2] ?? 'https://angi.221-121-1-68.sslip.io').replace(/\/$/, '');
 // The address shown on the outro: PROMO_HOST, else the site's host unless it is a raw sslip.io one.
-const HOST = process.env.PROMO_HOST ?? (/sslip\.io$/.test(new URL(SITE).host) ? '' : new URL(SITE).host);
+const HOST =
+  process.env.PROMO_HOST ?? (/sslip\.io$/.test(new URL(SITE).host) ? '' : new URL(SITE).host);
 const FPS = Number(process.env.PROMO_FPS ?? 60);
-const OUT = resolve(FPS === 60 ? 'public/videos/angi-quang-cao-60s.mp4' : 'storage/promo-render/draft.mp4');
+const OUT = resolve(
+  FPS === 60 ? 'public/videos/angi-quang-cao-60s.mp4' : 'storage/promo-render/draft.mp4',
+);
 const WORK = resolve('storage/promo-render/real');
 const FRAMES = join(WORK, 'frames');
 const save = JSON.parse(readFileSync('storage/promo-render/save.json', 'utf8'));
@@ -370,8 +375,10 @@ const SEED = `
 `;
 
 const BLOBS = '<div class="blob b1"></div><div class="blob b2"></div>';
-const BRAND = '<div class="brand"><img data-pop src="/favicon.svg" alt=""><span data-r>Ăn Gì</span></div>';
-const SWASH = '<svg class="swash" viewBox="0 0 120 12" preserveAspectRatio="none"><path pathLength="1" stroke-dasharray="1" d="M3 9 C 32 2, 78 2, 117 7"/></svg>';
+const BRAND =
+  '<div class="brand"><img data-pop src="/favicon.svg" alt=""><span data-r>Ăn Gì</span></div>';
+const SWASH =
+  '<svg class="swash" viewBox="0 0 120 12" preserveAspectRatio="none"><path pathLength="1" stroke-dasharray="1" d="M3 9 C 32 2, 78 2, 117 7"/></svg>';
 const INTRO = `${BLOBS}
   <div class="inner">
     ${BRAND}
@@ -400,7 +407,8 @@ const browser = await chromium.launch({
 });
 // Keep the laptop usable while it films.
 const pid = browser.process?.()?.pid;
-if (pid) spawnSync('wmic', ['process', 'where', `processid=${pid}`, 'CALL', 'setpriority', '16384']);
+if (pid)
+  spawnSync('wmic', ['process', 'where', `processid=${pid}`, 'CALL', 'setpriority', '16384']);
 
 const context = await browser.newContext({
   viewport: { width: 360, height: 640 },
@@ -425,8 +433,15 @@ const tick = async () => {
   await page.evaluate((t) => window.timeweb.goTo(t), clock);
 };
 const shoot = async () => {
-  const { data } = await cdp.send('Page.captureScreenshot', { format: 'jpeg', quality: 98, optimizeForSpeed: true });
-  writeFileSync(join(FRAMES, `f${String(shot++).padStart(5, '0')}.jpg`), Buffer.from(data, 'base64'));
+  const { data } = await cdp.send('Page.captureScreenshot', {
+    format: 'jpeg',
+    quality: 98,
+    optimizeForSpeed: true,
+  });
+  writeFileSync(
+    join(FRAMES, `f${String(shot++).padStart(5, '0')}.jpg`),
+    Buffer.from(data, 'base64'),
+  );
 };
 const film = async (ms) => {
   for (let i = Math.round(ms / STEP); i > 0; i--) {
@@ -451,25 +466,39 @@ const promo = {
   caption: (html, tag) => page.evaluate(([h, t]) => window.__promo.caption(h, t), [html, tag]),
   card: (html, enter) => page.evaluate(([h, e]) => window.__promo.card(h, e), [html, enter]),
   hideCard: () => page.evaluate(() => window.__promo.hideCard()),
-  scroll: (sel, by, dur = 900) => page.evaluate(([s, b, d]) => window.__promo.scroll(s, b, d), [sel, by, dur]),
+  scroll: (sel, by, dur = 900) =>
+    page.evaluate(([s, b, d]) => window.__promo.scroll(s, b, d), [sel, by, dur]),
   into: (sel, dur = 900) => page.evaluate(([s, d]) => window.__promo.into(s, d), [sel, dur]),
 };
 // Show the fingertip on the control, click as it presses down.
 const press = async (locator) => {
-  if (!(await filmUntil(() => locator.isVisible(), 5000))) throw new Error(`Not visible: ${locator}`);
+  if (!(await filmUntil(() => locator.isVisible(), 5000)))
+    throw new Error(`Not visible: ${locator}`);
   const box = await locator.boundingBox();
-  await page.evaluate(([x, y]) => window.__promo.touch(x, y), [box.x + box.width / 2, box.y + box.height / 2]);
+  await page.evaluate(
+    ([x, y]) => window.__promo.touch(x, y),
+    [box.x + box.width / 2, box.y + box.height / 2],
+  );
   await film(300);
   await locator.click({ timeout: 4000 });
 };
 const button = (name) => page.getByRole('button', { name }).first();
 const closePanel = async () => {
   const close = page.getByRole('button', { name: 'Đóng' }).last();
-  if (await close.isVisible().catch(() => false)) await press(close).catch(() => page.keyboard.press('Escape'));
+  if (await close.isVisible().catch(() => false))
+    await press(close).catch(() => page.keyboard.press('Escape'));
   else await page.keyboard.press('Escape');
 };
 const reelSwipe = async () => {
-  await page.evaluate(() => window.__promo.swipe(innerWidth * 0.78, innerHeight * 0.4, innerWidth * 0.22, innerHeight * 0.42, 340));
+  await page.evaluate(() =>
+    window.__promo.swipe(
+      innerWidth * 0.78,
+      innerHeight * 0.4,
+      innerWidth * 0.22,
+      innerHeight * 0.42,
+      340,
+    ),
+  );
   await film(120);
   await page.keyboard.press('ArrowRight');
 };
@@ -530,7 +559,10 @@ try {
   await page.evaluate(() => document.fonts.ready);
   await promo.card(BRIDGE, 'now');
   // Built: the scene is up and its "building the farm…" note has gone.
-  const built = () => page.evaluate(() => !!document.querySelector('.fa-scene') && !document.querySelector('.fa-loading'));
+  const built = () =>
+    page.evaluate(
+      () => !!document.querySelector('.fa-scene') && !document.querySelector('.fa-loading'),
+    );
   for (let i = 0; i < 300 && !(await built()); i++) await settle(100);
   if (!(await built())) throw new Error('The farm never finished building');
   await settle(2600);
@@ -599,33 +631,84 @@ if (shot < 10) throw new Error(`Only ${shot} frames filmed`);
 const enc = spawnSync(
   ffmpeg,
   [
-    '-y', '-framerate', String(FPS), '-i', join(FRAMES, 'f%05d.jpg'),
-    '-vf', 'scale=1080:1920:flags=lanczos,format=yuv420p',
-    '-c:v', 'libx264', '-preset', 'slow', '-crf', '14', '-r', String(FPS),
-    '-movflags', '+faststart', '-an', OUT,
+    '-y',
+    '-framerate',
+    String(FPS),
+    '-i',
+    join(FRAMES, 'f%05d.jpg'),
+    '-vf',
+    'scale=1080:1920:flags=lanczos,format=yuv420p',
+    '-c:v',
+    'libx264',
+    '-preset',
+    'slow',
+    '-crf',
+    '14',
+    '-r',
+    String(FPS),
+    '-movflags',
+    '+faststart',
+    '-an',
+    OUT,
   ],
   { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 },
 );
 if (enc.status !== 0) throw new Error(enc.stderr.slice(-3000));
-const music = ['mp3', 'm4a', 'wav'].map((x) => resolve(`storage/promo-tools/music.${x}`)).find(existsSync);
+const music = ['mp3', 'm4a', 'wav']
+  .map((x) => resolve(`storage/promo-tools/music.${x}`))
+  .find(existsSync);
 if (music) {
   const len = shot / FPS;
   const silent = OUT.replace(/\.mp4$/, '.silent.mp4');
   rmSync(silent, { force: true });
   renameSync(OUT, silent);
-  const mux = spawnSync(ffmpeg, [
-    '-y', '-i', silent, '-i', music, '-filter_complex',
-    `[1:a]atrim=0:${len.toFixed(2)},afade=t=in:d=1,afade=t=out:st=${(len - 2).toFixed(2)}:d=2[a]`,
-    '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', OUT,
-  ], { encoding: 'utf8' });
+  const mux = spawnSync(
+    ffmpeg,
+    [
+      '-y',
+      '-i',
+      silent,
+      '-i',
+      music,
+      '-filter_complex',
+      `[1:a]atrim=0:${len.toFixed(2)},afade=t=in:d=1,afade=t=out:st=${(len - 2).toFixed(2)}:d=2[a]`,
+      '-map',
+      '0:v',
+      '-map',
+      '[a]',
+      '-c:v',
+      'copy',
+      '-c:a',
+      'aac',
+      '-b:a',
+      '192k',
+      '-shortest',
+      '-movflags',
+      '+faststart',
+      OUT,
+    ],
+    { encoding: 'utf8' },
+  );
   if (mux.status !== 0) throw new Error(mux.stderr.slice(-3000));
   rmSync(silent, { force: true });
 }
 const probe = spawnSync(ffmpeg, ['-i', OUT], { encoding: 'utf8' }).stderr;
 const duration = probe.match(/Duration: ([\d:.]+)/)?.[1];
-writeFileSync(join(WORK, 'report.json'), JSON.stringify({ site: SITE, out: OUT, fps: FPS, frames: shot, duration, errors }, null, 2));
+writeFileSync(
+  join(WORK, 'report.json'),
+  JSON.stringify({ site: SITE, out: OUT, fps: FPS, frames: shot, duration, errors }, null, 2),
+);
 // A contact sheet (one frame every 2.5 s) to check the cut without playing it.
-spawnSync(ffmpeg, ['-y', '-i', OUT, '-vf', 'fps=0.4,scale=216:384,tile=8x3', '-frames:v', '1', join(WORK, 'sheet.png')]);
+spawnSync(ffmpeg, [
+  '-y',
+  '-i',
+  OUT,
+  '-vf',
+  'fps=0.4,scale=216:384,tile=8x3',
+  '-frames:v',
+  '1',
+  join(WORK, 'sheet.png'),
+]);
 if (errors.length) console.warn('Page errors:', errors);
 console.log(`Video exported: ${OUT} (${duration}, ${shot} frames at ${FPS} fps)`);
 if (!existsSync(OUT)) process.exit(1);

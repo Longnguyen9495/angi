@@ -1,5 +1,6 @@
 import { CalendarStar, SealCheck } from '@phosphor-icons/react';
 import { EVENT, eventOn, getRecipe, hasRecipe } from '../../../data/game';
+import { EVENT_POTS } from '../../../data/skyEconomy';
 import { eventDays } from '../../../domain/guests';
 import { HOUR_MS, currentTime, dateKey } from '../../../domain/time';
 import { t } from '../../../i18n';
@@ -22,6 +23,8 @@ export function EventBanner() {
       (24 * HOUR_MS),
   );
   const dishes = event.recipes.filter((id) => hasRecipe(id));
+  // Festival pots for a guest who already has a cloud garden (they come with the last milestone).
+  const pots = state.sky ? (EVENT_POTS[event.id] ?? []) : [];
   return (
     <section className="fj-event" aria-labelledby="su-kien">
       <p className="fj-event__kicker">
@@ -73,6 +76,9 @@ export function EventBanner() {
           );
         })}
       </ol>
+      {pots.length > 0 && (
+        <p className="fj-note">{m.eventPots(pots.map((p) => t.sky.pots[p]).join(', '))}</p>
+      )}
     </section>
   );
 }

@@ -5,7 +5,74 @@ nông trại "Ăn gì?". Nông trại dưới đất giữ nguyên lối chơi k
 chợ). Vườn Mây là tầng chơi thứ hai, xếp **chậu sưu tầm** lên từng tầng mây. Hai khu dùng chung kinh tế
 (xu, XP, cấp, kho) và đổ sản phẩm vào nhau.
 
-## Trạng thái (2026-10-08)
+## Trạng thái (cập nhật 2026-10-09)
+
+### Cập nhật lượt 5 (2026-10-09): tưới giúp, nhiệm vụ/thành tựu mây, chậu sự kiện, cân bằng tầng 8–10
+
+Vẫn chưa cổng nào "đạt": chưa thử trên máy thật, chưa thử 2 tài khoản trên 2 máy.
+
+**Đã làm:**
+- **G5, tưới giúp trên mây:** `POST /account/friends/CODE/skywater` (`Friends::skyWater`). Như dưới đất: cắt 25%
+  thời gian còn lại, không tưới cây đã chín hoặc vừa tưới trong 1 giờ (`Sky::canWater`). Mỗi lượt trồng chỉ
+  nhận **một** lượt tưới của bạn (khóa `skywater:<chủ>:<chậu>:<lượt>`), người tưới 5 lượt/ngày. Sự kiện
+  `skywater` (chủ vườn: cây chín sớm + XP) và `skywatered` (người tưới: XP, tính vào `help`). Guard tính lượt
+  tưới của bạn vào thời gian chín sớm nhất (`SkyGuard::skyFriendWaters`). Nút "Tưới giúp" trong màn thăm Vườn
+  Mây. Test: `selftest-sky-friends.php` (12 kiểm tra mới), `sky.test.ts`.
+- **G6, nhiệm vụ mây (§5.8):** ngày: bắt 5 bọ, thu 3 cây, chạy máy 2 lần, đóng 1 thùng; tuần: nâng sao 3 lần,
+  đóng đủ 2 chuyến, bắt giúp 10 bọ. Chỉ rút khi đã có Vườn Mây **và** công tắc đang bật (`setSkyQuests`, đọc
+  từ `/account/sky`); máy/khinh khí cầu chỉ khi đã mở.
+- **G6, thành tựu mây (kệ mới "Vườn Mây"):** mở tầng 3/5/10, chậu ★5 (1/5 chậu; chậu đã thăng bậc cũng tính),
+  đủ bộ (1/3), bọ hung vàng (1/5), đom đóm (10/50/100). Server tự đếm: số tầng, chậu ★5, bộ đủ đọc từ bản lưu;
+  bọ vàng, đom đóm đếm từ khóa `sky:bug` (`verified_stats` `skyGold`, `skyFirefly`).
+- **G6, chậu sự kiện:** mốc cuối của sự kiện mùa tặng chậu Lễ Tết cho người đã có Vườn Mây (`EVENT_POTS`):
+  Tết Đinh Mùi → hoa đào + rồng vàng, Trung Thu → bánh trung thu, Quốc khánh → hoa sen. Hoàn thành sự kiện
+  trước khi có Vườn Mây thì nhận khi lên mây. Guard kiểm tra số ngày phục vụ khách sự kiện như mốc thưởng.
+- **Kệ mây không còn đường nối:** phần giữa lặp lại nối theo đường cắt ít khác biệt nhất (image quilting),
+  hai đầu kệ nối đúng như ảnh gốc, phần giữa giãn ngang tối đa nửa bước lặp.
+- **Mô phỏng:** sửa 2 lỗi của bot (đếm ledger sai khi sổ bị giới hạn 1000 dòng nên XP/xu mây hiện 0 từ ngày 8;
+  không bao giờ nhận thưởng đủ bộ), bot để dành xu cho tầng kế khi đủ cấp. Bảng thêm cột Hạt Mây, Sương, chuyến.
+- **Lint:** sạch (`DishPuzzle` tách hàm ra `puzzle.ts`, `export-promo-video.mjs` khai báo biến trình duyệt).
+
+**Cân bằng tầng (chỉnh theo mô phỏng 90 ngày, 3 lần/ngày):** tầng 8 cấp 47→45, xu 6500→5500; tầng 9 cấp 54→50,
+xu 8500→6500; tầng 10 cấp 60→55, xu 11000→6000. Lý do: ở ngày 90 bot mới cấp 58 (tầng 10 cần 60), và tiết kiệm
+ròng cuối mùa chỉ ~630 xu/ngày.
+
+**Mô phỏng 90 ngày sau khi chỉnh** (`npm run sky:sim`, 2026-10-09, 4/4 kiểm tra đạt; bảng đầy đủ ở
+`storage/sky-garden-qa/sim-90.txt`):
+
+| Ngày | Cấp | Tầng | Chậu | Xu | Xu mây/ngày | XP mây/ngày | Bọ | Mây Ngọc | Hạt Mây | Sương | Chuyến |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 12 | 1 | 6 | 259 | 39 | 27 | 5 | 0 | 2 | 1 | 0 |
+| 2 | 13 | 1 | 6 | 581 | 249 | 45 | 9 | 0 | 2 | 1 | 0 |
+| 3 | 14 | 1 | 6 | 882 | 228 | 43 | 12 | 0 | 2 | 1 | 0 |
+| 4 | 15 | 2 | 9 | 211 | 166 | 69 | 22 | 0 | 2 | 1 | 0 |
+| 5 | 16 | 2 | 9 | 265 | 281 | 93 | 33 | 0 | 4 | 1 | 0 |
+| 6 | 17 | 2 | 10 | 251 | 423 | 90 | 41 | 0 | 4 | 1 | 0 |
+| 7 | 18 | 2 | 12 | 349 | 445 | 93 | 56 | 0 | 4 | 1 | 0 |
+| 14 | 23 | 3 | 18 | 541 | 589 | 150 | 163 | 0 | 6 | 11 | 0 |
+| 28 | 32 | 5 | 28 | 122 | 899 | 150 | 463 | 0 | 8 | 34 | 1 |
+| 42 | 40 | 6 | 35 | 329 | 1165 | 150 | 780 | 0 | 18 | 58 | 4 |
+| 56 | 46 | 7 | 36 | 957 | 1607 | 150 | 1134 | 0 | 20 | 80 | 4 |
+| 70 | 51 | 8 | 41 | 2299 | 1994 | 150 | 1559 | 0 | 25 | 100 | 7 |
+| 84 | 56 | 9 | 47 | 2622 | 1922 | 150 | 1983 | 0 | 25 | 118 | 9 |
+| 90 | 58 | 9 | 50 | 5515 | 1969 | 150 | 2165 | 0 | 33 | 130 | 10 |
+
+Mở tầng vào ngày: 1 / 4 / 9 / 18 / 27 / 39 / 54 / 66 / 78 / —. Tầng 5 ngày 27 (đạt mục tiêu 20–30). Tầng 10 chưa mở
+trong 90 ngày: ngày 90 có 5 515/6 000 xu, tiết kiệm ~480 xu/ngày, nên rơi vào khoảng ngày 91 (mục tiêu 70–90). Hạ
+thêm thì giá tầng 10 còn chưa tới nửa thiết kế ban đầu: cần người dùng quyết. XP mây chạm trần 150/ngày từ
+ngày 14. Sương Mai dư (130), Hạt Mây đủ: xu là thứ chặn ở tầng 8–10.
+
+**VIỆC CÒN DỞ:**
+1. Cần người dùng quyết: Q5 (nhập vườn khách), Q6 (quyền hình), xem lại các điểm khác §0 bên dưới.
+2. **Mây Ngọc gần như không kiếm được:** cả mùa 90 ngày bot có 0 Mây Ngọc (10 chuyến khinh khí cầu, không chuỗi
+   7 ngày nào; bộ Nông Sản cần 2 chậu giá Mây Ngọc mới đủ, nên không nhận được thưởng đủ bộ). Cần chọn nguồn
+   Mây Ngọc thường trực (ví dụ thưởng mốc tầng, thành tựu, hoặc bán 1 chậu Nông Sản thứ 5 bằng xu).
+3. Trang trí mây (§4.7) và tranh cây/chậu còn thiếu: chờ vẽ theo `prompts/sky-garden-prompts.md` sau khi chốt
+   Q6. Không độn hình tạm.
+4. Cộng hưởng 2/4/6 (§17.3) và trợ thủ (§17.4): plan ghi "xem xét" / "mở sau MVP, nếu được duyệt", chưa làm.
+5. Thử trên điện thoại thật (Android + iPhone): FPS ≥ 30, chốt Q4 (1×6 hay 2×3); thử 2 tài khoản trên 2 máy
+   (bắt bọ giúp, tưới giúp).
+6. Trước khi bật `sky.enabled` trên production: đặt `SKY_SECRET` trong `.env` server, chạy `npm run test:server`.
 
 ### Cập nhật lượt 4 (2026-10-08 tối): G2–G5 đã có code, sau công tắc `sky.enabled` (mặc định TẮT)
 
@@ -40,7 +107,7 @@ chưa thử 2 tài khoản trên 2 máy**.
 riêng khỏi kho nông trại; hoa hồng thay dâu tây; thưởng xu của chậu tính lúc thu; bọ không làm chậm cây; máy phin
 ở tầng 4; mầm đậu thần cấp 10 là nút trên nông trại, chưa có hình mầm.
 
-**VIỆC CÒN DỞ (làm tiếp từ đây):**
+**VIỆC CÒN DỞ lúc đó** (mục 1, 2 phần tưới giúp, 3 phần nhiệm vụ/thành tựu/sự kiện, 5, 6 đã xong ở lượt 5; danh sách mới ở lượt 5):
 1. Mô phỏng 90 ngày đã chạy một lần (2026-10-08, ~5 phút): **qua cả 4 kiểm tra, kể cả lên tầng 5 trong 90
    ngày**, nhưng bảng số liệu bị runner nuốt. Nay bảng ghi ra `storage/sky-garden-qa/sim-90.txt`: chạy lại
    `npm run sky:sim`, chép bảng vào đây, xem tốc độ tầng 5–10 và chỉnh `FLOORS`/`DAILY_SKY`/khinh khí cầu nếu cần.

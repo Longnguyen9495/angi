@@ -146,6 +146,7 @@ function BadgeShelves({ list, onClaim }: { list: BadgeView[]; onClaim: (b: Badge
       </div>
       {ACHIEVEMENT_GROUPS.map((g) => {
         const items = list.filter((b) => b.def.group === g).sort(badgeOrder);
+        if (items.length === 0) return null;
         const ready = items.filter((b) => b.ready).length;
         const isOpen = open[g] ?? ready > 0;
         const id = `fj-shelf-${g}`;

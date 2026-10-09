@@ -1,4 +1,6 @@
 import { ANIMAL_LIST, BOAT, CROPS, DECOR_LIST, HIVE, RECIPE_LIST, levelForXp } from '../data/game';
+import { BALLOON, MACHINES } from '../data/skyEconomy';
+import { POTS } from '../data/skyGarden';
 import { t } from '../i18n';
 import type { GuestProgress } from './progress';
 import { produceAvailable, recipeAvailable } from './selectors';
@@ -43,6 +45,18 @@ export type QuestMetric =
   | 'newRecipe'
   /** Days on which every daily quest was claimed. */
   | 'allDaily'
+  /** Vườn Mây (§5.8): bugs caught, sky harvests, machine products taken out, balloon boxes
+   * packed and full trips, star tries that succeeded, bugs caught in friends' cloud gardens,
+   * and the gold beetles and fireflies caught (achievements). */
+  | 'skyBug'
+  | 'skyHarvest'
+  | 'skyJob'
+  | 'skyBox'
+  | 'skyTrip'
+  | 'skyStar'
+  | 'skyHelp'
+  | 'skyGold'
+  | 'skyFirefly'
   /** Decorations bought. */
   | 'decor';
 
@@ -139,6 +153,11 @@ const DAILY_POOL: QuestDef[] = [
     when: (p, now) => ripensToday(p, 'mushroom', now),
   },
   { id: 'd-rate', metric: 'rate', target: 1, reward: R(10, 0, 0, 1) },
+  // Vườn Mây (plans/vuon-may.md §5.8): only once the guest has a cloud garden.
+  { id: 'd-sky-bug', metric: 'skyBug', target: 5, reward: R(12, 6), when: skyOn },
+  { id: 'd-sky-harvest', metric: 'skyHarvest', target: 3, reward: R(10, 5), when: skyOn },
+  { id: 'd-sky-job', metric: 'skyJob', target: 2, reward: R(10, 0, 1), when: skyMachines },
+  { id: 'd-sky-box', metric: 'skyBox', target: 1, reward: R(10, 5), when: skyBalloon },
 ];
 
 const WEEKLY_POOL: QuestDef[] = [
@@ -183,6 +202,9 @@ const WEEKLY_POOL: QuestDef[] = [
     when: (p) => planted(p, 'mushroom'),
   },
   { id: 'w-boat', metric: 'boat', target: 3, reward: R(50, 30), when: boatOpen },
+  { id: 'w-sky-star', metric: 'skyStar', target: 3, reward: R(60, 30), when: skyOn },
+  { id: 'w-sky-trip', metric: 'skyTrip', target: 2, reward: R(60, 30, 2), when: skyBalloon },
+  { id: 'w-sky-help', metric: 'skyHelp', target: 10, reward: R(50, 20), when: skyOn },
 ];
 
 export const DAILY_COUNT = 5;
@@ -197,6 +219,24 @@ function hiveOpen(p: GuestProgress): boolean {
 function boatOpen(p: GuestProgress): boolean {
   return lv(p) >= BOAT.unlockLevel;
 }
+/**
+ * Whether Vườn Mây is switched on (the server's sky.enabled, set when the app reads it): with
+ * it off, a cloud garden saved earlier can't be played, so its quests are not drawn.
+ */
+let skyQuests = false;
+export function setSkyQuests(on: boolean) {
+  skyQuests = on;
+}
+function skyOn(p: GuestProgress): boolean {
+  return skyQuests && !!p.sky;
+}
+function skyMachines(p: GuestProgress): boolean {
+  return skyOn(p) && Object.values(MACHINES).some((m) => p.sky!.floors >= m.floor);
+}
+function skyBalloon(p: GuestProgress): boolean {
+  return skyOn(p) && p.sky!.floors >= BALLOON.floor;
+}
+
 /** A fruit tree or mushroom block is in the ground now. */
 function planted(p: GuestProgress, kind: 'tree' | 'mushroom'): boolean {
   return p.plots.some((pl) => pl.crop !== null && CROPS[pl.crop].kind === kind);
@@ -215,10 +255,10 @@ function ripensToday(p: GuestProgress, kind: 'tree' | 'mushroom', now: number): 
   );
 }
 
-const SOCIAL: ReadonlySet<QuestMetric> = new Set(['help', 'steal', 'gift']);
+const SOCIAL: ReadonlySet<QuestMetric> = new Set(['help', 'steal', 'gift', 'skyHelp']);
 
-/** The four shelves of the achievements screen. */
-export type AchievementGroup = 'meals' | 'garden' | 'ranch' | 'social';
+/** The shelves of the achievements screen (the sky one once there is a cloud garden). */
+export type AchievementGroup = 'meals' | 'garden' | 'ranch' | 'social' | 'sky';
 
 export interface AchievementDef {
   id: string;
@@ -282,9 +322,24 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'generous', group: 'social', tiers: [1, 10, 50], value: total('gift') },
   { id: 'level', group: 'social', tiers: [5, 10, 20, 30], value: (p) => lv(p) },
   { id: 'diligent', group: 'social', tiers: [3, 15, 50], value: total('allDaily') },
+  // ——— Vườn Mây (§5.8) ———
+  { id: 'skyclimber', group: 'sky', tiers: [3, 5, 10], value: (p) => p.sky?.floors ?? 0 },
+  { id: 'starpot', group: 'sky', tiers: [1, 5], value: (p) => starPots(p) },
+  { id: 'collector', group: 'sky', tiers: [1, 3], value: (p) => p.sky?.sets.length ?? 0 },
+  { id: 'goldhunter', group: 'sky', tiers: [1, 5], value: total('skyGold') },
+  { id: 'fireflies', group: 'sky', tiers: [10, 50, 100], value: total('skyFirefly') },
 ];
 
-export const ACHIEVEMENT_GROUPS: AchievementGroup[] = ['meals', 'garden', 'ranch', 'social'];
+export const ACHIEVEMENT_GROUPS: AchievementGroup[] = ['meals', 'garden', 'ranch', 'social', 'sky'];
+
+/**
+ * Pots that reached ★5: at ★5 now, or raised a tier since (a tier-up needs ★5 and starts the
+ * pot at ★0 again). The server counts the same (ProgressGuard::badgeValue).
+ */
+export function starPots(p: GuestProgress): number {
+  return Object.values(p.sky?.pots ?? {}).filter((x) => x.stars >= 5 || x.tier > POTS[x.pot].tier)
+    .length;
+}
 
 /**
  * Tier n (1-based) pays more the higher it is: XP for the first two, then more xu and seeds
@@ -428,6 +483,17 @@ export function questsFor(p: GuestProgress, now: number): QuestState {
   return qs;
 }
 
+/** Counts an action toward today's and this week's quests and the achievements (into a copy). */
+export function track(s: GuestProgress, metric: QuestMetric, now: number, n = 1) {
+  if (n <= 0) return;
+  const qs = questsFor(s, now);
+  const add = (t: Partial<Record<QuestMetric, number>>) => ({
+    ...t,
+    [metric]: (t[metric] ?? 0) + n,
+  });
+  s.quests = { ...qs, day: add(qs.day), weekTally: add(qs.weekTally), total: add(qs.total) };
+}
+
 export type QuestStatus = 'open' | 'ready' | 'claimed';
 
 export interface QuestView {
@@ -471,7 +537,8 @@ export interface BadgeView {
 }
 
 export function badges(p: GuestProgress): BadgeView[] {
-  return ACHIEVEMENTS.map((def) => {
+  // The sky shelf only once there is a cloud garden.
+  return ACHIEVEMENTS.filter((def) => def.group !== 'sky' || !!p.sky).map((def) => {
     const claimed = p.quests.badges[def.id] ?? 0;
     const value = def.value(p);
     const next = def.tiers[claimed] ?? null;

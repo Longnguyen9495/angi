@@ -200,7 +200,7 @@ describe('saves', () => {
   });
 });
 
-describe('more quests and 28 achievements', () => {
+describe('more quests and 33 achievements', () => {
   const every = (s: GuestProgress, days: number) =>
     Array.from({ length: days }, (_, d) => [
       dailyQuests(s, NOON + d * DAY).map((v) => v.def),
@@ -218,7 +218,7 @@ describe('more quests and 28 achievements', () => {
       expect(vi.badges[a.id as keyof typeof vi.badges]?.name, a.id).toBeTruthy();
       expect(en.badges[a.id as keyof typeof en.badges]?.name, a.id).toBeTruthy();
     }
-    expect(ACHIEVEMENTS).toHaveLength(28);
+    expect(ACHIEVEMENTS).toHaveLength(33);
   });
 
   it('never draws two quests that count the same thing, nor more than one friends quest', () => {

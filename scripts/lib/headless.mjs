@@ -121,9 +121,21 @@ export async function withPage(
   } finally {
     ws?.close();
     // On Windows kill() only ends the parent; the renderer/GPU children would linger.
-    if (process.platform === 'win32' && browser.pid)
+    if (process.platform === 'win32' && browser.pid) {
       spawnSync('taskkill', ['/pid', String(browser.pid), '/T', '/F'], { stdio: 'ignore' });
-    else browser.kill();
+      // Edge can hand the session to a browser process outside that tree: whatever still runs
+      // on this run's profile goes too (left alone, its software-GL GPU process keeps a core
+      // busy for hours).
+      spawnSync(
+        'powershell',
+        [
+          '-NoProfile',
+          '-Command',
+          `Get-CimInstance Win32_Process -Filter "Name='msedge.exe' OR Name='chrome.exe'" | Where-Object { $_.CommandLine -like '*${profile.split(/[\\/]/).pop()}*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }`,
+        ],
+        { stdio: 'ignore' },
+      );
+    } else browser.kill();
     await server.close();
     try {
       rmSync(profile, { recursive: true, force: true });

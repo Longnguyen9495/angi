@@ -38,8 +38,9 @@ const FriendIsland = lazy(() => import('../../garden3d/FriendIsland'));
 const FriendSky = lazy(() =>
   import('../../sky-garden/game/FriendSky').then((x) => ({ default: x.FriendSky })),
 );
-/** Bugs a visitor may catch in friends' cloud gardens per day (server/lib/Friends.php). */
+/** Bugs a visitor may catch and pots water in friends' cloud gardens per day (server/lib/Friends.php). */
 const SKY_HELPS_PER_DAY = 5;
+const SKY_WATERS_PER_DAY = 5;
 /** The old 3D island stays reachable with ?visit=3d while the 2D farm is new. */
 const VISIT_3D =
   typeof location !== 'undefined' && new URLSearchParams(location.search).get('visit') === '3d';
@@ -474,6 +475,10 @@ function feedText(i: FeedItem): string {
       return t.sky.game.friend.feedHelp(i.name);
     case 'skycaught':
       return t.sky.game.friend.caughtForYou(i.name);
+    case 'skywater':
+      return t.sky.game.friend.wateredForYou(i.name);
+    case 'skywatered':
+      return t.sky.game.friend.feedWatered(i.name);
   }
 }
 
@@ -705,6 +710,26 @@ function FriendVisit({
       setBusy(false);
     }
   };
+  const waterPot = async (uid: string) => {
+    if (!garden || busy) return;
+    setBusy(true);
+    try {
+      const g = await friendsApi.skyWater(code, uid);
+      setGarden(g);
+      toast({
+        message: t.sky.game.friend.watered(g.name, XP.friendHelp),
+        tone: 'reward',
+      });
+      onHelped();
+    } catch (e) {
+      toast({
+        message: e instanceof AccountError ? e.message : t.sky.game.friend.waterFailed,
+        tone: 'warning',
+      });
+    } finally {
+      setBusy(false);
+    }
+  };
   const onSky = tab === 'sky' && !!garden?.sky;
 
   return (
@@ -747,8 +772,11 @@ function FriendVisit({
             now={now}
             helpsLeft={garden.skyHelpsLeft ?? 0}
             helpsMax={SKY_HELPS_PER_DAY}
+            watersLeft={garden.skyWatersLeft ?? 0}
+            watersMax={SKY_WATERS_PER_DAY}
             busy={busy}
             onCatch={(uid, stage) => void catchBug(uid, stage)}
+            onWater={(uid) => void waterPot(uid)}
           />
         </Suspense>
       )}

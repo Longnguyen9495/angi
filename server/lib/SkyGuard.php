@@ -101,6 +101,9 @@ trait SkyGuard
                 (is_array($j) && isset($S['recipes'][$j['recipe'] ?? '']) && $time($j['startedAt'] ?? null) && $time($j['readyAt'] ?? null)) || $bad('job');
             }
         }
+        foreach ($sky['events'] ?? [] as $x) {
+            (is_string($x) && isset($S['eventPots'][$x])) || $bad('event');
+        }
         foreach ($sky['sets'] ?? [] as $s) {
             (is_string($s) && isset($S['sets'][$s])) || $bad('set');
         }
@@ -213,7 +216,7 @@ trait SkyGuard
         $level = $ctx['level'];
         $newSky = is_array($new['sky'] ?? null) ? $new['sky'] : null;
         $floorsNew = (int) ($newSky['floors'] ?? 0);
-        $ev = ['plant' => [], 'jobIn' => [], 'jobOut' => [], 'floor' => [], 'slot' => [], 'set' => [], 'xp' => 0, 'harvests' => [], 'bugs' => [], 'dew' => 0];
+        $ev = ['plant' => [], 'jobIn' => [], 'jobOut' => [], 'floor' => [], 'slot' => [], 'set' => [], 'xp' => 0, 'harvests' => [], 'bugs' => [], 'dew' => 0, 'gold' => 0, 'firefly' => 0, 'event' => []];
         $any = false;
 
         // Evidence first: plantings and machine inputs.
@@ -313,6 +316,8 @@ trait SkyGuard
                 $want = SkyRules::rollBug($this->user, $uid, $cycle, $stage, (int) $pl['stats']['bug'], $checkAt - $ctx['offset'], $tutorial);
                 ($want !== null && $res === "bug:$want") || $fail('not the bug of this check');
                 $ev['bugs']["$uid:$cycle:$stage"] = true;
+                $ev['gold'] += $want === 'goldbeetle' ? 1 : 0;
+                $ev['firefly'] += $want === 'firefly' ? 1 : 0;
             } elseif (preg_match('/^sky:harvest:([a-z_]+\.\d+):(\d+):(\d+|coin)$/', $key, $m)) {
                 $uid = $m[1];
                 $cycle = (int) $m[2];
@@ -324,7 +329,7 @@ trait SkyGuard
                 $stats = $pl['stats'] ?? ['time' => 0, 'xp' => 0, 'bug' => 0, 'coin' => 0];
                 $grow = SkyRules::growMs($seed, $this->r);
                 $grow !== null || $fail('unknown seed');
-                $at + self::SLACK_MS >= $plantedAt + $this->minReady(SkyRules::plantGrowMs($grow, (int) $stats['time']), 0) || $fail('picked before it could ripen');
+                $at + self::SLACK_MS >= $plantedAt + $this->minReady(SkyRules::plantGrowMs($grow, (int) $stats['time']), $this->skyFriendWaters($uid, $cycle)) || $fail('picked before it could ripen');
                 $yield = $this->skyYield($seed);
                 $pot = $pl['pot'] ?? ($new['sky']['pots'][$uid] ?? $old['sky']['pots'][$uid] ?? null);
                 is_array($pot) || $fail('no such pot');
@@ -421,6 +426,13 @@ trait SkyGuard
                         $this->countClaims("sky:balloon:$prev:coin") > 0 || $fail('streak not reached');
                     }
                 }
+            } elseif (preg_match('/^sky:event:([a-z-]+):([a-z_]+)$/', $key, $m)) {
+                // A festival pot: its event's last milestone was reached (its days served).
+                $e = $this->r['events'][$m[1]] ?? null;
+                ($e !== null && in_array($m[2], (array) ($S['eventPots'][$m[1]] ?? []), true)) || $fail('no such festival pot');
+                ($res === "pot:{$m[2]}" && $d === 1) || $fail('one festival pot');
+                $this->eventDaysServed($e, $fresh) >= (int) end($e['targets']) || $fail('event not finished');
+                $ev['event'][$m[1]] = true;
             } elseif (preg_match('/^sky:(star|tier):/', $key)) {
                 $fail('stars and tiers are the server\'s');
             } else {
@@ -569,7 +581,7 @@ trait SkyGuard
                     (int) $npl['stats'][$k] <= $max[$k] || $fail("pot $uid stats above what it gives");
                 }
             }
-            $min = (int) $npl['plantedAt'] + $this->minReady(SkyRules::plantGrowMs($grow, (int) $npl['stats']['time']), 0);
+            $min = (int) $npl['plantedAt'] + $this->minReady(SkyRules::plantGrowMs($grow, (int) $npl['stats']['time']), $this->skyFriendWaters((string) $uid, (int) $npl['cycle']));
             (int) $npl['readyAt'] + self::SLACK_MS >= $min || $fail("pot $uid ripens too soon");
             $oldCaught = $same ? (array) ($opl['caught'] ?? []) : [];
             foreach ((array) ($npl['caught'] ?? []) as $c) {
@@ -607,10 +619,21 @@ trait SkyGuard
         if ($dew > 0 && $this->counted(self::dayKey('skydew', $ctx['serverMs'])) + $dew > (int) $S['dewPerDay']) {
             $fail('more dew than a day allows');
         }
+        foreach ((array) ($new['events'] ?? []) as $x) {
+            (in_array($x, (array) ($old['events'] ?? []), true) || isset($ev['event'][$x])) || $fail("event $x pots without their entries");
+        }
         foreach ((array) ($new['sets'] ?? []) as $s) {
             (in_array($s, (array) ($old['sets'] ?? []), true) || isset($ev['set'][$s])) || $fail("set $s without its reward");
         }
         $this->skyDew = $dew;
+    }
+
+    /** Friends' waterings of one planting (Friends::skyWater allows one; counted, not assumed). */
+    private function skyFriendWaters(string $uid, int $cycle): int
+    {
+        $st = $this->db->prepare("SELECT COUNT(*) FROM farm_events WHERE to_user = ? AND type = 'skywater' AND crop = ? AND cycle = ?");
+        $st->execute([$this->user, $uid, $cycle]);
+        return (int) $st->fetchColumn();
     }
 
     /** Dew started in this save (for the daily tally). */

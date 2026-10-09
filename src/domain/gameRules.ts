@@ -48,6 +48,7 @@ import {
   SET_STATS,
   SHARDS_PER_POT,
   SHARD_POTS,
+  EVENT_POTS,
   SKY_CROPS,
   SKY_GOOD_PRICE,
   SKY_ITEMS,
@@ -116,6 +117,11 @@ const BADGE_METRIC: Record<string, string> = {
   generous: 'gift',
   level: 'level',
   diligent: 'allDaily',
+  skyclimber: 'skyFloors',
+  starpot: 'skyStar5',
+  collector: 'skySets',
+  goldhunter: 'skyGold',
+  fireflies: 'skyFirefly',
 };
 
 export function buildGameRules() {
@@ -299,6 +305,7 @@ function skyRules() {
     starters: [...STARTER_POTS],
     shardsPerPot: SHARDS_PER_POT,
     shardPots: [...SHARD_POTS],
+    eventPots: Object.fromEntries(Object.entries(EVENT_POTS).map(([id, p]) => [id, [...p!]])),
     setStats: Object.fromEntries(
       Object.entries(SET_STATS).map(([k, v]) => [k, { time: 0, xp: 0, bug: 0, coin: 0, ...v }]),
     ),

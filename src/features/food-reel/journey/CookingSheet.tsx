@@ -10,7 +10,8 @@ import { currentTime } from '../../../domain/time';
 import { t } from '../../../i18n';
 import { useFeedback, useGame } from '../../../state/hooks';
 import { getReelDish } from '../data/reelCatalogue';
-import { DishPuzzle, PUZZLE_PIECES } from './DishPuzzle';
+import { DishPuzzle } from './DishPuzzle';
+import { PUZZLE_PIECES } from './puzzle';
 
 type Step = 'prep' | 'cooking' | 'done';
 

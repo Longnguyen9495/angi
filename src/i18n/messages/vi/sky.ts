@@ -293,6 +293,7 @@ export default {
       set: 'Đã nhận thưởng đủ bộ!',
       packed: 'Đã đóng thùng.',
       job: (name: string) => `Đã nhận ${name}.`,
+      eventPots: 'Sự kiện mùa tặng chậu Lễ Tết, xem trong kho chậu!',
     },
     /** Thăm Vườn Mây của bạn (G5). */
     friend: {
@@ -315,6 +316,13 @@ export default {
       failed: 'Chưa bắt được, thử lại sau nhé.',
       caughtForYou: (from: string) => `${from} đã bắt giúp bọ trên Vườn Mây`,
       feedHelp: (name: string) => `Bạn đã bắt giúp bọ ở Vườn Mây của ${name}`,
+      water: 'Tưới giúp',
+      waterRule: (left: number, max: number) =>
+        `Tưới giúp một cây đang lớn: cây chín sớm hơn, cả hai cùng được XP. Còn ${left}/${max} lượt hôm nay.`,
+      watered: (name: string, xp: number) => `Đã tưới giúp ${name}! +${xp} XP.`,
+      waterFailed: 'Chưa tưới được, thử lại sau nhé.',
+      wateredForYou: (from: string) => `${from} đã tưới giúp cây trên Vườn Mây`,
+      feedWatered: (name: string) => `Bạn đã tưới giúp cây ở Vườn Mây của ${name}`,
     },
   },
   /** Trang demo chuyển động (G1): dữ liệu giả, không lưu gì. */

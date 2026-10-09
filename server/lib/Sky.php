@@ -105,9 +105,10 @@ final class Sky
      * A friend's Vườn Mây, read-only (G5, plans/vuon-may.md §15.3): floors, the placed pots
      * with their tier, stars and planting, and the bugs sitting on them now. No ledger, no
      * rolls of checks not reached, nothing of the stored pots off the shelves.
-     * `$helped`: "uid:cycle:stage" of bugs a friend has already caught here.
+     * `$helped`: "uid:cycle:stage" of bugs a friend has already caught here; `$watered`:
+     * "uid:cycle" of plantings a friend has already watered.
      */
-    public static function friendView(int $owner, array $data, int $offset, array $helped): ?array
+    public static function friendView(int $owner, array $data, int $offset, array $helped, array $watered = []): ?array
     {
         $sky = is_array($data['sky'] ?? null) ? $data['sky'] : null;
         if ($sky === null) {
@@ -155,11 +156,28 @@ final class Sky
                         'readyAt' => (int) $pl['readyAt'] - $offset,
                     ],
                     'bugs' => $bugs[(string) $potUid] ?? [],
+                    // A friend may water it (Friends::skyWater): growing, not watered this hour,
+                    // and no friend has watered this planting yet.
+                    'waterable' => $pl !== null && self::canWater($pl, $offset, $serverNow)
+                        && !isset($watered["$potUid:" . (int) ($pl['cycle'] ?? 0)]),
                 ];
             }
             $floors[] = $slots;
         }
         return ['floors' => $floors, 'score' => $score, 'serverNow' => $serverNow];
+    }
+
+    /**
+     * A stored planting can take a watering now (server ms): not ripe, and its last watering
+     * (the owner's or a friend's) at least the farm's cooldown ago. Times in the save are on the
+     * owner's device clock, `$offset` ahead of the server's.
+     */
+    public static function canWater(array $pl, int $offset, int $serverNow): bool
+    {
+        $cool = (int) ProgressGuard::rules()['watering']['cooldownMs'];
+        $watered = isset($pl['wateredAt']) && is_int($pl['wateredAt']) ? $pl['wateredAt'] - $offset : null;
+        return (int) ($pl['readyAt'] ?? 0) - $offset > $serverNow
+            && ($watered === null || $serverNow - $watered >= $cool);
     }
 
     /** Điểm vườn (§12.2): Σ 10 × (tier + 1) + stars over the pots on the shelves. */

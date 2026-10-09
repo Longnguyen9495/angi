@@ -285,6 +285,16 @@ const data = {
       newRecipe: (n: number) => (n === 1 ? 'Nấu một công thức mới' : `Nấu ${n} công thức mới`),
       allDaily: (n: number) => `Xong hết nhiệm vụ ngày trong ${n} hôm`,
       decor: (n: number) => `Mua ${n} đồ trang trí`,
+      skyBug: (n: number) => `Bắt ${n} bọ trên Vườn Mây`,
+      skyHarvest: (n: number) => `Thu ${n} cây trên Vườn Mây`,
+      skyJob: (n: number) => `Chạy máy trên mây ${n} lần`,
+      skyBox: (n: number) =>
+        n === 1 ? 'Đóng một thùng khinh khí cầu' : `Đóng ${n} thùng khinh khí cầu`,
+      skyTrip: (n: number) => `Đóng đủ ${n} chuyến khinh khí cầu`,
+      skyStar: (n: number) => `Nâng sao chậu ${n} lần`,
+      skyHelp: (n: number) => `Bắt giúp ${n} bọ ở Vườn Mây của bạn`,
+      skyGold: (n: number) => (n === 1 ? 'Bắt một bọ hung vàng' : `Bắt ${n} bọ hung vàng`),
+      skyFirefly: (n: number) => `Bắt ${n} đom đóm`,
     },
     badges: {
       farmer: { name: 'Nhà nông', goal: (n: number) => `Thu hoạch ${n} ô` },
@@ -315,6 +325,20 @@ const data = {
       decorator: { name: 'Khéo bày', goal: (n: number) => `Có ${n} đồ trang trí` },
       level: { name: 'Lên đời', goal: (n: number) => `Đạt cấp ${n}` },
       diligent: { name: 'Chăm chỉ', goal: (n: number) => `Xong hết nhiệm vụ ngày ${n} hôm` },
+      skyclimber: { name: 'Leo mây', goal: (n: number) => `Mở tầng ${n} Vườn Mây` },
+      starpot: {
+        name: 'Chậu năm sao',
+        goal: (n: number) => (n === 1 ? 'Có một chậu ★5' : `Có ${n} chậu ★5`),
+      },
+      collector: {
+        name: 'Nhà sưu tầm',
+        goal: (n: number) => (n === 1 ? 'Đủ một bộ chậu' : `Đủ ${n} bộ chậu`),
+      },
+      goldhunter: {
+        name: 'Săn bọ vàng',
+        goal: (n: number) => (n === 1 ? 'Bắt bọ hung vàng' : `Bắt ${n} bọ hung vàng`),
+      },
+      fireflies: { name: 'Đêm đom đóm', goal: (n: number) => `Bắt ${n} đom đóm` },
     },
   },
   decor: {

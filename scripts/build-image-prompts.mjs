@@ -5,9 +5,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const root = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
-const manifest = JSON.parse(
-  readFileSync(join(root, 'prompts/regional-dishes.json'), 'utf8'),
-);
+const manifest = JSON.parse(readFileSync(join(root, 'prompts/regional-dishes.json'), 'utf8'));
 if (new Set(manifest.items.map((d) => d.slug)).size !== manifest.items.length) {
   throw new Error('Duplicate regional dish slug');
 }
@@ -64,5 +62,8 @@ const template = readFileSync(join(root, 'scripts/prompt-page.template.html'), '
 // Escape "<" so dish text can never close the inline <script> early.
 const data = JSON.stringify(pageItems).replace(/</g, '\\u003c');
 mkdirSync(join(root, 'public/fake'), { recursive: true });
-writeFileSync(join(root, 'public/fake/index.html'), template.replace('__DATA__', data).replaceAll('__COUNT__', String(pageItems.length)));
+writeFileSync(
+  join(root, 'public/fake/index.html'),
+  template.replace('__DATA__', data).replaceAll('__COUNT__', String(pageItems.length)),
+);
 console.log(`Wrote ${manifest.items.length} prompts.`);

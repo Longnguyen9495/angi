@@ -1,8 +1,9 @@
-import { CROPS, WATERING } from '../data/game';
+import { CROPS, EVENTS, WATERING, type EventId } from '../data/game';
 import {
   BALLOON,
   DAILY_SKY,
   DEW_PER_DAY,
+  EVENT_POTS,
   FLOORS,
   MACHINES,
   POT_PRICES,
@@ -25,6 +26,7 @@ import {
 import { POT_SETS, SLOTS_PER_FLOOR, type PotId, type PotSetId } from '../data/skyGarden';
 import type { BugId } from '../data/skyEconomy';
 import { post } from './ledger';
+import { track } from './quests';
 import type { GuestProgress } from './progress';
 import { cropAvailable, level, waterLeft } from './selectors';
 import {
@@ -80,7 +82,11 @@ export type SkyAction =
   | { type: 'SKY_COLLECT_JOB'; machine: MachineId; now: number }
   | { type: 'SKY_SELL'; good: SkyGoodId; qty: number; now: number }
   | { type: 'SKY_CLAIM_SET'; set: PotSetId; now: number }
-  | { type: 'SKY_PACK_BOX'; box: number; now: number };
+  | { type: 'SKY_PACK_BOX'; box: number; now: number }
+  /** A star try the server rolled a success for (Sky.php): counted for the quests only. */
+  | { type: 'SKY_STARRED'; now: number }
+  /** The festival pots of an event whose last milestone was claimed (EVENT_POTS). */
+  | { type: 'SKY_EVENT_POTS'; event: EventId; now: number };
 
 export function isSkyAction(a: { type: string }): a is SkyAction {
   return a.type.startsWith('SKY_');
@@ -354,6 +360,9 @@ export function skyReducer(state: GuestProgress, action: SkyAction): GuestProgre
         return state;
       p.plant = { ...p.plant!, caught: [...p.plant!.caught, action.stage] };
       tutorial(s, sky, 'bug', now);
+      track(s, 'skyBug', now);
+      if (bug === 'goldbeetle') track(s, 'skyGold', now);
+      if (bug === 'firefly') track(s, 'skyFirefly', now);
       return s;
     }
 
@@ -397,6 +406,7 @@ export function skyReducer(state: GuestProgress, action: SkyAction): GuestProgre
         sky.day = { ...sky.day, harvests: sky.day.harvests + 1 };
         tutorial(s, sky, 'harvest', now);
       }
+      track(s, 'skyHarvest', now, ripe.length);
       // Once floor 3 is open: the day's third harvest brings a cloud seed.
       if (sky.floors >= DAILY_SKY.fromFloor && sky.day.harvests >= DAILY_SKY.harvests) {
         post(
@@ -457,6 +467,7 @@ export function skyReducer(state: GuestProgress, action: SkyAction): GuestProgre
       };
       if (job.recipe === 'dried_jasmine') tutorial(s, sky, 'dried', now);
       if (job.recipe === 'jasmine_honey_tea') tutorial(s, sky, 'mix01', now);
+      track(s, 'skyJob', now);
       return s;
     }
 
@@ -498,10 +509,12 @@ export function skyReducer(state: GuestProgress, action: SkyAction): GuestProgre
       if (!post(s, `${key}:${action.box}`, `skygood:${box.good}`, -box.qty, 'sky:balloon', now))
         return state;
       payXp(s, sky, `xp:skybox:${date}:${action.box}`, BALLOON.boxXp, 'sky:balloon', now);
+      track(s, 'skyBox', now);
       const packed = [...today.packed, action.box];
       let done = today.done;
       if (packed.length === boxes.length && !done) {
         done = true;
+        track(s, 'skyTrip', now);
         post(s, `${key}:coin`, 'coin', BALLOON.coins, 'sky:balloon', now);
         post(s, `${key}:cloudseed`, 'skyitem:cloudseed', BALLOON.cloudseed, 'sky:balloon', now);
         post(s, `${key}:shard`, 'skyitem:shard', BALLOON.shards, 'sky:balloon', now);
@@ -513,6 +526,28 @@ export function skyReducer(state: GuestProgress, action: SkyAction): GuestProgre
         }
       }
       sky.balloon = { date, packed, done };
+      return s;
+    }
+
+    case 'SKY_EVENT_POTS': {
+      const ev = EVENTS.find((e) => e.id === action.event);
+      const pots = EVENT_POTS[action.event];
+      const last = ev ? ev.targets.length - 1 : -1;
+      const sky0 = state.sky;
+      if (!ev || !pots || !sky0 || (sky0.events ?? []).includes(ev.id)) return state;
+      if (!state.events[ev.id]?.claimed.includes(last)) return state;
+      const { s, sky } = draft(state, now);
+      for (const pot of pots) {
+        if (!addPot(s, sky, pot, `sky:event:${ev.id}:${pot}`, now)) return state;
+      }
+      sky.events = [...(sky.events ?? []), ev.id];
+      return s;
+    }
+
+    case 'SKY_STARRED': {
+      if (!state.sky) return state;
+      const s = structuredClone(state);
+      track(s, 'skyStar', now);
       return s;
     }
   }

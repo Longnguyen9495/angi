@@ -17,10 +17,10 @@ import {
   type SkyCropId,
   type SkyGoodId,
 } from '../data/skyEconomy';
-import { POT_SETS, type PotId, type PotSetId } from '../data/skyGarden';
+import { POT_SETS, type PotId } from '../data/skyGarden';
 import { createInitialProgress, type GuestProgress } from './progress';
 import { gameReducer, type Action } from './reducer';
-import { balloonBoxes, cropOpen, pendingChecks, slotCount, type SkyState } from './sky';
+import { balloonBoxes, cropOpen, pendingChecks, slotCount, slotPrice, type SkyState } from './sky';
 import { dateKey } from './time';
 
 /*
@@ -63,6 +63,9 @@ interface DayRow {
   skyXp: number;
   bugs: number;
   gems: number;
+  cloudseed: number;
+  dew: number;
+  trips: number;
 }
 
 function simulate(days: number, seed: number): { rows: DayRow[]; end: GuestProgress } {
@@ -73,9 +76,23 @@ function simulate(days: number, seed: number): { rows: DayRow[]; end: GuestProgr
     coins: 800,
   };
   p = { ...p, ingredients: { ...p.ingredients, honey: 3, milk: 2 } };
-  const act = (a: Action) => (p = gameReducer(p, a));
+  // The device keeps only the ledger's tail (LEDGER_LIMIT): new entries are the ones after the
+  // last one seen before each action.
+  let skyCoins = 0;
+  let skyXp = 0;
+  const act = (a: Action) => {
+    const last = p.ledger.at(-1)?.key;
+    p = gameReducer(p, a);
+    let i = p.ledger.length;
+    while (i > 0 && p.ledger[i - 1]!.key !== last) i--;
+    for (const e of p.ledger.slice(i)) {
+      if (!e.key.startsWith('sky:') && !e.key.startsWith('xp:sky')) continue;
+      if (e.resource === 'coin' && e.delta > 0) skyCoins += e.delta;
+      if (e.resource === 'xp') skyXp += e.delta;
+    }
+  };
   const rows: DayRow[] = [];
-  let ledgerSeen = 0;
+  let trips = 0;
 
   for (let d = 0; d < days; d++) {
     const dayStart = T0 + d * DAY;
@@ -90,20 +107,15 @@ function simulate(days: number, seed: number): { rows: DayRow[]; end: GuestProgr
         milk: p.ingredients.milk + (d % 3 === 0 ? 1 : 0),
       },
     };
-    let skyCoins = 0;
-    let skyXp = 0;
+    skyCoins = 0;
+    skyXp = 0;
     for (const [si, hour] of SESSIONS.entries()) {
       const now = dayStart + hour * 3_600_000;
       const next = dayStart + (SESSIONS[si + 1] ?? SESSIONS[0]! + 24) * 3_600_000;
       session(now, next);
     }
-    for (const e of p.ledger.slice(ledgerSeen)) {
-      if (!e.key.startsWith('sky:') && !e.key.startsWith('xp:sky')) continue;
-      if (e.resource === 'coin' && e.delta > 0) skyCoins += e.delta;
-      if (e.resource === 'xp') skyXp += e.delta;
-    }
-    ledgerSeen = p.ledger.length;
     const sky = p.sky;
+    if (sky?.balloon?.done && sky.balloon.date === dateKey(dayStart)) trips++;
     rows.push({
       day: d + 1,
       level: levelForXp(p.xp),
@@ -114,12 +126,10 @@ function simulate(days: number, seed: number): { rows: DayRow[]; end: GuestProgr
       skyXp,
       bugs: Object.values(sky?.bugs ?? {}).reduce((n, x) => n + (x ?? 0), 0),
       gems: sky?.items.gem ?? 0,
+      cloudseed: sky?.items.cloudseed ?? 0,
+      dew: sky?.items.dew ?? 0,
+      trips,
     });
-    // Keep the ledger short like the app does (only the tail is saved).
-    if (p.ledger.length > 4000) {
-      ledgerSeen -= p.ledger.length - 2000;
-      p = { ...p, ledger: p.ledger.slice(-2000) };
-    }
   }
   return { rows, end: p };
 
@@ -132,7 +142,7 @@ function simulate(days: number, seed: number): { rows: DayRow[]; end: GuestProgr
     for (const m of MACHINE_IDS) act({ type: 'SKY_COLLECT_JOB', machine: m, now });
     for (let b = 0; b < 6; b++) act({ type: 'SKY_PACK_BOX', box: b, now });
     cook(now);
-    for (const set of Object.keys(POT_SETS) as PotSetId[]) act({ type: 'SKY_CLAIM_SET', set, now });
+    for (const set of POT_SETS.map((s) => s.id)) act({ type: 'SKY_CLAIM_SET', set, now });
     act({ type: 'SKY_OPEN_FLOOR', now });
     sell(now);
     grow(now);
@@ -205,7 +215,13 @@ function simulate(days: number, seed: number): { rows: DayRow[]; end: GuestProgr
   function grow(now: number) {
     const sky = p.sky!;
     // Slots, then pots for the empty ones (cheapest coin pot of the floor the bot can afford).
-    for (let f = 0; f < sky.floors; f++) act({ type: 'SKY_BUY_SLOT', floor: f, now });
+    // Once the level allows the next floor, its coins are put aside first.
+    const nf = FLOORS[sky.floors];
+    const keep = nf && levelForXp(p.xp) >= nf.level ? Math.max(KEEP_COINS, nf.coins) : KEEP_COINS;
+    for (let f = 0; f < sky.floors; f++) {
+      const price = slotPrice(p.sky!, f);
+      if (price !== null && p.coins - price >= keep) act({ type: 'SKY_BUY_SLOT', floor: f, now });
+    }
     const coinPots = (Object.keys(POT_PRICES) as PotId[])
       .filter((x) => POT_PRICES[x]!.currency === 'coin')
       .sort((a, b) => POT_PRICES[a]!.price - POT_PRICES[b]!.price);
@@ -215,7 +231,7 @@ function simulate(days: number, seed: number): { rows: DayRow[]; end: GuestProgr
         let free = Object.values(p.sky!.pots).find((x) => !placed(p.sky!, x.uid));
         if (!free) {
           for (const pot of coinPots) {
-            if (p.coins - POT_PRICES[pot]!.price < KEEP_COINS) break;
+            if (p.coins - POT_PRICES[pot]!.price < keep) break;
             const before = p;
             act({ type: 'SKY_BUY_POT', pot, now });
             if (p !== before) break;

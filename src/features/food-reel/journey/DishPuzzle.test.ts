@@ -1,4 +1,4 @@
-import { PUZZLE_PIECES, pieceOrder, piecesShown } from './DishPuzzle';
+import { PUZZLE_PIECES, pieceOrder, piecesShown } from './puzzle';
 
 describe('dish puzzle', () => {
   it('uncovers one slice per cook and stops at eight', () => {

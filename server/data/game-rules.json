@@ -1686,6 +1686,42 @@
       "seeds": 0,
       "water": 1
     },
+    "d-sky-bug": {
+      "metric": "skyBug",
+      "target": 5,
+      "weekly": false,
+      "xp": 12,
+      "coins": 6,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-sky-harvest": {
+      "metric": "skyHarvest",
+      "target": 3,
+      "weekly": false,
+      "xp": 10,
+      "coins": 5,
+      "seeds": 0,
+      "water": 0
+    },
+    "d-sky-job": {
+      "metric": "skyJob",
+      "target": 2,
+      "weekly": false,
+      "xp": 10,
+      "coins": 0,
+      "seeds": 1,
+      "water": 0
+    },
+    "d-sky-box": {
+      "metric": "skyBox",
+      "target": 1,
+      "weekly": false,
+      "xp": 10,
+      "coins": 5,
+      "seeds": 0,
+      "water": 0
+    },
     "w-harvest": {
       "metric": "harvest",
       "target": 25,
@@ -1881,6 +1917,33 @@
       "weekly": true,
       "xp": 50,
       "coins": 30,
+      "seeds": 0,
+      "water": 0
+    },
+    "w-sky-star": {
+      "metric": "skyStar",
+      "target": 3,
+      "weekly": true,
+      "xp": 60,
+      "coins": 30,
+      "seeds": 0,
+      "water": 0
+    },
+    "w-sky-trip": {
+      "metric": "skyTrip",
+      "target": 2,
+      "weekly": true,
+      "xp": 60,
+      "coins": 30,
+      "seeds": 2,
+      "water": 0
+    },
+    "w-sky-help": {
+      "metric": "skyHelp",
+      "target": 10,
+      "weekly": true,
+      "xp": 50,
+      "coins": 20,
       "seeds": 0,
       "water": 0
     }
@@ -3335,6 +3398,207 @@
           "water": 0
         }
       ]
+    },
+    "skyclimber": {
+      "metric": "skyFloors",
+      "tiers": [
+        3,
+        5,
+        10
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
+    },
+    "starpot": {
+      "metric": "skyStar5",
+      "tiers": [
+        1,
+        5
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        }
+      ]
+    },
+    "collector": {
+      "metric": "skySets",
+      "tiers": [
+        1,
+        3
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        }
+      ]
+    },
+    "goldhunter": {
+      "metric": "skyGold",
+      "tiers": [
+        1,
+        5
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        }
+      ]
+    },
+    "fireflies": {
+      "metric": "skyFirefly",
+      "tiers": [
+        10,
+        50,
+        100
+      ],
+      "rewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 45,
+          "coins": 45,
+          "seeds": 3,
+          "water": 0
+        }
+      ],
+      "legacyRewards": [
+        {
+          "xp": 20,
+          "coins": 10,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 40,
+          "coins": 20,
+          "seeds": 1,
+          "water": 0
+        },
+        {
+          "xp": 60,
+          "coins": 30,
+          "seeds": 2,
+          "water": 0
+        }
+      ]
     }
   },
   "regions": {
@@ -3463,8 +3727,8 @@
         ]
       },
       {
-        "level": 47,
-        "coins": 6500,
+        "level": 45,
+        "coins": 5500,
         "cloudseed": 15,
         "dew": 8,
         "slots": [
@@ -3474,8 +3738,8 @@
         ]
       },
       {
-        "level": 54,
-        "coins": 8500,
+        "level": 50,
+        "coins": 6500,
         "cloudseed": 18,
         "dew": 10,
         "slots": [
@@ -3485,8 +3749,8 @@
         ]
       },
       {
-        "level": 60,
-        "coins": 11000,
+        "level": 55,
+        "coins": 6000,
         "cloudseed": 22,
         "dew": 12,
         "slots": [
@@ -4242,6 +4506,18 @@
       "teapot",
       "banh_chung"
     ],
+    "eventPots": {
+      "tet-dinh-mui": [
+        "peach_blossom",
+        "golden_dragon"
+      ],
+      "trung-thu": [
+        "mooncake"
+      ],
+      "quoc-khanh": [
+        "lotus"
+      ]
+    },
     "setStats": {
       "clay": {
         "time": 200,

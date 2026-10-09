@@ -294,6 +294,7 @@ const sky: Messages['sky'] = {
       set: 'Set reward claimed!',
       packed: 'Box packed.',
       job: (name: string) => `${name} collected.`,
+      eventPots: 'The seasonal event gave you festival pots. Find them in your pot store!',
     },
     friend: {
       farmTab: 'Farm',
@@ -315,6 +316,13 @@ const sky: Messages['sky'] = {
       failed: "Couldn't catch it, try again later.",
       caughtForYou: (from: string) => `${from} caught a bug in your cloud garden`,
       feedHelp: (name: string) => `You caught a bug in ${name}'s cloud garden`,
+      water: 'Water it',
+      waterRule: (left: number, max: number) =>
+        `Water a growing plant: it ripens sooner and you both get XP. ${left}/${max} left today.`,
+      watered: (name: string, xp: number) => `Watered it for ${name}! +${xp} XP.`,
+      waterFailed: "Couldn't water it, try again later.",
+      wateredForYou: (from: string) => `${from} watered a plant in your cloud garden`,
+      feedWatered: (name: string) => `You watered a plant in ${name}'s cloud garden`,
     },
   },
   demo: {

@@ -166,7 +166,8 @@ export interface DecorPlacement {
  * present: a friend sent us a seed. thanks: a friend said thanks.
  * referral: a garden we brought in (or the one that brought us in) reached a milestone.
  * skyhelp / skycaught (Vườn Mây): we caught a bug in a friend's cloud garden (a ladybug for
- * us) / a friend caught the bug on one of our pots for us.
+ * us) / a friend caught the bug on one of our pots for us. skywater / skywatered: a friend
+ * watered one of our cloud pots / we watered a friend's.
  */
 export type FriendEventType =
   | 'water'
@@ -178,7 +179,9 @@ export type FriendEventType =
   | 'thanks'
   | 'referral'
   | 'skyhelp'
-  | 'skycaught';
+  | 'skycaught'
+  | 'skywater'
+  | 'skywatered';
 
 /** Something a friend did for this garden, as recorded by the server (see server/lib/Friends.php). */
 export interface FriendEvent {
@@ -192,7 +195,10 @@ export interface FriendEvent {
   /** referral: coins and XP paid to each side. */
   coins?: number;
   xp?: number;
-  /** skycaught: the pot (plotId is the check, cycle the planting). skyhelp: the bug we got. */
+  /**
+   * skycaught / skywater: the pot (skycaught: plotId is the check; cycle the planting).
+   * skyhelp: the bug we got.
+   */
   pot?: string;
   bug?: BugId;
 }

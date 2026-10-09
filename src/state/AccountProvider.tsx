@@ -154,7 +154,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
           from: e.from,
           coins: e.coins,
           xp: e.xp,
-          pot: e.type === 'skycaught' && e.crop ? e.crop : undefined,
+          pot: (e.type === 'skycaught' || e.type === 'skywater') && e.crop ? e.crop : undefined,
           bug:
             e.type === 'skyhelp' && e.crop && Object.hasOwn(BUGS, e.crop)
               ? (e.crop as BugId)
@@ -173,6 +173,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         lines.push(t.account.friendEvents.present(e.from, CROPS[crop].seedName.toLowerCase()));
       if (e.type === 'thanks') lines.push(t.account.friendEvents.thanks(e.from));
       if (e.type === 'skycaught') lines.push(t.sky.game.friend.caughtForYou(e.from));
+      if (e.type === 'skywater') lines.push(t.sky.game.friend.wateredForYou(e.from));
       if (e.type === 'referral')
         lines.push(t.account.friendEvents.referral(e.from, e.coins ?? 0, e.xp ?? 0));
     }

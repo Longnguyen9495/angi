@@ -134,6 +134,47 @@ try {
     $check('the gold beetle is spent', ($t['data']['sky']['bugs']['goldbeetle'] ?? 0) === 0);
     $ok = $status(fn () => $acc->putProgress(['data' => $t['data'], 'baseVersion' => $t['version'], 'clientNow' => $now + 4000]));
     $check('a save on top of a tier-up passes', $ok === 0, "status $ok");
+    $version = $t['version'] + 1;
+
+    // Sky achievements (§5.8): a pot raised a tier counts as one that reached ★5; floor 3 is not open.
+    $badge = function (array $data, string $id, int $at): array {
+        $r = ProgressGuard::rules()['badges'][$id]['rewards'][0];
+        $data['xp'] += $r['xp'];
+        $data['coins'] += $r['coins'];
+        $data['quests']['badges'][$id] = 1;
+        $data['ledger'][] = ['key' => "badge:$id:1", 'resource' => 'xp', 'delta' => $r['xp'], 'balanceAfter' => $data['xp'], 'reason' => 'badge', 'at' => $at];
+        $data['ledger'][] = ['key' => "badge:$id:1:coin", 'resource' => 'coin', 'delta' => $r['coins'], 'balanceAfter' => $data['coins'], 'reason' => 'badge', 'at' => $at];
+        return $data;
+    };
+    $check('the floor-3 achievement refused on two floors', $status(fn () => $acc->putProgress(['data' => $badge($t['data'], 'skyclimber', $now + 5000), 'baseVersion' => $version, 'clientNow' => $now + 5000])) === 422);
+    $starred = $badge($t['data'], 'starpot', $now + 5000);
+    $ok = $status(fn () => $acc->putProgress(['data' => $starred, 'baseVersion' => $version, 'clientNow' => $now + 5000]));
+    $check('the ★5-pot achievement after a tier-up passes', $ok === 0, "status $ok");
+    $version++;
+
+    // Festival pots: only once the event's last milestone was reached (its days served).
+    $fest = $starred;
+    $fest['sky']['pots']['peach_blossom.3'] = $pot('peach_blossom.3', 'peach_blossom');
+    $fest['sky']['pots']['golden_dragon.4'] = $pot('golden_dragon.4', 'golden_dragon');
+    $fest['sky']['serial'] = 5;
+    $fest['sky']['events'] = ['tet-dinh-mui'];
+    $fest['ledger'][] = ['key' => 'sky:event:tet-dinh-mui:peach_blossom', 'resource' => 'pot:peach_blossom', 'delta' => 1, 'balanceAfter' => 1, 'reason' => 'sky:pot', 'at' => $now + 6000];
+    $fest['ledger'][] = ['key' => 'sky:event:tet-dinh-mui:golden_dragon', 'resource' => 'pot:golden_dragon', 'delta' => 1, 'balanceAfter' => 1, 'reason' => 'sky:pot', 'at' => $now + 6000];
+    $check('festival pots before the event is done refused', $status(fn () => $acc->putProgress(['data' => $fest, 'baseVersion' => $version, 'clientNow' => $now + 6000])) === 422);
+    $E = ProgressGuard::rules()['events']['tet-dinh-mui'];
+    $slot = (int) ProgressGuard::rules()['event']['slot'];
+    $ins = db()->prepare('INSERT INTO progress_claims (user_id, claim_key, created_at) VALUES (?, ?, ?)');
+    for ($i = 0; $i < (int) end($E['targets']); $i++) {
+        $ins->execute([$uid, 'guest:' . gmdate('Y-m-d', strtotime($E['from'] . ' 12:00 UTC') + $i * 86400) . ":$slot:coin", time()]);
+    }
+    $ok = $status(fn () => $acc->putProgress(['data' => $fest, 'baseVersion' => $version, 'clientNow' => $now + 6000]));
+    $check('festival pots once the event is done pass', $ok === 0, "status $ok");
+    $version++;
+    $wrong = $fest;
+    $wrong['sky']['pots']['mooncake.5'] = $pot('mooncake.5', 'mooncake');
+    $wrong['sky']['serial'] = 6;
+    $wrong['ledger'][] = ['key' => 'sky:event:tet-dinh-mui:mooncake', 'resource' => 'pot:mooncake', 'delta' => 1, 'balanceAfter' => 1, 'reason' => 'sky:pot', 'at' => $now + 7000];
+    $check('a pot that is not the event\'s refused', $status(fn () => $acc->putProgress(['data' => $wrong, 'baseVersion' => $version, 'clientNow' => $now + 7000])) === 422);
 } finally {
     @unlink($tmp);
 }

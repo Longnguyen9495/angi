@@ -1,3 +1,5 @@
+import { setSkyQuests } from '../../domain/quests';
+
 /**
  * Until G2 ships the real way up (plans/vuon-may.md §0.3, §0.8), the farm menu links to the
  * Vườn Mây motion demo only where the team looks at it: the dev server and the local copies
@@ -20,7 +22,10 @@ let statusPromise: Promise<boolean> | null = null;
 export function skyEnabled(): Promise<boolean> {
   statusPromise ??= import('../../services/account')
     .then(({ skyApi }) => skyApi.status())
-    .then((s) => s.enabled)
+    .then((s) => {
+      setSkyQuests(s.enabled);
+      return s.enabled;
+    })
     .catch(() => false);
   return statusPromise;
 }

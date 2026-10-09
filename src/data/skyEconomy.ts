@@ -1,3 +1,4 @@
+import type { EventId } from './game';
 import type { CropId } from './types';
 import { POT_SETS, POTS, type PotId, type PotSetId, type PotTier } from './skyGarden';
 
@@ -228,9 +229,9 @@ export const FLOORS: FloorDef[] = [
   { level: 29, coins: 2500, cloudseed: 8, dew: 3 },
   { level: 35, coins: 3600, cloudseed: 10, dew: 4 },
   { level: 41, coins: 5000, cloudseed: 12, dew: 6 },
-  { level: 47, coins: 6500, cloudseed: 15, dew: 8 },
-  { level: 54, coins: 8500, cloudseed: 18, dew: 10 },
-  { level: 60, coins: 11000, cloudseed: 22, dew: 12 },
+  { level: 45, coins: 5500, cloudseed: 15, dew: 8 },
+  { level: 50, coins: 6500, cloudseed: 18, dew: 10 },
+  { level: 55, coins: 6000, cloudseed: 22, dew: 12 },
 ].map((f, i) => ({ ...f, slots: slotPrices(i + 1) }));
 export const MAX_FLOORS = FLOORS.length;
 /** Slots a floor has before any is bought. */
@@ -270,6 +271,16 @@ export const POT_PRICES: Partial<Record<PotId, PotPrice>> = {
   pho_bowl: { currency: 'gem', price: 6, floor: 6 },
   teapot: { currency: 'gem', price: 6, floor: 6 },
   banh_chung: { currency: 'gem', price: 6, floor: 7 },
+};
+
+/**
+ * Festival pots (§5.6, `EVENTS`): an event's last milestone gives these to a guest with a cloud
+ * garden, claimed then or later once the garden is there. Never on sale.
+ */
+export const EVENT_POTS: Partial<Record<EventId, PotId[]>> = {
+  'tet-dinh-mui': ['peach_blossom', 'golden_dragon'],
+  'trung-thu': ['mooncake'],
+  'quoc-khanh': ['lotus'],
 };
 
 /** Balloon shards: this many make one pot of the table set (§5.6). */
